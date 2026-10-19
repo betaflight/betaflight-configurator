@@ -3264,11 +3264,31 @@
     "flightPlanLongitude": {
         "message": "გრძედი <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "სიმაღლე <span class=\"units\">ft AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "Altitude <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "სიჩქარე <span class=\"units\">კვანძები</span>"
+    "flightPlanAltitudeAria": {
+        "message": "Altitude in {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "სიჩქარე <span class=\"units\">კვანძები</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "სიჩქარეში{{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "ერთეული",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "იმპერიული"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "მეტრიკული"
     },
     "flightPlanType": {
         "message": "გზის წერტილის ტიპი"

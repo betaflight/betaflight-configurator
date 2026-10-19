@@ -3101,12 +3101,6 @@
     "flightPlanLongitude": {
         "message": "Долгота <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Высота <span class=\"units\">фут AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "Скорость <span class=\"units\">узлы</span>"
-    },
     "flightPlanType": {
         "message": "Тип маршрутной точки"
     },

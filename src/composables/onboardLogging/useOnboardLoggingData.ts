@@ -102,7 +102,7 @@ export function useOnboardLoggingData() {
         } else {
             buffer.push(mspHelper.REBOOT_TYPES.MSC);
         }
-        MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+        MSP.send_message(MSPCodes.MSP_REBOOT, buffer, false);
     };
 
     return {

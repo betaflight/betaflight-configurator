@@ -3179,12 +3179,6 @@
     "flightPlanLongitude": {
         "message": "Geografska dužina <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Visina <span class=\"units\">ft AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "Brzina <span class=\"units\">čvorova</span>"
-    },
     "flightPlanType": {
         "message": "Vrsta tačke puta"
     },

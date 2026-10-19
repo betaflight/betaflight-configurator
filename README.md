@@ -110,7 +110,7 @@ If you prefer to have the application in English or any other language, you can 
 
 ### Technical details
 
-The next versions of the App will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, npm, Vite and Vue for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
+The next versions of the App will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, npm, Vite, Vue and TypeScript for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
 
 ### Prepare your environment
 
@@ -175,6 +175,19 @@ Any change make in the code will reload the app in the Android device.
 ### Running tests
 
 `npm test`
+
+### Linting and type checking
+
+`npm run lint` runs ESLint and the TypeScript checker (`vue-tsc`); CI runs the same checks. `npm run lint:fix` and `npm run format` fix what they can.
+
+The App is migrating from JavaScript to TypeScript ([#5542](https://github.com/betaflight/betaflight-configurator/issues/5542)):
+
+- New files are `.ts`, and new components use `<script setup lang="ts">`.
+- A `.js` file you change for another reason converts to TypeScript in the same pull request.
+- `src/composables/`, `src/stores/` and `src/js/msp/` are TypeScript-only; lint rejects a `.js` file there. The dev-only `src/js/msp/debug/` is exempt.
+- Components never import MSP at runtime. Talking to the flight controller belongs in a Pinia store action or a composable, and lint enforces this. Type-only imports (`import type`) are allowed.
+
+[AGENTS.md](./AGENTS.md) has the full coding conventions and architecture rules.
 
 ## Support and Developers Channel
 

@@ -85,7 +85,7 @@ describe("LiveSensorPanel polling", () => {
         const expectations: [string, number, ReturnType<typeof vi.fn>][] = [
             ["IMU_pull", MSPCodes.MSP_RAW_IMU, graph.addGyroSample],
             ["altitude_pull", MSPCodes.MSP_ALTITUDE, graph.addAltitudeSample],
-            ["sonar_pull", MSPCodes.MSP_SONAR, graph.addSonarSample],
+            ["sonar_pull", MSPCodes.MSP_SONAR_ALTITUDE, graph.addSonarSample],
             ["pitot_pull", MSPCodes.MSP_PITOT, graph.addPitotSample],
             ["debug_pull", MSPCodes.MSP_DEBUG, graph.addDebugSample],
         ];

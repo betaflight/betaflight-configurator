@@ -1,78 +1,74 @@
 ---
-description: "Vue 3 development standards for Betaflight Configurator, with enforcement-status ledger for migration phases."
+description: "Vue 3 development standards for Betaflight Configurator: architecture guardrails, how each is enforced, and taste-call guidance."
 applyTo: "**/*.vue, **/*.ts, **/*.js, **/*.scss, **/*.less"
 ---
 
 # Vue 3 Development Instructions
 
-Standards for AI-assisted contributions to Betaflight Configurator. Adapted from the [awesome-copilot Vue 3 instructions](https://github.com/github/awesome-copilot/blob/main/instructions/vuejs3.instructions.md), with project-specific adjustments and an enforcement ledger that tracks which rules are tooled and which remain guidance.
+Standards for AI-assisted contributions to Betaflight Configurator. Adapted from the [awesome-copilot Vue 3 instructions](https://github.com/github/awesome-copilot/blob/main/instructions/vuejs3.instructions.md), with project-specific guardrails.
 
 ## Project context
-- **Stack**: Vue 3 + Composition API + `<script setup>`, Pinia 3, Vite 8, Tauri 2 (desktop), Capacitor 8 (Android).
+- **Stack**: Vue 3 + Composition API + `<script setup lang="ts">`, Pinia 4, Vite 8, Tauri 2 (desktop), Capacitor 8 (Android).
 - **UI**: `@nuxt/ui` v4 components + Tailwind CSS v4. Not a Nuxt app — no SSR, no `useAsyncData`, no Nuxt auto-imports outside the UI library.
-- **TypeScript**: incremental adoption, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). New files as `.ts` or `<script setup lang="ts">`, `strict` from the start; a composable or store you materially change may be converted in the same PR, one file per PR. Legacy JS stays JS (`allowJs`, `checkJs: false`): importable from TS, not checked. JSDoc on touched legacy JS. `src/js` (MSP, FC, serial) is not being re-architected, but file-format conversion is in scope and tracked in #5141.
+- **TypeScript**: `strict: true` everywhere, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). Every `.vue` file is checked. The remaining `.js` is still importable (`allowJs`) but not checked; the migration and what is left are tracked in #5542.
+- **State**: Pinia stores own all state. The `FC`, `GUI` and `CONFIGURATOR` singletons are gone (#4800); flight-controller state lives in `useFlightControllerStore()` (`src/stores/fc.ts`).
 - **Naming**: `PascalCase` for both component names and `.vue` file names.
 
-## Enforcement ledger
+## Architecture guardrails
 
-A rule lives in this file **only when tooling cannot enforce it yet**. Each row has an enforcement target — when that tool lands, the row leaves the file.
+Read these before writing code. A rule stays listed after tooling lands, so a new PR knows where code belongs before lint rejects it; the **Enforced by** column says what catches a violation.
 
-Status legend: 🚧 guidance-only · 🔧 partially tooled · 📐 stays as guidance (taste call, not lintable).
-Already enforced by ESLint / Prettier / EditorConfig (and intentionally absent below): indentation, semicolons, trailing commas, import order, basic naming.
+Legend: ✅ tooled (CI fails) · 🔧 partially tooled · 🚧 guidance only, tooling planned · 📐 guidance (taste call, not lintable).
+Formatting (indentation, semicolons, trailing commas, quotes) is owned by Prettier and ESLint and is not repeated here.
 
-### #4800 — Pinia as single source of truth
+### Layering — #4800
 
-| Rule | Status | Enforcement target |
+| Rule | Status | Enforced by |
 |---|---|---|
-| No MSP calls from Vue components — wrap in a store action or composable | 🚧 | ESLint `no-restricted-imports`: ban `src/js/msp/**` from `src/components/**` (Phase 0) |
-| Only `src/stores/**` and `src/composables/**` may import `src/js/msp/**` | 🚧 | `eslint-plugin-boundaries`, scoped per converted domain (Phase 1) |
-| No new fields on `src/js/fc.js` — write to a Pinia store | 🚧 | Seal `fc.ts` interface once converted (Phase 2) |
-| Hydration from legacy is explicit: `store.hydrateFromLegacy(…)` | 🚧 | TS store interface forces the method (Phase 1, per domain) |
-| New MSP codes: `src/js/msp/MSPCodes.ts` + encode/decode in `MSPHelper.js`, aligned with firmware `msp_protocol.h` | 🚧 | CI script diffing `MSPCodes.ts` against `msp_protocol.h` (Phase 1) |
+| Components never talk to the flight controller. MSP calls go in a store action or a composable; components read and write Pinia only | ✅ | `boundaries/dependencies` in `eslint.config.js`: only `src/stores/**`, `src/composables/**` and `src/js/**` may import `src/js/msp.ts` or `src/js/msp/**` (static and dynamic `import()`; `import type` is allowed) |
+| `src/js/**` is the transport and protocol layer (serial, MSP framing, flashing). It does not import components | 📐 | Review call |
+| FC state lives in `useFlightControllerStore()`. New fields go there, typed in `src/stores/fc.types.ts` — never a new module-level singleton | 🔧 | `vue-tsc` rejects untyped fields; a new singleton is a review call |
+| Side effects (MSP, network, persistence, polling) live in store actions or composables, not in components | 🔧 | MSP: the boundary rule above. Network and persistence: review call |
+| New MSP codes: `src/js/msp/MSPCodes.ts` + encode/decode in `MSPHelper.ts`, aligned with firmware `msp_protocol.h` | ✅ | `scripts/check-msp-codes.mjs` against every supported firmware branch; weekly and on pull requests touching the table (`.github/workflows/msp-codes.yml`) |
 
-### #4995 — Nuxt UI v4 + Tailwind conversion
+### TypeScript — #5542
 
-| Rule | Status | Enforcement target |
+| Rule | Status | Enforced by |
+|---|---|---|
+| New files are `.ts` or `<script setup lang="ts">` | 🔧 | ESLint rejects any `.js` in `src/composables/**`, `src/stores/**` and `src/js/msp/**` (except the dev-only `src/js/msp/debug/**`); other folders follow as they reach zero `.js` (#5542 phase 7) |
+| `strict` typing; no `any` to silence the checker | 🔧 | `strict: true` + `vue-tsc`; `@typescript-eslint/no-explicit-any` |
+| A file you touch for other reasons converts to TypeScript in the same PR; a touched test converts to `.test.ts` | 📐 | Review call |
+
+### Nuxt UI v4 + Tailwind — #4995
+
+| Rule | Status | Enforced by |
 |---|---|---|
 | Reach for `@nuxt/ui` v4 first: `UButton`, `UInput`, `UInputNumber`, `USelect`, `USwitch`, `UModal`, … | 📐 | Taste call |
 | Use shared wrappers in `src/components/elements/`: `UiBox`, `SettingRow`, `SettingColumn`, `HelpIcon`, `WikiButton` | 📐 | Taste call |
-| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🚧 | `eslint-plugin-vue` custom rule, scoped to converted tabs (Phase 1) |
-| No hard-coded colors — theme via CSS custom properties | 🚧 | Stylelint `color-no-hex` + disallowed-value list (Phase 0) |
+| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🚧 | Lint rule (#5542 phase 7) |
+| No hard-coded colors — theme via CSS custom properties | 🚧 | Lint rule as an error once existing violations are gone (#5542 phase 7) |
 | Respect light/dark (`.dark`) and color themes (`data-theme`) | 📐 | Visual review |
-
-### TypeScript migration (next phase)
-
-| Rule | Status | Enforcement target |
-|---|---|---|
-| New files as `.ts` or `<script setup lang="ts">` | 🔧 | `vue-tsc` checks what is TS; `tsconfig` `allowJs: false` on `src/components/**` (Phase 2) |
-| Touched legacy JS gets JSDoc types | 🚧 | `eslint-plugin-jsdoc` on changed files (Phase 1) |
-| Strict mode in converted folders | 🔧 | `strict: true` applies to every `.ts` / `lang="ts"` file now; `checkJs` per folder is the Phase 2 ratchet |
 
 ### Always-on
 
-| Rule | Status | Enforcement target |
+| Rule | Status | Enforced by |
 |---|---|---|
-| `.vue` filenames and component names: `PascalCase` | 🔧 | `eslint-plugin-unicorn/filename-case` (Phase 0) |
-| New source files start with the GPL header in `DEFAULT_LICENSE.md` (same text as the firmware) | 🚧 | `eslint-plugin-header` on files added after this row landed (Phase 0) |
-| Don't edit `dist/`, `node_modules/`, generated output | 🚧 | Pre-commit hook by path (Phase 0) |
-| i18n source of truth is `locales/en/messages.json` (Crowdin syncs the rest) | 🚧 | Pre-commit hook rejecting non-`en` locale edits (Phase 0) |
+| `.vue` filenames and component names: `PascalCase` | 📐 | Review call (no violations today) |
+| New source files start with the GPL header in `DEFAULT_LICENSE.md` (same text as the firmware) | 📐 | Review call |
+| Don't edit `dist/`, `node_modules/`, generated output | 📐 | Review call (`.gitignore` covers `dist/` and `node_modules/`) |
+| i18n source of truth is `locales/en/messages.json` (Crowdin syncs the rest) | 📐 | Review call |
 | Tests for non-trivial behaviour (Vitest, `npm run test`) | 📐 | Coverage gate is a proxy; review call |
 | Tests must catch bugs, not confirm the fix. A suite co-authored with the change is confirmation-biased — it passes while the code is still broken. Verify by driving the real behaviour (hardware/e2e), and write bug-hunting tests independently/adversarially, ideally blind to the implementation. | 📐 | Review call; separate adversarial pass |
 | One concern per PR (one tab, one store, one TS file) | 📐 | PR template / reviewer call |
 | Comments state non-obvious why (rationale) or what (functionality) concisely — no restating what well-named code shows, no personality/filler, skip it if removing wouldn't confuse a future reader. Before finishing, re-check new comments against this row | 📐 | Review call |
 
-## Phase plan
-- **Phase 0** — land cheap tooling: MSP-from-components ban, filename-case, Stylelint colors, pre-commit hooks for locales and generated paths.
-- **Phase 1** — per-domain bundles: each TS or Nuxt UI conversion PR ships the boundary lint, scoped-style ban, JSDoc rule, and MSP CI script for that domain.
-- **Phase 2** — once enough is TS: seal `fc.ts`, flip `allowJs: false` on converted folders, ratchet `strict: true`.
-
-When a 🚧 row's target tool lands, delete the row. The file should shrink monotonically.
+When tooling lands for a 🚧 or 🔧 rule, update its **Status** and **Enforced by** — don't delete the row.
 
 ---
 
 # Development standards (📐 guidance — not tooled)
 
-The sections below are taste-call patterns that can't be reasonably linted. They're durable guidance; they don't shrink with phases.
+The sections below are taste-call patterns that can't be reasonably linted.
 
 ## Architecture
 - Favour the Composition API (`setup` functions and composables) over the Options API.
@@ -81,9 +77,9 @@ The sections below are taste-call patterns that can't be reasonably linted. They
 - Extract reusable logic into composables under `src/composables/`.
 - Structure Pinia stores by domain, with clearly defined state, getters, and actions.
 
-## TypeScript integration (forward-looking)
+## TypeScript integration
 - New files: `.ts` or `<script setup lang="ts">` with `defineProps` / `defineEmits`.
-- Use `PropType<T>` for typed props and default values.
+- Type props with `defineProps<T>()` and defaults with `withDefaults`.
 - Define interfaces or type aliases for complex prop and state shapes.
 - Type event handlers and refs; type store getters and actions explicitly.
 

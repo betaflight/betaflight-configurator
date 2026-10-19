@@ -287,7 +287,7 @@ class STM32Protocol {
                     console.log(`${this.logHead} Disconnecting from MSP`, disconnectionResult);
                 });
             };
-            MSP.promise(MSPCodes.MSP_SET_REBOOT, buffer)
+            MSP.promise(MSPCodes.MSP_REBOOT, buffer)
                 .then(() => {
                     // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
                     disconnectFromMsp();
@@ -297,7 +297,7 @@ class STM32Protocol {
                         // Expected: the FC drops the serial link as part of rebooting.
                         disconnectFromMsp();
                     } else {
-                        console.error(`${this.logHead} MSP_SET_REBOOT request failed:`, error);
+                        console.error(`${this.logHead} MSP_REBOOT request failed:`, error);
                         this.handleError();
                     }
                 });
