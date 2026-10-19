@@ -34,8 +34,9 @@ interface ExportableFlightLog {
 export function GpxExporter(flightLog: ExportableFlightLog) {
     /**
      * @param success is a callback triggered when export is done
+     * @param failure is a callback triggered when the worker fails
      */
-    function dump(success: (gpx: string) => void): void {
+    function dump(success: (gpx: string) => void, failure: (event: Event) => void = () => {}): void {
         const frames = flightLog
                 .getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime())
                 .map((chunk) => chunk.frames),
@@ -44,6 +45,14 @@ export function GpxExporter(flightLog: ExportableFlightLog) {
         worker.onmessage = (event: MessageEvent<string>) => {
             success(event.data);
             worker.terminate();
+        };
+        worker.onerror = (event) => {
+            worker.terminate();
+            failure(event);
+        };
+        worker.onmessageerror = (event) => {
+            worker.terminate();
+            failure(event);
         };
         worker.postMessage({
             sysConfig: flightLog.getSysConfig(),

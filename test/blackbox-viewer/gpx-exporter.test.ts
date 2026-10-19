@@ -89,4 +89,19 @@ describe("GpxExporter", () => {
         expect(success).toHaveBeenCalledWith("<gpx/>");
         expect(worker.terminated).toBe(true);
     });
+
+    it.each(["onerror", "onmessageerror"] as const)(
+        "reports %s to the failure callback and stops the worker",
+        (handler) => {
+            const failure = vi.fn();
+            GpxExporter(flightLog).dump(() => {}, failure);
+            const [worker] = FakeWorker.instances;
+            const event = new Event("error");
+
+            worker[handler]?.(event);
+
+            expect(failure).toHaveBeenCalledWith(event);
+            expect(worker.terminated).toBe(true);
+        },
+    );
 });

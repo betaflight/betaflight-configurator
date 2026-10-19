@@ -80,7 +80,9 @@ export function exportCsv(flightLog, logFilename, options = {}) {
 }
 
 export function exportGpx(flightLog, logFilename) {
-    return saveExport("gpx", suggestedName(logFilename, "gpx"), (onSuccess) => GpxExporter(flightLog).dump(onSuccess));
+    return saveExport("gpx", suggestedName(logFilename, "gpx"), (onSuccess, onFailure) =>
+        GpxExporter(flightLog).dump(onSuccess, onFailure),
+    );
 }
 
 export function exportSpectrumToCsv(analyser, logFilename, options = {}) {
