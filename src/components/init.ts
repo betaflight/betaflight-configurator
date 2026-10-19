@@ -28,7 +28,7 @@ import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
 import DeviceHandler from "../js/device_handler";
 import PortUsage from "../js/port_usage";
-import { BetaflightComponents } from "../js/vue_components.js";
+import { BetaflightComponents } from "../js/vue_components";
 import { getNuxtUiRouter } from "../js/nuxt_ui_router";
 import { pinia } from "../js/pinia_instance";
 import { get as getConfig } from "../js/ConfigStorage";
