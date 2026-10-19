@@ -86,6 +86,9 @@ export default [
         files: ["**/*.vue"],
         rules: {
             "no-undef": "error",
+            // Shared styles belong in theme.css or nuxt-ui.css; a component's own styles nest
+            // under its root class instead of relying on `scoped` (#4995, #5542).
+            "vue/enforce-style-attribute": ["error", { allow: ["plain", "module"] }],
         },
     },
     {
