@@ -1,5 +1,39 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock, type MockInstance } from "vitest";
 import FileSystem, { buildAcceptTypes, buildNativeFilters, normalizeExtensions } from "../../src/js/FileSystem";
+
+// The globals each platform branch looks for; none of them is in lib.dom.
+const testGlobals = globalThis as typeof globalThis & {
+    __TAURI_INTERNALS__?: object;
+    showOpenFilePicker?: unknown;
+    showSaveFilePicker?: unknown;
+};
+
+// A pick that a test expects to succeed: fails the test on null/undefined.
+function picked<T>(file: T | null | undefined): T {
+    expect(file).toBeTruthy();
+    return file as T;
+}
 
 // The Tauri plugins are loaded on demand and only exist inside a Tauri shell, so
 // stub them for the desktop-path tests below.
@@ -115,17 +149,17 @@ describe("pickerId validation", () => {
     it("accepts a pickerId at exactly the 32-character limit", async () => {
         const exactly32 = "a".repeat(32);
         const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", exactly32);
-        expect(file.name).toBe("x.txt");
+        expect(file?.name).toBe("x.txt");
     });
 
     it("accepts hyphens and underscores, the two allowed non-alphanumerics", async () => {
         const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", "cli-file_2");
-        expect(file.name).toBe("x.txt");
+        expect(file?.name).toBe("x.txt");
     });
 
     it("treats an empty pickerId the same as an omitted one, not a validation failure", async () => {
         const file = await FileSystem.pickSaveFile("x.txt", "Text", ".txt", "");
-        expect(file.name).toBe("x.txt");
+        expect(file?.name).toBe("x.txt");
     });
 });
 
@@ -134,11 +168,11 @@ describe("pickerId validation", () => {
 // `<a download>` blob downloads.
 describe("FileSystem on Tauri desktop", () => {
     beforeEach(() => {
-        globalThis.__TAURI_INTERNALS__ = {};
+        testGlobals.__TAURI_INTERNALS__ = {};
     });
 
     afterEach(() => {
-        delete globalThis.__TAURI_INTERNALS__;
+        delete testGlobals.__TAURI_INTERNALS__;
         localStorage.removeItem("fileSystemLastDir");
         vi.resetAllMocks();
     });
@@ -160,7 +194,7 @@ describe("FileSystem on Tauri desktop", () => {
 
         const file = await FileSystem.pickSaveFile("log.csv", "CSV file", ".csv");
 
-        expect(file.name).toBe("log.csv");
+        expect(file?.name).toBe("log.csv");
     });
 
     it("rejects with an AbortError when the save dialog is dismissed", async () => {
@@ -204,10 +238,10 @@ describe("FileSystem on Tauri desktop", () => {
         const backing = new Uint8Array([9, 9, 1, 2, 3, 9]);
 
         await FileSystem.writeFile(file, new DataView(backing.buffer, 2, 3));
-        expect(Array.from(tauriFs.writeFile.mock.lastCall[1])).toEqual([1, 2, 3]);
+        expect(Array.from(tauriFs.writeFile.mock.lastCall?.[1])).toEqual([1, 2, 3]);
 
         await FileSystem.writeFile(file, backing.subarray(2, 5));
-        expect(Array.from(tauriFs.writeFile.mock.lastCall[1])).toEqual([1, 2, 3]);
+        expect(Array.from(tauriFs.writeFile.mock.lastCall?.[1])).toEqual([1, 2, 3]);
     });
 
     it("streams chunks straight to disk, truncating on the first and appending after", async () => {
@@ -250,12 +284,12 @@ describe("FileSystem on Tauri desktop", () => {
         // pick is offered, given what the first pick resolved to — these
         // two helpers carry the mock-then-call boilerplate that's
         // otherwise identical across every case.
-        async function saveAs(name, resolvedPath, pickerId) {
+        async function saveAs(name: string, resolvedPath: string, pickerId?: string) {
             tauriDialog.save.mockResolvedValueOnce(resolvedPath);
             return FileSystem.pickSaveFile(name, "Files", ".txt", pickerId);
         }
 
-        async function openAs(resolvedPath, pickerId) {
+        async function openAs(resolvedPath: string, pickerId?: string) {
             tauriDialog.open.mockResolvedValueOnce(resolvedPath);
             return FileSystem.pickOpenFile("Files", ".txt", pickerId);
         }
@@ -315,10 +349,10 @@ describe("FileSystem on Tauri desktop", () => {
 // scoped per `id` passed to the picker — so pickerId only needs forwarding
 // as `id` here, with no directory bookkeeping of our own.
 describe("FileSystem picker id (File System Access API)", () => {
-    let showOpenFilePicker;
-    let showSaveFilePicker;
+    let showOpenFilePicker: Mock;
+    let showSaveFilePicker: Mock;
 
-    function mockHandle(name) {
+    function mockHandle(name: string) {
         return {
             name,
             queryPermission: vi.fn().mockResolvedValue("granted"),
@@ -329,13 +363,13 @@ describe("FileSystem picker id (File System Access API)", () => {
     beforeEach(() => {
         showOpenFilePicker = vi.fn();
         showSaveFilePicker = vi.fn();
-        globalThis.showOpenFilePicker = showOpenFilePicker;
-        globalThis.showSaveFilePicker = showSaveFilePicker;
+        testGlobals.showOpenFilePicker = showOpenFilePicker;
+        testGlobals.showSaveFilePicker = showSaveFilePicker;
     });
 
     afterEach(() => {
-        delete globalThis.showOpenFilePicker;
-        delete globalThis.showSaveFilePicker;
+        delete testGlobals.showOpenFilePicker;
+        delete testGlobals.showSaveFilePicker;
     });
 
     it("pickOpenFile forwards pickerId as the picker's remembered-folder id", async () => {
@@ -361,16 +395,35 @@ describe("FileSystem picker id (File System Access API)", () => {
 
         expect(showOpenFilePicker.mock.calls[0][0]).not.toHaveProperty("id");
     });
+
+    it("streams chunks to the handle's writable stream and closes it", async () => {
+        const stream = { write: vi.fn(), close: vi.fn() };
+        const handle = { ...mockHandle("log.bbl"), createWritable: vi.fn().mockResolvedValue(stream) };
+        showSaveFilePicker.mockResolvedValue(handle);
+        const click = vi.spyOn(HTMLAnchorElement.prototype, "click");
+
+        const file = picked(await FileSystem.pickSaveFile("log.bbl", "Blackbox log", ".bbl"));
+        const writable = await FileSystem.openFile(file);
+        const chunk = new Blob(["a"]);
+        await FileSystem.writeChunck(writable, chunk);
+        await FileSystem.closeFile(writable);
+
+        expect(handle.createWritable).toHaveBeenCalledWith({ keepExistingData: false });
+        expect(stream.write).toHaveBeenCalledWith(chunk);
+        expect(stream.close).toHaveBeenCalledTimes(1);
+        expect(click).not.toHaveBeenCalled();
+        click.mockRestore();
+    });
 });
 
 // In jsdom, window.showOpenFilePicker / showSaveFilePicker are undefined and
 // isAndroid() is false, so the FileSystem wrapper takes its <input>/<a download>
 // fallback paths (the same ones used by Firefox and WebKit-based Tauri webviews).
 describe("FileSystem fallback (no File System Access API)", () => {
-    let clickSpy;
-    let downloaded;
-    let originalCreateObjectURL;
-    let originalRevokeObjectURL;
+    let clickSpy: MockInstance;
+    let downloaded: { download: string }[];
+    let originalCreateObjectURL: typeof URL.createObjectURL;
+    let originalRevokeObjectURL: typeof URL.revokeObjectURL;
 
     beforeEach(() => {
         // jsdom does not implement object URLs; save the originals so they can be
@@ -380,7 +433,9 @@ describe("FileSystem fallback (no File System Access API)", () => {
         URL.createObjectURL = vi.fn(() => "blob:mock");
         URL.revokeObjectURL = vi.fn();
         downloaded = [];
-        clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function () {
+        clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
+            this: HTMLAnchorElement,
+        ) {
             downloaded.push({ download: this.download });
         });
     });
@@ -392,30 +447,30 @@ describe("FileSystem fallback (no File System Access API)", () => {
     });
 
     it("uses the fallback path because the pickers are unavailable in jsdom", () => {
-        expect(window.showOpenFilePicker).toBeUndefined();
-        expect(window.showSaveFilePicker).toBeUndefined();
+        expect(testGlobals.showOpenFilePicker).toBeUndefined();
+        expect(testGlobals.showSaveFilePicker).toBeUndefined();
     });
 
     it("pickSaveFile returns a download descriptor instead of an OS save dialog", async () => {
-        const file = await FileSystem.pickSaveFile("config.txt", "Text", ".txt");
+        const file = picked(await FileSystem.pickSaveFile("config.txt", "Text", ".txt"));
         expect(file.name).toBe("config.txt");
         expect(file._download).toMatchObject({ name: "config.txt", chunks: [] });
     });
 
     it("pickSaveFile appends the extension when the suggested name has none", async () => {
         const file = await FileSystem.pickSaveFile("config", "Text", ".txt");
-        expect(file.name).toBe("config.txt");
+        expect(file?.name).toBe("config.txt");
     });
 
     it("writeFile triggers a browser download for a fallback descriptor", async () => {
-        const file = await FileSystem.pickSaveFile("dump.txt", "Text", ".txt");
+        const file = picked(await FileSystem.pickSaveFile("dump.txt", "Text", ".txt"));
         await FileSystem.writeFile(file, "hello");
         expect(clickSpy).toHaveBeenCalledTimes(1);
         expect(downloaded[0].download).toBe("dump.txt");
     });
 
     it("buffers streamed chunks and downloads them on close", async () => {
-        const file = await FileSystem.pickSaveFile("log.csv", "CSV", ".csv");
+        const file = picked(await FileSystem.pickSaveFile("log.csv", "CSV", ".csv"));
         const writable = await FileSystem.openFile(file);
         await FileSystem.writeChunck(writable, new Blob(["a"]));
         await FileSystem.writeChunck(writable, new Blob(["b"]));
@@ -428,7 +483,8 @@ describe("FileSystem fallback (no File System Access API)", () => {
     it("reads a fallback (input-selected) file straight from its blob", async () => {
         // jsdom's Blob lacks .text(); real browser/WebKit File objects have it,
         // so stub the blob to verify the descriptor routing and delegation.
-        const blob = { text: vi.fn().mockResolvedValue("chirp") };
+        // Only text() is stubbed, so it is cast to Blob.
+        const blob = { text: vi.fn().mockResolvedValue("chirp") } as unknown as Blob;
         const descriptor = { name: "x.txt", _blob: blob };
         expect(await FileSystem.readFile(descriptor)).toBe("chirp");
         expect(blob.text).toHaveBeenCalledTimes(1);

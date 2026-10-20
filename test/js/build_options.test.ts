@@ -1,14 +1,36 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options.js";
+import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options";
 import EscProtocols from "../../src/js/utils/EscProtocols";
 
 // vitest runs from the repo root.
-const generatedFile = readFileSync(resolve("src/js/build_options.js"), "utf8");
+const generatedFile = readFileSync(resolve("src/js/build_options.ts"), "utf8");
 
 describe("build_options", () => {
     it("keeps the generated header that records where the table came from", () => {
+        expect(generatedFile.startsWith(readFileSync(resolve("DEFAULT_LICENSE.md"), "utf8"))).toBe(true);
         expect(generatedFile).toContain("auto-generated file");
         expect(generatedFile).toMatch(/Generator {4}: `scripts\/generate-build-options\.mjs`/);
         expect(generatedFile).toMatch(/Source {7}: https:\/\/build\.betaflight\.com\/api\/options\/[\w.]+/);

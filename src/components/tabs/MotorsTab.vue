@@ -75,7 +75,7 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="protocolConfigured" fullWidth>
+                            <SettingRow v-if="protocolConfigured" data-setting-search-key="featureMOTOR_STOP" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('MOTOR_STOP')"
                                     @update:model-value="toggleFeature('MOTOR_STOP', $event)"
@@ -87,7 +87,11 @@
                                     <span class="ml-2" v-html="$t('featureMOTOR_STOPTip')"></span>
                                 </template>
                             </SettingRow>
-                            <SettingRow v-if="digitalProtocolConfigured" fullWidth>
+                            <SettingRow
+                                v-if="digitalProtocolConfigured"
+                                data-setting-search-key="featureESC_SENSOR"
+                                fullWidth
+                            >
                                 <USwitch
                                     :model-value="isFeatureEnabled('ESC_SENSOR')"
                                     @update:model-value="toggleFeature('ESC_SENSOR', $event)"
@@ -229,7 +233,7 @@
                         </UiBox>
                         <!-- 3D -->
                         <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
-                            <SettingRow :help="$t('feature3DTip')" fullWidth>
+                            <SettingRow data-setting-search-key="feature3D" :help="$t('feature3DTip')" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('3D')"
                                     @update:model-value="toggleFeature('3D', $event)"
