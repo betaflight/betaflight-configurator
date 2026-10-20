@@ -274,6 +274,90 @@ function readSettings(r: Reader): FilterSettings {
     };
 }
 
+// The status payload grows at its end with each firmware version: every block is read only when it is there.
+
+function readLpf2Basis(r: Reader): { highBandDb: number | null; lpf2Basis: Lpf2Basis | null } {
+    if (r.remaining < 3) {
+        return { highBandDb: null, lpf2Basis: null };
+    }
+    const highBandDb = r.s16() / 10;
+    return { highBandDb, lpf2Basis: LPF2_BASIS[r.u8()] ?? "noData" };
+}
+
+/** The RPM filter fade range and the notch tracking error. */
+function readRpmFade(r: Reader): { rpmFade: FilterTuneStatus["rpmFade"]; trackError: number | null } {
+    if (r.remaining < 6) {
+        return { rpmFade: null, trackError: null };
+    }
+    const rpmFade = { proposed: r.u16(), current: r.u16() };
+    return { rpmFade, trackError: r.u16() / 1e5 };
+}
+
+function readSignals(r: Reader): FilterTuneSignals | null {
+    if (r.remaining < 1) {
+        return null;
+    }
+    const bits = r.u8();
+    return { beeper: (bits & 1) !== 0, ledStrip: (bits & 2) !== 0, osd: (bits & 4) !== 0 };
+}
+
+function readCarried(r: Reader): FilterTuneStatus["carried"] {
+    return r.remaining >= 3 ? { frames: r.u16(), flights: r.u8() } : null;
+}
+
+function readDterm(r: Reader): DtermTune | null {
+    if (r.remaining < 13) {
+        return null;
+    }
+    const mult10 = r.u8();
+    const current = { dynMinHz: r.u16(), dynMaxHz: r.u16(), lpf2Hz: r.u16() };
+    const delayUs = r.u16();
+    const stockDelayUs = r.u16();
+    return { mult: mult10 ? mult10 / 10 : null, current, delayUs, stockDelayUs, inputPct: r.u8(), noisePct: r.u8() };
+}
+
+function readPidProfile(r: Reader): FilterTuneStatus["pidProfile"] {
+    if (r.remaining < 2) {
+        return null;
+    }
+    const current = r.u8();
+    const applied = r.u8();
+    return { current, applied: applied === 0xff ? null : applied };
+}
+
+/** The PID loop rate: measured while armed (0 before) and set. */
+function readLoop(r: Reader): FilterTuneStatus["loop"] {
+    return r.remaining >= 4 ? { measuredHz: r.u16(), setHz: r.u16() } : null;
+}
+
+function readSweep(r: Reader): SweepResult | null {
+    if (r.remaining < 19) {
+        return null;
+    }
+    const phase = SWEEP_PHASES[r.u8()] ?? "none";
+    const end = SWEEP_ENDS[r.u8()] ?? "none";
+    const amplitudeDps = r.u16() / 10;
+    const hz = (v: number) => (v ? v / 10 : null);
+    const crossoverHz = { roll: hz(r.u16()), pitch: hz(r.u16()) };
+    const phaseMarginDeg = { roll: r.u8(), pitch: r.u8() };
+    const noiseIndex = r.u16() / 10;
+    const noiseIndexNow = r.u16() / 10;
+    const heatStockK = r.u16() / 100;
+    const heatPickK = r.u16() / 100;
+    return {
+        phase,
+        end,
+        amplitudeDps,
+        crossoverHz,
+        phaseMarginDeg,
+        noiseIndex,
+        noiseIndexNow,
+        heatStockK,
+        heatPickK,
+        heatBudgetK: r.u8() / 10,
+    };
+}
+
 /** @returns null for a payload this host does not understand. */
 export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>): FilterTuneStatus | null {
     const r = new Reader(toBytes(data));
@@ -306,77 +390,14 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
         }
         const proposed = readSettings(r);
         const current: CurrentFilterSettings = { ...readSettings(r), lpf1StaticHz: r.u16(), lpf1DynMinHz: r.u16() };
-        // appended later: the LPF2 decision's basis (absent from older firmware)
-        let highBandDb: number | null = null;
-        let lpf2Basis: Lpf2Basis | null = null;
-        if (r.remaining >= 3) {
-            highBandDb = r.s16() / 10;
-            const basis = r.u8();
-            lpf2Basis = LPF2_BASIS[basis] ?? "noData";
-        }
-        // appended later still: the RPM filter fade range and the notch tracking error, then the in-flight signals
-        let rpmFade: FilterTuneStatus["rpmFade"] = null;
-        let trackError: number | null = null;
-        if (r.remaining >= 6) {
-            rpmFade = { proposed: r.u16(), current: r.u16() };
-            trackError = r.u16() / 1e5;
-        }
-        let signals: FilterTuneSignals | null = null;
-        if (r.remaining >= 1) {
-            const bits = r.u8();
-            signals = { beeper: (bits & 1) !== 0, ledStrip: (bits & 2) !== 0, osd: (bits & 4) !== 0 };
-        }
-        let carried: FilterTuneStatus["carried"] = null;
-        if (r.remaining >= 3) {
-            carried = { frames: r.u16(), flights: r.u8() };
-        }
-        let dterm: DtermTune | null = null;
-        if (r.remaining >= 13) {
-            const mult10 = r.u8();
-            const current = { dynMinHz: r.u16(), dynMaxHz: r.u16(), lpf2Hz: r.u16() };
-            const delayUs = r.u16();
-            const stockDelayUs = r.u16();
-            dterm = {
-                mult: mult10 ? mult10 / 10 : null,
-                current,
-                delayUs,
-                stockDelayUs,
-                inputPct: r.u8(),
-                noisePct: r.u8(),
-            };
-        }
-        let pidProfile: FilterTuneStatus["pidProfile"] = null;
-        if (r.remaining >= 2) {
-            const current = r.u8();
-            const applied = r.u8();
-            pidProfile = { current, applied: applied === 0xff ? null : applied };
-        }
-        let sweep: SweepResult | null = null;
-        if (r.remaining >= 19) {
-            const phase = SWEEP_PHASES[r.u8()] ?? "none";
-            const end = SWEEP_ENDS[r.u8()] ?? "none";
-            const amplitudeDps = r.u16() / 10;
-            const hz = (v: number) => (v ? v / 10 : null);
-            const crossoverHz = { roll: hz(r.u16()), pitch: hz(r.u16()) };
-            const phaseMarginDeg = { roll: r.u8(), pitch: r.u8() };
-            const noiseIndex = r.u16() / 10;
-            const noiseIndexNow = r.u16() / 10;
-            const heatStockK = r.u16() / 100;
-            const heatPickK = r.u16() / 100;
-            sweep = {
-                phase,
-                end,
-                amplitudeDps,
-                crossoverHz,
-                phaseMarginDeg,
-                noiseIndex,
-                noiseIndexNow,
-                heatStockK,
-                heatPickK,
-                heatBudgetK: r.u8() / 10,
-            };
-        }
-        const loop = r.remaining >= 4 ? { measuredHz: r.u16(), setHz: r.u16() } : null;
+        const basis = readLpf2Basis(r);
+        const fade = readRpmFade(r);
+        const signals = readSignals(r);
+        const carried = readCarried(r);
+        const dterm = readDterm(r);
+        const pidProfile = readPidProfile(r);
+        const sweep = readSweep(r);
+        const loop = readLoop(r);
         return {
             state: FILTER_TUNE_STATES[stateCode] ?? "idle",
             hasFrameMap: (flags & 1) !== 0,
@@ -395,10 +416,10 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             peaks,
             proposed,
             current,
-            highBandDb,
-            lpf2Basis,
-            rpmFade,
-            trackError,
+            highBandDb: basis.highBandDb,
+            lpf2Basis: basis.lpf2Basis,
+            rpmFade: fade.rpmFade,
+            trackError: fade.trackError,
             signals,
             carried,
             dterm,

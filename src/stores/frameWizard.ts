@@ -180,6 +180,19 @@ async function readCurves(): Promise<Record<string, number[][]>> {
     return curves;
 }
 
+/** The FC sees no battery (MSP_BATTERY_STATE; a craft without a voltage meter never reports it). */
+async function batteryMissing(): Promise<boolean> {
+    try {
+        await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
+    } catch (error) {
+        if (!isMspCancelled(error)) {
+            console.warn("Battery state read failed:", error);
+        }
+        return false;
+    }
+    return useFlightControllerStore().batteryState.batteryState === BATTERY_NOT_PRESENT;
+}
+
 export const useFrameWizardStore = defineStore("frameWizard", () => {
     const connectionStore = useConnectionStore();
 
@@ -400,18 +413,6 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
             return false;
         }
         return start(startParamsFor(kind));
-    }
-
-    async function batteryMissing(): Promise<boolean> {
-        try {
-            await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
-        } catch (error) {
-            if (!isMspCancelled(error)) {
-                console.warn("Battery state read failed:", error);
-            }
-            return false;
-        }
-        return useFlightControllerStore().batteryState.batteryState === BATTERY_NOT_PRESENT;
     }
 
     async function start(params: StartParams = DEFAULT_START): Promise<boolean> {

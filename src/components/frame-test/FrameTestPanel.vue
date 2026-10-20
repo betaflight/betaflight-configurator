@@ -519,10 +519,11 @@ const runNote = computed(() => {
     }
     // set up for RPM telemetry, yet none: the ESCs do not answer
     const rpmText = filterTune.telemetryConfigured ? t("frameTestNoRpmEscs") : t("frameTestNoRpm");
+    const beepKey = wizard.runKind === "motors" ? "frameTestBeepMotors" : "frameTestBeep";
     return {
         color: noRpm ? ("warning" as const) : ("neutral" as const),
         icon: beep ? "i-lucide-hand" : "i-lucide-gauge",
-        title: beep ? t(wizard.runKind === "motors" ? "frameTestBeepMotors" : "frameTestBeep") : undefined,
+        title: beep ? t(beepKey) : undefined,
         description: noRpm ? rpmText : undefined,
     };
 });
