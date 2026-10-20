@@ -29,6 +29,13 @@ export default {
                     // disabled appearance which !text-black would otherwise override.
                     class: "!text-black disabled:bg-accented disabled:!text-toned",
                 },
+                {
+                    color: "primary",
+                    variant: "soft",
+                    // Yellow text on the 10% yellow tint is ~1.6:1 in light mode. primary-800 brings
+                    // it to ~5.8:1 (WCAG AA); dark mode keeps the default, which already reads well.
+                    class: "text-primary-800 dark:text-primary",
+                },
             ],
             defaultVariants: {
                 size: "sm",
