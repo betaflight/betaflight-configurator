@@ -516,7 +516,8 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         }
 
         try {
-            if (config && !parsedHexData.configInserted) {
+            // No board config is `{}`, which is truthy: only a loaded config text is written.
+            if (typeof config === "string" && config && !parsedHexData.configInserted) {
                 const configInserter = new ConfigInserter();
 
                 if (configInserter.insertConfig(parsedHexData, config)) {

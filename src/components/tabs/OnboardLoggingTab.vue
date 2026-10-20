@@ -781,7 +781,8 @@ export default defineComponent({
             // Refresh the occupied size
             requestDataflashSummary(async () => {
                 const maxBytes = fcStore.dataflash?.usedSize || 0;
-                let openedFile: Awaited<ReturnType<typeof FileSystem.openFile>> | undefined;
+                // Assigned before the first readDataflash(), so every onChunkRead sees it.
+                let openedFile: Awaited<ReturnType<typeof FileSystem.openFile>>;
 
                 try {
                     const prefix = "BLACKBOX_LOG";
@@ -794,6 +795,10 @@ export default defineComponent({
                         `.${suffix}`,
                         "blackbox-dump-file",
                     );
+                    // Android returns null when the picker is dismissed; the other platforms throw AbortError.
+                    if (!fileWriter) {
+                        return;
+                    }
 
                     let nextAddress = 0;
                     // null once a chunk reports no compressed size

@@ -12,7 +12,12 @@
                     <UiBox :title="$t('sensorConfigHardware')" type="neutral" collapsible>
                         <!-- Active Gyro / IMU (API 1.47+) -->
                         <template v-if="showMultiGyro">
-                            <SettingRow v-for="gyro in gyroList" :key="gyro.index" fullWidth>
+                            <SettingRow
+                                v-for="gyro in gyroList"
+                                :key="gyro.index"
+                                data-setting-search-key="sensorConfigActiveGyros"
+                                fullWidth
+                            >
                                 <template #label>
                                     {{ $t("sensorConfigGyroLabel", { 1: gyro.index + 1 }) }}
                                     <span v-if="gyro.name" class="text-dimmed font-normal"
@@ -217,6 +222,7 @@
                             <span>{{ $t("sensorConfigAccNeedsCalibration") }}</span>
                         </div>
                         <UButton
+                            data-setting-search-key="sensorConfigCalibrate"
                             :label="
                                 calibratingAccel ? $t('initialSetupButtonCalibratingText') : $t('sensorConfigCalibrate')
                             "

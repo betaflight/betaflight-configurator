@@ -912,7 +912,8 @@ export default defineComponent({
         const saveFirmware = async () => {
             const fileType = state.firmware_type;
             try {
-                if (!fileType) {
+                const contents = fileType === "UF2" ? firmwareFlashing.getUf2Binary() : firmwareFlashing.getIntelHex();
+                if (!fileType || !state.filename || !contents) {
                     // Reading .toUpperCase() of undefined threw here before, into the same catch.
                     throw new TypeError("No firmware loaded to save");
                 }
@@ -926,10 +927,7 @@ export default defineComponent({
                     return false;
                 }
 
-                await FileSystem.writeFile(
-                    file,
-                    fileType === "UF2" ? firmwareFlashing.getUf2Binary() : firmwareFlashing.getIntelHex(),
-                );
+                await FileSystem.writeFile(file, contents);
                 return true;
             } catch (err) {
                 console.error(err);
@@ -1776,12 +1774,19 @@ export default defineComponent({
             { label: $t("firmwareFlasherSubTabFlash"), value: "flash", icon: "i-lucide-zap" },
         ]);
 
+        const selectSubtab = (subtab: string) => {
+            if (subtabItems.value.some((item) => item.value === subtab)) {
+                activeFlasherStep.value = subtab;
+            }
+        };
+
         // Return all public methods and state
         return {
             state,
             flashRingColor,
             activeFlasherStep,
             subtabItems,
+            selectSubtab,
             flashActionMenuItems,
             loadFirmwareMenuItems,
             cloudBuild,
