@@ -25,6 +25,8 @@
  * Payload version 1.
  */
 
+import { peakInfo, type MotorPeak } from "./frameWizardProtocol";
+
 export const FILTER_TUNE_VERSION = 1;
 export const FILTER_TUNE_MOTORS = 4;
 export const FILTER_TUNE_ORDERS = 5;
@@ -43,6 +45,10 @@ export const FILTER_TUNE_STATES = [
     "noTelemetry",
 ] as const;
 export type FilterTuneState = (typeof FILTER_TUNE_STATES)[number];
+
+const FRAME_MAP_VERSION_1 = 1;
+const FRAME_MAP_VERSION_2 = 2; // the motor profile follows the modes
+const SPIN_CHECKED = 1 << 7; // frame map v2 spin byte: the check was made; bits 0-3 the motors against the pattern
 
 export const FRAME_MAP_PART_TAPS = 1 << 0;
 export const FRAME_MAP_PART_MOTORS = 1 << 1;
@@ -101,6 +107,10 @@ export interface FilterTuneStatus {
     highBandDb: number | null;
     /** Why the autotune set gyro LPF2 the way it did; null with firmware that does not send it. */
     lpf2Basis: Lpf2Basis | null;
+    /** RPM filter fade range, Hz: proposed and current; null with firmware that does not send it. */
+    rpmFade: { proposed: number; current: number } | null;
+    /** How far the RPM notches miss the motors' lines, as a fraction; null with firmware that does not send it. */
+    trackError: number | null;
     /** How the FC tells the pilot in flight (enough data, discarded); null with firmware that does not send it. */
     signals: FilterTuneSignals | null;
 }
@@ -134,6 +144,12 @@ export interface FrameMap {
     hasTaps: boolean;
     hasMotors: boolean;
     modes: FrameMapMode[];
+    /** Payload v2: the motor run's peaks per motor as stored with the map (so they survive a restart). */
+    motors: MotorPeak[][] | null;
+    /** Payload v2: the motor run's two rotation speeds, Hz. */
+    rotationHz: [number, number] | null;
+    /** Payload v2: the motor run's spin check, null when none was made. */
+    spinWrongMask: number | null;
 }
 
 class Reader {
@@ -221,7 +237,13 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             const basis = r.u8();
             lpf2Basis = LPF2_BASIS[basis] ?? "noData";
         }
-        // appended later still: the in-flight signals the FC has
+        // appended later still: the RPM filter fade range and the notch tracking error, then the in-flight signals
+        let rpmFade: FilterTuneStatus["rpmFade"] = null;
+        let trackError: number | null = null;
+        if (r.remaining >= 6) {
+            rpmFade = { proposed: r.u16(), current: r.u16() };
+            trackError = r.u16() / 1e5;
+        }
         let signals: FilterTuneSignals | null = null;
         if (r.remaining >= 1) {
             const bits = r.u8();
@@ -247,6 +269,8 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             current,
             highBandDb,
             lpf2Basis,
+            rpmFade,
+            trackError,
             signals,
         };
     } catch {
@@ -258,7 +282,8 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
 export function parseFrameMap(data: ArrayBufferView | ArrayLike<number>): FrameMap | null {
     const r = new Reader(toBytes(data));
     try {
-        if (r.u8() !== FILTER_TUNE_VERSION) {
+        const version = r.u8();
+        if (version !== FRAME_MAP_VERSION_1 && version !== FRAME_MAP_VERSION_2) {
             return null;
         }
         const parts = r.u8();
@@ -274,10 +299,31 @@ export function parseFrameMap(data: ArrayBufferView | ArrayLike<number>): FrameM
                 unstable: (src & 8) !== 0,
             });
         }
+        let motors: MotorPeak[][] | null = null;
+        let rotationHz: [number, number] | null = null;
+        let spinWrongMask: number | null = null;
+        if (version === FRAME_MAP_VERSION_2) {
+            motors = [];
+            for (let m = 0; m < FILTER_TUNE_MOTORS; m++) {
+                const peaks: MotorPeak[] = [];
+                for (let n = r.u8(); n > 0; n--) {
+                    const hz = r.u16() / 10;
+                    const gain = r.u16() / 1e4;
+                    peaks.push({ hz, gain, ...peakInfo(r.u8()) });
+                }
+                motors.push(peaks);
+            }
+            rotationHz = [r.u16() / 10, r.u16() / 10];
+            const spin = r.u8();
+            spinWrongMask = spin & SPIN_CHECKED ? spin & 0x0f : null;
+        }
         return {
             hasTaps: (parts & FRAME_MAP_PART_TAPS) !== 0,
             hasMotors: (parts & FRAME_MAP_PART_MOTORS) !== 0,
             modes,
+            motors,
+            rotationHz,
+            spinWrongMask,
         };
     } catch {
         return null;

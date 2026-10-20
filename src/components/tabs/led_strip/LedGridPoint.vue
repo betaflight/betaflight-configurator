@@ -16,6 +16,7 @@
         <span class="overlay-v" v-show="led.functions.includes('v')"> </span>
         <span class="overlay-i" v-show="led.functions.includes('i')"> </span>
         <span class="overlay-w" v-show="led.functions.includes('w')"> </span>
+        <span class="overlay-z" v-show="led.functions.includes('z')"> </span>
         <span
             class="overlay-color"
             v-show="showColorOverlay"
@@ -336,6 +337,21 @@ const colorStyle = computed(() => {
     background-image: radial-gradient(1px at 8px 50%, red 0%, red 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
     margin-top: -30px;
     margin-inline-start: -9px;
+}
+
+.gPoint.function-z .overlay-z {
+    float: inline-start;
+    height: 6px;
+    width: 16px;
+    background-image: radial-gradient(
+        1px at 8px 50%,
+        var(--ui-secondary) 0%,
+        var(--ui-secondary) 2px,
+        rgba(0, 0, 0, 0.3) 3px,
+        rgba(0, 0, 0, 0) 4px
+    );
+    margin-top: -18px;
+    margin-inline-start: 16px;
 }
 
 .gPoint.function-v .overlay-v {

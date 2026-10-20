@@ -64,6 +64,11 @@ export function startParamsFor(kind: RunKind): StartParams {
 const AXES = ["roll", "pitch", "yaw"] as const;
 export type Axis = (typeof AXES)[number];
 
+/** A motor peak's info byte (the result and the frame map): bits 0-3 the axis, 4-5 the speeds it was seen at, 7 cable. */
+export function peakInfo(info: number): { axis: Axis | null; speeds: number; cable: boolean } {
+    return { axis: AXES[info & 0x0f] ?? null, speeds: (info >> 4) & 0x3, cable: (info & 0x80) !== 0 };
+}
+
 export interface WizardStatus {
     version: number;
     phase: WizardPhase;
@@ -281,14 +286,7 @@ export function parseResult(data: ArrayBufferView | ArrayLike<number>): WizardRe
             for (let n = r.u8(); n > 0; n--) {
                 const hz = r.u16() / 10;
                 const gain = r.u16() / 10000;
-                const axisByte = r.u8();
-                peaks.push({
-                    hz,
-                    gain,
-                    axis: AXES[axisByte & 0x0f] ?? null,
-                    speeds: (axisByte >> 4) & 0x3,
-                    cable: (axisByte & 0x80) !== 0,
-                });
+                peaks.push({ hz, gain, ...peakInfo(r.u8()) });
             }
             motors.push(peaks);
         }

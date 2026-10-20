@@ -160,6 +160,14 @@
                             :label="$t('ledStripVtxOverlay')"
                         />
                     </div>
+                    <div class="modifier-row filterTuneOverlay" v-show="filterTune.supported === true">
+                        <USwitch
+                            id="filterTune"
+                            v-model="overlayStates.filterTune"
+                            @update:model-value="onOverlayChange('z')"
+                            :label="$t('ledStripFilterTuneOverlay')"
+                        />
+                    </div>
                 </div>
 
                 <!-- Mode Colors -->
@@ -339,6 +347,7 @@ import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useFilterTuneStore } from "@/stores/filterTune";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 import UiBox from "../elements/UiBox.vue";
 
@@ -354,6 +363,7 @@ function decodeHtmlEntities(text: string) {
 }
 const t = (key: string) => decodeHtmlEntities(i18n.getMessage(key));
 const fcStore = useFlightControllerStore();
+const filterTune = useFilterTuneStore();
 
 const {
     wireMode,
@@ -406,6 +416,7 @@ const overlayStates = reactive({
     warnings: false,
     indicator: false,
     vtx: false,
+    filterTune: false,
 });
 
 // Other state
@@ -568,6 +579,7 @@ const onTabMounted = async () => {
     await runTabLoad(
         async () => {
             await loadData();
+            await filterTune.probe();
             initializeGrid();
             loadConfigValues();
             markClean();
@@ -1070,7 +1082,12 @@ function getModifierState(modifier: string) {
 }
 
 function getOverlayStateKey(overlay: string) {
-    const map: Record<string, keyof typeof overlayStates | undefined> = { w: "warnings", i: "indicator", v: "vtx" };
+    const map: Record<string, keyof typeof overlayStates | undefined> = {
+        w: "warnings",
+        i: "indicator",
+        v: "vtx",
+        z: "filterTune",
+    };
     return map[overlay];
 }
 

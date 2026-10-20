@@ -355,6 +355,23 @@ describe("frame wizard store", () => {
         return useFrameWizardStore();
     }
 
+    it("shows the motor run a v2 frame map keeps when the FC restarted and nothing is kept here", async () => {
+        const wizard = await store();
+        const peak = { hz: 212, gain: 0.1153, axis: "pitch" as const, speeds: 2, cable: false };
+        await wizard.loadLastResult({
+            hasTaps: true,
+            hasMotors: true,
+            modes: [],
+            motors: [[peak], [peak], [peak], [peak]],
+            rotationHz: [127.3, 236],
+            spinWrongMask: 0b0100,
+        });
+        expect(wizard.lastResult?.motors[0]).toEqual([peak]);
+        expect(wizard.lastResult?.rotationHz).toEqual([127.3, 236]);
+        expect(wizard.spinCheck).toMatchObject({ done: true, wrongMask: 0b0100 });
+        expect(wizard.lastMotorsAt).toBeNull();
+    });
+
     it("hides itself on firmware without the wizard", async () => {
         reply(0x3018, "unsupported");
         const wizard = await store();

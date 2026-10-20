@@ -58,7 +58,7 @@ const unsupported = computed(() => wizard.supported === false && filterTune.supp
 
 onMounted(async () => {
     await filterTune.load();
-    await wizard.loadLastResult();
+    await wizard.loadLastResult(filterTune.frameMap);
     filterTune.startPolling();
 });
 

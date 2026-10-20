@@ -39,6 +39,7 @@ import {
     saveHistory,
 } from "./frameHistory";
 import { parseSpinCheck, SPIN_CHECK_BASE, type SpinCheck } from "./frameSpinCheck";
+import type { FrameMap } from "./filterTuneProtocol";
 import {
     DEFAULT_START,
     clockFactor,
@@ -51,6 +52,7 @@ import {
     parseTapsPage,
     TAPS_PAGE_FEATURES,
     MOTOR_COUNT,
+    POINT_COUNT,
     RESPONSE_BINS,
     type SessionTap,
     type SessionTapFeatures,
@@ -71,6 +73,41 @@ const KEEPALIVE_MS = 200;
 const IDLE_POLL_MS = 1000;
 
 export type StartError = "refused" | "noReply" | "notStarted";
+
+/** The motor run a v2 frame map keeps (peaks, rotation speeds, spin check), as a result to show; null without one. */
+function motorRunFromMap(map: FrameMap | null): { result: WizardResult; spinCheck: SpinCheck | null } | null {
+    if (!map?.motors?.some((list) => list.length)) {
+        return null;
+    }
+    const result: WizardResult = {
+        phase: "done",
+        points: Array.from({ length: POINT_COUNT }, () => []),
+        motors: map.motors,
+        rotationHz: map.rotationHz ?? [0, 0],
+        rpmMask: true,
+        basesByRpm: true,
+        speedLimited: false,
+        noCable: false,
+        baseCommand: [0, 0],
+        f1Hz: 0,
+        sessionTaps: 0,
+        clippedTaps: 0,
+        noModeMask: 0,
+        amplitude: [0, 0, 0, 0],
+    };
+    // the map keeps only which motors turned against the pattern: every motor answered
+    const spinCheck: SpinCheck | null =
+        map.spinWrongMask === null
+            ? null
+            : {
+                  done: true,
+                  toneHz: 0,
+                  amplitude: 0,
+                  wrongMask: map.spinWrongMask,
+                  motors: Array.from({ length: 4 }, () => ({ yawSign: 1, yawPhaseDeg: 0, roll: 0, pitch: 0, yaw: 0 })),
+              };
+    return { result, spinCheck };
+}
 
 export const useFrameWizardStore = defineStore("frameWizard", () => {
     const connectionStore = useConnectionStore();
@@ -175,7 +212,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
 
     // The FC forgets its last run at power-off, and a motor run's result has no taps: this app keeps the last
     // taps run and the last motor run per craft (each with the date it was first seen) and shows them together.
-    function remember(fcResult: WizardResult | null, finishedNow: boolean) {
+    function remember(fcResult: WizardResult | null, finishedNow: boolean, map: FrameMap | null = null) {
         const key = craftKey(useFlightControllerStore().config.uid);
         let { taps, motors } = keptRuns(loadHistory(key));
         const now = new Date().toISOString();
@@ -192,8 +229,10 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         if (resultHasData(fcResult)) {
             saveHistory(key, { taps, motors, run: undefined });
         }
-        lastResult.value = mergeRuns(taps?.result, motors?.result) ?? fcResult;
-        spinCheck.value = motors?.spinCheck ?? spinCheck.value;
+        // nothing kept here (another computer, a cleared browser): the motor run the FC stores with its frame map
+        const stored = motors ? null : motorRunFromMap(map);
+        lastResult.value = mergeRuns(taps?.result, motors?.result ?? stored?.result) ?? fcResult;
+        spinCheck.value = motors?.spinCheck ?? spinCheck.value ?? stored?.spinCheck ?? null;
         lastTapsAt.value = taps?.at ?? null;
         lastMotorsAt.value = motors?.at ?? null;
         lastResultAt.value =
@@ -205,7 +244,8 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         lastResultKept.value = (!!taps && !hasTaps(fcResult)) || (!!motors && !hasMotors(fcResult));
     }
 
-    async function loadLastResult() {
+    /** @param map the FC's frame map, read already: it keeps the last motor run's peaks across a restart */
+    async function loadLastResult(map: FrameMap | null = null) {
         let fcResult: WizardResult | null = null;
         try {
             const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_RESULT);
@@ -216,7 +256,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
                 console.warn("Frame wizard result read failed:", error);
             }
         }
-        remember(fcResult, false);
+        remember(fcResult, false, map);
     }
 
     async function fetchResult() {

@@ -165,13 +165,20 @@ describe("filter autotune status", () => {
         expect(parseFilterTuneStatus(noData)).toMatchObject({ lpf2Basis: "noData" });
     });
 
-    it("reads the in-flight signals the FC has when it appends them, and nothing otherwise", () => {
+    it("reads the fade range, the tracking error and the in-flight signals when appended, nothing otherwise", () => {
         const withBasis = [...statusPayload(), ...new Sbuf().u16(-12).u8(1).bytes];
-        expect(parseFilterTuneStatus(withBasis)).toMatchObject({ signals: null });
-        expect(parseFilterTuneStatus([...withBasis, 0b110])).toMatchObject({
+        expect(parseFilterTuneStatus(withBasis)).toMatchObject({ rpmFade: null, trackError: null, signals: null });
+        // fade proposed / current, tracking error x 1e5
+        const withFade = [...withBasis, ...new Sbuf().u16(80).u16(50).u16(120).bytes];
+        expect(parseFilterTuneStatus(withFade)).toMatchObject({
+            rpmFade: { proposed: 80, current: 50 },
+            trackError: 0.0012,
+            signals: null,
+        });
+        expect(parseFilterTuneStatus([...withFade, 0b110])).toMatchObject({
             signals: { beeper: false, ledStrip: true, osd: true },
         });
-        expect(parseFilterTuneStatus([...withBasis, 0])).toMatchObject({
+        expect(parseFilterTuneStatus([...withFade, 0])).toMatchObject({
             signals: { beeper: false, ledStrip: false, osd: false },
         });
     });
@@ -238,6 +245,9 @@ describe("frame map", () => {
         expect(parseFrameMap(b.bytes)).toEqual({
             hasTaps: true,
             hasMotors: false,
+            motors: null,
+            rotationHz: null,
+            spinWrongMask: null,
             modes: [
                 { hz: 75.2, fromTaps: true, fromMotors: false, fromCable: false, unstable: false },
                 { hz: 210.1, fromTaps: true, fromMotors: true, fromCable: false, unstable: false },
@@ -247,8 +257,42 @@ describe("frame map", () => {
                 { hz: 173, fromTaps: true, fromMotors: false, fromCable: false, unstable: true },
             ],
         });
-        expect(parseFrameMap([1, 0, 0])).toEqual({ hasTaps: false, hasMotors: false, modes: [] });
-        expect(parseFrameMap([2, 0, 0])).toBeNull();
+        expect(parseFrameMap([1, 0, 0])).toMatchObject({ hasTaps: false, hasMotors: false, modes: [] });
+        expect(parseFrameMap([3, 0, 0])).toBeNull();
+    });
+
+    // frameMapWrite() v2: the motor profile after the modes
+    it("reads the motor run's peaks, rotation speeds and spin check a v2 map keeps", () => {
+        const b = new Sbuf().u8(2).u8(0b11).u8(1).u16(2101).u8(3);
+        // motor 1: 212 Hz gain 0.1153 pitch at both speeds; 439 Hz yaw, cable; motors 2-4 one peak each
+        b.u8(2)
+            .u16(2120)
+            .u16(1153)
+            .u8(0x21)
+            .u16(4390)
+            .u16(1079)
+            .u8(0x80 | 0x22);
+        for (let m = 1; m < 4; m++) {
+            b.u8(1)
+                .u16(2110 + m)
+                .u16(1000)
+                .u8(0x20);
+        }
+        b.u16(1273)
+            .u16(2360)
+            .u8(0x80 | 0b0100);
+        const map = parseFrameMap(b.bytes)!;
+        expect(map.modes).toHaveLength(1);
+        expect(map.motors![0]).toEqual([
+            { hz: 212, gain: 0.1153, axis: "pitch", speeds: 2, cable: false },
+            { hz: 439, gain: 0.1079, axis: "yaw", speeds: 2, cable: true },
+        ]);
+        expect(map.motors![3]).toHaveLength(1);
+        expect(map.rotationHz).toEqual([127.3, 236]);
+        expect(map.spinWrongMask).toBe(0b0100);
+        // no spin check made
+        const none = [...b.bytes.slice(0, -1), 0];
+        expect(parseFrameMap(none)!.spinWrongMask).toBeNull();
     });
 });
 

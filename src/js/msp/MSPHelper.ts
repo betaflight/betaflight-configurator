@@ -78,7 +78,7 @@ export type DataflashReadCallback = (
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
-let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w", "z"]; // in LSB bit
 
 let lastI2cErrorCount: number | null = null;
 

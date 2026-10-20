@@ -4280,6 +4280,9 @@
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"
     },
+    "ledStripFilterTuneOverlay": {
+        "message": "Filter tune (the FILTER TUNE mode state: blue collecting, green ready or saved, red discarded or missing data)"
+    },
     "ledStripBrightnessSliderTitle": {
         "message": "Brightness",
         "description": "Brightness of the LED Strip"
@@ -6928,6 +6931,18 @@
     "osdWarningAutopilotAbort": {
         "message": "Autopilot mission aborted",
         "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
+    },
+    "osdWarningTextMotorTemp": {
+        "message": "Motor hot (estimated)"
+    },
+    "osdWarningMotorTemp": {
+        "message": "Shows MOTOR HOT with the estimated winding temperature when it exceeds motor_thermal_warning"
+    },
+    "osdWarningTextFilterTune": {
+        "message": "Filter autotune"
+    },
+    "osdWarningFilterTune": {
+        "message": "While FILTER TUNE is on: HOVER until a steady hover, the frames collected (n/60), READY to land and disarm, SAVED, SHORT (too few frames), NO MAP or NO RPM"
     },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"

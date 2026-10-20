@@ -2132,6 +2132,10 @@ function chooseWarnings(fcStore: FcStore) {
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.AUTOPILOT_ABORT]);
     }
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+        // The firmware sends its warning count, so a build without these never lists them.
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.MOTOR_TEMP, W.FILTER_TUNE]);
+    }
 }
 
 // Apply the canvas size reported by the firmware via MSP_OSD_CANVAS to the grid size tables.

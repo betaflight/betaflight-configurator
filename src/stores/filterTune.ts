@@ -140,6 +140,20 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         }
     }
 
+    /** Whether the firmware has the filter autotune (one status query), for tabs that only need to know. */
+    async function probe() {
+        if (supported.value !== null) {
+            return;
+        }
+        try {
+            await refreshStatus();
+        } catch (error) {
+            if (!isMspCancelled(error)) {
+                console.warn("Filter autotune probe failed:", error);
+            }
+        }
+    }
+
     function schedule() {
         if (polling && supported.value !== false) {
             pollTimer = setTimeout(tick, STATUS_POLL_MS);
@@ -234,6 +248,7 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         shownKeptAt,
         modeAssigned,
         load,
+        probe,
         refreshMap,
         startPolling,
         stopPolling,
