@@ -255,7 +255,7 @@ function peakTitle(peak: ResidualPeak): string {
 }
 
 const LED_STATES = [
-    { key: "filterTuneLedCollecting", dot: "bg-primary" },
+    { key: "filterTuneLedCollecting", dot: "bg-info" },
     { key: "filterTuneLedReady", dot: "bg-success" },
     { key: "filterTuneLedDiscarded", dot: "bg-error" },
 ];
