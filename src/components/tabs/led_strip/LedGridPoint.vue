@@ -132,13 +132,6 @@ const colorStyle = computed(() => {
         opacity: 0.9;
     }
 
-    /* Selection states */
-
-    &.ui-selected {
-        box-shadow: inset 0 0 8px rgba(255, 0, 255, 1) !important;
-        border: solid 1px black !important;
-    }
-
     /* Function-specific backgrounds */
 
     &.function-s {
@@ -222,6 +215,13 @@ const colorStyle = computed(() => {
         );
         box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
         border-color: grey;
+    }
+
+    /* Selection state: after the function rules above, which set the same properties at the
+       same specificity, so the selection wins by coming later. */
+    &.ui-selected {
+        box-shadow: inset 0 0 8px rgba(255, 0, 255, 1);
+        border: solid 1px black;
     }
 
     /* Wire number display */

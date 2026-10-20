@@ -1613,21 +1613,22 @@ onUnmounted(() => {
                 }
             }
         }
+        /* Same specificity as the per-channel colours above, so these win by coming after them. */
         ul.aux-unused {
             [data-slot="indicator"] {
-                background-color: var(--color-channel-aux-unused) !important;
+                background-color: var(--color-channel-aux-unused);
             }
         }
 
         ul.aux-used {
             [data-slot="indicator"] {
-                background-color: var(--color-channel-aux-used) !important;
+                background-color: var(--color-channel-aux-used);
             }
         }
 
         ul.aux-active {
             [data-slot="indicator"] {
-                background-color: var(--color-channel-aux-active) !important;
+                background-color: var(--color-channel-aux-active);
                 box-shadow: 0 0 7px rgba(34, 211, 238, 0.65);
             }
         }
