@@ -330,3 +330,27 @@ describe("FILTER TUNE assigned to a switch", () => {
         expect(store.modeAssigned).toBe(true);
     });
 });
+
+describe("RPM telemetry settings", () => {
+    it("reads bidirectional DShot and the RPM filter harmonics after the status", async () => {
+        vi.resetModules();
+        const bytes = new Uint8Array(statusPayload());
+        const promise = vi.fn(async (code: number) =>
+            code === 0x301c
+                ? { data: new DataView(bytes.buffer), unsupported: false }
+                : { data: new DataView(new ArrayBuffer(0)) },
+        );
+        vi.doMock("../../src/js/msp", () => ({ default: { promise, send_message: vi.fn() } }));
+        const { createPinia, setActivePinia } = await import("pinia");
+        setActivePinia(createPinia());
+        const { useFilterTuneStore } = await import("../../src/stores/filterTune");
+        const { useFlightControllerStore } = await import("../../src/stores/fc");
+        const fc = useFlightControllerStore();
+        fc.motorConfig.use_dshot_telemetry = true;
+        fc.filterConfig.gyro_rpm_notch_harmonics = 0;
+        const store = useFilterTuneStore();
+
+        await store.load();
+        expect(store.telemetryConfig).toEqual({ bidirDshot: true, rpmFilter: false });
+    });
+});

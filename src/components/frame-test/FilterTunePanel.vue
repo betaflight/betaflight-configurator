@@ -159,6 +159,21 @@ const mapParts = computed(() => {
     return parts.join(" + ").toLowerCase();
 });
 
+// The FC reports live telemetry only: with the settings on, no telemetry means the ESCs are off (USB power alone).
+const telemetryLabel = computed(() => {
+    const config = filterTune.telemetryConfig;
+    if (status.value?.hasTelemetry === true || !config) {
+        return t("filterTuneNeedsTelemetry");
+    }
+    if (!config.bidirDshot) {
+        return t("filterTuneTelemetryOff");
+    }
+    if (!config.rpmFilter) {
+        return t("filterTuneRpmFilterOff");
+    }
+    return t("filterTuneEscSilent");
+});
+
 const requirements = computed<{ key: string; ok: boolean; label: string; title?: string }[]>(() => [
     {
         key: "map",
@@ -170,7 +185,7 @@ const requirements = computed<{ key: string; ok: boolean; label: string; title?:
                 : t("filterTuneNeedsMap"),
         title: t("frameMapHelp"),
     },
-    { key: "telemetry", ok: status.value?.hasTelemetry === true, label: t("filterTuneNeedsTelemetry") },
+    { key: "telemetry", ok: status.value?.hasTelemetry === true, label: telemetryLabel.value },
     { key: "mode", ok: filterTune.modeAssigned, label: t("filterTuneNeedsMode") },
 ]);
 

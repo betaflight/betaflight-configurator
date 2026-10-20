@@ -66,6 +66,22 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
     let pollTimer: ReturnType<typeof setTimeout> | null = null;
     let polling = false;
 
+    /**
+     * What the FC is set to for RPM telemetry (null until read): the FC reports only live telemetry, which is
+     * missing on USB power alone (the ESCs are off), so the settings tell that apart from a setting turned off.
+     */
+    const telemetryConfig = ref<{ bidirDshot: boolean; rpmFilter: boolean } | null>(null);
+
+    async function readTelemetryConfig() {
+        await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+        await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
+        const fc = useFlightControllerStore();
+        telemetryConfig.value = {
+            bidirDshot: Boolean(fc.motorConfig.use_dshot_telemetry),
+            rpmFilter: fc.filterConfig.gyro_rpm_notch_harmonics > 0,
+        };
+    }
+
     /** The last applied autotune measurement this app kept for the craft (the FC loses it at power-off). */
     const keptTune = ref<{ at: string; status: FilterTuneStatus } | null>(null);
     /** What to show: the FC's live measurement when it has frames, else the kept one. */
@@ -133,6 +149,7 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
             }
             if (supported.value) {
                 await refreshMap();
+                await readTelemetryConfig();
             }
         } catch (error) {
             if (!isMspCancelled(error)) {
@@ -240,12 +257,14 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         status.value = null;
         frameMap.value = null;
         keptTune.value = null;
+        telemetryConfig.value = null;
     }
 
     return {
         supported,
         status,
         frameMap,
+        telemetryConfig,
         busy,
         summary,
         shownStatus,

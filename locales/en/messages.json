@@ -9598,6 +9598,15 @@
     "filterTuneNeedsTelemetry": {
         "message": "DShot RPM telemetry and the RPM filter on"
     },
+    "filterTuneTelemetryOff": {
+        "message": "Bidirectional DShot is off: turn it on in the Motors tab"
+    },
+    "filterTuneRpmFilterOff": {
+        "message": "The RPM filter is off: set its harmonics above 0 in the PID Tuning tab"
+    },
+    "filterTuneEscSilent": {
+        "message": "No RPM telemetry from the ESCs: connect the battery (settings are on)"
+    },
     "filterTuneNeedsMode": {
         "message": "FILTER TUNE assigned to a switch in the Modes tab"
     },
