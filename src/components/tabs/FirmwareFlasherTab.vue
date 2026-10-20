@@ -1845,275 +1845,273 @@ export default defineComponent({
 
 <style lang="less">
 .tab-firmware_flasher {
-    & {
-        min-height: 100%;
+    min-height: 100%;
 
-        .flasher-tab-area {
-            min-height: 200px;
-        }
+    .flasher-tab-area {
+        min-height: 200px;
+    }
 
-        .content_wrapper .flashing-wait {
-            min-height: 150px;
-            height: 50%;
+    .content_wrapper .flashing-wait {
+        min-height: 150px;
+        height: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .flash-status-message {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        font-size: 0.85rem;
+    }
+    .grid-box-spacer {
+        height: 1rem;
+    }
+    .options {
+        position: relative;
+        line-height: 18px;
+        text-align: start;
+        label {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-        .flash-status-message {
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            font-size: 0.85rem;
-        }
-        .grid-box-spacer {
-            height: 1rem;
-        }
-        .options {
-            position: relative;
-            line-height: 18px;
-            text-align: start;
-            label {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                input {
-                    margin-inline-end: 0;
-                }
-                .helpicon {
-                    float: none;
-                    margin-inline-start: 3px;
-                    margin-top: 0;
-                    display: inline-block;
-                    align-self: center;
-                }
-            }
-            #flash_manual_baud_rate {
-                margin-inline-start: 0.5rem;
-            }
-        }
-        .board-selection-grid {
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            gap: 0.5rem;
-            align-items: start;
-        }
-
-        .board-selection-grid .grid-row {
-            display: contents;
-        }
-
-        .board-selection-grid .grid-row.select-row {
-            display: contents;
-        }
-
-        .board-selection-grid .grid-row:not(.select-row) {
-            display: grid;
-            grid-column: 1 / -1;
-        }
-
-        .board-selection-grid .build-select,
-        .board-selection-grid .board-select,
-        .board-selection-grid .firmware-version {
-            grid-column: 1;
-        }
-
-        .board-selection-grid .help-icon-cell {
-            grid-column: 2;
-            text-align: center;
-            padding-inline-start: 0.5rem;
-            padding-inline-end: 0.5rem;
-            width: 30px;
-        }
-
-        .board-selection-grid .action-button-cell {
-            grid-column: 3;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            align-self: center;
-        }
-        .select-wrapper-simple {
-            &.no-board-selected {
-                pointer-events: none;
-                opacity: 0.5;
-            }
-        }
-        .select-wrapper {
-            width: calc(100% - 2rem) !important;
-            max-width: 30rem !important;
-            display: grid;
-            grid-template-columns: 1fr auto auto;
             align-items: center;
             gap: 0.5rem;
-            box-sizing: border-box;
-            &.no-board-selected {
-                pointer-events: none;
-                opacity: 0.5;
+            input {
+                margin-inline-end: 0;
+            }
+            .helpicon {
+                float: none;
+                margin-inline-start: 3px;
+                margin-top: 0;
+                display: inline-block;
+                align-self: center;
             }
         }
-        .detect-board {
-            position: relative;
-            top: auto;
-            height: auto;
-            inset-inline-end: auto;
-            z-index: auto;
-            pointer-events: all;
+        #flash_manual_baud_rate {
+            margin-inline-start: 0.5rem;
+        }
+    }
+    .board-selection-grid {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 0.5rem;
+        align-items: start;
+    }
+
+    .board-selection-grid .grid-row {
+        display: contents;
+    }
+
+    .board-selection-grid .grid-row.select-row {
+        display: contents;
+    }
+
+    .board-selection-grid .grid-row:not(.select-row) {
+        display: grid;
+        grid-column: 1 / -1;
+    }
+
+    .board-selection-grid .build-select,
+    .board-selection-grid .board-select,
+    .board-selection-grid .firmware-version {
+        grid-column: 1;
+    }
+
+    .board-selection-grid .help-icon-cell {
+        grid-column: 2;
+        text-align: center;
+        padding-inline-start: 0.5rem;
+        padding-inline-end: 0.5rem;
+        width: 30px;
+    }
+
+    .board-selection-grid .action-button-cell {
+        grid-column: 3;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        align-self: center;
+    }
+    .select-wrapper-simple {
+        &.no-board-selected {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+    }
+    .select-wrapper {
+        width: calc(100% - 2rem) !important;
+        max-width: 30rem !important;
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        gap: 0.5rem;
+        box-sizing: border-box;
+        &.no-board-selected {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+    }
+    .detect-board {
+        position: relative;
+        top: auto;
+        height: auto;
+        inset-inline-end: auto;
+        z-index: auto;
+        pointer-events: all;
+        display: flex;
+        span {
+            padding: 0 0.5rem;
+            background-color: var(--primary-500);
+            cursor: pointer;
+            color: var(--surface-50);
+            font-size: 10px;
+            border-radius: 999px;
+            transition:
+                color 200ms,
+                background-color 200ms;
             display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        &.disabled {
+            pointer-events: none;
+            cursor: default;
             span {
-                padding: 0 0.5rem;
-                background-color: var(--primary-500);
-                cursor: pointer;
-                color: var(--surface-50);
-                font-size: 10px;
-                border-radius: 999px;
-                transition:
-                    color 200ms,
-                    background-color 200ms;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            &.disabled {
-                pointer-events: none;
+                background-color: var(--surface-500);
+                color: var(--text);
                 cursor: default;
-                span {
-                    background-color: var(--surface-500);
-                    color: var(--text);
-                    cursor: default;
-                }
             }
         }
+    }
 
-        .select-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            .select-wrapper {
-                width: 100% !important;
-                max-width: none !important;
-            }
-            strong {
-                font-size: 12px;
-            }
-        }
-        /* Keep help icons inline with multiselects inside Build Configuration */
-        .build_configuration .select-group {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            row-gap: 0.25rem;
-            align-items: center;
-        }
-        .build_configuration .select-group > strong {
-            grid-column: 1 / -1;
-        }
-        .build_configuration .select-group .select-wrapper {
-            grid-column: 1;
-            /* allow help icon to sit alongside; avoid forcing full-width */
-            max-width: none !important;
+    .select-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        .select-wrapper {
             width: 100% !important;
+            max-width: none !important;
         }
-        .build_configuration .select-group .helpicon {
-            grid-column: 2;
-            margin-top: 0; /* keep vertically centered */
+        strong {
+            font-size: 12px;
         }
-        .build_configuration {
-            .build_configuration_toggle_wrapper {
-                display: flex;
-                flex-wrap: nowrap;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .spacer_box_title {
-                white-space: nowrap;
-            }
-        }
-
-        /* Style multiselect tags for "Other options" selector */
-        #optionsInfo .multiselect__tags {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            align-items: center !important;
-            gap: 4px !important;
-        }
-
-        #optionsInfo .multiselect__tag {
-            background: var(--surface-500) !important;
-            color: var(--text) !important;
-            font-size: 11px;
-            padding: 3px 20px 3px 6px;
-            border-radius: 3px;
-            display: inline-flex !important;
-            align-items: center !important;
-        }
-
-        #optionsInfo .multiselect__tag-icon {
-            &:after {
-                color: var(--text) !important;
-            }
-            &:hover {
-                background: var(--surface-600) !important;
-            }
-        }
-
-        .default_btn {
-            width: fit-content;
-            padding-top: 0.25rem;
-            padding-inline-end: 0.25rem;
-            a {
-                padding: 0.15rem 0.5rem;
-            }
-        }
-
-        /* Waiting overlay shown during flashing */
-        .flashing-wait p {
-            text-align: center;
-            padding: 0 1rem;
-            font-size: 14px;
-        }
-
-        /* Cloud build info grid */
-        .cloud_build_grid {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 1rem 2rem;
-            align-items: center;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .cloud_build_grid .info_row {
-            display: contents;
-        }
-
-        .cloud_build_grid strong {
-            text-align: end;
-            white-space: nowrap;
-            padding-inline-end: 1rem;
-        }
-
-        .cloud_build_grid a {
-            text-align: start;
-        }
-
-        .cloud_build_grid .status_wrapper {
+    }
+    /* Keep help icons inline with multiselects inside Build Configuration */
+    .build_configuration .select-group {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        row-gap: 0.25rem;
+        align-items: center;
+    }
+    .build_configuration .select-group > strong {
+        grid-column: 1 / -1;
+    }
+    .build_configuration .select-group .select-wrapper {
+        grid-column: 1;
+        /* allow help icon to sit alongside; avoid forcing full-width */
+        max-width: none !important;
+        width: 100% !important;
+    }
+    .build_configuration .select-group .helpicon {
+        grid-column: 2;
+        margin-top: 0; /* keep vertically centered */
+    }
+    .build_configuration {
+        .build_configuration_toggle_wrapper {
             display: flex;
-            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: center;
             gap: 0.5rem;
         }
-
-        & + .content_toolbar {
-            width: fit-content;
+        .spacer_box_title {
+            white-space: nowrap;
         }
-        @media all and (max-width: 575px) {
-            .detect-board {
-                span {
-                    height: 18px;
-                    padding: 0 1rem !important;
-                    & > div {
-                        display: none;
-                    }
+    }
+
+    /* Style multiselect tags for "Other options" selector */
+    #optionsInfo .multiselect__tags {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 4px !important;
+    }
+
+    #optionsInfo .multiselect__tag {
+        background: var(--surface-500) !important;
+        color: var(--text) !important;
+        font-size: 11px;
+        padding: 3px 20px 3px 6px;
+        border-radius: 3px;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    #optionsInfo .multiselect__tag-icon {
+        &:after {
+            color: var(--text) !important;
+        }
+        &:hover {
+            background: var(--surface-600) !important;
+        }
+    }
+
+    .default_btn {
+        width: fit-content;
+        padding-top: 0.25rem;
+        padding-inline-end: 0.25rem;
+        a {
+            padding: 0.15rem 0.5rem;
+        }
+    }
+
+    /* Waiting overlay shown during flashing */
+    .flashing-wait p {
+        text-align: center;
+        padding: 0 1rem;
+        font-size: 14px;
+    }
+
+    /* Cloud build info grid */
+    .cloud_build_grid {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 1rem 2rem;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .cloud_build_grid .info_row {
+        display: contents;
+    }
+
+    .cloud_build_grid strong {
+        text-align: end;
+        white-space: nowrap;
+        padding-inline-end: 1rem;
+    }
+
+    .cloud_build_grid a {
+        text-align: start;
+    }
+
+    .cloud_build_grid .status_wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    & + .content_toolbar {
+        width: fit-content;
+    }
+    @media all and (max-width: 575px) {
+        .detect-board {
+            span {
+                height: 18px;
+                padding: 0 1rem !important;
+                & > div {
+                    display: none;
                 }
             }
         }

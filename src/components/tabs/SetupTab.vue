@@ -808,61 +808,59 @@ function openBuildOptionsDialog() {
 
 <style lang="less">
 .tab-setup {
-    & {
-        #interactive_block {
+    #interactive_block {
+        position: relative;
+        background-color: var(--surface-200);
+        border-radius: 1rem;
+        border: 2px solid var(--surface-400);
+        .reset-zaxis {
+            position: absolute;
+            top: 0.75rem;
+            inset-inline-end: 0.75rem;
+            z-index: 100;
+        }
+    }
+    .setup-top {
+        margin-top: 0.75rem;
+        #canvas_wrapper {
             position: relative;
-            background-color: var(--surface-200);
+            width: 100%;
+            height: 100%;
+            max-height: 32rem;
+            top: 0;
+            inset-inline-start: 0;
             border-radius: 1rem;
-            border: 2px solid var(--surface-400);
-            .reset-zaxis {
-                position: absolute;
-                top: 0.75rem;
-                inset-inline-end: 0.75rem;
-                z-index: 100;
-            }
         }
-        .setup-top {
-            margin-top: 0.75rem;
-            #canvas_wrapper {
-                position: relative;
-                width: 100%;
-                height: 100%;
-                max-height: 32rem;
-                top: 0;
-                inset-inline-start: 0;
-                border-radius: 1rem;
-            }
-        }
+    }
+    .setup-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    @media only screen and (max-width: 1055px) {
         .setup-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         }
-        @media only screen and (max-width: 1055px) {
-            .setup-info-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            }
-            #canvas_wrapper {
-                max-height: 20rem !important;
-            }
+        #canvas_wrapper {
+            max-height: 20rem !important;
         }
+    }
 
-        @media all and (max-width: 575px) {
-            .setup-info-grid {
-                grid-template-columns: 1fr;
-            }
-            .instruments-right {
-                position: static;
-                justify-content: center;
-                padding: 0.5rem 0 0.75rem;
-            }
+    @media all and (max-width: 575px) {
+        .setup-info-grid {
+            grid-template-columns: 1fr;
         }
-        .system_info {
-            td {
-                width: 50%;
-                vertical-align: baseline;
-            }
+        .instruments-right {
+            position: static;
+            justify-content: center;
+            padding: 0.5rem 0 0.75rem;
+        }
+    }
+    .system_info {
+        td {
+            width: 50%;
+            vertical-align: baseline;
         }
     }
     #canvas {

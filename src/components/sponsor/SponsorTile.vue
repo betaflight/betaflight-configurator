@@ -94,10 +94,8 @@ export default defineComponent({
 
 <style lang="less">
 .sponsor-container {
-    & {
-        min-height: 90px;
-        position: relative;
-    }
+    min-height: 90px;
+    position: relative;
 
     .fade-enter-active,
     .fade-leave-active {

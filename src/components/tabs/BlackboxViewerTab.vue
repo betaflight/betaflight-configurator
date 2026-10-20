@@ -129,9 +129,7 @@ onBeforeUnmount(() => {
 
 <style lang="less">
 .tab-blackbox-viewer-host {
-    & {
-        height: 100%;
-    }
+    height: 100%;
 
     .blackbox-viewer-root {
         position: relative;

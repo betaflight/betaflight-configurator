@@ -523,18 +523,16 @@ defineExpose({
 @import "@/components/EscDshotDirection/Styles.css";
 
 .escDshotDirection-dialog {
-    & {
-        width: 90%;
-        max-width: 800px;
-        max-height: 90vh;
-        border: 2px solid var(--surface-600);
-        border-radius: 3px;
-        background-color: var(--surface-100);
-        color: var(--text);
-        padding: 20px;
-        overflow-y: auto;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
-    }
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    border: 2px solid var(--surface-600);
+    border-radius: 3px;
+    background-color: var(--surface-100);
+    color: var(--text);
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
 
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.95); /* More opaque backdrop */

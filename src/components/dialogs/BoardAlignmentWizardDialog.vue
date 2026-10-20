@@ -972,18 +972,16 @@ defineExpose({ show, close });
 }
 
 .boardAlignmentWizard-dialog {
-    & {
-        width: 90%;
-        max-width: 760px;
-        border: 2px solid var(--surface-600);
-        border-radius: 4px;
-        background-color: var(--surface-100);
-        color: var(--text);
-        padding: 0;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
-        font-size: 14px;
-        line-height: 1.5;
-    }
+    width: 90%;
+    max-width: 760px;
+    border: 2px solid var(--surface-600);
+    border-radius: 4px;
+    background-color: var(--surface-100);
+    color: var(--text);
+    padding: 0;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+    line-height: 1.5;
 
     & p {
         font-size: 14px;

@@ -343,17 +343,15 @@ defineExpose({
 @import "@/components/MotorOutputReordering/Styles.css";
 
 .motorOutputReordering-dialog {
-    & {
-        width: 90%;
-        max-width: 900px;
-        max-height: 90vh;
-        border: 2px solid var(--surface-600);
-        border-radius: 3px;
-        background-color: var(--surface-100);
-        color: var(--text);
-        padding: 20px;
-        overflow-y: auto;
-    }
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    border: 2px solid var(--surface-600);
+    border-radius: 3px;
+    background-color: var(--surface-100);
+    color: var(--text);
+    padding: 20px;
+    overflow-y: auto;
 
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.9); /* More opaque backdrop */

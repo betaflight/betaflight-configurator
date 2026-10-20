@@ -118,17 +118,15 @@ const colorStyle = computed(() => {
 .gPoint {
     /* Base gPoint styles */
 
-    & {
-        float: inline-start;
-        border: solid 1px var(--surface-500);
-        width: 23px;
-        height: 23px;
-        margin: 3px;
-        border-radius: 7px;
-        background: var(--surface-300);
-        cursor: pointer;
-        position: relative;
-    }
+    float: inline-start;
+    border: solid 1px var(--surface-500);
+    width: 23px;
+    height: 23px;
+    margin: 3px;
+    border-radius: 7px;
+    background: var(--surface-300);
+    cursor: pointer;
+    position: relative;
 
     &:hover {
         opacity: 0.9;

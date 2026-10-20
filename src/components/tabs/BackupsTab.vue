@@ -603,14 +603,12 @@ onUnmounted(() => {
 
 <style lang="less">
 .backups_cli_background {
-    & {
-        border: 1px solid var(--ui-border);
-        background-color: rgba(64, 64, 64, 1);
-        height: 300px;
-        border-radius: 5px;
-        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
-        overflow-y: auto;
-    }
+    border: 1px solid var(--ui-border);
+    background-color: rgba(64, 64, 64, 1);
+    height: 300px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    overflow-y: auto;
 
     .backups_cli_window {
         padding: 5px;

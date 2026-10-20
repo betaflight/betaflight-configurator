@@ -494,11 +494,9 @@ onUnmounted(() => {
 
 <style lang="less">
 .flight-plan-map {
-    & {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     & > div:last-child {
         flex: 1;

@@ -253,20 +253,18 @@ onUnmounted(() => {
 
 <style lang="less">
 .led-grid-container {
-    & {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        border-radius: 3px;
-        background-color: var(--surface-200);
-        border: 1px solid var(--surface-500);
-        user-select: none;
-        cursor: crosshair;
-        display: flex;
-        flex-wrap: wrap;
-        align-content: flex-start;
-        z-index: 1;
-    }
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background-color: var(--surface-200);
+    border: 1px solid var(--surface-500);
+    user-select: none;
+    cursor: crosshair;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    z-index: 1;
 
     /* Ensure LED points are above grid sections */
 
