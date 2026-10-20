@@ -9995,7 +9995,7 @@
         "message": "This craft has no buzzer, LED strip or OSD to signal the autotune in flight: hover 30 seconds or more, then land and disarm with the mode on."
     },
     "filterTuneLedCollecting": {
-        "message": "collecting"
+        "message": "waiting for a steady hover (slow blink), collecting (fast blink)"
     },
     "filterTuneLedReady": {
         "message": "enough data"
