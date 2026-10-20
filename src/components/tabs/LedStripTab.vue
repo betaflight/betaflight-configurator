@@ -8,6 +8,10 @@
                 <p v-html="$t('ledStripHelp')"></p>
             </UiBox>
 
+            <UiBox v-if="fcStore.dshotBitbangBlocked" type="warning" highlight class="mb-3">
+                <p v-html="$t('ledStripDshotBitbangWarning')"></p>
+            </UiBox>
+
             <!-- LED Grid Container -->
             <div class="grid-container">
                 <!-- LED Grid with custom selection -->
