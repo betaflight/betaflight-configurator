@@ -61,7 +61,7 @@ import { onKeyStroke, useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
-import PortUsageModule from "./js/port_usage.js";
+import PortUsageModule from "./js/port_usage";
 import { i18n } from "./js/localization";
 import { useUiLocale } from "./composables/useUiLocale";
 import { useFlightControllerStore } from "./stores/fc";
@@ -73,7 +73,7 @@ import {
     TAB_ADAPTER_REGISTRATION_KEY,
     vueTabState,
 } from "./js/vue_tab_mounter.js";
-import { VueTabComponents } from "./js/vue_tab_registry.js";
+import { VueTabComponents } from "./js/vue_tab_registry";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {

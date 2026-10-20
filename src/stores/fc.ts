@@ -24,7 +24,7 @@ import { computed, reactive, ref, toRefs } from "vue";
 import semver from "semver";
 import { bit_check } from "../js/bit";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
-import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options.js";
+import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options";
 import type { FcState } from "./fc.types";
 
 export type { FcState } from "./fc.types";

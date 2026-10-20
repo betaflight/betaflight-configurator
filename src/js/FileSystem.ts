@@ -1,9 +1,115 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { isAndroid, isTauriDesktop } from "./utils/checkCompatibility";
 import CapacitorFile from "./protocols/CapacitorFile";
 import { hexStringToUint8Array, uint8ArrayToHexString } from "./utils/bytes";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 
-const EXTENSION_MIME_MAP = {
+/** One extension (".txt" or "txt") or a list of them. */
+export type FileExtensions = string | readonly string[] | null | undefined;
+
+/**
+ * What writeFile accepts. Views are typed over ArrayBufferLike because the
+ * firmware bytes are; nothing in the app creates a SharedArrayBuffer, which
+ * Blob and the File System Access API would reject.
+ */
+export type FileContents = string | Blob | ArrayBuffer | ArrayBufferView;
+
+// The File System Access API parts that lib.dom does not declare (Chromium only).
+interface PickerAcceptType {
+    description?: string;
+    accept: Record<string, string[]>;
+}
+
+interface PickerHandle extends FileSystemFileHandle {
+    queryPermission(descriptor: { mode: "read" | "readwrite" }): Promise<PermissionState>;
+    requestPermission(descriptor: { mode: "read" | "readwrite" }): Promise<PermissionState>;
+}
+
+interface FilePickerGlobals {
+    showOpenFilePicker?: (options: {
+        multiple?: boolean;
+        types?: PickerAcceptType[];
+        id?: string;
+    }) => Promise<PickerHandle[]>;
+    showSaveFilePicker?: (options: {
+        suggestedName?: string;
+        types?: PickerAcceptType[];
+        id?: string;
+    }) => Promise<PickerHandle>;
+}
+
+const pickerGlobals = globalThis as typeof globalThis & FilePickerGlobals;
+
+/** The <a download> fallback's pending download; it is also the streaming token. */
+interface PendingDownload {
+    name: string;
+    chunks: Blob[];
+}
+
+/**
+ * A file picked by pickOpenFile/pickSaveFile. Which of the private fields is
+ * set depends on the platform; callers only read `name` and pass the object back.
+ */
+export interface PickedFile {
+    name: string;
+    /** Web: a File System Access handle. Android: the SAF file id. */
+    _fileHandle?: PickerHandle | string;
+    /** Tauri desktop: the native path. */
+    _tauriPath?: string;
+    /** <input type=file> fallback: the selected File. */
+    _blob?: Blob;
+    /** <a download> fallback (save only). */
+    _download?: PendingDownload;
+}
+
+/** Tauri streaming token: each chunk is a separate append to the path. */
+interface TauriWriter {
+    _tauriPath: string;
+    _appending: boolean;
+}
+
+/** What openFile returns and writeChunck/closeFile take. Android's is the SAF file id. */
+export type FileWriter = FileSystemWritableFileStream | TauriWriter | PendingDownload | string;
+
+// Android hands back the SAF file id in `_fileHandle`, the web a handle; the
+// platform check in each caller decides which one it is.
+function androidFileId(file: PickedFile): string {
+    return file._fileHandle as string;
+}
+
+function webHandle(file: PickedFile): PickerHandle {
+    return file._fileHandle as PickerHandle;
+}
+
+function isTauriWriter(writable: FileWriter): writable is TauriWriter {
+    return typeof writable === "object" && Boolean((writable as Partial<TauriWriter>)._tauriPath);
+}
+
+function isPendingDownload(writable: FileWriter): writable is PendingDownload {
+    return typeof writable === "object" && Array.isArray((writable as Partial<PendingDownload>).chunks);
+}
+
+const EXTENSION_MIME_MAP: Record<string, string | undefined> = {
     ".txt": "text/plain",
     ".json": "application/json",
     ".hex": "application/octet-stream",
@@ -23,7 +129,7 @@ const EXTENSION_MIME_MAP = {
     ".webm": "video/webm",
 };
 
-function mimeForExtension(ext) {
+function mimeForExtension(ext: string): string {
     if (!ext) return "*/*";
     const lower = ext.toLowerCase().startsWith(".") ? ext.toLowerCase() : `.${ext.toLowerCase()}`;
     return EXTENSION_MIME_MAP[lower] || "*/*";
@@ -31,7 +137,7 @@ function mimeForExtension(ext) {
 
 // `*/*` is not a valid key for the File System Access API `accept` map, so fall
 // back to a generic binary type for unknown extensions when building filters.
-function mimeForAcceptKey(ext) {
+function mimeForAcceptKey(ext: string): string {
     const mime = mimeForExtension(ext);
     return mime === "*/*" ? "application/octet-stream" : mime;
 }
@@ -40,15 +146,15 @@ function mimeForAcceptKey(ext) {
 // dot-prefixed variants in BOTH lower and upper case. The File System Access
 // API matches extensions case-sensitively, so a `.txt` filter would otherwise
 // hide a `FOO.TXT` file. Listing both cases keeps the picker case-insensitive.
-export function normalizeExtensions(extension) {
-    let list = [];
+export function normalizeExtensions(extension: FileExtensions): string[] {
+    let list: readonly string[] = [];
     if (Array.isArray(extension)) {
         list = extension;
-    } else if (extension) {
+    } else if (typeof extension === "string" && extension) {
         list = [extension];
     }
 
-    const result = [];
+    const result: string[] = [];
     for (const raw of list) {
         if (!raw) {
             continue;
@@ -70,17 +176,15 @@ export function normalizeExtensions(extension) {
 
 // Build the `types` array for show{Open,Save}FilePicker, grouping the (case
 // expanded) extensions under their proper MIME types.
-export function buildAcceptTypes(description, extension) {
+export function buildAcceptTypes(description: string | undefined, extension: FileExtensions): PickerAcceptType[] {
     const extensions = normalizeExtensions(extension);
     if (extensions.length === 0) {
         return [];
     }
-    const accept = {};
+    const accept: Record<string, string[]> = {};
     for (const ext of extensions) {
         const mime = mimeForAcceptKey(ext);
-        if (!accept[mime]) {
-            accept[mime] = [];
-        }
+        accept[mime] ??= [];
         accept[mime].push(ext);
     }
     return [{ description, accept }];
@@ -91,7 +195,11 @@ export function buildAcceptTypes(description, extension) {
 // case-sensitively, so open filters keep the upper-case variants that
 // `normalizeExtensions` adds; a save filter only supplies the suffix to append,
 // so it stays lower case.
-export function buildNativeFilters(description, extension, keepCaseVariants = true) {
+export function buildNativeFilters(
+    description: string | undefined,
+    extension: FileExtensions,
+    keepCaseVariants = true,
+): { name: string; extensions: string[] }[] {
     const extensions = normalizeExtensions(extension)
         .map((ext) => ext.slice(1))
         .filter((ext) => keepCaseVariants || ext === ext.toLowerCase());
@@ -107,17 +215,20 @@ export function buildNativeFilters(description, extension, keepCaseVariants = tr
 // Linux WebKitGTK), where we fall back to a classic <input> / <a download>
 // flow so file open still works.
 function canUseOpenPicker() {
-    return typeof globalThis.showOpenFilePicker === "function";
+    return typeof pickerGlobals.showOpenFilePicker === "function";
 }
 
 function canUseSavePicker() {
-    return typeof globalThis.showSaveFilePicker === "function";
+    return typeof pickerGlobals.showSaveFilePicker === "function";
 }
 
 // The Tauri dialog and fs plugins, loaded on demand so that web and mobile
 // builds never pull them in. Desktop only — they are registered in
 // src-tauri/src/lib.rs behind `#[cfg(desktop)]`.
-let tauriPlugins = null;
+let tauriPlugins: Promise<{
+    dialog: typeof import("@tauri-apps/plugin-dialog");
+    fs: typeof import("@tauri-apps/plugin-fs");
+}> | null = null;
 function loadTauriPlugins() {
     tauriPlugins ??= Promise.all([import("@tauri-apps/plugin-dialog"), import("@tauri-apps/plugin-fs")]).then(
         ([dialog, fs]) => ({ dialog, fs }),
@@ -127,7 +238,7 @@ function loadTauriPlugins() {
 
 // The rejection showOpenFilePicker/showSaveFilePicker produce on dismissal, which
 // callers of this module already recognize.
-function abortError() {
+function abortError(): Error {
     const error = new Error("The user aborted a request.");
     error.name = "AbortError";
     return error;
@@ -135,15 +246,15 @@ function abortError() {
 
 // Native dialogs hand back an absolute path; the descriptors this module returns
 // carry the bare file name, like the File System Access handles do.
-function baseName(path) {
+function baseName(path: string): string {
     const parts = String(path).split(/[/\\]/);
-    return parts[parts.length - 1] || String(path);
+    return parts.at(-1) || String(path);
 }
 
 // Directory portion of a native path, in its original separator style. A
 // filesystem root ("/", "\", "C:\") must keep its trailing separator — dropping
 // it turns "C:\" into "C:", a drive-relative path rather than the drive root.
-function dirName(path) {
+function dirName(path: string): string {
     const str = String(path);
     const cut = Math.max(str.lastIndexOf("/"), str.lastIndexOf("\\"));
     if (cut < 0) {
@@ -160,7 +271,7 @@ function dirName(path) {
 
 // Append a file name to a remembered directory, keeping that directory's own
 // separator style (native paths on the same OS never mix "/" and "\").
-function joinPath(dir, name) {
+function joinPath(dir: string | undefined, name: string): string {
     if (!dir) {
         return name;
     }
@@ -173,7 +284,7 @@ function joinPath(dir, name) {
 // same way on every platform instead of only in the browser.
 const PICKER_ID_PATTERN = /^[A-Za-z0-9_-]{1,32}$/;
 
-function assertValidPickerId(pickerId) {
+function assertValidPickerId(pickerId: string | undefined): void {
     if (pickerId && !PICKER_ID_PATTERN.test(pickerId)) {
         throw new TypeError(`Invalid pickerId "${pickerId}": must be 1-32 ASCII letters, digits, "_" or "-".`);
     }
@@ -185,14 +296,14 @@ function assertValidPickerId(pickerId) {
 // desktop dialog path needs this.
 const LAST_DIR_STORAGE_KEY = "fileSystemLastDir";
 
-function getLastDir(pickerId) {
+function getLastDir(pickerId: string | undefined): string | undefined {
     if (!pickerId) {
         return undefined;
     }
-    return getConfig(LAST_DIR_STORAGE_KEY, {})[LAST_DIR_STORAGE_KEY]?.[pickerId];
+    return getConfig<Record<string, string>>(LAST_DIR_STORAGE_KEY, {})[LAST_DIR_STORAGE_KEY]?.[pickerId];
 }
 
-function setLastDir(pickerId, path) {
+function setLastDir(pickerId: string | undefined, path: string): void {
     if (!pickerId) {
         return;
     }
@@ -200,14 +311,14 @@ function setLastDir(pickerId, path) {
     if (!dir) {
         return;
     }
-    const dirs = getConfig(LAST_DIR_STORAGE_KEY, {})[LAST_DIR_STORAGE_KEY] || {};
+    const dirs = getConfig<Record<string, string>>(LAST_DIR_STORAGE_KEY, {})[LAST_DIR_STORAGE_KEY] || {};
     setConfig({ [LAST_DIR_STORAGE_KEY]: { ...dirs, [pickerId]: dir } });
 }
 
 // Open a file via a hidden <input type=file> and resolve with the selected File
 // (or reject with an AbortError when the dialog is dismissed, mirroring
 // showOpenFilePicker).
-function pickFileViaInput(extension) {
+function pickFileViaInput(extension: FileExtensions): Promise<File | null> {
     const accept = normalizeExtensions(extension).join(",");
     return new Promise((resolve, reject) => {
         const input = document.createElement("input");
@@ -219,19 +330,21 @@ function pickFileViaInput(extension) {
         document.body.appendChild(input);
 
         let settled = false;
-        let focusTimer = null;
+        let focusTimer: ReturnType<typeof setTimeout> | null = null;
         // Predeclared so `cleanup` can detach it (assigned further below).
-        let onFocus = null;
+        let onFocus: (() => void) | null = null;
 
         const cleanup = () => {
-            globalThis.removeEventListener("focus", onFocus);
+            if (onFocus) {
+                globalThis.removeEventListener("focus", onFocus);
+            }
             if (focusTimer) {
                 clearTimeout(focusTimer);
             }
             input.remove();
         };
 
-        const settle = (action, value) => {
+        const settle = <T>(action: (value: T) => void, value: T) => {
             if (settled) {
                 return;
             }
@@ -272,7 +385,7 @@ function pickFileViaInput(extension) {
 }
 
 // Ensure a suggested name keeps a sensible suffix when downloaded.
-function ensureExtension(name, extension) {
+function ensureExtension(name: string | undefined, extension: FileExtensions): string {
     if (name?.includes(".")) {
         return name;
     }
@@ -281,13 +394,13 @@ function ensureExtension(name, extension) {
 }
 
 // Save data by triggering a browser download (fallback for showSaveFilePicker).
-function downloadViaAnchor(name, contents) {
-    let blob;
+function downloadViaAnchor(name: string | undefined, contents: FileContents): void {
+    let blob: Blob;
     if (contents instanceof Blob) {
         blob = contents;
     } else {
         const ext = name?.includes(".") ? `.${name.split(".").pop()}` : "";
-        blob = new Blob([contents], { type: mimeForAcceptKey(ext) });
+        blob = new Blob([contents as BlobPart], { type: mimeForAcceptKey(ext) });
     }
 
     const url = URL.createObjectURL(blob);
@@ -301,7 +414,7 @@ function downloadViaAnchor(name, contents) {
 }
 
 class FileSystem {
-    _createFile(fileHandle) {
+    _createFile(fileHandle: PickerHandle): PickedFile {
         return {
             name: fileHandle.name,
             _fileHandle: fileHandle,
@@ -316,7 +429,12 @@ class FileSystem {
     // remembers its own last-used folder instead of sharing one. Android has
     // no equivalent: the Capacitor SAF plugin exposes no last-directory
     // option, so `pickerId` is validated but otherwise ignored on that platform.
-    async pickSaveFile(suggestedName, description, extension, pickerId) {
+    async pickSaveFile(
+        suggestedName: string,
+        description: string | undefined,
+        extension: FileExtensions,
+        pickerId?: string,
+    ): Promise<PickedFile | null | undefined> {
         assertValidPickerId(pickerId);
 
         if (isAndroid()) {
@@ -331,7 +449,7 @@ class FileSystem {
             return this._fallbackPickSaveFile(suggestedName, extension);
         }
 
-        const fileHandle = await globalThis.showSaveFilePicker({
+        const fileHandle = await pickerGlobals.showSaveFilePicker!({
             suggestedName: suggestedName,
             types: buildAcceptTypes(description, extension),
             ...(pickerId ? { id: pickerId } : {}),
@@ -350,7 +468,12 @@ class FileSystem {
 
     // The native save dialog. It only picks a path — nothing is created on disk
     // until the data is written — so the descriptor carries the path alone.
-    async _tauriPickSaveFile(suggestedName, description, extension, pickerId) {
+    async _tauriPickSaveFile(
+        suggestedName: string,
+        description: string | undefined,
+        extension: FileExtensions,
+        pickerId: string | undefined,
+    ): Promise<PickedFile> {
         const { dialog } = await loadTauriPlugins();
 
         const name = ensureExtension(suggestedName, extension);
@@ -371,7 +494,7 @@ class FileSystem {
     // Fallback save "handle": there is no OS save dialog without the File System
     // Access API, so we defer to a browser download when the data is written.
     // A `_download` token also carries chunks for the streaming write path.
-    _fallbackPickSaveFile(suggestedName, extension) {
+    _fallbackPickSaveFile(suggestedName: string, extension: FileExtensions): PickedFile {
         const name = ensureExtension(suggestedName, extension);
         return {
             name,
@@ -379,7 +502,11 @@ class FileSystem {
         };
     }
 
-    async _androidPickSaveFile(suggestedName, description, extension) {
+    async _androidPickSaveFile(
+        suggestedName: string,
+        _description: string | undefined,
+        extension: FileExtensions,
+    ): Promise<PickedFile | null> {
         const extensions = normalizeExtensions(extension);
         const mimeType = extensions.length > 0 ? mimeForExtension(extensions[0]) : "*/*";
 
@@ -402,14 +529,12 @@ class FileSystem {
     // remembers its own last-used folder instead of sharing one. Android has
     // no equivalent: the Capacitor SAF plugin exposes no last-directory
     // option, so `pickerId` is validated but otherwise ignored on that platform.
-    /**
-     * @typedef {object} PickedFile
-     * @property {string} name
-     * @property {unknown} [_fileHandle] web/Android handle, consumed by readFileAsBlob
-     * @property {Blob} [_blob] set only by the <input> fallback path
-     */
-    /** @returns {Promise<PickedFile | null | undefined>} null/undefined when cancelled or denied */
-    async pickOpenFile(description, extension, pickerId) {
+    /** @returns null/undefined when cancelled or denied */
+    async pickOpenFile(
+        description: string | undefined,
+        extension: FileExtensions,
+        pickerId?: string,
+    ): Promise<PickedFile | null | undefined> {
         assertValidPickerId(pickerId);
 
         if (isAndroid()) {
@@ -424,7 +549,7 @@ class FileSystem {
             return this._fallbackPickOpenFile(extension);
         }
 
-        const fileHandle = await globalThis.showOpenFilePicker({
+        const fileHandle = await pickerGlobals.showOpenFilePicker!({
             multiple: false,
             types: buildAcceptTypes(description, extension),
             ...(pickerId ? { id: pickerId } : {}),
@@ -437,7 +562,11 @@ class FileSystem {
         }
     }
 
-    async _tauriPickOpenFile(description, extension, pickerId) {
+    async _tauriPickOpenFile(
+        description: string | undefined,
+        extension: FileExtensions,
+        pickerId: string | undefined,
+    ): Promise<PickedFile> {
         const { dialog } = await loadTauriPlugins();
 
         const lastDir = getLastDir(pickerId);
@@ -459,7 +588,7 @@ class FileSystem {
 
     // Fallback open: read the File selected via a hidden <input>. The File is a
     // Blob, so it is carried directly on the descriptor for later reads.
-    async _fallbackPickOpenFile(extension) {
+    async _fallbackPickOpenFile(extension: FileExtensions): Promise<PickedFile | null> {
         const selected = await pickFileViaInput(extension);
         if (!selected) {
             return null;
@@ -470,7 +599,10 @@ class FileSystem {
         };
     }
 
-    async _androidPickOpenFile(description, extension) {
+    async _androidPickOpenFile(
+        _description: string | undefined,
+        extension: FileExtensions,
+    ): Promise<PickedFile | null> {
         const extensions = normalizeExtensions(extension);
         const mimeType = extensions.length > 0 ? mimeForExtension(extensions[0]) : "*/*";
 
@@ -489,11 +621,10 @@ class FileSystem {
     // verifyPermission  (web only — Android SAF grants implicitly)
     // ---------------------------------------------------------------
 
-    async verifyPermission(file, withWrite) {
-        const fileHandle = file._fileHandle;
+    async verifyPermission(file: PickedFile, withWrite: boolean): Promise<boolean> {
+        const fileHandle = webHandle(file);
 
-        const opts = {};
-        opts.mode = withWrite ? "readwrite" : "read";
+        const opts: { mode: "read" | "readwrite" } = { mode: withWrite ? "readwrite" : "read" };
 
         if ((await fileHandle.queryPermission(opts)) === "granted") {
             console.log("The user has %s permissions for the file: %s", opts.mode, fileHandle.name);
@@ -513,13 +644,13 @@ class FileSystem {
     // writeFile
     // ---------------------------------------------------------------
 
-    async writeFile(file, contents) {
+    async writeFile(file: PickedFile, contents: FileContents): Promise<void> {
         if (isAndroid()) {
             return this._androidWriteFile(file, contents);
         }
 
         if (file._tauriPath) {
-            return this._tauriWriteFile(file, contents);
+            return this._tauriWriteFile(file as PickedFile & { _tauriPath: string }, contents);
         }
 
         if (file._download) {
@@ -527,14 +658,14 @@ class FileSystem {
             return;
         }
 
-        const fileHandle = file._fileHandle;
+        const fileHandle = webHandle(file);
 
         const writable = await fileHandle.createWritable();
-        await writable.write(contents);
+        await writable.write(contents as FileSystemWriteChunkType);
         await writable.close();
     }
 
-    async _tauriWriteFile(file, contents) {
+    async _tauriWriteFile(file: PickedFile & { _tauriPath: string }, contents: FileContents): Promise<void> {
         const { fs } = await loadTauriPlugins();
 
         if (typeof contents === "string") {
@@ -544,8 +675,8 @@ class FileSystem {
         }
     }
 
-    async _androidWriteFile(file, contents) {
-        const fileId = file._fileHandle;
+    async _androidWriteFile(file: PickedFile, contents: FileContents): Promise<void> {
+        const fileId = androidFileId(file);
 
         if (typeof contents === "string") {
             await CapacitorFile.writeFile(fileId, contents, "utf8");
@@ -561,9 +692,9 @@ class FileSystem {
     // readFile
     // ---------------------------------------------------------------
 
-    async readFile(file) {
+    async readFile(file: PickedFile): Promise<string> {
         if (isAndroid()) {
-            return CapacitorFile.readFile(file._fileHandle);
+            return CapacitorFile.readFile(androidFileId(file));
         }
 
         if (file._tauriPath) {
@@ -575,7 +706,7 @@ class FileSystem {
             return await file._blob.text();
         }
 
-        const fileHandle = file._fileHandle;
+        const fileHandle = webHandle(file);
 
         const fileReader = await fileHandle.getFile();
         return await fileReader.text();
@@ -585,25 +716,25 @@ class FileSystem {
     // readFileAsBlob
     // ---------------------------------------------------------------
 
-    async readFileAsBlob(file) {
+    async readFileAsBlob(file: PickedFile): Promise<Blob> {
         if (isAndroid()) {
             return this._androidReadFileAsBlob(file);
         }
 
         if (file._tauriPath) {
-            return this._tauriReadFileAsBlob(file);
+            return this._tauriReadFileAsBlob(file as PickedFile & { _tauriPath: string });
         }
 
         if (file._blob) {
             return file._blob;
         }
 
-        const fileHandle = file._fileHandle;
+        const fileHandle = webHandle(file);
 
         return await fileHandle.getFile();
     }
 
-    async _tauriReadFileAsBlob(file) {
+    async _tauriReadFileAsBlob(file: PickedFile & { _tauriPath: string }): Promise<Blob> {
         const { fs } = await loadTauriPlugins();
         const bytes = await fs.readFile(file._tauriPath);
 
@@ -611,8 +742,8 @@ class FileSystem {
         return new Blob([bytes], { type: mimeForExtension(ext) });
     }
 
-    async _androidReadFileAsBlob(file) {
-        const hex = await CapacitorFile.readFileAsHex(file._fileHandle);
+    async _androidReadFileAsBlob(file: PickedFile): Promise<Blob> {
+        const hex = await CapacitorFile.readFileAsHex(androidFileId(file));
         const bytes = hexStringToUint8Array(hex);
 
         // Determine MIME type from file name extension
@@ -626,11 +757,11 @@ class FileSystem {
     // openFile  (streaming — returns a writable token)
     // ---------------------------------------------------------------
 
-    async openFile(file) {
+    async openFile(file: PickedFile): Promise<FileWriter> {
         if (isAndroid()) {
             // Return the fileId as the "writable" token.
             // The native OutputStream is lazy-opened on the first writeChunck.
-            return file._fileHandle;
+            return androidFileId(file);
         }
 
         if (file._tauriPath) {
@@ -648,7 +779,7 @@ class FileSystem {
             return file._download;
         }
 
-        const fileHandle = file._fileHandle;
+        const fileHandle = webHandle(file);
 
         const options = { keepExistingData: false };
         return await fileHandle.createWritable(options);
@@ -658,24 +789,24 @@ class FileSystem {
     // writeChunck  (streaming — writes one chunk)
     // ---------------------------------------------------------------
 
-    async writeChunck(writable, chunk) {
+    async writeChunck(writable: FileWriter, chunk: Blob): Promise<void> {
         if (isAndroid()) {
-            return this._androidWriteChunk(writable, chunk);
+            return this._androidWriteChunk(writable as string, chunk);
         }
 
-        if (writable?._tauriPath) {
+        if (isTauriWriter(writable)) {
             return this._tauriWriteChunk(writable, chunk);
         }
 
-        if (Array.isArray(writable?.chunks)) {
+        if (isPendingDownload(writable)) {
             writable.chunks.push(chunk);
             return;
         }
 
-        await writable.write(chunk);
+        await (writable as FileSystemWritableFileStream).write(chunk);
     }
 
-    async _tauriWriteChunk(writable, chunk) {
+    async _tauriWriteChunk(writable: TauriWriter, chunk: Blob): Promise<void> {
         const { fs } = await loadTauriPlugins();
         const bytes = await this._toUint8Array(chunk);
 
@@ -684,7 +815,7 @@ class FileSystem {
         writable._appending = true;
     }
 
-    async _androidWriteChunk(fileId, chunk) {
+    async _androidWriteChunk(fileId: string, chunk: Blob): Promise<void> {
         // chunk is a Blob (wrapping DataView for binary, or string for text)
         const buffer = await chunk.arrayBuffer();
         const bytes = new Uint8Array(buffer);
@@ -696,13 +827,13 @@ class FileSystem {
     // closeFile  (streaming — closes the writable)
     // ---------------------------------------------------------------
 
-    async closeFile(writable) {
+    async closeFile(writable: FileWriter): Promise<void> {
         if (isAndroid()) {
-            await CapacitorFile.closeFile(writable);
+            await CapacitorFile.closeFile(writable as string);
             return;
         }
 
-        if (writable?._tauriPath) {
+        if (isTauriWriter(writable)) {
             if (!writable._appending) {
                 // Nothing was streamed. The File System Access API creates the
                 // file when the picker returns, so an aborted save still leaves
@@ -714,19 +845,19 @@ class FileSystem {
             return;
         }
 
-        if (Array.isArray(writable?.chunks)) {
+        if (isPendingDownload(writable)) {
             downloadViaAnchor(writable.name, new Blob(writable.chunks));
             return;
         }
 
-        await writable.close();
+        await (writable as FileSystemWritableFileStream).close();
     }
 
     // ---------------------------------------------------------------
     // Helpers
     // ---------------------------------------------------------------
 
-    async _toUint8Array(data) {
+    async _toUint8Array(data: FileContents): Promise<Uint8Array> {
         if (data instanceof Uint8Array) {
             return data;
         }
