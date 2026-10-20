@@ -78,7 +78,13 @@
             </UFieldGroup>
         </div>
 
-        <UModal v-model:open="unstableFirmwareOpen" :title="$t('warningTitle')" :close="false" :dismissible="false">
+        <UModal
+            v-model:open="unstableFirmwareOpen"
+            class="dialog-unstable-firmware"
+            :title="$t('warningTitle')"
+            :close="false"
+            :dismissible="false"
+        >
             <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
                 <div class="flex items-center gap-2 mt-3">
@@ -2204,42 +2210,21 @@ export default defineComponent({
         margin-inline-end: 0.5rem !important;
         color: var(--text) !important;
     }
+}
 
-    /* Unstable firmware dialog content styling */
+/* The unstable-firmware dialog is teleported out of the tab, so it is styled by its own class.
+   Its message is a list, which Tailwind's base styles would otherwise strip of bullets. */
+.dialog-unstable-firmware {
+    ul {
+        margin-inline-start: 1.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
 
-    #dialogUnstableFirmwareAcknowledgement {
-        .content {
-            margin-bottom: 1rem;
-
-            ul {
-                margin: 0.5rem 0;
-                padding-inline-start: 1.5rem;
-                list-style-type: disc;
-            }
-
-            li {
-                margin: 0.25rem 0;
-                line-height: 1.5;
-            }
-
-            strong {
-                font-weight: bold;
-                color: var(--warning);
-            }
-        }
-
-        /* list styling */
-        ul {
-            margin-inline-start: 1.5rem;
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        li {
-            list-style: disc;
-            margin-bottom: 0.25rem;
-            margin-inline-start: 0.5rem;
-        }
+    li {
+        list-style: disc;
+        margin-bottom: 0.25rem;
+        margin-inline-start: 0.5rem;
     }
 }
 </style>
