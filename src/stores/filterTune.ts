@@ -23,6 +23,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
+import EscProtocols from "../js/utils/EscProtocols";
 import { isMspCancelled } from "../js/msp/mspErrors";
 import { useFrameWizardStore } from "./frameWizard";
 import { useFlightControllerStore } from "./fc";
@@ -67,19 +68,20 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
     let polling = false;
 
     /**
-     * What the FC is set to for RPM telemetry (null until read): the FC reports only live telemetry, which is
-     * missing on USB power alone (the ESCs are off), so the settings tell that apart from a setting turned off.
+     * The FC is set up for RPM telemetry: DShot, bidirectional, RPM filter on (null until read). The FC's own flag
+     * needs live telemetry, which is missing on USB power alone (the ESCs are off).
      */
-    const telemetryConfig = ref<{ bidirDshot: boolean; rpmFilter: boolean } | null>(null);
+    const telemetryConfigured = ref<boolean | null>(null);
 
     async function readTelemetryConfig() {
+        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
         await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
         await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
         const fc = useFlightControllerStore();
-        telemetryConfig.value = {
-            bidirDshot: Boolean(fc.motorConfig.use_dshot_telemetry),
-            rpmFilter: fc.filterConfig.gyro_rpm_notch_harmonics > 0,
-        };
+        telemetryConfigured.value =
+            EscProtocols.IsProtocolDshot(fc.config.apiVersion, fc.pidAdvancedConfig.fast_pwm_protocol) &&
+            Boolean(fc.motorConfig.use_dshot_telemetry) &&
+            fc.filterConfig.gyro_rpm_notch_harmonics > 0;
     }
 
     /** The last applied autotune measurement this app kept for the craft (the FC loses it at power-off). */
@@ -257,14 +259,14 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         status.value = null;
         frameMap.value = null;
         keptTune.value = null;
-        telemetryConfig.value = null;
+        telemetryConfigured.value = null;
     }
 
     return {
         supported,
         status,
         frameMap,
-        telemetryConfig,
+        telemetryConfigured,
         busy,
         summary,
         shownStatus,

@@ -332,7 +332,7 @@ describe("FILTER TUNE assigned to a switch", () => {
 });
 
 describe("RPM telemetry settings", () => {
-    it("reads bidirectional DShot and the RPM filter harmonics after the status", async () => {
+    it("counts the RPM telemetry set up when DShot, bidirectional and the RPM filter are on", async () => {
         vi.resetModules();
         const bytes = new Uint8Array(statusPayload());
         const promise = vi.fn(async (code: number) =>
@@ -346,11 +346,18 @@ describe("RPM telemetry settings", () => {
         const { useFilterTuneStore } = await import("../../src/stores/filterTune");
         const { useFlightControllerStore } = await import("../../src/stores/fc");
         const fc = useFlightControllerStore();
+        const { default: EscProtocols } = await import("../../src/js/utils/EscProtocols");
+        fc.config.apiVersion = "1.49.0";
+        fc.pidAdvancedConfig.fast_pwm_protocol = EscProtocols.GetAvailableProtocols("1.49.0").indexOf("DSHOT600");
         fc.motorConfig.use_dshot_telemetry = true;
         fc.filterConfig.gyro_rpm_notch_harmonics = 0;
         const store = useFilterTuneStore();
 
         await store.load();
-        expect(store.telemetryConfig).toEqual({ bidirDshot: true, rpmFilter: false });
+        expect(store.telemetryConfigured).toBe(false); // RPM filter harmonics 0
+
+        fc.filterConfig.gyro_rpm_notch_harmonics = 3;
+        await store.load();
+        expect(store.telemetryConfigured).toBe(true);
     });
 });
