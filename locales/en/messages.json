@@ -9755,10 +9755,10 @@
         "message": "More needed: fly again with the mode on"
     },
     "filterTuneState_exciting": {
-        "message": "Sweep: ANGLE, sticks centred"
+        "message": "Sweep: ANGLE, sticks steady"
     },
     "filterTuneSweep_none": {
-        "message": "Switch to ANGLE, sticks centred: the sweep starts."
+        "message": "Switch to ANGLE and hold the sticks steady: the sweep starts."
     },
     "filterTuneSweep_roll": {
         "message": "Sweeping roll. Hands off the sticks."
@@ -9776,7 +9776,7 @@
         "message": "Sweep stopped."
     },
     "filterTuneStepSweep": {
-        "message": "Then switch to ANGLE, sticks centred: it wiggles in roll, then pitch, about 15 s. Small corrections are fine, a big stick move stops it."
+        "message": "Then switch to ANGLE and hold the sticks steady, wherever they are: it wiggles in roll, then pitch, about 15 s. Small corrections are fine, a big stick move stops it."
     },
     "filterTuneSweepResult": {
         "message": "Crossover {{roll}} / {{pitch}} Hz, phase margin {{pmRoll}}° / {{pmPitch}}°. Motor heat {{heat}} K (stock {{stock}}, budget +{{budget}})."
@@ -9809,7 +9809,7 @@
         "message": "Motor {{kv}} KV, {{d}}×{{h}} mm"
     },
     "filterTuneState_bitbang": {
-        "message": "DShot bitbang has no timer: the motors get no signal"
+        "message": "DShot bitbang cannot start: arming is disabled"
     },
     "filterTuneState_loopSlow": {
         "message": "PID loop {{hz}} of {{set}} Hz: the FC is overloaded, nothing is applied"
@@ -10001,7 +10001,7 @@
         "message": "The FC refused: armed, a run already on, or not a quad."
     },
     "frameTestDshotBitbang": {
-        "message": "DShot bitbang did not start: its timer is taken (on F411 often by the LED strip). Set dshot_bitbang = OFF to keep the LEDs."
+        "message": "DShot bitbang did not start, so arming is disabled. Another feature can take a timer or pin it needs, the LED strip among them: check the resources, or set dshot_bitbang = OFF."
     },
     "frameTestRunAgain": {
         "message": "Run the motors again, held another way and still: modes of one run may be the support or the grip."
@@ -10205,7 +10205,7 @@
         "message": "the motors did not turn"
     },
     "frameTestEnd13": {
-        "message": "DShot bitbang has no timer, so the motors get no signal (a pin such as the LED strip takes it): move that pin or set dshot_bitbang OFF"
+        "message": "DShot bitbang could not start (another feature, such as the LED strip, can take a timer or pin it needs): check the resources or set dshot_bitbang OFF"
     },
     "frameTestEnd14": {
         "message": "the flight controller is overloaded with the motors on: the PID loop ran at {{hz}} Hz, below its set rate, and a tune measured that way would be wrong. Lower the load (a lower PID rate, no blackbox to flash, bitbang instead of timer DMA DShot)"
