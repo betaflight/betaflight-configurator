@@ -109,6 +109,79 @@ function motorRunFromMap(map: FrameMap | null): { result: WizardResult; spinChec
     return { result, spinCheck };
 }
 
+/** One MSP read: the payload, or null when the FC has no answer or does not know the code. */
+async function query(code: number, data?: number[]): Promise<Uint8Array | null> {
+    const response = await MSP.promise(code, data);
+    if (!response || response.unsupported) {
+        return null;
+    }
+    const view = response.data;
+    return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+}
+
+/** The last run's taps, page by page (the FC keeps them until the next start). */
+async function readTapPages(): Promise<SessionTap[]> {
+    const taps: SessionTap[] = [];
+    for (let first = 0; ;) {
+        const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_TAPS, [first]);
+        const page = bytes ? parseTapsPage(bytes) : null;
+        if (!page || page.taps.length === 0) {
+            return taps;
+        }
+        taps.push(...page.taps);
+        first = page.first + page.taps.length;
+        if (first >= page.total) {
+            return taps;
+        }
+    }
+}
+
+/** The features the FC classified the taps by, page by page. */
+async function readFeaturePages(): Promise<SessionTapFeatures[]> {
+    const features: SessionTapFeatures[] = [];
+    for (let page = 0; TAPS_PAGE_FEATURES + page <= 199; page++) {
+        const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_TAPS, [TAPS_PAGE_FEATURES + page]);
+        const parsed = bytes ? parseFeaturesPage(bytes) : null;
+        if (!parsed || parsed.taps.length === 0) {
+            break;
+        }
+        features.push(...parsed.taps);
+        if (parsed.first + parsed.taps.length >= parsed.total) {
+            break;
+        }
+    }
+    return features;
+}
+
+/** One gain curve page: roll / pitch / yaw, RESPONSE_BINS each; null when short. */
+function parseCurves(bytes: Uint8Array | null): number[][] | null {
+    if (!bytes || bytes.byteLength < 3 * RESPONSE_BINS * 2) {
+        return null;
+    }
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    return [0, 1, 2].map((axis) =>
+        Array.from({ length: RESPONSE_BINS }, (_, b) => view.getUint16((axis * RESPONSE_BINS + b) * 2, true) / 10000),
+    );
+}
+
+/**
+ * The motor run's gain curves (motor command to gyro, roll / pitch / yaw, 128 log bins from 20 Hz to f1)
+ * per base speed and motor, as the bench tools save them: "base/motor" (motor from 1); all zero once the
+ * buffers went back to the taps or the filter autotune.
+ */
+async function readCurves(): Promise<Record<string, number[][]>> {
+    const curves: Record<string, number[][]> = {};
+    for (let base = 0; base < 2; base++) {
+        for (let motor = 0; motor < MOTOR_COUNT; motor++) {
+            const axes = parseCurves(await query(MSPCodes.MSP2_FRAME_WIZARD_RESPONSE, [base, motor]));
+            if (axes) {
+                curves[`${base}/${motor + 1}`] = axes;
+            }
+        }
+    }
+    return curves;
+}
+
 export const useFrameWizardStore = defineStore("frameWizard", () => {
     const connectionStore = useConnectionStore();
 
@@ -157,15 +230,6 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         const target = connectionStore.connectedTo;
         return typeof target === "string" && serial.selectProtocol(target) === serial._instance("serial");
     });
-
-    async function query(code: number, data?: number[]): Promise<Uint8Array | null> {
-        const response = await MSP.promise(code, data);
-        if (!response || response.unsupported) {
-            return null;
-        }
-        const view = response.data;
-        return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
-    }
 
     async function refreshStatus(): Promise<WizardStatus | null> {
         const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_STATUS);
@@ -392,51 +456,11 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
      * for debugging a misclassified tap. Read page by page; the FC keeps them until the next start.
      */
     async function readSession() {
-        const taps: SessionTap[] = [];
-        for (let first = 0; ;) {
-            const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_TAPS, [first]);
-            const page = bytes ? parseTapsPage(bytes) : null;
-            if (!page || page.taps.length === 0) {
-                break;
-            }
-            taps.push(...page.taps);
-            first = page.first + page.taps.length;
-            if (first >= page.total) {
-                break;
-            }
-        }
-        const features: SessionTapFeatures[] = [];
-        for (let page = 0; TAPS_PAGE_FEATURES + page <= 199; page++) {
-            const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_TAPS, [TAPS_PAGE_FEATURES + page]);
-            const parsed = bytes ? parseFeaturesPage(bytes) : null;
-            if (!parsed || parsed.taps.length === 0) {
-                break;
-            }
-            features.push(...parsed.taps);
-            if (parsed.first + parsed.taps.length >= parsed.total) {
-                break;
-            }
-        }
+        const taps = await readTapPages();
+        const features = await readFeaturePages();
         const bySeq = new Map(features.map((f) => [f.seq, f]));
         await fetchSpinCheck();
-        // the motor run's gain curves (motor command to gyro, roll / pitch / yaw, 128 log bins from 20 Hz to f1)
-        // per base speed and motor, as the bench tools save them: "base/motor" (motor from 1); all zero once the
-        // buffers went back to the taps or the filter autotune
-        const curves: Record<string, number[][]> = {};
-        for (let base = 0; base < 2; base++) {
-            for (let motor = 0; motor < MOTOR_COUNT; motor++) {
-                const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_RESPONSE, [base, motor]);
-                if (bytes && bytes.byteLength >= 3 * RESPONSE_BINS * 2) {
-                    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-                    curves[`${base}/${motor + 1}`] = [0, 1, 2].map((axis) =>
-                        Array.from(
-                            { length: RESPONSE_BINS },
-                            (_, b) => view.getUint16((axis * RESPONSE_BINS + b) * 2, true) / 10000,
-                        ),
-                    );
-                }
-            }
-        }
+        const curves = await readCurves();
         return {
             savedAt: new Date().toISOString(),
             runKind: runKind.value,

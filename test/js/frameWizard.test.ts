@@ -518,7 +518,7 @@ describe("frame wizard store", () => {
         expect(msp.send_message).toHaveBeenCalledWith(0x3017, encodeAbort());
         const calls = msp.promise.mock.calls.length;
         await vi.advanceTimersByTimeAsync(3000);
-        expect(msp.promise.mock.calls.length).toBe(calls);
+        expect(msp.promise.mock.calls).toHaveLength(calls);
     });
 });
 

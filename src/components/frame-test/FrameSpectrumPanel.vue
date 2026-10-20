@@ -301,13 +301,13 @@ function lineTitle(line: SpectrumLine): string {
     if (line.storedFrom) {
         parts.push(t("frameSpectrumStoredTitle"));
     }
-    parts.push(
-        line.levelDb !== null
-            ? t("frameSpectrumLevel", { db: line.levelDb.toFixed(1) })
-            : line.severity === "unrated"
-              ? t("frameSpectrumNoMotorRun", { n: line.points.length, of: TAP_POINTS })
-              : t("frameSpectrumNoLevel"),
-    );
+    if (line.levelDb !== null) {
+        parts.push(t("frameSpectrumLevel", { db: line.levelDb.toFixed(1) }));
+    } else if (line.severity === "unrated") {
+        parts.push(t("frameSpectrumNoMotorRun", { n: line.points.length, of: TAP_POINTS }));
+    } else {
+        parts.push(t("frameSpectrumNoLevel"));
+    }
     if (line.points.length) {
         const names = line.points.map((p) =>
             p === POINT_FRAME ? t("frameSpectrumFrame") : t("frameSpectrumArm", { n: p + 1 }),

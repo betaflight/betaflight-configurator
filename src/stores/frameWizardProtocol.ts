@@ -50,7 +50,7 @@ export const OP_ABORT = 0;
 export const OP_START = 1;
 export const OP_KEEPALIVE = 2;
 
-export const START_FLAG_SKIP_TAPS = 1 << 0; // the motor run alone
+export const START_FLAG_SKIP_TAPS = 1; // bit 0: the motor run alone
 export const START_FLAG_FIXED_BASES = 1 << 1;
 export const START_FLAG_TAPS_ONLY = 1 << 3; // the cable, frame and arms by taps, done before any motor
 
@@ -327,10 +327,23 @@ export function parseResult(data: ArrayBufferView | ArrayLike<number>): WizardRe
 export const isTapPhase = (phase: WizardPhase): boolean => phase === "taps" || phase === "cable";
 export const isActivePhase = (phase: WizardPhase): boolean =>
     phase === "cable" || phase === "taps" || phase === "beep" || phase === "motors" || phase === "analyse";
+const sortedSet = (values: number[]): number[] => [...new Set(values)].sort((a, b) => a - b);
+
 export const isMotorPhase = (phase: WizardPhase): boolean =>
     phase === "beep" || phase === "motors" || phase === "analyse";
 
 export type StepState = "pending" | "active" | "done" | "error";
+
+/** A step's state: done wins, then an error, then active. */
+export function stepState(done: boolean, error: boolean, active: boolean): StepState {
+    if (done) {
+        return "done";
+    }
+    if (error) {
+        return "error";
+    }
+    return active ? "active" : "pending";
+}
 
 export interface ChecklistStep {
     /** "acc", "cable", "frame", "arm1".."arm4", "motor1".."motor4" */
@@ -371,7 +384,7 @@ function tapStep(id: string, point: number, status: WizardStatus | null, started
         tapping && status !== null && status.label === LABEL_CLIPPED && status.clippedPoint === point && !done;
     return {
         id,
-        state: done ? "done" : clipped ? "error" : tapping ? "active" : "pending",
+        state: stepState(done, clipped, tapping),
         count,
         progress: done ? 1 : Math.min(count / TAPS_NEEDED, 1),
         clipped,
@@ -384,7 +397,7 @@ export function tapChecklist(status: WizardStatus | null, ctx: ChecklistContext)
     const steps: ChecklistStep[] = [
         {
             id: "acc",
-            state: accOk ? "done" : status ? "error" : "pending",
+            state: stepState(accOk, status !== null, false),
             count: 0,
             progress: accOk ? 1 : 0,
             clipped: false,
@@ -403,15 +416,21 @@ export function tapChecklist(status: WizardStatus | null, ctx: ChecklistContext)
 
 /** Phase 2 checklist: the motors, all swept at once. */
 export function motorChecklist(status: WizardStatus | null, ctx: ChecklistContext): ChecklistStep[] {
+    const running = ctx.started && status !== null && (status.phase === "motors" || status.phase === "analyse");
+    const done = ctx.started && status?.phase === "done";
+    let progress = 0;
+    if (done) {
+        progress = 1;
+    } else if (running) {
+        progress = status.spin / 100;
+    }
     const steps: ChecklistStep[] = [];
     for (let m = 0; m < MOTOR_COUNT; m++) {
-        const running = ctx.started && status !== null && (status.phase === "motors" || status.phase === "analyse");
-        const done = ctx.started && status?.phase === "done";
         steps.push({
             id: `motor${m + 1}`,
-            state: done ? "done" : running ? "active" : "pending",
+            state: stepState(done, false, running),
             count: ctx.started && status ? status.live[m] : 0,
-            progress: done ? 1 : running && status ? status.spin / 100 : 0,
+            progress,
             clipped: false,
         });
     }
@@ -502,12 +521,8 @@ export function summarizeResonances(result: WizardResult, minScore = SUMMARY_MIN
 
     const resonances: Resonance[] = groups.map((group) => {
         const hz = medianHz(group);
-        const points = [...new Set(group.flatMap((p) => (p.point === undefined ? [] : [p.point])))].sort(
-            (a, b) => a - b,
-        );
-        const motors = [...new Set(group.flatMap((p) => (p.motor === undefined ? [] : [p.motor])))].sort(
-            (a, b) => a - b,
-        );
+        const points = sortedSet(group.flatMap((p) => (p.point === undefined ? [] : [p.point])));
+        const motors = sortedSet(group.flatMap((p) => (p.motor === undefined ? [] : [p.motor])));
         return { hz, points, motors, score: points.length + motors.length };
     });
 
@@ -744,6 +759,17 @@ export interface MapModeRef {
     unstable: boolean;
 }
 
+/** A frame map mode the run did not see: the cable's, unstable, a tap mode, or an earlier motor run's peak. */
+function storedModeSeverity(mode: MapModeRef, motorRun: boolean): ModeSeverity {
+    if (mode.fromCable) {
+        return "cable";
+    }
+    if (mode.unstable) {
+        return "unstable";
+    }
+    return mode.fromTaps ? severityOf(null, 1, false, false, motorRun) : "unrated";
+}
+
 /**
  * The run's modes as one spectrum, by frequency: the tap modes of every point and the motor peaks grouped
  * like the summary does, each with the loudest motor's level there and how much it matters. The cable's own
@@ -769,12 +795,8 @@ export function modeSpectrum(result: WizardResult | null, mapModes: MapModeRef[]
 
     const lines: SpectrumLine[] = groupByHz(peaks).map((group) => {
         const hz = medianHz(group);
-        const points = [...new Set(group.flatMap((p) => (p.point === undefined ? [] : [p.point])))].sort(
-            (a, b) => a - b,
-        );
-        const motors = [...new Set(group.flatMap((p) => (p.motor === undefined ? [] : [p.motor])))].sort(
-            (a, b) => a - b,
-        );
+        const points = sortedSet(group.flatMap((p) => (p.point === undefined ? [] : [p.point])));
+        const motors = sortedSet(group.flatMap((p) => (p.motor === undefined ? [] : [p.motor])));
         const dbs = group.filter((p) => p.db !== undefined).map((p) => p.db as number);
         const motorDb = [0, 1, 2, 3].map((m) => {
             const own = group.filter((p) => p.motor === m).map((p) => p.db as number);
@@ -787,11 +809,9 @@ export function modeSpectrum(result: WizardResult | null, mapModes: MapModeRef[]
         // map's cable entries only speak for the taps (firmware that marked no motor peak).
         const mapCable = near.length > 0 && near.every((m) => m.fromCable);
         const cable = group.every((p) => p.cable) || (mapCable && motors.length === 0);
-        const cableMotors = cable
-            ? []
-            : [...new Set(group.filter((p) => p.cable && p.motor !== undefined).map((p) => p.motor as number))].sort(
-                  (a, b) => a - b,
-              );
+        const cableMotors = sortedSet(
+            cable ? [] : group.filter((p) => p.cable && p.motor !== undefined).map((p) => p.motor as number),
+        );
         // the FC clears the mark when the motors drive the mode too
         const unstable = motors.length === 0 && near.length > 0 && near.every((m) => m.unstable && !m.fromCable);
         // a motor run's result has no taps: the map's taps part says the frame rang there (one place, at least)
@@ -814,17 +834,10 @@ export function modeSpectrum(result: WizardResult | null, mapModes: MapModeRef[]
         if (!lines.some((line) => nearAnyHz(line.hz, [mode.hz]))) {
             // a tap mode the motors do not drive (after a motor run), or a motor peak of an earlier motor run
             const tapped = Boolean(mode.fromTaps);
-            const severity: ModeSeverity = mode.fromCable
-                ? "cable"
-                : mode.unstable
-                  ? "unstable"
-                  : tapped
-                    ? severityOf(null, 1, false, false, motorRun)
-                    : "unrated";
             lines.push({
                 hz: mode.hz,
                 levelDb: null,
-                severity,
+                severity: storedModeSeverity(mode, motorRun),
                 points: [],
                 motors: [],
                 tapped,

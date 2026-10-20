@@ -50,7 +50,7 @@ const FRAME_MAP_VERSION_1 = 1;
 const FRAME_MAP_VERSION_2 = 2; // the motor profile follows the modes
 const SPIN_CHECKED = 1 << 7; // frame map v2 spin byte: the check was made; bits 0-3 the motors against the pattern
 
-export const FRAME_MAP_PART_TAPS = 1 << 0;
+export const FRAME_MAP_PART_TAPS = 1; // bit 0
 export const FRAME_MAP_PART_MOTORS = 1 << 1;
 
 /** 1x spread over the motors at or under this, with no motor standing out, reads as all OK. */

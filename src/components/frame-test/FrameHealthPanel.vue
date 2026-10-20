@@ -211,8 +211,27 @@ const motorRun = computed(() => (wizard.lastResult ? motorRunSummary(wizard.last
 const ALIKE_DB = 3;
 const BAR_SPAN_DB = 12;
 const SEVERITY_TEXT: Record<string, string> = { serious: "text-error", notable: "text-warning" };
-const signedDb = (db: number): string =>
-    Math.abs(db) < 0.5 ? "±0" : `${db > 0 ? "+" : "−"}${Math.abs(db).toFixed(1)}`;
+function signedDb(db: number): string {
+    if (Math.abs(db) < 0.5) {
+        return "±0";
+    }
+    const sign = db > 0 ? "+" : "−";
+    return `${sign}${Math.abs(db).toFixed(1)}`;
+}
+
+/** The colour of a motor's deviation from the others: much louder, louder, softer, alike. */
+function deviationTone(dev: number): { bar: string; text: string } {
+    if (dev >= MOTOR_LOUD_DB) {
+        return { bar: "bg-error", text: "text-error font-medium" };
+    }
+    if (dev >= ALIKE_DB) {
+        return { bar: "bg-warning", text: "text-warning" };
+    }
+    if (dev <= -ALIKE_DB) {
+        return { bar: "bg-inverted/30", text: "text-muted" };
+    }
+    return { bar: "bg-success", text: "text-success" };
+}
 
 const motorRows = computed(() => {
     const run = motorRun.value;
@@ -237,14 +256,7 @@ const motorRows = computed(() => {
             }
             const dev = db - median;
             const louder = dev > 0;
-            const tone =
-                dev >= MOTOR_LOUD_DB
-                    ? { bar: "bg-error", text: "text-error font-medium" }
-                    : dev >= ALIKE_DB
-                      ? { bar: "bg-warning", text: "text-warning" }
-                      : dev <= -ALIKE_DB
-                        ? { bar: "bg-inverted/30", text: "text-muted" }
-                        : { bar: "bg-success", text: "text-success" };
+            const tone = deviationTone(dev);
             return {
                 louder,
                 pct: (Math.min(Math.abs(dev), BAR_SPAN_DB) / BAR_SPAN_DB) * 50,
@@ -310,15 +322,12 @@ const motorBadges = computed<MotorBadge[]>(() => {
         const silent = v.silent.includes(m);
         const cw = wrong ? !set : set;
         const one = { ok: false, wrongWay: wrong ? [m] : [], silent: silent ? [m] : [] };
-        return {
-            ...badge,
-            color: wrong || silent ? "error" : badge.color,
-            spin: {
-                cw,
-                state: silent ? "unknown" : wrong ? "wrong" : "ok",
-                title: wrong || silent ? spinText(one) : t(cw ? "frameSpinMotorCw" : "frameSpinMotorCcw", { n: m + 1 }),
-            },
-        };
+        if (wrong || silent) {
+            const state = silent ? "unknown" : "wrong";
+            return { ...badge, color: "error", spin: { cw, state, title: spinText(one) } };
+        }
+        const title = t(cw ? "frameSpinMotorCw" : "frameSpinMotorCcw", { n: m + 1 });
+        return { ...badge, spin: { cw, state: "ok", title } };
     });
 });
 
@@ -338,9 +347,13 @@ const baseBadges = computed<MotorBadge[]>(() => {
                 title: t(run.standsOut[m] ? "frameHealthMotorLoud" : "frameHealthMotorAlike", { n: m + 1 }),
             };
         }
+        let color: MotorBadge["color"] = s.allOk ? "success" : "warning";
+        if (motor.standsOut) {
+            color = "error";
+        }
         return {
             label: `M${m + 1} · ${formatDb(motor.orders[0])} dB`,
-            color: motor.standsOut ? "error" : s.allOk ? "success" : "warning",
+            color,
             title: t("frameHealthMotorTitle", {
                 n: m + 1,
                 x1: formatDb(motor.orders[0]),

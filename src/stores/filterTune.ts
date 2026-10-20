@@ -46,6 +46,16 @@ const MAP_SAVE_SETTLE_MS = 1500;
 
 export type FilterTuneActionResult = "done" | "refused" | "failed";
 
+/** One MSP read: the payload, or null when the FC has no answer or does not know the code. */
+async function query(code: number, data?: number[]): Promise<Uint8Array | null> {
+    const response = await MSP.promise(code, data);
+    if (!response || response.unsupported) {
+        return null;
+    }
+    const view = response.data;
+    return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+}
+
 export const useFilterTuneStore = defineStore("filterTune", () => {
     /** null until probed; false when the firmware has no filter autotune. */
     const supported = ref<boolean | null>(null);
@@ -94,15 +104,6 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
                     range.id === BOX_FILTER_TUNE && range.range.start < range.range.end,
             ),
     );
-
-    async function query(code: number, data?: number[]): Promise<Uint8Array | null> {
-        const response = await MSP.promise(code, data);
-        if (!response || response.unsupported) {
-            return null;
-        }
-        const view = response.data;
-        return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
-    }
 
     async function refreshStatus() {
         const bytes = await query(MSPCodes.MSP2_FILTER_TUNE_STATUS);
@@ -196,7 +197,10 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         busy.value = true;
         try {
             const reply = await MSP.promise(MSPCodes.MSP2_SET_FRAME_WIZARD, data);
-            return !reply ? "failed" : reply.unsupported ? "refused" : "done";
+            if (!reply) {
+                return "failed";
+            }
+            return reply.unsupported ? "refused" : "done";
         } catch (error) {
             if (!isMspCancelled(error)) {
                 console.warn("Filter autotune action failed:", error);

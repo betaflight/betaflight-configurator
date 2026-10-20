@@ -280,6 +280,7 @@ import {
     motorChecklist,
     tapChecklist,
     type ChecklistStep,
+    stepState,
 } from "@/stores/frameWizardProtocol";
 import { spinText } from "./spinText";
 import { spinVerdict } from "@/stores/frameSpinCheck";
@@ -372,12 +373,12 @@ const canStart = computed(() => accOk.value && !wizard.starting && !wizard.activ
 // may not be read yet, or the FC restarted).
 const tapsDone = computed(() => filterTune.frameMap?.hasTaps === true || wizard.lastTapsAt !== null);
 
-const pointName = (point: number): string =>
-    point < 4
-        ? t("frameTestStepArm", { n: point + 1 })
-        : point === POINT_CABLE
-          ? t("frameTestStepCable")
-          : t("frameTestStepFrame");
+function pointName(point: number): string {
+    if (point < 4) {
+        return t("frameTestStepArm", { n: point + 1 });
+    }
+    return point === POINT_CABLE ? t("frameTestStepCable") : t("frameTestStepFrame");
+}
 
 function tapDescription(step: ChecklistStep, point: number, hint: string): string {
     if (step.clipped) {
@@ -417,10 +418,24 @@ const tapItems = computed(() => {
             description,
             step,
             ordinal: index + 1,
-            class: step.state === "done" ? DONE_SEPARATOR : step.learning ? "opacity-50" : undefined,
+            class: tapItemClass(step),
         };
     });
 });
+
+function tapItemClass(step: ChecklistStep): string | undefined {
+    if (step.state === "done") {
+        return DONE_SEPARATOR;
+    }
+    return step.learning ? "opacity-50" : undefined;
+}
+
+function spinStepProgress(verdict: unknown, running: boolean, spin: number | undefined): number {
+    if (verdict) {
+        return 1;
+    }
+    return running && spin !== undefined ? spin / 100 : 0;
+}
 
 // After the motors, their spin direction: each motor alone, the sign of its yaw answer (bench firmware).
 const spinItem = computed(() => {
@@ -431,9 +446,9 @@ const spinItem = computed(() => {
     const verdict = check ? spinVerdict(check) : null;
     const step: ChecklistStep = {
         id: "spin",
-        state: verdict ? (verdict.ok ? "done" : "error") : running ? "active" : "pending",
+        state: stepState(verdict?.ok === true, verdict?.ok === false, running),
         count: 0,
-        progress: verdict ? 1 : running && status ? status.spin / 100 : 0,
+        progress: spinStepProgress(verdict, running, status?.spin),
         clipped: false,
     };
     let description: string | undefined;

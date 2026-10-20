@@ -67,9 +67,9 @@ export function saveHistory(key: string | null, patch: FrameHistory): void {
 
 /** The run found tap modes / motor peaks (the FC reports an empty result after a restart). */
 export const hasTaps = (result: WizardResult | null): result is WizardResult =>
-    result !== null && result.points.some((p) => p.length > 0);
+    result?.points.some((p) => p.length > 0) === true;
 export const hasMotors = (result: WizardResult | null): result is WizardResult =>
-    result !== null && result.motors.some((m) => m.length > 0);
+    result?.motors.some((m) => m.length > 0) === true;
 export const resultHasData = (result: WizardResult | null): result is WizardResult =>
     hasTaps(result) || hasMotors(result);
 
