@@ -9622,9 +9622,6 @@
     "filterTuneStep1": {
         "message": "Turn FILTER TUNE on and hover steadily for 30 seconds or more."
     },
-    "filterTuneStep2": {
-        "message": "Two beeps: enough data."
-    },
     "filterTuneStep3": {
         "message": "Land and disarm with the mode still on: the new filters are saved and work from the next arm. Disarm with the mode off to discard them."
     },
@@ -9960,5 +9957,35 @@
     },
     "frameTestCableMode": {
         "message": "cable"
+    },
+    "filterTuneStep2Beeps": {
+        "message": "Two beeps: enough data. Only with a buzzer: without one, hover 30 seconds or more, then land."
+    },
+    "filterTuneStep2Signals": {
+        "message": "Enough data: {{ways}}."
+    },
+    "filterTuneStep2None": {
+        "message": "Enough data after 30 seconds or more of hovering; this craft does not signal it."
+    },
+    "filterTuneSignalBeeps": {
+        "message": "two beeps"
+    },
+    "filterTuneSignalLeds": {
+        "message": "the LED strip turns green"
+    },
+    "filterTuneSignalOsd": {
+        "message": "the OSD shows FILTER TUNE READY"
+    },
+    "filterTuneNoSignal": {
+        "message": "This craft has no buzzer, LED strip or OSD to signal the autotune in flight: hover 30 seconds or more, then land and disarm with the mode on."
+    },
+    "filterTuneLedCollecting": {
+        "message": "collecting"
+    },
+    "filterTuneLedReady": {
+        "message": "enough data"
+    },
+    "filterTuneLedDiscarded": {
+        "message": "discarded"
     }
 }

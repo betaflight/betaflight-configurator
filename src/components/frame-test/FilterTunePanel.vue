@@ -54,9 +54,23 @@
             </span>
         </div>
 
+        <!-- the craft can tell the pilot nothing in flight: say so before the flight -->
+        <p v-if="noSignal" class="flex items-start gap-2 text-xs text-warning">
+            <UIcon name="i-lucide-triangle-alert" class="mt-0.5 size-3.5 shrink-0" />
+            {{ $t("filterTuneNoSignal") }}
+        </p>
         <ol class="list-decimal pl-5 text-xs text-muted flex flex-col gap-0.5">
             <li>{{ $t("filterTuneStep1") }}</li>
-            <li>{{ $t("filterTuneStep2") }}</li>
+            <li>
+                {{ step2 }}
+                <!-- what the LED strip's colours mean -->
+                <span v-if="status?.signals?.ledStrip" class="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
+                    <span v-for="led in LED_STATES" :key="led.key" class="flex items-center gap-1">
+                        <span class="size-2 shrink-0 rounded-full" :class="led.dot"></span>
+                        {{ $t(led.key) }}
+                    </span>
+                </span>
+            </li>
             <li>{{ $t("filterTuneStep3") }}</li>
         </ol>
 
@@ -239,6 +253,31 @@ function peakTitle(peak: ResidualPeak): string {
     }
     return parts.join(" · ");
 }
+
+const LED_STATES = [
+    { key: "filterTuneLedCollecting", dot: "bg-primary" },
+    { key: "filterTuneLedReady", dot: "bg-success" },
+    { key: "filterTuneLedDiscarded", dot: "bg-error" },
+];
+
+// Step 2 says how this craft tells the pilot there is enough data: the FC reports its signals (buzzer, LED
+// strip, OSD); older firmware only beeps, so with it the buzzer is the only way.
+const step2 = computed(() => {
+    const sig = status.value?.signals;
+    if (!sig) {
+        return t("filterTuneStep2Beeps");
+    }
+    const ways = [
+        sig.beeper ? t("filterTuneSignalBeeps") : "",
+        sig.ledStrip ? t("filterTuneSignalLeds") : "",
+        sig.osd ? t("filterTuneSignalOsd") : "",
+    ].filter(Boolean);
+    return ways.length ? t("filterTuneStep2Signals", { ways: ways.join(", ") }) : t("filterTuneStep2None");
+});
+const noSignal = computed(() => {
+    const sig = status.value?.signals;
+    return !!sig && !sig.beeper && !sig.ledStrip && !sig.osd;
+});
 
 const revertMessage = ref<{ ok: boolean; text: string } | null>(null);
 

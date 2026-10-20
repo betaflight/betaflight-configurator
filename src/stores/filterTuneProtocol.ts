@@ -101,6 +101,17 @@ export interface FilterTuneStatus {
     highBandDb: number | null;
     /** Why the autotune set gyro LPF2 the way it did; null with firmware that does not send it. */
     lpf2Basis: Lpf2Basis | null;
+    /** How the FC tells the pilot in flight (enough data, discarded); null with firmware that does not send it. */
+    signals: FilterTuneSignals | null;
+}
+
+export interface FilterTuneSignals {
+    /** A buzzer is set up: beeps. */
+    beeper: boolean;
+    /** The LED strip is on with LEDs: the whole strip in the state's colour. */
+    ledStrip: boolean;
+    /** The OSD is on with a display: a FILTER TUNE message. */
+    osd: boolean;
 }
 
 export const LPF2_BASIS = ["harmonics", "off", "highBand", "highPeak"] as const;
@@ -210,6 +221,12 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             const basis = r.u8();
             lpf2Basis = LPF2_BASIS[basis] ?? "noData";
         }
+        // appended later still: the in-flight signals the FC has
+        let signals: FilterTuneSignals | null = null;
+        if (r.remaining >= 1) {
+            const bits = r.u8();
+            signals = { beeper: (bits & 1) !== 0, ledStrip: (bits & 2) !== 0, osd: (bits & 4) !== 0 };
+        }
         return {
             state: FILTER_TUNE_STATES[stateCode] ?? "idle",
             hasFrameMap: (flags & 1) !== 0,
@@ -230,6 +247,7 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             current,
             highBandDb,
             lpf2Basis,
+            signals,
         };
     } catch {
         return null;

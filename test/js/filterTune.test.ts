@@ -165,6 +165,17 @@ describe("filter autotune status", () => {
         expect(parseFilterTuneStatus(noData)).toMatchObject({ lpf2Basis: "noData" });
     });
 
+    it("reads the in-flight signals the FC has when it appends them, and nothing otherwise", () => {
+        const withBasis = [...statusPayload(), ...new Sbuf().u16(-12).u8(1).bytes];
+        expect(parseFilterTuneStatus(withBasis)).toMatchObject({ signals: null });
+        expect(parseFilterTuneStatus([...withBasis, 0b110])).toMatchObject({
+            signals: { beeper: false, ledStrip: true, osd: true },
+        });
+        expect(parseFilterTuneStatus([...withBasis, 0])).toMatchObject({
+            signals: { beeper: false, ledStrip: false, osd: false },
+        });
+    });
+
     it("parses a status read from the bench FC (firmware 8729d4f4d, no hover yet)", () => {
         const hex =
             "01010300003c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ff" +
