@@ -17,7 +17,12 @@
         >
             <USwitch v-model="state.showDevelopmentReleases" @change="onShowDevelopmentReleasesChange" />
         </SettingRow>
-        <SettingRow :help="$t('firmwareFlasherOnlineSelectBuildType')" fullWidth v-if="state.buildTypeRowVisible">
+        <SettingRow
+            data-setting-search-key="firmwareFlasherBuildTypeLabel"
+            :help="$t('firmwareFlasherOnlineSelectBuildType')"
+            fullWidth
+            v-if="state.buildTypeRowVisible"
+        >
             <USelect
                 v-model="state.selectedBuildType"
                 :items="state.buildTypeOptions"
@@ -25,7 +30,11 @@
                 @update:model-value="onBuildTypeChange"
             />
         </SettingRow>
-        <SettingRow :help="$t('firmwareFlasherOnlineSelectBoardHint')" fullWidth>
+        <SettingRow
+            data-setting-search-key="firmwareFlasherBoardLabel"
+            :help="$t('firmwareFlasherOnlineSelectBoardHint')"
+            fullWidth
+        >
             <div class="flex items-center gap-2">
                 <UFieldGroup class="min-w-80">
                     <USelectMenu
@@ -54,7 +63,11 @@
                 </UFieldGroup>
             </div>
         </SettingRow>
-        <SettingRow :help="$t('firmwareFlasherOnlineSelectFirmwareVersionDescription')" fullWidth>
+        <SettingRow
+            data-setting-search-key="versionLabelFirmware"
+            :help="$t('firmwareFlasherOnlineSelectFirmwareVersionDescription')"
+            fullWidth
+        >
             <USelect
                 v-model="boardSelection.state.selectedFirmwareVersion"
                 value-key="release"
