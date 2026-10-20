@@ -404,7 +404,7 @@ describe("serial_backend connect deeplink", () => {
         expect(autoSelect).toBeTypeOf("function");
 
         serial.connect.mockClear();
-        autoSelect();
+        autoSelect!();
 
         // No competing open, and the selection is still the manual deeplink target.
         expect(serial.connect).not.toHaveBeenCalled();
@@ -677,13 +677,13 @@ describe("serial_backend connect-failure dialog", () => {
 
         DeviceHandler.devicePicker.autoConnect = false;
         serial.connect.mockClear();
-        autoSelect();
+        autoSelect!();
         expect(serial.connect).not.toHaveBeenCalled();
 
         // With it on the same listener connects, and its failure stays silent.
         DeviceHandler.devicePicker.autoConnect = true;
         dialogStore.open.mockClear();
-        autoSelect();
+        autoSelect!();
         expect(serial.connect).toHaveBeenCalled();
 
         serialHandlers.connect({ detail: false });
