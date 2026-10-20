@@ -35,7 +35,7 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 
 | Rule | Status | Enforced by |
 |---|---|---|
-| New files are `.ts` or `<script setup lang="ts">` | 🔧 | ESLint rejects any `.js` in `src/composables/**`, `src/stores/**` and `src/js/msp/**` (except the dev-only `src/js/msp/debug/**`); other folders follow as they reach zero `.js` (#5542 phase 7) |
+| New files are `.ts` or `<script setup lang="ts">` | 🔧 | ESLint rejects any `.js` in `src/components/**`, `src/composables/**`, `src/stores/**` and `src/js/msp/**` (except the dev-only `src/js/msp/debug/**`); other folders follow as they reach zero `.js` (#5542 phase 7) |
 | `strict` typing; no `any` to silence the checker | 🔧 | `strict: true` + `vue-tsc`; `@typescript-eslint/no-explicit-any` |
 | A file you touch for other reasons converts to TypeScript in the same PR; a touched test converts to `.test.ts` | 📐 | Review call |
 
@@ -45,7 +45,7 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 |---|---|---|
 | Reach for `@nuxt/ui` v4 first: `UButton`, `UInput`, `UInputNumber`, `USelect`, `USwitch`, `UModal`, … | 📐 | Taste call |
 | Use shared wrappers in `src/components/elements/`: `UiBox`, `SettingRow`, `SettingColumn`, `HelpIcon`, `WikiButton` | 📐 | Taste call |
-| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🚧 | Lint rule (#5542 phase 7) |
+| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🔧 | CodeRabbit flags a new block (`.coderabbit.yaml`). A lint rule follows once the legacy blocks are gone (#5542) |
 | No hard-coded colors — theme via CSS custom properties | 🚧 | Lint rule as an error once existing violations are gone (#5542 phase 7) |
 | Respect light/dark (`.dark`) and color themes (`data-theme`) | 📐 | Visual review |
 
