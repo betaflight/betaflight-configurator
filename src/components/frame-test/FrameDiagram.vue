@@ -1,31 +1,7 @@
 <template>
-    <!-- the quad seen from above, front up; each motor's own peaks stacked beside its corner -->
-    <div class="mx-auto grid w-fit grid-cols-[minmax(4.5rem,auto)_auto_minmax(4.5rem,auto)] gap-x-2">
-        <div
-            v-for="side in SIDES"
-            :key="side.column"
-            class="flex flex-col justify-between"
-            :class="[side.items, side.place]"
-        >
-            <div
-                v-for="index in side.motors"
-                :key="index"
-                class="flex gap-1"
-                :class="[index === side.motors[0] ? 'flex-col' : 'flex-col-reverse', side.items]"
-            >
-                <UBadge
-                    v-for="peak in motors[index].peaks ?? []"
-                    :key="peak.label"
-                    :color="peak.color"
-                    variant="subtle"
-                    size="sm"
-                    class="tabular-nums"
-                    :title="peak.title"
-                    :label="peak.label"
-                />
-            </div>
-        </div>
-        <div class="relative col-start-2 row-start-1 size-56">
+    <!-- the quad seen from above, front up -->
+    <div class="mx-auto w-fit">
+        <div class="relative size-56">
             <svg viewBox="0 0 200 200" class="size-full" role="img" :aria-label="$t('frameDiagramAlt')">
                 <path
                     d="M40 40 160 160M40 160 160 40"
@@ -35,17 +11,31 @@
                     stroke-linecap="round"
                     fill="none"
                 />
-                <circle
-                    v-for="(at, index) in MOTOR_AT"
-                    :key="index"
-                    :cx="at.x"
-                    :cy="at.y"
-                    r="28"
-                    class="text-primary"
-                    stroke="currentColor"
-                    stroke-width="4"
-                    fill="none"
-                />
+                <!-- the prop circle; with a spin check an arrow round it the way the motor turns, green / red when the
+                     check confirms / contradicts the direction set -->
+                <template v-for="(at, index) in MOTOR_AT" :key="index">
+                    <g v-if="motors[index].spin" :class="SPIN_RING[motors[index].spin!.state]">
+                        <title>{{ motors[index].spin!.title }}</title>
+                        <path
+                            :d="spinArc(at, motors[index].spin!.cw).arc"
+                            stroke="currentColor"
+                            stroke-width="4"
+                            stroke-linecap="round"
+                            fill="none"
+                        />
+                        <path :d="spinArc(at, motors[index].spin!.cw).head" fill="currentColor" />
+                    </g>
+                    <circle
+                        v-else
+                        :cx="at.x"
+                        :cy="at.y"
+                        r="28"
+                        :class="SPIN_RING.none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        fill="none"
+                    />
+                </template>
             </svg>
             <!-- the motors where they sit -->
             <UBadge
@@ -81,12 +71,19 @@ import type { PropType } from "vue";
 
 type BadgeColor = "success" | "warning" | "error" | "neutral";
 
+/** A frame mode most motors drive, shown in the middle. */
+export interface CentreMode {
+    label: string;
+    color: BadgeColor;
+    title?: string;
+}
+
 export interface MotorBadge {
     label: string;
     color: BadgeColor;
     title?: string;
-    /** The motor's own peaks, listed beside its corner. */
-    peaks?: { label: string; color: BadgeColor; title?: string }[];
+    /** Its spin direction seen from above, and whether the spin check agrees ("unknown": no answer). */
+    spin?: { cw: boolean; state: "ok" | "wrong" | "unknown"; title: string };
 }
 
 defineProps({
@@ -97,7 +94,7 @@ defineProps({
     },
     /** The frame's modes most motors drive, shown in the middle. */
     centre: {
-        type: Array as PropType<NonNullable<MotorBadge["peaks"]>>,
+        type: Array as PropType<CentreMode[]>,
         default: () => [],
     },
 });
@@ -109,9 +106,37 @@ const MOTOR_AT = [
     { x: 40, y: 160 },
     { x: 40, y: 40 },
 ];
-// Per side the front motor first (its peaks grow down from the top), then the rear one (up from the bottom).
-const SIDES = [
-    { column: "left", motors: [3, 2], items: "items-end", place: "col-start-1 row-start-1" },
-    { column: "right", motors: [1, 0], items: "items-start", place: "col-start-3 row-start-1" },
-];
+const SPIN_RING: Record<string, string> = {
+    ok: "text-success",
+    wrong: "text-error",
+    unknown: "text-dimmed",
+    none: "text-primary",
+};
+const RING_R = 28;
+const ARC_GAP_DEG = 50; // the opening the arrowhead points into, on the outer side
+
+/** The prop circle as an arrow round the motor the way it turns (seen from above), its opening on the outer side. */
+function spinArc(at: { x: number; y: number }, cw: boolean): { arc: string; head: string } {
+    const outward = Math.atan2(at.y - 100, at.x - 100); // screen angle, y down: clockwise is increasing
+    const half = (ARC_GAP_DEG / 2) * (Math.PI / 180);
+    const dir = cw ? 1 : -1;
+    const a0 = outward + dir * half;
+    const a1 = outward + dir * (2 * Math.PI - half);
+    const point = (a: number, r = RING_R) => [at.x + r * Math.cos(a), at.y + r * Math.sin(a)];
+    const [x0, y0] = point(a0);
+    const [x1, y1] = point(a1);
+    const arc = `M${x0.toFixed(2)} ${y0.toFixed(2)} A${RING_R} ${RING_R} 0 1 ${cw ? 1 : 0} ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+    // the head: its tip on along the turn, its base across the ring
+    const tx = -Math.sin(a1) * dir;
+    const ty = Math.cos(a1) * dir;
+    const nx = Math.cos(a1);
+    const ny = Math.sin(a1);
+    const tip = [x1 + tx * 9, y1 + ty * 9];
+    const b1 = [x1 + nx * 7, y1 + ny * 7];
+    const b2 = [x1 - nx * 7, y1 - ny * 7];
+    const head = `M${tip.map((v) => v.toFixed(2)).join(" ")} L${b1.map((v) => v.toFixed(2)).join(" ")} L${b2
+        .map((v) => v.toFixed(2))
+        .join(" ")} Z`;
+    return { arc, head };
+}
 </script>

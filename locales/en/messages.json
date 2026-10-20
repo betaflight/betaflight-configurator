@@ -9377,7 +9377,7 @@
         "message": "Frame and motors"
     },
     "frameHealthHelp": {
-        "message": "How strongly each motor shakes the frame at its rotation frequency (1x) and its harmonics, over the noise floor, measured in flight by the filter autotune. Motors that agree mean balanced props and motors."
+        "message": "The quad seen from above. Each prop ring is an arrow the way the motor turns (as set in the Motors tab); after a motor run it is green when the spin check agrees and red when the motor turns the wrong way. A motor is yellow when it shakes a frame resonance much harder than the others (its mount or the motor). In the middle, the frame's main resonances. After a filter autotune flight, each motor's 1x over the noise floor."
     },
     "frameHealthQuadOnly": {
         "message": "The diagram is for Quad X."
@@ -9406,14 +9406,8 @@
     "frameHealthMotorDiffers": {
         "message": "Motor {{n}} drives the {{hz}} Hz resonance {{db}} dB over the others: check its screws, mount and bearings."
     },
-    "frameHealthMotorOwnPeaks": {
-        "message": "Motor {{n}}: peaks of its own in the motor run, loudest first (no tap found them, at most one other motor shows them: its mount, its arm or the motor itself)"
-    },
-    "frameHealthMotorNoOwnPeaks": {
-        "message": "Motor {{n}}: no peaks of its own in the motor run, only the frame's"
-    },
     "frameHealthCentreMode": {
-        "message": "{{hz}} Hz: a mode of the whole frame, motors {{list}} drive it ({{db}} dB from the loudest)"
+        "message": "{{hz}} Hz: a strong frame resonance, motors {{list}} drive it ({{db}} dB from the strongest)"
     },
     "filterTuneMapStored": {
         "message": "Frame map stored: {{parts}}"
@@ -9479,7 +9473,7 @@
         "message": "Frame resonances"
     },
     "frameSpectrumHelp": {
-        "message": "The frame's resonances from the last frame test. Left to right the frequency, the same scale every run; a bar's height is how hard the motors shake the frame there, in dB from the strongest resonance of the motor run (0 dB). Red: strong, within 6 dB of the strongest and seen in three places or more - the resonances the filters must handle; every frame has some, they are no fault. Yellow: medium, within 12 dB. Green: weak. Grey: the frame rings there on a tap but the motors do not drive it, or the flight controller marked it unstable. On each plate the frequency, a fan with the numbers of the motors that drive it (as the motor run) and a hand when the taps found it too (as the taps). A peak only one or two motors show is on the quad diagram, by those motors. Hidden unless you click their label: the USB cable's own resonances, and the ones only the taps found (the motors do not drive them, so no filter needs them)."
+        "message": "The frame's resonances from the last frame test. Left to right the frequency, the same scale every run; a bar's height is how hard the motors shake the frame there, in dB from the strongest resonance of the motor run (0 dB). Red: strong, within 6 dB of the strongest and seen in three places or more - the resonances the filters must handle; every frame has some, they are no fault. Yellow: medium, within 12 dB. Green: weak. Grey: the frame rings there on a tap but the motors do not drive it, or the flight controller marked it unstable. On each plate the frequency, a fan with the numbers of the motors that drive it (as the motor run) and a hand when the taps found it too (as the taps). Weak peaks only one or two motors show are not here: they are listed under Each motor against the others. Hidden unless you click their label: the USB cable's own resonances, and the ones only the taps found (the motors do not drive them, so no filter needs them)."
     },
     "frameSpectrum_serious": {
         "message": "Strong"
@@ -9897,5 +9891,74 @@
     },
     "frameTestSpeedLimited": {
         "message": "A rotation target was not reached within the command limit."
+    },
+    "frameSpinMotorCw": {
+        "message": "Motor {{n}} turns clockwise seen from above, as set and as the spin check found"
+    },
+    "frameSpinMotorCcw": {
+        "message": "Motor {{n}} turns counter-clockwise seen from above, as set and as the spin check found"
+    },
+    "frameSpectrumTapsAt": {
+        "message": "Taps: {{date}}"
+    },
+    "frameSpectrumMotorsAt": {
+        "message": "Motor run: {{date}}"
+    },
+    "frameHealthMotorAlike": {
+        "message": "Motor {{n}} shakes the frame as the others do in the motor run"
+    },
+    "frameHealthMotorLoud": {
+        "message": "Motor {{n}} shakes a frame resonance 10 dB or more harder than the others: check its screws, mount and bearings"
+    },
+    "frameMapCableMode": {
+        "message": "The USB cable's own resonance, not the frame's"
+    },
+    "frameMapTitle": {
+        "message": "Frame map"
+    },
+    "frameMapEmpty": {
+        "message": "Nothing stored yet: run the taps part of the frame test."
+    },
+    "frameMapUnstableMode": {
+        "message": "Unstable: few taps saw it, even where it rang most (the flight controller on its soft mount, a hand, a loose part). The filter autotune puts no static notch on it."
+    },
+    "frameTestStart": {
+        "message": "Start frame test"
+    },
+    "frameTestAgain": {
+        "message": "Run again"
+    },
+    "frameTestBlockedByMotorTest": {
+        "message": "Locked while motor test mode is on: turn it off to use the frame test."
+    },
+    "frameTestEnd2": {
+        "message": "aborted from the app"
+    },
+    "frameTestEnd3": {
+        "message": "lost connection"
+    },
+    "frameTestEnd4": {
+        "message": "the craft was armed"
+    },
+    "frameTestEnd5": {
+        "message": "battery low"
+    },
+    "frameTestEnd6": {
+        "message": "the USB cable came out"
+    },
+    "frameTestEnd7": {
+        "message": "the craft was dropped"
+    },
+    "frameTestEnd8": {
+        "message": "the craft was turned over"
+    },
+    "frameTestEnd9": {
+        "message": "the craft was spun or swung hard"
+    },
+    "frameTestEnd10": {
+        "message": "the craft hit something hard (over 6 g) while the motors ran"
+    },
+    "frameTestCableMode": {
+        "message": "cable"
     }
 }

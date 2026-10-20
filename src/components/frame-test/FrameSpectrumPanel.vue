@@ -2,7 +2,13 @@
     <UiBox v-if="allLines.length" :title="$t('frameSpectrumTitle')" :help="$t('frameSpectrumHelp')" type="neutral">
         <!-- which run this is, on the box's frame at the right (as the title on the left): its date, and whether
              the FC still has it or this app kept it -->
-        <RunDateBadge v-if="wizard.lastResultAt" :at="wizard.lastResultAt" :kept="wizard.lastResultKept" on-frame />
+        <RunDateBadge
+            v-if="wizard.lastResultAt"
+            :at="wizard.lastResultAt"
+            :kept="wizard.lastResultKept"
+            :detail="runDates"
+            on-frame
+        />
         <!-- the answer first, in words: which resonances matter and whether a motor stands out -->
         <!-- the colour on the icon and the edge, the text in the plain text colours: readable on any theme -->
         <UAlert
@@ -385,6 +391,18 @@ const axis = computed(() => {
     return marks;
 });
 const axisRows = computed(() => Math.max(1, ...axis.value.map((m) => m.row + 1)));
+
+// which runs the chart shows, and when each was measured
+const shortDate = (iso: string) =>
+    new Date(iso).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+const runDates = computed(() =>
+    [
+        wizard.lastTapsAt ? t("frameSpectrumTapsAt", { date: shortDate(wizard.lastTapsAt) }) : "",
+        wizard.lastMotorsAt ? t("frameSpectrumMotorsAt", { date: shortDate(wizard.lastMotorsAt) }) : "",
+    ]
+        .filter(Boolean)
+        .join("\n"),
+);
 
 const hzList = (list: SpectrumLine[]): string => list.map((l) => l.hz.toFixed(0)).join(", ");
 

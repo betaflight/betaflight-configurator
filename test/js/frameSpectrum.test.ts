@@ -150,4 +150,20 @@ describe("mode spectrum", () => {
             [882, -26],
         ]);
     });
+
+    it('keeps a strong mode two motors drive on the chart (5" motor run, 2026-10-20 10:22)', () => {
+        // prettier-ignore
+        const peaks: [number, number][][] = [[[67.1,0.0413],[208.5,0.1153],[326.2,0.069],[437.8,0.1079],[556.5,0.0344],[840.5,0.0063],[1035.4,0.0039],[1191.3,0.0033]],[[211.7,0.0766],[239.2,0.0448],[531.1,0.0585],[1087.9,0.0028]],[[128.6,0.0283],[211.9,0.1128],[328.6,0.0429],[357.8,0.0397],[439.4,0.0584],[529.7,0.0174],[648.5,0.0156],[873.8,0.0068]],[[130.1,0.0294],[212.5,0.1021],[236.9,0.0683],[301.3,0.0335],[521.6,0.0765],[1098,0.0021]]];
+        const motorRun = {
+            points: [[], [], [], [], [], []],
+            motors: peaks.map((list) => list.map(([hz, gain]) => ({ hz, gain, axis: null, speeds: 2, cable: false }))),
+        } as unknown as WizardResult;
+        const lines = modeSpectrum(motorRun);
+        // 439 Hz: motors 1 and 3 only, -0.6 dB from the strongest: a frame mode, not a motor's own peak
+        const strong = lines.find((l) => Math.round(l.hz) === 439)!;
+        expect(strong.motors).toEqual([0, 2]);
+        expect(isFrameMode(strong)).toBe(true);
+        // a weak peak of one motor stays off the chart
+        expect(isFrameMode(lines.find((l) => Math.round(l.hz) === 1191)!)).toBe(false);
+    });
 });

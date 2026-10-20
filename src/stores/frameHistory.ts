@@ -30,7 +30,11 @@ import type { WizardResult } from "./frameWizardProtocol";
  * the FC. Keyed by the MCU's unique id.
  */
 export interface FrameHistory {
-    /** The last frame test run the FC reported (taps and / or motors), with its spin check. */
+    /** The last taps run the FC reported (its points' modes). */
+    taps?: { at: string; result: WizardResult };
+    /** The last motor run the FC reported (its motors' peaks), with its spin check. */
+    motors?: { at: string; result: WizardResult; spinCheck: SpinCheck | null };
+    /** Kept by an earlier version: the last run of either kind. Read as taps and / or motors. */
     run?: { at: string; result: WizardResult; spinCheck: SpinCheck | null };
     /** The filter autotune's measurement once it was applied (or had enough frames). */
     tune?: { at: string; status: FilterTuneStatus };
@@ -61,9 +65,40 @@ export function saveHistory(key: string | null, patch: FrameHistory): void {
     setConfig({ [key]: { ...loadHistory(key), ...patch } });
 }
 
-/** A result with something in it: the FC reports an empty one after a restart. */
+/** The run found tap modes / motor peaks (the FC reports an empty result after a restart). */
+export const hasTaps = (result: WizardResult | null): result is WizardResult =>
+    result !== null && result.points.some((p) => p.length > 0);
+export const hasMotors = (result: WizardResult | null): result is WizardResult =>
+    result !== null && result.motors.some((m) => m.length > 0);
 export const resultHasData = (result: WizardResult | null): result is WizardResult =>
-    result !== null && (result.points.some((p) => p.length > 0) || result.motors.some((m) => m.length > 0));
+    hasTaps(result) || hasMotors(result);
+
+/** The kept taps and motor runs, an earlier version's single run sorted into them. */
+export function keptRuns(history: FrameHistory): Pick<FrameHistory, "taps" | "motors"> {
+    const old = history.run;
+    return {
+        taps: history.taps ?? (old && hasTaps(old.result) ? { at: old.at, result: old.result } : undefined),
+        motors: history.motors ?? (old && hasMotors(old.result) ? old : undefined),
+    };
+}
+
+/**
+ * The frame as the last taps run and the last motor run found it together: the motor run's peaks with the
+ * taps run's points (a motor run's result has no taps, a taps run's no motors).
+ */
+export function mergeRuns(taps: WizardResult | undefined, motors: WizardResult | undefined): WizardResult | null {
+    if (taps && motors) {
+        return {
+            ...motors,
+            points: taps.points,
+            sessionTaps: taps.sessionTaps,
+            clippedTaps: taps.clippedTaps,
+            noModeMask: taps.noModeMask,
+            noCable: taps.noCable,
+        };
+    }
+    return taps ?? motors ?? null;
+}
 
 /** The same run as the one kept (its date stays). */
 export const sameRun = (a: WizardResult, b: WizardResult): boolean => JSON.stringify(a) === JSON.stringify(b);

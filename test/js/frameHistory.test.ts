@@ -20,7 +20,15 @@
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
-import { craftKey, loadHistory, resultHasData, sameRun, saveHistory } from "../../src/stores/frameHistory";
+import {
+    craftKey,
+    keptRuns,
+    loadHistory,
+    mergeRuns,
+    resultHasData,
+    sameRun,
+    saveHistory,
+} from "../../src/stores/frameHistory";
 import type { WizardResult } from "../../src/stores/frameWizardProtocol";
 
 const empty = {
@@ -60,5 +68,26 @@ describe("frame test history", () => {
         expect(resultHasData(run)).toBe(true);
         expect(sameRun(run, structuredClone(run))).toBe(true);
         expect(sameRun(run, empty)).toBe(false);
+    });
+
+    it("shows the last taps run and the last motor run together, an older single run sorted into them", () => {
+        const tapsRun = {
+            ...empty,
+            phase: "done",
+            sessionTaps: 30,
+            points: [[{ hz: 212, taps: 5, cable: false }], [], [], [], [], []],
+        } as unknown as WizardResult;
+        const merged = mergeRuns(tapsRun, run)!;
+        expect(merged.points).toEqual(tapsRun.points);
+        expect(merged.motors).toEqual(run.motors);
+        expect(merged.sessionTaps).toBe(30);
+        expect(mergeRuns(undefined, run)).toBe(run);
+        expect(mergeRuns(undefined, undefined)).toBeNull();
+        // an earlier version kept one run of either kind
+        expect(keptRuns({ run: { at: "a", result: run, spinCheck: null } })).toMatchObject({
+            taps: undefined,
+            motors: { at: "a", result: run },
+        });
+        expect(keptRuns({ run: { at: "b", result: tapsRun, spinCheck: null } }).taps?.at).toBe("b");
     });
 });

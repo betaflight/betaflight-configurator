@@ -843,11 +843,16 @@ export function modeSpectrum(result: WizardResult | null, mapModes: MapModeRef[]
 export const FRAME_MIN_MOTORS = 3;
 
 /**
- * A mode of the frame: the taps found it, or most motors drive it. A peak only one or two motors show and no
- * tap found belongs to those motors (their mount, arm or the motor itself) and goes with them, not here.
+ * A mode of the frame: the taps found it, most motors drive it, or it is strong enough to matter to the
+ * filters whoever drives it (two motors of one pair can ring a mode of their arms near the strongest). Only a
+ * weak peak of one or two motors that no tap found belongs to those motors (their mount, arm or the motor
+ * itself) and goes with them, not here.
  */
 export const isFrameMode = (line: SpectrumLine): boolean =>
-    line.tapped || line.motors.length === 0 || line.motors.length >= FRAME_MIN_MOTORS;
+    line.tapped ||
+    line.motors.length === 0 ||
+    line.motors.length >= FRAME_MIN_MOTORS ||
+    (line.levelDb !== null && line.levelDb >= NOTABLE_DB);
 
 export interface MotorOwnPeak {
     hz: number;

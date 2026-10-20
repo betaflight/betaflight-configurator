@@ -27,7 +27,17 @@ import { isMspCancelled } from "../js/msp/mspErrors";
 import { serial } from "../js/serial";
 import { useConnectionStore } from "./connection";
 import { useFlightControllerStore } from "./fc";
-import { craftKey, loadHistory, resultHasData, sameRun, saveHistory } from "./frameHistory";
+import {
+    craftKey,
+    hasMotors,
+    hasTaps,
+    keptRuns,
+    loadHistory,
+    mergeRuns,
+    resultHasData,
+    sameRun,
+    saveHistory,
+} from "./frameHistory";
 import { parseSpinCheck, SPIN_CHECK_BASE, type SpinCheck } from "./frameSpinCheck";
 import {
     DEFAULT_START,
@@ -76,6 +86,9 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
     const lastResultAt = ref<string | null>(null);
     /** The last run comes from this app's copy: the FC no longer has it (restarted since). */
     const lastResultKept = ref(false);
+    /** When the last taps run and the last motor run were first seen; null when none is kept. */
+    const lastTapsAt = ref<string | null>(null);
+    const lastMotorsAt = ref<string | null>(null);
     /** The wizard was started from here; the checklist shows the FC's counts only then. */
     const started = ref(false);
     /** Which part runs (or ran last): taps for the frame and arms, motors for the motor run. */
@@ -160,31 +173,36 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         }
     }
 
-    // The FC forgets its last run at power-off: a run it still reports is kept by this app (per craft, its
-    // first-seen date kept while it stays the same run), and one it no longer has comes from there, marked so.
+    // The FC forgets its last run at power-off, and a motor run's result has no taps: this app keeps the last
+    // taps run and the last motor run per craft (each with the date it was first seen) and shows them together.
     function remember(fcResult: WizardResult | null, finishedNow: boolean) {
         const key = craftKey(useFlightControllerStore().config.uid);
-        const history = loadHistory(key);
-        if (resultHasData(fcResult)) {
-            const same = !finishedNow && history.run !== undefined && sameRun(history.run.result, fcResult);
-            const at = same ? history.run!.at : new Date().toISOString();
-            // after arming the FC lends the buffers to the autotune: the spin check of the same run stays kept
-            const spin = spinCheck.value ?? (same ? history.run!.spinCheck : null);
-            lastResult.value = fcResult;
-            spinCheck.value = spin;
-            lastResultAt.value = at;
-            lastResultKept.value = false;
-            saveHistory(key, { run: { at, result: fcResult, spinCheck: spin } });
-        } else if (history.run) {
-            lastResult.value = history.run.result;
-            spinCheck.value = history.run.spinCheck;
-            lastResultAt.value = history.run.at;
-            lastResultKept.value = true;
-        } else {
-            lastResult.value = fcResult;
-            lastResultAt.value = null;
-            lastResultKept.value = false;
+        let { taps, motors } = keptRuns(loadHistory(key));
+        const now = new Date().toISOString();
+        if (hasTaps(fcResult)) {
+            const same = !finishedNow && taps !== undefined && sameRun(taps.result, fcResult);
+            taps = { at: same ? taps!.at : now, result: fcResult };
         }
+        if (hasMotors(fcResult)) {
+            const same = !finishedNow && motors !== undefined && sameRun(motors.result, fcResult);
+            // after arming the FC lends the buffers to the autotune: the spin check of the same run stays kept
+            const spin = spinCheck.value ?? (same ? motors!.spinCheck : null);
+            motors = { at: same ? motors!.at : now, result: fcResult, spinCheck: spin };
+        }
+        if (resultHasData(fcResult)) {
+            saveHistory(key, { taps, motors, run: undefined });
+        }
+        lastResult.value = mergeRuns(taps?.result, motors?.result) ?? fcResult;
+        spinCheck.value = motors?.spinCheck ?? spinCheck.value;
+        lastTapsAt.value = taps?.at ?? null;
+        lastMotorsAt.value = motors?.at ?? null;
+        lastResultAt.value =
+            [taps?.at, motors?.at]
+                .filter((d): d is string => !!d)
+                .sort()
+                .at(-1) ?? null;
+        // kept: something shown that the FC no longer reports
+        lastResultKept.value = (!!taps && !hasTaps(fcResult)) || (!!motors && !hasMotors(fcResult));
     }
 
     async function loadLastResult() {
@@ -422,6 +440,8 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         spinCheck,
         lastResultAt,
         lastResultKept,
+        lastTapsAt,
+        lastMotorsAt,
         loadSpinCheck,
         loadLastResult,
         started,

@@ -168,147 +168,80 @@
                 :description="startErrorText"
             />
 
+            <!-- the run's end: one status row with Save session, the warnings, the taps' modes per point on request
+                 (the resonances are on the chart, the motors' peaks and spin in Frame and motors) -->
             <template v-if="wizard.finished">
-                <UAlert
-                    :color="phase === 'done' ? 'success' : 'error'"
-                    variant="subtle"
-                    :icon="phase === 'done' ? 'i-lucide-circle-check' : 'i-lucide-circle-stop'"
-                    :title="endText"
-                    :ui="{ title: 'text-highlighted font-medium', description: 'text-default' }"
-                />
-                <!-- the motor run's spin check: the steps are hidden once the run is done, so its verdict stays here -->
-                <div v-if="spinResult" class="flex items-start gap-2 text-sm">
-                    <UIcon
-                        :name="spinResult.ok ? 'i-lucide-rotate-cw' : 'i-lucide-triangle-alert'"
-                        class="mt-0.5 size-4 shrink-0"
-                        :class="spinResult.ok ? 'text-success' : 'text-error'"
-                    />
-                    <span>
-                        <span class="font-medium text-highlighted">{{ $t("frameTestStepSpin") }}:</span>
-                        {{ spinResult.text }}
-                    </span>
-                </div>
-                <UButton
-                    :label="$t('frameTestSaveSession')"
-                    color="neutral"
-                    variant="outline"
-                    size="xs"
-                    icon="i-lucide-save"
-                    class="self-start"
-                    :loading="savingSession"
-                    @click="saveSession"
-                />
-                <div v-if="result" class="flex flex-col gap-3 text-sm">
-                    <div v-for="group in summaryGroups" :key="group.key" class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1 font-medium text-highlighted">
-                            {{ group.title }}
-                            <HelpIcon :text="group.help" />
-                        </div>
-                        <div class="flex flex-wrap gap-1">
-                            <UBadge
-                                v-for="r in group.items"
-                                :key="r.hz"
-                                :color="r === summary?.main ? 'primary' : 'neutral'"
-                                :variant="r === summary?.main ? 'solid' : 'subtle'"
-                                size="lg"
-                                :title="whereText(r)"
-                                :label="`${hz(r.hz)} Hz`"
-                            />
-                        </div>
-                    </div>
-                    <p v-if="summaryGroups.length === 0" class="text-muted">{{ $t("frameTestNoResonances") }}</p>
-                    <ul v-if="warnings.length" class="text-xs text-muted flex flex-col gap-0.5">
-                        <li v-for="w in warnings" :key="w">{{ w }}</li>
-                    </ul>
-
-                    <UCollapsible>
-                        <UButton
-                            :label="$t('frameTestDetails')"
-                            color="neutral"
-                            variant="link"
-                            size="xs"
-                            trailing-icon="i-lucide-chevron-down"
-                            class="px-0 group"
-                            :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform' }"
+                <div class="flex items-center justify-between gap-2 border-t border-default pt-3">
+                    <span class="flex items-center gap-2 text-sm font-medium text-highlighted">
+                        <UIcon
+                            :name="phase === 'done' ? 'i-lucide-circle-check' : 'i-lucide-circle-stop'"
+                            class="size-4 shrink-0"
+                            :class="phase === 'done' ? 'text-success' : 'text-error'"
                         />
-                        <template #content>
-                            <div class="flex flex-col gap-3 pt-2">
-                                <div>
-                                    <div class="font-medium text-highlighted mb-1">{{ $t("frameTestTapModes") }}</div>
-                                    <div
-                                        v-for="row in pointRows"
-                                        :key="row.name"
-                                        class="grid grid-cols-[6rem_1fr] gap-2 items-start py-0.5"
-                                    >
-                                        <span class="text-muted">{{ row.name }}</span>
-                                        <div class="flex flex-wrap gap-1">
-                                            <span v-if="row.modes.length === 0" class="text-dimmed">
-                                                {{ $t("frameTestNoModes") }}
-                                            </span>
-                                            <UBadge
-                                                v-for="(mode, i) in row.modes"
-                                                :key="i"
-                                                :color="mode.cable ? 'warning' : 'neutral'"
-                                                variant="subtle"
-                                                size="sm"
-                                                :icon="mode.cable ? 'i-lucide-cable' : undefined"
-                                                :title="
-                                                    mode.cable && !row.isCable
-                                                        ? $t('frameTestCableModeHelp')
-                                                        : $t('frameTestModeTaps', { count: mode.taps })
-                                                "
-                                                :label="`${hz(mode.hz)} Hz`"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-highlighted mb-1">{{ $t("frameTestMotorPeaks") }}</div>
-                                    <div
-                                        v-for="row in motorRows"
-                                        :key="row.name"
-                                        class="grid grid-cols-[6rem_1fr] gap-2 items-start py-0.5"
-                                    >
-                                        <span class="text-muted">{{ row.name }}</span>
-                                        <div class="flex flex-wrap gap-1">
-                                            <span v-if="row.peaks.length === 0" class="text-dimmed">
-                                                {{ $t("frameTestNoModes") }}
-                                            </span>
-                                            <UBadge
-                                                v-for="(peak, i) in row.peaks"
-                                                :key="i"
-                                                :color="peak.cable ? 'warning' : 'neutral'"
-                                                :variant="peak.speeds === 2 ? 'subtle' : 'outline'"
-                                                size="sm"
-                                                :icon="peak.cable ? 'i-lucide-cable' : undefined"
-                                                :title="peakTitle(peak)"
-                                                :label="`${hz(peak.hz)} Hz ${axisShort(peak.axis)}`"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <ul class="text-xs text-muted flex flex-col gap-0.5">
-                                    <li v-if="result.rotationHz[0] > 0">
-                                        {{
-                                            $t("frameTestRotation", {
-                                                r1: result.rotationHz[0],
-                                                r2: result.rotationHz[1],
-                                            })
-                                        }}
-                                    </li>
-                                    <li>
-                                        {{
-                                            $t("frameTestSessionTaps", {
-                                                count: result.sessionTaps,
-                                                clipped: result.clippedTaps,
-                                            })
-                                        }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </template>
-                    </UCollapsible>
+                        {{ endText }}
+                    </span>
+                    <UButton
+                        :label="$t('frameTestSaveSession')"
+                        color="neutral"
+                        variant="outline"
+                        size="xs"
+                        icon="i-lucide-save"
+                        :loading="savingSession"
+                        @click="saveSession"
+                    />
                 </div>
+                <ul v-if="warnings.length" class="flex flex-col gap-0.5 text-xs text-muted">
+                    <li v-for="w in warnings" :key="w">{{ w }}</li>
+                </ul>
+                <UCollapsible v-if="result && pointRows.some((row) => row.modes.length)" class="text-sm">
+                    <UButton
+                        :label="$t('frameTestTapModes')"
+                        color="neutral"
+                        variant="link"
+                        size="xs"
+                        trailing-icon="i-lucide-chevron-down"
+                        class="group px-0"
+                        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform' }"
+                    />
+                    <template #content>
+                        <div class="flex flex-col pt-2">
+                            <div
+                                v-for="row in pointRows"
+                                :key="row.name"
+                                class="grid grid-cols-[6rem_1fr] items-start gap-2 py-0.5"
+                            >
+                                <span class="text-muted">{{ row.name }}</span>
+                                <div class="flex flex-wrap gap-1">
+                                    <span v-if="row.modes.length === 0" class="text-dimmed">
+                                        {{ $t("frameTestNoModes") }}
+                                    </span>
+                                    <UBadge
+                                        v-for="(mode, i) in row.modes"
+                                        :key="i"
+                                        :color="mode.cable ? 'warning' : 'neutral'"
+                                        variant="subtle"
+                                        size="sm"
+                                        :icon="mode.cable ? 'i-lucide-cable' : undefined"
+                                        :title="
+                                            mode.cable && !row.isCable
+                                                ? $t('frameTestCableModeHelp')
+                                                : $t('frameTestModeTaps', { count: mode.taps })
+                                        "
+                                        :label="`${hz(mode.hz)} Hz`"
+                                    />
+                                </div>
+                            </div>
+                            <p class="pt-1 text-xs text-muted">
+                                {{
+                                    $t("frameTestSessionTaps", {
+                                        count: result.sessionTaps,
+                                        clipped: result.clippedTaps,
+                                    })
+                                }}
+                            </p>
+                        </div>
+                    </template>
+                </UCollapsible>
             </template>
 
             <div v-if="wizard.active" class="flex gap-2">
@@ -327,7 +260,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
-import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import ProgressRing from "@/components/ProgressRing.vue";
 import { i18n } from "@/js/localization";
@@ -346,12 +278,8 @@ import {
     POINT_COUNT,
     isTapPhase,
     motorChecklist,
-    summarizeResonances,
     tapChecklist,
-    type Axis,
     type ChecklistStep,
-    type MotorPeak,
-    type Resonance,
 } from "@/stores/frameWizardProtocol";
 import { spinText } from "./spinText";
 import { spinVerdict } from "@/stores/frameSpinCheck";
@@ -440,13 +368,9 @@ const canStart = computed(() => accOk.value && !wizard.starting && !wizard.activ
 
 // The motor run comes after the taps part: the frame map on the FC has its taps part (firmware with the
 // filter autotune), or the FC's last run was a finished taps run (firmware without the map).
-const tapsDone = computed(() => {
-    if (filterTune.frameMap) {
-        return filterTune.frameMap.hasTaps;
-    }
-    const last = wizard.lastResult;
-    return !!last && last.phase === "done" && last.sessionTaps > 0;
-});
+// The taps part is done when the FC's frame map holds it, or this app keeps a taps run of this craft (the map
+// may not be read yet, or the FC restarted).
+const tapsDone = computed(() => filterTune.frameMap?.hasTaps === true || wizard.lastTapsAt !== null);
 
 const pointName = (point: number): string =>
     point < 4
@@ -496,15 +420,6 @@ const tapItems = computed(() => {
             class: step.state === "done" ? DONE_SEPARATOR : step.learning ? "opacity-50" : undefined,
         };
     });
-});
-
-const spinResult = computed(() => {
-    const check = wizard.runKind === "motors" && wizard.spinCheck?.done ? wizard.spinCheck : null;
-    if (!check) {
-        return null;
-    }
-    const verdict = spinVerdict(check);
-    return { ok: verdict.ok, text: spinText(verdict) };
 });
 
 // After the motors, their spin direction: each motor alone, the sign of its yaw answer (bench firmware).
@@ -623,41 +538,6 @@ const pointRows = computed(() => {
         .filter((row) => !(row.isCable && res.noCable));
 });
 
-const motorRows = computed(() =>
-    (result.value?.motors ?? []).map((peaks, m) => ({
-        name: t("frameTestStepMotor", { n: m + 1 }),
-        peaks: byHz(peaks),
-    })),
-);
-
-const summary = computed(() => (result.value ? summarizeResonances(result.value) : null));
-
-const summaryGroups = computed(() => {
-    const s = summary.value;
-    if (!s) {
-        return [];
-    }
-    return [
-        { key: "both", items: s.frameAndMotors, title: t("frameTestSumBoth"), help: t("frameTestSumBothHelp") },
-        { key: "taps", items: s.tapsOnly, title: t("frameTestSumTaps"), help: t("frameTestSumTapsHelp") },
-        { key: "motors", items: s.motorsOnly, title: t("frameTestSumMotors"), help: t("frameTestSumMotorsHelp") },
-    ].filter((group) => group.items.length > 0);
-});
-
-function whereText(r: Resonance): string {
-    const parts: string[] = [];
-    if (r.points.length) {
-        parts.push(t("frameTestWhereTaps", { list: r.points.map(pointName).join(", ") }));
-    }
-    if (r.motors.length) {
-        parts.push(t("frameTestWhereMotors", { list: r.motors.map((m) => m + 1).join(", ") }));
-    }
-    if (r === summary.value?.main) {
-        parts.unshift(t("frameTestMain"));
-    }
-    return parts.join(" · ");
-}
-
 const noModePoints = computed(() => {
     const res = result.value;
     if (!res) {
@@ -692,26 +572,6 @@ const warnings = computed(() => {
     }
     return list;
 });
-
-const axisNames: Record<Axis, string> = {
-    roll: "frameTestAxisRoll",
-    pitch: "frameTestAxisPitch",
-    yaw: "frameTestAxisYaw",
-};
-const axisShort = (axis: Axis | null): string => (axis ? t(axisNames[axis]).charAt(0).toUpperCase() : "");
-
-function peakTitle(peak: MotorPeak): string {
-    const parts = [
-        t("frameTestPeakHelp", { axis: peak.axis ? t(axisNames[peak.axis]) : "?", gain: peak.gain.toFixed(3) }),
-    ];
-    if (peak.speeds !== 2) {
-        parts.push(t("frameTestOneSpeed"));
-    }
-    if (peak.cable) {
-        parts.push(t("frameTestCableModeHelp"));
-    }
-    return parts.join(" · ");
-}
 
 // Same convention as motor test mode: Escape stops a running wizard.
 function onKeydown(event: KeyboardEvent) {

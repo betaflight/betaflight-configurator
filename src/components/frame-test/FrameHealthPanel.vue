@@ -89,6 +89,45 @@
                 <span></span>
             </template>
         </div>
+        <!-- every peak of every motor, with its axis, for the specialist -->
+        <UCollapsible v-if="peakRows.length" class="text-sm">
+            <UButton
+                :label="$t('frameTestMotorPeaks')"
+                color="neutral"
+                variant="link"
+                size="xs"
+                trailing-icon="i-lucide-chevron-down"
+                class="group px-0"
+                :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform' }"
+            />
+            <template #content>
+                <div class="flex flex-col pt-2">
+                    <div
+                        v-for="row in peakRows"
+                        :key="row.name"
+                        class="grid grid-cols-[3rem_1fr] items-start gap-2 py-0.5"
+                    >
+                        <span class="text-muted">{{ row.name }}</span>
+                        <div class="flex flex-wrap gap-1">
+                            <span v-if="row.peaks.length === 0" class="text-dimmed">{{ $t("frameTestNoModes") }}</span>
+                            <UBadge
+                                v-for="(peak, i) in row.peaks"
+                                :key="i"
+                                :color="peak.cable ? 'warning' : 'neutral'"
+                                :variant="peak.speeds === 2 ? 'subtle' : 'outline'"
+                                size="sm"
+                                :icon="peak.cable ? 'i-lucide-cable' : undefined"
+                                :title="peakTitle(peak)"
+                                :label="`${peak.hz.toFixed(0)} Hz ${axisShort(peak.axis)}`"
+                            />
+                        </div>
+                    </div>
+                    <p v-if="rotationHz" class="pt-1 text-xs text-muted">
+                        {{ $t("frameTestRotation", { r1: rotationHz[0], r2: rotationHz[1] }) }}
+                    </p>
+                </div>
+            </template>
+        </UCollapsible>
     </UiBox>
 </template>
 
@@ -104,13 +143,45 @@ import { useFilterTuneStore } from "@/stores/filterTune";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useFrameWizardStore } from "@/stores/frameWizard";
 import {
-    FRAME_MIN_MOTORS,
+    isFrameMode,
     modeSpectrum,
-    motorOwnPeaks,
     MOTOR_LOUD_DB,
     motorRunSummary,
     nearAnyHz,
+    type Axis,
+    type MotorPeak,
 } from "@/stores/frameWizardProtocol";
+
+// Every peak of every motor of the last motor run, by frequency, with its axis.
+const peakRows = computed(() =>
+    (wizard.lastResult?.motors ?? []).some((list) => list.length)
+        ? wizard.lastResult!.motors.map((list, m) => ({
+              name: `M${m + 1}`,
+              peaks: [...list].sort((a, b) => a.hz - b.hz),
+          }))
+        : [],
+);
+const rotationHz = computed(() =>
+    wizard.lastResult && wizard.lastResult.rotationHz[0] > 0 ? wizard.lastResult.rotationHz : null,
+);
+const AXIS_NAME: Record<Axis, string> = {
+    roll: "frameTestAxisRoll",
+    pitch: "frameTestAxisPitch",
+    yaw: "frameTestAxisYaw",
+};
+const axisShort = (axis: Axis | null): string => (axis ? t(AXIS_NAME[axis]).charAt(0).toUpperCase() : "");
+function peakTitle(peak: MotorPeak): string {
+    const parts = [
+        t("frameTestPeakHelp", { axis: peak.axis ? t(AXIS_NAME[peak.axis]) : "?", gain: peak.gain.toFixed(3) }),
+    ];
+    if (peak.speeds !== 2) {
+        parts.push(t("frameTestOneSpeed"));
+    }
+    if (peak.cable) {
+        parts.push(t("frameTestCableModeHelp"));
+    }
+    return parts.join(" · ");
+}
 
 const QUAD_X_MIXER = 3;
 const CUSTOM_MIXER = 23; // generic Custom: with 4 motors, a Quad X with its own mmix (a deadcat)
@@ -194,23 +265,17 @@ const motorRows = computed(() => {
 
 // Per motor: from flight data its 1x over the floor; else from the motor run the peaks of its own (the ones
 // no tap found and at most one other motor shows: its mount, arm or the motor itself), loudest first.
-const MAX_OWN_PEAKS = 3;
 const SEVERITY_COLOR: Record<string, MotorBadge["color"]> = { serious: "error", notable: "warning" };
 const spectrum = computed(() =>
     wizard.lastResult ? modeSpectrum(wizard.lastResult, filterTune.frameMap?.modes ?? []) : null,
 );
-const ownPeaks = computed(() => (spectrum.value ? motorOwnPeaks(spectrum.value) : null));
 
-// In the middle: the frame's modes most motors drive (the same within the grouping tolerance) that matter,
-// loudest first.
-const MAX_CENTRE_MODES = 3;
+// In the middle: the strong frame modes, by frequency (the chart's verdict names the same).
+const MAX_CENTRE_MODES = 4;
 const centreModes = computed(() =>
     (spectrum.value ?? [])
-        .filter(
-            (line) =>
-                line.motors.length >= FRAME_MIN_MOTORS && (line.severity === "serious" || line.severity === "notable"),
-        )
-        .sort((a, b) => (b.levelDb ?? -99) - (a.levelDb ?? -99))
+        // the strong frame modes, the ones the chart's verdict names, by frequency
+        .filter((line) => line.severity === "serious" && isFrameMode(line))
         .slice(0, MAX_CENTRE_MODES)
         .map((line) => ({
             label: `${line.hz.toFixed(0)} Hz`,
@@ -226,50 +291,51 @@ const centreModes = computed(() =>
 // The motor run's spin check: a motor turning the wrong way (or not answering) is red, whatever else it shows.
 const spin = computed(() => (wizard.spinCheck?.done ? spinVerdict(wizard.spinCheck) : null));
 
+// Quad X seen from above with the props in (Betaflight's default): 1 and 4 turn clockwise, 2 and 3 the other way;
+// the Motors tab's props-out switch turns them all around.
+const CLOCKWISE_PROPS_IN = [true, false, false, true];
+
+// Each motor's spin direction on the diagram: the one set (props in / out), green when the spin check agrees,
+// red the way it really turns when it does not, grey without an answer.
 const motorBadges = computed<MotorBadge[]>(() => {
     const badges = baseBadges.value;
     const v = spin.value;
-    if (!v || v.ok) {
+    if (!v) {
         return badges;
     }
-    return badges.map((badge, m) =>
-        v.wrongWay.includes(m) || v.silent.includes(m)
-            ? {
-                  ...badge,
-                  color: "error",
-                  title: spinText({
-                      ok: false,
-                      wrongWay: v.wrongWay.filter((x) => x === m),
-                      silent: v.silent.filter((x) => x === m),
-                  }),
-              }
-            : badge,
-    );
+    const reversed = Boolean(fcStore.mixerConfig.reverseMotorDir);
+    return badges.map((badge, m) => {
+        const set = CLOCKWISE_PROPS_IN[m] !== reversed;
+        const wrong = v.wrongWay.includes(m);
+        const silent = v.silent.includes(m);
+        const cw = wrong ? !set : set;
+        const one = { ok: false, wrongWay: wrong ? [m] : [], silent: silent ? [m] : [] };
+        return {
+            ...badge,
+            color: wrong || silent ? "error" : badge.color,
+            spin: {
+                cw,
+                state: silent ? "unknown" : wrong ? "wrong" : "ok",
+                title: wrong || silent ? spinText(one) : t(cw ? "frameSpinMotorCw" : "frameSpinMotorCcw", { n: m + 1 }),
+            },
+        };
+    });
 });
 
 const baseBadges = computed<MotorBadge[]>(() => {
     const s = summary.value;
-    const own = ownPeaks.value;
     return [0, 1, 2, 3].map((m) => {
         const motor = s?.motors[m];
         if (!motor) {
-            if (!motorRun.value || !own) {
+            const run = motorRun.value;
+            if (!run) {
                 return { label: `M${m + 1}`, color: "neutral" };
             }
-            const peaks = own[m];
+            // the motor's colour is the motor run's verdict on it: one shaking the frame much harder is yellow
             return {
                 label: `M${m + 1}`,
-                // the motor's colour is the verdict on it (one shaking the frame much harder); its peaks are coloured
-                // by how strong they are
-                color: motorRun.value.standsOut[m] ? "warning" : "success",
-                title: peaks.length
-                    ? t("frameHealthMotorOwnPeaks", { n: m + 1 })
-                    : t("frameHealthMotorNoOwnPeaks", { n: m + 1 }),
-                peaks: peaks.slice(0, MAX_OWN_PEAKS).map((p) => ({
-                    label: `${p.hz.toFixed(0)} Hz`,
-                    color: SEVERITY_COLOR[p.severity] ?? "neutral",
-                    title: t("frameSpectrumLevel", { db: p.db.toFixed(1) }),
-                })),
+                color: run.standsOut[m] ? "warning" : "success",
+                title: t(run.standsOut[m] ? "frameHealthMotorLoud" : "frameHealthMotorAlike", { n: m + 1 }),
             };
         }
         return {

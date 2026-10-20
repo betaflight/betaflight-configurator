@@ -29,12 +29,16 @@ const props = defineProps({
     at: { type: String, required: true },
     /** Kept by this app: the flight controller no longer has it. */
     kept: { type: Boolean, default: false },
+    /** More for the hover text (which runs the date covers). */
+    detail: { type: String, default: "" },
     /** On the box's frame at the right, shaped as the box's title on the left. */
     onFrame: { type: Boolean, default: false },
 });
 
 const icon = computed(() => (props.kept ? "i-lucide-history" : "i-lucide-clock"));
-const hint = computed(() => i18n.getMessage(props.kept ? "runDateKept" : "runDateLive"));
+const hint = computed(() =>
+    [i18n.getMessage(props.kept ? "runDateKept" : "runDateLive"), props.detail].filter(Boolean).join("\n"),
+);
 const label = computed(() =>
     new Date(props.at).toLocaleString(undefined, {
         month: "short",
