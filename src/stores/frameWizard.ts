@@ -199,7 +199,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         lastResultAt.value =
             [taps?.at, motors?.at]
                 .filter((d): d is string => !!d)
-                .sort()
+                .sort((a, b) => a.localeCompare(b))
                 .at(-1) ?? null;
         // kept: something shown that the FC no longer reports
         lastResultKept.value = (!!taps && !hasTaps(fcResult)) || (!!motors && !hasMotors(fcResult));
