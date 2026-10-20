@@ -1932,25 +1932,6 @@ export default defineComponent({
         justify-content: flex-end;
         align-self: center;
     }
-    .select-wrapper-simple {
-        &.no-board-selected {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-    }
-    .select-wrapper {
-        width: calc(100% - 2rem) !important;
-        max-width: 30rem !important;
-        display: grid;
-        grid-template-columns: 1fr auto auto;
-        align-items: center;
-        gap: 0.5rem;
-        box-sizing: border-box;
-        &.no-board-selected {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-    }
     .detect-board {
         position: relative;
         top: auto;
@@ -1988,15 +1969,11 @@ export default defineComponent({
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
-        .select-wrapper {
-            width: 100% !important;
-            max-width: none !important;
-        }
         strong {
             font-size: 12px;
         }
     }
-    /* Keep help icons inline with multiselects inside Build Configuration */
+    /* Keep help icons inline with the selects inside Build Configuration */
     .build_configuration .select-group {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -2005,12 +1982,6 @@ export default defineComponent({
     }
     .build_configuration .select-group > strong {
         grid-column: 1 / -1;
-    }
-    .build_configuration .select-group .select-wrapper {
-        grid-column: 1;
-        /* allow help icon to sit alongside; avoid forcing full-width */
-        max-width: none !important;
-        width: 100% !important;
     }
     .build_configuration .select-group .helpicon {
         grid-column: 2;
@@ -2025,33 +1996,6 @@ export default defineComponent({
         }
         .spacer_box_title {
             white-space: nowrap;
-        }
-    }
-
-    /* Style multiselect tags for "Other options" selector */
-    #optionsInfo .multiselect__tags {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
-        gap: 4px !important;
-    }
-
-    #optionsInfo .multiselect__tag {
-        background: var(--surface-500) !important;
-        color: var(--text) !important;
-        font-size: 11px;
-        padding: 3px 20px 3px 6px;
-        border-radius: 3px;
-        display: inline-flex !important;
-        align-items: center !important;
-    }
-
-    #optionsInfo .multiselect__tag-icon {
-        &:after {
-            color: var(--text) !important;
-        }
-        &:hover {
-            background: var(--surface-600) !important;
         }
     }
 
@@ -2219,207 +2163,23 @@ export default defineComponent({
         }
     }
 
-    .osd-needs-attention {
-        .multiselect__single,
-        .multiselect__placeholder {
-            color: red !important;
-        }
-    }
-
     /* Container management */
-
-    .select-wrapper.fixed-width {
-        display: grid;
-        grid-template-columns: 1fr auto auto;
-        align-items: center;
-        gap: 0.5rem;
-        width: 100%;
-        min-width: 240px;
-        max-width: 440px;
-        position: relative;
-        z-index: 1002; /* Lower than board select, but active state will be above expert options */
-    }
-
-    .standard-select {
-        min-height: 28px;
-        font-size: 12px;
-        flex: 1;
-        z-index: 1001 !important;
-        font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
-        position: relative;
-    }
 
     /* Multi Selects */
 
-    .standard-select .multiselect__tags {
-        min-height: 28px;
-        padding: 0 30px 0 8px;
-        border: 1px solid var(--surface-500);
-        border-radius: 3px;
-        background: var(--surface-200);
-        display: flex;
-        align-items: center;
-    }
-
-    .standard-select .multiselect__single,
-    .standard-select .multiselect__input,
-    .standard-select .multiselect__placeholder {
-        color: var(--text) !important;
-        background: transparent !important;
-        line-height: 26px;
-        margin-bottom: 0;
-    }
-
     /* FIX: Hide search text when selection is present */
-
-    .standard-select:not(.multiselect--active) .multiselect__input {
-        opacity: 0 !important;
-        position: absolute !important;
-    }
 
     /* Dropdown list styling */
 
-    .standard-select .multiselect__content-wrapper {
-        position: absolute;
-        display: block;
-        background: var(--surface-400);
-        border: 1px solid var(--surface-600);
-        border-top: none;
-        z-index: 99999 !important;
-        max-height: 250px;
-        overflow-y: auto;
-        width: 100%;
-        inset-inline-start: 0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-    }
-
-    .standard-select .multiselect__option {
-        font-size: 12px !important;
-        color: var(--text) !important;
-        padding: 8px 12px;
-        min-height: 30px;
-    }
-
-    .standard-select .multiselect__option--highlight {
-        background: var(--surface-300) !important; /* Darker blue for better contrast */
-        color: var(--text) !important;
-    }
-
     /* 1. Reset the internal input to remove borders/outlines */
-
-    .standard-select .multiselect__input {
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        color: var(--text) !important;
-        font-size: 12px !important;
-    }
 
     /* 2. Target the placeholder text specifically */
 
-    .standard-select .multiselect__placeholder {
-        color: var(--text) !important;
-        font-size: 12px !important;
-        margin-bottom: 0;
-        padding-top: 0;
-        line-height: 26px; /* Vertical centering */
-        border: none !important;
-    }
-
     /* 3. Target the native placeholder inside the search input */
-
-    .standard-select .multiselect__input::placeholder {
-        color: var(--text) !important;
-        font-size: 12px !important;
-        border: none !important;
-    }
 
     /* 4. Ensure the selected single value matches page font size */
 
-    .standard-select .multiselect__single {
-        font-size: 12px !important;
-        line-height: 26px;
-        padding: 0 0 0 2px;
-        margin-bottom: 0;
-    }
-
     /* Firmware version dropdown should appear above expert options but below board select when both open */
-
-    .select-wrapper.fixed-width .standard-select.multiselect--active {
-        z-index: 1005 !important; /* Below board select active (100000) but above everything else */
-    }
-
-    .select-wrapper.fixed-width .standard-select .multiselect__content-wrapper {
-        z-index: 1001 !important;
-    }
-
-    .select-wrapper {
-        /* When multiselect is open, enable positioning and high z-index */
-        .standard-select.multiselect--active {
-            position: relative;
-            z-index: 10000 !important;
-        }
-
-        .standard-select.multiselect--active .multiselect__content-wrapper {
-            z-index: 10001 !important;
-        }
-
-        .standard-select.multiselect--active .multiselect__content {
-            z-index: 10001 !important;
-        }
-    }
-
-    .select-wrapper-simple {
-        /* When multiselect is open, enable positioning and high z-index */
-        .standard-select.multiselect--active {
-            position: relative;
-            z-index: 10000 !important;
-        }
-
-        .standard-select.multiselect--active .multiselect__content-wrapper {
-            z-index: 10001 !important;
-        }
-
-        .standard-select.multiselect--active .multiselect__content {
-            z-index: 10001 !important;
-        }
-    }
-
-    /* When multiselect is open, increase z-index to be above everything */
-
-    .standard-select.multiselect--active {
-        position: relative;
-        z-index: 10000 !important;
-    }
-
-    .standard-select.multiselect--active .multiselect__content-wrapper {
-        z-index: 10001 !important;
-    }
-
-    .standard-select.multiselect--active .multiselect__content {
-        z-index: 10001 !important;
-    }
-
-    .standard-select .multiselect__option--selected {
-        background: var(--surface-300) !important;
-        color: var(--text) !important;
-        font-weight: normal;
-    }
-
-    .standard-select .multiselect__option--selected.multiselect__option--highlight {
-        background: var(--surface-500) !important;
-        color: var(--surface-50) !important;
-    }
-
-    /* Group headers (Legacy, Supported, etc.) */
-
-    .standard-select .multiselect__option--group {
-        background: var(--surface-600) !important;
-        color: var(--text) !important;
-        font-size: 10px !important;
-        font-weight: bold;
-    }
 
     /* List styling for recovery and warning text in FlasherFlashTab */
 
