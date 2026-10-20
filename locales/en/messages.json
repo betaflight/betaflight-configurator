@@ -293,11 +293,11 @@
         "description": "In the selection of languages, this is the default language of the system or English as fallback."
     },
     "language_ar": {
-        "message": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+        "message": "العربية",
         "description": "Don't translate!!!"
     },
     "language_ca": {
-        "message": "Catal\u00e0",
+        "message": "Català",
         "description": "Don't translate!!!"
     },
     "language_da": {
@@ -313,7 +313,7 @@
         "description": "Don't translate!!!"
     },
     "language_es": {
-        "message": "Espa\u00f1ol",
+        "message": "Español",
         "description": "Don't translate!!!"
     },
     "language_eu": {
@@ -321,7 +321,7 @@
         "description": "Don't translate!!!"
     },
     "language_fr": {
-        "message": "Fran\u00e7ais",
+        "message": "Français",
         "description": "Don't translate!!!"
     },
     "language_gl": {
@@ -329,7 +329,7 @@
         "description": "Don't translate!!!"
     },
     "language_he": {
-        "message": "\u05E2\u05D1\u05E8\u05D9\u05EA",
+        "message": "עברית",
         "description": "Don't translate!!!"
     },
     "language_it": {
@@ -337,19 +337,19 @@
         "description": "Don't translate!!!"
     },
     "language_ja": {
-        "message": "\u65E5\u672C\u8A9E",
+        "message": "日本語",
         "description": "Don't translate!!!"
     },
     "language_ka": {
-        "message": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8",
+        "message": "ქართული",
         "description": "Don't translate!!!"
     },
     "language_kk": {
-        "message": "\u049A\u0430\u0437\u0430\u049B\u0448\u0430",
+        "message": "Қазақша",
         "description": "Don't translate!!!"
     },
     "language_ko": {
-        "message": "\ud55c\uad6d\uc5b4",
+        "message": "한국어",
         "description": "Don't translate!!!"
     },
     "language_nl": {
@@ -357,11 +357,11 @@
         "description": "Don't translate!!!"
     },
     "language_pt": {
-        "message": "Portugu\u00EAs",
+        "message": "Português",
         "description": "Don't translate!!!"
     },
     "language_pt-BR": {
-        "message": "Portugu\u00EAs Brasileiro",
+        "message": "Português Brasileiro",
         "description": "Don't translate!!!"
     },
     "language_pl": {
@@ -369,7 +369,7 @@
         "description": "Don't translate!!!"
     },
     "language_ru": {
-        "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+        "message": "Русский",
         "description": "Don't translate!!!"
     },
     "language_sr": {
@@ -377,11 +377,11 @@
         "description": "Don't translate!!!"
     },
     "language_sr-Cyrl": {
-        "message": "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
+        "message": "Српски (ћирилица)",
         "description": "Don't translate!!!"
     },
     "language_uk": {
-        "message": "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
+        "message": "Українська",
         "description": "Don't translate!!!"
     },
     "language_uz": {
@@ -389,11 +389,11 @@
         "description": "Don't translate!!!"
     },
     "language_zh-CN": {
-        "message": "\u7b80\u4f53\u4e2d\u6587",
+        "message": "简体中文",
         "description": "Don't translate!!!"
     },
     "language_zh-TW": {
-        "message": "\u7e41\u9ad4\u4e2d\u6587",
+        "message": "繁體中文",
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
@@ -534,27 +534,55 @@
     "tabPidTuning": {
         "message": "PID Tuning"
     },
-    "tabAutotune": { "message": "Autotune" },
+    "tabAutotune": {
+        "message": "Autotune"
+    },
     "tabBlackboxViewer": {
         "message": "Blackbox Viewer",
         "description": "Navigation sidebar label for the Blackbox log viewer tab"
     },
-    "autotuneImportTitle": { "message": "Blackbox Chirp Analysis" },
-    "autotuneImportButton": { "message": "Import Blackbox Log" },
+    "autotuneImportTitle": {
+        "message": "Blackbox Chirp Analysis"
+    },
+    "autotuneImportButton": {
+        "message": "Import Blackbox Log"
+    },
     "autotuneImportDescription": {
         "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations."
     },
-    "autotuneBandwidth": { "message": "Bandwidth" },
-    "autotuneCrossover": { "message": "Gain Crossover" },
-    "autotunePhaseMargin": { "message": "Phase Margin" },
-    "autotuneTargetCrossover": { "message": "Crossover Limit" },
-    "autotuneMaxPhaseMargin": { "message": "Max Phase Margin" },
-    "autotunePredictedSensitivity": { "message": "Predicted Peak Sens." },
-    "autotuneLoopDelay": { "message": "Loop Delay" },
-    "autotuneTargetMargin": { "message": "Tuning target" },
-    "autotuneMarginAggressive": { "message": "Aggressive" },
-    "autotuneMarginNormal": { "message": "Normal" },
-    "autotuneMarginConservative": { "message": "Conservative" },
+    "autotuneBandwidth": {
+        "message": "Bandwidth"
+    },
+    "autotuneCrossover": {
+        "message": "Gain Crossover"
+    },
+    "autotunePhaseMargin": {
+        "message": "Phase Margin"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Crossover Limit"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Max Phase Margin"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Predicted Peak Sens."
+    },
+    "autotuneLoopDelay": {
+        "message": "Loop Delay"
+    },
+    "autotuneTargetMargin": {
+        "message": "Tuning target"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Aggressive"
+    },
+    "autotuneMarginNormal": {
+        "message": "Normal"
+    },
+    "autotuneMarginConservative": {
+        "message": "Conservative"
+    },
     "autotuneTargetUnreachable": {
         "message": "$1: this craft cannot reach $2° of phase margin (its limit is about $3), so the gain is held rather than guessed. Choose a lower target, or add D to raise the limit."
     },
@@ -567,43 +595,111 @@
     "autotuneSensitivityUnreachable": {
         "message": "$1: no gain within one pass keeps peak sensitivity inside the robustness bound. The value proposed is the best available rather than a safe one — treat it as a starting point and re-measure."
     },
-    "autotuneResonantPeak": { "message": "Resonant Peak" },
-    "autotuneCoherence": { "message": "Coherence" },
-    "autotuneCurrent": { "message": "Current" },
-    "autotuneProposed": { "message": "Proposed" },
-    "autotuneApplied": { "message": "Gains applied and saved." },
+    "autotuneResonantPeak": {
+        "message": "Resonant Peak"
+    },
+    "autotuneCoherence": {
+        "message": "Coherence"
+    },
+    "autotuneCurrent": {
+        "message": "Current"
+    },
+    "autotuneProposed": {
+        "message": "Proposed"
+    },
+    "autotuneApplied": {
+        "message": "Gains applied and saved."
+    },
     "autotuneApplyConfirmText": {
         "message": "Applying writes the tuning sliders to the flight controller and saves them to EEPROM. Recommended gains can destabilise the craft on first arm, so be ready to disarm for the first test."
     },
-    "autotuneApplyConfirmTitle": { "message": "Apply recommended gains?" },
-    "autotuneApplyFailed": { "message": "Failed to apply gains" },
-    "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
-    "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
-    "autotuneImportAnother": { "message": "Import Another" },
-    "autotuneImportRetry": { "message": "Try Again" },
-    "autotuneFile": { "message": "File" },
-    "autotuneAxesDetected": { "message": "Axes Detected" },
-    "autotuneApplyGains": { "message": "Apply Gains" },
-    "autotuneGainTitle": { "message": "Gain Recommendation" },
-    "autotuneAxisRoll": { "message": "Roll" },
-    "autotuneAxisPitch": { "message": "Pitch" },
-    "autotuneAxisYaw": { "message": "Yaw" },
-    "autotuneBodePlotTitle": { "message": "Frequency Response" },
-    "autotuneSectionCurrentPids": { "message": "Current PIDs (from log)" },
-    "autotuneSectionAnalysis": { "message": "Analysis" },
-    "autotuneSectionProposedSliders": { "message": "Proposed Sliders" },
-    "autotuneSliderMasterMultiplier": { "message": "Master Multiplier" },
-    "autotuneSliderPIGain": { "message": "P / I Gain" },
-    "autotuneSliderIGain": { "message": "I Gain" },
-    "autotuneSliderDGain": { "message": "D Gain" },
-    "autotuneSliderFeedforward": { "message": "Feedforward" },
-    "autotuneSliderDTermFilter": { "message": "D-Term Filter" },
-    "autotuneApplyFromAxis": { "message": "Apply gains from axis" },
-    "autotuneSensitivityPeak": { "message": "Sensitivity Peak" },
-    "autotuneOvershoot": { "message": "Overshoot" },
-    "autotuneRiseTime": { "message": "Rise Time" },
-    "autotuneSettlingTime": { "message": "Settling Time" },
-    "autotuneSpectrogramTitle": { "message": "Spectrogram (Gyro)" },
+    "autotuneApplyConfirmTitle": {
+        "message": "Apply recommended gains?"
+    },
+    "autotuneApplyFailed": {
+        "message": "Failed to apply gains"
+    },
+    "autotuneConnectRequired": {
+        "message": "Connect to flight controller to apply gains."
+    },
+    "autotuneSampleRate": {
+        "message": "Sample rate: {{rate}} Hz"
+    },
+    "autotuneImportAnother": {
+        "message": "Import Another"
+    },
+    "autotuneImportRetry": {
+        "message": "Try Again"
+    },
+    "autotuneFile": {
+        "message": "File"
+    },
+    "autotuneAxesDetected": {
+        "message": "Axes Detected"
+    },
+    "autotuneApplyGains": {
+        "message": "Apply Gains"
+    },
+    "autotuneGainTitle": {
+        "message": "Gain Recommendation"
+    },
+    "autotuneAxisRoll": {
+        "message": "Roll"
+    },
+    "autotuneAxisPitch": {
+        "message": "Pitch"
+    },
+    "autotuneAxisYaw": {
+        "message": "Yaw"
+    },
+    "autotuneBodePlotTitle": {
+        "message": "Frequency Response"
+    },
+    "autotuneSectionCurrentPids": {
+        "message": "Current PIDs (from log)"
+    },
+    "autotuneSectionAnalysis": {
+        "message": "Analysis"
+    },
+    "autotuneSectionProposedSliders": {
+        "message": "Proposed Sliders"
+    },
+    "autotuneSliderMasterMultiplier": {
+        "message": "Master Multiplier"
+    },
+    "autotuneSliderPIGain": {
+        "message": "P / I Gain"
+    },
+    "autotuneSliderIGain": {
+        "message": "I Gain"
+    },
+    "autotuneSliderDGain": {
+        "message": "D Gain"
+    },
+    "autotuneSliderFeedforward": {
+        "message": "Feedforward"
+    },
+    "autotuneSliderDTermFilter": {
+        "message": "D-Term Filter"
+    },
+    "autotuneApplyFromAxis": {
+        "message": "Apply gains from axis"
+    },
+    "autotuneSensitivityPeak": {
+        "message": "Sensitivity Peak"
+    },
+    "autotuneOvershoot": {
+        "message": "Overshoot"
+    },
+    "autotuneRiseTime": {
+        "message": "Rise Time"
+    },
+    "autotuneSettlingTime": {
+        "message": "Settling Time"
+    },
+    "autotuneSpectrogramTitle": {
+        "message": "Spectrogram (Gyro)"
+    },
     "tabReceiver": {
         "message": "Receiver"
     },
@@ -4302,7 +4398,16 @@
         "message": "VTX (uses vtx frequency to assign color)"
     },
     "ledStripFilterTuneOverlay": {
-        "message": "Filter tune (the FILTER TUNE mode state: blue collecting, green ready or saved, red discarded or missing data)"
+        "message": "Filter tune"
+    },
+    "ledStripFilterTuneBlue": {
+        "message": "collecting"
+    },
+    "ledStripFilterTuneGreen": {
+        "message": "ready"
+    },
+    "ledStripFilterTuneRed": {
+        "message": "discarded"
     },
     "ledStripBrightnessSliderTitle": {
         "message": "Brightness",
@@ -6963,7 +7068,7 @@
         "message": "Filter autotune"
     },
     "osdWarningFilterTune": {
-        "message": "While FILTER TUNE is on: HOVER until a steady hover, the frames collected (n/60), READY to land and disarm, SAVED, SHORT (too few frames), NO MAP or NO RPM"
+        "message": "FILTER TUNE state: HOVER, n/60, READY, SAVED, MORE n/60, SHORT, NO MAP, NO RPM"
     },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
@@ -9380,16 +9485,16 @@
         "message": "Frame"
     },
     "frameTabQuadOnly": {
-        "message": "The Frame section is for quads for now (Quad X, Quad +, Quad X 1234): set the mixer in the Motors tab."
+        "message": "For quads only (Quad X, Quad +, Quad X 1234): set the mixer in the Motors tab."
     },
     "frameTabUnsupported": {
-        "message": "This firmware has neither the frame test nor the filter autotune."
+        "message": "This firmware has no frame test or filter autotune. Built in on boards with over 512 KB flash; on F411, F722 and G4 add USE_FILTER_AUTOTUNE to the custom defines."
     },
     "frameTestRunTaps": {
         "message": "Frame and arms by taps"
     },
     "frameTestRunTapsHint": {
-        "message": "Hold the craft by the battery. Tap the USB cable 5 times, then the frame and every arm from below, in any order. No motor spins."
+        "message": "Hold it by the battery. Tap the USB cable 5 times, then the frame and each arm from below."
     },
     "frameTestStartTaps": {
         "message": "Start the taps"
@@ -9398,10 +9503,10 @@
         "message": "Motor run"
     },
     "frameTestRunMotorsHint": {
-        "message": "All four motors spin up at once to find the resonances they excite. Remove the propellers and hold the craft by the battery."
+        "message": "All four motors spin up to find the resonances they excite. Props off, hold it by the battery."
     },
     "frameTestMotorsNeedTaps": {
-        "message": "Run the taps part first: the motor run builds on the frame it finds."
+        "message": "Do the taps first."
     },
     "frameTestStartMotors": {
         "message": "Start the motor run"
@@ -9413,7 +9518,7 @@
         "message": "Frame and motors"
     },
     "frameHealthHelp": {
-        "message": "The quad seen from above. Each prop ring is an arrow the way the motor turns (as set in the Motors tab); after a motor run it is green when the spin check agrees and red when the motor turns the wrong way. A motor is yellow when it shakes a frame resonance much harder than the others (its mount or the motor). In the middle, the frame's main resonances. After a filter autotune flight, each motor's 1x over the noise floor."
+        "message": "The quad from above.<br><br><strong>Ring</strong>: the spin direction.<br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-success\"></span>Checked. <span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-error\"></span>The wrong way.<br><strong>Yellow motor</strong>: shakes the frame much harder than the others.<br><strong>Centre</strong>: the frame's main resonances.<br><br>After an autotune flight: each motor's 1x over the noise floor."
     },
     "frameHealthQuadOnly": {
         "message": "The diagram is for Quad X."
@@ -9428,7 +9533,7 @@
         "message": "Check the motors, score {{score}}"
     },
     "frameHealthMotorStandsOut": {
-        "message": "Motor {{n}} shakes the frame much more than the others: check its propeller and balance."
+        "message": "Motor {{n}} shakes the frame much more than the others: check its prop and balance."
     },
     "frameHealthMotorTitle": {
         "message": "Motor {{n}}: 1x {{x1}} dB, 2x {{x2}} dB, 3x {{x3}} dB"
@@ -9440,16 +9545,16 @@
         "message": "In flight (filter autotune)"
     },
     "frameHealthMotorDiffers": {
-        "message": "Motor {{n}} drives the {{hz}} Hz resonance {{db}} dB over the others: check its screws, mount and bearings."
+        "message": "Motor {{n}}: {{db}} dB over the others at {{hz}} Hz. Check its screws, mount and bearings."
     },
     "frameHealthCentreMode": {
-        "message": "{{hz}} Hz: a strong frame resonance, motors {{list}} drive it ({{db}} dB from the strongest)"
+        "message": "{{hz}} Hz: strong frame resonance, motors {{list}} ({{db}} dB)"
     },
     "filterTuneMapStored": {
         "message": "Frame map stored: {{parts}}"
     },
     "frameHealthMotorRunHelp": {
-        "message": "Propellers off, the motors one after another shake the frame through its resonances. Per resonance most motors drive, each motor against the others (their median), the bar from the middle: right louder, left softer. Green: as loud as the others (within 3 dB). Grey: softer, normal - a motor near a node of a mode barely drives it. Yellow: 3 to 10 dB louder. Red: 10 dB or more louder - check that motor and its mount, screws and bearings."
+        "message": "Each motor against the others, per shared resonance.<br>Right: louder. Left: softer.<br><br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-success\"></span>Within 3 dB.<br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-inverted/30\"></span>Softer, normal near a node.<br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-warning\"></span>3 to 10 dB louder.<br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-error\"></span>10 dB or more: check that motor and its mount."
     },
     "frameHealthSpread": {
         "message": "The motors' 1x differ by {{spread}} dB."
@@ -9458,10 +9563,10 @@
         "message": "No motor drives it much harder than the others"
     },
     "frameHealthSpreadHigh": {
-        "message": "One motor drives it 10 dB or more over the others: check that motor and its mount"
+        "message": "One motor 10 dB+ over the others: check that motor and its mount"
     },
     "frameHealthNoPeak": {
-        "message": "Motor {{n}} shows no peak here: it sits near a node of this mode (normal)"
+        "message": "Motor {{n}}: no peak here (near a node, normal)"
     },
     "frameHealthMotorVsOthers": {
         "message": "Motor {{n}}: {{db}} dB against the other motors"
@@ -9473,7 +9578,7 @@
         "message": "Motors 1 and 4 turn one way, 2 and 3 the other, as Quad X needs."
     },
     "frameSpinWrongWay": {
-        "message": "Motor {{list}} turns the wrong way: swap two of its three wires, or reverse it in the ESC."
+        "message": "Motor {{list}} turns the wrong way: swap two motor wires or reverse it in the ESC."
     },
     "frameSpinSilent": {
         "message": "Motor {{list}} gave no answer: check that it spins."
@@ -9488,16 +9593,10 @@
         "message": "The frame test found a motor turning the wrong way"
     },
     "motorsSpinCheckNote": {
-        "message": "From the last motor run of the Frame tab: each motor alone, the yaw it answers with. It checks the motors against each other; that they all turn the way set here (props in or out) is up to this switch."
-    },
-    "runDateLive": {
-        "message": "When this was measured; the flight controller still holds it"
-    },
-    "runDateKept": {
-        "message": "When this was measured. Kept by this app: the flight controller forgets it when switched off"
+        "message": "Checked by the last motor run in the Frame tab: the motors against each other. Props in or out is up to this switch."
     },
     "frameMapHelp": {
-        "message": "The frame's resonances stored on the flight controller by the frame test. The filter autotune needs at least the taps part."
+        "message": "The frame's resonances stored on the FC. The autotune needs at least the taps part."
     },
     "frameMapPartTaps": {
         "message": "Taps"
@@ -9509,7 +9608,7 @@
         "message": "Frame resonances"
     },
     "frameSpectrumHelp": {
-        "message": "The frame's resonances from the last frame test. Left to right the frequency, the same scale every run; a bar's height is how hard the motors shake the frame there, in dB from the strongest resonance of the motor run (0 dB). Red: strong, within 6 dB of the strongest and seen in three places or more - the resonances the filters must handle; every frame has some, they are no fault. Yellow: medium, within 12 dB. Green: weak. Grey: the frame rings there on a tap but the motors do not drive it, or the flight controller marked it unstable. On each plate the frequency, a fan with the numbers of the motors that drive it (as the motor run) and a hand when the taps found it too (as the taps). Weak peaks only one or two motors show are not here: they are listed under Each motor against the others. Hidden unless you click their label: the USB cable's own resonances, and the ones only the taps found (the motors do not drive them, so no filter needs them)."
+        "message": "Resonances from the last frame test.<br>Bar height: how hard the motors shake the frame, in dB from the strongest.<br><br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-error\"></span>Strong: within 6 dB and seen in 3+ places. The filters must handle these.<br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-warning\"></span>Medium: within 12 dB.<br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-success/50\"></span>Weak.<br><span style=\"margin-inline-end: 0.35em\" class=\"inline-block size-2 rounded-full align-middle bg-inverted/30\"></span>Taps only, or unstable.<br><br>Fan: the motors that drive it. Hand: the taps found it too.<br>The USB cable's and taps-only modes: click their label."
     },
     "frameSpectrum_serious": {
         "message": "Strong"
@@ -9530,10 +9629,10 @@
         "message": "Not rated yet"
     },
     "frameSpectrumUnratedNote": {
-        "message": "Run the motor part to see which of them the motors shake, and how hard. Until then a bar's height is how many of the 5 tap points rang there."
+        "message": "Run the motors to rate them. Until then a bar's height is how many of the 5 tap points rang there."
     },
     "frameSpectrumNoMotorRun": {
-        "message": "not rated, no motor run yet: rang at {{n}} of {{of}} tap points"
+        "message": "not rated yet: rang at {{n}} of {{of}} tap points"
     },
     "frameSpectrumWhereWhole": {
         "message": "frame"
@@ -9550,11 +9649,14 @@
     "frameSpectrumStoredMotors": {
         "message": "earlier motor run"
     },
+    "frameSpectrumMotorOnce": {
+        "message": "one motor run only: maybe the support or the grip"
+    },
     "frameSpectrumStoredTitle": {
-        "message": "stored in the frame map on the FC by an earlier run; the last run did not see it"
+        "message": "from an earlier run (stored on the FC)"
     },
     "frameSpectrumCableDisagree": {
-        "message": "the FC took the peaks of motors {{list}} for the USB cable's; the other motors drive it as the frame's"
+        "message": "motors {{list}} saw it as the USB cable's, the others as the frame's"
     },
     "frameSpectrumVerdictTaps": {
         "message": "The taps found {{count}} frame resonances: {{list}} Hz"
@@ -9566,7 +9668,7 @@
         "message": "No resonance stands out: the motors shake the frame evenly"
     },
     "frameSpectrumVerdictMotorsAlike": {
-        "message": "All four motors shake the frame alike: nothing points to a loose motor, mount or arm. The filter autotune aims at the strong ones."
+        "message": "All motors shake the frame alike: no loose motor, mount or arm."
     },
     "frameSpectrumTappedInMap": {
         "message": "the taps found it (frame map)"
@@ -9581,7 +9683,7 @@
         "message": "Hide them from the chart"
     },
     "frameSpectrumSeriousRule": {
-        "message": "Within {{db}} dB of the strongest resonance and seen in three places or more: the ones the filters must handle"
+        "message": "Within {{db}} dB of the strongest, seen in 3+ places: the filters must handle these"
     },
     "frameSpectrumNotableRule": {
         "message": "Within {{db}} dB of the strongest resonance"
@@ -9611,7 +9713,7 @@
         "message": "Filter autotune"
     },
     "filterTuneHelp": {
-        "message": "Tunes the gyro filters in flight from the frame map and the motors' noise: RPM filter weights and Q, dynamic notches, LPF2 and a static notch where the frame rings."
+        "message": "Tunes the gyro filters in flight from the frame map and the motor noise.<br><br>Sets the RPM filter, the dynamic notches, LPF2 and a static notch where the frame rings."
     },
     "filterTuneNeedsMap": {
         "message": "Frame map stored (frame test, taps part)"
@@ -9649,17 +9751,83 @@
     "filterTuneState_discarded": {
         "message": "Discarded"
     },
+    "filterTuneState_partial": {
+        "message": "More needed: fly again with the mode on"
+    },
+    "filterTuneState_exciting": {
+        "message": "Sweep: ANGLE, sticks centred"
+    },
+    "filterTuneSweep_none": {
+        "message": "Switch to ANGLE, sticks centred: the sweep starts."
+    },
+    "filterTuneSweep_roll": {
+        "message": "Sweeping roll. Hands off the sticks."
+    },
+    "filterTuneSweep_settle": {
+        "message": "Pause, pitch next."
+    },
+    "filterTuneSweep_pitch": {
+        "message": "Sweeping pitch. Hands off the sticks."
+    },
+    "filterTuneSweep_done": {
+        "message": "Sweep done."
+    },
+    "filterTuneSweep_aborted": {
+        "message": "Sweep stopped."
+    },
+    "filterTuneStepSweep": {
+        "message": "Then switch to ANGLE, sticks centred: it wiggles in roll, then pitch, about 15 s. Small corrections are fine, a big stick move stops it."
+    },
+    "filterTuneSweepResult": {
+        "message": "Crossover {{roll}} / {{pitch}} Hz, phase margin {{pmRoll}}° / {{pmPitch}}°. Motor heat {{heat}} K (stock {{stock}}, budget +{{budget}})."
+    },
+    "filterTuneSweepStopped": {
+        "message": "Sweep stopped: {{reason}}. D left as it is."
+    },
+    "filterTuneSweepEnd_none": {
+        "message": "no reason"
+    },
+    "filterTuneSweepEnd_sticks": {
+        "message": "sticks moved"
+    },
+    "filterTuneSweepEnd_throttle": {
+        "message": "throttle moved"
+    },
+    "filterTuneSweepEnd_attitude": {
+        "message": "tilted over 25°"
+    },
+    "filterTuneSweepEnd_rate": {
+        "message": "rotated over 300 °/s"
+    },
+    "filterTuneSweepEnd_mode": {
+        "message": "left ANGLE or the mode"
+    },
+    "filterTuneNeedsMotor": {
+        "message": "Motor KV and stator size set"
+    },
+    "filterTuneMotorSet": {
+        "message": "Motor {{kv}} KV, {{d}}×{{h}} mm"
+    },
+    "filterTuneState_bitbang": {
+        "message": "DShot bitbang has no timer: the motors get no signal"
+    },
+    "filterTuneState_loopSlow": {
+        "message": "PID loop {{hz}} of {{set}} Hz: the FC is overloaded, nothing is applied"
+    },
     "filterTuneState_noTelemetry": {
         "message": "No DShot telemetry / RPM filter"
+    },
+    "filterTuneCarried": {
+        "message": "{{frames}} from {{flights}} earlier flights"
     },
     "filterTuneFrames": {
         "message": "{{frames}} of {{min}} frames"
     },
     "filterTuneStep1": {
-        "message": "Turn FILTER TUNE on and hover steadily for 30 seconds or more."
+        "message": "Turn FILTER TUNE on and hover steadily for 30 s or more."
     },
     "filterTuneStep3": {
-        "message": "Land and disarm with the mode still on: the new filters are saved and work from the next arm. Disarm with the mode off to discard them."
+        "message": "Land and disarm with the mode on: saved, used from the next arm. Mode off at disarm: discarded."
     },
     "filterTuneResult": {
         "message": "Filters"
@@ -9713,13 +9881,22 @@
         "message": "1x left after the RPM filter {{db}} dB, score {{score}}"
     },
     "filterTuneLpf2Basis_harmonics": {
-        "message": "LPF2 set from the 4x/5x motor harmonics the RPM filter leaves (up to {{harmonics}} dB over the floor)."
+        "message": "LPF2 set from the 4x/5x harmonics left (up to {{harmonics}} dB over the floor)."
     },
     "filterTuneLpf2Basis_off": {
-        "message": "LPF2 off: 4x/5x at most {{harmonics}} dB over the floor and the raw gyro noise above 600 Hz {{band}} dB against the 100-600 Hz band, nothing left for it to filter. Gyro downsampling then averages the samples instead of filtering them through LPF2."
+        "message": "LPF2 off: 4x/5x at most {{harmonics}} dB over the floor, noise above 600 Hz {{band}} dB vs 100-600 Hz. Nothing for it to filter."
     },
     "filterTuneLpf2Basis_highBand": {
-        "message": "LPF2 kept for the raw gyro noise above 600 Hz ({{band}} dB against the 100-600 Hz band)."
+        "message": "LPF2 kept for the noise above 600 Hz ({{band}} dB vs 100-600 Hz)."
+    },
+    "filterTuneLpf2Basis_dterm": {
+        "message": "LPF2 picked with the D-term filters: P+D delay at 50 Hz {{delay}} µs (stock {{stock}}), D input {{input}} %, motor noise {{noise}} % of stock."
+    },
+    "filterTuneDterm": {
+        "message": "D-term filters"
+    },
+    "filterTuneDtermProfile": {
+        "message": "D-term filters (PID profile {{n}})"
     },
     "filterTuneLpf2Basis_highPeak": {
         "message": "LPF2 kept for a peak above 450 Hz the notches do not cover."
@@ -9731,7 +9908,7 @@
         "message": "Gyro filters are back to what they were before the autotune."
     },
     "filterTuneRevertRefused": {
-        "message": "The flight controller refused: disarm first, or there is nothing to revert to."
+        "message": "The FC refused: disarm first, or nothing to revert."
     },
     "filterTuneRevertFailed": {
         "message": "No reply from the flight controller."
@@ -9740,7 +9917,7 @@
         "message": "Learning your taps"
     },
     "frameTestLearning": {
-        "message": "Tap the frame and the arms in any order. The flight controller first collects taps from several directions; then every point fills in at once."
+        "message": "Tap the frame and arms in any order. The points fill in once the FC has taps from several directions."
     },
     "frameTestStepLearning": {
         "message": "waiting: keep tapping, any order"
@@ -9752,13 +9929,13 @@
         "message": "Frame test"
     },
     "frameTestHelp": {
-        "message": "Finds the resonances of the frame: first from taps, then from the motors, all measured on the flight controller. Propellers off."
+        "message": "Finds the frame's resonances, measured on the FC.<br><br><strong>1. Taps</strong>: the USB cable, the frame and each arm. No motors.<br><strong>2. Motor run</strong>: props off, all four motors spin up."
     },
     "frameTestIntro": {
-        "message": "Two parts, each run on its own: the frame and arms by taps (no motor spins), and the motor run (propellers off). The taps part also stores the frame map the filter autotune needs."
+        "message": "Two parts: taps (no motors), then the motor run (props off). The taps store the frame map the autotune needs."
     },
     "frameTestEnable": {
-        "message": "<strong>I understand the risks</strong>, the propellers are removed - allow the motor run."
+        "message": "<strong>I understand the risks</strong>, props are off"
     },
     "frameTestAbort": {
         "message": "Abort"
@@ -9767,10 +9944,10 @@
         "message": "Accelerometer calibrated"
     },
     "frameTestAccNotCalibrated": {
-        "message": "The accelerometer is not calibrated: calibrate it in the Setup tab, then come back. The frame test never calibrates it."
+        "message": "Accelerometer not calibrated: calibrate it in the Setup tab."
     },
     "frameTestAccMissing": {
-        "message": "No accelerometer: the frame test needs it to tell the taps apart."
+        "message": "No accelerometer: the frame test needs it."
     },
     "frameTestStepCable": {
         "message": "USB cable"
@@ -9809,13 +9986,40 @@
         "message": "Motor sweep {{pct}} %"
     },
     "frameTestBeep": {
-        "message": "Taps collected. Hold the craft firmly: the motors start after the long beep."
+        "message": "Taps done. Hold it firmly: the motors start after the long beep."
+    },
+    "frameTestBeepMotors": {
+        "message": "Hold it firmly: the motors start after the long beep."
+    },
+    "frameTestNoRpmEscs": {
+        "message": "Bidirectional DShot is on, but no ESC sends RPM: speeds set by command."
     },
     "frameTestNoRpm": {
-        "message": "No DShot RPM telemetry (enable bidirectional DShot): the two speeds are set by command and the rotation lines are not masked."
+        "message": "No DShot RPM telemetry: speeds set by command, rotation lines not masked."
     },
     "frameTestStartRefused": {
-        "message": "The flight controller refused to start: it is armed, a session is already running, or the craft is not a quad."
+        "message": "The FC refused: armed, a run already on, or not a quad."
+    },
+    "frameTestDshotBitbang": {
+        "message": "DShot bitbang did not start: its timer is taken (on F411 often by the LED strip). Set dshot_bitbang = OFF to keep the LEDs."
+    },
+    "frameTestRunAgain": {
+        "message": "Run the motors again, held another way and still: modes of one run may be the support or the grip."
+    },
+    "frameTestRunAgainHeld": {
+        "message": "Run the motors again, held other than {{held}} and still: modes of one run may be the support or the grip."
+    },
+    "frameTestHeld_flat": {
+        "message": "flat"
+    },
+    "frameTestHeld_side": {
+        "message": "on its side"
+    },
+    "frameTestHeld_noseUp": {
+        "message": "nose up or down"
+    },
+    "frameTestStartNoBattery": {
+        "message": "No battery: the motors cannot turn on USB power."
     },
     "frameTestStartNoReply": {
         "message": "No reply from the flight controller."
@@ -9851,19 +10055,19 @@
         "message": "Frame resonances driven by the motors"
     },
     "frameTestSumBothHelp": {
-        "message": "The frame rings here when tapped and the motors excite it: these are the ones that show up in flight. The highlighted one was seen in the most places."
+        "message": "Rings on taps and driven by the motors: these show up in flight."
     },
     "frameTestSumTaps": {
         "message": "Frame only"
     },
     "frameTestSumTapsHelp": {
-        "message": "The frame rings here when tapped, but the motors did not excite it on the bench."
+        "message": "Rings on taps, the motors did not drive it."
     },
     "frameTestSumMotors": {
         "message": "Motors only"
     },
     "frameTestSumMotorsHelp": {
-        "message": "Seen with the motors spinning but not on the taps: likely the motors or their mounts."
+        "message": "Driven by the motors, not on taps: likely the motors or their mounts."
     },
     "frameTestWhereTaps": {
         "message": "taps: {{list}}"
@@ -9926,22 +10130,16 @@
         "message": "A rotation target was not reached within the command limit."
     },
     "frameSpinMotorCw": {
-        "message": "Motor {{n}} turns clockwise seen from above, as set and as the spin check found"
+        "message": "Motor {{n}}: clockwise, as set"
     },
     "frameSpinMotorCcw": {
-        "message": "Motor {{n}} turns counter-clockwise seen from above, as set and as the spin check found"
-    },
-    "frameSpectrumTapsAt": {
-        "message": "Taps: {{date}}"
-    },
-    "frameSpectrumMotorsAt": {
-        "message": "Motor run: {{date}}"
+        "message": "Motor {{n}}: counter-clockwise, as set"
     },
     "frameHealthMotorAlike": {
-        "message": "Motor {{n}} shakes the frame as the others do in the motor run"
+        "message": "Motor {{n}}: as the others"
     },
     "frameHealthMotorLoud": {
-        "message": "Motor {{n}} shakes a frame resonance 10 dB or more harder than the others: check its screws, mount and bearings"
+        "message": "Motor {{n}} shakes a resonance 10 dB+ harder than the others: check its screws, mount and bearings"
     },
     "frameMapCableMode": {
         "message": "The USB cable's own resonance, not the frame's"
@@ -9953,7 +10151,13 @@
         "message": "Nothing stored yet: run the taps part of the frame test."
     },
     "frameMapUnstableMode": {
-        "message": "Unstable: few taps saw it, even where it rang most (the flight controller on its soft mount, a hand, a loose part). The filter autotune puts no static notch on it."
+        "message": "Unstable: few taps saw it (soft mount, a hand, a loose part). No static notch on it."
+    },
+    "frameSpectrumTapHeard": {
+        "message": "Tap heard"
+    },
+    "frameSpectrumTapHeardReady": {
+        "message": "Tap heard: its peaks came {{ms}} ms after it"
     },
     "frameTestStart": {
         "message": "Start frame test"
@@ -9962,7 +10166,7 @@
         "message": "Run again"
     },
     "frameTestBlockedByMotorTest": {
-        "message": "Locked while motor test mode is on: turn it off to use the frame test."
+        "message": "Locked while motor test mode is on."
     },
     "frameTestEnd2": {
         "message": "aborted from the app"
@@ -9991,17 +10195,32 @@
     "frameTestEnd10": {
         "message": "the craft hit something hard (over 6 g) while the motors ran"
     },
+    "frameTestDoneNoMotors": {
+        "message": "Taps stored; the motor run did not start: {{reason}}."
+    },
+    "frameTestEnd11": {
+        "message": "no battery"
+    },
+    "frameTestEnd12": {
+        "message": "the motors did not turn"
+    },
+    "frameTestEnd13": {
+        "message": "DShot bitbang has no timer, so the motors get no signal (a pin such as the LED strip takes it): move that pin or set dshot_bitbang OFF"
+    },
+    "frameTestEnd14": {
+        "message": "the flight controller is overloaded with the motors on: the PID loop ran at {{hz}} Hz, below its set rate, and a tune measured that way would be wrong. Lower the load (a lower PID rate, no blackbox to flash, bitbang instead of timer DMA DShot)"
+    },
     "frameTestCableMode": {
         "message": "cable"
     },
     "filterTuneStep2Beeps": {
-        "message": "Two beeps: enough data. Only with a buzzer: without one, hover 30 seconds or more, then land."
+        "message": "Two beeps: enough data (buzzer only). Without one, hover 30 s or more."
     },
     "filterTuneStep2Signals": {
         "message": "Enough data: {{ways}}."
     },
     "filterTuneStep2None": {
-        "message": "Enough data after 30 seconds or more of hovering; this craft does not signal it."
+        "message": "Enough data after 30 s or more of hovering (no signal on this craft)."
     },
     "filterTuneSignalBeeps": {
         "message": "two beeps"
@@ -10013,10 +10232,13 @@
         "message": "the OSD shows FILTER TUNE READY"
     },
     "filterTuneNoSignal": {
-        "message": "This craft has no buzzer, LED strip or OSD to signal the autotune in flight: hover 30 seconds or more, then land and disarm with the mode on."
+        "message": "No buzzer, LED strip or OSD to signal in flight: hover 30 s or more, then land and disarm with the mode on."
+    },
+    "filterTuneStep3Beacon": {
+        "message": "Land and disarm with the mode on. Three rising tones: saved. Two low tones: fly again to add frames. Mode off at disarm: discarded."
     },
     "filterTuneLedCollecting": {
-        "message": "waiting for a steady hover (slow blink), collecting (fast blink)"
+        "message": "waiting (slow), collecting (fast)"
     },
     "filterTuneLedReady": {
         "message": "enough data"

@@ -138,6 +138,18 @@ describe("mode spectrum", () => {
         expect(lines.find((l) => Math.round(l.hz) === 521)).toMatchObject({ tapped: false });
     });
 
+    it("a motor mode only the last motor run found, and no tap, is marked as of one run", () => {
+        const motorsOnly = { ...run, points: [[], [], [], [], [], []] } as WizardResult;
+        const map = [
+            { hz: 521, fromTaps: false, fromMotors: true, fromCable: false, unstable: false, motorOnce: true },
+            { hz: 210, fromTaps: true, fromMotors: true, fromCable: false, unstable: false, motorOnce: true },
+        ];
+        const lines = modeSpectrum(motorsOnly, map);
+        expect(lines.find((l) => Math.round(l.hz) === 521)?.motorOnce).toBe(true);
+        // the taps found it too: the frame's
+        expect(lines.find((l) => Math.round(l.hz) === 211)?.motorOnce).toBe(false);
+    });
+
     it("splits the frame modes from the peaks of one or two motors", () => {
         const lines = modeSpectrum(run);
         expect(lines.filter(isFrameMode).map((l) => Math.round(l.hz))).toEqual([

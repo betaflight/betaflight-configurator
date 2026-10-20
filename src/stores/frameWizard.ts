@@ -27,17 +27,6 @@ import { isMspCancelled } from "../js/msp/mspErrors";
 import { serial } from "../js/serial";
 import { useConnectionStore } from "./connection";
 import { useFlightControllerStore } from "./fc";
-import {
-    craftKey,
-    hasMotors,
-    hasTaps,
-    keptRuns,
-    loadHistory,
-    mergeRuns,
-    resultHasData,
-    sameRun,
-    saveHistory,
-} from "./frameHistory";
 import { parseSpinCheck, SPIN_CHECK_BASE, type SpinCheck } from "./frameSpinCheck";
 import type { FrameMap } from "./filterTuneProtocol";
 import {
@@ -62,17 +51,26 @@ import {
     type StartParams,
     type WizardResult,
     type WizardStatus,
+    hasMotors,
+    hasTaps,
+    mergeRuns,
 } from "./frameWizardProtocol";
 
 // The status (41 B a reply) is progress only, once a second is plenty: the result is read once at the end.
 // The FC stops the motors 0.5 s after the last keepalive while they run (1.5 s otherwise); a status poll
 // is one, and between polls the 1-byte keepalive op goes out every 200 ms, so one lost on the way is
-// covered by the next.
+// covered by the next. That is ~85 B/s back from the FC, within a BLE bridge's ~300 B/s.
 const STATUS_MS = 1000;
 const KEEPALIVE_MS = 200;
 const IDLE_POLL_MS = 1000;
 
-export type StartError = "refused" | "noReply" | "notStarted";
+export type StartError = "refused" | "noReply" | "notStarted" | "noBattery";
+
+/** Arming disabled because DShot bitbang did not start (a timer it needs is taken, as by an LED strip on F411). */
+const ARMING_DISABLED_DSHOT_BITBANG = 1 << 22;
+
+/** MSP_BATTERY_STATE: the FC sees no battery (a craft without a voltage meter never reports this). */
+const BATTERY_NOT_PRESENT = 3;
 
 /** The motor run a v2 frame map keeps (peaks, rotation speeds, spin check), as a result to show; null without one. */
 function motorRunFromMap(map: FrameMap | null): { result: WizardResult; spinCheck: SpinCheck | null } | null {
@@ -193,12 +191,8 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
     const lastResult = ref<WizardResult | null>(null);
     const spinCheck = ref<SpinCheck | null>(null);
     /** When the last run was first seen; null when unknown. */
-    const lastResultAt = ref<string | null>(null);
     /** The last run comes from this app's copy: the FC no longer has it (restarted since). */
-    const lastResultKept = ref(false);
     /** When the last taps run and the last motor run were first seen; null when none is kept. */
-    const lastTapsAt = ref<string | null>(null);
-    const lastMotorsAt = ref<string | null>(null);
     /** The wizard was started from here; the checklist shows the FC's counts only then. */
     const started = ref(false);
     /** Which part runs (or ran last): taps for the frame and arms, motors for the motor run. */
@@ -212,6 +206,10 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
     const startError = ref<StartError | null>(null);
     /** RPM telemetry was missing when the wizard started (bases by command, no rotation mask). */
     const noRpmAtStart = ref(false);
+    /** The motors have no output at all: DShot bitbang did not start (the arming flags say so, polled by the app). */
+    const dshotBitbangFailed = computed(
+        () => (useFlightControllerStore().config.armingDisableFlags & ARMING_DISABLED_DSHOT_BITBANG) !== 0,
+    );
     const clock = ref(1);
 
     let first: { fcMs: number; hostMs: number } | null = null;
@@ -255,11 +253,31 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         return parsed;
     }
 
+    const craftNow = () => useFlightControllerStore().config.uid.join(",");
+    /** The FC's frame map as last read (its profile keeps the motor run's peaks and spin check). */
+    let lastMap: FrameMap | null = null;
+
     // The motor run's spin direction check; null when the FC has none (older firmware, a taps run, the buffers
     // lent to the filter autotune).
     async function fetchSpinCheck() {
         const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_RESPONSE, [SPIN_CHECK_BASE, 0]);
-        spinCheck.value = bytes ? parseSpinCheck(bytes) : null;
+        const parsed = bytes ? parseSpinCheck(bytes) : null;
+        // gone from the FC (listening or the autotune took the buffers): the page read before listening, else
+        // the pass / fail its frame map keeps (no tone, phases or levels)
+        spinCheck.value = parsed ?? keptPages()?.spinCheck ?? motorRunFromMap(lastMap)?.spinCheck ?? null;
+    }
+
+    // The motor run's response pages share the FC's buffer with listening to taps: read before it starts.
+    let kept: { craft: string; curves: Record<string, number[][]>; spinCheck: SpinCheck | null } | null = null;
+    const keptPages = () => (kept?.craft === craftNow() ? kept : null);
+
+    /** The spin check and the gain curves, read once per craft and run before listening takes the buffer. */
+    async function keepResponses() {
+        if (!keptPages()) {
+            await fetchSpinCheck();
+            const curves = await readCurves();
+            kept = { craft: craftNow(), curves, spinCheck: spinCheck.value };
+        }
     }
 
     /** The spin check of the last motor run, for the Motors tab; silent on firmware without it. */
@@ -274,42 +292,18 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         }
     }
 
-    // The FC forgets its last run at power-off, and a motor run's result has no taps: this app keeps the last
-    // taps run and the last motor run per craft (each with the date it was first seen) and shows them together.
-    function remember(fcResult: WizardResult | null, finishedNow: boolean, map: FrameMap | null = null) {
-        const key = craftKey(useFlightControllerStore().config.uid);
-        let { taps, motors } = keptRuns(loadHistory(key));
-        const now = new Date().toISOString();
-        if (hasTaps(fcResult)) {
-            const same = !finishedNow && taps !== undefined && sameRun(taps.result, fcResult);
-            taps = { at: same ? taps!.at : now, result: fcResult };
-        }
-        if (hasMotors(fcResult)) {
-            const same = !finishedNow && motors !== undefined && sameRun(motors.result, fcResult);
-            // after arming the FC lends the buffers to the autotune: the spin check of the same run stays kept
-            const spin = spinCheck.value ?? (same ? motors!.spinCheck : null);
-            motors = { at: same ? motors!.at : now, result: fcResult, spinCheck: spin };
-        }
-        if (resultHasData(fcResult)) {
-            saveHistory(key, { taps, motors, run: undefined });
-        }
-        // nothing kept here (another computer, a cleared browser): the motor run the FC stores with its frame map
-        const stored = motors ? null : motorRunFromMap(map);
-        lastResult.value = mergeRuns(taps?.result, motors?.result ?? stored?.result) ?? fcResult;
-        spinCheck.value = motors?.spinCheck ?? spinCheck.value ?? stored?.spinCheck ?? null;
-        lastTapsAt.value = taps?.at ?? null;
-        lastMotorsAt.value = motors?.at ?? null;
-        lastResultAt.value =
-            [taps?.at, motors?.at]
-                .filter((d): d is string => !!d)
-                .sort((a, b) => a.localeCompare(b))
-                .at(-1) ?? null;
-        // kept: something shown that the FC no longer reports
-        lastResultKept.value = (!!taps && !hasTaps(fcResult)) || (!!motors && !hasMotors(fcResult));
+    // The FC keeps its last run in RAM and the motor run's peaks and spin check in its frame map (the config):
+    // a taps run shows with the stored motor run, and after a restart the stored motor run alone.
+    function remember(fcResult: WizardResult | null) {
+        const stored = motorRunFromMap(lastMap);
+        const motors = hasMotors(fcResult) ? fcResult : stored?.result;
+        lastResult.value = mergeRuns(hasTaps(fcResult) ? fcResult : undefined, motors) ?? fcResult;
+        spinCheck.value ??= stored?.spinCheck ?? null;
     }
 
     /** @param map the FC's frame map, read already: it keeps the last motor run's peaks across a restart */
     async function loadLastResult(map: FrameMap | null = null) {
+        lastMap = map;
         let fcResult: WizardResult | null = null;
         try {
             const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_RESULT);
@@ -320,14 +314,14 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
                 console.warn("Frame wizard result read failed:", error);
             }
         }
-        remember(fcResult, false, map);
+        remember(fcResult);
     }
 
     async function fetchResult() {
         const bytes = await query(MSPCodes.MSP2_FRAME_WIZARD_RESULT);
         result.value = bytes ? parseResult(bytes) : null;
         await fetchSpinCheck();
-        remember(result.value, true);
+        remember(result.value);
         if (first && status.value) {
             clock.value = clockFactor(first.fcMs, first.hostMs, status.value.fcMs, performance.now());
         }
@@ -398,13 +392,31 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
     }
 
     /** One part of the frame test on its own. */
-    function startRun(kind: RunKind): Promise<boolean> {
+    async function startRun(kind: RunKind): Promise<boolean> {
         runKind.value = kind;
+        // on USB power alone the ESCs are off: the motors would not turn and the run would measure noise
+        if (kind === "motors" && (await batteryMissing())) {
+            startError.value = "noBattery";
+            return false;
+        }
         return start(startParamsFor(kind));
+    }
+
+    async function batteryMissing(): Promise<boolean> {
+        try {
+            await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
+        } catch (error) {
+            if (!isMspCancelled(error)) {
+                console.warn("Battery state read failed:", error);
+            }
+            return false;
+        }
+        return useFlightControllerStore().batteryState.batteryState === BATTERY_NOT_PRESENT;
     }
 
     async function start(params: StartParams = DEFAULT_START): Promise<boolean> {
         starting.value = true;
+        kept = null; // a new run, new pages
         startError.value = null;
         result.value = null;
         clock.value = 1;
@@ -459,8 +471,12 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         const taps = await readTapPages();
         const features = await readFeaturePages();
         const bySeq = new Map(features.map((f) => [f.seq, f]));
-        await fetchSpinCheck();
-        const curves = await readCurves();
+        // listening has taken the buffer since: the pages kept before it
+        const pages = keptPages();
+        if (!pages) {
+            await fetchSpinCheck();
+        }
+        const curves = pages ? pages.curves : await readCurves();
         return {
             savedAt: new Date().toISOString(),
             runKind: runKind.value,
@@ -469,7 +485,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
             clockFactor: clock.value,
             taps: taps.map((tap) => ({ ...tap, features: bySeq.get(tap.seq) ?? null })),
             curves,
-            spinCheck: spinCheck.value,
+            spinCheck: pages ? pages.spinCheck : spinCheck.value,
         };
     }
 
@@ -502,11 +518,8 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         result,
         lastResult,
         spinCheck,
-        lastResultAt,
-        lastResultKept,
-        lastTapsAt,
-        lastMotorsAt,
         loadSpinCheck,
+        keepResponses,
         loadLastResult,
         started,
         runKind,
@@ -514,6 +527,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         starting,
         startError,
         noRpmAtStart,
+        dshotBitbangFailed,
         clock,
         active,
         finished,

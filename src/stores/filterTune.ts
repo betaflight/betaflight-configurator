@@ -36,7 +36,6 @@ import {
     type FilterTuneStatus,
     type FrameMap,
 } from "./filterTuneProtocol";
-import { craftKey, loadHistory, saveHistory } from "./frameHistory";
 
 // The status is a progress readout (frames collected, the verdict so far): once a second is enough.
 const STATUS_POLL_MS = 1000;
@@ -73,9 +72,25 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
      */
     const telemetryConfigured = ref<boolean | null>(null);
 
+    /**
+     * The motor's KV and stator size (null until read): the D-term rule holds the motors' heat from the ripple to
+     * a budget, worked out from them. The stator size follows KV in MSP_MOTOR_CONFIG (API 1.49, 0 when unset).
+     */
+    const motorSpec = ref<{ kv: number; statorDiameterMm: number; statorHeightMm: number } | null>(null);
+
     async function readTelemetryConfig() {
         await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-        await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+        const motor = await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+        const view = motor && !motor.unsupported ? motor.data : null;
+        // u16 x3, u8 x4, u16 kv, then u8 stator diameter mm, u8 height 0.1 mm
+        motorSpec.value =
+            view && view.byteLength >= 14
+                ? {
+                      kv: view.getUint16(10, true),
+                      statorDiameterMm: view.getUint8(12),
+                      statorHeightMm: view.getUint8(13) / 10,
+                  }
+                : null;
         await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
         const fc = useFlightControllerStore();
         telemetryConfigured.value =
@@ -84,33 +99,7 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
             fc.filterConfig.gyro_rpm_notch_harmonics > 0;
     }
 
-    /** The last applied autotune measurement this app kept for the craft (the FC loses it at power-off). */
-    const keptTune = ref<{ at: string; status: FilterTuneStatus } | null>(null);
-    /** What to show: the FC's live measurement when it has frames, else the kept one. */
-    const shownStatus = computed(() =>
-        status.value && status.value.frames > 0 ? status.value : (keptTune.value?.status ?? status.value),
-    );
-    /** The shown measurement is the kept one (the FC restarted since); its date. */
-    const shownKeptAt = computed(() =>
-        keptTune.value && shownStatus.value === keptTune.value.status ? keptTune.value.at : null,
-    );
-    const summary = computed(() => (shownStatus.value ? harmonicSummary(shownStatus.value) : null));
-
-    const craft = () => craftKey(useFlightControllerStore().config.uid);
-
-    // Applied in flight: keep it now, before the FC is switched off.
-    function keepApplied(parsed: FilterTuneStatus) {
-        const kept = keptTune.value?.status;
-        if (
-            parsed.state !== "applied" ||
-            parsed.frames === 0 ||
-            (kept?.state === "applied" && kept.frames === parsed.frames)
-        ) {
-            return;
-        }
-        keptTune.value = { at: new Date().toISOString(), status: parsed };
-        saveHistory(craft(), { tune: keptTune.value });
-    }
+    const summary = computed(() => (status.value ? harmonicSummary(status.value) : null));
 
     // FILTER TUNE has a switch range in the Modes tab (an empty slot has start == end); a mode that is on
     // right now is on a switch whatever the ranges read at load say
@@ -131,7 +120,6 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         }
         if (parsed) {
             status.value = parsed;
-            keepApplied(parsed);
         }
     }
 
@@ -142,7 +130,6 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
 
     /** The mixer (for the frame diagram) and the frame map, then the status once a second. */
     async function load() {
-        keptTune.value = loadHistory(craft()).tune ?? null;
         try {
             await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
             await refreshStatus();
@@ -258,8 +245,8 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         supported.value = null;
         status.value = null;
         frameMap.value = null;
-        keptTune.value = null;
         telemetryConfigured.value = null;
+        motorSpec.value = null;
     }
 
     return {
@@ -267,10 +254,9 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         status,
         frameMap,
         telemetryConfigured,
+        motorSpec,
         busy,
         summary,
-        shownStatus,
-        shownKeptAt,
         modeAssigned,
         load,
         probe,

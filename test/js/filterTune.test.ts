@@ -25,6 +25,7 @@ import {
     encodeRevertFilters,
     harmonicSummary,
     parseFilterTuneStatus,
+    heldAs,
     parseFrameMap,
     type FilterTuneStatus,
 } from "../../src/stores/filterTuneProtocol";
@@ -143,7 +144,7 @@ describe("filter autotune status", () => {
             ],
         });
         expect(s.harmonics[0][0]).toBe(-1.5);
-        const names = [0, 1, 2, 3, 4, 5, 6, 7].map((code) => status({ state: code }).state);
+        const names = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((code) => status({ state: code }).state);
         expect(names).toEqual([
             "noFrameMap",
             "idle",
@@ -153,6 +154,8 @@ describe("filter autotune status", () => {
             "applied",
             "discarded",
             "noTelemetry",
+            "partial",
+            "exciting",
         ]);
         expect(status({ bad: 255 }).badMotor).toBeNull();
     });
@@ -162,6 +165,7 @@ describe("filter autotune status", () => {
         const withBasis = [...statusPayload(), ...new Sbuf().u16(-12).u8(1).bytes];
         expect(parseFilterTuneStatus(withBasis)).toMatchObject({ highBandDb: -1.2, lpf2Basis: "off" });
         const noData = [...statusPayload(), ...new Sbuf().u16(0).u8(255).bytes];
+        expect(parseFilterTuneStatus([...statusPayload(), ...new Sbuf().u16(0).u8(4).bytes])?.lpf2Basis).toBe("dterm");
         expect(parseFilterTuneStatus(noData)).toMatchObject({ lpf2Basis: "noData" });
     });
 
@@ -180,7 +184,65 @@ describe("filter autotune status", () => {
         });
         expect(parseFilterTuneStatus([...withFade, 0])).toMatchObject({
             signals: { beeper: false, ledStrip: false, osd: false },
+            carried: null,
         });
+        // frames carried from earlier flights (counted in frames already), and how many flights
+        const withCarried = [...withFade, 0, ...new Sbuf().u16(31).u8(1).bytes];
+        expect(parseFilterTuneStatus(withCarried)).toMatchObject({ carried: { frames: 31, flights: 1 }, dterm: null });
+        // the D-term pick: x0.8, now dyn 75-150 and LPF2 150, delay 380 vs 452 us, D input 95 %, noise 105 %
+        const withD = [
+            ...withCarried,
+            ...new Sbuf().u8(8).u16(75).u16(150).u16(150).u16(380).u16(452).u8(95).u8(105).bytes,
+        ];
+        expect(parseFilterTuneStatus(withD)?.dterm).toEqual({
+            mult: 0.8,
+            current: { dynMinHz: 75, dynMaxHz: 150, lpf2Hz: 150 },
+            delayUs: 380,
+            stockDelayUs: 452,
+            inputPct: 95,
+            noisePct: 105,
+        });
+        expect(parseFilterTuneStatus(withD)?.pidProfile).toBeNull();
+        // PID profiles: current 2, applied to 0; 0xFF: not applied
+        expect(parseFilterTuneStatus([...withD, 1, 0])?.pidProfile).toEqual({ current: 1, applied: 0 });
+        expect(parseFilterTuneStatus([...withD, 2, 0xff])?.pidProfile).toEqual({ current: 2, applied: null });
+        expect(parseFilterTuneStatus([...withD, 1, 0])?.sweep).toBeNull();
+        // the sweep: done, crossover 39.0 / 41.5 Hz, margins 45 / 47, noise 21.4 vs 10.0, heat 0.50 vs 0.93 K, budget 2 K
+        const sweep = new Sbuf()
+            .u8(4)
+            .u8(0)
+            .u16(250)
+            .u16(390)
+            .u16(415)
+            .u8(45)
+            .u8(47)
+            .u16(214)
+            .u16(100)
+            .u16(50)
+            .u16(93)
+            .u8(20);
+        expect(parseFilterTuneStatus([...withD, 1, 0, ...sweep.bytes])?.sweep).toEqual({
+            phase: "done",
+            end: "none",
+            amplitudeDps: 25,
+            crossoverHz: { roll: 39, pitch: 41.5 },
+            phaseMarginDeg: { roll: 45, pitch: 47 },
+            noiseIndex: 21.4,
+            noiseIndexNow: 10,
+            heatStockK: 0.5,
+            heatPickK: 0.93,
+            heatBudgetK: 2,
+        });
+        // stopped by the sticks, pitch not measured
+        const stopped = new Sbuf().u8(5).u8(1).u16(250).u16(390).u16(0).u8(45).u8(0).u16(0).u16(0).u16(0).u16(0).u8(20);
+        expect(parseFilterTuneStatus([...withD, 1, 0, ...stopped.bytes])?.sweep).toMatchObject({
+            phase: "aborted",
+            end: "sticks",
+            crossoverHz: { roll: 39, pitch: null },
+        });
+        // 0: D left as it is
+        withD[withCarried.length] = 0;
+        expect(parseFilterTuneStatus(withD)?.dterm?.mult).toBeNull();
     });
 
     it("parses a status read from the bench FC (firmware 8729d4f4d, no hover yet)", () => {
@@ -248,16 +310,22 @@ describe("frame map", () => {
             motors: null,
             rotationHz: null,
             spinWrongMask: null,
+            runGravity: null,
             modes: [
-                { hz: 75.2, fromTaps: true, fromMotors: false, fromCable: false, unstable: false },
-                { hz: 210.1, fromTaps: true, fromMotors: true, fromCable: false, unstable: false },
-                { hz: 446, fromTaps: false, fromMotors: true, fromCable: false, unstable: false },
-                { hz: 375.5, fromTaps: false, fromMotors: false, fromCable: true, unstable: false },
+                { hz: 75.2, fromTaps: true, fromMotors: false, fromCable: false, unstable: false, motorOnce: false },
+                { hz: 210.1, fromTaps: true, fromMotors: true, fromCable: false, unstable: false, motorOnce: false },
+                { hz: 446, fromTaps: false, fromMotors: true, fromCable: false, unstable: false, motorOnce: false },
+                { hz: 375.5, fromTaps: false, fromMotors: false, fromCable: true, unstable: false, motorOnce: false },
                 // FRAME_MAP_SRC_UNSTABLE: a tap mode few taps saw
-                { hz: 173, fromTaps: true, fromMotors: false, fromCable: false, unstable: true },
+                { hz: 173, fromTaps: true, fromMotors: false, fromCable: false, unstable: true, motorOnce: false },
             ],
         });
         expect(parseFrameMap([1, 0, 0])).toMatchObject({ hasTaps: false, hasMotors: false, modes: [] });
+        // FRAME_MAP_SRC_MOTOR_ONCE: a motor mode only the last motor run found
+        expect(parseFrameMap(new Sbuf().u8(1).u8(0b10).u8(1).u16(8740).u8(0x12).bytes)!.modes[0]).toMatchObject({
+            fromMotors: true,
+            motorOnce: true,
+        });
         expect(parseFrameMap([3, 0, 0])).toBeNull();
     });
 
@@ -290,6 +358,13 @@ describe("frame map", () => {
         expect(map.motors![3]).toHaveLength(1);
         expect(map.rotationHz).toEqual([127.3, 236]);
         expect(map.spinWrongMask).toBe(0b0100);
+        expect(map.runGravity).toBeNull(); // firmware before the run's gravity
+        // appended: down in the craft's axes x100 at the start of the last motor run (here on its side)
+        const held = parseFrameMap([...b.bytes, 3, 0x9d, 0xfe])!;
+        expect(held.runGravity).toEqual({ x: 0.03, y: -0.99, z: -0.02 });
+        expect(heldAs(held.runGravity!)).toBe("side");
+        expect(heldAs({ x: 0, y: 0.1, z: 1 })).toBe("flat");
+        expect(heldAs({ x: -0.9, y: 0.2, z: 0.3 })).toBe("noseUp");
         // no spin check made
         const none = [...b.bytes.slice(0, -1), 0];
         expect(parseFrameMap(none)!.spinWrongMask).toBeNull();
@@ -335,11 +410,19 @@ describe("RPM telemetry settings", () => {
     it("counts the RPM telemetry set up when DShot, bidirectional and the RPM filter are on", async () => {
         vi.resetModules();
         const bytes = new Uint8Array(statusPayload());
-        const promise = vi.fn(async (code: number) =>
-            code === 0x301c
-                ? { data: new DataView(bytes.buffer), unsupported: false }
-                : { data: new DataView(new ArrayBuffer(0)) },
+        // MSP_MOTOR_CONFIG: min/max throttle, min command, count, poles, telemetry, ESC sensor, kv 2800, stator 22 x 3.5 mm
+        const motor = new Uint8Array(
+            new Sbuf().u16(1070).u16(2000).u16(1000).u8(4).u8(14).u8(1).u8(0).u16(2800).u8(22).u8(35).u8(51).bytes,
         );
+        const promise = vi.fn(async (code: number) => {
+            if (code === 0x301c) {
+                return { data: new DataView(bytes.buffer), unsupported: false };
+            }
+            if (code === 131) {
+                return { data: new DataView(motor.buffer), unsupported: false };
+            }
+            return { data: new DataView(new ArrayBuffer(0)) };
+        });
         vi.doMock("../../src/js/msp", () => ({ default: { promise, send_message: vi.fn() } }));
         const { createPinia, setActivePinia } = await import("pinia");
         setActivePinia(createPinia());
@@ -355,6 +438,7 @@ describe("RPM telemetry settings", () => {
 
         await store.load();
         expect(store.telemetryConfigured).toBe(false); // RPM filter harmonics 0
+        expect(store.motorSpec).toEqual({ kv: 2800, statorDiameterMm: 22, statorHeightMm: 3.5 });
 
         fc.filterConfig.gyro_rpm_notch_harmonics = 3;
         await store.load();

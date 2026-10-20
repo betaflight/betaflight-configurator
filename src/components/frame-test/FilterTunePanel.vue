@@ -38,7 +38,7 @@
                 :color="stateColor"
                 variant="subtle"
                 size="lg"
-                :label="$t(`filterTuneState_${status.state}`)"
+                :label="$t(`filterTuneState_${status.state}`, { hz: status.loop?.measuredHz, set: status.loop?.setHz })"
             />
         </div>
 
@@ -51,7 +51,12 @@
             />
             <span class="text-xs text-muted tabular-nums">
                 {{ $t("filterTuneFrames", { frames: status!.frames, min: status!.minFrames }) }}
+                <template v-if="status!.carried?.flights">
+                    ·
+                    {{ $t("filterTuneCarried", { frames: status!.carried.frames, flights: status!.carried.flights }) }}
+                </template>
             </span>
+            <span v-if="sweepText" class="text-xs text-info">{{ sweepText }}</span>
         </div>
 
         <!-- the craft can tell the pilot nothing in flight: say so before the flight -->
@@ -71,16 +76,13 @@
                     </span>
                 </span>
             </li>
-            <li>{{ $t("filterTuneStep3") }}</li>
+            <li v-if="status?.sweep">{{ $t("filterTuneStepSweep") }}</li>
+            <li>{{ status?.carried ? $t("filterTuneStep3Beacon") : $t("filterTuneStep3") }}</li>
         </ol>
 
         <!-- before / after -->
         <div v-if="showResult" class="flex flex-col gap-2 border-t border-default pt-3">
-            <!-- the FC forgot it (restarted since): the measurement this app kept when it was applied -->
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-sm font-medium text-highlighted">{{ $t("filterTuneResult") }}</span>
-                <RunDateBadge v-if="filterTune.shownKeptAt" :at="filterTune.shownKeptAt" kept />
-            </div>
+            <span class="text-sm font-medium text-highlighted">{{ $t("filterTuneResult") }}</span>
             <div class="grid max-w-lg grid-cols-[1fr_auto_auto] gap-x-4 gap-y-1 text-sm">
                 <span class="text-xs text-muted">{{ $t("filterTuneSetting") }}</span>
                 <span class="text-xs text-muted text-right">{{ $t("filterTuneBefore") }}</span>
@@ -111,6 +113,7 @@
                 {{ $t("filterTuneResidual", { db: result!.residual1x.toFixed(1), score: result!.score }) }}
             </span>
             <span v-if="lpf2Text" class="text-xs text-muted">{{ lpf2Text }}</span>
+            <span v-if="sweepResult" class="text-xs text-muted">{{ sweepResult }}</span>
         </div>
 
         <UAlert
@@ -136,17 +139,18 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
-import RunDateBadge from "./RunDateBadge.vue";
 import { i18n } from "@/js/localization";
 import { useFilterTuneStore } from "@/stores/filterTune";
+import { useFrameWizardStore } from "@/stores/frameWizard";
 import type { FilterSettings, ResidualPeak } from "@/stores/filterTuneProtocol";
 
 const filterTune = useFilterTuneStore();
+const wizard = useFrameWizardStore();
 const t = (key: string, params?: Record<string, unknown>) => i18n.getMessage(key, params);
 
 const status = computed(() => filterTune.status);
 // the measurement shown: the FC's live one, else the one kept when it was applied
-const result = computed(() => filterTune.shownStatus);
+const result = computed(() => filterTune.status);
 const map = computed(() => filterTune.frameMap);
 const mapParts = computed(() => {
     const parts = [];
@@ -172,18 +176,39 @@ const requirements = computed<{ key: string; ok: boolean; label: string; title?:
     },
     {
         key: "telemetry",
-        ok: status.value?.hasTelemetry === true || filterTune.telemetryConfigured === true,
+        ok:
+            status.value?.hasTelemetry === true ||
+            (filterTune.telemetryConfigured === true && !wizard.dshotBitbangFailed),
         label: t("filterTuneNeedsTelemetry"),
     },
     { key: "mode", ok: filterTune.modeAssigned, label: t("filterTuneNeedsMode") },
+    // the D-term rule works out the motors' heat from these (firmware with the sweep)
+    ...(status.value?.sweep ? [motorRequirement.value] : []),
 ]);
+
+const motorRequirement = computed(() => {
+    const m = filterTune.motorSpec;
+    const ok = !!m && m.kv > 0 && m.statorDiameterMm > 0 && m.statorHeightMm > 0;
+    return {
+        key: "motor",
+        ok,
+        label: ok
+            ? t("filterTuneMotorSet", { kv: m!.kv, d: m!.statorDiameterMm, h: m!.statorHeightMm })
+            : t("filterTuneNeedsMotor"),
+    };
+});
 
 const stateColor = computed(() => {
     switch (status.value?.state) {
         case "applied":
             return "success";
         case "ready":
+        case "partial":
+        case "exciting":
             return "primary";
+        case "bitbang":
+        case "loopSlow":
+            return "error";
         case "noFrameMap":
         case "noTelemetry":
         case "discarded":
@@ -194,7 +219,7 @@ const stateColor = computed(() => {
 });
 
 const showProgress = computed(
-    () => status.value !== null && (status.value.state === "collecting" || status.value.state === "ready"),
+    () => status.value !== null && ["collecting", "ready", "partial", "exciting"].includes(status.value.state),
 );
 const showResult = computed(
     () =>
@@ -232,12 +257,54 @@ function rows(proposed: FilterSettings) {
             after: proposed.notch1Hz > 0 ? `${proposed.notch1Hz} / ${proposed.notch1CutoffHz} Hz` : t("filterTuneOff"),
         },
     ];
+    // the D-term filters, scaled together with LPF2 for the least P+D delay
+    const d = result.value!.dterm;
+    if (d) {
+        const now = `${d.current.dynMinHz}–${d.current.dynMaxHz} / ${hz(d.current.lpf2Hz)}`;
+        // the D-term filters live in a PID profile: the one they went to, else the current one they would go to
+        const pid = result.value!.pidProfile;
+        const profile = pid ? (pid.applied ?? pid.current) + 1 : null;
+        const label = profile ? t("filterTuneDtermProfile", { n: profile }) : t("filterTuneDterm");
+        list.push({ key: "dterm", label, before: now, after: d.mult ? `×${d.mult}` : now });
+    }
     return list.map((row) => ({ ...row, changed: row.before !== row.after }));
 }
 
 const settingRows = computed(() => (result.value ? rows(result.value.proposed) : []));
 
 // Why LPF2 is where the autotune put it: the 4x/5x harmonics, the noise above 600 Hz, or a high peak
+// While the craft is swept: what it waits for, or which axis it sweeps
+const sweepText = computed(() => {
+    const st = status.value;
+    if (st?.state !== "exciting" || !st.sweep) {
+        return "";
+    }
+    return t(`filterTuneSweep_${st.sweep.phase}`);
+});
+
+// What the sweep found, and the heat the D-term pick is held to; or why it stopped
+const sweepResult = computed(() => {
+    const sw = result.value?.sweep;
+    if (!sw) {
+        return "";
+    }
+    if (sw.phase === "aborted") {
+        return t("filterTuneSweepStopped", { reason: t(`filterTuneSweepEnd_${sw.end}`) });
+    }
+    if (sw.crossoverHz.roll === null) {
+        return "";
+    }
+    return t("filterTuneSweepResult", {
+        roll: sw.crossoverHz.roll.toFixed(0),
+        pitch: sw.crossoverHz.pitch?.toFixed(0) ?? "—",
+        pmRoll: sw.phaseMarginDeg.roll,
+        pmPitch: sw.phaseMarginDeg.pitch,
+        heat: sw.heatPickK.toFixed(2),
+        stock: sw.heatStockK.toFixed(2),
+        budget: sw.heatBudgetK.toFixed(1),
+    });
+});
+
 const lpf2Text = computed(() => {
     const st = result.value;
     if (!st?.lpf2Basis || st.lpf2Basis === "noData") {
@@ -247,6 +314,10 @@ const lpf2Text = computed(() => {
     return t(`filterTuneLpf2Basis_${st.lpf2Basis}`, {
         harmonics: worst45.toFixed(1),
         band: st.highBandDb?.toFixed(1) ?? "?",
+        delay: st.dterm?.delayUs ?? "?",
+        stock: st.dterm?.stockDelayUs ?? "?",
+        input: st.dterm?.inputPct ?? "?",
+        noise: st.dterm?.noisePct ?? "?",
     });
 });
 

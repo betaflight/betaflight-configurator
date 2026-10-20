@@ -26,6 +26,10 @@ import {
     LABEL_PENDING,
     clockFactor,
     encodeAbort,
+    encodeListen,
+    hasMotors,
+    hasTaps,
+    mergeRuns,
     encodeStart,
     motorChecklist,
     motorRunSummary,
@@ -40,6 +44,7 @@ import {
     type Resonance,
     type WizardResult,
     type WizardStatus,
+    parseListen,
 } from "../../src/stores/frameWizardProtocol";
 
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
@@ -355,7 +360,7 @@ describe("frame wizard store", () => {
         return useFrameWizardStore();
     }
 
-    it("shows the motor run a v2 frame map keeps when the FC restarted and nothing is kept here", async () => {
+    it("shows the motor run the frame map keeps in the config when the FC restarted", async () => {
         const wizard = await store();
         const peak = { hz: 212, gain: 0.1153, axis: "pitch" as const, speeds: 2, cable: false };
         await wizard.loadLastResult({
@@ -365,11 +370,30 @@ describe("frame wizard store", () => {
             motors: [[peak], [peak], [peak], [peak]],
             rotationHz: [127.3, 236],
             spinWrongMask: 0b0100,
+            runGravity: null,
         });
         expect(wizard.lastResult?.motors[0]).toEqual([peak]);
         expect(wizard.lastResult?.rotationHz).toEqual([127.3, 236]);
         expect(wizard.spinCheck).toMatchObject({ done: true, wrongMask: 0b0100 });
-        expect(wizard.lastMotorsAt).toBeNull();
+    });
+
+    it("saves the spin check read before listening, not the empty page after it", async () => {
+        const wizard = await store();
+        const spin = new Sbuf().u8(2).u8(1).u8(36).u16(150).u8(0);
+        for (let m = 0; m < 4; m++) {
+            spin.u8(m === 1 || m === 2 ? -1 : 1)
+                .u16(125)
+                .u16(50)
+                .u16(10)
+                .u16(470);
+        }
+        // the spin check page, then (listening took the buffer) no data
+        reply(0x301a, spin.bytes, "unsupported");
+        await wizard.keepResponses();
+        const session = await wizard.readSession();
+        expect(session.spinCheck).toMatchObject({ done: true, toneHz: 36 });
+        await wizard.loadSpinCheck();
+        expect(wizard.spinCheck).toMatchObject({ toneHz: 36 });
     });
 
     it("hides itself on firmware without the wizard", async () => {
@@ -477,10 +501,7 @@ describe("frame wizard store", () => {
         const wizard = await store();
         wizard.startPolling();
         await vi.advanceTimersByTimeAsync(5000);
-        // no keepalive op (2) to the wizard
-        expect(
-            msp.send_message.mock.calls.filter(([code, data]) => code === 0x3017 && (data as number[])[0] === 2),
-        ).toEqual([]);
+        expect(msp.send_message).not.toHaveBeenCalled();
         wizard.detach();
     });
 
@@ -701,5 +722,77 @@ describe("motor run summary", () => {
         expect(nearAnyHz(75.5, cableModesHz(withCable))).toBe(true);
         expect(nearAnyHz(210, cableModesHz(withCable))).toBe(false);
         expect(cableModesHz(null)).toEqual([]);
+    });
+});
+
+describe("taps run with the stored motor run", () => {
+    it("puts a taps run's points over a motor run's peaks", () => {
+        const both = parseResult(resultPayload())!;
+        const taps = { ...both, motors: both.motors.map(() => []) };
+        const motors = { ...both, points: both.points.map(() => []), sessionTaps: 0 };
+        expect(hasTaps(taps)).toBe(true);
+        expect(hasMotors(taps)).toBe(false);
+        const merged = mergeRuns(taps, motors)!;
+        expect(merged.points).toEqual(both.points);
+        expect(merged.motors).toEqual(both.motors);
+        expect(merged.sessionTaps).toBe(27);
+        expect(mergeRuns(undefined, motors)).toBe(motors);
+        expect(mergeRuns(undefined, undefined)).toBeNull();
+    });
+});
+
+describe("listen page", () => {
+    const listenPayload = (seq: number, ageMs: number, flags: number, peaks: [number, number][]) => {
+        const out = [1, 1, seq & 0xff, seq >> 8, ageMs & 0xff, ageMs >> 8, flags, peaks.length];
+        for (const [hz, db] of peaks) {
+            const d = Math.round(db * 10) & 0xffff;
+            out.push(Math.round(hz * 10) & 0xff, Math.round(hz * 10) >> 8, d & 0xff, d >> 8);
+        }
+        return out;
+    };
+
+    it("reads the last tap's peaks with their level against the strongest", () => {
+        const page = parseListen(
+            listenPayload(3, 120, 0, [
+                [447.2, 0],
+                [129, -9.4],
+            ]),
+        );
+        expect(page?.active).toBe(true);
+        expect(page?.tap).toEqual({
+            seq: 3,
+            ageMs: 120,
+            clipped: false,
+            noDecay: false,
+            peaks: [
+                { hz: 447.2, db: 0 },
+                { hz: 129, db: -9.4 },
+            ],
+            readyMs: null,
+        });
+        expect(page?.trigger).toBeNull();
+    });
+
+    it("reads the trigger appended after the peaks: heard at once, the peaks later", () => {
+        const page = parseListen([...listenPayload(3, 120, 0, [[447.2, 0]]), 4, 0, 15, 0, 178, 0]);
+        expect(page?.trigger).toEqual({ seq: 4, ageMs: 15 });
+        expect(page?.tap?.seq).toBe(3); // the last tap's peaks until the new one's are ready
+        expect(page?.tap?.readyMs).toBe(178);
+        expect(parseListen([...listenPayload(0, 0xffff, 0, []), 0, 0, 0xff, 0xff, 0xff, 0xff])?.trigger).toBeNull();
+    });
+
+    it("no tap yet, a clipped tap, other versions", () => {
+        expect(parseListen(listenPayload(0, 0xffff, 0, []))?.tap).toBeNull();
+        expect(parseListen(listenPayload(1, 10, 3, []))?.tap).toMatchObject({
+            clipped: true,
+            noDecay: true,
+            peaks: [],
+        });
+        expect(parseListen([2, 1, 0, 0, 0, 0, 0, 0])).toBeNull();
+        expect(parseListen([1, 1, 0])).toBeNull();
+    });
+
+    it("listening is op 8", () => {
+        expect(encodeListen()).toEqual([8]);
     });
 });

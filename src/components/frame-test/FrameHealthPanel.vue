@@ -5,10 +5,7 @@
 
         <!-- the filter autotune in flight: each motor's 1x and harmonics over the floor -->
         <template v-if="summary">
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-sm font-medium text-highlighted">{{ $t("frameHealthInFlight") }}</span>
-                <RunDateBadge v-if="filterTune.shownKeptAt" :at="filterTune.shownKeptAt" kept />
-            </div>
+            <span class="text-sm font-medium text-highlighted">{{ $t("frameHealthInFlight") }}</span>
             <UAlert
                 :color="summary.allOk ? 'success' : 'warning'"
                 variant="subtle"
@@ -135,7 +132,6 @@
 import { computed } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import FrameDiagram, { type MotorBadge } from "./FrameDiagram.vue";
-import RunDateBadge from "./RunDateBadge.vue";
 import { spinText } from "./spinText";
 import { spinVerdict } from "@/stores/frameSpinCheck";
 import { i18n } from "@/js/localization";
@@ -377,7 +373,7 @@ const verdictText = computed(() => {
     if (!s) {
         return "";
     }
-    const bad = filterTune.shownStatus?.badMotor;
+    const bad = filterTune.status?.badMotor;
     if (bad !== null && bad !== undefined) {
         return t("frameHealthMotorStandsOut", { n: bad + 1 });
     }

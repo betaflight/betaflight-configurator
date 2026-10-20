@@ -221,6 +221,7 @@ describe("MSPCodes", () => {
             MSP2_FRAME_WIZARD_TAPS: 0x301b,
             MSP2_FILTER_TUNE_STATUS: 0x301c,
             MSP2_FRAME_MAP: 0x301d,
+            MSP2_FRAME_WIZARD_LISTEN: 0x301e,
         });
     });
 

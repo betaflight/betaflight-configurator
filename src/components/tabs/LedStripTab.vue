@@ -167,6 +167,16 @@
                             @update:model-value="onOverlayChange('z')"
                             :label="$t('ledStripFilterTuneOverlay')"
                         />
+                        <!-- what its colours mean, once it is on -->
+                        <span
+                            v-if="overlayStates.filterTune"
+                            class="ms-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted"
+                        >
+                            <span v-for="led in FILTER_TUNE_LEDS" :key="led.key" class="flex items-center gap-1">
+                                <span class="size-2 shrink-0 rounded-full" :class="led.dot"></span>
+                                {{ $t(led.key) }}
+                            </span>
+                        </span>
                     </div>
                 </div>
 
@@ -364,6 +374,12 @@ function decodeHtmlEntities(text: string) {
 const t = (key: string) => decodeHtmlEntities(i18n.getMessage(key));
 const fcStore = useFlightControllerStore();
 const filterTune = useFilterTuneStore();
+// the Filter tune overlay's colours (flight/filter_autotune.c)
+const FILTER_TUNE_LEDS = [
+    { key: "ledStripFilterTuneBlue", dot: "bg-info" },
+    { key: "ledStripFilterTuneGreen", dot: "bg-success" },
+    { key: "ledStripFilterTuneRed", dot: "bg-error" },
+];
 
 const {
     wireMode,

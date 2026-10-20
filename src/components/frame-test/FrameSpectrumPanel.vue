@@ -1,14 +1,5 @@
 <template>
     <UiBox v-if="allLines.length" :title="$t('frameSpectrumTitle')" :help="$t('frameSpectrumHelp')" type="neutral">
-        <!-- which run this is, on the box's frame at the right (as the title on the left): its date, and whether
-             the FC still has it or this app kept it -->
-        <RunDateBadge
-            v-if="wizard.lastResultAt"
-            :at="wizard.lastResultAt"
-            :kept="wizard.lastResultKept"
-            :detail="runDates"
-            on-frame
-        />
         <!-- the answer first, in words: which resonances matter and whether a motor stands out -->
         <!-- the colour on the icon and the edge, the text in the plain text colours: readable on any theme -->
         <UAlert
@@ -44,6 +35,10 @@
                     :label="`${item.label} · ${item.count}`"
                 />
             </template>
+            <!-- the FC heard a tap: at once, before its peaks are ready -->
+            <Transition leave-active-class="transition-opacity duration-500" leave-to-class="opacity-0">
+                <UIcon v-if="heard" name="i-lucide-hand" class="size-5 text-primary" :title="tapTitle" />
+            </Transition>
         </div>
 
         <div ref="plot" class="flex w-full flex-col select-none">
@@ -71,21 +66,52 @@
                 <div
                     v-for="bar in bars"
                     :key="bar.line.hz"
-                    class="absolute bottom-0 w-1.5 -translate-x-1/2 rounded-t-sm"
-                    :class="[barClass(bar.line), bar.line.storedFrom ? 'opacity-50' : '']"
+                    class="absolute bottom-0 w-1.5 -translate-x-1/2 overflow-hidden rounded-t-sm transition-colors"
+                    :class="[
+                        lit.has(bar.line.hz)
+                            ? [DIM_BAR[badgeColor(bar.line)], 'duration-75']
+                            : [barClass(bar.line), 'duration-500'],
+                        bar.line.storedFrom ? 'opacity-50' : '',
+                    ]"
                     :style="{ left: `${bar.x}px`, height: `${bar.height}px` }"
                     :title="lineTitle(bar.line)"
-                ></div>
+                >
+                    <!-- a tap just rang this mode: how strongly, in the tap, on the same scale as the bar -->
+                    <div
+                        v-if="lit.has(bar.line.hz)"
+                        :key="listen.tap?.seq"
+                        class="lit-decay absolute inset-x-0 bottom-0 origin-bottom"
+                        :class="LIT_BAR[badgeColor(bar.line)]"
+                        :style="{ height: `${litHeight(bar)}px`, animationDuration: `${LISTEN_SHOW_MS}ms` }"
+                    ></div>
+                </div>
+                <!-- a peak of the tap no known mode is near (a part the tap rang): grey, its frequency over it -->
+                <div
+                    v-for="ghost in ghosts"
+                    :key="`ghost-${listen.tap?.seq}-${ghost.hz}`"
+                    class="lit-fade absolute bottom-0 w-1.5 -translate-x-1/2 rounded-t-sm bg-inverted/30"
+                    :style="{
+                        left: `${ghost.x}px`,
+                        height: `${ghost.height}px`,
+                        animationDuration: `${LISTEN_SHOW_MS}ms`,
+                    }"
+                >
+                    <span
+                        class="absolute bottom-full left-1/2 mb-0.5 -translate-x-1/2 text-[11px] font-medium whitespace-nowrap text-muted tabular-nums"
+                    >
+                        {{ ghost.hz.toFixed(0) }}
+                    </span>
+                </div>
                 <!-- by each peak what found it: over it, or beside its top right or left where there is room; its
                  frequency is under it -->
                 <UBadge
                     v-for="label in labels"
                     :key="`label-${label.line.hz}`"
                     :color="badgeColor(label.line)"
-                    variant="subtle"
+                    :variant="label.line.motorOnce ? 'outline' : 'subtle'"
                     size="sm"
                     :icon="label.plate.icon"
-                    class="absolute gap-1 whitespace-nowrap tabular-nums"
+                    class="absolute gap-1 whitespace-nowrap tabular-nums transition-colors duration-500"
                     :class="[
                         label.anchor === 'centre'
                             ? '-translate-x-1/2'
@@ -93,6 +119,7 @@
                               ? '-translate-x-full'
                               : '',
                         label.line.storedFrom ? 'opacity-60' : '',
+                        lit.has(label.line.hz) ? LIT_BG[badgeColor(label.line)] : '',
                     ]"
                     :style="{ left: `${label.x}px`, bottom: `${label.y}px` }"
                     :title="lineTitle(label.line)"
@@ -119,8 +146,13 @@
                 <span
                     v-for="mark in axis"
                     :key="mark.line.hz"
-                    class="absolute -translate-x-1/2 text-xs font-medium tabular-nums"
-                    :class="TEXT[badgeColor(mark.line)]"
+                    class="absolute -translate-x-1/2 text-xs tabular-nums transition-colors duration-500"
+                    :class="[
+                        TEXT[badgeColor(mark.line)],
+                        lit.has(mark.line.hz)
+                            ? `rounded-sm px-1 font-bold ${LIT_BG[badgeColor(mark.line)]}`
+                            : 'font-medium',
+                    ]"
                     :style="{ left: `${mark.x}px`, top: `${GAP_PX + mark.row * AXIS_ROW_PX}px` }"
                     :title="lineTitle(mark.line)"
                 >
@@ -134,10 +166,10 @@
 <script setup lang="ts">
 import { computed, onUnmounted, reactive, ref, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
-import RunDateBadge from "./RunDateBadge.vue";
 import { i18n } from "@/js/localization";
 import { useFilterTuneStore } from "@/stores/filterTune";
 import { useFrameWizardStore } from "@/stores/frameWizard";
+import { LISTEN_SHOW_MS, useFrameListenStore } from "@/stores/frameListen";
 import {
     isFrameMode,
     modeSpectrum,
@@ -151,6 +183,7 @@ import {
 
 const filterTune = useFilterTuneStore();
 const wizard = useFrameWizardStore();
+const listen = useFrameListenStore();
 const t = (key: string, params?: Record<string, unknown>) => i18n.getMessage(key, params);
 
 const BAR_MAX_PX = 180;
@@ -186,6 +219,26 @@ const TEXT: Record<Color, string> = {
     warning: "text-warning",
     success: "text-success",
     neutral: "text-muted",
+};
+// a mode a tap just rang: its label and frequency on a denser background of its colour
+const LIT_BG: Record<Color, string> = {
+    error: "bg-error/30",
+    warning: "bg-warning/30",
+    success: "bg-success/30",
+    neutral: "bg-inverted/20",
+};
+// a bar a tap rang: the rest of it dimmed, the part the tap rang in its colour, brighter
+const DIM_BAR: Record<Color, string> = {
+    error: "bg-error/30",
+    warning: "bg-warning/30",
+    success: "bg-success/25",
+    neutral: "bg-inverted/15",
+};
+const LIT_BAR: Record<Color, string> = {
+    error: "bg-error brightness-125 saturate-150",
+    warning: "bg-warning brightness-125 saturate-150",
+    success: "bg-success brightness-125 saturate-150",
+    neutral: "bg-inverted/60",
 };
 const BAR: Record<Color, string> = {
     error: "bg-error",
@@ -301,6 +354,9 @@ function lineTitle(line: SpectrumLine): string {
     if (line.storedFrom) {
         parts.push(t("frameSpectrumStoredTitle"));
     }
+    if (line.motorOnce) {
+        parts.push(t("frameSpectrumMotorOnce"));
+    }
     if (line.levelDb !== null) {
         parts.push(t("frameSpectrumLevel", { db: line.levelDb.toFixed(1) }));
     } else if (line.severity === "unrated") {
@@ -326,6 +382,71 @@ function lineTitle(line: SpectrumLine): string {
 }
 
 const bars = computed(() => lines.value.map((line) => ({ line, x: xPx(line.hz), height: Math.round(heightPx(line)) })));
+
+// A tap heard outside a run lights the modes it rang (within 4 %): its level in the tap, dB from its strongest peak.
+const LIT_TOLERANCE = 0.04;
+const lit = ref(new Map<number, number>());
+const ghosts = ref<{ hz: number; x: number; height: number }[]>([]);
+let litTimer: ReturnType<typeof setTimeout> | null = null;
+watch(
+    () => listen.heardAt,
+    () => {
+        const peaks = listen.tap?.peaks ?? [];
+        const next = new Map<number, number>();
+        const near = (hz: number, other: number) => Math.abs(hz / other - 1) <= LIT_TOLERANCE;
+        for (const bar of bars.value) {
+            const dbs = peaks.filter((p) => near(p.hz, bar.line.hz)).map((p) => p.db);
+            if (dbs.length) {
+                next.set(bar.line.hz, Math.max(...dbs));
+            }
+        }
+        lit.value = next;
+        // the rest, on the axis as it is (one outside it is not shown: the axis does not jump on a tap)
+        ghosts.value = peaks
+            .filter((p) => !bars.value.some((bar) => near(p.hz, bar.line.hz)))
+            .filter((p) => Math.log10(p.hz) >= range.value.lo && Math.log10(p.hz) <= range.value.hi)
+            .map((p) => ({ hz: p.hz, x: xPx(p.hz), height: Math.max(levelPx(p.db), NO_LEVEL_PX) }));
+        if (litTimer) {
+            clearTimeout(litTimer);
+        }
+        const left = LISTEN_SHOW_MS - (Date.now() - listen.heardAt);
+        litTimer = setTimeout(
+            () => {
+                lit.value = new Map();
+                ghosts.value = [];
+            },
+            Math.max(left, 0),
+        );
+    },
+);
+onUnmounted(() => litTimer && clearTimeout(litTimer));
+// the tap's level as a share of the bar: its strongest peak fills it
+// The detector fired: the hand shows from the trigger until a little after the tap's peaks came.
+const HEARD_SHOW_MS = 400;
+const heard = ref(false);
+let heardTimer: ReturnType<typeof setTimeout> | null = null;
+watch(
+    () => listen.triggeredAt,
+    (at) => {
+        const left = HEARD_SHOW_MS - (Date.now() - at);
+        if (left <= 0) {
+            return; // an earlier tap, from before this view listened
+        }
+        heard.value = true;
+        if (heardTimer) {
+            clearTimeout(heardTimer);
+        }
+        heardTimer = setTimeout(() => (heard.value = false), left);
+    },
+);
+onUnmounted(() => heardTimer && clearTimeout(heardTimer));
+const tapTitle = computed(() => {
+    const ready = listen.tap?.readyMs;
+    return ready == null ? t("frameSpectrumTapHeard") : t("frameSpectrumTapHeardReady", { ms: ready });
+});
+
+const litHeight = (bar: { line: SpectrumLine; height: number }): number =>
+    (levelPx(lit.value.get(bar.line.hz) ?? FLOOR_DB) / BAR_MAX_PX) * bar.height;
 
 // Labels are placed in this order: the strong ones first, so they get the spots right over their bars.
 const RANK: Record<ModeSeverity, number> = { serious: 0, notable: 1, minor: 2, unrated: 2, unstable: 3, cable: 4 };
@@ -391,18 +512,6 @@ const axis = computed(() => {
     return marks;
 });
 const axisRows = computed(() => Math.max(1, ...axis.value.map((m) => m.row + 1)));
-
-// which runs the chart shows, and when each was measured
-const shortDate = (iso: string) =>
-    new Date(iso).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-const runDates = computed(() =>
-    [
-        wizard.lastTapsAt ? t("frameSpectrumTapsAt", { date: shortDate(wizard.lastTapsAt) }) : "",
-        wizard.lastMotorsAt ? t("frameSpectrumMotorsAt", { date: shortDate(wizard.lastMotorsAt) }) : "",
-    ]
-        .filter(Boolean)
-        .join("\n"),
-);
 
 const hzList = (list: SpectrumLine[]): string => list.map((l) => l.hz.toFixed(0)).join(", ");
 
@@ -485,3 +594,47 @@ watch(plot, (el, old) => {
 });
 onUnmounted(() => resizeObserver.disconnect());
 </script>
+
+<style scoped>
+/* a tap's level rises inside the bar */
+/* a tap's level: up at once, held a moment, then it falls and fades away like a meter */
+.lit-decay {
+    animation-name: lit-decay;
+    animation-fill-mode: forwards;
+}
+
+@keyframes lit-decay {
+    0% {
+        transform: scaleY(0);
+        animation-timing-function: ease-out;
+    }
+    5% {
+        transform: scaleY(1);
+    }
+    20% {
+        transform: scaleY(1);
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+    }
+    100% {
+        transform: scaleY(0);
+        opacity: 0.3;
+    }
+}
+
+/* a peak no mode is near: held a moment, then it fades */
+.lit-fade {
+    animation-name: lit-fade;
+    animation-fill-mode: forwards;
+}
+
+@keyframes lit-fade {
+    20% {
+        opacity: 1;
+        animation-timing-function: ease-in;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+</style>

@@ -49,6 +49,8 @@ export const END_DONE = 1;
 export const OP_ABORT = 0;
 export const OP_START = 1;
 export const OP_KEEPALIVE = 2;
+/** Listen to taps outside a run (disarmed, no motors, nothing stored): MSP2_FRAME_WIZARD_LISTEN reports them. */
+export const OP_LISTEN = 8;
 
 export const START_FLAG_SKIP_TAPS = 1; // bit 0: the motor run alone
 export const START_FLAG_FIXED_BASES = 1 << 1;
@@ -208,6 +210,76 @@ export function encodeAbort(): number[] {
 
 export function encodeKeepalive(): number[] {
     return [OP_KEEPALIVE];
+}
+
+export function encodeListen(): number[] {
+    return [OP_LISTEN];
+}
+
+const LISTEN_VERSION = 1;
+const LISTEN_NO_TAP = 0xffff;
+
+/** One tap heard while listening: its peaks, each in dB from the tap's strongest one (0 at the top). */
+export interface ListenTap {
+    /** Counts the taps since listening started: a new one when it changes. */
+    seq: number;
+    /** Milliseconds since this tap when the FC answered. */
+    ageMs: number;
+    clipped: boolean;
+    /** The tap had no complete decay: no peaks (as clipped, a full-scale tap). */
+    noDecay: boolean;
+    peaks: { hz: number; db: number }[];
+    /** From the trigger to the peaks being ready, ms (null: firmware without it). */
+    readyMs: number | null;
+}
+
+export interface ListenStatus {
+    active: boolean;
+    /** null before the first tap. */
+    tap: ListenTap | null;
+    /** The detector fired (at once, before the decay): its count and age; null before any, or older firmware. */
+    trigger: { seq: number; ageMs: number } | null;
+}
+
+/**
+ * MSP2_FRAME_WIZARD_LISTEN v1: u8 ver, u8 active, u16 seq, u16 ms since the last tap (0xFFFF none), u8 flags
+ * (bit 0 clipped, bit 1 no decay), u8 n, n x {u16 Hz x10, i16 dB x10 from the tap's strongest peak}; appended
+ * later: u16 trigger count, u16 ms since the last trigger, u16 ms from the trigger to the peaks (0xFFFF none).
+ * @returns null for a payload this host does not understand.
+ */
+export function parseListen(data: ArrayBufferView | ArrayLike<number>): ListenStatus | null {
+    const r = new Reader(toBytes(data));
+    try {
+        if (r.u8() !== LISTEN_VERSION) {
+            return null;
+        }
+        const active = r.u8() !== 0;
+        const seq = r.u16();
+        const ageMs = r.u16();
+        const flags = r.u8();
+        const peaks: { hz: number; db: number }[] = [];
+        for (let n = r.u8(); n > 0; n--) {
+            const hz = r.u16() / 10;
+            const db = (r.u16() << 16) >> 16;
+            peaks.push({ hz, db: Math.min(0, db / 10) });
+        }
+        let trigger: ListenStatus["trigger"] = null;
+        let readyMs: number | null = null;
+        if (r.remaining >= 6) {
+            const triggerSeq = r.u16();
+            const triggerAgeMs = r.u16();
+            const ready = r.u16();
+            trigger = triggerAgeMs === LISTEN_NO_TAP ? null : { seq: triggerSeq, ageMs: triggerAgeMs };
+            readyMs = ready === LISTEN_NO_TAP ? null : ready;
+        }
+        const tap =
+            ageMs === LISTEN_NO_TAP
+                ? null
+                : { seq, ageMs, clipped: (flags & 1) !== 0, noDecay: (flags & 2) !== 0, peaks, readyMs };
+        return { active, tap, trigger };
+    } catch {
+        return null;
+    }
 }
 
 /** @returns null for a payload this host does not understand (older firmware). */
@@ -743,6 +815,8 @@ export interface SpectrumLine {
     cableMotors: number[];
     /** Per motor, its level here against the loudest peak of the run, dB; null where it shows no peak. */
     motorDb: (number | null)[];
+    /** Only the last motor run found it, and no tap: maybe the support or the grip, not the frame. */
+    motorOnce?: boolean;
 }
 
 /** Within this of the loudest peak and seen in 3+ places: the resonance the filters must deal with. */
@@ -757,6 +831,7 @@ export interface MapModeRef {
     fromMotors?: boolean;
     fromCable: boolean;
     unstable: boolean;
+    motorOnce?: boolean;
 }
 
 /** A frame map mode the run did not see: the cable's, unstable, a tap mode, or an earlier motor run's peak. */
@@ -817,16 +892,21 @@ export function modeSpectrum(result: WizardResult | null, mapModes: MapModeRef[]
         // a motor run's result has no taps: the map's taps part says the frame rang there (one place, at least)
         const mapTapped = points.length === 0 && near.some((m) => m.fromTaps && !m.fromCable);
         const score = points.length + motors.length + (mapTapped ? 1 : 0);
+        const tapped = points.length > 0 || mapTapped;
+        // the map's motor part has it from the last run only: a second run (held another way) tells
+        const motorModes = near.filter((m) => m.fromMotors);
+        const motorOnce = !tapped && motorModes.length > 0 && motorModes.every((m) => m.motorOnce);
         return {
             hz,
             levelDb,
             severity: severityOf(levelDb, score, cable, unstable, motorRun),
             points,
             motors,
-            tapped: points.length > 0 || mapTapped,
+            tapped,
             storedFrom: null,
             cableMotors,
             motorDb,
+            motorOnce,
         };
     });
 
@@ -844,6 +924,7 @@ export function modeSpectrum(result: WizardResult | null, mapModes: MapModeRef[]
                 storedFrom: tapped || mode.fromCable ? null : "motors",
                 cableMotors: [],
                 motorDb: [null, null, null, null],
+                motorOnce: !tapped && mode.motorOnce === true,
             });
         }
     }
@@ -902,4 +983,28 @@ function severityOf(
         return "serious";
     }
     return levelDb >= NOTABLE_DB ? "notable" : "minor";
+}
+
+/** The run found tap modes / motor peaks (the FC reports an empty result after a restart). */
+export const hasTaps = (result: WizardResult | null | undefined): result is WizardResult =>
+    result?.points.some((p) => p.length > 0) === true;
+export const hasMotors = (result: WizardResult | null | undefined): result is WizardResult =>
+    result?.motors.some((m) => m.length > 0) === true;
+
+/**
+ * The frame as a taps run and a motor run found it together: the motor run's peaks with the taps run's points
+ * (a motor run's result has no taps, a taps run's no motors).
+ */
+export function mergeRuns(taps: WizardResult | undefined, motors: WizardResult | undefined): WizardResult | null {
+    if (taps && motors) {
+        return {
+            ...motors,
+            points: taps.points,
+            sessionTaps: taps.sessionTaps,
+            clippedTaps: taps.clippedTaps,
+            noModeMask: taps.noModeMask,
+            noCable: taps.noCable,
+        };
+    }
+    return taps ?? motors ?? null;
 }

@@ -43,6 +43,10 @@ export const FILTER_TUNE_STATES = [
     "applied",
     "discarded",
     "noTelemetry",
+    "partial", // disarmed with the mode on and too few frames: the next flight with the mode on adds to them
+    "exciting", // the noise is in: a roll then pitch sweep in ANGLE, sticks centred, for the crossover
+    "bitbang", // DShot bitbang has no timer (a pin such as the LED strip took it): the motors get no signal
+    "loopSlow", // the PID loop ran below 90 % of its set rate in flight: nothing is applied
 ] as const;
 export type FilterTuneState = (typeof FILTER_TUNE_STATES)[number];
 
@@ -113,6 +117,54 @@ export interface FilterTuneStatus {
     trackError: number | null;
     /** How the FC tells the pilot in flight (enough data, discarded); null with firmware that does not send it. */
     signals: FilterTuneSignals | null;
+    /** Frames brought from earlier flights of this session (in frames already), and how many flights; null
+     * with firmware that does not carry them. */
+    carried: { frames: number; flights: number } | null;
+    /** The D-term filters the autotune picked with LPF2; null with firmware that does not send them. */
+    dterm: DtermTune | null;
+    /**
+     * PID profiles (from 0): the current one, where the D-term filters go, and the one they went to (null: not
+     * applied, or reverted); null with firmware that does not send them.
+     */
+    pidProfile: { current: number; applied: number | null } | null;
+    /** The sweep for the crossover and the motor heat the D-term pick is held to; null with older firmware. */
+    sweep: SweepResult | null;
+    /** The PID loop rate, Hz: measured while armed (0: not armed yet) and set. */
+    loop: { measuredHz: number; setHz: number } | null;
+}
+
+export const SWEEP_PHASES = ["none", "roll", "settle", "pitch", "done", "aborted"] as const;
+export const SWEEP_ENDS = ["none", "sticks", "throttle", "attitude", "rate", "mode"] as const;
+
+export interface SweepResult {
+    phase: (typeof SWEEP_PHASES)[number];
+    /** Why it was stopped (phase aborted). */
+    end: (typeof SWEEP_ENDS)[number];
+    /** The sweep's rate amplitude, °/s. */
+    amplitudeDps: number;
+    /** Crossover, Hz (null: not measured), and phase margin, °. */
+    crossoverHz: { roll: number | null; pitch: number | null };
+    phaseMarginDeg: { roll: number; pitch: number };
+    /** Motor noise index measured, and predicted for the filters now. */
+    noiseIndex: number;
+    noiseIndexNow: number;
+    /** Motor heat from the ripple, K: with the stock filters, with the pick; and the budget over stock. */
+    heatStockK: number;
+    heatPickK: number;
+    heatBudgetK: number;
+}
+
+export interface DtermTune {
+    /** The D-term filter cutoffs scaled by this; null: D left as it is (nothing met the limits). */
+    mult: number | null;
+    /** dterm_lpf1_dyn_min_hz, dterm_lpf1_dyn_max_hz, dterm_lpf2_static_hz now. */
+    current: { dynMinHz: number; dynMaxHz: number; lpf2Hz: number };
+    /** P+D delay at 50 Hz, µs: with the pick and with the stock filters. */
+    delayUs: number;
+    stockDelayUs: number;
+    /** D input and motor noise with the pick, % of the stock filters. */
+    inputPct: number;
+    noisePct: number;
 }
 
 export interface FilterTuneSignals {
@@ -124,7 +176,7 @@ export interface FilterTuneSignals {
     osd: boolean;
 }
 
-export const LPF2_BASIS = ["harmonics", "off", "highBand", "highPeak"] as const;
+export const LPF2_BASIS = ["harmonics", "off", "highBand", "highPeak", "dterm"] as const;
 export type Lpf2Basis = (typeof LPF2_BASIS)[number] | "noData";
 
 export interface FrameMapMode {
@@ -138,6 +190,18 @@ export interface FrameMapMode {
      * not a frame mode the filters count on. Cleared when the motors drive it too.
      */
     unstable: boolean;
+    /**
+     * A motor mode only the last motor run found (the one before did not, within 6 %): it may be the support
+     * or the grip the craft was held by. The filter autotune counts on modes the motor runs repeat.
+     */
+    motorOnce: boolean;
+}
+
+/** Which way down was in the craft's axes (x, y, z, each -1..1) when the last motor run started. */
+export interface RunGravity {
+    x: number;
+    y: number;
+    z: number;
 }
 
 export interface FrameMap {
@@ -150,6 +214,19 @@ export interface FrameMap {
     rotationHz: [number, number] | null;
     /** Payload v2: the motor run's spin check, null when none was made. */
     spinWrongMask: number | null;
+    /** Payload v2, appended later: how the craft was held in the last motor run; null with older firmware. */
+    runGravity: RunGravity | null;
+}
+
+export type HeldAs = "flat" | "side" | "noseUp";
+
+/** How the craft was held: the axis down was nearest (flat on its frame, on its side, or nose up / down). */
+export function heldAs(g: RunGravity): HeldAs {
+    const [x, y, z] = [Math.abs(g.x), Math.abs(g.y), Math.abs(g.z)];
+    if (z >= x && z >= y) {
+        return "flat";
+    }
+    return y >= x ? "side" : "noseUp";
 }
 
 class Reader {
@@ -249,6 +326,57 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             const bits = r.u8();
             signals = { beeper: (bits & 1) !== 0, ledStrip: (bits & 2) !== 0, osd: (bits & 4) !== 0 };
         }
+        let carried: FilterTuneStatus["carried"] = null;
+        if (r.remaining >= 3) {
+            carried = { frames: r.u16(), flights: r.u8() };
+        }
+        let dterm: DtermTune | null = null;
+        if (r.remaining >= 13) {
+            const mult10 = r.u8();
+            const current = { dynMinHz: r.u16(), dynMaxHz: r.u16(), lpf2Hz: r.u16() };
+            const delayUs = r.u16();
+            const stockDelayUs = r.u16();
+            dterm = {
+                mult: mult10 ? mult10 / 10 : null,
+                current,
+                delayUs,
+                stockDelayUs,
+                inputPct: r.u8(),
+                noisePct: r.u8(),
+            };
+        }
+        let pidProfile: FilterTuneStatus["pidProfile"] = null;
+        if (r.remaining >= 2) {
+            const current = r.u8();
+            const applied = r.u8();
+            pidProfile = { current, applied: applied === 0xff ? null : applied };
+        }
+        let sweep: SweepResult | null = null;
+        if (r.remaining >= 19) {
+            const phase = SWEEP_PHASES[r.u8()] ?? "none";
+            const end = SWEEP_ENDS[r.u8()] ?? "none";
+            const amplitudeDps = r.u16() / 10;
+            const hz = (v: number) => (v ? v / 10 : null);
+            const crossoverHz = { roll: hz(r.u16()), pitch: hz(r.u16()) };
+            const phaseMarginDeg = { roll: r.u8(), pitch: r.u8() };
+            const noiseIndex = r.u16() / 10;
+            const noiseIndexNow = r.u16() / 10;
+            const heatStockK = r.u16() / 100;
+            const heatPickK = r.u16() / 100;
+            sweep = {
+                phase,
+                end,
+                amplitudeDps,
+                crossoverHz,
+                phaseMarginDeg,
+                noiseIndex,
+                noiseIndexNow,
+                heatStockK,
+                heatPickK,
+                heatBudgetK: r.u8() / 10,
+            };
+        }
+        const loop = r.remaining >= 4 ? { measuredHz: r.u16(), setHz: r.u16() } : null;
         return {
             state: FILTER_TUNE_STATES[stateCode] ?? "idle",
             hasFrameMap: (flags & 1) !== 0,
@@ -272,6 +400,11 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             rpmFade,
             trackError,
             signals,
+            carried,
+            dterm,
+            pidProfile,
+            sweep,
+            loop,
         };
     } catch {
         return null;
@@ -297,11 +430,13 @@ export function parseFrameMap(data: ArrayBufferView | ArrayLike<number>): FrameM
                 fromMotors: (src & 2) !== 0,
                 fromCable: (src & 4) !== 0,
                 unstable: (src & 8) !== 0,
+                motorOnce: (src & 0x10) !== 0,
             });
         }
         let motors: MotorPeak[][] | null = null;
         let rotationHz: [number, number] | null = null;
         let spinWrongMask: number | null = null;
+        let runGravity: RunGravity | null = null;
         if (version === FRAME_MAP_VERSION_2) {
             motors = [];
             for (let m = 0; m < FILTER_TUNE_MOTORS; m++) {
@@ -316,6 +451,10 @@ export function parseFrameMap(data: ArrayBufferView | ArrayLike<number>): FrameM
             rotationHz = [r.u16() / 10, r.u16() / 10];
             const spin = r.u8();
             spinWrongMask = spin & SPIN_CHECKED ? spin & 0x0f : null;
+            if (r.remaining >= 3) {
+                const s8 = () => ((r.u8() << 24) >> 24) / 100;
+                runGravity = { x: s8(), y: s8(), z: s8() };
+            }
         }
         return {
             hasTaps: (parts & FRAME_MAP_PART_TAPS) !== 0,
@@ -324,6 +463,7 @@ export function parseFrameMap(data: ArrayBufferView | ArrayLike<number>): FrameM
             motors,
             rotationHz,
             spinWrongMask,
+            runGravity,
         };
     } catch {
         return null;

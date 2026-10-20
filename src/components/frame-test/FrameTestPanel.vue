@@ -36,6 +36,8 @@
                 <div class="text-sm font-medium text-highlighted">{{ $t("frameTestRunMotors") }}</div>
                 <p class="text-xs text-muted">{{ $t("frameTestRunMotorsHint") }}</p>
                 <p v-if="!tapsDone" class="text-xs text-warning">{{ $t("frameTestMotorsNeedTaps") }}</p>
+                <p v-if="wizard.dshotBitbangFailed" class="text-xs text-error">{{ $t("frameTestDshotBitbang") }}</p>
+                <p v-else-if="runAgainHint" class="text-xs text-info">{{ runAgainHint }}</p>
                 <SettingRow :label="$t('frameTestEnable')" fullWidth>
                     <USwitch v-model="wizard.enabled" :disabled="!tapsDone" size="xs" />
                 </SettingRow>
@@ -46,7 +48,7 @@
                     color="error"
                     class="self-start"
                     :loading="wizard.starting && wizard.runKind === 'motors'"
-                    :disabled="!canStart || !wizard.enabled || !tapsDone"
+                    :disabled="!canStart || !wizard.enabled || !tapsDone || wizard.dshotBitbangFailed"
                     @click="wizard.startRun('motors')"
                 />
             </div>
@@ -98,19 +100,15 @@
 
                 <p v-if="lastTapText" class="text-xs text-muted" aria-live="polite">{{ lastTapText }}</p>
 
+                <!-- one note for the motor run: hold the craft before the motors start, and RPM telemetry missing -->
                 <UAlert
-                    v-if="phase === 'beep'"
-                    color="warning"
+                    v-if="runNote"
+                    :color="runNote.color"
                     variant="subtle"
-                    icon="i-lucide-hand"
-                    :description="$t('frameTestBeep')"
-                />
-                <UAlert
-                    v-if="wizard.active && wizard.noRpmAtStart"
-                    color="warning"
-                    variant="subtle"
-                    icon="i-lucide-gauge"
-                    :description="$t('frameTestNoRpm')"
+                    :icon="runNote.icon"
+                    :title="runNote.title"
+                    :description="runNote.description"
+                    :ui="{ title: 'text-highlighted font-medium', description: 'text-default' }"
                 />
 
                 <div v-if="wizard.runKind !== 'taps'" class="flex flex-col gap-2">
@@ -267,6 +265,7 @@ import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { useFrameWizardStore } from "@/stores/frameWizard";
 import { useFilterTuneStore } from "@/stores/filterTune";
+import { heldAs } from "@/stores/filterTuneProtocol";
 import {
     END_DONE,
     LABEL_CLIPPED,
@@ -280,6 +279,7 @@ import {
     motorChecklist,
     tapChecklist,
     type ChecklistStep,
+    hasTaps,
     stepState,
 } from "@/stores/frameWizardProtocol";
 import { spinText } from "./spinText";
@@ -369,9 +369,7 @@ const canStart = computed(() => accOk.value && !wizard.starting && !wizard.activ
 
 // The motor run comes after the taps part: the frame map on the FC has its taps part (firmware with the
 // filter autotune), or the FC's last run was a finished taps run (firmware without the map).
-// The taps part is done when the FC's frame map holds it, or this app keeps a taps run of this craft (the map
-// may not be read yet, or the FC restarted).
-const tapsDone = computed(() => filterTune.frameMap?.hasTaps === true || wizard.lastTapsAt !== null);
+const tapsDone = computed(() => filterTune.frameMap?.hasTaps === true || hasTaps(wizard.lastResult));
 
 function pointName(point: number): string {
     if (point < 4) {
@@ -503,6 +501,32 @@ const lastTapText = computed(() => {
     return t("frameTestLastTap", { seq: status.seq, label });
 });
 
+// Modes only the last motor run found may be the support or the grip: a second run, held another way, tells.
+const runAgainHint = computed(() => {
+    const map = filterTune.frameMap;
+    if (!map?.modes.some((m) => m.fromMotors && m.motorOnce)) {
+        return "";
+    }
+    const held = map.runGravity ? t(`frameTestHeld_${heldAs(map.runGravity)}`) : "";
+    return held ? t("frameTestRunAgainHeld", { held }) : t("frameTestRunAgain");
+});
+
+const runNote = computed(() => {
+    const beep = phase.value === "beep";
+    const noRpm = wizard.active && wizard.noRpmAtStart;
+    if (!beep && !noRpm) {
+        return null;
+    }
+    // set up for RPM telemetry, yet none: the ESCs do not answer
+    const rpmText = filterTune.telemetryConfigured ? t("frameTestNoRpmEscs") : t("frameTestNoRpm");
+    return {
+        color: noRpm ? ("warning" as const) : ("neutral" as const),
+        icon: beep ? "i-lucide-hand" : "i-lucide-gauge",
+        title: beep ? t(wizard.runKind === "motors" ? "frameTestBeepMotors" : "frameTestBeep") : undefined,
+        description: noRpm ? rpmText : undefined,
+    };
+});
+
 const startErrorText = computed(() => {
     switch (wizard.startError) {
         case "refused":
@@ -511,6 +535,8 @@ const startErrorText = computed(() => {
             return t("frameTestStartNoReply");
         case "notStarted":
             return t("frameTestStartNotStarted");
+        case "noBattery":
+            return t("frameTestStartNoBattery");
         default:
             return "";
     }
@@ -528,13 +554,17 @@ const previousRunEnd = computed(() => {
 
 const endText = computed(() => {
     const status = wizard.status;
-    if (!status || status.phase === "done" || status.endReason === END_DONE) {
+    if (!status || status.endReason === END_DONE) {
         return t("frameTestDone");
     }
     const reason =
-        status.endReason >= 2 && status.endReason <= 10
-            ? t(`frameTestEnd${status.endReason}`)
+        status.endReason >= 2 && status.endReason <= 14
+            ? t(`frameTestEnd${status.endReason}`, { hz: status.loopHz })
             : t("frameTestEndUnknown");
+    if (status.phase === "done") {
+        // the taps went into the map, the motors had no power, no telemetry or no DShot (11, 12, 13)
+        return status.endReason >= 11 ? t("frameTestDoneNoMotors", { reason }) : t("frameTestDone");
+    }
     return t("frameTestAborted", { reason });
 });
 
