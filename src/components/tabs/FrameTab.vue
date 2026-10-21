@@ -20,7 +20,7 @@
 
             <FrameSpectrumPanel v-if="quad" />
 
-            <div v-if="quad" class="grid-row grid-box col2 max-[1055px]:!grid-cols-1">
+            <div v-if="quad" class="grid-row grid-box col2 mt-4 max-[1055px]:!grid-cols-1">
                 <!-- the steps in order on the left (bench test, then the autotune in flight), the motors on the right -->
                 <div class="col-span-1 flex flex-col gap-4">
                     <FrameTestPanel @finished="filterTune.afterFrameTest()" />
@@ -42,11 +42,13 @@ import FrameHealthPanel from "@/components/frame-test/FrameHealthPanel.vue";
 import FilterTunePanel from "@/components/frame-test/FilterTunePanel.vue";
 import FrameSpectrumPanel from "@/components/frame-test/FrameSpectrumPanel.vue";
 import { useFilterTuneStore } from "@/stores/filterTune";
+import { useFrameListenStore } from "@/stores/frameListen";
 import { useFrameWizardStore } from "@/stores/frameWizard";
 import { useFlightControllerStore } from "@/stores/fc";
 import { isQuadMixer } from "@/components/sidebar/sidebar_items";
 
 const filterTune = useFilterTuneStore();
+const listen = useFrameListenStore();
 const wizard = useFrameWizardStore();
 const fcStore = useFlightControllerStore();
 
@@ -60,9 +62,11 @@ onMounted(async () => {
     await filterTune.load();
     await wizard.loadLastResult(filterTune.frameMap);
     filterTune.startPolling();
+    listen.start();
 });
 
 onUnmounted(() => {
+    listen.detach();
     filterTune.detach();
 });
 </script>

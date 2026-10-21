@@ -4400,15 +4400,6 @@
     "ledStripFilterTuneOverlay": {
         "message": "Filter tune"
     },
-    "ledStripFilterTuneBlue": {
-        "message": "collecting"
-    },
-    "ledStripFilterTuneGreen": {
-        "message": "ready"
-    },
-    "ledStripFilterTuneRed": {
-        "message": "discarded"
-    },
     "ledStripBrightnessSliderTitle": {
         "message": "Brightness",
         "description": "Brightness of the LED Strip"
@@ -9571,8 +9562,11 @@
     "frameHealthMotorVsOthers": {
         "message": "Motor {{n}}: {{db}} dB against the other motors"
     },
-    "frameTestStepSpin": {
-        "message": "Spin direction"
+    "frameSpinHint": {
+        "message": "After the sweep each motor spins alone: how each one turns shows here."
+    },
+    "frameSpinOkShort": {
+        "message": "Every motor turns as set."
     },
     "frameSpinOk": {
         "message": "Motors 1 and 4 turn one way, 2 and 3 the other, as Quad X needs."
@@ -9725,10 +9719,10 @@
         "message": "FILTER TUNE assigned to a switch in the Modes tab"
     },
     "filterTuneModeOff": {
-        "message": "FILTER TUNE OFF"
+        "message": "OFF"
     },
     "filterTuneModeOn": {
-        "message": "FILTER TUNE ON"
+        "message": "ON"
     },
     "filterTuneState_noFrameMap": {
         "message": "No frame map"
@@ -9919,9 +9913,6 @@
     "frameTestLearning": {
         "message": "Tap the frame and arms in any order. The points fill in once the FC has taps from several directions."
     },
-    "frameTestStepLearning": {
-        "message": "waiting: keep tapping, any order"
-    },
     "frameTestSaveSession": {
         "message": "Save session"
     },
@@ -9940,9 +9931,6 @@
     "frameTestAbort": {
         "message": "Abort"
     },
-    "frameTestStepAcc": {
-        "message": "Accelerometer calibrated"
-    },
     "frameTestAccNotCalibrated": {
         "message": "Accelerometer not calibrated: calibrate it in the Setup tab."
     },
@@ -9952,23 +9940,26 @@
     "frameTestStepCable": {
         "message": "USB cable"
     },
-    "frameTestStepCableHint": {
-        "message": "Tap the USB cable 5 times first, gently"
-    },
     "frameTestStepFrame": {
         "message": "Frame"
-    },
-    "frameTestStepFrameHint": {
-        "message": "Tap the centre of the frame from below"
     },
     "frameTestStepArm": {
         "message": "Arm {{n}}"
     },
-    "frameTestStepArmHint": {
-        "message": "Tap the arm of motor {{n}} from below"
+    "frameTestStepArmsHint": {
+        "message": "Tap each arm from below, in any order. A ring turns green after {{n}} taps."
     },
-    "frameTestTapCount": {
-        "message": "{{count}} taps, confirmed modes: {{modes}}"
+    "frameTestHintCable": {
+        "message": "Tap the USB cable {{n}} times: it tells its own modes from the frame's."
+    },
+    "frameTestHintFrame": {
+        "message": "Tap the centre of the frame from below, {{n}} times."
+    },
+    "frameTestStepAccShort": {
+        "message": "Accel"
+    },
+    "frameTestStepCableShort": {
+        "message": "USB"
     },
     "frameTestTooStrong": {
         "message": "Too strong: tap softer"
@@ -9978,9 +9969,6 @@
     },
     "frameTestStepMotor": {
         "message": "Motor {{n}}"
-    },
-    "frameTestResonanceCount": {
-        "message": "{{count}} found"
     },
     "frameTestSweep": {
         "message": "Motor sweep {{pct}} %"
@@ -10026,18 +10014,6 @@
     },
     "frameTestStartNotStarted": {
         "message": "The flight controller did not confirm the start."
-    },
-    "frameTestLastTap": {
-        "message": "Tap {{seq}}: {{label}}"
-    },
-    "frameTestLabelUnknown": {
-        "message": "not recognised, tap again"
-    },
-    "frameTestLabelPending": {
-        "message": "collecting the first taps"
-    },
-    "frameTestLabelClipped": {
-        "message": "too strong, tap softer"
     },
     "frameTestDone": {
         "message": "Frame test done"
@@ -10228,6 +10204,9 @@
     "filterTuneSignalLeds": {
         "message": "the LED strip turns green"
     },
+    "filterTuneLedWaiting": {
+        "message": "waiting"
+    },
     "filterTuneSignalOsd": {
         "message": "the OSD shows FILTER TUNE READY"
     },
@@ -10238,10 +10217,10 @@
         "message": "Land and disarm with the mode on. Three rising tones: saved. Two low tones: fly again to add frames. Mode off at disarm: discarded."
     },
     "filterTuneLedCollecting": {
-        "message": "waiting (slow), collecting (fast)"
+        "message": "collecting"
     },
     "filterTuneLedReady": {
-        "message": "enough data"
+        "message": "ready"
     },
     "filterTuneLedDiscarded": {
         "message": "discarded"

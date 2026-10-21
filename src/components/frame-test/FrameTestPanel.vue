@@ -65,40 +65,52 @@
                     :title="$t('frameTestLearningTitle')"
                     :description="$t('frameTestLearning')"
                 />
-                <UTimeline v-if="wizard.runKind !== 'motors'" :items="tapItems" size="md" :ui="timelineUi">
-                    <template #indicator="{ item }">
-                        <ProgressRing
-                            :value="ringValue(item.step)"
-                            :color="ringColor(item.step)"
-                            :size="32"
-                            :stroke-width="3"
-                            :class="{ 'animate-pulse': item.step.clipped }"
-                        >
-                            <UIcon
-                                v-if="item.step.state === 'done'"
-                                name="i-lucide-check"
-                                class="size-4 text-success"
-                            />
-                            <UIcon
-                                v-else-if="item.step.id === 'acc' && item.step.state === 'error'"
-                                name="i-lucide-x"
-                                class="size-4 text-error"
-                            />
-                            <span
-                                v-else
-                                class="text-xs font-semibold"
-                                :class="item.step.state === 'pending' ? 'text-muted' : 'text-highlighted'"
-                            >
-                                {{ item.step.state === "pending" ? item.ordinal : item.step.count }}
-                            </span>
-                        </ProgressRing>
-                    </template>
-                    <template #description="{ item }">
-                        <span :class="item.step.clipped ? 'text-error' : ''">{{ item.description }}</span>
-                    </template>
-                </UTimeline>
+                <!-- the taps: the accelerometer, the USB cable and the frame in a row from edge to edge, then the arms
+                     as the motors sit on the quad (front row M4 M2, rear M3 M1) -->
+                <div v-if="wizard.runKind !== 'motors'" class="flex flex-col gap-4">
+                    <div class="flex items-start">
+                        <template v-for="(item, index) in stepItems" :key="item.value">
+                            <div
+                                v-if="index"
+                                class="mx-2 mt-4 h-0.5 flex-1 rounded-full"
+                                :class="stepItems[index - 1].step.state === 'done' ? 'bg-success' : 'bg-accented'"
+                            ></div>
+                            <div class="flex flex-col items-center gap-1.5" :class="item.class">
+                                <TapRing
+                                    :key="flashKey(item.step)"
+                                    :step="item.step"
+                                    :ordinal="item.ordinal"
+                                    :flash="flashClass(item.step)"
+                                />
+                                <span class="text-sm">{{ item.title }}</span>
+                            </div>
+                        </template>
+                    </div>
 
-                <p v-if="lastTapText" class="text-xs text-muted" aria-live="polite">{{ lastTapText }}</p>
+                    <p v-if="stepHint" class="text-center text-sm text-muted">{{ stepHint }}</p>
+
+                    <div v-if="armItems.length" class="flex flex-col items-center gap-3 border-t border-default pt-4">
+                        <p class="max-w-prose text-center text-sm text-muted">
+                            {{ $t("frameTestStepArmsHint", { n: TAPS_NEEDED }) }}
+                        </p>
+                        <div class="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-12 gap-y-3 pb-1">
+                            <div
+                                v-for="item in armItems"
+                                :key="item.value"
+                                class="flex items-center gap-3"
+                                :class="item.class"
+                            >
+                                <TapRing
+                                    :key="flashKey(item.step)"
+                                    :step="item.step"
+                                    :ordinal="item.ordinal"
+                                    :flash="flashClass(item.step)"
+                                />
+                                <span class="text-sm">{{ item.title }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- one note for the motor run: hold the craft before the motors start, and RPM telemetry missing -->
                 <UAlert
@@ -120,41 +132,32 @@
                         :color="phase === 'done' ? 'success' : 'primary'"
                         :aria-label="$t('frameTestSweep', { pct: spinPct })"
                     />
-                    <UTimeline :items="motorItems" orientation="horizontal" size="md" :ui="timelineUi">
-                        <template #indicator="{ item }">
-                            <ProgressRing
-                                :value="ringValue(item.step)"
-                                :color="ringColor(item.step)"
-                                :size="32"
-                                :stroke-width="3"
+                    <!-- the four motors with the resonances found, then under them how each one turns -->
+                    <div class="grid grid-cols-4 gap-x-2 pt-2">
+                        <div v-for="item in motorRow" :key="item.value" class="flex flex-col items-center gap-1.5">
+                            <TapRing :step="item.step" :ordinal="item.ordinal" />
+                            <span class="text-sm">{{ item.title }}</span>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex flex-col items-center gap-3 border-t border-default pt-4">
+                        <p class="text-center text-sm text-muted">{{ spinHint }}</p>
+                        <div class="grid w-full grid-cols-4 gap-x-2">
+                            <div
+                                v-for="cell in spinCells"
+                                :key="cell.n"
+                                class="flex justify-center"
+                                :title="cell.title"
                             >
-                                <UIcon
-                                    v-if="item.step.state === 'done'"
-                                    name="i-lucide-check"
-                                    class="size-4 text-success"
-                                />
-                                <UIcon
-                                    v-else-if="item.step.id === 'spin'"
-                                    name="i-lucide-rotate-cw"
-                                    class="size-4"
-                                    :class="
-                                        item.step.state === 'error'
-                                            ? 'text-error'
-                                            : item.step.state === 'pending'
-                                              ? 'text-muted'
-                                              : 'text-highlighted'
-                                    "
-                                />
-                                <span
-                                    v-else
-                                    class="text-xs font-semibold"
-                                    :class="item.step.state === 'pending' ? 'text-muted' : 'text-highlighted'"
-                                >
-                                    {{ item.step.state === "pending" ? item.ordinal : item.step.count }}
-                                </span>
-                            </ProgressRing>
-                        </template>
-                    </UTimeline>
+                                <ProgressRing :value="cell.value" :color="cell.color" :size="32" :stroke-width="3">
+                                    <UIcon
+                                        :name="cell.cw ? 'i-lucide-rotate-cw' : 'i-lucide-rotate-ccw'"
+                                        class="size-4"
+                                        :class="cell.icon"
+                                    />
+                                </ProgressRing>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </template>
 
@@ -242,7 +245,7 @@
                 </UCollapsible>
             </template>
 
-            <div v-if="wizard.active" class="flex gap-2">
+            <div v-if="wizard.active" class="flex justify-center border-t border-default pt-4">
                 <UButton
                     :label="$t('frameTestAbort')"
                     color="error"
@@ -260,6 +263,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import ProgressRing from "@/components/ProgressRing.vue";
+import TapRing from "./TapRing.vue";
 import { i18n } from "@/js/localization";
 import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
@@ -269,21 +273,19 @@ import { heldAs } from "@/stores/filterTuneProtocol";
 import {
     END_DONE,
     LABEL_CLIPPED,
-    LABEL_NONE,
-    LABEL_PENDING,
-    LABEL_UNKNOWN,
-    MOTOR_COUNT,
     POINT_CABLE,
     POINT_COUNT,
+    POINT_FRAME,
+    TAPS_NEEDED,
     isTapPhase,
     motorChecklist,
     tapChecklist,
     type ChecklistStep,
     hasTaps,
-    stepState,
 } from "@/stores/frameWizardProtocol";
 import { spinText } from "./spinText";
-import { spinVerdict } from "@/stores/frameSpinCheck";
+import { motorSpins, spinVerdict } from "@/stores/frameSpinCheck";
+import { useFlightControllerStore } from "@/stores/fc";
 
 const emit = defineEmits<{
     /** A run ended (done or aborted): the FC has stored its part of the frame map if it was done. */
@@ -292,6 +294,7 @@ const emit = defineEmits<{
 
 const wizard = useFrameWizardStore();
 const filterTune = useFilterTuneStore();
+const fcStore = useFlightControllerStore();
 
 // Turning the props-off switch off stops a motor run.
 watch(
@@ -318,13 +321,6 @@ watch(
 const t = (key: string, params?: Record<string, unknown>) => i18n.getMessage(key, params);
 
 // a done step joins the next with a success line
-const DONE_SEPARATOR = "[&_[data-slot=separator]]:bg-success";
-
-const timelineUi = {
-    indicator: "bg-transparent size-8",
-    title: "text-sm",
-    description: "text-xs",
-};
 
 const phase = computed(() => wizard.status?.phase ?? "idle");
 // the FC collects the first taps unlabelled until they come from several directions
@@ -378,128 +374,151 @@ function pointName(point: number): string {
     return point === POINT_CABLE ? t("frameTestStepCable") : t("frameTestStepFrame");
 }
 
-function tapDescription(step: ChecklistStep, point: number, hint: string): string {
-    if (step.clipped) {
-        return t("frameTestTooStrong");
-    }
-    if (!wizard.started || step.state === "pending") {
-        return hint;
-    }
-    return t("frameTestTapCount", { count: step.count, modes: wizard.status?.confirmed[point] ?? 0 });
-}
+// The arm steps (motor numbers), left column then right as the quad sits: M4 M3 | M2 M1
+const ARM_ORDER = ["arm4", "arm3", "arm2", "arm1"];
 
 const tapItems = computed(() => {
     const ctx = { started: wizard.started, usbLink: wizard.usbLink };
     return tapChecklist(wizard.status, ctx).map((step, index) => {
         let title: string;
-        let description: string;
         if (step.id === "acc") {
-            title = t("frameTestStepAcc");
-            description = "";
+            title = t("frameTestStepAccShort");
         } else if (step.id === "cable") {
-            title = t("frameTestStepCable");
-            description = tapDescription(step, POINT_CABLE, t("frameTestStepCableHint"));
+            title = t("frameTestStepCableShort");
         } else if (step.id === "frame") {
             title = t("frameTestStepFrame");
-            description = tapDescription(step, 4, t("frameTestStepFrameHint"));
         } else {
             const arm = Number(step.id.slice(3));
             title = t("frameTestStepArm", { n: arm });
-            description = tapDescription(step, arm - 1, t("frameTestStepArmHint", { n: arm }));
-        }
-        if (step.learning) {
-            description = t("frameTestStepLearning");
         }
         return {
             value: step.id,
             title,
-            description,
             step,
             ordinal: index + 1,
-            class: tapItemClass(step),
+            class: step.learning ? "opacity-50" : undefined,
         };
     });
 });
 
-function tapItemClass(step: ChecklistStep): string | undefined {
-    if (step.state === "done") {
-        return DONE_SEPARATOR;
+const stepItems = computed(() => tapItems.value.filter((item) => !ARM_ORDER.includes(item.value)));
+// What to do next in the first row: the USB cable, then the frame's centre; the arms have their own sentence
+const stepHint = computed(() => {
+    const next = stepItems.value.find((item) => item.value !== "acc" && item.step.state !== "done");
+    if (next?.value === "cable") {
+        return t("frameTestHintCable", { n: TAPS_NEEDED });
     }
-    return step.learning ? "opacity-50" : undefined;
-}
-
-function spinStepProgress(verdict: unknown, running: boolean, spin: number | undefined): number {
-    if (verdict) {
-        return 1;
-    }
-    return running && spin !== undefined ? spin / 100 : 0;
-}
-
-// After the motors, their spin direction: each motor alone, the sign of its yaw answer (bench firmware).
-const spinItem = computed(() => {
-    const status = wizard.status;
-    const running = wizard.started && status !== null && (status.phase === "motors" || status.phase === "analyse");
-    const runDone = wizard.started && status?.phase === "done";
-    const check = runDone && wizard.spinCheck?.done ? wizard.spinCheck : null;
-    const verdict = check ? spinVerdict(check) : null;
-    const step: ChecklistStep = {
-        id: "spin",
-        state: stepState(verdict?.ok === true, verdict?.ok === false, running),
-        count: 0,
-        progress: spinStepProgress(verdict, running, status?.spin),
-        clipped: false,
-    };
-    let description: string | undefined;
-    if (verdict) {
-        description = spinText(verdict);
-    } else if (runDone) {
-        description = t("frameSpinNone");
-    }
-    return { value: step.id, title: t("frameTestStepSpin"), description, step, ordinal: MOTOR_COUNT + 1 };
+    return next?.value === "frame" ? t("frameTestHintFrame", { n: TAPS_NEEDED }) : "";
 });
+const armItems = computed(() =>
+    ARM_ORDER.map((id) => tapItems.value.find((item) => item.value === id)).filter((item) => item !== undefined),
+);
 
-const motorItems = computed(() => [
-    ...motorChecklist(wizard.status, { started: wizard.started, usbLink: wizard.usbLink }).map((step, index) => ({
+// The four motors: the ring counts the resonances found
+const motorRow = computed(() =>
+    motorChecklist(wizard.status, { started: wizard.started, usbLink: wizard.usbLink }).map((step, index) => ({
         value: step.id,
         title: t("frameTestStepMotor", { n: index + 1 }),
-        description: step.state === "pending" ? undefined : t("frameTestResonanceCount", { count: step.count }),
         step,
         ordinal: index + 1,
-        class: step.state === "done" ? DONE_SEPARATOR : undefined,
     })),
-    spinItem.value,
-]);
+);
 
-function ringValue(step: ChecklistStep): number {
-    return step.state === "error" ? 100 : Math.round(step.progress * 100);
-}
-
-function ringColor(step: ChecklistStep): string {
-    return { pending: "primary", active: "primary", done: "success", error: "error" }[step.state];
-}
-
-const lastTapText = computed(() => {
-    const status = wizard.status;
-    if (!wizard.started || !status || !isTapPhase(status.phase) || status.label === LABEL_NONE) {
-        return "";
-    }
-    let label: string;
-    if (status.label === LABEL_UNKNOWN) {
-        label = t("frameTestLabelUnknown");
-    } else if (status.label === LABEL_PENDING) {
-        label = t("frameTestLabelPending");
-    } else if (status.label === LABEL_CLIPPED) {
-        label =
-            status.clippedPoint === null
-                ? t("frameTestLabelClipped")
-                : `${pointName(status.clippedPoint)}: ${t("frameTestLabelClipped")}`;
-    } else if (status.label >= 0 && status.label < POINT_COUNT) {
-        label = pointName(status.label);
-    } else {
-        return "";
-    }
-    return t("frameTestLastTap", { seq: status.seq, label });
+// After the motors, their spin direction: each motor alone, the sign of its yaw answer. One ring per motor under
+// it: the arrow is the way it turns (the one set, or the real one when it differs), green when the check agrees,
+// red when the motor turns wrong or gave no answer.
+const spinVerdictNow = computed(() => {
+    const done = wizard.started && phase.value === "done" && wizard.spinCheck?.done === true;
+    return done && wizard.spinCheck ? spinVerdict(wizard.spinCheck) : null;
 });
+const spinCells = computed(() => {
+    const status = wizard.status;
+    const running = wizard.started && status !== null && (status.phase === "motors" || status.phase === "analyse");
+    const reversed = Boolean(fcStore.mixerConfig.reverseMotorDir);
+    return motorSpins(spinVerdictNow.value, reversed).map((spin, m) => {
+        const bad = spin.state === "wrong" || spin.state === "unknown";
+        const done = spin.state === "ok";
+        let title = t(spin.cw ? "frameSpinMotorCw" : "frameSpinMotorCcw", { n: m + 1 });
+        if (bad) {
+            title = spinText({
+                ok: false,
+                wrongWay: spin.state === "wrong" ? [m] : [],
+                silent: spin.state === "unknown" ? [m] : [],
+            });
+        }
+        let icon = "text-muted";
+        if (done) {
+            icon = "text-success";
+        } else if (bad) {
+            icon = "text-error";
+        }
+        let color = "primary";
+        if (bad) {
+            color = "error";
+        } else if (done) {
+            color = "success";
+        }
+        return {
+            n: m + 1,
+            cw: spin.cw,
+            title,
+            icon,
+            color,
+            value: bad || done ? 100 : running && status ? status.spin : 0,
+        };
+    });
+});
+// What the check says in a line: the wrong way or silent motors, none when the run had no check, else how to read it
+const spinHint = computed(() => {
+    const v = spinVerdictNow.value;
+    if (v && !v.ok) {
+        return spinText(v);
+    }
+    if (v) {
+        return t("frameSpinOkShort");
+    }
+    return phase.value === "done" ? t("frameSpinNone") : t("frameSpinHint");
+});
+
+// A tap lands: the ring of its point flashes for a moment, red when the tap was too strong
+const flash = ref<{ point: number; seq: number; clipped: boolean } | null>(null);
+let flashTimer: ReturnType<typeof setTimeout> | null = null;
+watch(
+    () => wizard.status?.seq,
+    () => {
+        const status = wizard.status;
+        if (!wizard.started || !status || !isTapPhase(status.phase)) {
+            return;
+        }
+        const clipped = status.label === LABEL_CLIPPED;
+        const point = clipped ? status.clippedPoint : status.label;
+        if (point === null || point < 0 || point >= POINT_COUNT) {
+            return;
+        }
+        flash.value = { point, seq: status.seq, clipped };
+        if (flashTimer) {
+            clearTimeout(flashTimer);
+        }
+        flashTimer = setTimeout(() => (flash.value = null), 700);
+    },
+);
+onUnmounted(() => flashTimer && clearTimeout(flashTimer));
+
+const stepPoint = (id: string): number => {
+    if (id === "cable") {
+        return POINT_CABLE;
+    }
+    return id === "frame" ? POINT_FRAME : Number(id.slice(3)) - 1;
+};
+/** The flash class for a step's ring while a tap of its point has just landed. */
+function flashClass(step: ChecklistStep): string {
+    const f = flash.value;
+    if (!f || step.id === "acc" || stepPoint(step.id) !== f.point) {
+        return "";
+    }
+    return f.clipped ? "tap-flash tap-flash-error" : "tap-flash";
+}
+const flashKey = (step: ChecklistStep): string => `${step.id}-${flash.value?.seq ?? 0}`;
 
 // Modes only the last motor run found may be the support or the grip: a second run, held another way, tells.
 const runAgainHint = computed(() => {

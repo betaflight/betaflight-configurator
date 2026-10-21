@@ -9,6 +9,15 @@
                     :class="item.ok ? 'text-success' : 'text-error'"
                 />
                 <span :class="item.ok ? '' : 'text-muted'" :title="item.title">{{ item.label }}</span>
+                <!-- the mode's switch right now, in the mode's own row -->
+                <UBadge
+                    v-if="item.key === 'mode' && status"
+                    :color="status.modeOn ? 'success' : 'neutral'"
+                    variant="subtle"
+                    size="sm"
+                    icon="i-lucide-radio"
+                    :label="status.modeOn ? $t('filterTuneModeOn') : $t('filterTuneModeOff')"
+                />
                 <!-- the frame map is the frame test's: a way to drop it -->
                 <template v-if="item.key === 'map' && map && (map.hasTaps || map.hasMotors)">
                     <UButton
@@ -24,17 +33,12 @@
             </li>
         </ul>
 
-        <div v-if="status" class="flex flex-wrap items-center gap-2">
+        <!-- idle has nothing to say -->
+        <div
+            v-if="status && status.state !== 'idle'"
+            class="flex flex-wrap items-center gap-2 border-t border-default pt-3"
+        >
             <UBadge
-                :color="status.modeOn ? 'success' : 'neutral'"
-                variant="subtle"
-                size="lg"
-                icon="i-lucide-radio"
-                :label="status.modeOn ? $t('filterTuneModeOn') : $t('filterTuneModeOff')"
-            />
-            <!-- idle says nothing the mode badge does not -->
-            <UBadge
-                v-if="status.state !== 'idle'"
                 :color="stateColor"
                 variant="subtle"
                 size="lg"
@@ -42,7 +46,7 @@
             />
         </div>
 
-        <div v-if="showProgress" class="flex flex-col gap-1">
+        <div v-if="showProgress" class="flex flex-col gap-1.5">
             <UProgress
                 :model-value="Math.min(status!.frames, status!.minFrames)"
                 :max="status!.minFrames"
@@ -59,38 +63,43 @@
             <span v-if="sweepText" class="text-xs text-info">{{ sweepText }}</span>
         </div>
 
-        <!-- the craft can tell the pilot nothing in flight: say so before the flight -->
-        <p v-if="noSignal" class="flex items-start gap-2 text-xs text-warning">
-            <UIcon name="i-lucide-triangle-alert" class="mt-0.5 size-3.5 shrink-0" />
-            {{ $t("filterTuneNoSignal") }}
-        </p>
-        <ol class="list-decimal pl-5 text-xs text-muted flex flex-col gap-0.5">
-            <li>{{ $t("filterTuneStep1") }}</li>
-            <li>
-                {{ step2 }}
-                <!-- what the LED strip's colours mean -->
-                <span v-if="status?.signals?.ledStrip" class="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
-                    <span v-for="led in LED_STATES" :key="led.key" class="flex items-center gap-1">
-                        <span class="size-2 shrink-0 rounded-full" :class="led.dot"></span>
-                        {{ $t(led.key) }}
+        <div class="flex flex-col gap-3 border-t border-default pt-3">
+            <!-- the craft can tell the pilot nothing in flight: say so before the flight -->
+            <p v-if="noSignal" class="flex items-start gap-2 text-xs text-warning">
+                <UIcon name="i-lucide-triangle-alert" class="mt-0.5 size-3.5 shrink-0" />
+                {{ $t("filterTuneNoSignal") }}
+            </p>
+            <ol class="list-decimal pl-8 text-xs text-muted flex flex-col gap-1">
+                <li>{{ $t("filterTuneStep1") }}</li>
+                <li>
+                    {{ step2 }}
+                    <!-- what the LED strip's colours mean -->
+                    <span v-if="status?.signals?.ledStrip" class="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
+                        <span v-for="led in LED_STATES" :key="led.key" class="flex items-center gap-1">
+                            <span class="size-2 shrink-0 rounded-full" :class="led.dot"></span>
+                            {{ $t(led.key) }}
+                        </span>
                     </span>
-                </span>
-            </li>
-            <li v-if="status?.sweep">{{ $t("filterTuneStepSweep") }}</li>
-            <li>{{ status?.carried ? $t("filterTuneStep3Beacon") : $t("filterTuneStep3") }}</li>
-        </ol>
+                </li>
+                <li v-if="status?.sweep">{{ $t("filterTuneStepSweep") }}</li>
+                <li>{{ status?.carried ? $t("filterTuneStep3Beacon") : $t("filterTuneStep3") }}</li>
+            </ol>
+        </div>
 
         <!-- before / after -->
-        <div v-if="showResult" class="flex flex-col gap-2 border-t border-default pt-3">
+        <div v-if="showResult" class="flex flex-col gap-3 border-t border-default pt-3">
             <span class="text-sm font-medium text-highlighted">{{ $t("filterTuneResult") }}</span>
-            <div class="grid max-w-lg grid-cols-[1fr_auto_auto] gap-x-4 gap-y-1 text-sm">
-                <span class="text-xs text-muted">{{ $t("filterTuneSetting") }}</span>
-                <span class="text-xs text-muted text-right">{{ $t("filterTuneBefore") }}</span>
-                <span class="text-xs text-muted text-right">{{ $t("filterTuneAfter") }}</span>
+            <div class="grid w-full grid-cols-[1fr_minmax(8rem,auto)_minmax(8rem,auto)] text-sm">
+                <span class="pb-1 text-xs text-muted">{{ $t("filterTuneSetting") }}</span>
+                <span class="pb-1 pl-6 text-right text-xs text-muted">{{ $t("filterTuneBefore") }}</span>
+                <span class="pb-1 pl-6 text-right text-xs text-muted">{{ $t("filterTuneAfter") }}</span>
                 <template v-for="row in settingRows" :key="row.key">
-                    <span class="text-muted">{{ row.label }}</span>
-                    <span class="text-right tabular-nums">{{ row.before }}</span>
-                    <span class="text-right tabular-nums" :class="row.changed ? 'font-medium text-highlighted' : ''">
+                    <span class="border-t border-default py-1.5 text-muted">{{ row.label }}</span>
+                    <span class="border-t border-default py-1.5 pl-6 text-right tabular-nums">{{ row.before }}</span>
+                    <span
+                        class="border-t border-default py-1.5 pl-6 text-right tabular-nums"
+                        :class="row.changed ? 'font-medium text-highlighted' : 'text-muted'"
+                    >
                         {{ row.after }}
                     </span>
                 </template>
@@ -109,11 +118,12 @@
                     />
                 </div>
             </div>
-            <span class="text-xs text-muted">
-                {{ $t("filterTuneResidual", { db: result!.residual1x.toFixed(1), score: result!.score }) }}
-            </span>
-            <span v-if="lpf2Text" class="text-xs text-muted">{{ lpf2Text }}</span>
-            <span v-if="sweepResult" class="text-xs text-muted">{{ sweepResult }}</span>
+            <!-- what the measurement says, line by line -->
+            <ul class="flex flex-col gap-2 border-t border-default pt-3 text-xs text-muted">
+                <li>{{ $t("filterTuneResidual", { db: result!.residual1x.toFixed(1), score: result!.score }) }}</li>
+                <li v-if="lpf2Text">{{ lpf2Text }}</li>
+                <li v-if="sweepResult">{{ sweepResult }}</li>
+            </ul>
         </div>
 
         <UAlert
@@ -122,17 +132,18 @@
             variant="subtle"
             :description="revertMessage.text"
         />
-        <UButton
-            v-if="status?.backupPresent"
-            :label="$t('filterTuneRevert')"
-            color="neutral"
-            variant="outline"
-            size="xs"
-            icon="i-lucide-undo-2"
-            class="self-start"
-            :loading="filterTune.busy"
-            @click="revert"
-        />
+        <!-- as the frame test's Abort: centred under a line -->
+        <div v-if="status?.backupPresent" class="flex justify-center border-t border-default pt-4">
+            <UButton
+                :label="$t('filterTuneRevert')"
+                color="neutral"
+                variant="outline"
+                size="xs"
+                icon="i-lucide-undo-2"
+                :loading="filterTune.busy"
+                @click="revert"
+            />
+        </div>
     </UiBox>
 </template>
 
@@ -330,7 +341,8 @@ function peakTitle(peak: ResidualPeak): string {
 }
 
 const LED_STATES = [
-    { key: "filterTuneLedCollecting", dot: "bg-info" },
+    { key: "filterTuneLedWaiting", dot: "bg-info" },
+    { key: "filterTuneLedCollecting", dot: "bg-violet-500" },
     { key: "filterTuneLedReady", dot: "bg-success" },
     { key: "filterTuneLedDiscarded", dot: "bg-error" },
 ];

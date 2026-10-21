@@ -115,3 +115,29 @@ export function spinVerdict(check: SpinCheck): SpinVerdict {
     const wrongWay = [0, 1, 2, 3].filter((i) => check.wrongMask & (1 << i) && !silent.includes(i));
     return { ok: silent.length === 0 && wrongWay.length === 0, wrongWay, silent };
 }
+
+// Quad X seen from above with the props in (Betaflight's default): 1 and 4 turn clockwise, 2 and 3 the other way;
+// the Motors tab's props-out switch turns them all around.
+export const CLOCKWISE_PROPS_IN = [true, false, false, true];
+
+export interface MotorSpin {
+    /** Clockwise seen from above: the one set, or the opposite when the check found the motor turning wrong. */
+    cw: boolean;
+    /** pending: no check yet; ok: as set; wrong: against the pattern; unknown: gave no yaw answer. */
+    state: "pending" | "ok" | "wrong" | "unknown";
+}
+
+/** Each motor's spin direction and what the check found (verdict null: no check yet). */
+export function motorSpins(verdict: SpinVerdict | null, reversed: boolean): MotorSpin[] {
+    return CLOCKWISE_PROPS_IN.map((propsIn, m) => {
+        const set = propsIn !== reversed;
+        if (!verdict) {
+            return { cw: set, state: "pending" };
+        }
+        if (verdict.silent.includes(m)) {
+            return { cw: set, state: "unknown" };
+        }
+        const wrong = verdict.wrongWay.includes(m);
+        return { cw: wrong ? !set : set, state: wrong ? "wrong" : "ok" };
+    });
+}

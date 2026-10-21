@@ -133,7 +133,7 @@ import { computed } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import FrameDiagram, { type MotorBadge } from "./FrameDiagram.vue";
 import { spinText } from "./spinText";
-import { spinVerdict } from "@/stores/frameSpinCheck";
+import { CLOCKWISE_PROPS_IN, spinVerdict } from "@/stores/frameSpinCheck";
 import { i18n } from "@/js/localization";
 import { useFilterTuneStore } from "@/stores/filterTune";
 import { useFlightControllerStore } from "@/stores/fc";
@@ -298,10 +298,6 @@ const centreModes = computed(() =>
 
 // The motor run's spin check: a motor turning the wrong way (or not answering) is red, whatever else it shows.
 const spin = computed(() => (wizard.spinCheck?.done ? spinVerdict(wizard.spinCheck) : null));
-
-// Quad X seen from above with the props in (Betaflight's default): 1 and 4 turn clockwise, 2 and 3 the other way;
-// the Motors tab's props-out switch turns them all around.
-const CLOCKWISE_PROPS_IN = [true, false, false, true];
 
 // Each motor's spin direction on the diagram: the one set (props in / out), green when the spin check agrees,
 // red the way it really turns when it does not, grey without an answer.

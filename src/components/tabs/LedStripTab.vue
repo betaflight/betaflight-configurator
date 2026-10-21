@@ -376,9 +376,10 @@ const fcStore = useFlightControllerStore();
 const filterTune = useFilterTuneStore();
 // the Filter tune overlay's colours (flight/filter_autotune.c)
 const FILTER_TUNE_LEDS = [
-    { key: "ledStripFilterTuneBlue", dot: "bg-info" },
-    { key: "ledStripFilterTuneGreen", dot: "bg-success" },
-    { key: "ledStripFilterTuneRed", dot: "bg-error" },
+    { key: "filterTuneLedWaiting", dot: "bg-info" },
+    { key: "filterTuneLedCollecting", dot: "bg-violet-500" },
+    { key: "filterTuneLedReady", dot: "bg-success" },
+    { key: "filterTuneLedDiscarded", dot: "bg-error" },
 ];
 
 const {
