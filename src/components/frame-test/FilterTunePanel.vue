@@ -18,6 +18,16 @@
                     icon="i-lucide-radio"
                     :label="status.modeOn ? $t('filterTuneModeOn') : $t('filterTuneModeOff')"
                 />
+                <!-- what it is doing; idle has nothing to say -->
+                <UBadge
+                    v-if="item.key === 'mode' && status && status.state !== 'idle'"
+                    :color="stateColor"
+                    variant="subtle"
+                    size="sm"
+                    :label="
+                        $t(`filterTuneState_${status.state}`, { hz: status.loop?.measuredHz, set: status.loop?.setHz })
+                    "
+                />
                 <!-- the frame map is the frame test's: a way to drop it -->
                 <template v-if="item.key === 'map' && map && (map.hasTaps || map.hasMotors)">
                     <UButton
@@ -62,20 +72,7 @@
             <p v-if="heatError" class="text-xs text-error">{{ heatError }}</p>
         </div>
 
-        <!-- idle has nothing to say -->
-        <div
-            v-if="status && status.state !== 'idle'"
-            class="flex flex-wrap items-center gap-2 border-t border-default pt-3"
-        >
-            <UBadge
-                :color="stateColor"
-                variant="subtle"
-                size="lg"
-                :label="$t(`filterTuneState_${status.state}`, { hz: status.loop?.measuredHz, set: status.loop?.setHz })"
-            />
-        </div>
-
-        <div v-if="showProgress" class="flex flex-col gap-1.5">
+        <div v-if="showProgress" class="flex flex-col gap-1.5 border-t border-default pt-3">
             <UProgress
                 :model-value="Math.min(status!.frames, status!.minFrames)"
                 :max="status!.minFrames"
