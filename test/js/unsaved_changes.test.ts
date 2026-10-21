@@ -7,6 +7,7 @@ import { useDialogStore } from "../../src/stores/dialog";
 import { useDirtyState } from "../../src/composables/useDirtyState";
 import { useConnectionStore } from "../../src/stores/connection";
 import { useNavigationStore } from "../../src/stores/navigation";
+import { getConnectionState } from "../../src/js/connection_state";
 import {
     confirmLeaveTab,
     hasUnsavedChanges,
@@ -194,6 +195,43 @@ describe("unsaved changes", () => {
         await flushPromises();
 
         expect(proceed).not.toHaveBeenCalled();
+        wrapper.unmount();
+    });
+
+    it("does not queue a reconnect target when a save fails and drops the link", async () => {
+        const connectionStore = useConnectionStore(pinia);
+        const navigationStore = useNavigationStore(pinia);
+        const { state, wrapper } = mountSavingTab(async () => {
+            connectionStore.connectionValid = false;
+            return false;
+        });
+        state.value = 2;
+
+        confirmLeaveTab("ports", vi.fn());
+        listener("save")();
+        await flushPromises();
+
+        expect(navigationStore.tabAfterReconnect).toBeNull();
+        wrapper.unmount();
+    });
+
+    it("still queues the reconnect target when a save and reboot reports its own cancellation", async () => {
+        const connectionStore = useConnectionStore(pinia);
+        const navigationStore = useNavigationStore(pinia);
+        const rebootWindow = vi.spyOn(getConnectionState(), "isRebootWindowOpen", "get").mockReturnValue(true);
+        const { state, wrapper } = mountSavingTab(async () => {
+            connectionStore.connectionValid = false;
+            return false;
+        });
+        state.value = 2;
+
+        confirmLeaveTab("ports", vi.fn());
+        listener("save")();
+        await flushPromises();
+
+        expect(navigationStore.tabAfterReconnect).toEqual({ tab: "ports", mode: "connected" });
+        navigationStore.tabAfterReconnect = null;
+        rebootWindow.mockRestore();
         wrapper.unmount();
     });
 });

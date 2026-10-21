@@ -109,14 +109,17 @@ async function saveThenLeave(save: TabSaveAction, target: LeaveTarget, proceed: 
         console.error("Save before leaving the tab failed:", error);
         return;
     }
-    if (getConnectionState().isRebootWindowOpen || !useConnectionStore(pinia).connectionValid) {
-        useNavigationStore(pinia).tabAfterReconnect = { tab: target.tab, mode: target.mode ?? "connected" };
+    // A save that reboots the FC cancels its own in-flight MSP request, so runSave resolves false
+    // even though the save went through. Inside the reboot window that false is expected; outside
+    // it a false is a real failure (or a cancel), and the user stays on the tab. Checked as well as
+    // the dirty state, because some steps mark their part clean before the EEPROM write (a port
+    // assignment, say), so a save that fails at the last step can leave the tab looking clean.
+    const rebooting = getConnectionState().isRebootWindowOpen;
+    if (result === false && !rebooting) {
         return;
     }
-    // runSave resolves false on failure. Checked as well as the dirty state, because some steps
-    // mark their part clean before the EEPROM write (a port assignment, say), so a save that
-    // fails at the last step can leave the tab looking clean.
-    if (result === false) {
+    if (rebooting || !useConnectionStore(pinia).connectionValid) {
+        useNavigationStore(pinia).tabAfterReconnect = { tab: target.tab, mode: target.mode ?? "connected" };
         return;
     }
     if (!hasUnsavedChanges()) {
