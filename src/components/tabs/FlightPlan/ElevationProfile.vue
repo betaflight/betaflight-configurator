@@ -830,165 +830,167 @@ watch(
 );
 </script>
 
-<style scoped>
-.profile-stats {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.75rem;
-}
-
-.profile-stats .stat {
-    color: var(--text);
-    font-size: 0.75rem;
-}
-
-.profile-stats .stat strong {
-    color: var(--surface-950);
-}
-
-.profile-chart-container {
-    width: 100%;
-    overflow-x: auto;
-}
-
-.profile-chart {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* SVG styles */
-.grid-line {
-    stroke: var(--surface-500);
-    stroke-width: 0.5;
-    opacity: 0.3;
-}
-
-.grid-line-light {
-    stroke: var(--surface-500);
-    stroke-width: 0.5;
-    opacity: 0.15;
-}
-
-.axis-label {
-    fill: var(--text);
-    font-size: 8px;
-    font-family: sans-serif;
-}
-
-.terrain-area {
-    fill: var(--surface-700);
-    opacity: 0.2;
-}
-
-.terrain-line {
-    fill: none;
-    stroke: var(--surface-700);
-    stroke-width: 1.5;
-    opacity: 0.7;
-}
-
-.elevation-area {
-    fill: var(--primary-500);
-    opacity: 0.15;
-}
-
-.elevation-line {
-    fill: none;
-    stroke: var(--primary-500);
-    stroke-width: 1.5;
-}
-
-.waypoint-marker {
-    fill: var(--primary-500);
-    stroke: var(--surface-50);
-    stroke-width: 1.5;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.waypoint-marker:hover {
-    r: 4;
-    fill: var(--primary-600);
-}
-
-.waypoint-marker.selected {
-    fill: var(--success-500);
-    stroke: var(--surface-50);
-    stroke-width: 2;
-}
-
-.waypoint-label {
-    fill: var(--text);
-    font-size: 7px;
-    font-weight: bold;
-    pointer-events: none;
-    font-family: sans-serif;
-}
-
-.ground-line {
-    stroke: var(--surface-700);
-    stroke-width: 1;
-    stroke-dasharray: 4, 2;
-    opacity: 0.6;
-}
-
-.ground-label {
-    fill: var(--surface-700);
-    font-size: 7px;
-    font-family: sans-serif;
-    font-weight: bold;
-}
-
-.max-ground-line {
-    stroke: var(--error-500);
-    stroke-width: 1;
-    stroke-dasharray: 2, 2;
-    opacity: 0.7;
-}
-
-.max-ground-label {
-    fill: var(--error-500);
-    font-size: 7px;
-    font-family: sans-serif;
-    font-weight: bold;
-}
-
-.tooltip-bg {
-    fill: var(--surface-950);
-    opacity: 0.9;
-    stroke: var(--primary-500);
-    stroke-width: 0.5;
-}
-
-.tooltip-text {
-    fill: var(--surface-50);
-    font-size: 8px;
-    font-family: sans-serif;
-    pointer-events: none;
-}
-
-.no-waypoints {
-    padding: 2rem;
-    text-align: center;
-    color: var(--surface-700);
-}
-
-.no-waypoints p {
-    margin: 0;
-    font-style: italic;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+<style lang="less">
+.elevation-profile {
     .profile-stats {
-        flex-direction: column;
-        gap: 0.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+    }
+
+    .profile-stats .stat {
+        color: var(--text);
+        font-size: 0.75rem;
+    }
+
+    .profile-stats .stat strong {
+        color: var(--surface-950);
     }
 
     .profile-chart-container {
-        overflow-x: scroll;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .profile-chart {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    /* SVG styles */
+    .grid-line {
+        stroke: var(--surface-500);
+        stroke-width: 0.5;
+        opacity: 0.3;
+    }
+
+    .grid-line-light {
+        stroke: var(--surface-500);
+        stroke-width: 0.5;
+        opacity: 0.15;
+    }
+
+    .axis-label {
+        fill: var(--text);
+        font-size: 8px;
+        font-family: sans-serif;
+    }
+
+    .terrain-area {
+        fill: var(--surface-700);
+        opacity: 0.2;
+    }
+
+    .terrain-line {
+        fill: none;
+        stroke: var(--surface-700);
+        stroke-width: 1.5;
+        opacity: 0.7;
+    }
+
+    .elevation-area {
+        fill: var(--primary-500);
+        opacity: 0.15;
+    }
+
+    .elevation-line {
+        fill: none;
+        stroke: var(--primary-500);
+        stroke-width: 1.5;
+    }
+
+    .waypoint-marker {
+        fill: var(--primary-500);
+        stroke: var(--surface-50);
+        stroke-width: 1.5;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .waypoint-marker:hover {
+        r: 4;
+        fill: var(--primary-600);
+    }
+
+    .waypoint-marker.selected {
+        fill: var(--success-500);
+        stroke: var(--surface-50);
+        stroke-width: 2;
+    }
+
+    .waypoint-label {
+        fill: var(--text);
+        font-size: 7px;
+        font-weight: bold;
+        pointer-events: none;
+        font-family: sans-serif;
+    }
+
+    .ground-line {
+        stroke: var(--surface-700);
+        stroke-width: 1;
+        stroke-dasharray: 4, 2;
+        opacity: 0.6;
+    }
+
+    .ground-label {
+        fill: var(--surface-700);
+        font-size: 7px;
+        font-family: sans-serif;
+        font-weight: bold;
+    }
+
+    .max-ground-line {
+        stroke: var(--error-500);
+        stroke-width: 1;
+        stroke-dasharray: 2, 2;
+        opacity: 0.7;
+    }
+
+    .max-ground-label {
+        fill: var(--error-500);
+        font-size: 7px;
+        font-family: sans-serif;
+        font-weight: bold;
+    }
+
+    .tooltip-bg {
+        fill: var(--surface-950);
+        opacity: 0.9;
+        stroke: var(--primary-500);
+        stroke-width: 0.5;
+    }
+
+    .tooltip-text {
+        fill: var(--surface-50);
+        font-size: 8px;
+        font-family: sans-serif;
+        pointer-events: none;
+    }
+
+    .no-waypoints {
+        padding: 2rem;
+        text-align: center;
+        color: var(--surface-700);
+    }
+
+    .no-waypoints p {
+        margin: 0;
+        font-style: italic;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-stats {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .profile-chart-container {
+            overflow-x: scroll;
+        }
     }
 }
 </style>

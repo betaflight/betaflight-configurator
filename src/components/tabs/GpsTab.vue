@@ -247,7 +247,7 @@
                         <div v-show="showLoadMap" ref="mapContainerRef" class="map-container h-[433px] w-full">
                             <div ref="mapRef" class="map h-[400px] w-full"></div>
                             <div
-                                class="map-controls flex justify-end items-center gap-1 h-[33px] rounded-b px-1 bg-[#FAFAFA] dark:bg-transparent"
+                                class="map-controls flex justify-end items-center gap-1 h-[33px] rounded-b px-1 bg-(--surface-100) dark:bg-transparent"
                             >
                                 <UTooltip :text="$t('gpsMapSatelliteView')">
                                     <UButton

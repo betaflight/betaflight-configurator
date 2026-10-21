@@ -118,47 +118,47 @@ const strokeColor = computed<string>(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .progress-ring {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-}
 
-.progress-ring__svg {
-    transform: rotate(-90deg);
-}
+    .progress-ring__svg {
+        transform: rotate(-90deg);
+    }
 
-.progress-ring__svg--spin {
-    animation: ring-spin 0.8s linear infinite;
-}
+    .progress-ring__svg--spin {
+        animation: ring-spin 0.8s linear infinite;
+    }
 
-.progress-ring__track {
-    stroke: var(--surface-400);
-}
+    .progress-ring__track {
+        stroke: var(--surface-400);
+    }
 
-.progress-ring__fill {
-    transition:
-        stroke-dashoffset 0.35s ease,
-        stroke 0.35s ease;
-}
+    .progress-ring__fill {
+        transition:
+            stroke-dashoffset 0.35s ease,
+            stroke 0.35s ease;
+    }
 
-.progress-ring__content {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-}
+    .progress-ring__content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
 
-.progress-ring__pct {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1;
+    .progress-ring__pct {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1;
+    }
 }
 
 @keyframes ring-spin {

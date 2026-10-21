@@ -45,7 +45,7 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 |---|---|---|
 | Reach for `@nuxt/ui` v4 first: `UButton`, `UInput`, `UInputNumber`, `USelect`, `USwitch`, `UModal`, … | 📐 | Taste call |
 | Use shared wrappers in `src/components/elements/`: `UiBox`, `SettingRow`, `SettingColumn`, `HelpIcon`, `WikiButton` | 📐 | Taste call |
-| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🔧 | CodeRabbit flags a new block (`.coderabbit.yaml`). A lint rule follows once the legacy blocks are gone (#5542) |
+| No `<style scoped>`: promote shared rules to `src/css/theme.css` or `nuxt-ui.css`, and nest a component's own rules under its root class | ✅ | ESLint `vue/enforce-style-attribute` |
 | No hard-coded colors — theme via CSS custom properties | 🚧 | Lint rule as an error once existing violations are gone (#5542 phase 7) |
 | Respect light/dark (`.dark`) and color themes (`data-theme`) | 📐 | Visual review |
 
@@ -101,7 +101,7 @@ The sections below are taste-call patterns that can't be reasonably linted.
 
 ## Styling
 - Prefer Tailwind v4 utilities + `@nuxt/ui` v4 components over custom CSS.
-- `<style scoped>` is acceptable in legacy SFCs; new components should avoid it (see #4995).
+- No `<style scoped>` (#4995). A component's own rules go in `<style lang="less">`, nested under its root class (a tab's is `.tab-<name>`); teleported content (modals, popovers) gets its own class.
 - Theme via CSS custom properties in `src/css/theme.css`. No hex literals in new code.
 - Mobile-first responsive layouts. Respect `.dark` and `data-theme` switching.
 

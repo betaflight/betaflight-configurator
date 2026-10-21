@@ -1,5 +1,5 @@
 <template>
-    <UModal v-model:open="open" :title="title">
+    <UModal v-model:open="open" :title="title" class="connect-options-dialog">
         <template #body>
             <div class="connect-options">
                 <p class="connect-options__help">
@@ -221,36 +221,38 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.connect-options {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-width: min(26rem, 80vw);
-}
+<style lang="less">
+.connect-options-dialog {
+    .connect-options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-width: min(26rem, 80vw);
+    }
 
-.connect-options__help {
-    margin: 0;
-    color: var(--text);
-    opacity: 0.8;
-    font-size: 0.875rem;
-}
+    .connect-options__help {
+        margin: 0;
+        color: var(--text);
+        opacity: 0.8;
+        font-size: 0.875rem;
+    }
 
-.connect-options__field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-}
+    .connect-options__field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+    }
 
-.connect-options__field > span,
-.connect-options__field > label {
-    font-size: 0.875rem;
-    color: var(--text);
-}
+    .connect-options__field > span,
+    .connect-options__field > label {
+        font-size: 0.875rem;
+        color: var(--text);
+    }
 
-.connect-options__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
+    .connect-options__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
 }
 </style>

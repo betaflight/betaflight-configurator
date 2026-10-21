@@ -44,9 +44,9 @@
                             <span
                                 class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
                                 :class="{
-                                    'bg-[#e24761]': axis === 'x',
-                                    'bg-[#49c747]': axis === 'y',
-                                    'bg-[#477ac7]': axis === 'z',
+                                    'bg-axis-roll': axis === 'x',
+                                    'bg-axis-pitch': axis === 'y',
+                                    'bg-axis-yaw': axis === 'z',
                                 }"
                                 >{{ displayValues[i] }}</span
                             >
@@ -55,7 +55,7 @@
                     <template v-else>
                         <div class="flex justify-between py-0.5">
                             <span>X:</span>
-                            <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#e24761]">{{
+                            <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-axis-roll">{{
                                 displayValues[0]
                             }}</span>
                         </div>
@@ -97,7 +97,7 @@
                     </div>
                     <div class="flex justify-between py-0.5">
                         <span>Value:</span>
-                        <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#e24761]">{{
+                        <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-axis-roll">{{
                             displayValues[0]
                         }}</span>
                     </div>

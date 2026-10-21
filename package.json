@@ -121,7 +121,7 @@
     "storybook": "^10.5.2",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.69.0",
-    "vite": "^8.0.16",
+    "vite": "^8.3.4",
     "vite-plugin-static-copy": "^4.1.1",
     "vitest": "^5.0.0",
     "vue-eslint-parser": "^10.4.1",

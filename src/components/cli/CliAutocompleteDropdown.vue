@@ -47,7 +47,7 @@ watch(
 );
 </script>
 
-<style scoped>
+<style lang="less">
 .cli-autocomplete-dropdown {
     position: absolute;
     bottom: 100%;
@@ -61,37 +61,37 @@ watch(
     padding: 0;
     margin: 0;
     z-index: 100;
-}
 
-.cli-autocomplete-dropdown::-webkit-scrollbar {
-    width: 6px;
-}
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
 
-.cli-autocomplete-dropdown::-webkit-scrollbar-track {
-    background: lightgrey;
-    border-radius: 3px;
-}
+    &::-webkit-scrollbar-track {
+        background: lightgrey;
+        border-radius: 3px;
+    }
 
-.cli-autocomplete-dropdown::-webkit-scrollbar-thumb {
-    background: grey;
-    border-radius: 3px;
-}
+    &::-webkit-scrollbar-thumb {
+        background: grey;
+        border-radius: 3px;
+    }
 
-.cli-autocomplete-dropdown li {
-    padding: 2px 5px;
-}
+    li {
+        padding: 2px 5px;
+    }
 
-.cli-autocomplete-dropdown li.active {
-    background-color: var(--surface-600);
-}
+    li.active {
+        background-color: var(--surface-600);
+    }
 
-.cli-autocomplete-dropdown a {
-    font-family: monospace;
-    cursor: pointer;
-}
+    a {
+        font-family: monospace;
+        cursor: pointer;
+    }
 
-.cli-autocomplete-dropdown a :deep(b) {
-    font-family: monospace;
-    font-weight: bold;
+    a b {
+        font-family: monospace;
+        font-weight: bold;
+    }
 }
 </style>
