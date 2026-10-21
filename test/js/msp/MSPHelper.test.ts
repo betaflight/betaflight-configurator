@@ -426,17 +426,16 @@ describe("MSP_MOTOR_CONFIG motor thermal fields", () => {
             callbacks: [],
         });
 
-    it("reads the datasheet resistance and idle current after the stator geometry", () => {
-        decode([...header, 22, 35, 0, 70, 0, 0x78, 0x05]);
+    it("reads the datasheet resistance after the stator geometry", () => {
+        decode([...header, 22, 35, 0, 70, 0]);
 
         expect(fcStore.motorConfig.motor_kv).toEqual(2800);
         expect(fcStore.motorConfig.motor_stator_diameter).toEqual(22);
         expect(fcStore.motorConfig.motor_datasheet_supported).toEqual(true);
         expect(fcStore.motorConfig.motor_resistance).toEqual(70);
-        expect(fcStore.motorConfig.motor_idle_current).toEqual(1400);
     });
 
-    it("leaves the datasheet fields off for a firmware that sends only the geometry", () => {
+    it("leaves the datasheet resistance off for a firmware that sends only the geometry", () => {
         fcStore.motorConfig.motor_resistance = 55;
         decode([...header, 22, 35, 0]);
 
@@ -444,14 +443,14 @@ describe("MSP_MOTOR_CONFIG motor thermal fields", () => {
         expect(fcStore.motorConfig.motor_resistance).toEqual(0);
     });
 
-    it("writes the datasheet fields back only when the firmware reported them", () => {
-        decode([...header, 22, 70, 51, 55, 0, 0x4c, 0x04]);
+    it("writes the datasheet resistance back only when the firmware reported it", () => {
+        decode([...header, 22, 70, 51, 55, 0]);
         const withFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
-        expect(withFields.slice(-7)).toEqual([22, 70, 51, 55, 0, 0x4c, 0x04]);
+        expect(withFields.slice(-5)).toEqual([22, 70, 51, 55, 0]);
 
         decode([...header, 22, 70, 51]);
         const withoutFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
         expect(withoutFields.slice(-3)).toEqual([22, 70, 51]);
-        expect(withoutFields.length).toEqual(withFields.length - 4);
+        expect(withoutFields.length).toEqual(withFields.length - 2);
     });
 });

@@ -283,28 +283,6 @@
                                     fcStore.motorConfig.motor_resistance ? "mΩ" : $t("configurationMotorDatasheetAuto")
                                 }}</span>
                             </SettingRow>
-                            <SettingRow
-                                v-if="isMotorDatasheetSupported"
-                                :label="$t('configurationMotorIdleCurrent')"
-                                :help="$t('configurationMotorIdleCurrentHelp')"
-                                fullWidth
-                            >
-                                <UInputNumber
-                                    v-model="motorIdleCurrentAmps"
-                                    :min="0"
-                                    :max="20"
-                                    :step="0.01"
-                                    size="xs"
-                                    orientation="vertical"
-                                    :format-options="{ useGrouping: false, maximumFractionDigits: 2 }"
-                                    class="w-16"
-                                />
-                                <span class="ml-2 text-xs text-muted">{{
-                                    fcStore.motorConfig.motor_idle_current
-                                        ? "A @ 10 V"
-                                        : $t("configurationMotorDatasheetAuto")
-                                }}</span>
-                            </SettingRow>
                         </UiBox>
                         <!-- 3D -->
                         <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
@@ -1816,16 +1794,10 @@ const isMotorKvSupported = computed(() => semver.gte(fcStore.config.apiVersion, 
 const isMotorStatorSupported = computed(
     () => isMotorKvSupported.value && fcStore.motorConfig.motor_stator_diameter > 0,
 );
-// Datasheet winding resistance and no-load current: the firmware keeps mOhm and mA, the field shows the idle current in A
+// Datasheet winding resistance (mOhm), reported by firmware with the motor thermal estimator
 const isMotorDatasheetSupported = computed(
     () => isMotorStatorSupported.value && fcStore.motorConfig.motor_datasheet_supported,
 );
-const motorIdleCurrentAmps = computed({
-    get: () => fcStore.motorConfig.motor_idle_current / 1000,
-    set: (amps: number | null) => {
-        fcStore.motorConfig.motor_idle_current = Math.round(Math.min(Math.max(amps ?? 0, 0), 20) * 1000);
-    },
-});
 const motorStatorSizes = [
     "0802",
     "1103",

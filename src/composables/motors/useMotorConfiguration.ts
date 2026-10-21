@@ -146,14 +146,10 @@ export function useMotorConfiguration(
             (newVal, oldVal) => handleChange("motor_stator_height", newVal, oldVal),
         );
 
-        // Motor datasheet values (thermal estimator)
+        // Motor datasheet winding resistance (thermal estimator)
         watch(
             () => fcStore.motorConfig.motor_resistance,
             (newVal, oldVal) => handleChange("motor_resistance", newVal, oldVal),
-        );
-        watch(
-            () => fcStore.motorConfig.motor_idle_current,
-            (newVal, oldVal) => handleChange("motor_idle_current", newVal, oldVal),
         );
 
         // ESC Sensor feature
