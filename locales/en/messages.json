@@ -10204,9 +10204,6 @@
     "filterTuneSignalLeds": {
         "message": "the LED strip turns green"
     },
-    "filterTuneLedWaiting": {
-        "message": "waiting"
-    },
     "filterTuneSignalOsd": {
         "message": "the OSD shows FILTER TUNE READY"
     },
@@ -10221,6 +10218,9 @@
     },
     "filterTuneLedReady": {
         "message": "ready"
+    },
+    "filterTuneLedLand": {
+        "message": "land"
     },
     "filterTuneLedDiscarded": {
         "message": "discarded"
