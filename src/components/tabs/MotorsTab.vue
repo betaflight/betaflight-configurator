@@ -1899,6 +1899,14 @@ const motorModelItems = computed(() =>
         ? motorsOfBrand(selectedMotorBrand.value).map((m) => ({ label: motorLabel(m), value: motorKey(m) }))
         : [],
 );
+const pickedMotor = () =>
+    selectedMotorBrand.value === MOTOR_GENERIC
+        ? undefined
+        : motorsOfBrand(selectedMotorBrand.value).find((x) => motorKey(x) === selectedMotorKey.value);
+const stillPicked = (m: MotorSpec, kv: number, d: number, h: number, r: number) =>
+    m.kv === kv &&
+    (!isMotorStatorSupported.value || (m.statorDiameterMm === d && m.statorHeightDmm === h)) &&
+    (!isMotorDatasheetSupported.value || m.resistanceMohm === r);
 watch(
     () => [
         fcStore.motorConfig.motor_kv,
@@ -1907,6 +1915,12 @@ watch(
         fcStore.motorConfig.motor_resistance,
     ],
     ([kv, d, h, r]) => {
+        // the picked motor stays picked while the values are the ones it wrote: a model without a published
+        // resistance, or firmware without the datasheet fields, never matches findMotor() below
+        const picked = pickedMotor();
+        if (picked && stillPicked(picked, kv, d, h, r)) {
+            return;
+        }
         const m = findMotor(kv, d, h, r);
         if (m) {
             selectedMotorBrand.value = m.brand;
