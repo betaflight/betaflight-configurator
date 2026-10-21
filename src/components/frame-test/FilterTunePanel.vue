@@ -410,6 +410,12 @@ const heatDragging = ref(false);
 const heatPending = ref<number | null>(null);
 let heatPendingTimer: ReturnType<typeof setTimeout> | null = null;
 const HEAT_PENDING_MS = 3000;
+function clearHeatPendingTimer() {
+    if (heatPendingTimer) {
+        clearTimeout(heatPendingTimer);
+        heatPendingTimer = null;
+    }
+}
 watch(
     () => tuneChoice.value?.preset,
     (preset) => {
@@ -420,6 +426,7 @@ watch(
             return; // still the old value: the FC has not taken the write yet
         }
         heatPending.value = null;
+        clearHeatPendingTimer();
         heatIndex.value = preset;
     },
     { immediate: true },
@@ -434,9 +441,7 @@ function startHeatDrag() {
 }
 onUnmounted(() => {
     window.removeEventListener("pointerup", endHeatDrag);
-    if (heatPendingTimer) {
-        clearTimeout(heatPendingTimer);
-    }
+    clearHeatPendingTimer();
 });
 // "D x1.5, P+D delay 1.3 ms (stock 2.5 ms), +0.2 K" for the selected stop
 const stopDetail = computed(() => {
@@ -458,14 +463,14 @@ async function onHeat() {
     const stop = heatIndex.value;
     heatError.value = "";
     heatPending.value = stop;
-    if (heatPendingTimer) {
-        clearTimeout(heatPendingTimer);
-    }
-    // the FC did not show it in time (refused, or slow): the slider goes back to what the FC says
+    clearHeatPendingTimer();
+    // the FC did not show it in time (refused, or slow): the slider goes back to what the FC says,
+    // unless the user is already on it again
     heatPendingTimer = setTimeout(() => {
+        heatPendingTimer = null;
         heatPending.value = null;
         const preset = tuneChoice.value?.preset;
-        if (preset !== undefined && preset < TUNE_STOPS) {
+        if (preset !== undefined && preset < TUNE_STOPS && !heatDragging.value) {
             heatIndex.value = preset;
         }
     }, HEAT_PENDING_MS);
