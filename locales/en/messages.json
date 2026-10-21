@@ -854,6 +854,18 @@
     "tabSwitchWaitForOperation": {
         "message": "You <span class=\"message-negative\">can't</span> do this right now, please wait for current operation to finish ..."
     },
+    "unsavedChangesTitle": {
+        "message": "Unsaved changes"
+    },
+    "unsavedChangesText": {
+        "message": "This tab has changes that have not been saved to the flight controller. Leave the tab and discard them?"
+    },
+    "unsavedChangesDiscard": {
+        "message": "Discard changes"
+    },
+    "unsavedChangesStay": {
+        "message": "Stay on tab"
+    },
     "tabSwitchUpgradeRequired": {
         "message": "You need to <strong>upgrade</strong> your firmware to the latest version of Betaflight before you can use the $1 tab."
     },
