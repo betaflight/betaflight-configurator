@@ -33,11 +33,12 @@ export const FILTER_TUNE_ORDERS = 5;
 
 export const OP_REVERT_FILTERS = 4;
 export const OP_FORGET_FRAME_MAP = 5;
-/** The motor heating the D-term and gyro filters may add over the stock chain, 0.1 K steps (disarmed only). */
-export const OP_HEAT_BUDGET = 9;
+/** The noise / delay slider's stop (0 low noise, 1 balanced, 2 low delay), disarmed only. */
+export const OP_TUNE_PRESET = 9;
 
-/** The three positions of the noise / delay slider: the heat budget in 0.1 K. */
-export const HEAT_PRESETS = [0, 5, 10] as const;
+/** The slider's stops; the FC also reports 3 for a manual heat budget set in the CLI. */
+export const TUNE_STOPS = 3;
+export const TUNE_MANUAL = 3;
 
 export const FILTER_TUNE_STATES = [
     "noFrameMap",
@@ -138,6 +139,26 @@ export interface FilterTuneStatus {
     sweep: SweepResult | null;
     /** The PID loop rate, Hz: measured while armed (0: not armed yet) and set. */
     loop: { measuredHz: number; setHz: number } | null;
+    /** The noise / delay choice and what each stop would do on this craft; null with older firmware. */
+    tuneChoice: TuneChoice | null;
+}
+
+/** One stop of the slider: the D-term multiplier, gyro LPF2, the P+D delay and the motor heat it gives. */
+export interface TuneStop {
+    /** null: D as it is. */
+    dMult: number | null;
+    /** 0: off. */
+    lpf2Hz: number;
+    delayUs: number;
+    /** Absolute ripple heat of this choice, K (the stock chain's is sweep.heatStockK). */
+    heatK: number;
+}
+
+export interface TuneChoice {
+    /** 0 low noise, 1 balanced, 2 low delay, 3 manual (a heat budget set in the CLI). */
+    preset: number;
+    /** The three stops measured this session; null before a hover or sweep, or after a restart. */
+    stops: TuneStop[] | null;
 }
 
 export const SWEEP_PHASES = ["none", "roll", "settle", "pitch", "done", "aborted"] as const;
@@ -337,6 +358,20 @@ function readLoop(r: Reader): FilterTuneStatus["loop"] {
     return r.remaining >= 4 ? { measuredHz: r.u16(), setHz: r.u16() } : null;
 }
 
+/** The preset, then for each stop: D x10, gyro LPF2 Hz, P+D delay us, ripple heat 0.01 K (zeros: not measured). */
+function readTuneChoice(r: Reader): TuneChoice | null {
+    if (r.remaining < 1 + TUNE_STOPS * 7) {
+        return null;
+    }
+    const preset = r.u8();
+    const stops: TuneStop[] = [];
+    for (let i = 0; i < TUNE_STOPS; i++) {
+        const mult10 = r.u8();
+        stops.push({ dMult: mult10 ? mult10 / 10 : null, lpf2Hz: r.u16(), delayUs: r.u16(), heatK: r.u16() / 100 });
+    }
+    return { preset, stops: stops.some((s) => s.delayUs > 0) ? stops : null };
+}
+
 function readSweep(r: Reader): SweepResult | null {
     if (r.remaining < 19) {
         return null;
@@ -405,6 +440,7 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
         const pidProfile = readPidProfile(r);
         const sweep = readSweep(r);
         const loop = readLoop(r);
+        const tuneChoice = readTuneChoice(r);
         return {
             state: FILTER_TUNE_STATES[stateCode] ?? "idle",
             hasFrameMap: (flags & 1) !== 0,
@@ -434,6 +470,7 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             pidProfile,
             sweep,
             loop,
+            tuneChoice,
         };
     } catch {
         return null;
@@ -502,9 +539,9 @@ export function parseFrameMap(data: ArrayBufferView | ArrayLike<number>): FrameM
 export const encodeRevertFilters = (): number[] => [OP_REVERT_FILTERS];
 export const encodeForgetFrameMap = (): number[] => [OP_FORGET_FRAME_MAP];
 
-export const encodeHeatBudget = (deciKelvin: number): number[] => [
-    OP_HEAT_BUDGET,
-    Math.max(0, Math.min(200, Math.round(deciKelvin))),
+export const encodeTunePreset = (stop: number): number[] => [
+    OP_TUNE_PRESET,
+    Math.max(0, Math.min(TUNE_STOPS - 1, stop)),
 ];
 
 export interface MotorHarmonics {

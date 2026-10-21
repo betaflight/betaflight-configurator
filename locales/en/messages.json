@@ -10222,20 +10222,26 @@
     "filterTuneHeat_0": {
         "message": "Low noise"
     },
-    "filterTuneHeat_5": {
+    "filterTuneHeat_1": {
         "message": "Balanced"
     },
-    "filterTuneHeat_10": {
+    "filterTuneHeat_2": {
         "message": "Low delay"
     },
     "filterTuneHeatText_0": {
-        "message": "D-term no noisier than stock."
+        "message": "Least delay with no more motor heating than the stock filters."
     },
-    "filterTuneHeatText_5": {
-        "message": "A little more motor noise for less delay (default)."
+    "filterTuneHeatText_1": {
+        "message": "The knee of this craft's delay and heat curve (default)."
     },
-    "filterTuneHeatText_10": {
-        "message": "Least delay, more motor noise (still within about 1 K of heating)."
+    "filterTuneHeatText_2": {
+        "message": "The next knee: least delay, more motor heating."
+    },
+    "filterTuneHeatDetail": {
+        "message": "D ×{{d}}, P+D delay {{ms}} ms (stock {{stock}} ms), +{{heat}} K"
+    },
+    "filterTuneHeatManual": {
+        "message": "Manual (CLI): {{k}} K"
     },
     "filterTuneHeatRefused": {
         "message": "Disarm to change this."

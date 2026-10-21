@@ -29,7 +29,7 @@ import { useFrameWizardStore } from "./frameWizard";
 import { useFlightControllerStore } from "./fc";
 import {
     encodeForgetFrameMap,
-    encodeHeatBudget,
+    encodeTunePreset,
     encodeRevertFilters,
     harmonicSummary,
     parseFilterTuneStatus,
@@ -225,9 +225,9 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         return result;
     }
 
-    /** Set the noise / delay slider (the heat budget, 0.1 K steps): the FC takes it at once while disarmed. */
-    async function setHeatBudget(deciKelvin: number): Promise<FilterTuneActionResult> {
-        const result = await setOp(encodeHeatBudget(deciKelvin));
+    /** Set the noise / delay slider's stop: the FC takes it at once while disarmed. */
+    async function setTunePreset(stop: number): Promise<FilterTuneActionResult> {
+        const result = await setOp(encodeTunePreset(stop));
         await refreshStatus().catch(() => undefined);
         return result;
     }
@@ -272,7 +272,7 @@ export const useFilterTuneStore = defineStore("filterTune", () => {
         startPolling,
         stopPolling,
         revert,
-        setHeatBudget,
+        setTunePreset,
         forgetFrameMap,
         afterFrameTest,
         detach,

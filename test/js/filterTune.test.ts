@@ -22,8 +22,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
     encodeForgetFrameMap,
-    encodeHeatBudget,
-    HEAT_PRESETS,
+    encodeTunePreset,
     encodeRevertFilters,
     harmonicSummary,
     parseFilterTuneStatus,
@@ -248,6 +247,23 @@ describe("filter autotune status", () => {
         // 0: D left as it is
         withD[withCarried.length] = 0;
         expect(parseFilterTuneStatus(withD)?.dterm?.mult).toBeNull();
+        // the noise / delay choice after the loop rate: preset 1, three stops {D x10, LPF2 Hz, delay us, heat 0.01 K}
+        const stop = (d: number, lpf2: number, delay: number, heat: number) =>
+            new Sbuf().u8(d).u16(lpf2).u16(delay).u16(heat).bytes;
+        const choice = [1, ...stop(7, 0, 2400, 50), ...stop(15, 650, 1300, 70), ...stop(22, 0, 950, 120)];
+        const tail = [...withD, 1, 0, ...sweep.bytes, ...new Sbuf().u16(3900).u16(4000).bytes];
+        expect(parseFilterTuneStatus(tail)?.tuneChoice).toBeNull();
+        expect(parseFilterTuneStatus([...tail, ...choice])?.tuneChoice).toEqual({
+            preset: 1,
+            stops: [
+                { dMult: 0.7, lpf2Hz: 0, delayUs: 2400, heatK: 0.5 },
+                { dMult: 1.5, lpf2Hz: 650, delayUs: 1300, heatK: 0.7 },
+                { dMult: 2.2, lpf2Hz: 0, delayUs: 950, heatK: 1.2 },
+            ],
+        });
+        // no measurement yet: the stops are zeros; manual is 3
+        const zeros = [3, ...stop(0, 0, 0, 0), ...stop(0, 0, 0, 0), ...stop(0, 0, 0, 0)];
+        expect(parseFilterTuneStatus([...tail, ...zeros])?.tuneChoice).toEqual({ preset: 3, stops: null });
     });
 
     it("parses a status read from the bench FC (firmware 8729d4f4d, no hover yet)", () => {
@@ -377,17 +393,17 @@ describe("frame map", () => {
 });
 
 describe("ops and run flags", () => {
-    it("revert, forget and the heat budget are ops 4, 5 and 9", () => {
+    it("revert, forget and the noise / delay stop are ops 4, 5 and 9", () => {
         expect(encodeRevertFilters()).toEqual([4]);
         expect(encodeForgetFrameMap()).toEqual([5]);
-        // the slider's three stops in 0.1 K, kept within the FC's 0..200
-        expect(HEAT_PRESETS.map((dk) => encodeHeatBudget(dk))).toEqual([
+        // the slider's stops: 0 low noise, 1 balanced, 2 low delay (3, manual, is the CLI's)
+        expect([0, 1, 2].map((stop) => encodeTunePreset(stop))).toEqual([
             [9, 0],
-            [9, 5],
-            [9, 10],
+            [9, 1],
+            [9, 2],
         ]);
-        expect(encodeHeatBudget(999)).toEqual([9, 200]);
-        expect(encodeHeatBudget(-3)).toEqual([9, 0]);
+        expect(encodeTunePreset(7)).toEqual([9, 2]);
+        expect(encodeTunePreset(-1)).toEqual([9, 0]);
     });
 
     it("the taps run sets TAPS_ONLY, the motor run SKIP_TAPS (the flags byte after max command)", () => {

@@ -47,7 +47,9 @@
         <div v-if="status?.sweep" class="flex flex-col gap-2 border-t border-default pt-3">
             <div class="flex items-baseline justify-between gap-2">
                 <span class="text-sm font-medium text-highlighted">{{ $t("filterTuneHeatTitle") }}</span>
-                <span v-if="heatCustom" class="text-xs text-muted tabular-nums">{{ heatKelvin }} K</span>
+                <span v-if="tuneManual" class="text-xs text-muted tabular-nums">{{
+                    $t("filterTuneHeatManual", { k: manualKelvin })
+                }}</span>
             </div>
             <!-- blue (little noise), green, orange (little delay) -->
             <USlider
@@ -61,14 +63,16 @@
             />
             <div class="flex justify-between text-xs">
                 <span
-                    v-for="(preset, index) in HEAT_PRESETS"
-                    :key="preset"
-                    :class="index === heatIndex ? 'font-medium text-highlighted' : 'text-muted'"
+                    v-for="index in 3"
+                    :key="index"
+                    :class="!tuneManual && index - 1 === heatIndex ? 'font-medium text-highlighted' : 'text-muted'"
                 >
-                    {{ $t(`filterTuneHeat_${preset}`) }}
+                    {{ $t(`filterTuneHeat_${index - 1}`) }}
                 </span>
             </div>
-            <p class="text-xs text-muted">{{ $t(`filterTuneHeatText_${HEAT_PRESETS[heatIndex]}`) }}</p>
+            <p v-if="!tuneManual" class="text-xs text-muted">{{ $t(`filterTuneHeatText_${heatIndex}`) }}</p>
+            <!-- what this stop does on this craft, once it is measured -->
+            <p v-if="!tuneManual && stopDetail" class="text-xs text-muted tabular-nums">{{ stopDetail }}</p>
             <p v-if="heatError" class="text-xs text-error">{{ heatError }}</p>
         </div>
 
@@ -180,7 +184,7 @@ import UiBox from "@/components/elements/UiBox.vue";
 import { i18n } from "@/js/localization";
 import { useFilterTuneStore } from "@/stores/filterTune";
 import { useFrameWizardStore } from "@/stores/frameWizard";
-import { HEAT_PRESETS, type FilterSettings, type ResidualPeak } from "@/stores/filterTuneProtocol";
+import { TUNE_MANUAL, TUNE_STOPS, type FilterSettings, type ResidualPeak } from "@/stores/filterTuneProtocol";
 
 const filterTune = useFilterTuneStore();
 const wizard = useFrameWizardStore();
@@ -393,29 +397,40 @@ const noSignal = computed(() => {
     return !!sig && !sig.beeper && !sig.ledStrip && !sig.osd;
 });
 
-// The noise / delay slider: three stops of the heat budget; a CLI value between them shows the nearest stop and its K
+// The noise / delay slider: three stops the FC works out from this craft's own delay and heat curve; a heat
+// budget set in the CLI is the manual one (no stop selected)
 const heatIndex = ref(1);
 const heatError = ref("");
-const heatBudget = computed(() => Math.round((status.value?.sweep?.heatBudgetK ?? 0.5) * 10));
-const heatCustom = computed(() => !(HEAT_PRESETS as readonly number[]).includes(heatBudget.value));
-const heatKelvin = computed(() => (heatBudget.value / 10).toFixed(1));
+const tuneChoice = computed(() => status.value?.tuneChoice ?? null);
+const tuneManual = computed(() => tuneChoice.value?.preset === TUNE_MANUAL);
+const manualKelvin = computed(() => (status.value?.sweep?.heatBudgetK ?? 0).toFixed(1));
 watch(
-    heatBudget,
-    (dk) => {
-        let nearest = 0;
-        HEAT_PRESETS.forEach((preset, index) => {
-            if (Math.abs(preset - dk) < Math.abs(HEAT_PRESETS[nearest] - dk)) {
-                nearest = index;
-            }
-        });
-        heatIndex.value = nearest;
+    tuneChoice,
+    (choice) => {
+        if (choice && choice.preset < TUNE_STOPS) {
+            heatIndex.value = choice.preset;
+        }
     },
     { immediate: true },
 );
+// "D x1.5, P+D delay 1.3 ms (stock 2.5 ms), +0.2 K" for the selected stop
+const stopDetail = computed(() => {
+    const stop = tuneChoice.value?.stops?.[heatIndex.value];
+    const stock = status.value?.dterm?.stockDelayUs;
+    const stockHeat = status.value?.sweep?.heatStockK;
+    if (!stop || !stock || stockHeat === undefined) {
+        return "";
+    }
+    return t("filterTuneHeatDetail", {
+        d: stop.dMult ?? "—",
+        ms: (stop.delayUs / 1000).toFixed(1),
+        stock: (stock / 1000).toFixed(1),
+        heat: Math.max(0, stop.heatK - stockHeat).toFixed(1),
+    });
+});
 async function onHeat() {
-    const stop = HEAT_PRESETS[heatIndex.value];
     heatError.value = "";
-    const result = await filterTune.setHeatBudget(stop);
+    const result = await filterTune.setTunePreset(heatIndex.value);
     if (result !== "done") {
         heatError.value = t("filterTuneHeatRefused");
     }
