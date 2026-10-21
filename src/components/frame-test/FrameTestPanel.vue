@@ -452,6 +452,7 @@ const spinCells = computed(() => {
         } else if (bad) {
             icon = "text-error";
         }
+        const progress = running && status ? status.spin : 0;
         let color = "primary";
         if (bad) {
             color = "error";
@@ -464,7 +465,7 @@ const spinCells = computed(() => {
             title,
             icon,
             color,
-            value: bad || done ? 100 : running && status ? status.spin : 0,
+            value: bad || done ? 100 : progress,
         };
     });
 });
