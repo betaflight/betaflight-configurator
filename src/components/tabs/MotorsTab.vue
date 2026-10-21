@@ -345,9 +345,9 @@
                                         <span
                                             class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
                                             :class="{
-                                                'bg-[#e24761]': axis === 'x',
-                                                'bg-[#49c747]': axis === 'y',
-                                                'bg-[#477ac7]': axis === 'z',
+                                                'bg-axis-roll': axis === 'x',
+                                                'bg-axis-pitch': axis === 'y',
+                                                'bg-axis-yaw': axis === 'z',
                                             }"
                                             >{{ rawDataDisplay[axis] }}</span
                                         >
@@ -355,7 +355,7 @@
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span
-                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
+                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-axis-throttle whitespace-nowrap tabular-nums"
                                             >{{ rawDataDisplay.rms }}</span
                                         >
                                     </div>
