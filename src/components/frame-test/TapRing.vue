@@ -30,26 +30,3 @@ defineProps({
     flash: { type: String, default: "" },
 });
 </script>
-
-<style scoped>
-/* a tap landed on this point: its ring flashes in a translucent colour */
-:deep(.tap-flash),
-.tap-flash {
-    border-radius: 9999px;
-    animation: tap-flash 0.7s ease-out;
-    --tap-flash: color-mix(in srgb, var(--ui-primary) 45%, transparent);
-}
-
-.tap-flash-error {
-    --tap-flash: color-mix(in srgb, var(--ui-error) 45%, transparent);
-}
-
-@keyframes tap-flash {
-    from {
-        background-color: var(--tap-flash);
-    }
-    to {
-        background-color: transparent;
-    }
-}
-</style>

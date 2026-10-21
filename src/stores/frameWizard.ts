@@ -203,9 +203,6 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
     /** The FC's last run, whoever started it (kept on the FC until the next start), read when the tab opens. */
     const lastResult = ref<WizardResult | null>(null);
     const spinCheck = ref<SpinCheck | null>(null);
-    /** When the last run was first seen; null when unknown. */
-    /** The last run comes from this app's copy: the FC no longer has it (restarted since). */
-    /** When the last taps run and the last motor run were first seen; null when none is kept. */
     /** The wizard was started from here; the checklist shows the FC's counts only then. */
     const started = ref(false);
     /** Which part runs (or ran last): taps for the frame and arms, motors for the motor run. */

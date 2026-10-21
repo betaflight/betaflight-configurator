@@ -58,14 +58,25 @@ const quad = computed(() => isQuadMixer(fcStore.mixerConfig.mixer, fcStore.motor
 // Firmware without the frame test and without the filter autotune: nothing here applies.
 const unsupported = computed(() => wizard.supported === false && filterTune.supported === false);
 
+// The loads below take a while: a tab left meanwhile must not start polling or listening afterwards.
+let mounted = false;
+
 onMounted(async () => {
+    mounted = true;
     await filterTune.load();
+    if (!mounted) {
+        return;
+    }
     await wizard.loadLastResult(filterTune.frameMap);
+    if (!mounted) {
+        return;
+    }
     filterTune.startPolling();
     listen.start();
 });
 
 onUnmounted(() => {
+    mounted = false;
     listen.detach();
     filterTune.detach();
 });

@@ -2441,6 +2441,9 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
     [MSPCodes.MSP2_FRAME_MAP]: NOTHING_TO_DO,
 
+    // Listening to taps outside a run: the frameListen store reads the replies off the raw response.
+    [MSPCodes.MSP2_FRAME_WIZARD_LISTEN]: NOTHING_TO_DO,
+
     [MSPCodes.MSP_SET_FILTER_CONFIG]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_SET_ADVANCED_CONFIG]() {
