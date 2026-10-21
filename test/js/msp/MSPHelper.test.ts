@@ -451,6 +451,6 @@ describe("MSP_MOTOR_CONFIG motor thermal fields", () => {
         decode([...header, 22, 70, 51]);
         const withoutFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
         expect(withoutFields.slice(-3)).toEqual([22, 70, 51]);
-        expect(withoutFields.length).toEqual(withFields.length - 2);
+        expect(withoutFields).toHaveLength(withFields.length - 2);
     });
 });

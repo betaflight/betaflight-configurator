@@ -1839,15 +1839,16 @@ watch(
 const parseStatorSize = (text: string | number): { d: number; h: number } | null => {
     // accepts "2207", "2203.5", "2203,5" and "22035" (five digits = diameter + height in tenths)
     const t = String(text).trim().replace(",", ".");
-    let m = /^(\d{2})(\d{1,2}(?:\.\d)?)$/.exec(t);
+    const decimal = /^(\d{2})(\d{1,2}(?:\.\d)?)$/.exec(t);
+    const tenths = decimal ? null : /^(\d{2})(\d{3})$/.exec(t);
     let d = 0;
     let h = 0;
-    if (m) {
-        d = parseInt(m[1], 10);
-        h = Math.round(parseFloat(m[2]) * 10);
-    } else if ((m = /^(\d{2})(\d{3})$/.exec(t))) {
-        d = parseInt(m[1], 10);
-        h = parseInt(m[2], 10);
+    if (decimal) {
+        d = Number.parseInt(decimal[1], 10);
+        h = Math.round(Number.parseFloat(decimal[2]) * 10);
+    } else if (tenths) {
+        d = Number.parseInt(tenths[1], 10);
+        h = Number.parseInt(tenths[2], 10);
     }
     return d >= 5 && d <= 60 && h >= 10 && h <= 250 ? { d, h } : null;
 };
