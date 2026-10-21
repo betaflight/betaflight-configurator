@@ -57,8 +57,8 @@
                 :min="0"
                 :max="2"
                 :step="1"
-                :disabled="filterTune.busy"
                 :ui="{ track: 'bg-gradient-to-r from-info via-success to-warning', range: 'bg-transparent' }"
+                @pointerdown="startHeatDrag"
                 @change="onHeat"
             />
             <div class="flex justify-between text-xs">
@@ -179,7 +179,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onUnmounted, ref, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { i18n } from "@/js/localization";
 import { useFilterTuneStore } from "@/stores/filterTune";
@@ -404,15 +404,40 @@ const heatError = ref("");
 const tuneChoice = computed(() => status.value?.tuneChoice ?? null);
 const tuneManual = computed(() => tuneChoice.value?.preset === TUNE_MANUAL);
 const manualKelvin = computed(() => (status.value?.sweep?.heatBudgetK ?? 0).toFixed(1));
+// The status comes every second and the FC takes a write a moment later: the slider follows the FC only while the
+// user is not on it (not dragging, no write of his waiting to show in the status)
+const heatDragging = ref(false);
+const heatPending = ref<number | null>(null);
+let heatPendingTimer: ReturnType<typeof setTimeout> | null = null;
+const HEAT_PENDING_MS = 3000;
 watch(
-    tuneChoice,
-    (choice) => {
-        if (choice && choice.preset < TUNE_STOPS) {
-            heatIndex.value = choice.preset;
+    () => tuneChoice.value?.preset,
+    (preset) => {
+        if (preset === undefined || preset >= TUNE_STOPS || heatDragging.value) {
+            return;
         }
+        if (heatPending.value !== null && preset !== heatPending.value) {
+            return; // still the old value: the FC has not taken the write yet
+        }
+        heatPending.value = null;
+        heatIndex.value = preset;
     },
     { immediate: true },
 );
+function endHeatDrag() {
+    heatDragging.value = false;
+    window.removeEventListener("pointerup", endHeatDrag);
+}
+function startHeatDrag() {
+    heatDragging.value = true;
+    window.addEventListener("pointerup", endHeatDrag);
+}
+onUnmounted(() => {
+    window.removeEventListener("pointerup", endHeatDrag);
+    if (heatPendingTimer) {
+        clearTimeout(heatPendingTimer);
+    }
+});
 // "D x1.5, P+D delay 1.3 ms (stock 2.5 ms), +0.2 K" for the selected stop
 const stopDetail = computed(() => {
     const stop = tuneChoice.value?.stops?.[heatIndex.value];
@@ -429,8 +454,22 @@ const stopDetail = computed(() => {
     });
 });
 async function onHeat() {
+    endHeatDrag();
+    const stop = heatIndex.value;
     heatError.value = "";
-    const result = await filterTune.setTunePreset(heatIndex.value);
+    heatPending.value = stop;
+    if (heatPendingTimer) {
+        clearTimeout(heatPendingTimer);
+    }
+    // the FC did not show it in time (refused, or slow): the slider goes back to what the FC says
+    heatPendingTimer = setTimeout(() => {
+        heatPending.value = null;
+        const preset = tuneChoice.value?.preset;
+        if (preset !== undefined && preset < TUNE_STOPS) {
+            heatIndex.value = preset;
+        }
+    }, HEAT_PENDING_MS);
+    const result = await filterTune.setTunePreset(stop);
     if (result !== "done") {
         heatError.value = t("filterTuneHeatRefused");
     }
