@@ -21,7 +21,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, reactive } from "vue";
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { setActivePinia } from "pinia";
 import { pinia } from "../../src/js/pinia_instance";
 import { useDialogStore } from "../../src/stores/dialog";
@@ -38,12 +38,6 @@ import {
 
 function listener(name: string): () => void {
     return useDialogStore(pinia).activeDialog?.listeners[name] as () => void;
-}
-
-/** A tab with a dirty flag and a registered Save action. */
-function mountSavingTab(save: () => Promise<unknown>) {
-    const mounted = mountDirtyTab(save);
-    return mounted;
 }
 
 /** A tab-like component whose dirty flag is driven from the test. */
@@ -109,128 +103,100 @@ describe("unsaved changes", () => {
         expect(hasUnsavedChanges()).toBe(false);
     });
 
-    it("proceeds without asking when nothing is unsaved", () => {
-        const proceed = vi.fn();
-
-        confirmLeaveTab("ports", proceed);
-
-        expect(proceed).toHaveBeenCalledOnce();
+    it("lets the user leave without asking when nothing is unsaved", async () => {
+        await expect(confirmLeaveTab("ports")).resolves.toBe(true);
         expect(useDialogStore(pinia).activeDialog).toBeNull();
     });
 
-    it("asks first; Stay keeps the tab and Leave proceeds", () => {
+    it("asks first; Stay keeps the tab and Leave lets the user go", async () => {
         const unregister = registerUnsavedChanges(() => true);
-        const proceed = vi.fn();
         const dialogStore = useDialogStore(pinia);
 
-        confirmLeaveTab("ports", proceed);
-        expect(proceed).not.toHaveBeenCalled();
+        const stayed = confirmLeaveTab("ports");
         expect(dialogStore.activeDialog?.type).toBe("UnsavedChangesDialog");
-        expect(dialogStore.activeDialog?.props.canSave).toBe(false);
+        expect(dialogStore.activeDialog?.props).toEqual({ canSave: false });
 
         listener("stay")();
-        expect(proceed).not.toHaveBeenCalled();
+        await expect(stayed).resolves.toBe(false);
         expect(dialogStore.activeDialog).toBeNull();
 
-        confirmLeaveTab("ports", proceed);
+        const left = confirmLeaveTab("ports");
         listener("leave")();
-        expect(proceed).toHaveBeenCalledOnce();
+        await expect(left).resolves.toBe(true);
         expect(dialogStore.activeDialog).toBeNull();
 
         unregister();
     });
 
     it("saves and then leaves once the tab is clean", async () => {
-        const { state, tracker, wrapper } = mountSavingTab(async () => tracker.markClean());
+        const { state, tracker, wrapper } = mountDirtyTab(async () => tracker.markClean());
         state.value = 2;
-        const proceed = vi.fn();
 
-        confirmLeaveTab("ports", proceed);
+        const leaving = confirmLeaveTab("ports");
         expect(useDialogStore(pinia).activeDialog?.props.canSave).toBe(true);
         listener("save")();
-        await flushPromises();
 
-        expect(proceed).toHaveBeenCalledOnce();
+        await expect(leaving).resolves.toBe(true);
         wrapper.unmount();
     });
 
     it("stays on the tab when the save leaves it dirty", async () => {
-        const { state, wrapper } = mountSavingTab(async () => {});
+        const { state, wrapper } = mountDirtyTab(async () => {});
         state.value = 2;
-        const proceed = vi.fn();
 
-        confirmLeaveTab("ports", proceed);
+        const leaving = confirmLeaveTab("ports");
         listener("save")();
-        await flushPromises();
 
-        expect(proceed).not.toHaveBeenCalled();
+        await expect(leaving).resolves.toBe(false);
         wrapper.unmount();
     });
 
-    it("opens the target tab after reconnecting when the save reboots", async () => {
+    it.each([
+        { tab: "ports", mode: undefined, expected: { tab: "ports", mode: "connected" } },
+        { tab: "user_profile", mode: "loggedin", expected: { tab: "user_profile", mode: "loggedin" } },
+    ])("opens $tab ($expected.mode) after reconnecting when the save reboots", async ({ tab, mode, expected }) => {
         const connectionStore = useConnectionStore(pinia);
         const navigationStore = useNavigationStore(pinia);
-        const { state, wrapper } = mountSavingTab(async () => {
-            connectionStore.connectionValid = false;
-        });
-        state.value = 2;
-        const proceed = vi.fn();
-
-        confirmLeaveTab("ports", proceed);
-        listener("save")();
-        await flushPromises();
-
-        expect(proceed).not.toHaveBeenCalled();
-        expect(navigationStore.tabAfterReconnect).toEqual({ tab: "ports", mode: "connected" });
-        navigationStore.tabAfterReconnect = null;
-        wrapper.unmount();
-    });
-
-    it("keeps the sidebar mode of the target for after the reconnect", async () => {
-        const connectionStore = useConnectionStore(pinia);
-        const navigationStore = useNavigationStore(pinia);
-        const { state, wrapper } = mountSavingTab(async () => {
+        const { state, wrapper } = mountDirtyTab(async () => {
             connectionStore.connectionValid = false;
         });
         state.value = 2;
 
-        confirmLeaveTab({ tab: "user_profile", mode: "loggedin" }, vi.fn());
+        const leaving = confirmLeaveTab(tab, mode);
         listener("save")();
-        await flushPromises();
 
-        expect(navigationStore.tabAfterReconnect).toEqual({ tab: "user_profile", mode: "loggedin" });
+        await expect(leaving).resolves.toBe(false);
+        expect(navigationStore.tabAfterReconnect).toEqual(expected);
         navigationStore.tabAfterReconnect = null;
         wrapper.unmount();
     });
 
     it("stays on the tab when the save reports failure, even if it looks clean", async () => {
-        const { state, tracker, wrapper } = mountSavingTab(async () => {
+        const { state, tracker, wrapper } = mountDirtyTab(async () => {
             tracker.markClean();
             return false;
         });
         state.value = 2;
-        const proceed = vi.fn();
 
-        confirmLeaveTab("ports", proceed);
+        const leaving = confirmLeaveTab("ports");
         listener("save")();
-        await flushPromises();
 
-        expect(proceed).not.toHaveBeenCalled();
+        await expect(leaving).resolves.toBe(false);
         wrapper.unmount();
     });
 
     it("does not queue a reconnect target when a save fails and drops the link", async () => {
         const connectionStore = useConnectionStore(pinia);
         const navigationStore = useNavigationStore(pinia);
-        const { state, wrapper } = mountSavingTab(async () => {
+        const { state, wrapper } = mountDirtyTab(async () => {
             connectionStore.connectionValid = false;
             return false;
         });
         state.value = 2;
 
-        confirmLeaveTab("ports", vi.fn());
+        const leaving = confirmLeaveTab("ports");
         listener("save")();
-        await flushPromises();
+        await expect(leaving).resolves.toBe(false);
 
         expect(navigationStore.tabAfterReconnect).toBeNull();
         wrapper.unmount();
@@ -240,15 +206,15 @@ describe("unsaved changes", () => {
         const connectionStore = useConnectionStore(pinia);
         const navigationStore = useNavigationStore(pinia);
         const rebootWindow = vi.spyOn(getConnectionState(), "isRebootWindowOpen", "get").mockReturnValue(true);
-        const { state, wrapper } = mountSavingTab(async () => {
+        const { state, wrapper } = mountDirtyTab(async () => {
             connectionStore.connectionValid = false;
             return false;
         });
         state.value = 2;
 
-        confirmLeaveTab("ports", vi.fn());
+        const leaving = confirmLeaveTab("ports");
         listener("save")();
-        await flushPromises();
+        await expect(leaving).resolves.toBe(false);
 
         expect(navigationStore.tabAfterReconnect).toEqual({ tab: "ports", mode: "connected" });
         navigationStore.tabAfterReconnect = null;

@@ -1562,19 +1562,16 @@ async function refreshConfig() {
     analyticsChanges.value = {};
 }
 
-// Whether the last saveConfig() ran to the end, rather than being cancelled or failing.
-let lastSaveCompleted = false;
+// Save OSD configuration to FC. Resolves true once the save went through.
+const saveConfig = async () => {
+    // Warn before a pick that would take a port from another feature; a cancel here leaves the
+    // save untouched, before anything has been written to the FC, and counts as not saved. The
+    // prompt is modal, so no second save can start while it is open.
+    if (!(await confirmPortConflicts())) {
+        return false;
+    }
 
-// Save OSD configuration to FC
-const saveConfig = () =>
-    runSave(async () => {
-        lastSaveCompleted = false;
-        // Warn before a pick that would take a port from another feature; a cancel here leaves the
-        // save untouched, before anything has been written to the FC.
-        if (!(await confirmPortConflicts())) {
-            return;
-        }
-
+    return runSave(async () => {
         // Sync store state to the shared OSD.data bridge used by legacy helpers.
         osdStore.syncToLegacy();
 
@@ -1595,14 +1592,13 @@ const saveConfig = () =>
         // Show success
         gui_log(i18n.getMessage("osdSettingsSaved"));
         flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
-        lastSaveCompleted = true;
     });
+};
 
 // A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
 // A cancelled or failed save does not reboot, so the tab stays open with the edits intact.
 const saveAndRebootConfig = async () => {
-    await saveConfig();
-    if (!lastSaveCompleted) {
+    if (!(await saveConfig())) {
         return;
     }
     await reboot();

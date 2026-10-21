@@ -218,8 +218,7 @@
 import { defineComponent } from "vue";
 import type { DropdownMenuItem } from "@nuxt/ui";
 import { useUserSession } from "./UserSession";
-import { switchTab } from "@/js/tab_switch.js";
-import { confirmLeaveTab } from "@/js/unsaved_changes";
+import { navigateToTab } from "@/js/tab_switch.js";
 import { sidebarItems } from "@/components/sidebar/sidebar_items";
 import { i18n } from "@/js/localization";
 
@@ -265,10 +264,7 @@ export default defineComponent({
                     .map((item) => ({
                         label: i18n.getMessage(item.i18n),
                         icon: item.icon,
-                        onSelect: () =>
-                            confirmLeaveTab({ tab: item.key, mode: item.mode }, () =>
-                                switchTab(item.key, { mode: item.mode }),
-                            ),
+                        onSelect: () => void navigateToTab(item.key, { mode: item.mode }),
                     })),
                 trailingItems,
             );

@@ -72,7 +72,6 @@ export interface Saving {
  */
 export function useSaving(): Saving {
     const isSaving = ref(false);
-    let activeSave: Promise<boolean> | null = null;
 
     /**
      * Run one save operation while `isSaving` is held true. A benign MspCancelledError
@@ -84,24 +83,12 @@ export function useSaving(): Saving {
      * @param fn the async save work (marshal + MSP writes + persist)
      * @param options optional tab-specific follow-up
      * @returns true when the save ran to the end; false when it failed, was cancelled, or was
-     * refused because another save was already running outside runSave
+     * refused because another save was already running
      */
-    function runSave(fn: () => Promise<void>, options: RunSaveOptions = {}): Promise<boolean> {
-        // A second call while a save is running joins it instead of starting another, so a caller
-        // that awaits the save (the unsaved-changes prompt) settles when the real save does.
-        if (activeSave) {
-            return activeSave;
-        }
+    async function runSave(fn: () => Promise<void>, { onError }: RunSaveOptions = {}): Promise<boolean> {
         if (isSaving.value) {
-            return Promise.resolve(false);
+            return false;
         }
-        activeSave = doSave(fn, options).finally(() => {
-            activeSave = null;
-        });
-        return activeSave;
-    }
-
-    async function doSave(fn: () => Promise<void>, { onError }: RunSaveOptions): Promise<boolean> {
         isSaving.value = true;
         try {
             await fn();

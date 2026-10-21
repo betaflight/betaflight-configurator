@@ -1588,6 +1588,13 @@ export function cancelRebootReconnect() {
     }
 }
 
+// A reboot window that ends without a reconnect (timed out, Auto-Connect off, board unplugged)
+// drops the tab a save-and-reboot was heading for, so a later, unrelated connect opens the
+// remembered tab or Setup instead of jumping to it.
+function dropTabAfterReconnect() {
+    useNavigationStore().tabAfterReconnect = null;
+}
+
 // Drive the disconnect/reconnect cycle for a BLE/manual reboot. The link bounces (or survives)
 // as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
 // reboot dialog is shown.
@@ -1627,6 +1634,7 @@ function rebootReconnect() {
         if (driven && !rebootReconnectAllowed()) {
             rebootReconnectTimerId = false;
             getConnectionState().concludeReboot(false);
+            dropTabAfterReconnect();
             return;
         }
 
@@ -1670,6 +1678,9 @@ function rebootReconnect() {
                 // for): concludeReboot settles to IDLE so normal selection resumes. A kept BLE
                 // link that never made it back to connected is dropped for real here.
                 getConnectionState().concludeReboot(connectionStore.connectionValid);
+                if (!connectionStore.connectionValid) {
+                    dropTabAfterReconnect();
+                }
                 releaseKeptRebootLink();
                 return;
             }

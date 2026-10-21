@@ -25,7 +25,6 @@ import { useConnectionStore } from "../stores/connection";
 import { useNavigationStore } from "../stores/navigation";
 import { getConnectionState } from "./connection_state";
 import { pinia } from "./pinia_instance";
-import { i18n } from "./localization";
 
 /** Returns true while the source holds edits that have not been written to the FC. */
 export type UnsavedChangesSource = () => boolean;
@@ -39,12 +38,6 @@ export type TabSaveAction = () => unknown;
 const sources = new Set<UnsavedChangesSource>();
 
 let tabSave: TabSaveAction | null = null;
-
-/** Where the user is heading: a tab key and, when it is not `connected`, its sidebar mode. */
-export interface LeaveTarget {
-    tab: string;
-    mode?: string;
-}
 
 /**
  * Registers a source of unsaved edits for the active tab.
@@ -73,6 +66,9 @@ export function registerUnsavedChangesForComponent(source: UnsavedChangesSource)
 /**
  * Registers the calling tab's Save action for the lifetime of the component, so the prompt can
  * offer "Save changes". A tab that registers none still gets the prompt, without that button.
+ *
+ * There is a single global slot, so the last component to call this wins. Call it from the tab
+ * component itself, never from a sub-component, which would silently replace the tab's Save.
  */
 export function registerTabSave(save: TabSaveAction): void {
     if (!getCurrentInstance()) {
@@ -96,18 +92,18 @@ export function hasUnsavedChanges(): boolean {
 }
 
 /**
- * Runs the tab's Save, then leaves. A save that fails, or one the user cancels part-way (a port
- * conflict prompt, say), keeps the user on the tab with the edits intact — runSave has already
- * reported the failure. A save that reboots the FC drops the connection;
- * the target tab is then opened once the FC reconnects.
+ * Runs the tab's Save and reports whether the user can now leave. A save that fails, or one the
+ * user cancels part-way (a port conflict prompt, say), keeps the user on the tab with the edits
+ * intact — runSave has already reported the failure. A save that reboots the FC drops the
+ * connection; the target tab is then opened once the FC reconnects.
  */
-async function saveThenLeave(save: TabSaveAction, target: LeaveTarget, proceed: () => void): Promise<void> {
+async function saveThenLeave(save: TabSaveAction, tab: string, mode: string): Promise<boolean> {
     let result: unknown;
     try {
         result = await save();
     } catch (error) {
         console.error("Save before leaving the tab failed:", error);
-        return;
+        return false;
     }
     // A save that reboots the FC cancels its own in-flight MSP request, so runSave resolves false
     // even though the save went through. Inside the reboot window that false is expected; outside
@@ -116,57 +112,55 @@ async function saveThenLeave(save: TabSaveAction, target: LeaveTarget, proceed: 
     // assignment, say), so a save that fails at the last step can leave the tab looking clean.
     const rebooting = getConnectionState().isRebootWindowOpen;
     if (result === false && !rebooting) {
-        return;
+        return false;
     }
     if (rebooting || !useConnectionStore(pinia).connectionValid) {
-        useNavigationStore(pinia).tabAfterReconnect = { tab: target.tab, mode: target.mode ?? "connected" };
-        return;
+        useNavigationStore(pinia).tabAfterReconnect = { tab, mode };
+        return false;
     }
-    if (!hasUnsavedChanges()) {
-        proceed();
-    }
+    return !hasUnsavedChanges();
 }
 
 /**
- * Runs `proceed` straight away when nothing is unsaved; otherwise asks first. The user can save
- * and then leave, leave without saving, or stay. Used for user-driven navigation away from a tab.
+ * Resolves true straight away when nothing is unsaved; otherwise asks first. The user can save
+ * and then leave, leave without saving, or stay. Used for user-driven navigation away from a tab
+ * (see navigateToTab).
  *
  * Leaving without saving only navigates: it does not revert anything a tab has already sent to
  * the FC's RAM (a PID profile switch, reset or copy), so the prompt says "not saved" rather than
  * "discard".
- * @param target the tab `proceed` opens, or the tab and its sidebar mode, kept so a save that
- * reboots can still reach it once the FC reconnects
+ * @param tab the tab the user is heading for, and `mode` its sidebar mode: both are kept so a save
+ * that reboots can still reach it once the FC reconnects
+ * @returns true when the caller should go on to open the tab now
  */
-export function confirmLeaveTab(target: string | LeaveTarget, proceed: () => void): void {
-    const leaveTarget = typeof target === "string" ? { tab: target } : target;
+export function confirmLeaveTab(tab: string, mode = "connected"): Promise<boolean> {
     if (!hasUnsavedChanges()) {
-        proceed();
-        return;
+        return Promise.resolve(true);
     }
     const save = tabSave;
     const dialogStore = useDialogStore(pinia);
-    dialogStore.open(
-        "UnsavedChangesDialog",
-        {
-            title: i18n.getMessage("unsavedChangesTitle"),
-            text: i18n.getMessage("unsavedChangesText"),
-            saveText: i18n.getMessage("unsavedChangesSave"),
-            leaveText: i18n.getMessage("unsavedChangesLeave"),
-            stayText: i18n.getMessage("unsavedChangesStay"),
-            canSave: save !== null,
-        },
-        {
-            save: () => {
-                dialogStore.close();
-                if (save) {
-                    void saveThenLeave(save, leaveTarget, proceed);
-                }
+    return new Promise((resolve) => {
+        dialogStore.open(
+            "UnsavedChangesDialog",
+            { canSave: save !== null },
+            {
+                save: () => {
+                    dialogStore.close();
+                    if (save) {
+                        void saveThenLeave(save, tab, mode).then(resolve);
+                    } else {
+                        resolve(false);
+                    }
+                },
+                leave: () => {
+                    dialogStore.close();
+                    resolve(true);
+                },
+                stay: () => {
+                    dialogStore.close();
+                    resolve(false);
+                },
             },
-            leave: () => {
-                dialogStore.close();
-                proceed();
-            },
-            stay: () => dialogStore.close(),
-        },
-    );
+        );
+    });
 }

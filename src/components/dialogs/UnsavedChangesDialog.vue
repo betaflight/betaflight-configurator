@@ -19,15 +19,15 @@ License along with this software.
 If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-    <UModal :open="open" :title="title" :close="false" :dismissible="false">
+    <UModal :open="open" :title="$t('unsavedChangesTitle')" :close="false" :dismissible="false">
         <template #body>
-            <div v-html="text"></div>
+            <p>{{ $t("unsavedChangesText") }}</p>
         </template>
         <template #footer>
             <div class="flex flex-wrap gap-2 justify-end w-full">
-                <UButton color="neutral" variant="soft" @click="$emit('stay')">{{ stayText }}</UButton>
-                <UButton color="error" variant="soft" @click="$emit('leave')">{{ leaveText }}</UButton>
-                <UButton v-if="canSave" color="primary" @click="$emit('save')">{{ saveText }}</UButton>
+                <UButton color="neutral" variant="soft" @click="$emit('stay')">{{ $t("unsavedChangesStay") }}</UButton>
+                <UButton color="error" variant="soft" @click="$emit('leave')">{{ $t("unsavedChangesLeave") }}</UButton>
+                <UButton v-if="canSave" color="primary" @click="$emit('save')">{{ $t("unsavedChangesSave") }}</UButton>
             </div>
         </template>
     </UModal>
@@ -37,11 +37,6 @@ If not, see <http://www.gnu.org/licenses/>.
 import { ref } from "vue";
 
 defineProps({
-    title: String,
-    text: String,
-    saveText: String,
-    leaveText: String,
-    stayText: String,
     /** False when the tab registered no save action, so only Leave and Stay are offered. */
     canSave: Boolean,
 });

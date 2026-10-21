@@ -82,8 +82,7 @@ import { sidebarItems } from "./sidebar_items";
 import { useVisibleTabs } from "./useVisibleTabs";
 import { useNavigationStore } from "@/stores/navigation";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
-import { switchTab } from "@/js/tab_switch.js";
-import { confirmLeaveTab } from "@/js/unsaved_changes";
+import { navigateToTab } from "@/js/tab_switch.js";
 import { TABS } from "@/js/tab_adapters";
 import DarkTheme, { setDarkTheme } from "@/js/DarkTheme";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
@@ -123,14 +122,7 @@ const visibleItems = computed(() =>
         tooltip: { text: t(item.i18n) },
         onSelect: (event?: Event) => {
             event?.preventDefault?.();
-            const tabKey = item.tab ?? item.key;
-            if (vueTabState.activeTabName === tabKey) {
-                closeMobileSidebar();
-                return;
-            }
-            confirmLeaveTab({ tab: tabKey, mode: item.mode }, () => {
-                switchTab(tabKey, { mode: item.mode, label: t(item.i18n) });
-            });
+            void navigateToTab(item.tab ?? item.key, { mode: item.mode, label: t(item.i18n) });
             closeMobileSidebar();
         },
     })),
@@ -250,20 +242,12 @@ function onSettingSelected(setting: SettingsSearchEntry) {
         return;
     }
 
-    const openSetting = () => {
-        switchTab(setting.tab, {
-            mode: item.mode,
-            label: t(item.i18n),
-        });
-        void focusSetting(setting);
-    };
-
     closeMobileSidebar();
-    if (vueTabState.activeTabName === setting.tab) {
-        openSetting();
-    } else {
-        confirmLeaveTab({ tab: setting.tab, mode: item.mode }, openSetting);
-    }
+    void navigateToTab(setting.tab, { mode: item.mode, label: t(item.i18n) }).then((opened) => {
+        if (opened) {
+            void focusSetting(setting);
+        }
+    });
 }
 
 function toggleDarkMode() {

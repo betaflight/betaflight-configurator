@@ -151,8 +151,7 @@ import { useVisibleTabs } from "../sidebar/useVisibleTabs.js";
 import { useTranslation } from "i18next-vue";
 import semver from "semver";
 import { vueTabState } from "../../js/vue_tab_mounter.js";
-import { switchTab } from "../../js/tab_switch.js";
-import { confirmLeaveTab } from "../../js/unsaved_changes";
+import { navigateToTab } from "../../js/tab_switch.js";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { shortenTargetDisplay, stripVersionDisplay } from "./statusBarText";
 import { API_VERSION_1_46 } from "../../js/data_storage";
@@ -225,14 +224,7 @@ export default defineComponent({
                     icon: item.icon,
                     label: t(item.i18n),
                     active: vueTabState.activeTabName === key,
-                    select: () => {
-                        if (vueTabState.activeTabName === key) {
-                            return;
-                        }
-                        confirmLeaveTab({ tab: key, mode: item.mode }, () =>
-                            switchTab(key, { mode: item.mode, label: t(item.i18n) }),
-                        );
-                    },
+                    select: () => void navigateToTab(key, { mode: item.mode, label: t(item.i18n) }),
                 };
             }),
         );

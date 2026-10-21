@@ -774,6 +774,47 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
+    it("drops the tab a save was reopening when the reboot window times out without a reconnect", () => {
+        const navigationStore = useNavigationStore();
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
+            DeviceHandler.devicePicker.autoConnect = true;
+            establishConnection();
+            navigationStore.tabAfterReconnect = { tab: "ports", mode: "connected" };
+
+            reinitializeConnection();
+
+            // Still waiting for the FC: the target is kept for the reconnect.
+            vi.advanceTimersByTime(5000);
+            expect(navigationStore.tabAfterReconnect).toEqual({ tab: "ports", mode: "connected" });
+
+            // The FC never answers, so the window runs out and a later connect opens the default.
+            vi.advanceTimersByTime(30000);
+            expect(navigationStore.tabAfterReconnect).toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("drops the tab a save was reopening when Auto-Connect is off and nothing will reconnect", () => {
+        const navigationStore = useNavigationStore();
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
+            DeviceHandler.devicePicker.autoConnect = false;
+            establishConnection();
+            navigationStore.tabAfterReconnect = { tab: "ports", mode: "connected" };
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500);
+
+            expect(navigationStore.tabAfterReconnect).toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
     it("an intentional disconnect during the reboot window cancels the reconnect retry", () => {
         vi.useFakeTimers();
         try {

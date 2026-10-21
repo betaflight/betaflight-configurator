@@ -29,6 +29,7 @@ import { sidebarItems } from "../components/sidebar/sidebar_items";
 import { useConnectionStore } from "../stores/connection";
 import { useNavigationStore } from "../stores/navigation";
 import { useAuthStore } from "../stores/auth";
+import { confirmLeaveTab } from "./unsaved_changes";
 
 export interface SwitchTabOptions {
     /**
@@ -157,6 +158,22 @@ export function switchTab(tabKey: string, options: SwitchTabOptions = {}): boole
     });
 
     return true;
+}
+
+/**
+ * Opens a tab the user picked (sidebar, status bar, account menu, settings search). Picking the
+ * tab already open does nothing; leaving a tab with unsaved changes asks first (confirmLeaveTab).
+ * @returns true when the tab is open, or its switch has started, once this resolves; false when
+ * the user stayed, a save is reopening it after a reboot, or switchTab refused
+ */
+export async function navigateToTab(tabKey: string, options: SwitchTabOptions = {}): Promise<boolean> {
+    if (vueTabState.activeTabName === tabKey) {
+        return true;
+    }
+    if (!(await confirmLeaveTab(tabKey, options.mode))) {
+        return false;
+    }
+    return switchTab(tabKey, options);
 }
 
 /**
