@@ -649,6 +649,7 @@ import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 import { useNavigationStore } from "@/stores/navigation";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
@@ -1368,6 +1369,7 @@ const saveConfig = (withReboot = false) =>
 
         needReboot.value = false;
     });
+registerTabSave(() => saveConfig(needReboot.value));
 
 // Model preview
 function initModelPreview() {

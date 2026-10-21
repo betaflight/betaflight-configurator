@@ -144,7 +144,7 @@ import { gui_log } from "@/js/gui_log";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { runTabLoad } from "@/composables/useTabLoad";
-import { registerUnsavedChangesForComponent } from "@/js/unsaved_changes";
+import { registerTabSave, registerUnsavedChangesForComponent } from "@/js/unsaved_changes";
 import { CopyProfileType, usePidTuningMsp } from "@/composables/pidTuning/usePidTuningMsp";
 
 /** What CopyProfileDialog confirms with: the selected target profile and/or rate profile. */
@@ -482,6 +482,7 @@ function save() {
         pidTuningStore.markProfileClean();
     });
 }
+registerTabSave(() => save());
 
 async function refresh() {
     try {

@@ -82,6 +82,9 @@ export const useNavigationStore = defineStore("navigation", () => {
     /** A tab to open once the current connection has been torn down (set to reach the flasher). */
     const pendingTab = ref<string | null>(null);
 
+    /** A tab to open on the next connect, in place of the default (set by a save that reboots). */
+    const tabAfterReconnect = ref<string | null>(null);
+
     /** The tabs the sidebar shows and switchTab accepts. */
     const allowedTabs = ref<string[]>([...DEFAULT_ALLOWED_TABS_WHEN_DISCONNECTED]);
 
@@ -98,6 +101,7 @@ export const useNavigationStore = defineStore("navigation", () => {
         activeTab,
         tabSwitchInProgress,
         pendingTab,
+        tabAfterReconnect,
         allowedTabs,
         expertMode,
         optionsDialogOpen,

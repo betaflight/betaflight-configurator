@@ -626,7 +626,7 @@ import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import { runTabLoad } from "@/composables/useTabLoad";
-import { registerUnsavedChangesForComponent } from "@/js/unsaved_changes";
+import { registerTabSave, registerUnsavedChangesForComponent } from "@/js/unsaved_changes";
 
 // From API 1.49 both live on the OSD parameter group. The bit osd_uart sets in the synthesised
 // mask follows the display port device, and on MSP DisplayPort it is the shared MSP bit, so the
@@ -698,7 +698,7 @@ import { API_VERSION_1_48 } from "@/js/data_storage";
 import { useConnectionStore } from "@/stores/connection";
 
 const osdStore = useOsdStore();
-registerUnsavedChangesForComponent(() => osdStore.dirty);
+registerUnsavedChangesForComponent(() => portsOrConfigDirty.value);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
 const { hasBuildOption } = useBuildOptions();
@@ -1601,6 +1601,7 @@ const saveAndRebootConfig = async () => {
 
 // The primary button does what its label says: with a port change pending it saves and reboots.
 const savePrimaryAction = () => (portSettingsChanged.value ? saveAndRebootConfig() : saveConfig());
+registerTabSave(() => savePrimaryAction());
 
 // Font Manager
 const fontCharacterUrls = computed(() => {

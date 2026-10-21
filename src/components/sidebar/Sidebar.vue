@@ -83,7 +83,7 @@ import { useVisibleTabs } from "./useVisibleTabs";
 import { useNavigationStore } from "@/stores/navigation";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
 import { switchTab } from "@/js/tab_switch.js";
-import { confirmDiscardUnsavedChanges } from "@/js/unsaved_changes";
+import { confirmLeaveTab } from "@/js/unsaved_changes";
 import { TABS } from "@/js/tab_adapters";
 import DarkTheme, { setDarkTheme } from "@/js/DarkTheme";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
@@ -128,7 +128,7 @@ const visibleItems = computed(() =>
                 closeMobileSidebar();
                 return;
             }
-            confirmDiscardUnsavedChanges(() => {
+            confirmLeaveTab(tabKey, () => {
                 switchTab(tabKey, { mode: item.mode, label: t(item.i18n) });
             });
             closeMobileSidebar();
@@ -262,7 +262,7 @@ function onSettingSelected(setting: SettingsSearchEntry) {
     if (vueTabState.activeTabName === setting.tab) {
         openSetting();
     } else {
-        confirmDiscardUnsavedChanges(openSetting);
+        confirmLeaveTab(setting.tab, openSetting);
     }
 }
 

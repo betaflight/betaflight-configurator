@@ -150,17 +150,23 @@ export function usePortsConfiguration(
 
         updateFeatures();
 
-        const saveEeprom = () => {
-            void saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSave")));
-        };
+        // Resolves once the reboot has started, so a caller can wait for the save to go through.
+        return new Promise<void>((resolve) => {
+            const saveEeprom = () => {
+                void saveAndReboot().then(() => {
+                    gui_log(i18n.getMessage("portsEepromSave"));
+                    resolve();
+                });
+            };
 
-        mspHelper.sendSerialConfig(() => {
-            MSP.send_message(
-                MSPCodes.MSP_SET_FEATURE_CONFIG,
-                mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
-                false,
-                saveEeprom,
-            );
+            mspHelper.sendSerialConfig(() => {
+                MSP.send_message(
+                    MSPCodes.MSP_SET_FEATURE_CONFIG,
+                    mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                    false,
+                    saveEeprom,
+                );
+            });
         });
     };
 

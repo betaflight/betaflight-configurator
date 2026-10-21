@@ -858,10 +858,13 @@
         "message": "Unsaved changes"
     },
     "unsavedChangesText": {
-        "message": "This tab has changes that have not been saved to the flight controller. Leave the tab and discard them?"
+        "message": "This tab has changes that have not been saved yet."
     },
-    "unsavedChangesDiscard": {
-        "message": "Discard changes"
+    "unsavedChangesSave": {
+        "message": "Save changes"
+    },
+    "unsavedChangesLeave": {
+        "message": "Leave without saving"
     },
     "unsavedChangesStay": {
         "message": "Stay on tab"

@@ -341,6 +341,7 @@ import {
     SdcardState,
 } from "../../composables/onboardLogging/useOnboardLoggingData";
 import { useOnboardLoggingSave } from "../../composables/onboardLogging/useOnboardLoggingSave";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const BLOCK_SIZE = 4096;
 
@@ -683,6 +684,7 @@ export default defineComponent({
                 markClean(savedSnapshot);
             });
         }
+        registerTabSave(() => saveSettings());
 
         function askToEraseFlash() {
             if (dataflashUsedSize.value === 0) {

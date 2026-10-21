@@ -158,12 +158,24 @@ export function switchTab(tabKey: string, options: SwitchTabOptions = {}): boole
     return true;
 }
 
-/** Opens the remembered last tab after connecting, when that option is on and the tab is allowed, else Setup. */
+/**
+ * Opens the tab a save-and-reboot was leaving for, else the remembered last tab when that option
+ * is on and the tab is allowed, else Setup.
+ */
 export function selectDefaultTabWhenConnected(): void {
+    const navigationStore = useNavigationStore();
+    const tabAfterReconnect = navigationStore.tabAfterReconnect;
+    navigationStore.tabAfterReconnect = null;
+    if (tabAfterReconnect && navigationStore.allowedTabs.includes(tabAfterReconnect)) {
+        if (switchTab(tabAfterReconnect, { mode: "connected" })) {
+            return;
+        }
+    }
+
     const result = getConfig(["rememberLastTab", "lastTab"]);
     const lastTab = typeof result.lastTab === "string" ? result.lastTab.substring(4) : "";
     const tabKey =
-        result.rememberLastTab && lastTab && useNavigationStore().allowedTabs.includes(lastTab) ? lastTab : "setup";
+        result.rememberLastTab && lastTab && navigationStore.allowedTabs.includes(lastTab) ? lastTab : "setup";
 
     if (!switchTab(tabKey, { mode: "connected" })) {
         switchTab("setup", { mode: "connected" });

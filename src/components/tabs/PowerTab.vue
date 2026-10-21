@@ -389,6 +389,7 @@ import { i18n } from "../../js/localization";
 import { usePower } from "../../composables/usePower";
 import { useInterval } from "../../composables/useInterval";
 import { useSaving } from "../../composables/useSaving";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 export default defineComponent({
     name: "PowerTab",
@@ -501,6 +502,7 @@ export default defineComponent({
                 await saveConfig();
                 await loadData();
             });
+        registerTabSave(() => handleSave());
 
         const openCalibrationManager = () => {
             sourceschanged.value = false;
