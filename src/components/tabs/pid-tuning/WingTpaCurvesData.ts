@@ -20,8 +20,7 @@
  */
 
 import type { WingConfig } from "../../../stores/fc.types";
-
-import { getCssVar } from "../../../js/utils/common";
+import { getCssVar } from "@/js/utils/cssVar";
 
 export interface TpaCurvePoint {
     /** Airspeed in m/s. */

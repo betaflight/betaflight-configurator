@@ -1,5 +1,6 @@
-import { getCssVar } from "../../../js/utils/common";
-export function getPsasHyperbolicCurves(psasConfig, curvesState) {
+import type { PsasConfig, PsasCurvesState } from "../../../stores/fc.types";
+import { getCssVar } from "@/js/utils/cssVar";
+export function getPsasHyperbolicCurves(psasConfig: PsasConfig, curvesState: PsasCurvesState) {
     // The list of charts curves
     const chartCurves = [];
 
@@ -49,7 +50,7 @@ export function getPsasHyperbolicCurves(psasConfig, curvesState) {
 }
 
 // Hyperbolic curve definition
-function generatePsasCurve(refSpeed, power, minLimit, maxLimit) {
+function generatePsasCurve(refSpeed: number, power: number, minLimit: number, maxLimit: number) {
     if (!(refSpeed > 0 && power > 0 && minLimit > 0 && maxLimit > 0)) {
         return [];
     }

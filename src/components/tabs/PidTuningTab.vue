@@ -745,7 +745,7 @@ onMounted(async () => {
 
 /* ── PID titlebar ─────────────────────────────────────────────────── */
 .tab-pid_tuning .pid_titlebar {
-    color: #fff;
+    color: white;
     background-color: var(--surface-300);
     border-start-start-radius: 3px;
     border-start-end-radius: 3px;
@@ -1052,7 +1052,7 @@ onMounted(async () => {
     width: 23px;
     height: 23px;
     border-radius: 50%;
-    background: #ffbb2a;
+    background: var(--primary-500);
     border: solid 1px var(--surface-300);
     cursor: pointer;
     position: relative;
@@ -1202,7 +1202,7 @@ onMounted(async () => {
 
 /* ── Rates logo ───────────────────────────────────────────────────── */
 .tab-pid_tuning .cf .rates_logo_bg {
-    background-color: #ebeced;
+    background-color: var(--surface-300);
 }
 .tab-pid_tuning .rates_logo_div {
     margin-top: -10%;
@@ -1218,11 +1218,11 @@ onMounted(async () => {
 
 /* ── Fancy header (not under .tab-pid_tuning) ─────────────────────── */
 .fancy.header {
-    background-color: #d6d6d6;
+    background-color: var(--surface-400);
     padding-top: 8px;
     font-size: 12px;
     border-bottom: 1px solid var(--surface-500);
-    color: #595959;
+    color: var(--surface-900);
     background-image: linear-gradient(
         315deg,
         rgba(255, 255, 255, 0.2) 10%,
@@ -1294,13 +1294,13 @@ onMounted(async () => {
 
 /* ── PID row colors (not under .tab-pid_tuning) ──────────────────── */
 .pid_roll {
-    background-color: #e24761;
+    background-color: var(--color-axis-roll);
 }
 .pid_pitch {
-    background-color: #49c747;
+    background-color: var(--color-axis-pitch);
 }
 .pid_yaw {
-    background-color: #477ac7;
+    background-color: var(--color-axis-yaw);
 }
 .pid_roll,
 .pid_pitch,
@@ -1364,11 +1364,11 @@ onMounted(async () => {
     }
     .tab-pid_tuning .sliderHeaders {
         height: 18px;
-        background-color: #d6d6d6;
+        background-color: var(--surface-400);
         line-height: 13px;
         font-size: 12px;
         border-bottom: 1px solid var(--surface-500);
-        color: #595959;
+        color: var(--surface-900);
         font-weight: normal;
         background-image: linear-gradient(
             315deg,
@@ -1396,7 +1396,7 @@ onMounted(async () => {
         );
     }
     .tab-pid_tuning .sliderHeaders span {
-        color: #595959;
+        color: var(--surface-900);
     }
     .tab-pid_tuning .sliderLabels tr.sliderHeaders td:first-child {
         text-align: start;

@@ -684,6 +684,7 @@ import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WingCurvesChart from "./WingCurvesChart.vue";
 import getPsasHyperbolicCurves from "./WingPsasCurvesData";
+import type { PsasCurvesState } from "../../../stores/fc.types";
 
 const { t } = useTranslation();
 const fcStore = useFlightControllerStore();
@@ -1116,7 +1117,7 @@ const psasTrimmingTauReset = computed({
 
 // PSAS config - reactive reference
 const chartCurves = computed(() => {
-    const curvesState = {
+    const curvesState: PsasCurvesState = {
         showMain: true,
         mainActive: psasSpeedCurvesMainEnabled.value,
         showStick: true,

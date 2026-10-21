@@ -21,7 +21,7 @@
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import getTpaHyperbolicCurve from "../../src/components/tabs/pid-tuning/WingTpaCurvesData";
-import { getCssVar } from "../../src/js/utils/common";
+import { getCssVar } from "../../src/js/utils/cssVar";
 import type { WingConfig } from "../../src/stores/fc.types";
 
 // Reference values were computed by running the JavaScript version of this module.

@@ -825,6 +825,15 @@ export interface PsasConfig {
     psas_trim_tau_reset: number;
 }
 
+export interface PsasCurvesState {
+    showMain: boolean;
+    mainActive: boolean;
+    showStick: boolean;
+    stickActive: boolean;
+    showRollStick: boolean;
+    rollStickActive: boolean;
+}
+
 export interface FcState {
     adjustmentRanges: AdjustmentRange[];
     advancedTuning: AdvancedTuning;

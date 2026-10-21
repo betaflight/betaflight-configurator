@@ -38,7 +38,7 @@
                     </div>
 
                     <!-- Roll -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs">
                         {{ $t("controlAxisRoll") }}
                     </div>
                     <UInputNumber
@@ -91,7 +91,7 @@
                     </div>
 
                     <!-- Pitch -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs">
                         {{ $t("controlAxisPitch") }}
                     </div>
                     <UInputNumber
@@ -144,7 +144,7 @@
                     </div>
 
                     <!-- Yaw -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs">
                         {{ $t("controlAxisYaw") }}
                     </div>
                     <UInputNumber
@@ -322,6 +322,7 @@ import raceflightLogo from "@/images/rate_logos/raceflight.svg";
 import kissLogo from "@/images/rate_logos/kiss.svg";
 import actualLogo from "@/images/rate_logos/actual.svg";
 import quickratesLogo from "@/images/rate_logos/quickrates.svg";
+import { getCssVar } from "@/js/utils/cssVar";
 
 const { t } = useTranslation();
 const fcStore = useFlightControllerStore();
@@ -861,21 +862,21 @@ function drawRateCurves() {
 
     // Draw Roll curve (red)
     ctx.save();
-    ctx.strokeStyle = "#ff0000";
+    ctx.strokeStyle = getCssVar("--rates-curve-roll");
     ctx.translate(0, 0);
     rateCurve.draw(axisRateCurveParams(rates, "roll"), maxAngularVel, ctx);
     ctx.restore();
 
     // Draw Pitch curve (green)
     ctx.save();
-    ctx.strokeStyle = "#00ff00";
+    ctx.strokeStyle = getCssVar("--rates-curve-pitch");
     ctx.translate(0, -4);
     rateCurve.draw(axisRateCurveParams(rates, "pitch"), maxAngularVel, ctx);
     ctx.restore();
 
     // Draw Yaw curve (blue)
     ctx.save();
-    ctx.strokeStyle = "#0000ff";
+    ctx.strokeStyle = getCssVar("--rates-curve-yaw");
     ctx.translate(0, 4);
     rateCurve.draw(axisRateCurveParams(rates, "yaw"), maxAngularVel, ctx);
     ctx.restore();
@@ -885,22 +886,22 @@ function drawRateCurves() {
     nextTick(() => updateRatesLabels());
 }
 
-// Balloon label configuration — RGB axis palette (Roll=#e24761, Pitch=#49c747, Yaw=#477ac7)
+// Balloon label configuration: the axis colours (--color-axis-*) at 40% and 60%
 const BALLOON_COLORS: Record<"roll" | "pitch" | "yaw", BalloonColors> = {
     roll: {
         color: "rgba(226,71,97,0.4)",
         border: "rgba(226,71,97,0.6)",
-        text: "#000000",
+        text: "black",
     },
     pitch: {
         color: "rgba(73,199,71,0.4)",
         border: "rgba(73,199,71,0.6)",
-        text: "#000000",
+        text: "black",
     },
     yaw: {
         color: "rgba(71,122,199,0.4)",
         border: "rgba(71,122,199,0.6)",
-        text: "#000000",
+        text: "black",
     },
 };
 
@@ -1047,7 +1048,7 @@ function updateRatesLabels() {
             axisRateCurveParams(rates, "roll"),
             maxRateRounded,
             ctx,
-            "#FF8080",
+            getCssVar("--rates-stick-roll"),
         );
 
         const currentPitchRate = rateCurve.drawStickPosition(
@@ -1055,7 +1056,7 @@ function updateRatesLabels() {
             axisRateCurveParams(rates, "pitch"),
             maxRateRounded,
             ctx,
-            "#80FF80",
+            getCssVar("--rates-stick-pitch"),
         );
 
         const currentYawRate = rateCurve.drawStickPosition(
@@ -1063,7 +1064,7 @@ function updateRatesLabels() {
             axisRateCurveParams(rates, "yaw"),
             maxRateRounded,
             ctx,
-            "#8080FF",
+            getCssVar("--rates-stick-yaw"),
         );
 
         ctx.restore();
@@ -1144,7 +1145,7 @@ function drawAxisLabel(
     align?: CanvasRenderingContext2D["textAlign"],
     color?: string,
 ) {
-    ctx.fillStyle = color || "#888888";
+    ctx.fillStyle = color || getCssVar("--rates-label-color");
     ctx.textAlign = align || "center";
     ctx.fillText(text, x, y);
 }
@@ -1313,7 +1314,7 @@ function drawAngleModeLabels(
 }
 
 function drawAxes(ctx: CanvasRenderingContext2D, width: number, height: number) {
-    ctx.strokeStyle = "#888888";
+    ctx.strokeStyle = getCssVar("--rates-label-color");
     ctx.lineWidth = 4;
 
     // Horizontal center line
@@ -1503,7 +1504,7 @@ function drawThrottlePositionIndicator(
     context.save();
     const fontSize = 10;
     context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
-    context.fillStyle = "#888888";
+    context.fillStyle = getCssVar("--rates-label-color");
 
     const realInputThr = thrPercent * 100;
     const outputThr = Math.max(0, Math.min(100, (1 - thrpos.y / canvasHeight) * 100));
@@ -1586,7 +1587,7 @@ function drawThrottleCurve() {
 
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     context.lineWidth = 2;
-    context.strokeStyle = "#ffbb00";
+    context.strokeStyle = getCssVar("--rates-throttle-curve");
 
     const thrPercent = fcStore.rc?.channels?.[3]
         ? Math.max(0, Math.min(1, (fcStore.rc.channels[3] - 1000) / 1000))

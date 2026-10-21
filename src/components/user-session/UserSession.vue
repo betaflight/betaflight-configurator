@@ -423,7 +423,7 @@ export default defineComponent({
 }
 </style>
 
-<style scoped>
+<style lang="less">
 .waiting-container {
     display: flex;
     flex-direction: column;
@@ -431,22 +431,23 @@ export default defineComponent({
     justify-content: center;
     min-height: 120px;
     gap: 12px;
+    .waiting-spinner {
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        border-top: 4px solid var(--primary-500);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: user-session-spin 1s linear infinite;
+    }
+    .waiting-message {
+        font-size: 14px;
+        color: var(--text);
+        margin: 0;
+        text-align: center;
+    }
 }
-.waiting-spinner {
-    border: 4px solid rgba(255, 255, 255, 0.2);
-    border-top: 4px solid var(--primary-500);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-}
-.waiting-message {
-    font-size: 14px;
-    color: var(--text);
-    margin: 0;
-    text-align: center;
-}
-@keyframes spin {
+
+@keyframes user-session-spin {
     0% {
         transform: rotate(0deg);
     }

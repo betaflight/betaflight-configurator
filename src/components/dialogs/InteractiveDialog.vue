@@ -2,6 +2,7 @@
     <UModal
         :open="open"
         :title="title"
+        class="interactive-dialog"
         :close="false"
         :dismissible="false"
         :ui="{ content: 'max-w-3xl w-[calc(100vw-2rem)] h-[80vh]' }"
@@ -69,26 +70,28 @@ defineExpose({
 });
 </script>
 
-<style scoped>
-.cli-response {
-    min-height: 0;
-    padding: 0.5rem 0.75rem;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 11px;
-    line-height: 1.4;
-    white-space: pre-line;
-    resize: none;
-    color: var(--text);
-    background-color: var(--surface-0);
-    border: 1px solid var(--subtleAccent);
-    border-radius: 4px;
-}
+<style lang="less">
+.interactive-dialog {
+    .cli-response {
+        min-height: 0;
+        padding: 0.5rem 0.75rem;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 11px;
+        line-height: 1.4;
+        white-space: pre-line;
+        resize: none;
+        color: var(--text);
+        background-color: var(--surface-0);
+        border: 1px solid var(--subtleAccent);
+        border-radius: 4px;
+    }
 
-.cli-command {
-    padding: 0.4rem 0.75rem;
-    color: var(--text);
-    background-color: var(--surface-0);
-    border: 1px solid var(--subtleAccent);
-    border-radius: 4px;
+    .cli-command {
+        padding: 0.4rem 0.75rem;
+        color: var(--text);
+        background-color: var(--surface-0);
+        border: 1px solid var(--subtleAccent);
+        border-radius: 4px;
+    }
 }
 </style>
