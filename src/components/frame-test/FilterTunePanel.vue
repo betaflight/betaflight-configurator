@@ -39,14 +39,14 @@
                 <span class="text-sm font-medium text-highlighted">{{ $t("filterTuneHeatTitle") }}</span>
                 <span v-if="heatCustom" class="text-xs text-muted tabular-nums">{{ heatKelvin }} K</span>
             </div>
-            <!-- blue (little noise) to orange (little delay) -->
+            <!-- blue (little noise), green, orange (little delay) -->
             <USlider
                 v-model="heatIndex"
                 :min="0"
                 :max="2"
                 :step="1"
                 :disabled="filterTune.busy"
-                :ui="{ track: 'bg-gradient-to-r from-info to-warning', range: 'bg-transparent' }"
+                :ui="{ track: 'bg-gradient-to-r from-info via-success to-warning', range: 'bg-transparent' }"
                 @change="onHeat"
             />
             <div class="flex justify-between text-xs">
