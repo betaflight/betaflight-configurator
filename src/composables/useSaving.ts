@@ -61,7 +61,8 @@ export interface RunSaveOptions {
 
 export interface Saving {
     isSaving: Ref<boolean>;
-    runSave: (fn: () => Promise<void>, options?: RunSaveOptions) => Promise<void>;
+    /** Resolves true when the save ran to the end, false when it failed or was cancelled. */
+    runSave: (fn: () => Promise<void>, options?: RunSaveOptions) => Promise<boolean>;
 }
 
 /**
@@ -71,7 +72,7 @@ export interface Saving {
  */
 export function useSaving(): Saving {
     const isSaving = ref(false);
-    let activeSave: Promise<void> | null = null;
+    let activeSave: Promise<boolean> | null = null;
 
     /**
      * Run one save operation while `isSaving` is held true. A benign MspCancelledError
@@ -82,15 +83,17 @@ export function useSaving(): Saving {
      * rollback, re-enabling controls) — it does not need to log or notify again.
      * @param fn the async save work (marshal + MSP writes + persist)
      * @param options optional tab-specific follow-up
+     * @returns true when the save ran to the end; false when it failed, was cancelled, or was
+     * refused because another save was already running outside runSave
      */
-    function runSave(fn: () => Promise<void>, options: RunSaveOptions = {}): Promise<void> {
+    function runSave(fn: () => Promise<void>, options: RunSaveOptions = {}): Promise<boolean> {
         // A second call while a save is running joins it instead of starting another, so a caller
         // that awaits the save (the unsaved-changes prompt) settles when the real save does.
         if (activeSave) {
             return activeSave;
         }
         if (isSaving.value) {
-            return Promise.resolve();
+            return Promise.resolve(false);
         }
         activeSave = doSave(fn, options).finally(() => {
             activeSave = null;
@@ -98,17 +101,18 @@ export function useSaving(): Saving {
         return activeSave;
     }
 
-    async function doSave(fn: () => Promise<void>, { onError }: RunSaveOptions): Promise<void> {
+    async function doSave(fn: () => Promise<void>, { onError }: RunSaveOptions): Promise<boolean> {
         isSaving.value = true;
         try {
             await fn();
+            return true;
         } catch (e) {
             // A tab switch, or the reboot/disconnect that a Save-and-Reboot triggers, clears the
             // MSP queue and cancels the in-flight request. The save itself already went through (or
             // the user navigated away), so this is not a real failure — don't log it or surface a
             // "save failed" notification to the caller.
             if (isMspCancelled(e)) {
-                return;
+                return false;
             }
             // One user-visible failure path for every save flow (#5276): the console keeps the
             // details, the log toast tells the user the configuration did not stick — in the
@@ -116,6 +120,7 @@ export function useSaving(): Saving {
             console.error("Save failed:", e);
             gui_log(saveFailureMessageOf(e) ?? i18n.getMessage("configurationSaveFailed"));
             onError?.(e);
+            return false;
         } finally {
             isSaving.value = false;
         }

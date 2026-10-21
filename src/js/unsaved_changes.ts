@@ -30,12 +30,21 @@ import { i18n } from "./localization";
 /** Returns true while the source holds edits that have not been written to the FC. */
 export type UnsavedChangesSource = () => boolean;
 
-/** The active tab's Save action: the same one its Save button runs. It may return a promise. */
+/**
+ * The active tab's Save action: the same one its Save button runs. It may return a promise; one
+ * that resolves false (as runSave does on failure) keeps the user on the tab.
+ */
 export type TabSaveAction = () => unknown;
 
 const sources = new Set<UnsavedChangesSource>();
 
 let tabSave: TabSaveAction | null = null;
+
+/** Where the user is heading: a tab key and, when it is not `connected`, its sidebar mode. */
+export interface LeaveTarget {
+    tab: string;
+    mode?: string;
+}
 
 /**
  * Registers a source of unsaved edits for the active tab.
@@ -88,19 +97,26 @@ export function hasUnsavedChanges(): boolean {
 
 /**
  * Runs the tab's Save, then leaves. A save that fails, or one the user cancels part-way (a port
- * conflict prompt, say), leaves the tab dirty, so the user stays on it with the edits intact —
- * runSave has already reported the failure. A save that reboots the FC drops the connection;
+ * conflict prompt, say), keeps the user on the tab with the edits intact — runSave has already
+ * reported the failure. A save that reboots the FC drops the connection;
  * the target tab is then opened once the FC reconnects.
  */
-async function saveThenLeave(save: TabSaveAction, targetTab: string, proceed: () => void): Promise<void> {
+async function saveThenLeave(save: TabSaveAction, target: LeaveTarget, proceed: () => void): Promise<void> {
+    let result: unknown;
     try {
-        await save();
+        result = await save();
     } catch (error) {
         console.error("Save before leaving the tab failed:", error);
         return;
     }
     if (getConnectionState().isRebootWindowOpen || !useConnectionStore(pinia).connectionValid) {
-        useNavigationStore(pinia).tabAfterReconnect = targetTab;
+        useNavigationStore(pinia).tabAfterReconnect = { tab: target.tab, mode: target.mode ?? "connected" };
+        return;
+    }
+    // runSave resolves false on failure. Checked as well as the dirty state, because some steps
+    // mark their part clean before the EEPROM write (a port assignment, say), so a save that
+    // fails at the last step can leave the tab looking clean.
+    if (result === false) {
         return;
     }
     if (!hasUnsavedChanges()) {
@@ -115,9 +131,11 @@ async function saveThenLeave(save: TabSaveAction, targetTab: string, proceed: ()
  * Leaving without saving only navigates: it does not revert anything a tab has already sent to
  * the FC's RAM (a PID profile switch, reset or copy), so the prompt says "not saved" rather than
  * "discard".
- * @param targetTab the tab `proceed` opens, kept so a save that reboots can still reach it
+ * @param target the tab `proceed` opens, or the tab and its sidebar mode, kept so a save that
+ * reboots can still reach it once the FC reconnects
  */
-export function confirmLeaveTab(targetTab: string, proceed: () => void): void {
+export function confirmLeaveTab(target: string | LeaveTarget, proceed: () => void): void {
+    const leaveTarget = typeof target === "string" ? { tab: target } : target;
     if (!hasUnsavedChanges()) {
         proceed();
         return;
@@ -138,7 +156,7 @@ export function confirmLeaveTab(targetTab: string, proceed: () => void): void {
             save: () => {
                 dialogStore.close();
                 if (save) {
-                    void saveThenLeave(save, targetTab, proceed);
+                    void saveThenLeave(save, leaveTarget, proceed);
                 }
             },
             leave: () => {

@@ -28,6 +28,7 @@ import { mountVueTab, vueTabState } from "./vue_tab_mounter";
 import { sidebarItems } from "../components/sidebar/sidebar_items";
 import { useConnectionStore } from "../stores/connection";
 import { useNavigationStore } from "../stores/navigation";
+import { useAuthStore } from "../stores/auth";
 
 export interface SwitchTabOptions {
     /**
@@ -164,10 +165,13 @@ export function switchTab(tabKey: string, options: SwitchTabOptions = {}): boole
  */
 export function selectDefaultTabWhenConnected(): void {
     const navigationStore = useNavigationStore();
-    const tabAfterReconnect = navigationStore.tabAfterReconnect;
+    const pending = navigationStore.tabAfterReconnect;
     navigationStore.tabAfterReconnect = null;
-    if (tabAfterReconnect && navigationStore.allowedTabs.includes(tabAfterReconnect)) {
-        if (switchTab(tabAfterReconnect, { mode: "connected" })) {
+    if (pending) {
+        // Account tabs are not in the connected allowed list; they need the user still signed in.
+        const allowed =
+            pending.mode === "loggedin" ? useAuthStore().isLoggedIn : navigationStore.allowedTabs.includes(pending.tab);
+        if (allowed && switchTab(pending.tab, { mode: pending.mode })) {
             return;
         }
     }

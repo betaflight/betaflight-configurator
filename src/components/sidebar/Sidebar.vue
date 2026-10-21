@@ -128,7 +128,7 @@ const visibleItems = computed(() =>
                 closeMobileSidebar();
                 return;
             }
-            confirmLeaveTab(tabKey, () => {
+            confirmLeaveTab({ tab: tabKey, mode: item.mode }, () => {
                 switchTab(tabKey, { mode: item.mode, label: t(item.i18n) });
             });
             closeMobileSidebar();
@@ -262,7 +262,7 @@ function onSettingSelected(setting: SettingsSearchEntry) {
     if (vueTabState.activeTabName === setting.tab) {
         openSetting();
     } else {
-        confirmLeaveTab(setting.tab, openSetting);
+        confirmLeaveTab({ tab: setting.tab, mode: item.mode }, openSetting);
     }
 }
 

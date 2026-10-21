@@ -265,7 +265,10 @@ export default defineComponent({
                     .map((item) => ({
                         label: i18n.getMessage(item.i18n),
                         icon: item.icon,
-                        onSelect: () => confirmLeaveTab(item.key, () => switchTab(item.key, { mode: item.mode })),
+                        onSelect: () =>
+                            confirmLeaveTab({ tab: item.key, mode: item.mode }, () =>
+                                switchTab(item.key, { mode: item.mode }),
+                            ),
                     })),
                 trailingItems,
             );

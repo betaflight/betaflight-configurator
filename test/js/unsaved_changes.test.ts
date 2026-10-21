@@ -19,13 +19,13 @@ function listener(name: string): () => void {
 }
 
 /** A tab with a dirty flag and a registered Save action. */
-function mountSavingTab(save: () => Promise<void>) {
+function mountSavingTab(save: () => Promise<unknown>) {
     const mounted = mountDirtyTab(save);
     return mounted;
 }
 
 /** A tab-like component whose dirty flag is driven from the test. */
-function mountDirtyTab(save?: () => Promise<void>) {
+function mountDirtyTab(save?: () => Promise<unknown>) {
     const state = reactive({ value: 1 });
     let tracker!: ReturnType<typeof useDirtyState>;
     const wrapper = mount(
@@ -159,8 +159,41 @@ describe("unsaved changes", () => {
         await flushPromises();
 
         expect(proceed).not.toHaveBeenCalled();
-        expect(navigationStore.tabAfterReconnect).toBe("ports");
+        expect(navigationStore.tabAfterReconnect).toEqual({ tab: "ports", mode: "connected" });
         navigationStore.tabAfterReconnect = null;
+        wrapper.unmount();
+    });
+
+    it("keeps the sidebar mode of the target for after the reconnect", async () => {
+        const connectionStore = useConnectionStore(pinia);
+        const navigationStore = useNavigationStore(pinia);
+        const { state, wrapper } = mountSavingTab(async () => {
+            connectionStore.connectionValid = false;
+        });
+        state.value = 2;
+
+        confirmLeaveTab({ tab: "user_profile", mode: "loggedin" }, vi.fn());
+        listener("save")();
+        await flushPromises();
+
+        expect(navigationStore.tabAfterReconnect).toEqual({ tab: "user_profile", mode: "loggedin" });
+        navigationStore.tabAfterReconnect = null;
+        wrapper.unmount();
+    });
+
+    it("stays on the tab when the save reports failure, even if it looks clean", async () => {
+        const { state, tracker, wrapper } = mountSavingTab(async () => {
+            tracker.markClean();
+            return false;
+        });
+        state.value = 2;
+        const proceed = vi.fn();
+
+        confirmLeaveTab("ports", proceed);
+        listener("save")();
+        await flushPromises();
+
+        expect(proceed).not.toHaveBeenCalled();
         wrapper.unmount();
     });
 });

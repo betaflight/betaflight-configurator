@@ -229,7 +229,9 @@ export default defineComponent({
                         if (vueTabState.activeTabName === key) {
                             return;
                         }
-                        confirmLeaveTab(key, () => switchTab(key, { mode: item.mode, label: t(item.i18n) }));
+                        confirmLeaveTab({ tab: key, mode: item.mode }, () =>
+                            switchTab(key, { mode: item.mode, label: t(item.i18n) }),
+                        );
                     },
                 };
             }),
