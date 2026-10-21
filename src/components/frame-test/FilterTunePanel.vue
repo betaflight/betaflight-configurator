@@ -33,6 +33,26 @@
             </li>
         </ul>
 
+        <!-- noise or delay: how much motor heating the D-term and gyro filters may add (firmware with the D rule) -->
+        <div v-if="status?.sweep" class="flex flex-col gap-2 border-t border-default pt-3">
+            <div class="flex items-baseline justify-between gap-2">
+                <span class="text-sm font-medium text-highlighted">{{ $t("filterTuneHeatTitle") }}</span>
+                <span v-if="heatCustom" class="text-xs text-muted tabular-nums">{{ heatKelvin }} K</span>
+            </div>
+            <USlider v-model="heatIndex" :min="0" :max="2" :step="1" :disabled="filterTune.busy" @change="onHeat" />
+            <div class="flex justify-between text-xs">
+                <span
+                    v-for="(preset, index) in HEAT_PRESETS"
+                    :key="preset"
+                    :class="index === heatIndex ? 'font-medium text-highlighted' : 'text-muted'"
+                >
+                    {{ $t(`filterTuneHeat_${preset}`) }}
+                </span>
+            </div>
+            <p class="text-xs text-muted">{{ $t(`filterTuneHeatText_${HEAT_PRESETS[heatIndex]}`) }}</p>
+            <p v-if="heatError" class="text-xs text-error">{{ heatError }}</p>
+        </div>
+
         <!-- idle has nothing to say -->
         <div
             v-if="status && status.state !== 'idle'"
@@ -123,6 +143,7 @@
                 <li>{{ $t("filterTuneResidual", { db: result!.residual1x.toFixed(1), score: result!.score }) }}</li>
                 <li v-if="lpf2Text">{{ lpf2Text }}</li>
                 <li v-if="sweepResult">{{ sweepResult }}</li>
+                <li v-if="result!.fromLastTune">{{ $t("filterTuneFromLast") }}</li>
             </ul>
         </div>
 
@@ -148,12 +169,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { i18n } from "@/js/localization";
 import { useFilterTuneStore } from "@/stores/filterTune";
 import { useFrameWizardStore } from "@/stores/frameWizard";
-import type { FilterSettings, ResidualPeak } from "@/stores/filterTuneProtocol";
+import { HEAT_PRESETS, type FilterSettings, type ResidualPeak } from "@/stores/filterTuneProtocol";
 
 const filterTune = useFilterTuneStore();
 const wizard = useFrameWizardStore();
@@ -365,6 +386,34 @@ const noSignal = computed(() => {
     const sig = status.value?.signals;
     return !!sig && !sig.beeper && !sig.ledStrip && !sig.osd;
 });
+
+// The noise / delay slider: three stops of the heat budget; a CLI value between them shows the nearest stop and its K
+const heatIndex = ref(1);
+const heatError = ref("");
+const heatBudget = computed(() => Math.round((status.value?.sweep?.heatBudgetK ?? 0.5) * 10));
+const heatCustom = computed(() => !(HEAT_PRESETS as readonly number[]).includes(heatBudget.value));
+const heatKelvin = computed(() => (heatBudget.value / 10).toFixed(1));
+watch(
+    heatBudget,
+    (dk) => {
+        let nearest = 0;
+        HEAT_PRESETS.forEach((preset, index) => {
+            if (Math.abs(preset - dk) < Math.abs(HEAT_PRESETS[nearest] - dk)) {
+                nearest = index;
+            }
+        });
+        heatIndex.value = nearest;
+    },
+    { immediate: true },
+);
+async function onHeat() {
+    const stop = HEAT_PRESETS[heatIndex.value];
+    heatError.value = "";
+    const result = await filterTune.setHeatBudget(stop);
+    if (result !== "done") {
+        heatError.value = t("filterTuneHeatRefused");
+    }
+}
 
 const revertMessage = ref<{ ok: boolean; text: string } | null>(null);
 

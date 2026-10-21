@@ -22,6 +22,8 @@
 import { describe, expect, it, vi } from "vitest";
 import {
     encodeForgetFrameMap,
+    encodeHeatBudget,
+    HEAT_PRESETS,
     encodeRevertFilters,
     harmonicSummary,
     parseFilterTuneStatus,
@@ -105,6 +107,7 @@ describe("filter autotune status", () => {
             enoughFrames: true,
             backupPresent: true,
             appliedThisBoot: true,
+            fromLastTune: false,
             frames: 42,
             minFrames: 60,
             sampleHz: 1000,
@@ -158,6 +161,8 @@ describe("filter autotune status", () => {
             "exciting",
         ]);
         expect(status({ bad: 255 }).badMotor).toBeNull();
+        // bit 6: the D-term and sweep fields are the last applied tune's, kept across a restart
+        expect(status({ flags: 0b1000000 }).fromLastTune).toBe(true);
     });
 
     it("reads the LPF2 basis when the firmware appends it, and nothing otherwise", () => {
@@ -372,9 +377,17 @@ describe("frame map", () => {
 });
 
 describe("ops and run flags", () => {
-    it("revert and forget are ops 4 and 5", () => {
+    it("revert, forget and the heat budget are ops 4, 5 and 9", () => {
         expect(encodeRevertFilters()).toEqual([4]);
         expect(encodeForgetFrameMap()).toEqual([5]);
+        // the slider's three stops in 0.1 K, kept within the FC's 0..200
+        expect(HEAT_PRESETS.map((dk) => encodeHeatBudget(dk))).toEqual([
+            [9, 0],
+            [9, 5],
+            [9, 10],
+        ]);
+        expect(encodeHeatBudget(999)).toEqual([9, 200]);
+        expect(encodeHeatBudget(-3)).toEqual([9, 0]);
     });
 
     it("the taps run sets TAPS_ONLY, the motor run SKIP_TAPS (the flags byte after max command)", () => {

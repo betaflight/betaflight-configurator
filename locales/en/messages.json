@@ -10216,6 +10216,33 @@
     "filterTuneLedCollecting": {
         "message": "collecting"
     },
+    "filterTuneHeatTitle": {
+        "message": "Noise or delay"
+    },
+    "filterTuneHeat_0": {
+        "message": "Low noise"
+    },
+    "filterTuneHeat_5": {
+        "message": "Balanced"
+    },
+    "filterTuneHeat_10": {
+        "message": "Low delay"
+    },
+    "filterTuneHeatText_0": {
+        "message": "D-term no noisier than stock."
+    },
+    "filterTuneHeatText_5": {
+        "message": "A little more motor noise for less delay (default)."
+    },
+    "filterTuneHeatText_10": {
+        "message": "Least delay, more motor noise (still within about 1 K of heating)."
+    },
+    "filterTuneHeatRefused": {
+        "message": "Disarm to change this."
+    },
+    "filterTuneFromLast": {
+        "message": "From the last tune, kept across a restart."
+    },
     "filterTuneLedReady": {
         "message": "ready"
     },

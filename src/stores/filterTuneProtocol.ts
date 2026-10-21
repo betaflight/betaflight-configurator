@@ -33,6 +33,11 @@ export const FILTER_TUNE_ORDERS = 5;
 
 export const OP_REVERT_FILTERS = 4;
 export const OP_FORGET_FRAME_MAP = 5;
+/** The motor heating the D-term and gyro filters may add over the stock chain, 0.1 K steps (disarmed only). */
+export const OP_HEAT_BUDGET = 9;
+
+/** The three positions of the noise / delay slider: the heat budget in 0.1 K. */
+export const HEAT_PRESETS = [0, 5, 10] as const;
 
 export const FILTER_TUNE_STATES = [
     "noFrameMap",
@@ -91,6 +96,8 @@ export interface FilterTuneStatus {
     enoughFrames: boolean;
     backupPresent: boolean;
     appliedThisBoot: boolean;
+    /** The D-term and sweep fields are the last applied tune's, kept across a restart (not this session's). */
+    fromLastTune: boolean;
     frames: number;
     minFrames: number;
     sampleHz: number;
@@ -406,6 +413,7 @@ export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>)
             enoughFrames: (flags & 8) !== 0,
             backupPresent: (flags & 16) !== 0,
             appliedThisBoot: (flags & 32) !== 0,
+            fromLastTune: (flags & 64) !== 0,
             frames,
             minFrames,
             sampleHz,
@@ -493,6 +501,11 @@ export function parseFrameMap(data: ArrayBufferView | ArrayLike<number>): FrameM
 
 export const encodeRevertFilters = (): number[] => [OP_REVERT_FILTERS];
 export const encodeForgetFrameMap = (): number[] => [OP_FORGET_FRAME_MAP];
+
+export const encodeHeatBudget = (deciKelvin: number): number[] => [
+    OP_HEAT_BUDGET,
+    Math.max(0, Math.min(200, Math.round(deciKelvin))),
+];
 
 export interface MotorHarmonics {
     /** 1x..5x over the floor, dB (the RPM filter covers 1x-3x; 4x and 5x set gyro LPF2). */
