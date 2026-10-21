@@ -1597,11 +1597,13 @@ const saveConfig = async () => {
 
 // A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
 // A cancelled or failed save does not reboot, so the tab stays open with the edits intact.
+// Resolves false then, so the unsaved-changes prompt keeps the user on the tab.
 const saveAndRebootConfig = async () => {
     if (!(await saveConfig())) {
-        return;
+        return false;
     }
     await reboot();
+    return true;
 };
 
 // The primary button does what its label says: with a port change pending it saves and reboots.
