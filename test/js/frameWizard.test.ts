@@ -396,6 +396,15 @@ describe("frame wizard store", () => {
         expect(wizard.spinCheck).toMatchObject({ toneHz: 36 });
     });
 
+    it("says why the FC ended a run it had just accepted (a whoop on USB, no battery)", async () => {
+        const wizard = await store();
+        reply(0x3017, []); // the start is taken
+        reply(0x3018, statusPayload({ phase: PHASE.aborted, end: 4 }));
+        expect(await wizard.start()).toBe(false);
+        expect(wizard.startError).toBe("stoppedAtOnce");
+        expect(wizard.startEnd).toMatchObject({ code: 4 });
+    });
+
     it("hides itself on firmware without the wizard", async () => {
         reply(0x3018, "unsupported");
         const wizard = await store();

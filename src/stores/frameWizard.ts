@@ -64,7 +64,7 @@ const STATUS_MS = 1000;
 const KEEPALIVE_MS = 200;
 const IDLE_POLL_MS = 1000;
 
-export type StartError = "refused" | "noReply" | "notStarted" | "noBattery";
+export type StartError = "refused" | "noReply" | "notStarted" | "noBattery" | "stoppedAtOnce";
 
 /** Arming disabled because DShot bitbang did not start (a timer it needs is taken, as by an LED strip on F411). */
 const ARMING_DISABLED_DSHOT_BITBANG = 1 << 22;
@@ -214,6 +214,8 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
     const enabled = ref(false);
     const starting = ref(false);
     const startError = ref<StartError | null>(null);
+    /** Why the FC ended a run it had just accepted (stoppedAtOnce), from its status. */
+    const startEnd = ref<{ code: number; loopHz: number } | null>(null);
     /** RPM telemetry was missing when the wizard started (bases by command, no rotation mask). */
     const noRpmAtStart = ref(false);
     /** The motors have no output at all: DShot bitbang did not start (the arming flags say so, polled by the app). */
@@ -416,6 +418,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         starting.value = true;
         kept = null; // a new run, new pages
         startError.value = null;
+        startEnd.value = null;
         result.value = null;
         clock.value = 1;
         first = null;
@@ -433,7 +436,10 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
             started.value = true;
             const now = await refreshStatus();
             if (!now || !isActivePhase(now.phase)) {
-                startError.value = "notStarted";
+                // taken and ended within the first poll: the status says why (battery, power, ...)
+                const stopped = now !== null && now.endReason >= 2;
+                startError.value = stopped ? "stoppedAtOnce" : "notStarted";
+                startEnd.value = stopped ? { code: now.endReason, loopHz: now.loopHz } : null;
                 started.value = false;
                 return false;
             }
@@ -493,6 +499,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         runKind.value = null;
         result.value = null;
         startError.value = null;
+        startEnd.value = null;
         noRpmAtStart.value = false;
         clock.value = 1;
         first = null;
@@ -524,6 +531,7 @@ export const useFrameWizardStore = defineStore("frameWizard", () => {
         enabled,
         starting,
         startError,
+        startEnd,
         noRpmAtStart,
         dshotBitbangFailed,
         clock,

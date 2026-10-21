@@ -556,6 +556,10 @@ const startErrorText = computed(() => {
             return t("frameTestStartNoReply");
         case "notStarted":
             return t("frameTestStartNotStarted");
+        case "stoppedAtOnce":
+            return t("frameTestStartStopped", {
+                reason: endReasonText(wizard.startEnd?.code ?? 0, wizard.startEnd?.loopHz),
+            });
         case "noBattery":
             return t("frameTestStartNoBattery");
         default:
@@ -573,15 +577,16 @@ const previousRunEnd = computed(() => {
     return t("frameTestPreviousRun", { end: endText.value });
 });
 
+function endReasonText(code: number, loopHz?: number): string {
+    return code >= 2 && code <= 14 ? t(`frameTestEnd${code}`, { hz: loopHz }) : t("frameTestEndUnknown");
+}
+
 const endText = computed(() => {
     const status = wizard.status;
     if (!status || status.endReason === END_DONE) {
         return t("frameTestDone");
     }
-    const reason =
-        status.endReason >= 2 && status.endReason <= 14
-            ? t(`frameTestEnd${status.endReason}`, { hz: status.loopHz })
-            : t("frameTestEndUnknown");
+    const reason = endReasonText(status.endReason, status.loopHz);
     if (status.phase === "done") {
         // the taps went into the map, the motors had no power, no telemetry or no DShot (11, 12, 13)
         return status.endReason >= 11 ? t("frameTestDoneNoMotors", { reason }) : t("frameTestDone");

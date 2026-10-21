@@ -10012,6 +10012,9 @@
     "frameTestStartNoReply": {
         "message": "No reply from the flight controller."
     },
+    "frameTestStartStopped": {
+        "message": "The flight controller stopped it at once: {{reason}}."
+    },
     "frameTestStartNotStarted": {
         "message": "The flight controller did not confirm the start."
     },
