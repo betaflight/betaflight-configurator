@@ -29,7 +29,7 @@ describe("motor database", () => {
 
     it("finds the motor back from the flight controller values", () => {
         expect(findMotor(2800, 22, 35, 70)?.model).toBe("Lightning V2 2203.5");
-        expect(findMotor(2800, 22, 35, 0)?.brand).toBe("X-NOVA");
+        expect(findMotor(2800, 22, 35, 0)).toBeNull(); // no resistance: could be any 2203.5 2800KV
         expect(findMotor(2801, 22, 35, 70)).toBeNull();
     });
 });

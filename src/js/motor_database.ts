@@ -233,8 +233,8 @@ export function motorLabel(m: MotorSpec): string {
     return `${m.model} ${m.kv}KV`;
 }
 
-// The entry the flight controller's values belong to: KV and stator must match, and the resistance too when both
-// are set. Ambiguous or no match: null (the selection shows as custom).
+// The entry the flight controller's values belong to: KV, stator and the datasheet resistance (written by picking the
+// model) must all match, so a motor with the same KV and size from another brand is not taken for it. No match: null.
 export function findMotor(
     kv: number,
     statorDiameterMm: number,
@@ -246,7 +246,8 @@ export function findMotor(
             m.kv === kv &&
             m.statorDiameterMm === statorDiameterMm &&
             m.statorHeightDmm === statorHeightDmm &&
-            (!resistanceMohm || !m.resistanceMohm || m.resistanceMohm === resistanceMohm),
+            m.resistanceMohm > 0 &&
+            m.resistanceMohm === resistanceMohm,
     );
     return found.length === 1 ? found[0] : null;
 }
