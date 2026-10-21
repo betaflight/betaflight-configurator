@@ -1764,6 +1764,18 @@
     "configurationMotorAdvanced": {
         "message": "Advanced motor settings"
     },
+    "configurationMotorBrand": {
+        "message": "Motor"
+    },
+    "configurationMotorBrandHelp": {
+        "message": "Pick the brand and model to fill in the KV, stator size, magnet count and the datasheet winding resistance. Values can still be edited below; a motor not in the list stays custom."
+    },
+    "configurationMotorCustom": {
+        "message": "Custom"
+    },
+    "configurationMotorModel": {
+        "message": "Model"
+    },
     "configurationMotorResistance": {
         "message": "Motor winding resistance"
     },
