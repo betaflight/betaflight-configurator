@@ -1768,10 +1768,7 @@
         "message": "Motor"
     },
     "configurationMotorBrandHelp": {
-        "message": "Pick the brand and model to fill in the KV, stator size, magnet count and the datasheet winding resistance. Values can still be edited below; a motor not in the list stays custom."
-    },
-    "configurationMotorCustom": {
-        "message": "Custom"
+        "message": "Pick the brand and model to fill in the KV, stator size, magnet count and the datasheet winding resistance. Values can still be edited below; Generic: a motor not in the list, entered by hand."
     },
     "configurationMotorModel": {
         "message": "Model"

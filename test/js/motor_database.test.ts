@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MOTOR_DATABASE, findMotor, motorBrands, motorsOfBrand } from "../../src/js/motor_database";
+import { MOTOR_DATABASE, MOTOR_GENERIC, findMotor, motorBrands, motorsOfBrand } from "../../src/js/motor_database";
 
 describe("motor database", () => {
     it("has one entry per brand, model and KV", () => {
@@ -21,9 +21,12 @@ describe("motor database", () => {
         }
     });
 
-    it("lists brands sorted and filters by brand", () => {
-        const brands = motorBrands();
+    it("lists Generic first, then the brands sorted, and filters by brand", () => {
+        const [first, ...brands] = motorBrands();
+        expect(first).toBe(MOTOR_GENERIC);
         expect(brands).toEqual([...brands].sort((a, b) => a.localeCompare(b)));
+        expect(brands).not.toContain(MOTOR_GENERIC);
+        expect(motorsOfBrand(MOTOR_GENERIC)).toHaveLength(0);
         expect(motorsOfBrand("X-NOVA").every((m) => m.brand === "X-NOVA")).toBe(true);
     });
 

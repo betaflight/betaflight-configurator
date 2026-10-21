@@ -233,17 +233,16 @@
                                 <USelectMenu
                                     v-model="selectedMotorBrand"
                                     :items="motorBrandItems"
-                                    :placeholder="$t('configurationMotorCustom')"
                                     :search-input="{ placeholder: $t('search'), icon: 'i-lucide-search' }"
                                     size="xs"
                                     class="min-w-36"
                                     @update:model-value="selectedMotorKey = ''"
                                 />
                                 <USelectMenu
+                                    v-if="selectedMotorBrand !== MOTOR_GENERIC"
                                     v-model="selectedMotorKey"
                                     value-key="value"
                                     :items="motorModelItems"
-                                    :disabled="!selectedMotorBrand"
                                     :placeholder="$t('configurationMotorModel')"
                                     :search-input="{ placeholder: $t('search'), icon: 'i-lucide-search' }"
                                     size="xs"
@@ -669,7 +668,7 @@ import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
-import { findMotor, motorBrands, motorLabel, motorsOfBrand, type MotorSpec } from "@/js/motor_database";
+import { MOTOR_GENERIC, findMotor, motorBrands, motorLabel, motorsOfBrand, type MotorSpec } from "@/js/motor_database";
 
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
@@ -1893,10 +1892,10 @@ const normalizeStatorInput = () => {
 // keeps only the values, so the selection is found again from them (no unique match: custom).
 const motorKey = (m: MotorSpec) => `${m.brand}|${m.model}|${m.kv}`;
 const motorBrandItems = motorBrands();
-const selectedMotorBrand = ref<string | undefined>(undefined);
+const selectedMotorBrand = ref(MOTOR_GENERIC);
 const selectedMotorKey = ref("");
 const motorModelItems = computed(() =>
-    selectedMotorBrand.value
+    selectedMotorBrand.value !== MOTOR_GENERIC
         ? motorsOfBrand(selectedMotorBrand.value).map((m) => ({ label: motorLabel(m), value: motorKey(m) }))
         : [],
 );
@@ -1913,13 +1912,15 @@ watch(
             selectedMotorBrand.value = m.brand;
             selectedMotorKey.value = motorKey(m);
         } else if (selectedMotorKey.value) {
+            // the values were edited away from the picked motor: hand entry
+            selectedMotorBrand.value = MOTOR_GENERIC;
             selectedMotorKey.value = "";
         }
     },
     { immediate: true },
 );
 const applyMotorModel = (key: string) => {
-    const m = motorsOfBrand(selectedMotorBrand.value ?? "").find((x) => motorKey(x) === key);
+    const m = motorsOfBrand(selectedMotorBrand.value).find((x) => motorKey(x) === key);
     if (!m) {
         return;
     }

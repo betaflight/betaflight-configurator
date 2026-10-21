@@ -221,8 +221,11 @@ export const MOTOR_DATABASE: readonly MotorSpec[] = [
     { brand: "X-NOVA", model: "Lightning V2 2203.5", kv: 2800, statorDiameterMm: 22, statorHeightDmm: 35, magnets: 14, resistanceMohm: 70, idleCurrentA: 1.4, idleCurrentV: 10, weightG: 19, source: "https://www.drone-fpv-racer.com/en/x-nova-lightning-v2-22035-2800kv-motor-1pc-11386.html" },
 ];
 
+// The brand for a motor that is not in the list: its values are entered by hand.
+export const MOTOR_GENERIC = "Generic";
+
 export function motorBrands(): string[] {
-    return [...new Set(MOTOR_DATABASE.map((m) => m.brand))].sort((a, b) => a.localeCompare(b));
+    return [MOTOR_GENERIC, ...[...new Set(MOTOR_DATABASE.map((m) => m.brand))].sort((a, b) => a.localeCompare(b))];
 }
 
 export function motorsOfBrand(brand: string): MotorSpec[] {
