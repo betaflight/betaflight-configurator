@@ -62,11 +62,20 @@ describe("useSaving", () => {
         const pending = runSave(first);
         expect(isSaving.value).toBe(true);
 
-        await runSave(second);
+        // The second call joins the running save rather than starting its own.
+        let joinedSettled = false;
+        const joined = runSave(second).then(() => {
+            joinedSettled = true;
+        });
+        await Promise.resolve();
         expect(second).not.toHaveBeenCalled();
+        expect(joinedSettled).toBe(false);
 
         resolveFirst();
         await pending;
+        await joined;
+        expect(joinedSettled).toBe(true);
+        expect(second).not.toHaveBeenCalled();
         expect(isSaving.value).toBe(false);
     });
 

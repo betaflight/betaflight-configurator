@@ -151,12 +151,12 @@ export function usePortsConfiguration(
         updateFeatures();
 
         // Resolves once the reboot has started, so a caller can wait for the save to go through.
-        return new Promise<void>((resolve) => {
+        return new Promise<void>((resolve, reject) => {
             const saveEeprom = () => {
-                void saveAndReboot().then(() => {
+                saveAndReboot().then(() => {
                     gui_log(i18n.getMessage("portsEepromSave"));
                     resolve();
-                });
+                }, reject);
             };
 
             mspHelper.sendSerialConfig(() => {
