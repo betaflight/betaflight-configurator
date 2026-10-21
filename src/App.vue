@@ -240,8 +240,8 @@ watch(
 );
 </script>
 
-<style scoped>
-@keyframes spin {
+<style lang="less">
+@keyframes app-spin {
     0% {
         transform: rotate(0deg);
     }

@@ -174,7 +174,7 @@ const pulling = computed(() => !!dataflash?.pulling?.value);
 const progress = computed(() => dataflash?.progress?.value ?? 0);
 </script>
 
-<style scoped>
+<style lang="less">
 .toolbar-bar {
     display: flex;
     align-items: center;
@@ -183,24 +183,24 @@ const progress = computed(() => dataflash?.progress?.value ?? 0);
     padding: 0.3rem 0.75rem;
     background: var(--surface-100);
     border-bottom: 1px solid var(--surface-300);
-}
 
-.toolbar-group {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
+    .toolbar-group {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
 
-.toolbar-group--start {
-    min-width: 0;
-}
+    .toolbar-group--start {
+        min-width: 0;
+    }
 
-.toolbar-filename {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    max-width: 360px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    .toolbar-filename {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        max-width: 360px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 </style>
