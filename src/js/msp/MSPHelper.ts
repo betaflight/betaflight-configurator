@@ -1219,10 +1219,19 @@ const DECODERS: Partial<Record<number, Decoder>> = {
             fcStore.motorConfig.motor_stator_diameter = 0;
             fcStore.motorConfig.motor_stator_height = 0;
             fcStore.motorConfig.motor_prop_diameter = 0;
+            fcStore.motorConfig.motor_datasheet_supported = false;
+            fcStore.motorConfig.motor_resistance = 0;
+            fcStore.motorConfig.motor_idle_current = 0;
             if (data.offset + 3 <= data.byteLength) {
                 fcStore.motorConfig.motor_stator_diameter = data.readU8();
                 fcStore.motorConfig.motor_stator_height = data.readU8();
                 fcStore.motorConfig.motor_prop_diameter = data.readU8();
+            }
+            // Datasheet values: winding resistance [mOhm] and no-load current at 10 V [mA], 0 = derived by the firmware
+            if (data.offset + 4 <= data.byteLength) {
+                fcStore.motorConfig.motor_resistance = data.readU16();
+                fcStore.motorConfig.motor_idle_current = data.readU16();
+                fcStore.motorConfig.motor_datasheet_supported = true;
             }
         }
     },
@@ -2687,6 +2696,9 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
                     .push8(fcStore.motorConfig.motor_stator_diameter)
                     .push8(fcStore.motorConfig.motor_stator_height)
                     .push8(fcStore.motorConfig.motor_prop_diameter);
+                if (fcStore.motorConfig.motor_datasheet_supported) {
+                    buffer.push16(fcStore.motorConfig.motor_resistance).push16(fcStore.motorConfig.motor_idle_current);
+                }
             }
         }
     },

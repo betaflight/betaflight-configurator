@@ -405,3 +405,53 @@ function generateRandomString(length = -1) {
 
     return result;
 }
+
+describe("MSP_MOTOR_CONFIG motor thermal fields", () => {
+    const mspHelper = new MspHelper();
+    let fcStore: ReturnType<typeof useFlightControllerStore>;
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.config.apiVersion = "1.49.0";
+    });
+
+    // minthrottle, maxthrottle, mincommand, motor count, poles, bidir, ESC sensor, KV
+    const header = [0, 0, 0xd0, 0x07, 0xe8, 0x03, 4, 14, 1, 0, 0xf0, 0x0a];
+    const decode = (bytes: number[]) =>
+        mspHelper.process_data({
+            code: MSPCodes.MSP_MOTOR_CONFIG,
+            dataView: new MspDataView(new Uint8Array(bytes).buffer),
+            crcError: false,
+            unsupported: 0,
+            callbacks: [],
+        });
+
+    it("reads the datasheet resistance and idle current after the stator geometry", () => {
+        decode([...header, 22, 35, 0, 70, 0, 0x78, 0x05]);
+
+        expect(fcStore.motorConfig.motor_kv).toEqual(2800);
+        expect(fcStore.motorConfig.motor_stator_diameter).toEqual(22);
+        expect(fcStore.motorConfig.motor_datasheet_supported).toEqual(true);
+        expect(fcStore.motorConfig.motor_resistance).toEqual(70);
+        expect(fcStore.motorConfig.motor_idle_current).toEqual(1400);
+    });
+
+    it("leaves the datasheet fields off for a firmware that sends only the geometry", () => {
+        fcStore.motorConfig.motor_resistance = 55;
+        decode([...header, 22, 35, 0]);
+
+        expect(fcStore.motorConfig.motor_datasheet_supported).toEqual(false);
+        expect(fcStore.motorConfig.motor_resistance).toEqual(0);
+    });
+
+    it("writes the datasheet fields back only when the firmware reported them", () => {
+        decode([...header, 22, 70, 51, 55, 0, 0x4c, 0x04]);
+        const withFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
+        expect(withFields.slice(-7)).toEqual([22, 70, 51, 55, 0, 0x4c, 0x04]);
+
+        decode([...header, 22, 70, 51]);
+        const withoutFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
+        expect(withoutFields.slice(-3)).toEqual([22, 70, 51]);
+        expect(withoutFields.length).toEqual(withFields.length - 4);
+    });
+});

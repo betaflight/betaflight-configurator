@@ -371,6 +371,9 @@ export function createInitialState(): FcState {
             motor_stator_diameter: 0, // mm, 0 = firmware without the thermal estimator
             motor_stator_height: 0, // 0.1 mm
             motor_prop_diameter: 0, // 0.1 inch, 0 = auto
+            motor_datasheet_supported: false,
+            motor_resistance: 0, // mOhm, 0 = derive
+            motor_idle_current: 0, // mA at 10 V, 0 = derive
         },
         gpsConfig: {
             provider: 0,

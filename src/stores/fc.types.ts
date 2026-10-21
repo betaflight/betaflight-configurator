@@ -466,6 +466,9 @@ export interface MotorConfig {
     motor_stator_diameter: number; // mm, 0 = firmware without the thermal estimator
     motor_stator_height: number; // 0.1 mm
     motor_prop_diameter: number; // 0.1 inch, 0 = auto
+    motor_datasheet_supported: boolean; // firmware reports the datasheet fields below
+    motor_resistance: number; // line-to-line winding resistance, mOhm, 0 = derive from KV and stator size
+    motor_idle_current: number; // no-load current at 10 V, mA, 0 = derive from the stator size
 }
 
 // Reset as 8 undefined slots; MSP_MOTOR / MSP_SERVO fill as many as the FC reports.

@@ -217,7 +217,20 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="isMotorKvSupported" :label="$t('configurationMotorKv')" :help="$t('configurationMotorKvHelp')" fullWidth>
+                        </UiBox>
+                        <!-- Advanced motor settings: motor data for the RPM limiter and the motor thermal estimator -->
+                        <UiBox
+                            v-if="isMotorKvSupported"
+                            :title="$t('configurationMotorAdvanced')"
+                            type="neutral"
+                            collapsible
+                        >
+                            <SettingRow
+                                v-if="isMotorKvSupported"
+                                :label="$t('configurationMotorKv')"
+                                :help="$t('configurationMotorKvHelp')"
+                                fullWidth
+                            >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.motor_kv"
                                     :min="1"
@@ -229,7 +242,12 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="isMotorStatorSupported" :label="$t('configurationMotorStator')" :help="$t('configurationMotorStatorHelp')" fullWidth>
+                            <SettingRow
+                                v-if="isMotorStatorSupported"
+                                :label="$t('configurationMotorStator')"
+                                :help="$t('configurationMotorStatorHelp')"
+                                fullWidth
+                            >
                                 <UInput
                                     v-model="motorStatorInput"
                                     list="motor-stator-sizes"
@@ -244,6 +262,48 @@
                                     <option v-for="size in motorStatorSizes" :key="size" :value="size" />
                                 </datalist>
                                 <span class="ml-2 text-xs text-muted">{{ motorStatorPreview }}</span>
+                            </SettingRow>
+                            <SettingRow
+                                v-if="isMotorDatasheetSupported"
+                                :label="$t('configurationMotorResistance')"
+                                :help="$t('configurationMotorResistanceHelp')"
+                                fullWidth
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.motor_resistance"
+                                    :min="0"
+                                    :max="5000"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false }"
+                                    class="w-16"
+                                />
+                                <span class="ml-2 text-xs text-muted">{{
+                                    fcStore.motorConfig.motor_resistance ? "mΩ" : $t("configurationMotorDatasheetAuto")
+                                }}</span>
+                            </SettingRow>
+                            <SettingRow
+                                v-if="isMotorDatasheetSupported"
+                                :label="$t('configurationMotorIdleCurrent')"
+                                :help="$t('configurationMotorIdleCurrentHelp')"
+                                fullWidth
+                            >
+                                <UInputNumber
+                                    v-model="motorIdleCurrentAmps"
+                                    :min="0"
+                                    :max="20"
+                                    :step="0.01"
+                                    size="xs"
+                                    orientation="vertical"
+                                    :format-options="{ useGrouping: false, maximumFractionDigits: 2 }"
+                                    class="w-16"
+                                />
+                                <span class="ml-2 text-xs text-muted">{{
+                                    fcStore.motorConfig.motor_idle_current
+                                        ? "A @ 10 V"
+                                        : $t("configurationMotorDatasheetAuto")
+                                }}</span>
                             </SettingRow>
                         </UiBox>
                         <!-- 3D -->
@@ -1753,8 +1813,42 @@ const getTelemetryHtml = (index: number) => {
 const isMotorKvSupported = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_49));
 
 // Stator size as printed on the motor ("2207", "2203.5", "1404"): firmware stores diameter [mm] and height [0.1 mm]
-const isMotorStatorSupported = computed(() => isMotorKvSupported.value && fcStore.motorConfig.motor_stator_diameter > 0);
-const motorStatorSizes = ["0802", "1103", "1303.5", "1404", "1504", "1606", "1804", "2004", "2203", "2203.5", "2204", "2205", "2206", "2207", "2306", "2306.5", "2307", "2506", "2806.5", "2810", "3110"];
+const isMotorStatorSupported = computed(
+    () => isMotorKvSupported.value && fcStore.motorConfig.motor_stator_diameter > 0,
+);
+// Datasheet winding resistance and no-load current: the firmware keeps mOhm and mA, the field shows the idle current in A
+const isMotorDatasheetSupported = computed(
+    () => isMotorStatorSupported.value && fcStore.motorConfig.motor_datasheet_supported,
+);
+const motorIdleCurrentAmps = computed({
+    get: () => fcStore.motorConfig.motor_idle_current / 1000,
+    set: (amps: number | null) => {
+        fcStore.motorConfig.motor_idle_current = Math.round(Math.min(Math.max(amps ?? 0, 0), 20) * 1000);
+    },
+});
+const motorStatorSizes = [
+    "0802",
+    "1103",
+    "1303.5",
+    "1404",
+    "1504",
+    "1606",
+    "1804",
+    "2004",
+    "2203",
+    "2203.5",
+    "2204",
+    "2205",
+    "2206",
+    "2207",
+    "2306",
+    "2306.5",
+    "2307",
+    "2506",
+    "2806.5",
+    "2810",
+    "3110",
+];
 const formatStatorSize = (d: number, h: number): string => {
     if (!d || !h) {
         return "";
@@ -1802,7 +1896,10 @@ const applyStatorSize = () => {
         fcStore.motorConfig.motor_stator_height = parsed.h;
     }
     // invalid input (or unchanged): show what the firmware holds
-    motorStatorInput.value = formatStatorSize(fcStore.motorConfig.motor_stator_diameter, fcStore.motorConfig.motor_stator_height);
+    motorStatorInput.value = formatStatorSize(
+        fcStore.motorConfig.motor_stator_diameter,
+        fcStore.motorConfig.motor_stator_height,
+    );
 };
 
 onMounted(() => {

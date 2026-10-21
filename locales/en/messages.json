@@ -1761,6 +1761,24 @@
     "configurationMotorStatorHelp": {
         "message": "Stator size as printed on the motor, e.g. 2207 or 2203.5 (diameter 22 mm, height 3.5 mm). Used by the motor thermal estimator to scale heat capacity and cooling."
     },
+    "configurationMotorAdvanced": {
+        "message": "Advanced motor settings"
+    },
+    "configurationMotorResistance": {
+        "message": "Motor winding resistance"
+    },
+    "configurationMotorResistanceHelp": {
+        "message": "Internal resistance from the motor datasheet, in milliohm (e.g. 70 for 0.070 Ω), measured between two motor wires. Sets the copper loss from the motor current in the thermal estimator. A multimeter reads too high on 5\" and larger motors because of its leads; use the datasheet value. 0 = estimate from KV and stator size."
+    },
+    "configurationMotorIdleCurrent": {
+        "message": "Motor idle current"
+    },
+    "configurationMotorIdleCurrentHelp": {
+        "message": "No-load current at 10 V from the motor datasheet (\"Idle current @10V\"), in amps. Sets the motor's no-load (iron and bearing) loss in the thermal estimator. 0 = estimate from the stator size."
+    },
+    "configurationMotorDatasheetAuto": {
+        "message": "auto"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (ESC value when disarmed)"
     },

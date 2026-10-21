@@ -54,6 +54,8 @@ export interface MotorDefaults {
     motor_kv: number;
     motor_stator_diameter: number;
     motor_stator_height: number;
+    motor_resistance: number;
+    motor_idle_current: number;
 }
 
 export type MotorConfigKey = keyof MotorDefaults;
@@ -107,6 +109,8 @@ export function useMotorsState() {
             motor_kv: fcStore.motorConfig.motor_kv,
             motor_stator_diameter: fcStore.motorConfig.motor_stator_diameter,
             motor_stator_height: fcStore.motorConfig.motor_stator_height,
+            motor_resistance: fcStore.motorConfig.motor_resistance,
+            motor_idle_current: fcStore.motorConfig.motor_idle_current,
         };
 
         // Store previous values for comparison
