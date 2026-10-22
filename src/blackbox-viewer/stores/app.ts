@@ -22,9 +22,9 @@
 import { defineStore } from "pinia";
 import { ref, shallowRef } from "vue";
 import type { GraphPanelConfig } from "./graph";
-import type { defaultUserSettings } from "../user_settings_data.js";
+import type { UserSettings } from "../user_settings_data";
 
-export type UserSettings = typeof defaultUserSettings;
+export type { UserSettings };
 
 export const useAppStore = defineStore("app", () => {
     const legendHidden = ref(false);

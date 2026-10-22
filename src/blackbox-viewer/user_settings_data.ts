@@ -1,5 +1,36 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+export interface Mixer {
+    name: string;
+    /** The 3D craft model to draw. */
+    model: string;
+    /** The motor order diagram, under images/motor_order/. */
+    image: string;
+    defaultMotorOrder: number[];
+    defaultYawOffset: number;
+}
+
 // Mixer definitions — shared between settings dialog and renderers
-export const mixerList = [
+export const mixerList: Mixer[] = [
     {
         name: "Tricopter",
         model: "tricopter",
@@ -81,8 +112,75 @@ export const mixerList = [
     },
 ];
 
+/** A craft drawn with a chosen mixer's motor order, instead of the log's own. */
+export interface CustomMix {
+    /** Motor index for each position of the mixer's diagram. */
+    motorOrder: number[];
+    yawOffset: number;
+}
+
+/** An overlay's place on the graph; every value is a CSS percentage. */
+export interface OverlayPosition {
+    left: string;
+    top: string;
+}
+
+export interface SizedOverlay extends OverlayPosition {
+    size: string;
+}
+
+export interface UserSettings {
+    /** 1-based index into mixerList. */
+    mixerConfiguration: number;
+    customMix: CustomMix | null;
+    stickMode: number;
+    stickUnits: boolean;
+    stickTrails: boolean;
+    stickInvertYaw: boolean;
+    legendUnits: boolean;
+    /** 1 m/s, 2 kph, 3 mph. */
+    speedUnits: number;
+    /** 1 metres, 2 feet. */
+    altitudeUnits: number;
+    darkMode: number;
+    gapless: boolean;
+    /** "3D" by default; the toolbar toggle stores a boolean. Read for truthiness. */
+    drawCraft: string | boolean;
+    hasCraft: boolean;
+    drawPidTable: boolean;
+    drawSticks: boolean;
+    drawTime: boolean;
+    drawEvents: boolean;
+    drawAnalyser: boolean;
+    drawWatermark: boolean;
+    drawLapTimer: boolean;
+    drawGradient: boolean;
+    drawVerticalBar: boolean;
+    graphSmoothOverride: boolean;
+    graphExpoOverride: boolean;
+    graphGridOverride: boolean;
+    analyserSampleRate: number;
+    analyserHanning: boolean;
+    eraseBackground: boolean;
+    spectrumType: number;
+    overdrawSpectrumType: number;
+    psdHeatmapMin: number;
+    psdHeatmapMax: number;
+    /** Not in the defaults: unset until the user sets it in the dialog. */
+    mapTrailAltitudeColored?: boolean;
+    craft: SizedOverlay;
+    sticks: SizedOverlay;
+    analyser: SizedOverlay;
+    analyser_legend: OverlayPosition & { width: string };
+    map: SizedOverlay;
+    flight3d: OverlayPosition & { width: string; height: string };
+    /** `logo` is a data URL, or null for none. */
+    watermark: SizedOverlay & { transparency: string; logo: string | null };
+    laptimer: OverlayPosition & { transparency: string };
+}
+
 // Default user settings — used as baseline before user overrides
-export const defaultUserSettings = {
+export const defaultUserSettings: UserSettings = {
     mixerConfiguration: 3,
     customMix: null,
     stickMode: 2,
