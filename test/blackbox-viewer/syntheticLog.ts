@@ -93,3 +93,42 @@ export function intraFrames(count: number, start = 0): MainFrame[] {
 export function log(frames: MainFrame[], extra: number[] = []): number[] {
     return [...headerBytes(), ...frames.flatMap(intraFrame), ...extra];
 }
+
+/**
+ * A P-frame after `previous`: iteration +1 (predicted), time +`timeStep` (straight-line predicted,
+ * so the step is the delta from the frame before), motors and rc as deltas from `previous`.
+ */
+export function interFrame(previous: MainFrame, next: MainFrame, timeStep: number, previousStep: number): number[] {
+    return [
+        "P".codePointAt(0)!,
+        ...signedVB(timeStep - previousStep),
+        ...signedVB(next.motors[0] - previous.motors[0]),
+        ...signedVB(next.motors[1] - previous.motors[1]),
+        ...signedVB(next.rc - previous.rc),
+    ];
+}
+
+/**
+ * A log of `groups` runs of one I-frame and three P-frames, 4 iterations and 4 ms per run
+ * (the header sets "I interval:4"), with every main frame returned for checking.
+ */
+export function mixedLog(groups: number, extraHeader: string[] = []): { bytes: number[]; frames: MainFrame[] } {
+    const bytes = headerBytes([...HEADER, "H I interval:4", ...extraHeader]);
+    const frames: MainFrame[] = [];
+    for (let g = 0; g < groups; g++) {
+        const run = Array.from({ length: 4 }, (_, k) => ({
+            iteration: g * 4 + k,
+            time: 1_000_000 + g * 4000 + k * 1000,
+            // motor[0] is lowest in a P-frame (the 3rd of each run), so merged stats need both frame types.
+            motors: [(k === 2 ? 1000 : 1100) + g * 4 + k, 1200 - ((g * 4 + k) % 5) * 10] as [number, number],
+            rc: ((g * 4 + k) % 3) * 50 - 50,
+        }));
+        bytes.push(...intraFrame(run[0]));
+        for (let k = 1; k < 4; k++) {
+            // The straight-line predictor extends the previous step; the I-frame counts as a step of 0.
+            bytes.push(...interFrame(run[k - 1], run[k], 1000, k === 1 ? 0 : 1000));
+        }
+        frames.push(...run);
+    }
+    return { bytes, frames };
+}
