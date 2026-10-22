@@ -270,7 +270,11 @@ function presentContext(flightLog: PresentedFlightLog, fieldName: string, userSe
 }
 
 type FieldDecoder = (value: number, context: PresentContext) => string | number | undefined;
-type FieldConverter = (value: number, toFriendly: boolean, context: PresentContext) => number;
+/** A field's conversion from log units to chart units, and back. */
+interface FieldConverter {
+    toFriendly: (value: number, context: PresentContext) => number;
+    fromFriendly: (value: number, context: PresentContext) => number;
+}
 
 /** A field-name lookup; a Map, so a name such as "toString" finds nothing, as a switch would. */
 function fieldTable<F>(entries: [names: string[], handler: F][]): Map<string, F> {
@@ -561,51 +565,103 @@ const FIELD_DECODERS = fieldTable<FieldDecoder>([
     ],
 ]);
 
+/** The motor pole count for eRPM; a missing one is null, which the arithmetic reads as 0, as before. */
+function motorPoles(flightLog: PresentedFlightLog): number {
+    return Number(flightLog.getSysConfig()["motor_poles"]);
+}
+
+function isFirmwareFrom(flightLog: PresentedFlightLog, firmwareType: number, version: string): boolean {
+    return (
+        flightLog.getSysConfig().firmwareType === firmwareType &&
+        semver.gte(flightLog.getSysConfig().firmwareVersion, version)
+    );
+}
+
+/** What vbatLatest is divided by for volts: centivolts from Betaflight 4.0, decivolts from 3.1 or Cleanflight 2.0, else millivolts. */
+function vbatDivisor(flightLog: PresentedFlightLog): number {
+    if (isFirmwareFrom(flightLog, FIRMWARE_TYPE_BETAFLIGHT, "4.0.0")) {
+        return 100;
+    }
+    if (
+        isFirmwareFrom(flightLog, FIRMWARE_TYPE_BETAFLIGHT, "3.1.0") ||
+        isFirmwareFrom(flightLog, FIRMWARE_TYPE_CLEANFLIGHT, "2.0.0")
+    ) {
+        return 10;
+    }
+    return 1000;
+}
+
+/** What amperageLatest is divided by for amps: centiamps from Betaflight 3.1.0 (3.1.7+ is a subset) or Cleanflight 2.0, else milliamps. */
+function amperageDivisor(flightLog: PresentedFlightLog): number {
+    const centiamps =
+        isFirmwareFrom(flightLog, FIRMWARE_TYPE_BETAFLIGHT, "3.1.0") ||
+        isFirmwareFrom(flightLog, FIRMWARE_TYPE_CLEANFLIGHT, "2.0.0");
+    return centiamps ? 100 : 1000;
+}
+
+/** The logged cm/s in m/s, times this: 3.6 for kph, 2.2369 for mph, 1 for m/s and any other setting. */
+function speedFactor(speedUnits: number): number {
+    switch (speedUnits) {
+        case 2:
+            return 3.6;
+        case 3:
+            return 2.2369;
+        default:
+            return 1;
+    }
+}
+
 /** ConvertFieldValue() for each field it scales; any other field (flags, enums, counts) is passed through. */
 const FIELD_CONVERTERS = fieldTable<FieldConverter>([
     [
         ["time"],
-        (value, toFriendly) => {
-            return toFriendly ? value / 1000 : value * 1000;
+        {
+            toFriendly: (value) => value / 1000,
+            fromFriendly: (value) => value * 1000,
         },
     ],
     [
         ["gyroADC[0]", "gyroADC[1]", "gyroADC[2]", "gyroUnfilt[0]", "gyroUnfilt[1]", "gyroUnfilt[2]"],
-        (value, toFriendly, { flightLog, highResolutionScale }) => {
-            return toFriendly
-                ? flightLog.gyroRawToDegreesPerSecond(value / highResolutionScale)
-                : (value * highResolutionScale) / flightLog.gyroRawToDegreesPerSecond(1);
+        {
+            toFriendly: (value, { flightLog, highResolutionScale }) =>
+                flightLog.gyroRawToDegreesPerSecond(value / highResolutionScale),
+            fromFriendly: (value, { flightLog, highResolutionScale }) =>
+                (value * highResolutionScale) / flightLog.gyroRawToDegreesPerSecond(1),
         },
     ],
     [
         ["axisError[0]", "axisError[1]", "axisError[2]"],
-        (value, toFriendly, { highResolutionScale }) => {
-            return toFriendly ? value / highResolutionScale : value * highResolutionScale;
+        {
+            toFriendly: (value, { highResolutionScale }) => value / highResolutionScale,
+            fromFriendly: (value, { highResolutionScale }) => value * highResolutionScale,
         },
     ],
     [
         ["rcCommand[0]", "rcCommand[1]", "rcCommand[2]"],
-        (value, toFriendly, { highResolutionScale }) => {
-            return toFriendly ? value / highResolutionScale + 1500 : (value - 1500) * highResolutionScale;
+        {
+            toFriendly: (value, { highResolutionScale }) => value / highResolutionScale + 1500,
+            fromFriendly: (value, { highResolutionScale }) => (value - 1500) * highResolutionScale,
         },
     ],
     [
         ["rcCommand[3]"],
-        (value, toFriendly, { highResolutionScale }) => {
-            return toFriendly ? value / highResolutionScale : value * highResolutionScale;
+        {
+            toFriendly: (value, { highResolutionScale }) => value / highResolutionScale,
+            fromFriendly: (value, { highResolutionScale }) => value * highResolutionScale,
         },
     ],
     [
         ["motor[0]", "motor[1]", "motor[2]", "motor[3]", "motor[4]", "motor[5]", "motor[6]", "motor[7]"],
-        (value, toFriendly, { flightLog }) => {
-            return toFriendly ? flightLog.rcMotorRawToPctPhysical(value) : flightLog.PctPhysicalTorcMotorRaw(value);
+        {
+            toFriendly: (value, { flightLog }) => flightLog.rcMotorRawToPctPhysical(value),
+            fromFriendly: (value, { flightLog }) => flightLog.PctPhysicalTorcMotorRaw(value),
         },
     ],
     [
         ["eRPM[0]", "eRPM[1]", "eRPM[2]", "eRPM[3]", "eRPM[4]", "eRPM[5]", "eRPM[6]", "eRPM[7]"],
-        (value, toFriendly, { flightLog }) => {
-            const motor_poles = Number(flightLog.getSysConfig()["motor_poles"]);
-            return toFriendly ? (value * 200) / motor_poles : (value * motor_poles) / 200;
+        {
+            toFriendly: (value, { flightLog }) => (value * 200) / motorPoles(flightLog),
+            fromFriendly: (value, { flightLog }) => (value * motorPoles(flightLog)) / 200,
         },
     ],
     [
@@ -629,131 +685,113 @@ const FIELD_CONVERTERS = fieldTable<FieldConverter>([
             "axisS[1]",
             "axisS[2]",
         ],
-        (value, toFriendly, { flightLog }) => {
-            return toFriendly ? flightLog.getPIDPercentage(value) : value / flightLog.getPIDPercentage(1);
+        {
+            toFriendly: (value, { flightLog }) => flightLog.getPIDPercentage(value),
+            fromFriendly: (value, { flightLog }) => value / flightLog.getPIDPercentage(1),
         },
     ],
     [
         ["accSmooth[0]", "accSmooth[1]", "accSmooth[2]"],
-        (value, toFriendly, { flightLog }) => {
-            return toFriendly ? flightLog.accRawToGs(value) : value / flightLog.accRawToGs(1);
+        {
+            toFriendly: (value, { flightLog }) => flightLog.accRawToGs(value),
+            fromFriendly: (value, { flightLog }) => value / flightLog.accRawToGs(1),
         },
     ],
     [
         ["vbatLatest"],
-        (value, toFriendly, { flightLog }) => {
-            if (
-                flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                semver.gte(flightLog.getSysConfig().firmwareVersion, "4.0.0")
-            ) {
-                return toFriendly ? value / 100 : value * 100;
-            } else if (
-                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
-                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
-            ) {
-                return toFriendly ? value / 10 : value * 10;
-            } else {
-                return toFriendly ? value / 1000 : value * 1000;
-            }
+        {
+            toFriendly: (value, { flightLog }) => value / vbatDivisor(flightLog),
+            fromFriendly: (value, { flightLog }) => value * vbatDivisor(flightLog),
         },
     ],
     [
         ["amperageLatest"],
-        (value, toFriendly, { flightLog }) => {
-            // As in decodeFieldToFriendly(): 3.1.7+ is a subset of 3.1.0+.
-            if (
-                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
-                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
-            ) {
-                return toFriendly ? value / 100 : value * 100;
-            } else {
-                return toFriendly ? value / 1000 : value * 1000;
-            }
+        {
+            toFriendly: (value, { flightLog }) => value / amperageDivisor(flightLog),
+            fromFriendly: (value, { flightLog }) => value * amperageDivisor(flightLog),
         },
     ],
     [
         ["heading[0]", "heading[1]", "heading[2]"],
-        (value, toFriendly) => {
-            return toFriendly ? (value / Math.PI) * 180 : (value * Math.PI) / 180;
+        {
+            toFriendly: (value) => (value / Math.PI) * 180,
+            fromFriendly: (value) => (value * Math.PI) / 180,
         },
     ],
     [
         ["baroAlt"],
-        (value, toFriendly, { userSettings }) => {
-            return toFriendly
-                ? Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 100, userSettings.altitudeUnits))
-                : (value * 100) /
-                      Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits));
+        {
+            toFriendly: (value, { userSettings }) =>
+                Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 100, userSettings.altitudeUnits)),
+            fromFriendly: (value, { userSettings }) =>
+                (value * 100) / Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits)),
         },
     ],
     [
         ["rssi"],
-        (value, toFriendly) => {
-            return toFriendly ? (value / 1024) * 100 : (value * 1024) / 100;
+        {
+            toFriendly: (value) => (value / 1024) * 100,
+            fromFriendly: (value) => (value * 1024) / 100,
         },
     ],
     [
         ["GPS_coord[0]", "GPS_coord[1]"],
-        (value, toFriendly) => {
-            return toFriendly ? value / 10000000 : value * 10000000;
+        {
+            toFriendly: (value) => value / 10000000,
+            fromFriendly: (value) => value * 10000000,
         },
     ],
     [
         ["GPS_altitude"],
-        (value, toFriendly, { userSettings }) => {
-            return toFriendly
-                ? Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 10, userSettings.altitudeUnits))
-                : (value * 10) /
-                      Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits));
+        {
+            toFriendly: (value, { userSettings }) =>
+                Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 10, userSettings.altitudeUnits)),
+            fromFriendly: (value, { userSettings }) =>
+                (value * 10) / Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits)),
         },
     ],
     [
         ["GPS_speed"],
-        (value, toFriendly, { userSettings }) => {
-            switch (userSettings.speedUnits) {
-                case 1:
-                    return toFriendly ? value / 100 : value * 100; // m/s
-                case 2:
-                    return toFriendly ? (value / 100) * 3.6 : (100 * value) / 3.6; // kph
-                case 3:
-                    return toFriendly ? (value / 100) * 2.2369 : (value * 100) / 2.2369; //mph
-                default:
-                    return toFriendly ? value / 100 : value * 100; // m/s
-            }
+        {
+            toFriendly: (value, { userSettings }) => (value / 100) * speedFactor(userSettings.speedUnits),
+            fromFriendly: (value, { userSettings }) => (value * 100) / speedFactor(userSettings.speedUnits),
         },
     ],
     [
         ["GPS_ground_course"],
-        (value, toFriendly) => {
-            return toFriendly ? value / 10 : value * 10;
+        {
+            toFriendly: (value) => value / 10,
+            fromFriendly: (value) => value * 10,
         },
     ],
     [
         ["GPS_velned[0]", "GPS_velned[1]", "GPS_velned[2]"],
-        (value, toFriendly) => {
-            return toFriendly ? value / 100 : value * 100;
+        {
+            toFriendly: (value) => value / 100,
+            fromFriendly: (value) => value * 100,
         },
     ],
     [
         ["magADC[0]", "magADC[1]", "magADC[2]"],
-        (value, toFriendly) => {
-            return toFriendly ? value / 10 : value * 10;
+        {
+            toFriendly: (value) => value / 10,
+            fromFriendly: (value) => value * 10,
         },
     ],
     [
         ["pitot[0]"],
-        (value, toFriendly) => {
-            return toFriendly ? value / 100 : value * 100;
+        {
+            toFriendly: (value) => value / 100,
+            fromFriendly: (value) => value * 100,
         },
     ],
     [
         ["debug[0]", "debug[1]", "debug[2]", "debug[3]", "debug[4]", "debug[5]", "debug[6]", "debug[7]"],
-        (value, toFriendly, { flightLog, fieldName }) => {
-            return FlightLogFieldPresenter.ConvertDebugFieldValue(flightLog, fieldName, toFriendly, value);
+        {
+            toFriendly: (value, { flightLog, fieldName }) =>
+                FlightLogFieldPresenter.ConvertDebugFieldValue(flightLog, fieldName, true, value),
+            fromFriendly: (value, { flightLog, fieldName }) =>
+                FlightLogFieldPresenter.ConvertDebugFieldValue(flightLog, fieldName, false, value),
         },
     ],
 ]);
@@ -913,10 +951,12 @@ export class FlightLogFieldPresenter {
      * @param value Value of the field
      * @param toFriendly If true then convert from log file units to charts, else - from charts units to log file
      */
+    // The toFriendly flag (Sonar S2301) is the API of its 12 JavaScript call sites, in grapher.js and
+    // graph_config.js (batch F of #5542); each field's conversion is a toFriendly/fromFriendly pair.
     static ConvertFieldValue(
         flightLog: PresentedFlightLog,
         fieldName: string,
-        toFriendly: boolean,
+        toFriendly: boolean, // NOSONAR
         rawValue: number | null | undefined,
     ): number {
         const { userSettings } = useSettingsStore();
@@ -930,7 +970,10 @@ export class FlightLogFieldPresenter {
         const context = presentContext(flightLog, fieldName, userSettings);
 
         const convert = FIELD_CONVERTERS.get(fieldName);
-        return convert ? convert(value, toFriendly, context) : value;
+        if (!convert) {
+            return value;
+        }
+        return toFriendly ? convert.toFriendly(value, context) : convert.fromFriendly(value, context);
     }
 
     /**
