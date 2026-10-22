@@ -26,7 +26,7 @@ import {
     FIRMWARE_TYPE_CLEANFLIGHT,
     FIRMWARE_TYPE_BETAFLIGHT,
     FIRMWARE_TYPE_INAV,
-} from "../flightlog_fielddefs.js";
+} from "../flightlog_fielddefs";
 import type { FlightLog } from "../flightlog.js";
 
 export type FlightLogInstance = InstanceType<typeof FlightLog>;

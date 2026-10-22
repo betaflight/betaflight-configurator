@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FLIGHT_LOG_FLIGHT_STATE_NAME } from "../flightlog_fielddefs.js";
+import { FLIGHT_LOG_FLIGHT_STATE_NAME } from "../flightlog_fielddefs";
 import { GPS_transform } from "../gps_transform";
 
 /** Frame time index in a decoded main frame (FlightLogParser.FLIGHT_LOG_FIELD_INDEX_TIME). */

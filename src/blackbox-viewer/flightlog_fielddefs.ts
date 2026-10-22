@@ -1,6 +1,27 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import semver from "semver";
 
-function makeReadOnly(x) {
+function makeReadOnly<T>(x: T): Readonly<T> {
     // Make read-only if browser supports it:
     if (Object.freeze) {
         return Object.freeze(x);
@@ -50,7 +71,8 @@ export const AXIS = makeReadOnly({
     YAW: 2,
 });
 
-export let FLIGHT_LOG_FLIGHT_MODE_NAME = [];
+/** Flight mode names for the loaded log's firmware; set by adjustFieldDefsList(). */
+export let FLIGHT_LOG_FLIGHT_MODE_NAME: readonly string[] = [];
 
 export const FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3 = makeReadOnly([
     "ARM",
@@ -263,7 +285,7 @@ export const RC_SMOOTHING_DEBUG_AXIS = makeReadOnly(["ROLL", "PITCH", "YAW", "TH
 export const FILTER_TYPE = makeReadOnly(["PT1", "BIQUAD", "PT2", "PT3"]);
 
 // Debug mode names and debug field labels are no longer defined here. They now
-// live in the single shared source of truth `src/js/utils/debugModes.js`
+// live in the single shared source of truth `src/js/utils/debugModes.ts`
 // (getDebugModes / getDebugFieldNames), consumed by both the configurator debug
 // store and the blackbox viewer. The blackbox parser resolves the log's
 // API version once (firmwareToApiVersion) and stores it on sysConfig.apiVersion.
@@ -276,7 +298,8 @@ export const GYRO_HARDWARE_LPF = makeReadOnly(["NORMAL", "EXPERIMENTAL", "1KHZ_S
 
 export const GYRO_32KHZ_HARDWARE_LPF = makeReadOnly(["NORMAL", "EXPERIMENTAL"]);
 
-export let ACC_HARDWARE = [];
+/** Accelerometer names for the loaded log's firmware; set by adjustFieldDefsList(). */
+export let ACC_HARDWARE: readonly string[] = [];
 
 const ACC_HARDWARE_COMPLETE = makeReadOnly([
     "AUTO",
@@ -316,7 +339,8 @@ export const BARO_HARDWARE = makeReadOnly([
     "2SMPB_02B",
 ]);
 
-export let MAG_HARDWARE = [];
+/** Magnetometer names for the loaded log's firmware; set by adjustFieldDefsList(). */
+export let MAG_HARDWARE: readonly string[] = [];
 
 const MAG_HARDWARE_COMPLETE = makeReadOnly([
     "AUTO",
@@ -378,64 +402,69 @@ export const SIMPLIFIED_PIDS_MODE = makeReadOnly(["OFF", "ON - RP", "ON - RPY"])
 
 export const THROTTLE_LIMIT_TYPE = makeReadOnly(["OFF", "SCALE", "CLIP"]);
 
-export function adjustFieldDefsList(firmwareType, firmwareVersion) {
+/**
+ * Point the hardware and flight mode name lists at the ones the given firmware uses. The
+ * lists are module state, so this has to run before anything reads them for a new log.
+ */
+export function adjustFieldDefsList(firmwareType: number, firmwareVersion: string): void {
     if (firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(firmwareVersion, "3.3.0")) {
         // Hardware names
-        ACC_HARDWARE = ACC_HARDWARE_COMPLETE.slice(0);
-        MAG_HARDWARE = MAG_HARDWARE_COMPLETE.slice(0);
+        const accHardware = ACC_HARDWARE_COMPLETE.slice(0);
+        const magHardware = MAG_HARDWARE_COMPLETE.slice(0);
 
         if (semver.gte(firmwareVersion, "4.5.0")) {
-            MAG_HARDWARE.splice(MAG_HARDWARE.indexOf("LIS3MDL"), 0, "LIS2MDL");
-            MAG_HARDWARE.push("IST8310");
+            magHardware.splice(magHardware.indexOf("LIS3MDL"), 0, "LIS2MDL");
+            magHardware.push("IST8310");
         }
         if (semver.gte(firmwareVersion, "2025.12.0")) {
-            ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("ADXL345"), 1);
-            ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("MMA8452"), 1);
-            ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("BMA280"), 1);
-            ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("LSM303DLHC"), 1);
-            ACC_HARDWARE.splice(ACC_HARDWARE.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
+            accHardware.splice(accHardware.indexOf("ADXL345"), 1);
+            accHardware.splice(accHardware.indexOf("MMA8452"), 1);
+            accHardware.splice(accHardware.indexOf("BMA280"), 1);
+            accHardware.splice(accHardware.indexOf("LSM303DLHC"), 1);
+            accHardware.splice(accHardware.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
         }
 
-        ACC_HARDWARE = makeReadOnly(ACC_HARDWARE);
-        MAG_HARDWARE = makeReadOnly(MAG_HARDWARE);
+        ACC_HARDWARE = makeReadOnly(accHardware);
+        MAG_HARDWARE = makeReadOnly(magHardware);
 
         // Flight mode names
+        let modeNames: string[];
         if (semver.gte(firmwareVersion, "2025.12.0")) {
-            FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_POST_4_5.slice(0);
+            modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_POST_4_5.slice(0);
         } else {
-            FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_POST_3_3.slice(0);
+            modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_POST_3_3.slice(0);
             if (semver.lt(firmwareVersion, "3.4.0")) {
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GPSRESCUE"), 1);
+                modeNames.splice(modeNames.indexOf("GPSRESCUE"), 1);
             }
             if (semver.gte(firmwareVersion, "3.5.0")) {
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("RANGEFINDER"), 1);
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("CAMTRIG"), 1);
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("LEDMAX"), 1);
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("LLIGHTS"), 1);
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GOV"), 1);
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GTUNE"), 1);
+                modeNames.splice(modeNames.indexOf("RANGEFINDER"), 1);
+                modeNames.splice(modeNames.indexOf("CAMTRIG"), 1);
+                modeNames.splice(modeNames.indexOf("LEDMAX"), 1);
+                modeNames.splice(modeNames.indexOf("LLIGHTS"), 1);
+                modeNames.splice(modeNames.indexOf("GOV"), 1);
+                modeNames.splice(modeNames.indexOf("GTUNE"), 1);
             }
             if (semver.gte(firmwareVersion, "4.0.0")) {
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("BARO"), 1);
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GPSHOME"), 1);
-                FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GPSHOLD"), 1);
+                modeNames.splice(modeNames.indexOf("BARO"), 1);
+                modeNames.splice(modeNames.indexOf("GPSHOME"), 1);
+                modeNames.splice(modeNames.indexOf("GPSHOLD"), 1);
             }
         }
         if (semver.gte(firmwareVersion, "2026.6.0")) {
-            FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("GPSRESCUE") + 1, 0, "AUTOPILOT");
+            modeNames.splice(modeNames.indexOf("GPSRESCUE") + 1, 0, "AUTOPILOT");
         }
 
-        FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
+        FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(modeNames);
     } else {
         ACC_HARDWARE = makeReadOnly(ACC_HARDWARE_COMPLETE.slice(0));
         MAG_HARDWARE = makeReadOnly(MAG_HARDWARE_COMPLETE.slice(0));
 
-        FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);
+        const modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);
 
         if (firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.lte(firmwareVersion, "3.1.6")) {
-            FLIGHT_LOG_FLIGHT_MODE_NAME.splice(FLIGHT_LOG_FLIGHT_MODE_NAME.indexOf("ANTIGRAVITY"), 1);
+            modeNames.splice(modeNames.indexOf("ANTIGRAVITY"), 1);
         }
 
-        FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
+        FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(modeNames);
     }
 }
