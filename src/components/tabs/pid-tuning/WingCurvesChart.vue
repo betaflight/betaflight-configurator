@@ -243,7 +243,7 @@ function drawChart() {
         axisLabel: getCssVar("--chart-axis-label-color"),
         tick: getCssVar("--chart-tick-color"),
         grid: getCssVar("--chart-grid-line-color"),
-        curve: getCssVar("--chart-curve-color"),
+        curve: getCssVar("--chart-curve-color-1"),
     };
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
