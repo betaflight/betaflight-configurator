@@ -557,7 +557,7 @@ function mapFieldNamesToIndex(fieldNames: string[]): Record<string, number> {
  */
 function translateLegacyFieldNames(names: string[]): string[] {
     for (let i = 0; i < names.length; i++) {
-        const matches = names[i].match(/^gyroData(.+)$/);
+        const matches = /^gyroData(.+)$/.exec(names[i]);
 
         if (matches) {
             names[i] = `gyroADC${matches[1]}`;
@@ -1163,7 +1163,7 @@ export class FlightLogParser {
          * Parse "Field X ..." header and update frameDefs
          */
         const parseFieldDefinition = (fieldName: string, fieldValue: string) => {
-            const matches = fieldName.match(/^Field (.) (.+)$/);
+            const matches = /^Field (.) (.+)$/.exec(fieldName);
             if (!matches) {
                 return false;
             }
@@ -1171,18 +1171,14 @@ export class FlightLogParser {
             const frameName = matches[1];
             const frameInfo = matches[2];
 
-            if (!this.frameDefs[frameName]) {
-                this.frameDefs[frameName] = {
-                    name: [],
-                    nameToIndex: {},
-                    count: 0,
-                    signed: [],
-                    predictor: [],
-                    encoding: [],
-                };
-            }
-
-            const frameDef = this.frameDefs[frameName];
+            const frameDef = (this.frameDefs[frameName] ??= {
+                name: [],
+                nameToIndex: {},
+                count: 0,
+                signed: [],
+                predictor: [],
+                encoding: [],
+            });
 
             const frameInfoHandlers: Record<string, (() => void) | undefined> = {
                 predictor: () => {
@@ -1311,7 +1307,7 @@ export class FlightLogParser {
         // never ends. Such a header falls back to logging every frame.
         HEADER_HANDLERS["I interval"] = (_fn, fv) => {
             this.sysConfig.frameIntervalI = Number.parseInt(fv, 10);
-            if (!(this.sysConfig.frameIntervalI >= 1)) {
+            if (Number.isNaN(this.sysConfig.frameIntervalI) || this.sysConfig.frameIntervalI < 1) {
                 this.sysConfig.frameIntervalI = 1;
             }
         };
@@ -1570,6 +1566,67 @@ export class FlightLogParser {
          * raw - Set to true to disable predictions (and so store raw values)
          * skippedFrames - Set to the number of field iterations that were skipped over by rate settings since the last frame.
          */
+        /**
+         * Read the field at `i`, and the ones encoded together with it, into `values`; returns how
+         * many fields that was. Scalar encodings are a group of one.
+         */
+        function readFieldGroup(frameDef: FrameDef, i: number, values: number[]): number {
+            const encoding = frameDef.encoding;
+            switch (encoding[i]) {
+                case FLIGHT_LOG_FIELD_ENCODING_SIGNED_VB:
+                    values[0] = stream.readSignedVB();
+                    return 1;
+                case FLIGHT_LOG_FIELD_ENCODING_UNSIGNED_VB:
+                    values[0] = stream.readUnsignedVB();
+                    return 1;
+                case FLIGHT_LOG_FIELD_ENCODING_NEG_14BIT:
+                    values[0] = -signExtend14Bit(stream.readUnsignedVB());
+                    return 1;
+                case FLIGHT_LOG_FIELD_ENCODING_TAG8_4S16:
+                    if (dataVersion < 2) {
+                        stream.readTag8_4S16_v1(values);
+                    } else {
+                        stream.readTag8_4S16_v2(values);
+                    }
+                    return 4;
+                case FLIGHT_LOG_FIELD_ENCODING_TAG2_3S32:
+                    stream.readTag2_3S32(values);
+                    return 3;
+                case FLIGHT_LOG_FIELD_ENCODING_TAG2_3SVARIABLE:
+                    stream.readTag2_3SVariable(values);
+                    return 3;
+                case FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB: {
+                    //How many fields are in this encoded group? Check the subsequent field encodings:
+                    let j;
+                    for (j = i + 1; j < i + 8 && j < frameDef.count; j++) {
+                        if (encoding[j] !== FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB) {
+                            break;
+                        }
+                    }
+                    const groupCount = j - i;
+                    stream.readTag8_8SVB(values, groupCount);
+                    return groupCount;
+                }
+                case FLIGHT_LOG_FIELD_ENCODING_NULL:
+                    //Nothing to read
+                    values[0] = 0;
+                    return 1;
+                default:
+                    if (encoding[i] === undefined) {
+                        throw new Error(`Missing field encoding header for field #${i} '${frameDef.name[i]}'`);
+                    }
+                    throw new Error(`Unsupported field encoding ${encoding[i]}`);
+            }
+        }
+
+        /**
+         * Attempt to parse the frame of into the supplied `current` buffer using the encoding/predictor
+         * definitions from `frameDefs`. The previous frame values are used for predictions.
+         *
+         * frameDef - The definition for the frame type being parsed (from this.frameDefs)
+         * raw - Set to true to disable predictions (and so store raw values)
+         * skippedFrames - Set to the number of field iterations that were skipped over by rate settings since the last frame.
+         */
         function parseFrame(
             frameDef: FrameDef,
             current: number[],
@@ -1579,130 +1636,27 @@ export class FlightLogParser {
             raw: boolean,
         ): void {
             const predictor = frameDef.predictor,
-                encoding = frameDef.encoding,
                 values: number[] = new Array(8);
-            let i, j, groupCount;
+            let i = 0;
 
-            i = 0;
             while (i < frameDef.count) {
-                let value: number;
-
                 if (predictor[i] === FLIGHT_LOG_FIELD_PREDICTOR_INC) {
-                    current[i] = skippedFrames + 1;
-
-                    if (previous) {
-                        current[i] += previous[i];
-                    }
-
+                    current[i] = skippedFrames + 1 + (previous ? previous[i] : 0);
                     i++;
-                } else {
-                    switch (encoding[i]) {
-                        case FLIGHT_LOG_FIELD_ENCODING_SIGNED_VB:
-                            value = stream.readSignedVB();
-                            break;
-                        case FLIGHT_LOG_FIELD_ENCODING_UNSIGNED_VB:
-                            value = stream.readUnsignedVB();
-                            break;
-                        case FLIGHT_LOG_FIELD_ENCODING_NEG_14BIT:
-                            value = -signExtend14Bit(stream.readUnsignedVB());
-                            break;
-                        case FLIGHT_LOG_FIELD_ENCODING_TAG8_4S16:
-                            if (dataVersion < 2) {
-                                stream.readTag8_4S16_v1(values);
-                            } else {
-                                stream.readTag8_4S16_v2(values);
-                            }
+                    continue;
+                }
 
-                            //Apply the predictors for the fields:
-                            for (j = 0; j < 4; j++, i++) {
-                                current[i] = applyPrediction(
-                                    i,
-                                    raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
-                                    values[j],
-                                    current,
-                                    previous,
-                                    previous2,
-                                );
-                            }
-
-                            continue;
-                        case FLIGHT_LOG_FIELD_ENCODING_TAG2_3S32:
-                            stream.readTag2_3S32(values);
-
-                            //Apply the predictors for the fields:
-                            for (j = 0; j < 3; j++, i++) {
-                                current[i] = applyPrediction(
-                                    i,
-                                    raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
-                                    values[j],
-                                    current,
-                                    previous,
-                                    previous2,
-                                );
-                            }
-
-                            continue;
-                        case FLIGHT_LOG_FIELD_ENCODING_TAG2_3SVARIABLE:
-                            stream.readTag2_3SVariable(values);
-
-                            //Apply the predictors for the fields:
-                            for (j = 0; j < 3; j++, i++) {
-                                current[i] = applyPrediction(
-                                    i,
-                                    raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
-                                    values[j],
-                                    current,
-                                    previous,
-                                    previous2,
-                                );
-                            }
-
-                            continue;
-                        case FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB:
-                            //How many fields are in this encoded group? Check the subsequent field encodings:
-                            for (j = i + 1; j < i + 8 && j < frameDef.count; j++) {
-                                if (encoding[j] !== FLIGHT_LOG_FIELD_ENCODING_TAG8_8SVB) {
-                                    break;
-                                }
-                            }
-
-                            groupCount = j - i;
-
-                            stream.readTag8_8SVB(values, groupCount);
-
-                            for (j = 0; j < groupCount; j++, i++) {
-                                current[i] = applyPrediction(
-                                    i,
-                                    raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
-                                    values[j],
-                                    current,
-                                    previous,
-                                    previous2,
-                                );
-                            }
-
-                            continue;
-                        case FLIGHT_LOG_FIELD_ENCODING_NULL:
-                            //Nothing to read
-                            value = 0;
-                            break;
-                        default:
-                            if (encoding[i] === undefined) {
-                                throw new Error(`Missing field encoding header for field #${i} '${frameDef.name[i]}'`);
-                            } else {
-                                throw new Error(`Unsupported field encoding ${encoding[i]}`);
-                            }
-                    }
-
+                //Apply the predictors for the fields read, which may run past the frame's count, as they always could:
+                const groupCount = readFieldGroup(frameDef, i, values);
+                for (let j = 0; j < groupCount; j++, i++) {
                     current[i] = applyPrediction(
                         i,
                         raw ? FLIGHT_LOG_FIELD_PREDICTOR_0 : predictor[i],
-                        value,
+                        values[j],
                         current,
                         previous,
                         previous2,
                     );
-                    i++;
                 }
             }
         }
@@ -1860,7 +1814,8 @@ export class FlightLogParser {
                     }
 
                     //Round toward zero like C would do for integer division:
-                    value += ~~((previous[fieldIndex] + previous2![fieldIndex]) / 2);
+                    // `~~` also wraps to int32, which Math.trunc would not: kept as the parser always computed it.
+                    value += ~~((previous[fieldIndex] + previous2![fieldIndex]) / 2); // NOSONAR
                     break;
                 case FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD:
                     if (this.frameDefs.H?.nameToIndex["GPS_home[0]"] === undefined) {
@@ -2140,37 +2095,65 @@ export class FlightLogParser {
             );
         };
 
+        /** Parse "H" lines until the end of the range or the first data frame, which is left unread. */
+        const readHeaderLines = (): void => {
+            while (true) {
+                const command = stream.readChar();
+
+                if (command === "H") {
+                    parseHeaderLine();
+                } else if (command === EOF) {
+                    return;
+                } else if (getFrameType(command)) {
+                    /*
+                     * If we see something that looks like the beginning of a data frame, assume it
+                     * is and terminate the header.
+                     */
+                    stream.unreadChar();
+                    return;
+                } // else skip garbage which apparently precedes the first data frame
+            }
+        };
+
+        /** Allocate the history the frame parsers decode into, now the field counts are known. */
+        const allocateHistory = (intraDef: FrameDef): void => {
+            mainHistoryRing = [new Array(intraDef.count), new Array(intraDef.count), new Array(intraDef.count)];
+
+            const homeDef = this.frameDefs.H;
+            const gpsDef = this.frameDefs.G;
+            if (homeDef && gpsDef) {
+                gpsHomeHistory = [new Array(homeDef.count), new Array(homeDef.count)];
+                lastGPS = new Array(gpsDef.count);
+
+                /* Home coord predictors appear in pairs (lat/lon), but the predictor ID is the same for both. It's easier to
+                 * apply the right predictor during parsing if we rewrite the predictor ID for the second half of the pair here:
+                 */
+                for (let i = 1; i < gpsDef.count; i++) {
+                    if (
+                        gpsDef.predictor[i - 1] === FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD &&
+                        gpsDef.predictor[i] === FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD
+                    ) {
+                        gpsDef.predictor[i] = FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD_1;
+                    }
+                }
+            } else {
+                gpsHomeHistory = [];
+                lastGPS = [];
+            }
+
+            lastSlow = this.frameDefs.S ? new Array(this.frameDefs.S.count) : [];
+        };
+
         this.parseHeader = function (startOffset, endOffset) {
             this.resetAllState();
 
             //Set parsing ranges up
-            stream.start = startOffset === undefined ? stream.pos : startOffset;
+            stream.start = startOffset ?? stream.pos;
             stream.pos = stream.start;
-            stream.end = endOffset === undefined ? stream.end : endOffset;
+            stream.end = endOffset ?? stream.end;
             stream.eof = false;
 
-            mainloop: while (true) {
-                const command = stream.readChar();
-
-                switch (command) {
-                    case "H":
-                        parseHeaderLine();
-                        break;
-                    case EOF:
-                        break mainloop;
-                    default:
-                        /*
-                         * If we see something that looks like the beginning of a data frame, assume it
-                         * is and terminate the header.
-                         */
-                        if (getFrameType(command)) {
-                            stream.unreadChar();
-
-                            break mainloop;
-                        } // else skip garbage which apparently precedes the first data frame
-                        break;
-                }
-            }
+            readHeaderLines();
 
             adjustFieldDefsList(this.sysConfig.firmwareType, this.sysConfig.firmwareVersion);
             this.sysConfig.apiVersion = firmwareToApiVersion(
@@ -2197,37 +2180,7 @@ export class FlightLogParser {
             }
 
             // Now we know our field counts, we can allocate arrays to hold parsed data
-            mainHistoryRing = [
-                new Array(this.frameDefs.I.count),
-                new Array(this.frameDefs.I.count),
-                new Array(this.frameDefs.I.count),
-            ];
-
-            if (this.frameDefs.H && this.frameDefs.G) {
-                gpsHomeHistory = [new Array(this.frameDefs.H.count), new Array(this.frameDefs.H.count)];
-                lastGPS = new Array(this.frameDefs.G.count);
-
-                /* Home coord predictors appear in pairs (lat/lon), but the predictor ID is the same for both. It's easier to
-                 * apply the right predictor during parsing if we rewrite the predictor ID for the second half of the pair here:
-                 */
-                for (let i = 1; i < this.frameDefs.G.count; i++) {
-                    if (
-                        this.frameDefs.G.predictor[i - 1] === FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD &&
-                        this.frameDefs.G.predictor[i] === FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD
-                    ) {
-                        this.frameDefs.G.predictor[i] = FLIGHT_LOG_FIELD_PREDICTOR_HOME_COORD_1;
-                    }
-                }
-            } else {
-                gpsHomeHistory = [];
-                lastGPS = [];
-            }
-
-            if (this.frameDefs.S) {
-                lastSlow = new Array(this.frameDefs.S.count);
-            } else {
-                lastSlow = [];
-            }
+            allocateHistory(this.frameDefs.I);
         };
 
         /**
@@ -2254,9 +2207,60 @@ export class FlightLogParser {
          * Continue the current parse by scanning the given range of offsets for data. To begin an independent parse,
          * call resetDataState() first.
          */
+        /**
+         * Finish the frame that started at `frameStart`, now the next one has begun (or the stream
+         * ended). Returns false if it was corrupt, after counting it; the caller then resynchronises.
+         */
+        const completeFrame = (
+            frameType: AnyFrameTypeHandler,
+            frameStart: number,
+            looksLikeFrameCompleted: boolean,
+            raw: boolean,
+        ): boolean => {
+            const lastFrameSize = stream.pos - frameStart;
+
+            const frameTypeStats = (this.stats.frame[frameType.marker] ??= {
+                bytes: 0,
+                sizeCount: new Int32Array(256) /* int32 arrays are zero-filled, handy! */,
+                validCount: 0,
+                corruptCount: 0,
+                desyncCount: 0,
+                field: [],
+            });
+
+            // If we see what looks like the beginning of a new frame, assume that the previous frame was valid:
+            if (lastFrameSize <= FLIGHT_LOG_MAX_FRAME_LENGTH && looksLikeFrameCompleted) {
+                // Every frame type has a complete handler. Each handler's marker is its own frame
+                // type, which TypeScript cannot correlate across the union.
+                const frameAccepted = (frameType as FrameTypeHandler).complete(
+                    frameType.marker,
+                    frameStart,
+                    stream.pos,
+                    raw,
+                );
+
+                if (frameAccepted) {
+                    //Update statistics for this frame type
+                    frameTypeStats.bytes += lastFrameSize;
+                    frameTypeStats.sizeCount[lastFrameSize]++;
+                    frameTypeStats.validCount++;
+                } else {
+                    frameTypeStats.desyncCount++;
+                }
+                return true;
+            }
+
+            //The previous frame was corrupt
+
+            //We need to resynchronise before we can deliver another main frame:
+            mainStreamIsValid = false;
+            frameTypeStats.corruptCount++;
+            this.stats.totalCorruptFrames++;
+            return false;
+        };
+
         this.parseLogData = function (raw, startOffset, endOffset) {
-            let looksLikeFrameCompleted,
-                prematureEof = false,
+            let prematureEof = false,
                 frameStart = 0,
                 frameType,
                 lastFrameType = null;
@@ -2264,69 +2268,26 @@ export class FlightLogParser {
             invalidateMainStream();
 
             //Set parsing ranges up for the log the caller selected
-            stream.start = startOffset === undefined ? stream.pos : startOffset;
+            stream.start = startOffset ?? stream.pos;
             stream.pos = stream.start;
-            stream.end = endOffset === undefined ? stream.end : endOffset;
+            stream.end = endOffset ?? stream.end;
             stream.eof = false;
             while (true) {
                 const command = stream.readChar();
 
-                if (lastFrameType) {
-                    const lastFrameSize = stream.pos - frameStart;
-
-                    // Is this the beginning of a new frame?
-                    looksLikeFrameCompleted = getFrameType(command) || (!prematureEof && command === EOF);
-
-                    if (!this.stats.frame[lastFrameType.marker]) {
-                        this.stats.frame[lastFrameType.marker] = {
-                            bytes: 0,
-                            sizeCount: new Int32Array(256) /* int32 arrays are zero-filled, handy! */,
-                            validCount: 0,
-                            corruptCount: 0,
-                            desyncCount: 0,
-                            field: [],
-                        };
-                    }
-
-                    const frameTypeStats = this.stats.frame[lastFrameType.marker]!;
-                    // If we see what looks like the beginning of a new frame, assume that the previous frame was valid:
-                    if (lastFrameSize <= FLIGHT_LOG_MAX_FRAME_LENGTH && looksLikeFrameCompleted) {
-                        // Every frame type has a complete handler. Each handler's marker is its own frame
-                        // type, which TypeScript cannot correlate across the union.
-                        const frameAccepted = (lastFrameType as FrameTypeHandler).complete(
-                            lastFrameType.marker,
-                            frameStart,
-                            stream.pos,
-                            raw,
-                        );
-
-                        if (frameAccepted) {
-                            //Update statistics for this frame type
-                            frameTypeStats.bytes += lastFrameSize;
-                            frameTypeStats.sizeCount[lastFrameSize]++;
-                            frameTypeStats.validCount++;
-                        } else {
-                            frameTypeStats.desyncCount++;
-                        }
-                    } else {
-                        //The previous frame was corrupt
-
-                        //We need to resynchronise before we can deliver another main frame:
-                        mainStreamIsValid = false;
-                        frameTypeStats.corruptCount++;
-                        this.stats.totalCorruptFrames++;
-
-                        /*
-                         * Start the search for a frame beginning after the first byte of the previous corrupt frame.
-                         * This way we can find the start of the next frame after the corrupt frame if the corrupt frame
-                         * was truncated.
-                         */
-                        stream.pos = frameStart + 1;
-                        lastFrameType = null;
-                        prematureEof = false;
-                        stream.eof = false;
-                        continue;
-                    }
+                // Is this the beginning of a new frame?
+                const looksLikeFrameCompleted = Boolean(getFrameType(command)) || (!prematureEof && command === EOF);
+                if (lastFrameType && !completeFrame(lastFrameType, frameStart, looksLikeFrameCompleted, raw)) {
+                    /*
+                     * Start the search for a frame beginning after the first byte of the previous corrupt frame.
+                     * This way we can find the start of the next frame after the corrupt frame if the corrupt frame
+                     * was truncated.
+                     */
+                    stream.pos = frameStart + 1;
+                    lastFrameType = null;
+                    prematureEof = false;
+                    stream.eof = false;
+                    continue;
                 }
 
                 if (command === EOF) {
