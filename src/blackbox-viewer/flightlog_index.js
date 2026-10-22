@@ -1,8 +1,7 @@
 import { FlightLogParser } from "./flightlog_parser";
 import { FlightLogEvent } from "./flightlog_fielddefs";
 import { IMU } from "./imu";
-import { ArrayDataStream } from "./datastream";
-import "./decoders";
+import { ArrayDataStream } from "../js/blackbox/datastream";
 
 export function FlightLogIndex(logData) {
     //Private:

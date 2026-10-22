@@ -9,8 +9,9 @@ import {
     FIRMWARE_TYPE_BETAFLIGHT,
     FIRMWARE_TYPE_INAV,
 } from "./flightlog_fielddefs";
-import { ArrayDataStream } from "./datastream";
-import "./decoders";
+import { ArrayDataStream } from "../js/blackbox/datastream";
+// Patches the tag readers onto ArrayDataStream; parseFrame() calls them.
+import "../js/blackbox/decoders";
 import {
     hexToFloat,
     uint32ToFloat,
@@ -156,7 +157,8 @@ export function FlightLogParser(logData) {
         FLIGHT_LOG_FIELD_ENCODING_TAG8_4S16 = 8,
         FLIGHT_LOG_FIELD_ENCODING_NULL = 9, // Nothing is written to the file, take value to be zero
         FLIGHT_LOG_FIELD_ENCODING_TAG2_3SVARIABLE = 10,
-        EOF = ArrayDataStream.prototype.EOF,
+        // What readChar() returns once the stream is exhausted
+        EOF = "",
         NEWLINE = "\n".codePointAt(0),
         INFLIGHT_ADJUSTMENT_FUNCTIONS = [
             {
