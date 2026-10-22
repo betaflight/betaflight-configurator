@@ -72,6 +72,28 @@ describe("PrefStorage", () => {
         expect(localStorage.getItem("x")).toBeNull();
     });
 
+    it("falls back to memory when reading localStorage itself throws", () => {
+        // A browser that blocks storage throws a SecurityError from the property getter.
+        const descriptor = Object.getOwnPropertyDescriptor(globalThis, "localStorage")!;
+        Object.defineProperty(globalThis, "localStorage", {
+            configurable: true,
+            get: () => {
+                throw new DOMException("The operation is insecure.", "SecurityError");
+            },
+        });
+        vi.spyOn(console, "warn").mockImplementation(() => {});
+        try {
+            const prefs = new PrefStorage();
+
+            prefs.set("x", 5);
+
+            expect(read(prefs, "x")).toBe(5);
+            expect(read(prefs, "y")).toBeNull();
+        } finally {
+            Object.defineProperty(globalThis, "localStorage", descriptor);
+        }
+    });
+
     it("uses chrome.storage.local where the Chrome Apps API exists", () => {
         const store: Record<string, unknown> = {};
         vi.stubGlobal("chrome", {

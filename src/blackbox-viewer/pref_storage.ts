@@ -34,6 +34,32 @@ function chromeStorageLocal(): ChromeStorageLocal | undefined {
 }
 
 /**
+ * localStorage if this page may use it, else null. Where storage is blocked, reading the
+ * `localStorage` property itself throws a SecurityError, so the read is inside the try too.
+ */
+function usableLocalStorage(): Storage | null {
+    try {
+        const storage = globalThis.localStorage;
+        if (!storage) {
+            // No persistent storage available
+            return null;
+        }
+        // Verify localStorage is actually usable (may be disabled in some browsers)
+        const testKey = "__pref_storage_test__";
+        storage.setItem(testKey, "test");
+        storage.removeItem(testKey);
+        return storage;
+    } catch (e) {
+        // localStorage exists but isn't usable (e.g., private browsing mode, or blocked by the browser)
+        console.warn(
+            "localStorage is not available, falling back to in-memory storage:",
+            (e as { message?: unknown }).message,
+        );
+        return null;
+    }
+}
+
+/**
  * A local key/value store for JSON-encodable values. Supports localStorage, chrome.storage.local, and in-memory backends.
  *
  * Supply keyPrefix if you want it automatically prepended to key names.
@@ -42,29 +68,16 @@ export class PrefStorage {
     private readonly keyPrefix: string;
     private readonly mode: typeof LOCALSTORAGE | typeof CHROME_STORAGE_LOCAL | typeof MEMORY;
     private readonly memoryStorage: Record<string, unknown> = {};
+    /** Acquired once, safely; only set in LOCALSTORAGE mode. */
+    private readonly localStorage: Storage | null = null;
 
     constructor(keyPrefix?: string) {
-        // Determine which storage backend to use
+        // Determine which storage backend to use, falling back to in-memory storage
         if (chromeStorageLocal()) {
             this.mode = CHROME_STORAGE_LOCAL;
-        } else if (globalThis.localStorage) {
-            // Verify localStorage is actually usable (may be disabled in some browsers)
-            try {
-                const testKey = "__pref_storage_test__";
-                globalThis.localStorage.setItem(testKey, "test");
-                globalThis.localStorage.removeItem(testKey);
-                this.mode = LOCALSTORAGE;
-            } catch (e) {
-                // localStorage exists but isn't usable (e.g., private browsing mode)
-                console.warn(
-                    "localStorage is not available, falling back to in-memory storage:",
-                    (e as { message?: unknown }).message,
-                );
-                this.mode = MEMORY;
-            }
         } else {
-            // No persistent storage available, fall back to in-memory storage
-            this.mode = MEMORY;
+            this.localStorage = usableLocalStorage();
+            this.mode = this.localStorage ? LOCALSTORAGE : MEMORY;
         }
 
         this.keyPrefix = keyPrefix || "";
@@ -81,12 +94,10 @@ export class PrefStorage {
             case LOCALSTORAGE: {
                 let parsed: unknown = null;
 
-                if (globalThis.localStorage) {
-                    try {
-                        parsed = JSON.parse(globalThis.localStorage[name]);
-                    } catch {
-                        // Invalid JSON in storage — return null
-                    }
+                try {
+                    parsed = JSON.parse(this.localStorage![name]);
+                } catch {
+                    // Invalid JSON in storage — return null
                 }
 
                 onGet(parsed);
@@ -111,13 +122,11 @@ export class PrefStorage {
 
         switch (this.mode) {
             case LOCALSTORAGE:
-                if (globalThis.localStorage) {
-                    try {
-                        globalThis.localStorage[name] = JSON.stringify(value);
-                    } catch (e) {
-                        // Storage quota exceeded or other error
-                        console.warn("Failed to save to localStorage:", (e as { message?: unknown }).message);
-                    }
+                try {
+                    this.localStorage![name] = JSON.stringify(value);
+                } catch (e) {
+                    // Storage quota exceeded or other error
+                    console.warn("Failed to save to localStorage:", (e as { message?: unknown }).message);
                 }
                 break;
             case CHROME_STORAGE_LOCAL: {
