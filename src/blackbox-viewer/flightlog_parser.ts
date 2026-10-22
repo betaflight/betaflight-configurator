@@ -1306,9 +1306,12 @@ export class FlightLogParser {
         }
 
         // Individual handlers with unique logic
+        // shouldHaveFrame() needs all three intervals to be at least 1: anything else (0, or NaN
+        // from a garbled header) makes it false for every iteration, and the skipped-frame count
+        // never ends. Such a header falls back to logging every frame.
         HEADER_HANDLERS["I interval"] = (_fn, fv) => {
             this.sysConfig.frameIntervalI = Number.parseInt(fv, 10);
-            if (this.sysConfig.frameIntervalI < 1) {
+            if (!(this.sysConfig.frameIntervalI >= 1)) {
                 this.sysConfig.frameIntervalI = 1;
             }
         };
@@ -1320,6 +1323,10 @@ export class FlightLogParser {
             } else {
                 this.sysConfig.frameIntervalPNum = Number.parseInt(fv.substring(0, slashIdx), 10);
                 this.sysConfig.frameIntervalPDenom = Number.parseInt(fv.substring(slashIdx + 1), 10);
+            }
+            if (!(this.sysConfig.frameIntervalPNum >= 1 && this.sysConfig.frameIntervalPDenom >= 1)) {
+                this.sysConfig.frameIntervalPNum = 1;
+                this.sysConfig.frameIntervalPDenom = 1;
             }
         };
         HEADER_HANDLERS["P denom"] = noopHandler;
