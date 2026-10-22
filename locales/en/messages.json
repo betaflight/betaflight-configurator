@@ -1768,19 +1768,10 @@
         "message": "Motor"
     },
     "configurationMotorBrandHelp": {
-        "message": "Pick the brand and model to fill in the KV, stator size, magnet count and the datasheet winding resistance. Values can still be edited below; Generic: a motor not in the list, entered by hand."
+        "message": "Pick the brand and model to fill in the KV, stator size and magnet count. Values can still be edited below; Generic: a motor not in the list, entered by hand."
     },
     "configurationMotorModel": {
         "message": "Model"
-    },
-    "configurationMotorResistance": {
-        "message": "Motor winding resistance"
-    },
-    "configurationMotorResistanceHelp": {
-        "message": "Internal resistance from the motor datasheet, in milliohm (e.g. 70 for 0.070 Ω), measured between two motor wires. Sets the copper loss from the motor current in the thermal estimator. A multimeter reads too high on 5\" and larger motors because of its leads; use the datasheet value. 0 = estimate from KV and stator size."
-    },
-    "configurationMotorDatasheetAuto": {
-        "message": "auto"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (ESC value when disarmed)"

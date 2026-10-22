@@ -426,31 +426,29 @@ describe("MSP_MOTOR_CONFIG motor thermal fields", () => {
             callbacks: [],
         });
 
-    it("reads the datasheet resistance after the stator geometry", () => {
-        decode([...header, 22, 35, 0, 70, 0]);
+    it("reads the stator geometry after the KV", () => {
+        decode([...header, 22, 35, 0]);
 
         expect(fcStore.motorConfig.motor_kv).toEqual(2800);
         expect(fcStore.motorConfig.motor_stator_diameter).toEqual(22);
-        expect(fcStore.motorConfig.motor_datasheet_supported).toEqual(true);
-        expect(fcStore.motorConfig.motor_resistance).toEqual(70);
+        expect(fcStore.motorConfig.motor_stator_height).toEqual(35);
+        expect(fcStore.motorConfig.motor_prop_diameter).toEqual(0);
     });
 
-    it("leaves the datasheet resistance off for a firmware that sends only the geometry", () => {
-        fcStore.motorConfig.motor_resistance = 55;
-        decode([...header, 22, 35, 0]);
+    it("clears the geometry for a firmware without the thermal estimator", () => {
+        fcStore.motorConfig.motor_stator_diameter = 22;
+        decode([...header]);
 
-        expect(fcStore.motorConfig.motor_datasheet_supported).toEqual(false);
-        expect(fcStore.motorConfig.motor_resistance).toEqual(0);
+        expect(fcStore.motorConfig.motor_stator_diameter).toEqual(0);
     });
 
-    it("writes the datasheet resistance back only when the firmware reported it", () => {
-        decode([...header, 22, 70, 51, 55, 0]);
-        const withFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
-        expect(withFields.slice(-5)).toEqual([22, 70, 51, 55, 0]);
-
+    it("writes the geometry back only when the firmware reported it", () => {
         decode([...header, 22, 70, 51]);
+        const withFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
+        expect(withFields.slice(-3)).toEqual([22, 70, 51]);
+
+        decode([...header]);
         const withoutFields = mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG);
-        expect(withoutFields.slice(-3)).toEqual([22, 70, 51]);
-        expect(withoutFields).toHaveLength(withFields.length - 2);
+        expect(withoutFields).toHaveLength(withFields.length - 3);
     });
 });

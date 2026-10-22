@@ -36,8 +36,6 @@ describe("motor database", () => {
             expect(m.statorDiameterMm).toBeLessThanOrEqual(60);
             expect(m.statorHeightDmm).toBeGreaterThanOrEqual(10);
             expect(m.statorHeightDmm).toBeLessThanOrEqual(250);
-            expect(m.resistanceMohm).toBeGreaterThanOrEqual(0);
-            expect(m.resistanceMohm).toBeLessThanOrEqual(5000);
             expect(m.magnets % 2).toBe(0);
         }
     });
@@ -52,8 +50,9 @@ describe("motor database", () => {
     });
 
     it("finds the motor back from the flight controller values", () => {
-        expect(findMotor(2800, 22, 35, 70)?.model).toBe("Lightning V2 2203.5");
-        expect(findMotor(2800, 22, 35, 0)).toBeNull(); // no resistance: could be any 2203.5 2800KV
-        expect(findMotor(2801, 22, 35, 70)).toBeNull();
+        expect(findMotor(2800, 22, 35, 14)?.model).toBe("Lightning V2 2203.5");
+        expect(findMotor(2800, 22, 35, 12)).toBeNull(); // other magnet count
+        expect(findMotor(2801, 22, 35, 14)).toBeNull();
+        expect(findMotor(1950, 22, 70, 14)).toBeNull(); // a 2207 1950KV of several brands: no unique match
     });
 });

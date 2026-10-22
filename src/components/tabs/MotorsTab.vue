@@ -288,26 +288,6 @@
                                 </datalist>
                                 <span class="ml-2 text-xs text-muted">{{ motorStatorPreview }}</span>
                             </SettingRow>
-                            <SettingRow
-                                v-if="isMotorDatasheetSupported"
-                                :label="$t('configurationMotorResistance')"
-                                :help="$t('configurationMotorResistanceHelp')"
-                                fullWidth
-                            >
-                                <UInputNumber
-                                    v-model="fcStore.motorConfig.motor_resistance"
-                                    :min="0"
-                                    :max="5000"
-                                    :step="1"
-                                    size="xs"
-                                    orientation="vertical"
-                                    :format-options="{ useGrouping: false }"
-                                    class="w-16"
-                                />
-                                <span class="ml-2 text-xs text-muted">{{
-                                    fcStore.motorConfig.motor_resistance ? "mΩ" : $t("configurationMotorDatasheetAuto")
-                                }}</span>
-                            </SettingRow>
                         </UiBox>
                         <!-- 3D -->
                         <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
@@ -1820,10 +1800,6 @@ const isMotorKvSupported = computed(() => semver.gte(fcStore.config.apiVersion, 
 const isMotorStatorSupported = computed(
     () => isMotorKvSupported.value && fcStore.motorConfig.motor_stator_diameter > 0,
 );
-// Datasheet winding resistance (mOhm), reported by firmware with the motor thermal estimator
-const isMotorDatasheetSupported = computed(
-    () => isMotorStatorSupported.value && fcStore.motorConfig.motor_datasheet_supported,
-);
 const motorStatorSizes = [
     "0802",
     "1103",
@@ -1888,8 +1864,8 @@ const motorStatorPreview = computed(() => {
 const normalizeStatorInput = () => {
     motorStatorInput.value = String(motorStatorInput.value).replace(",", ".");
 };
-// Motor database: brand and model fill in KV, stator size, magnets and the datasheet resistance. The flight controller
-// keeps only the values, so the selection is found again from them (no unique match: custom).
+// Motor database: brand and model fill in KV, stator size and magnets. The flight controller keeps only the values, so
+// the selection is found again from them (no unique match: Generic with the same values).
 const motorKey = (m: MotorSpec) => `${m.brand}|${m.model}|${m.kv}`;
 const motorBrandItems = motorBrands();
 const selectedMotorBrand = ref(MOTOR_GENERIC);
@@ -1903,25 +1879,25 @@ const pickedMotor = () =>
     selectedMotorBrand.value === MOTOR_GENERIC
         ? undefined
         : motorsOfBrand(selectedMotorBrand.value).find((x) => motorKey(x) === selectedMotorKey.value);
-const stillPicked = (m: MotorSpec, kv: number, d: number, h: number, r: number) =>
+const stillPicked = (m: MotorSpec, kv: number, d: number, h: number, poles: number) =>
     m.kv === kv &&
     (!isMotorStatorSupported.value || (m.statorDiameterMm === d && m.statorHeightDmm === h)) &&
-    (!isMotorDatasheetSupported.value || m.resistanceMohm === r);
+    (!m.magnets || m.magnets === poles);
 watch(
     () => [
         fcStore.motorConfig.motor_kv,
         fcStore.motorConfig.motor_stator_diameter,
         fcStore.motorConfig.motor_stator_height,
-        fcStore.motorConfig.motor_resistance,
+        fcStore.motorConfig.motor_poles,
     ],
-    ([kv, d, h, r]) => {
-        // the picked motor stays picked while the values are the ones it wrote: a model without a published
-        // resistance, or firmware without the datasheet fields, never matches findMotor() below
+    ([kv, d, h, poles]) => {
+        // the picked motor stays picked while the values are the ones it wrote: motors of several brands share KV,
+        // stator and magnets, so findMotor() below finds them only when the combination is unique
         const picked = pickedMotor();
-        if (picked && stillPicked(picked, kv, d, h, r)) {
+        if (picked && stillPicked(picked, kv, d, h, poles)) {
             return;
         }
-        const m = findMotor(kv, d, h, r);
+        const m = isMotorStatorSupported.value ? findMotor(kv, d, h, poles) : null;
         if (m) {
             selectedMotorBrand.value = m.brand;
             selectedMotorKey.value = motorKey(m);
@@ -1945,9 +1921,6 @@ const applyMotorModel = (key: string) => {
     }
     if (m.magnets) {
         fcStore.motorConfig.motor_poles = m.magnets;
-    }
-    if (isMotorDatasheetSupported.value) {
-        fcStore.motorConfig.motor_resistance = m.resistanceMohm;
     }
 };
 
