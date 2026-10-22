@@ -30,6 +30,7 @@ import {
     FlightLogEvent,
     AXIS,
     FAST_PROTOCOL,
+    SUPER_EXPO_YAW,
     FIRMWARE_TYPE_BETAFLIGHT,
     FIRMWARE_TYPE_CLEANFLIGHT,
 } from "./flightlog_fielddefs";
@@ -1787,9 +1788,9 @@ export class FlightLog {
             let superExpoFactor = 1 / calculateExpoPlus(value, axis);
 
             if (axis === AXIS.YAW /*YAW*/) {
-                // SUPER_EXPO_YAW is a list of names, so its `.ON` and `.ALWAYS` were always undefined.
-                const SUPER_EXPO_YAW_ON = undefined;
-                const SUPER_EXPO_YAW_ALWAYS = undefined;
+                // The header logs the mode as an index into SUPER_EXPO_YAW.
+                const SUPER_EXPO_YAW_ON = SUPER_EXPO_YAW.indexOf("ON");
+                const SUPER_EXPO_YAW_ALWAYS = SUPER_EXPO_YAW.indexOf("ALWAYS");
                 if (sysConfig.superExpoYawMode === SUPER_EXPO_YAW_ON && currentFlightMode == null) {
                     superExpoFactor = 1; // If we don't know the flight mode, then reset the super expo mode.
                 }

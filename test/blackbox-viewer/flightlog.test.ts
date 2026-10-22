@@ -160,3 +160,30 @@ describe("FlightLog unit conversions", () => {
         expect(modes.Angle).toBe(false);
     });
 });
+
+describe("FlightLog yaw rate before Betaflight 2.8", () => {
+    // Yaw at a stick of 250 with rates[2] = 30: plain, ((30 + 47) * 250) >> 7 = 150. With
+    // super expo the factor is 1 / (1 - 0.5 * 250 / 500) = 4/3, giving 200.
+    const legacy = (mode: number) =>
+        open(1, [
+            "H Firmware revision:Betaflight 2.7.0 (abcdef) NAZE",
+            `H superExpoYawMode:${mode}`,
+            "H superExpoFactor:50,50",
+            "H rates:40,40,30",
+        ]).flightLog;
+    const SUPER_EXPO_MODE = 1 << 28;
+
+    it("never applies super expo when the yaw mode is OFF", () => {
+        expect(legacy(0).rcCommandRawToDegreesPerSecond(250, 2, SUPER_EXPO_MODE)).toBe(150);
+    });
+
+    it("applies it under ON only while the flight mode has super expo", () => {
+        expect(legacy(1).rcCommandRawToDegreesPerSecond(250, 2, SUPER_EXPO_MODE)).toBe(200);
+        expect(legacy(1).rcCommandRawToDegreesPerSecond(250, 2, 0)).toBe(150);
+        expect(legacy(1).rcCommandRawToDegreesPerSecond(250, 2, null)).toBe(150);
+    });
+
+    it("always applies it under ALWAYS", () => {
+        expect(legacy(2).rcCommandRawToDegreesPerSecond(250, 2, 0)).toBe(200);
+    });
+});
