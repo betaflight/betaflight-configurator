@@ -23,7 +23,7 @@ import { defineStore } from "pinia";
 import { ref, shallowRef, computed, nextTick } from "vue";
 import { useSettingsStore } from "./settings.js";
 import { useLogStore } from "./log";
-import { PrefStorage } from "../pref_storage.js";
+import { PrefStorage } from "../pref_storage";
 import type { FlightLogGrapher } from "../grapher.js";
 import type { GraphConfig } from "../graph_config.js";
 import type { MapGrapher } from "../graph_map.js";

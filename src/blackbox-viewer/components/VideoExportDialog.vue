@@ -6,7 +6,7 @@ import { usePlaybackStore } from "../stores/playback";
 import { useAppStore } from "../stores/app";
 import { useGraphStore } from "../stores/graph";
 import { useSettingsStore } from "../stores/settings.js";
-import { PrefStorage } from "../pref_storage.js";
+import { PrefStorage } from "../pref_storage";
 import {
     cancelActiveVideoExport,
     estimateFrameCount,
