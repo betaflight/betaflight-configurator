@@ -1559,14 +1559,6 @@ export class FlightLogParser {
         };
 
         /**
-         * Attempt to parse the frame of into the supplied `current` buffer using the encoding/predictor
-         * definitions from `frameDefs`. The previous frame values are used for predictions.
-         *
-         * frameDef - The definition for the frame type being parsed (from this.frameDefs)
-         * raw - Set to true to disable predictions (and so store raw values)
-         * skippedFrames - Set to the number of field iterations that were skipped over by rate settings since the last frame.
-         */
-        /**
          * Read the field at `i`, and the ones encoded together with it, into `values`; returns how
          * many fields that was. Scalar encodings are a group of one.
          */
@@ -2203,10 +2195,6 @@ export class FlightLogParser {
             }
         };
 
-        /**
-         * Continue the current parse by scanning the given range of offsets for data. To begin an independent parse,
-         * call resetDataState() first.
-         */
         /**
          * Finish the frame that started at `frameStart`, now the next one has begun (or the stream
          * ended). Returns false if it was corrupt, after counting it; the caller then resynchronises.
