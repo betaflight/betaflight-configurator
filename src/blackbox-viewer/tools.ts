@@ -90,8 +90,6 @@ export function parseCommaSeparatedString(string: string, length?: number): Head
      *                      else an Array is returned containing all the values up to the length (if specified)
      ***/
     const parts = string.split(",");
-    let result: (HeaderScalar | null)[];
-    let value: number;
 
     length = length || parts.length; // we can force a length if we like
 
@@ -99,21 +97,24 @@ export function parseCommaSeparatedString(string: string, length?: number): Head
         // this is not actually a list, just return the value
         // `parts` is an array here, so indexOf(".") only matches a part that is exactly "." and both
         // branches then give NaN: in effect this always parses the whole string as a float.
-        value = parts.indexOf(".") ? Number.parseFloat(String(parts)) : Number.parseInt(String(parts), 10);
+        const value = parts.indexOf(".") ? Number.parseFloat(String(parts)) : Number.parseInt(String(parts), 10);
         return Number.isNaN(value) ? string : value;
-    } else {
-        // this really is a list; build an array
-        result = new Array(length);
-        for (let i = 0; i < length; i++) {
-            if (i < parts.length) {
-                value = parts[i].indexOf(".") ? Number.parseFloat(parts[i]) : Number.parseInt(parts[i], 10);
-                result[i] = Number.isNaN(value) ? parts[i] : value;
-            } else {
-                result[i] = null;
-            }
-        }
-        return result;
     }
+
+    // this really is a list; build an array
+    const result: (HeaderScalar | null)[] = new Array(length);
+    for (let i = 0; i < length; i++) {
+        result[i] = i < parts.length ? parseListItem(parts[i]) : null;
+    }
+    return result;
+}
+
+/** One item of a header list: a number where it parses as one, otherwise the text. */
+function parseListItem(part: string): HeaderScalar {
+    // indexOf(".") is 0 only for an item starting with ".", which parseInt() turns into NaN, so
+    // such an item stays text; any other item is parsed as a float.
+    const value = part.indexOf(".") ? Number.parseFloat(part) : Number.parseInt(part, 10);
+    return Number.isNaN(value) ? part : value;
 }
 
 /**
@@ -193,9 +194,11 @@ export function formatTime(msec: number, displayMsec?: boolean): string {
     const hours = Math.floor(mins / 60);
     mins %= 60;
 
-    return `${
-        (msec < 0 ? "-" : "") + (hours ? `${leftPad(hours, "0", 2)}:` : "") + leftPad(mins, "0", 2)
-    }:${leftPad(secs, "0", 2)}${displayMsec ? `.${leftPad(ms, "0", 3)}` : ""}`;
+    const sign = msec < 0 ? "-" : "";
+    const hoursPart = hours ? `${leftPad(hours, "0", 2)}:` : "";
+    const msecPart = displayMsec ? `.${leftPad(ms, "0", 3)}` : "";
+
+    return `${sign}${hoursPart}${leftPad(mins, "0", 2)}:${leftPad(secs, "0", 2)}${msecPart}`;
 }
 
 export function stringLoopTime(
@@ -228,30 +231,34 @@ export function stringLoopTime(
 export function stringTimetoMsec(input: string): number {
     try {
         // A null match throws on `.length`, which the catch turns into 0.
-        const matches = input.match(/(-)?(\d+)(\D)*(\d+)*\D*(\d+)*/)!;
-
-        if (matches.length > 2) {
-            // there is a placeholder - either : or .
-            if (matches[3] === ":") {
-                // time has been entered MM:SS.SSS
-                return (
-                    (matches[1] ? -1 : 1) *
-                    (Number(matches[2]) * 60 * 1000000 +
-                        Number(matches[4] ? matches[4] : 0) * 1000000 +
-                        Number(matches[5] ? `${matches[5]}00`.slice(0, 3) : 0) * 1000)
-                );
-            } else {
-                return (
-                    (matches[1] ? -1 : 1) *
-                    (Number(matches[2]) * 1000000 + Number(matches[4] ? `${matches[4]}00`.slice(0, 3) : 0) * 1000)
-                );
-            }
-        } else {
-            return (matches[1] ? -1 : 1) * (Number(matches[2]) * 1000000);
-        }
+        return matchedTimeToMicroseconds(/(-)?(\d+)(\D)*(\d+)*\D*(\d+)*/.exec(input)!);
     } catch {
         return 0;
     }
+}
+
+/** Up to three fraction digits as milliseconds ("5" is 500), or 0 when there are none. */
+function fractionToMilliseconds(digits: string | undefined): number {
+    return Number(digits ? `${digits}00`.slice(0, 3) : 0);
+}
+
+function matchedTimeToMicroseconds(matches: RegExpExecArray): number {
+    const sign = matches[1] ? -1 : 1;
+
+    if (matches.length <= 2) {
+        return sign * (Number(matches[2]) * 1000000);
+    }
+    // there is a placeholder - either : or .
+    if (matches[3] === ":") {
+        // time has been entered MM:SS.SSS
+        return (
+            sign *
+            (Number(matches[2]) * 60 * 1000000 +
+                Number(matches[4] ? matches[4] : 0) * 1000000 +
+                fractionToMilliseconds(matches[5]) * 1000)
+        );
+    }
+    return sign * (Number(matches[2]) * 1000000 + fractionToMilliseconds(matches[4]) * 1000);
 }
 
 export function constrain(value: number, min: number, max: number): number {
@@ -259,7 +266,7 @@ export function constrain(value: number, min: number, max: number): number {
 }
 
 export function validate<T>(value: T | null | undefined, defaultValue: T): T {
-    return value == null ? defaultValue : value;
+    return value ?? defaultValue;
 }
 
 export interface CornerRadii {
@@ -379,14 +386,14 @@ export const mouseNotification: MouseNotification = {
     enabled: true,
     elem: null,
     timeout: null,
-    show: function (target, x, y, message, delay, messageClass, align, margin) {
+    // Eight positional parameters (Sonar S107): its one caller is main.js, which batch G of #5542
+    // converts; show() takes an options object then.
+    show: function (target, x, y, message, delay, messageClass, align, margin) /* NOSONAR */ {
         if (!this.enabled) {
             return false;
         }
 
-        if (!this.elem) {
-            this.elem = document.getElementById("mouseNotification");
-        }
+        this.elem ??= document.getElementById("mouseNotification");
 
         messageClass = messageClass || "mouseNotification-box";
         margin = margin || 10;
@@ -452,5 +459,5 @@ export function firmwareGreaterOrEqual(sysConfig: FirmwareIdentity, bf_version: 
 }
 
 export function escapeRegExp(string: string): string {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return string.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 }
