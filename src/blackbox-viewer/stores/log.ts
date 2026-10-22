@@ -66,7 +66,7 @@ export const useLogStore = defineStore("blackboxLog", () => {
 
     const firmwareClass = computed(() => {
         const type = flightLog.value?.getSysConfig?.()?.firmwareType;
-        return FIRMWARE_CLASS_MAP[type] ?? null;
+        return type === undefined ? null : (FIRMWARE_CLASS_MAP[type] ?? null);
     });
 
     function setFlightLog(log: FlightLogInstance | null) {
