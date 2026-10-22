@@ -20,7 +20,7 @@
  */
 
 import { FLIGHT_LOG_FLIGHT_STATE_NAME } from "../flightlog_fielddefs.js";
-import { GPS_transform } from "../gps_transform.js";
+import { GPS_transform } from "../gps_transform";
 
 /** Frame time index in a decoded main frame (FlightLogParser.FLIGHT_LOG_FIELD_INDEX_TIME). */
 export const FRAME_TIME_INDEX = 1;
@@ -102,14 +102,6 @@ export interface FlightTrack {
     toLocal(lat: number, lon: number, altM: number): TrackPoint;
     positionAt(tUs: number): TrackPoint | null;
 }
-
-type Transform = { WGS_BS(lat: number, lon: number, h: number): { x: number; y: number; z: number } };
-const LocalTransform = GPS_transform as unknown as new (
-    lat0: number,
-    lon0: number,
-    h0: number,
-    heading: number,
-) => Transform;
 
 /**
  * Read GPS fixes, baro altitude and idle-throttle spans from the main frames. The firmware logs GPS
@@ -304,7 +296,7 @@ export function buildTrack(
         return null;
     }
     const origin = { lat: allFixes[0].lat, lon: allFixes[0].lon, altM: allFixes[0].altM };
-    const transform = new LocalTransform(origin.lat, origin.lon, origin.altM, 0);
+    const transform = new GPS_transform(origin.lat, origin.lon, origin.altM, 0);
     const toLocal = (lat: number, lon: number, altM: number): TrackPoint => {
         const p = transform.WGS_BS(lat, lon, altM);
         return { n: p.x, u: p.y, e: p.z };
