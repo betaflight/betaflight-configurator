@@ -32,6 +32,7 @@ import {
 import { formatTime } from "./tools";
 import { useSettingsStore } from "./stores/settings";
 import type { FlightLog } from "./flightlog";
+import type { UserSettings } from "./user_settings_data";
 import {
     type DebugContext,
     type DebugScaleContext,
@@ -246,6 +247,517 @@ function debugFieldLabel(fieldName: string, ctx: DebugContext): string {
     return fieldNames[getDebugModes(ctx.apiVersion)[0]][fieldName] ?? fieldName;
 }
 
+/** What the per-field formatters read besides the value. */
+interface PresentContext {
+    flightLog: PresentedFlightLog;
+    fieldName: string;
+    /** 10 for a high-resolution log, whose values carry one more decimal; else 1. */
+    highResolutionScale: number;
+    /** The decimal places that extra digit adds: 1 or 0. */
+    highResolutionAddPrecision: number;
+    userSettings: UserSettings;
+}
+
+function presentContext(flightLog: PresentedFlightLog, fieldName: string, userSettings: UserSettings): PresentContext {
+    const highResolution = flightLog && Number(flightLog.getSysConfig().blackbox_high_resolution) > 0;
+    return {
+        flightLog,
+        fieldName,
+        highResolutionScale: highResolution ? 10 : 1,
+        highResolutionAddPrecision: highResolution ? 1 : 0,
+        userSettings,
+    };
+}
+
+type FieldDecoder = (value: number, context: PresentContext) => string | number | undefined;
+type FieldConverter = (value: number, toFriendly: boolean, context: PresentContext) => number;
+
+/** A field-name lookup; a Map, so a name such as "toString" finds nothing, as a switch would. */
+function fieldTable<F>(entries: [names: string[], handler: F][]): Map<string, F> {
+    const table = new Map<string, F>();
+    for (const [names, handler] of entries) {
+        for (const name of names) {
+            table.set(name, handler);
+        }
+    }
+    return table;
+}
+
+/** decodeFieldToFriendly() for each field it knows; any other field is shown as a whole number. */
+const FIELD_DECODERS = fieldTable<FieldDecoder>([
+    [
+        ["time"],
+        (value) => {
+            return formatTime(value / 1000, true);
+        },
+    ],
+    [
+        ["gyroADC[0]", "gyroADC[1]", "gyroADC[2]", "gyroUnfilt[0]", "gyroUnfilt[1]", "gyroUnfilt[2]"],
+        (value, { flightLog, highResolutionScale, highResolutionAddPrecision }) => {
+            return `${flightLog
+                .gyroRawToDegreesPerSecond(value / highResolutionScale)
+                .toFixed(highResolutionAddPrecision)} °/s`;
+        },
+    ],
+    [
+        ["gyroADCs[0]", "gyroADCs[1]", "gyroADCs[2]"],
+        (value) => {
+            return `${value.toFixed(0)} °/s`;
+        },
+    ],
+    [
+        ["axisError[0]", "axisError[1]", "axisError[2]"],
+        (value, { highResolutionScale, highResolutionAddPrecision }) => {
+            return `${(value / highResolutionScale).toFixed(highResolutionAddPrecision)} °/s`;
+        },
+    ],
+    [
+        ["rcCommand[0]", "rcCommand[1]", "rcCommand[2]"],
+        (value, { highResolutionScale, highResolutionAddPrecision }) => {
+            return `${(value / highResolutionScale + 1500).toFixed(highResolutionAddPrecision)} us`;
+        },
+    ],
+    [
+        ["rcCommand[3]"],
+        (value, { highResolutionScale, highResolutionAddPrecision }) => {
+            return `${(value / highResolutionScale).toFixed(highResolutionAddPrecision)} us`;
+        },
+    ],
+    [
+        ["motor[0]", "motor[1]", "motor[2]", "motor[3]", "motor[4]", "motor[5]", "motor[6]", "motor[7]"],
+        (value, { flightLog }) => {
+            return `${flightLog.rcMotorRawToPctPhysical(value).toFixed(2)} %`;
+        },
+    ],
+    [
+        ["eRPM[0]", "eRPM[1]", "eRPM[2]", "eRPM[3]", "eRPM[4]", "eRPM[5]", "eRPM[6]", "eRPM[7]"],
+        (value, { flightLog }) => {
+            const motor_poles = Number(flightLog.getSysConfig()["motor_poles"]);
+            return `${((value * 200) / motor_poles).toFixed(0)} rpm / ${((value * 3.333) / motor_poles).toFixed(1)} hz`;
+        },
+    ],
+    [
+        ["rcCommands[0]", "rcCommands[1]", "rcCommands[2]"],
+        (value, { highResolutionScale, highResolutionAddPrecision }) => {
+            return `${(value / highResolutionScale).toFixed(highResolutionAddPrecision)} °/s`;
+        },
+    ],
+    [
+        ["rcCommands[3]"],
+        (value) => {
+            return `${value.toFixed(1)}%`;
+        },
+    ],
+    [
+        [
+            "axisSum[0]",
+            "axisSum[1]",
+            "axisSum[2]",
+            "axisP[0]",
+            "axisP[1]",
+            "axisP[2]",
+            "axisI[0]",
+            "axisI[1]",
+            "axisI[2]",
+            "axisD[0]",
+            "axisD[1]",
+            "axisD[2]",
+            "axisF[0]",
+            "axisF[1]",
+            "axisF[2]",
+            "axisS[0]",
+            "axisS[1]",
+            "axisS[2]",
+        ],
+        (value, { flightLog }) => {
+            return `${flightLog.getPIDPercentage(value).toFixed(1)} %`;
+        },
+    ],
+    [
+        ["accSmooth[0]", "accSmooth[1]", "accSmooth[2]"],
+        (value, { flightLog, highResolutionAddPrecision }) => {
+            return `${flightLog.accRawToGs(value).toFixed(2 + highResolutionAddPrecision)} g`;
+        },
+    ],
+    [
+        ["vbatLatest"],
+        (value, { flightLog }) => {
+            if (
+                flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
+                semver.gte(flightLog.getSysConfig().firmwareVersion, "4.0.0")
+            ) {
+                return (
+                    `${(value / 100).toFixed(2)}V` +
+                    `, ${(value / 100 / Number(flightLog.getNumCellsEstimate())).toFixed(2)} V/cell`
+                );
+            } else if (
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
+            ) {
+                return (
+                    `${(value / 10).toFixed(2)}V` +
+                    `, ${(value / 10 / Number(flightLog.getNumCellsEstimate())).toFixed(2)} V/cell`
+                );
+            } else {
+                return (
+                    `${(flightLog.vbatADCToMillivolts(value) / 1000).toFixed(2)}V` +
+                    `, ${(
+                        flightLog.vbatADCToMillivolts(value) /
+                        1000 /
+                        Number(flightLog.getNumCellsEstimate())
+                    ).toFixed(2)} V/cell`
+                );
+            }
+        },
+    ],
+    [
+        ["amperageLatest"],
+        (value, { flightLog }) => {
+            // Betaflight 3.1.0+ and Cleanflight 2.0.0+ log centiamps (3.1.7+ is a subset of the first).
+            if (
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
+            ) {
+                return (
+                    `${(value / 100).toFixed(2)}A` +
+                    `, ${(value / 100 / Number(flightLog.getNumMotors())).toFixed(2)} A/motor`
+                );
+            } else {
+                return (
+                    `${(flightLog.amperageADCToMillivolts(value) / 1000).toFixed(2)}A` +
+                    `, ${(flightLog.amperageADCToMillivolts(value) / 1000 / Number(flightLog.getNumMotors())).toFixed(
+                        2,
+                    )} A/motor`
+                );
+            }
+        },
+    ],
+    [
+        ["heading[0]", "heading[1]", "heading[2]"],
+        (value) => {
+            return `${((value / Math.PI) * 180).toFixed(1)}°`;
+        },
+    ],
+    [
+        ["baroAlt"],
+        (value, { userSettings }) => {
+            return FlightLogFieldPresenter.decodeCorrectAltitude(value / 100, userSettings.altitudeUnits);
+        },
+    ],
+    [
+        ["flightModeFlags"],
+        (value) => {
+            return FlightLogFieldPresenter.presentFlags(value, FLIGHT_LOG_FLIGHT_MODE_NAME);
+        },
+    ],
+    [
+        ["stateFlags"],
+        (value) => {
+            return FlightLogFieldPresenter.presentFlags(value, FLIGHT_LOG_FLIGHT_STATE_NAME);
+        },
+    ],
+    [
+        ["failsafePhase"],
+        (value) => {
+            return FlightLogFieldPresenter.presentEnum(value, FLIGHT_LOG_FAILSAFE_PHASE_NAME);
+        },
+    ],
+    [
+        ["features"],
+        (value) => {
+            return FlightLogFieldPresenter.presentEnum(value, FLIGHT_LOG_FEATURES);
+        },
+    ],
+    [
+        ["rssi"],
+        (value) => {
+            return `${((value / 1024) * 100).toFixed(2)} %`;
+        },
+    ],
+    [
+        ["GPS_numSat"],
+        (value) => {
+            return `${value}`;
+        },
+    ],
+    [
+        ["GPS_coord[0]", "GPS_coord[1]"],
+        (value) => {
+            return `${(value / 10000000).toFixed(5)}`;
+        },
+    ],
+    [
+        ["GPS_altitude"],
+        (value, { userSettings }) => {
+            return FlightLogFieldPresenter.decodeCorrectAltitude(value / 10, userSettings.altitudeUnits);
+        },
+    ],
+    [
+        ["GPS_speed"],
+        (value, { userSettings }) => {
+            switch (userSettings.speedUnits) {
+                case 1:
+                    return `${(value / 100).toFixed(2)} m/s`;
+                case 2:
+                    return `${((value / 100) * 3.6).toFixed(2)} kph`;
+                case 3:
+                    return `${((value / 100) * 2.2369).toFixed(2)} mph`;
+                default:
+                    return `${(value / 100).toFixed(2)} m/s`;
+            }
+        },
+    ],
+    [
+        ["GPS_ground_course"],
+        (value) => {
+            return `${(value / 10).toFixed(1)} °`;
+        },
+    ],
+    [
+        ["GPS_velned[0]", "GPS_velned[1]", "GPS_velned[2]"],
+        (value) => {
+            return `${(value / 100).toFixed(1)} m/s`;
+        },
+    ],
+    [
+        ["gpsCartesianCoords[0]", "gpsCartesianCoords[1]", "gpsCartesianCoords[2]", "gpsDistance"],
+        (value) => {
+            return `${value.toFixed(0)} m`;
+        },
+    ],
+    [
+        ["gpsHomeAzimuth", "gpsTrajectoryTiltAngle"],
+        (value) => {
+            return `${value.toFixed(1)} °`;
+        },
+    ],
+    [
+        ["magADC[0]", "magADC[1]", "magADC[2]"],
+        (value) => {
+            return `${(value / 10).toFixed(1)} °`;
+        },
+    ],
+    [
+        ["pitot[0]"],
+        (value) => {
+            return `${(value / 100).toFixed(1)} m/s`;
+        },
+    ],
+    [
+        ["pitot[1]"],
+        (value) => {
+            return `${value.toFixed(1)} Pa`;
+        },
+    ],
+    [
+        ["debug[0]", "debug[1]", "debug[2]", "debug[3]", "debug[4]", "debug[5]", "debug[6]", "debug[7]"],
+        (value, { flightLog, fieldName }) => {
+            return FlightLogFieldPresenter.decodeDebugFieldToFriendly(flightLog, fieldName, value);
+        },
+    ],
+]);
+
+/** ConvertFieldValue() for each field it scales; any other field (flags, enums, counts) is passed through. */
+const FIELD_CONVERTERS = fieldTable<FieldConverter>([
+    [
+        ["time"],
+        (value, toFriendly) => {
+            return toFriendly ? value / 1000 : value * 1000;
+        },
+    ],
+    [
+        ["gyroADC[0]", "gyroADC[1]", "gyroADC[2]", "gyroUnfilt[0]", "gyroUnfilt[1]", "gyroUnfilt[2]"],
+        (value, toFriendly, { flightLog, highResolutionScale }) => {
+            return toFriendly
+                ? flightLog.gyroRawToDegreesPerSecond(value / highResolutionScale)
+                : (value * highResolutionScale) / flightLog.gyroRawToDegreesPerSecond(1);
+        },
+    ],
+    [
+        ["axisError[0]", "axisError[1]", "axisError[2]"],
+        (value, toFriendly, { highResolutionScale }) => {
+            return toFriendly ? value / highResolutionScale : value * highResolutionScale;
+        },
+    ],
+    [
+        ["rcCommand[0]", "rcCommand[1]", "rcCommand[2]"],
+        (value, toFriendly, { highResolutionScale }) => {
+            return toFriendly ? value / highResolutionScale + 1500 : (value - 1500) * highResolutionScale;
+        },
+    ],
+    [
+        ["rcCommand[3]"],
+        (value, toFriendly, { highResolutionScale }) => {
+            return toFriendly ? value / highResolutionScale : value * highResolutionScale;
+        },
+    ],
+    [
+        ["motor[0]", "motor[1]", "motor[2]", "motor[3]", "motor[4]", "motor[5]", "motor[6]", "motor[7]"],
+        (value, toFriendly, { flightLog }) => {
+            return toFriendly ? flightLog.rcMotorRawToPctPhysical(value) : flightLog.PctPhysicalTorcMotorRaw(value);
+        },
+    ],
+    [
+        ["eRPM[0]", "eRPM[1]", "eRPM[2]", "eRPM[3]", "eRPM[4]", "eRPM[5]", "eRPM[6]", "eRPM[7]"],
+        (value, toFriendly, { flightLog }) => {
+            const motor_poles = Number(flightLog.getSysConfig()["motor_poles"]);
+            return toFriendly ? (value * 200) / motor_poles : (value * motor_poles) / 200;
+        },
+    ],
+    [
+        [
+            "axisSum[0]",
+            "axisSum[1]",
+            "axisSum[2]",
+            "axisP[0]",
+            "axisP[1]",
+            "axisP[2]",
+            "axisI[0]",
+            "axisI[1]",
+            "axisI[2]",
+            "axisD[0]",
+            "axisD[1]",
+            "axisD[2]",
+            "axisF[0]",
+            "axisF[1]",
+            "axisF[2]",
+            "axisS[0]",
+            "axisS[1]",
+            "axisS[2]",
+        ],
+        (value, toFriendly, { flightLog }) => {
+            return toFriendly ? flightLog.getPIDPercentage(value) : value / flightLog.getPIDPercentage(1);
+        },
+    ],
+    [
+        ["accSmooth[0]", "accSmooth[1]", "accSmooth[2]"],
+        (value, toFriendly, { flightLog }) => {
+            return toFriendly ? flightLog.accRawToGs(value) : value / flightLog.accRawToGs(1);
+        },
+    ],
+    [
+        ["vbatLatest"],
+        (value, toFriendly, { flightLog }) => {
+            if (
+                flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
+                semver.gte(flightLog.getSysConfig().firmwareVersion, "4.0.0")
+            ) {
+                return toFriendly ? value / 100 : value * 100;
+            } else if (
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
+            ) {
+                return toFriendly ? value / 10 : value * 10;
+            } else {
+                return toFriendly ? value / 1000 : value * 1000;
+            }
+        },
+    ],
+    [
+        ["amperageLatest"],
+        (value, toFriendly, { flightLog }) => {
+            // As in decodeFieldToFriendly(): 3.1.7+ is a subset of 3.1.0+.
+            if (
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
+                (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
+                    semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
+            ) {
+                return toFriendly ? value / 100 : value * 100;
+            } else {
+                return toFriendly ? value / 1000 : value * 1000;
+            }
+        },
+    ],
+    [
+        ["heading[0]", "heading[1]", "heading[2]"],
+        (value, toFriendly) => {
+            return toFriendly ? (value / Math.PI) * 180 : (value * Math.PI) / 180;
+        },
+    ],
+    [
+        ["baroAlt"],
+        (value, toFriendly, { userSettings }) => {
+            return toFriendly
+                ? Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 100, userSettings.altitudeUnits))
+                : (value * 100) /
+                      Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits));
+        },
+    ],
+    [
+        ["rssi"],
+        (value, toFriendly) => {
+            return toFriendly ? (value / 1024) * 100 : (value * 1024) / 100;
+        },
+    ],
+    [
+        ["GPS_coord[0]", "GPS_coord[1]"],
+        (value, toFriendly) => {
+            return toFriendly ? value / 10000000 : value * 10000000;
+        },
+    ],
+    [
+        ["GPS_altitude"],
+        (value, toFriendly, { userSettings }) => {
+            return toFriendly
+                ? Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 10, userSettings.altitudeUnits))
+                : (value * 10) /
+                      Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits));
+        },
+    ],
+    [
+        ["GPS_speed"],
+        (value, toFriendly, { userSettings }) => {
+            switch (userSettings.speedUnits) {
+                case 1:
+                    return toFriendly ? value / 100 : value * 100; // m/s
+                case 2:
+                    return toFriendly ? (value / 100) * 3.6 : (100 * value) / 3.6; // kph
+                case 3:
+                    return toFriendly ? (value / 100) * 2.2369 : (value * 100) / 2.2369; //mph
+                default:
+                    return toFriendly ? value / 100 : value * 100; // m/s
+            }
+        },
+    ],
+    [
+        ["GPS_ground_course"],
+        (value, toFriendly) => {
+            return toFriendly ? value / 10 : value * 10;
+        },
+    ],
+    [
+        ["GPS_velned[0]", "GPS_velned[1]", "GPS_velned[2]"],
+        (value, toFriendly) => {
+            return toFriendly ? value / 100 : value * 100;
+        },
+    ],
+    [
+        ["magADC[0]", "magADC[1]", "magADC[2]"],
+        (value, toFriendly) => {
+            return toFriendly ? value / 10 : value * 10;
+        },
+    ],
+    [
+        ["pitot[0]"],
+        (value, toFriendly) => {
+            return toFriendly ? value / 100 : value * 100;
+        },
+    ],
+    [
+        ["debug[0]", "debug[1]", "debug[2]", "debug[3]", "debug[4]", "debug[5]", "debug[6]", "debug[7]"],
+        (value, toFriendly, { flightLog, fieldName }) => {
+            return FlightLogFieldPresenter.ConvertDebugFieldValue(flightLog, fieldName, toFriendly, value);
+        },
+    ],
+]);
+
 export class FlightLogFieldPresenter {
     static presentFlags(flags: number, flagNames: ArrayLike<string>): string {
         let printedFlag = false,
@@ -357,235 +869,10 @@ export class FlightLogFieldPresenter {
         // value is typed as the number each branch treats it as. Nothing is converted.
         const value = rawValue as number;
 
-        const highResolutionScale = flightLog && Number(flightLog.getSysConfig().blackbox_high_resolution) > 0 ? 10 : 1;
-        const highResolutionAddPrecision =
-            flightLog && Number(flightLog.getSysConfig().blackbox_high_resolution) > 0 ? 1 : 0;
+        const context = presentContext(flightLog, fieldName, userSettings);
 
-        switch (fieldName) {
-            case "time":
-                return formatTime(value / 1000, true);
-
-            case "gyroADC[0]":
-            case "gyroADC[1]":
-            case "gyroADC[2]":
-            case "gyroUnfilt[0]":
-            case "gyroUnfilt[1]":
-            case "gyroUnfilt[2]":
-                return `${flightLog
-                    .gyroRawToDegreesPerSecond(value / highResolutionScale)
-                    .toFixed(highResolutionAddPrecision)} °/s`;
-
-            case "gyroADCs[0]":
-            case "gyroADCs[1]":
-            case "gyroADCs[2]":
-                return `${value.toFixed(0)} °/s`;
-
-            case "axisError[0]":
-            case "axisError[1]":
-            case "axisError[2]":
-                return `${(value / highResolutionScale).toFixed(highResolutionAddPrecision)} °/s`;
-
-            case "rcCommand[0]":
-            case "rcCommand[1]":
-            case "rcCommand[2]":
-                return `${(value / highResolutionScale + 1500).toFixed(highResolutionAddPrecision)} us`;
-            case "rcCommand[3]":
-                return `${(value / highResolutionScale).toFixed(highResolutionAddPrecision)} us`;
-
-            case "motor[0]":
-            case "motor[1]":
-            case "motor[2]":
-            case "motor[3]":
-            case "motor[4]":
-            case "motor[5]":
-            case "motor[6]":
-            case "motor[7]":
-                return `${flightLog.rcMotorRawToPctPhysical(value).toFixed(2)} %`;
-
-            case "eRPM[0]":
-            case "eRPM[1]":
-            case "eRPM[2]":
-            case "eRPM[3]":
-            case "eRPM[4]":
-            case "eRPM[5]":
-            case "eRPM[6]":
-            case "eRPM[7]": {
-                const motor_poles = Number(flightLog.getSysConfig()["motor_poles"]);
-                return `${((value * 200) / motor_poles).toFixed(0)} rpm / ${((value * 3.333) / motor_poles).toFixed(1)} hz`;
-            }
-            case "rcCommands[0]":
-            case "rcCommands[1]":
-            case "rcCommands[2]":
-                return `${(value / highResolutionScale).toFixed(highResolutionAddPrecision)} °/s`;
-            case "rcCommands[3]":
-                return `${value.toFixed(1)}%`;
-
-            case "axisSum[0]":
-            case "axisSum[1]":
-            case "axisSum[2]":
-            case "axisP[0]":
-            case "axisP[1]":
-            case "axisP[2]":
-            case "axisI[0]":
-            case "axisI[1]":
-            case "axisI[2]":
-            case "axisD[0]":
-            case "axisD[1]":
-            case "axisD[2]":
-            case "axisF[0]":
-            case "axisF[1]":
-            case "axisF[2]":
-            case "axisS[0]":
-            case "axisS[1]":
-            case "axisS[2]":
-                return `${flightLog.getPIDPercentage(value).toFixed(1)} %`;
-
-            case "accSmooth[0]":
-            case "accSmooth[1]":
-            case "accSmooth[2]":
-                return `${flightLog.accRawToGs(value).toFixed(2 + highResolutionAddPrecision)} g`;
-
-            case "vbatLatest":
-                if (
-                    flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "4.0.0")
-                ) {
-                    return (
-                        `${(value / 100).toFixed(2)}V` +
-                        `, ${(value / 100 / Number(flightLog.getNumCellsEstimate())).toFixed(2)} V/cell`
-                    );
-                } else if (
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
-                ) {
-                    return (
-                        `${(value / 10).toFixed(2)}V` +
-                        `, ${(value / 10 / Number(flightLog.getNumCellsEstimate())).toFixed(2)} V/cell`
-                    );
-                } else {
-                    return (
-                        `${(flightLog.vbatADCToMillivolts(value) / 1000).toFixed(2)}V` +
-                        `, ${(
-                            flightLog.vbatADCToMillivolts(value) /
-                            1000 /
-                            Number(flightLog.getNumCellsEstimate())
-                        ).toFixed(2)} V/cell`
-                    );
-                }
-
-            case "amperageLatest":
-                if (
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.7")) ||
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
-                ) {
-                    return (
-                        `${(value / 100).toFixed(2)}A` +
-                        `, ${(value / 100 / Number(flightLog.getNumMotors())).toFixed(2)} A/motor`
-                    );
-                } else if (
-                    flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")
-                ) {
-                    return (
-                        `${(value / 100).toFixed(2)}A` +
-                        `, ${(value / 100 / Number(flightLog.getNumMotors())).toFixed(2)} A/motor`
-                    );
-                } else {
-                    return (
-                        `${(flightLog.amperageADCToMillivolts(value) / 1000).toFixed(2)}A` +
-                        `, ${(
-                            flightLog.amperageADCToMillivolts(value) /
-                            1000 /
-                            Number(flightLog.getNumMotors())
-                        ).toFixed(2)} A/motor`
-                    );
-                }
-
-            case "heading[0]":
-            case "heading[1]":
-            case "heading[2]":
-                return `${((value / Math.PI) * 180).toFixed(1)}°`;
-
-            case "baroAlt":
-                return FlightLogFieldPresenter.decodeCorrectAltitude(value / 100, userSettings.altitudeUnits);
-
-            case "flightModeFlags":
-                return FlightLogFieldPresenter.presentFlags(value, FLIGHT_LOG_FLIGHT_MODE_NAME);
-
-            case "stateFlags":
-                return FlightLogFieldPresenter.presentFlags(value, FLIGHT_LOG_FLIGHT_STATE_NAME);
-
-            case "failsafePhase":
-                return FlightLogFieldPresenter.presentEnum(value, FLIGHT_LOG_FAILSAFE_PHASE_NAME);
-
-            case "features":
-                return FlightLogFieldPresenter.presentEnum(value, FLIGHT_LOG_FEATURES);
-
-            case "rssi":
-                return `${((value / 1024) * 100).toFixed(2)} %`;
-
-            //H Field G name:time,GPS_numSat,GPS_coord[0],GPS_coord[1],GPS_altitude,GPS_speed,GPS_ground_course
-            case "GPS_numSat":
-                return `${value}`;
-            case "GPS_coord[0]":
-            case "GPS_coord[1]":
-                return `${(value / 10000000).toFixed(5)}`;
-            case "GPS_altitude":
-                return FlightLogFieldPresenter.decodeCorrectAltitude(value / 10, userSettings.altitudeUnits);
-            case "GPS_speed":
-                switch (userSettings.speedUnits) {
-                    case 1:
-                        return `${(value / 100).toFixed(2)} m/s`;
-                    case 2:
-                        return `${((value / 100) * 3.6).toFixed(2)} kph`;
-                    case 3:
-                        return `${((value / 100) * 2.2369).toFixed(2)} mph`;
-                    default:
-                        return `${(value / 100).toFixed(2)} m/s`;
-                }
-            case "GPS_ground_course":
-                return `${(value / 10).toFixed(1)} °`;
-
-            case "GPS_velned[0]":
-            case "GPS_velned[1]":
-            case "GPS_velned[2]":
-                return `${(value / 100).toFixed(1)} m/s`;
-
-            case "gpsCartesianCoords[0]":
-            case "gpsCartesianCoords[1]":
-            case "gpsCartesianCoords[2]":
-            case "gpsDistance":
-                return `${value.toFixed(0)} m`;
-            case "gpsHomeAzimuth":
-            case "gpsTrajectoryTiltAngle":
-                return `${value.toFixed(1)} °`;
-            case "magADC[0]":
-            case "magADC[1]":
-            case "magADC[2]":
-                return `${(value / 10).toFixed(1)} °`;
-
-            case "pitot[0]":
-                return `${(value / 100).toFixed(1)} m/s`;
-            case "pitot[1]":
-                return `${value.toFixed(1)} Pa`;
-
-            case "debug[0]":
-            case "debug[1]":
-            case "debug[2]":
-            case "debug[3]":
-            case "debug[4]":
-            case "debug[5]":
-            case "debug[6]":
-            case "debug[7]":
-                return FlightLogFieldPresenter.decodeDebugFieldToFriendly(flightLog, fieldName, value);
-
-            default:
-                return value?.toFixed(0);
-        }
+        const decode = FIELD_DECODERS.get(fieldName);
+        return decode ? decode(value, context) : value?.toFixed(0);
     }
 
     static decodeDebugFieldToFriendly(
@@ -640,189 +927,10 @@ export class FlightLogFieldPresenter {
         // unchanged from the branches that return the value as it is.
         const value = rawValue as number;
 
-        const highResolutionScale = flightLog && Number(flightLog.getSysConfig().blackbox_high_resolution) > 0 ? 10 : 1;
+        const context = presentContext(flightLog, fieldName, userSettings);
 
-        switch (fieldName) {
-            case "time":
-                return toFriendly ? value / 1000 : value * 1000;
-
-            case "gyroADC[0]":
-            case "gyroADC[1]":
-            case "gyroADC[2]":
-            case "gyroUnfilt[0]":
-            case "gyroUnfilt[1]":
-            case "gyroUnfilt[2]":
-                return toFriendly
-                    ? flightLog.gyroRawToDegreesPerSecond(value / highResolutionScale)
-                    : (value * highResolutionScale) / flightLog.gyroRawToDegreesPerSecond(1);
-
-            case "axisError[0]":
-            case "axisError[1]":
-            case "axisError[2]":
-                return toFriendly ? value / highResolutionScale : value * highResolutionScale;
-
-            case "rcCommand[0]":
-            case "rcCommand[1]":
-            case "rcCommand[2]":
-                return toFriendly ? value / highResolutionScale + 1500 : (value - 1500) * highResolutionScale;
-            case "rcCommand[3]":
-                return toFriendly ? value / highResolutionScale : value * highResolutionScale;
-
-            case "motor[0]":
-            case "motor[1]":
-            case "motor[2]":
-            case "motor[3]":
-            case "motor[4]":
-            case "motor[5]":
-            case "motor[6]":
-            case "motor[7]":
-                return toFriendly ? flightLog.rcMotorRawToPctPhysical(value) : flightLog.PctPhysicalTorcMotorRaw(value);
-
-            case "eRPM[0]":
-            case "eRPM[1]":
-            case "eRPM[2]":
-            case "eRPM[3]":
-            case "eRPM[4]":
-            case "eRPM[5]":
-            case "eRPM[6]":
-            case "eRPM[7]": {
-                const motor_poles = Number(flightLog.getSysConfig()["motor_poles"]);
-                return toFriendly ? (value * 200) / motor_poles : (value * motor_poles) / 200;
-            }
-            case "axisSum[0]":
-            case "axisSum[1]":
-            case "axisSum[2]":
-            case "axisP[0]":
-            case "axisP[1]":
-            case "axisP[2]":
-            case "axisI[0]":
-            case "axisI[1]":
-            case "axisI[2]":
-            case "axisD[0]":
-            case "axisD[1]":
-            case "axisD[2]":
-            case "axisF[0]":
-            case "axisF[1]":
-            case "axisF[2]":
-            case "axisS[0]":
-            case "axisS[1]":
-            case "axisS[2]":
-                return toFriendly ? flightLog.getPIDPercentage(value) : value / flightLog.getPIDPercentage(1);
-
-            case "accSmooth[0]":
-            case "accSmooth[1]":
-            case "accSmooth[2]":
-                return toFriendly ? flightLog.accRawToGs(value) : value / flightLog.accRawToGs(1);
-
-            case "vbatLatest":
-                if (
-                    flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "4.0.0")
-                ) {
-                    return toFriendly ? value / 100 : value * 100;
-                } else if (
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")) ||
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
-                ) {
-                    return toFriendly ? value / 10 : value * 10;
-                } else {
-                    return toFriendly ? value / 1000 : value * 1000;
-                }
-
-            case "amperageLatest":
-                if (
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.7")) ||
-                    (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_CLEANFLIGHT &&
-                        semver.gte(flightLog.getSysConfig().firmwareVersion, "2.0.0"))
-                ) {
-                    return toFriendly ? value / 100 : value * 100;
-                } else if (
-                    flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
-                    semver.gte(flightLog.getSysConfig().firmwareVersion, "3.1.0")
-                ) {
-                    return toFriendly ? value / 100 : value * 100;
-                } else {
-                    return toFriendly ? value / 1000 : value * 1000;
-                }
-
-            case "heading[0]":
-            case "heading[1]":
-            case "heading[2]":
-                return toFriendly ? (value / Math.PI) * 180 : (value * Math.PI) / 180;
-
-            case "baroAlt":
-                return toFriendly
-                    ? Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 100, userSettings.altitudeUnits))
-                    : (value * 100) /
-                          Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits));
-
-            case "flightModeFlags":
-                return value;
-
-            case "stateFlags":
-                return value;
-
-            case "failsafePhase":
-                return value;
-
-            case "features":
-                return value;
-
-            case "rssi":
-                return toFriendly ? (value / 1024) * 100 : (value * 1024) / 100;
-
-            //H Field G name:time,GPS_numSat,GPS_coord[0],GPS_coord[1],GPS_altitude,GPS_speed,GPS_ground_course
-            case "GPS_numSat":
-                return value;
-            case "GPS_coord[0]":
-            case "GPS_coord[1]":
-                return toFriendly ? value / 10000000 : value * 10000000;
-            case "GPS_altitude":
-                return toFriendly
-                    ? Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value / 10, userSettings.altitudeUnits))
-                    : (value * 10) /
-                          Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits));
-            case "GPS_speed":
-                switch (userSettings.speedUnits) {
-                    case 1:
-                        return toFriendly ? value / 100 : value * 100; // m/s
-                    case 2:
-                        return toFriendly ? (value / 100) * 3.6 : (100 * value) / 3.6; // kph
-                    case 3:
-                        return toFriendly ? (value / 100) * 2.2369 : (value * 100) / 2.2369; //mph
-                    default:
-                        return toFriendly ? value / 100 : value * 100; // m/s
-                }
-            case "GPS_ground_course":
-                return toFriendly ? value / 10 : value * 10;
-            case "GPS_velned[0]":
-            case "GPS_velned[1]":
-            case "GPS_velned[2]":
-                return toFriendly ? value / 100 : value * 100;
-            case "magADC[0]":
-            case "magADC[1]":
-            case "magADC[2]":
-                return toFriendly ? value / 10 : value * 10;
-
-            case "pitot[0]":
-                return toFriendly ? value / 100 : value * 100;
-
-            case "debug[0]":
-            case "debug[1]":
-            case "debug[2]":
-            case "debug[3]":
-            case "debug[4]":
-            case "debug[5]":
-            case "debug[6]":
-            case "debug[7]":
-                return FlightLogFieldPresenter.ConvertDebugFieldValue(flightLog, fieldName, toFriendly, value);
-
-            default:
-                return value;
-        }
+        const convert = FIELD_CONVERTERS.get(fieldName);
+        return convert ? convert(value, toFriendly, context) : value;
     }
 
     /**
