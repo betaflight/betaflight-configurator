@@ -1,8 +1,29 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import semver from "semver";
 import { FIRMWARE_TYPE_BETAFLIGHT, FIRMWARE_TYPE_CLEANFLIGHT } from "./flightlog_fielddefs";
 
 //Convert a hexadecimal string (that represents a binary 32-bit float) into a float
-export function hexToFloat(string) {
+export function hexToFloat(string: string): number {
     const arr = new Uint32Array(1);
     arr[0] = Number.parseInt(string, 16);
 
@@ -11,7 +32,7 @@ export function hexToFloat(string) {
     return floatArr[0];
 }
 
-export function uint32ToFloat(value) {
+export function uint32ToFloat(value: number): number {
     const arr = new Uint32Array(1);
     arr[0] = value;
 
@@ -20,66 +41,26 @@ export function uint32ToFloat(value) {
     return floatArr[0];
 }
 
-export function asciiArrayToString(arr) {
+export function asciiArrayToString(arr: Iterable<number>): string {
     return String.fromCodePoint(...arr);
 }
 
-export function asciiStringToByteArray(s) {
-    const bytes = [];
+export function asciiStringToByteArray(s: string): number[] {
+    const bytes: number[] = [];
 
     for (let i = 0; i < s.length; i++) {
-        bytes.push(s.charCodeAt(i));
+        bytes.push(s.codePointAt(i) as number);
     }
 
     return bytes;
 }
 
-export function signExtend24Bit(u) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return u & 0x800000 ? u | 0xff000000 : u;
-}
-
-export function signExtend16Bit(word) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return word & 0x8000 ? word | 0xffff0000 : word;
-}
-
-export function signExtend14Bit(word) {
+export function signExtend14Bit(word: number): number {
     //If sign bit is set, fill the top bits with 1s to sign-extend
     return word & 0x2000 ? word | 0xffffc000 : word;
 }
 
-export function signExtend8Bit(byte) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return byte & 0x80 ? byte | 0xffffff00 : byte;
-}
-
-export function signExtend7Bit(byte) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return byte & 0x40 ? byte | 0xffffff80 : byte;
-}
-
-export function signExtend6Bit(byte) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return byte & 0x20 ? byte | 0xffffffc0 : byte;
-}
-
-export function signExtend5Bit(byte) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return byte & 0x10 ? byte | 0xffffffe0 : byte;
-}
-
-export function signExtend4Bit(nibble) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return nibble & 0x08 ? nibble | 0xfffffff0 : nibble;
-}
-
-export function signExtend2Bit(byte) {
-    //If sign bit is set, fill the top bits with 1s to sign-extend
-    return byte & 0x02 ? byte | 0xfffffffc : byte;
-}
-
-export function stringHasComma(string) {
+export function stringHasComma(string: string): boolean {
     /***
      * Checks if the string contains at least one comma.
      *
@@ -91,7 +72,12 @@ export function stringHasComma(string) {
     return string.includes(",");
 }
 
-export function parseCommaSeparatedString(string, length) {
+/** One parsed header value: a number where it parses as one, otherwise the text. */
+export type HeaderScalar = number | string;
+/** What parseCommaSeparatedString() returns: a scalar for one value, a list (padded with `null`) for more. */
+export type HeaderValue = HeaderScalar | (HeaderScalar | null)[];
+
+export function parseCommaSeparatedString(string: string, length?: number): HeaderValue {
     /***
      * Parse a comma separated string for individual values.
      *
@@ -104,14 +90,16 @@ export function parseCommaSeparatedString(string, length) {
      *                      else an Array is returned containing all the values up to the length (if specified)
      ***/
     const parts = string.split(",");
-    let result;
-    let value;
+    let result: (HeaderScalar | null)[];
+    let value: number;
 
     length = length || parts.length; // we can force a length if we like
 
     if (length < 2) {
         // this is not actually a list, just return the value
-        value = parts.indexOf(".") ? Number.parseFloat(parts) : Number.parseInt(parts, 10);
+        // `parts` is an array here, so indexOf(".") only matches a part that is exactly "." and both
+        // branches then give NaN: in effect this always parses the whole string as a float.
+        value = parts.indexOf(".") ? Number.parseFloat(String(parts)) : Number.parseInt(String(parts), 10);
         return Number.isNaN(value) ? string : value;
     } else {
         // this really is a list; build an array
@@ -132,7 +120,7 @@ export function parseCommaSeparatedString(string, length) {
  * Find the index of `item` in `list`, or if `item` is not contained in `list` then return the index
  * of the next-smaller element (or 0 if `item` is smaller than all values in `list`).
  **/
-export function binarySearchOrPrevious(list, item) {
+export function binarySearchOrPrevious(list: ArrayLike<number>, item: number): number {
     let min = 0,
         max = list.length,
         mid,
@@ -159,7 +147,7 @@ export function binarySearchOrPrevious(list, item) {
  * Find the index of `item` in `list`, or if `item` is not contained in `list` then return the index
  * of the next-larger element (or the index of the last item if `item` is larger than all values in `list`).
  */
-export function binarySearchOrNext(list, item) {
+export function binarySearchOrNext(list: ArrayLike<number>, item: number): number {
     let min = 0,
         max = list.length,
         mid,
@@ -182,8 +170,8 @@ export function binarySearchOrNext(list, item) {
     return result;
 }
 
-export function leftPad(string, pad, minLength) {
-    string = `${string}`;
+export function leftPad(value: string | number, pad: string, minLength: number): string {
+    let string = `${value}`;
 
     while (string.length < minLength) {
         string = pad + string;
@@ -192,7 +180,7 @@ export function leftPad(string, pad, minLength) {
     return string;
 }
 
-export function formatTime(msec, displayMsec) {
+export function formatTime(msec: number, displayMsec?: boolean): string {
     // modify function to allow negative times.
     let ms = Math.round(Math.abs(msec));
 
@@ -210,7 +198,12 @@ export function formatTime(msec, displayMsec) {
     }:${leftPad(secs, "0", 2)}${displayMsec ? `.${leftPad(ms, "0", 3)}` : ""}`;
 }
 
-export function stringLoopTime(loopTime, pid_process_denom, unsynced_fast_pwm, motor_pwm_rate) {
+export function stringLoopTime(
+    loopTime: number | null | undefined,
+    pid_process_denom: number | null | undefined,
+    unsynced_fast_pwm: number | null | undefined,
+    motor_pwm_rate: number | null | undefined,
+): string {
     let returnString = "";
     if (loopTime != null) {
         returnString = `${loopTime}\u03BCS (${Number.parseFloat((1000 / loopTime).toFixed(3))}kHz`;
@@ -231,9 +224,11 @@ export function stringLoopTime(loopTime, pid_process_denom, unsynced_fast_pwm, m
     return returnString;
 }
 
-export function stringTimetoMsec(input) {
+/** Parse a typed time (`SS.sss` or `MM:SS.sss`, optionally negative) into microseconds; 0 if unparsable. */
+export function stringTimetoMsec(input: string): number {
     try {
-        const matches = input.match(/(-)?(\d+)(\D)*(\d+)*\D*(\d+)*/);
+        // A null match throws on `.length`, which the catch turns into 0.
+        const matches = input.match(/(-)?(\d+)(\D)*(\d+)*\D*(\d+)*/)!;
 
         if (matches.length > 2) {
             // there is a placeholder - either : or .
@@ -241,40 +236,63 @@ export function stringTimetoMsec(input) {
                 // time has been entered MM:SS.SSS
                 return (
                     (matches[1] ? -1 : 1) *
-                    (matches[2] * 60 * 1000000 +
-                        (matches[4] ? matches[4] : 0) * 1000000 +
-                        (matches[5] ? `${matches[5]}00`.slice(0, 3) : 0) * 1000)
+                    (Number(matches[2]) * 60 * 1000000 +
+                        Number(matches[4] ? matches[4] : 0) * 1000000 +
+                        Number(matches[5] ? `${matches[5]}00`.slice(0, 3) : 0) * 1000)
                 );
             } else {
                 return (
                     (matches[1] ? -1 : 1) *
-                    (matches[2] * 1000000 + (matches[4] ? `${matches[4]}00`.slice(0, 3) : 0) * 1000)
+                    (Number(matches[2]) * 1000000 + Number(matches[4] ? `${matches[4]}00`.slice(0, 3) : 0) * 1000)
                 );
             }
         } else {
-            return (matches[1] ? -1 : 1) * (matches[2] * 1000000);
+            return (matches[1] ? -1 : 1) * (Number(matches[2]) * 1000000);
         }
     } catch {
         return 0;
     }
 }
 
-export function constrain(value, min, max) {
+export function constrain(value: number, min: number, max: number): number {
     return Math.max(min, Math.min(value, max));
 }
 
-export function validate(value, defaultValue) {
+export function validate<T>(value: T | null | undefined, defaultValue: T): T {
     return value == null ? defaultValue : value;
 }
 
-export function roundRect(ctx, { x, y, width, height, radius = 5, fill = true, stroke = true }) {
-    if (typeof radius === "number") {
-        radius = { tl: radius, tr: radius, br: radius, bl: radius };
+export interface CornerRadii {
+    tl: number;
+    tr: number;
+    br: number;
+    bl: number;
+}
+
+export interface RoundRectOptions {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    /** One radius for every corner, or per corner (missing corners are square; the object is filled in). */
+    radius?: number | Partial<CornerRadii>;
+    fill?: boolean;
+    stroke?: boolean;
+}
+
+export function roundRect(
+    ctx: CanvasRenderingContext2D,
+    { x, y, width, height, radius: radiusOption = 5, fill = true, stroke = true }: RoundRectOptions,
+): void {
+    let radius: CornerRadii;
+    if (typeof radiusOption === "number") {
+        radius = { tl: radiusOption, tr: radiusOption, br: radiusOption, bl: radiusOption };
     } else {
-        const defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
-        for (const side of Object.keys(defaultRadius)) {
-            radius[side] = radius[side] || defaultRadius[side];
+        const defaultRadius: CornerRadii = { tl: 0, tr: 0, br: 0, bl: 0 };
+        for (const side of Object.keys(defaultRadius) as (keyof CornerRadii)[]) {
+            radiusOption[side] = radiusOption[side] || defaultRadius[side];
         }
+        radius = radiusOption as CornerRadii;
     }
     ctx.beginPath();
     ctx.moveTo(x + radius.tl, y);
@@ -295,10 +313,15 @@ export function roundRect(ctx, { x, y, width, height, radius = 5, fill = true, s
     }
 }
 
-function getOrCreateNotifElem(parentElem, messageClass, message, timeout) {
+function getOrCreateNotifElem(
+    parentElem: HTMLElement,
+    messageClass: string,
+    message: string,
+    timeout: ReturnType<typeof setTimeout> | null,
+): HTMLElement {
     let notifElem = document.getElementById("mouse-notification");
     if (notifElem) {
-        clearTimeout(timeout);
+        clearTimeout(timeout ?? undefined);
         notifElem.className = messageClass;
         notifElem.innerHTML = message;
     } else {
@@ -311,7 +334,7 @@ function getOrCreateNotifElem(parentElem, messageClass, message, timeout) {
     return notifElem;
 }
 
-function computeAlignedLeft(align, targetWidth, popupWidth, margin) {
+function computeAlignedLeft(align: string, targetWidth: number, popupWidth: number, margin: number): number {
     if (align.includes("right")) {
         return targetWidth - (popupWidth + margin);
     }
@@ -321,7 +344,7 @@ function computeAlignedLeft(align, targetWidth, popupWidth, margin) {
     return margin;
 }
 
-function computeAlignedTop(align, targetHeight, popupHeight, margin) {
+function computeAlignedTop(align: string, targetHeight: number, popupHeight: number, margin: number): number {
     if (align.includes("bottom")) {
         return targetHeight - (popupHeight + margin);
     }
@@ -331,7 +354,28 @@ function computeAlignedTop(align, targetHeight, popupHeight, margin) {
     return margin;
 }
 
-export const mouseNotification = {
+interface MouseNotification {
+    enabled: boolean;
+    /** The `#mouseNotification` container, looked up on first use. */
+    elem: HTMLElement | null;
+    timeout: ReturnType<typeof setTimeout> | null;
+    /**
+     * Show `message` (HTML) over `target` for `delay` ms, at the mouse position or, with `align`
+     * ("top"/"middle"/"bottom" plus "left"/"center"/"right"), at that corner of the target.
+     */
+    show(
+        target: Element | string | null,
+        x: number | null,
+        y: number | null,
+        message: string,
+        delay?: number | null,
+        messageClass?: string | null,
+        align?: string | null,
+        margin?: number | null,
+    ): boolean;
+}
+
+export const mouseNotification: MouseNotification = {
     enabled: true,
     elem: null,
     timeout: null,
@@ -347,37 +391,45 @@ export const mouseNotification = {
         messageClass = messageClass || "mouseNotification-box";
         margin = margin || 10;
 
-        getOrCreateNotifElem(this.elem, messageClass, message, this.timeout);
+        // The viewer's markup always has #mouseNotification; without it this throws, as it always did.
+        const elem = this.elem!;
+        getOrCreateNotifElem(elem, messageClass, message, this.timeout);
         this.timeout = setTimeout(function () {
             document.getElementById("mouse-notification")?.remove();
         }, delay || 1000);
 
-        let popupRect = this.elem.getBoundingClientRect();
-        const targetEl = target instanceof Element ? target : document.querySelector(target);
-        const targetRect = targetEl.getBoundingClientRect();
+        let popupRect = elem.getBoundingClientRect();
+        const targetEl = target instanceof Element ? target : document.querySelector(String(target));
+        const targetRect = targetEl!.getBoundingClientRect();
 
         // reposition the notification
         if (align == null) {
-            this.elem.style.left = `${(x || 0) - targetRect.left + margin}px`;
-            this.elem.style.top = `${(y || 0) - targetRect.top + margin}px`;
+            elem.style.left = `${(x || 0) - targetRect.left + margin}px`;
+            elem.style.top = `${(y || 0) - targetRect.top + margin}px`;
         } else {
             const left = computeAlignedLeft(align, targetRect.width, popupRect.width, margin);
             const top = computeAlignedTop(align, targetRect.height, popupRect.height, margin);
-            this.elem.style.left = `${left}px`;
-            this.elem.style.top = `${top}px`;
+            elem.style.left = `${left}px`;
+            elem.style.top = `${top}px`;
         }
 
         // now re-position the box if it goes out of the target element
-        popupRect = this.elem.getBoundingClientRect();
+        popupRect = elem.getBoundingClientRect();
         if (popupRect.right > targetRect.right - margin) {
-            this.elem.style.left = `${targetRect.right - popupRect.width - margin}px`;
+            elem.style.left = `${targetRect.right - popupRect.width - margin}px`;
         }
 
         return true;
     },
 };
 
-export function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version) {
+/** The two sysConfig fields firmwareGreaterOrEqual() reads. */
+export interface FirmwareIdentity {
+    firmwareType: number;
+    firmwareVersion: string;
+}
+
+export function firmwareGreaterOrEqual(sysConfig: FirmwareIdentity, bf_version: string, cf_version?: string): boolean {
     /***
      * Check if firmware version is higher or equal to requested version
      *
@@ -399,14 +451,6 @@ export function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version) {
     }
 }
 
-export function escapeRegExp(string) {
+export function escapeRegExp(string: string): string {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-export function triggerDownload(blob, filename) {
-    const a = document.createElement("a");
-    a.download = filename;
-    a.href = URL.createObjectURL(blob);
-    a.click();
-    URL.revokeObjectURL(a.href);
 }
