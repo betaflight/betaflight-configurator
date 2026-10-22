@@ -182,10 +182,7 @@ export class IMU {
         }
 
         const roll = Math.atan2(this.estimateGyro.Y, this.estimateGyro.Z);
-        const pitch = Math.atan2(
-            -this.estimateGyro.X,
-            Math.sqrt(this.estimateGyro.Y * this.estimateGyro.Y + this.estimateGyro.Z * this.estimateGyro.Z),
-        );
+        const pitch = Math.atan2(-this.estimateGyro.X, Math.hypot(this.estimateGyro.Y, this.estimateGyro.Z));
 
         //Magnetometer heading disabled — only EstN heading used
         rotateVector(this.EstN, deltaGyroAngle);
