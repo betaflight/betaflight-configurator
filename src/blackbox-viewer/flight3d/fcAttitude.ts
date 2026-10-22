@@ -28,7 +28,7 @@ import type { FlightLog } from "../flightlog";
 // from the GPS course while moving). Logs without it show the craft as a plain position marker:
 // a gyro-only estimate or the direction of travel would give a heading unrelated to the nose.
 //
-// Scene frame: x = North, y = Up, z = East (the GPS_transform local frame). The craft is modelled
+// Scene frame: x = North, y = Up, z = East (the GpsTransform local frame). The craft is modelled
 // with nose = +x, up = +y, right = +z, so an identity quaternion is level and facing north.
 //
 // The FC logs the body(FLU) -> earth(NWU) quaternion, as implied by the firmware's attitude

@@ -21,8 +21,15 @@
 
 import semver from "semver";
 import { FlightLogIndex, type IntraframeDirectory } from "./flightlog_index";
-import { FlightLogParser, type FieldStats, type LogEvent, type ParserStats, type SysConfig } from "./flightlog_parser";
-import { GPS_transform } from "./gps_transform";
+import {
+    FlightLogParser,
+    type FieldStats,
+    type FrameReadyHandler,
+    type LogEvent,
+    type ParserStats,
+    type SysConfig,
+} from "./flightlog_parser";
+import { GpsTransform } from "./gps_transform";
 import {
     MAX_MOTOR_NUMBER,
     DSHOT_MIN_VALUE,
@@ -134,6 +141,327 @@ function verifyChunkIndexes(_chunks: Chunk[]) {
  * Additional computed fields are derived from the original data set and added as new fields in the resulting data.
  * Window based smoothing of fields is offered.
  */
+/** Give the events at the end of `chunk` that have no time yet the time `nextTime`. */
+function fillTrailingEventTimes(chunk: Chunk, nextTime: number): void {
+    for (let j = chunk.events.length - 1; j >= 0; j--) {
+        if (chunk.events[j].time !== undefined) {
+            // All events with missing timestamps should appear at the end of the chunk, so we're done
+            return;
+        }
+        chunk.events[j].time = nextTime;
+    }
+}
+
+/** Copy `source` into slot `j` of `frames`, on top of the recycled array there if there is one. */
+function copyFrameInto(frames: LogFrame[], j: number, source: LogFrame): void {
+    const target = frames[j];
+    if (target) {
+        //Copy on top of the recycled array:
+        target.length = source.length;
+
+        for (let k = 0; k < source.length; k++) {
+            target[k] = source[k];
+        }
+    } else {
+        //Allocate a new copy of the raw array:
+        frames[j] = source.slice(0) as LogFrame;
+    }
+}
+
+const TIME = FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME;
+
+/** A frame position: chunk index into the source chunks, frame index within it. */
+interface Cursor {
+    chunk: number;
+    frame: number;
+}
+
+/** One smoothing call's chunks: the source, the copies being smoothed, and which copies were cached. */
+interface SmoothingPass {
+    sourceChunks: Chunk[];
+    resultChunks: Chunk[];
+    chunkAlreadyDone: boolean[];
+    leadingROChunks: number;
+    trailingROChunks: number;
+}
+
+/** The moving window over one partition: its edges, its sum and count, and where the partition ends. */
+interface SmoothingWindow {
+    left: Cursor;
+    right: Cursor;
+    /** Exclusive: the partition doesn't contain the value at `end`. */
+    end: Cursor;
+    partitionEnded: boolean;
+    accumulator: number;
+    valuesInHistory: number;
+}
+
+function frameAt(pass: SmoothingPass, at: Cursor): LogFrame {
+    return pass.sourceChunks[at.chunk].frames[at.frame];
+}
+
+/**
+ * The center may not be the left edge of a partition: we may just have skipped the previous chunk
+ * because it was cached. If so, the window starts further left, so the main loop reads those
+ * earlier values to prime it.
+ */
+function primeLeft(pass: SmoothingPass, center: Cursor, earliestTime: number): Cursor {
+    const left = { ...center };
+    while (left.frame > 0 || (left.frame === 0 && left.chunk > 0)) {
+        const old = { ...left };
+
+        //Try moving it left
+        if (left.frame === 0) {
+            left.chunk--;
+            left.frame = pass.sourceChunks[left.chunk].frames.length - 1;
+        } else {
+            left.frame--;
+        }
+
+        if (pass.sourceChunks[left.chunk].gapStartsHere[left.frame] || frameAt(pass, left)[TIME] < earliestTime) {
+            //We moved the left index one step too far, shift it back
+            return old;
+        }
+    }
+    return left;
+}
+
+/** Old values fall out of the window. */
+function dropOld(pass: SmoothingPass, window: SmoothingWindow, fieldIndex: number, earliestTime: number): void {
+    const left = window.left;
+    while (frameAt(pass, left)[TIME] < earliestTime) {
+        window.accumulator -= fieldNumber(frameAt(pass, left), fieldIndex);
+        window.valuesInHistory--;
+
+        left.frame++;
+        if (left.frame === pass.sourceChunks[left.chunk].frames.length) {
+            left.frame = 0;
+            left.chunk++;
+        }
+    }
+}
+
+/** New values are added to the window, up to a discontinuity or the end of the region. */
+function addNew(pass: SmoothingPass, window: SmoothingWindow, fieldIndex: number, latestTime: number): void {
+    const right = window.right;
+    while (!window.partitionEnded && frameAt(pass, right)[TIME] <= latestTime) {
+        window.accumulator += fieldNumber(frameAt(pass, right), fieldIndex);
+        window.valuesInHistory++;
+
+        //If there is a discontinuity after this point, stop trying to add further values
+        if (pass.sourceChunks[right.chunk].gapStartsHere[right.frame]) {
+            window.partitionEnded = true;
+        }
+
+        //Advance the right index onward since we read a value
+        right.frame++;
+        if (right.frame === pass.sourceChunks[right.chunk].frames.length) {
+            right.frame = 0;
+            right.chunk++;
+
+            if (right.chunk === pass.sourceChunks.length) {
+                //We reached the end of the region of interest!
+                window.partitionEnded = true;
+            }
+        }
+
+        if (window.partitionEnded) {
+            //Let the center-storing loop know not to advance the center to this position:
+            window.end = { ...right };
+        }
+    }
+}
+
+/**
+ * Advance the center to the next frame. "skipChunk" when that enters a chunk that is already
+ * smoothed, "done" when it leaves the region to smooth.
+ */
+function advanceCenter(pass: SmoothingPass, center: Cursor): "next" | "skipChunk" | "done" {
+    center.frame++;
+    if (center.frame === pass.sourceChunks[center.chunk].frames.length) {
+        center.frame = 0;
+        center.chunk++;
+
+        //Is the next chunk already cached? Then we have nothing to write into there
+        if (pass.chunkAlreadyDone[center.chunk]) {
+            return "skipChunk";
+        }
+
+        //Have we covered the whole ROI?
+        if (center.chunk === pass.sourceChunks.length - pass.trailingROChunks) {
+            return "done";
+        }
+    }
+    return "next";
+}
+
+/**
+ * Smooth one partition, starting at `center`: march the window along until a discontinuity or the
+ * end of the region, writing each average into the result. Returns why it stopped.
+ */
+function smoothPartition(
+    pass: SmoothingPass,
+    fieldIndex: number,
+    radius: number,
+    center: Cursor,
+): "partition" | "skipChunk" | "done" {
+    const lastChunk = pass.sourceChunks.length - 1 - pass.trailingROChunks;
+    let centerTime = frameAt(pass, center)[TIME];
+    const left = primeLeft(pass, center, centerTime - radius);
+    const window: SmoothingWindow = {
+        left,
+        right: { ...left },
+        // We'll refine this guess for the end of the partition later if we find discontinuities:
+        end: { chunk: lastChunk, frame: pass.sourceChunks[lastChunk].frames.length },
+        partitionEnded: false,
+        accumulator: 0,
+        valuesInHistory: 0,
+    };
+
+    //The main loop, where we march our smoothing window along until we exhaust this partition
+    while (center.chunk < window.end.chunk || (center.chunk === window.end.chunk && center.frame < window.end.frame)) {
+        dropOld(pass, window, fieldIndex, centerTime - radius);
+        addNew(pass, window, fieldIndex, centerTime + radius);
+
+        // Store the average of the history window into the frame in the center of the window
+        pass.resultChunks[center.chunk - pass.leadingROChunks].frames[center.frame][fieldIndex] = Math.round(
+            window.accumulator / window.valuesInHistory,
+        );
+
+        // Advance the center so we can start computing the next value
+        const step = advanceCenter(pass, center);
+        if (step !== "next") {
+            return step;
+        }
+
+        centerTime = frameAt(pass, center)[TIME];
+    }
+    return "partition";
+}
+
+/** Smooth one field over every chunk of the pass that is not cached already. */
+function smoothField(pass: SmoothingPass, fieldIndex: number, radius: number): void {
+    //The position we're currently computing the smoothed value for. Don't bother to smooth the
+    //first and last source chunks, since we can't smooth them completely.
+    const center: Cursor = { chunk: pass.leadingROChunks, frame: 0 };
+    for (; center.chunk < pass.sourceChunks.length - pass.trailingROChunks; center.chunk++) {
+        if (pass.chunkAlreadyDone[center.chunk]) {
+            continue;
+        }
+
+        //Each partition begins where the last one ended; a skipped chunk moves on to the next.
+        for (center.frame = 0; center.frame < pass.sourceChunks[center.chunk].frames.length;) {
+            const stop = smoothPartition(pass, fieldIndex, radius, center);
+            if (stop === "skipChunk") {
+                break;
+            }
+            if (stop === "done") {
+                return;
+            }
+        }
+    }
+}
+
+/*
+ * The rcCommandRawToDegreesPerSecond() curves are Betaflight version specific, due to the coding
+ * improvements from v2.8.0 onwards. Header values are read through Number(), the coercion the
+ * arithmetic applied to a missing (null) one.
+ */
+
+/** Betaflight 3.0+ / Cleanflight 2.0+: the setpoint rate curve. */
+function setpointRate(sysConfig: SysConfig, axis: number, rc: number): number {
+    const RC_RATE_INCREMENTAL = 14.54;
+    const RC_EXPO_POWER = 3;
+
+    let rcCommandf = rc / 500;
+    const rcCommandfAbs = Math.abs(rcCommandf);
+
+    if (sysConfig["rc_expo"][axis]) {
+        const expof = Number(sysConfig["rc_expo"][axis]) / 100;
+        rcCommandf = rcCommandf * rcCommandfAbs ** RC_EXPO_POWER * expof + rcCommandf * (1 - expof);
+    }
+
+    let rcRate = Number(sysConfig["rc_rates"][axis]) / 100;
+    if (rcRate > 2) {
+        rcRate += RC_RATE_INCREMENTAL * (rcRate - 2);
+    }
+
+    let angleRate = 200 * rcRate * rcCommandf;
+    if (sysConfig.rates[axis]) {
+        const rcSuperfactor = 1 / constrain(1 - rcCommandfAbs * (Number(sysConfig.rates[axis]) / 100), 0.01, 1);
+        angleRate *= rcSuperfactor;
+    }
+
+    const limit = sysConfig["rate_limits"][axis];
+    if (sysConfig.pidController === 0 || limit == null) {
+        /* LEGACY */
+        return constrain(angleRate * 4.1, -8190, 8190) >> 2; // Rate limit protection
+    }
+    return constrain(angleRate, -1 * limit, limit); // Rate limit protection (deg/sec)
+}
+
+/** Betaflight 2.8 to 3.0. */
+function rateFrom28(sysConfig: SysConfig, value: number, axis: number): number {
+    const FEATURE_SUPEREXPO_RATES = 1 << 23;
+    let angleRate;
+
+    if (Number(sysConfig.features) & FEATURE_SUPEREXPO_RATES) {
+        let rcFactor =
+            axis === AXIS.YAW
+                ? Math.abs(value) / (500 * (validate(sysConfig.rc_rates[2], 100) / 100))
+                : Math.abs(value) / (500 * (validate(sysConfig.rc_rates[0], 100) / 100));
+        rcFactor = 1 / constrain(1 - rcFactor * (validate(sysConfig.rates[axis], 100) / 100), 0.01, 1);
+
+        angleRate = rcFactor * ((27 * value) / 16);
+    } else {
+        angleRate = ((validate(sysConfig.rates[axis], 100) + 27) * value) / 16;
+    }
+
+    return constrain(angleRate, -8190, 8190); // Rate limit protection
+}
+
+/** Before Betaflight 2.8: the expo-plus curve, with super expo per axis and, on yaw, per mode. */
+function rateBefore28(
+    sysConfig: SysConfig,
+    value: number,
+    axis: number,
+    currentFlightMode: number | null | undefined,
+    hasSuperExpoMode: (flightMode: number) => boolean,
+): number {
+    let propFactor;
+    if (axis === AXIS.YAW && !sysConfig.superExpoYawMode) {
+        propFactor = 1;
+    } else {
+        const factor = axis === AXIS.YAW ? sysConfig.superExpoFactorYaw : sysConfig.superExpoFactor;
+        propFactor = 1 - (Number(factor) / 100) * (Math.abs(value) / 500);
+    }
+
+    let superExpoFactor = 1 / propFactor;
+
+    if (axis !== AXIS.YAW) {
+        /*ROLL or PITCH */
+        if (currentFlightMode == null) {
+            superExpoFactor = 1; // If we don't know the flight mode, then reset the super expo mode.
+        }
+        const rate = Number(axis === AXIS.ROLL ? sysConfig.rates[AXIS.ROLL] : sysConfig.rates[AXIS.PITCH]);
+        return (superExpoFactor * ((rate + 27) * value)) >> 6;
+    }
+
+    // The header logs the mode as an index into SUPER_EXPO_YAW.
+    const SUPER_EXPO_YAW_ON = SUPER_EXPO_YAW.indexOf("ON");
+    const SUPER_EXPO_YAW_ALWAYS = SUPER_EXPO_YAW.indexOf("ALWAYS");
+    if (sysConfig.superExpoYawMode === SUPER_EXPO_YAW_ON && currentFlightMode == null) {
+        superExpoFactor = 1; // If we don't know the flight mode, then reset the super expo mode.
+    }
+    if (
+        sysConfig.superExpoYawMode === SUPER_EXPO_YAW_ALWAYS ||
+        (sysConfig.superExpoYawMode === SUPER_EXPO_YAW_ON && hasSuperExpoMode(Number(currentFlightMode)))
+    ) {
+        return (superExpoFactor * ((Number(sysConfig.rates[AXIS.YAW]) + 47) * value)) >> 7;
+    }
+    return ((Number(sysConfig.rates[AXIS.YAW]) + 47) * value) >> 7;
+}
+
 export class FlightLog {
     declare parser: FlightLogParser;
     declare getMainFieldCount: () => number;
@@ -194,7 +522,7 @@ export class FlightLog {
         let fieldSmoothing: Record<number, number> = {},
             maxSmoothing = 0;
         const smoothedCache = new FIFOCache<number, Chunk>(2);
-        let gpsTransform: GPS_transform | null = null;
+        let gpsTransform: GpsTransform | null = null;
 
         //Public fields:
         this.parser = parser;
@@ -525,6 +853,202 @@ export class FlightLog {
             return numMotors;
         };
 
+        /** The transform to the local frame around a GPS home (lat, lon in 1e-7 degrees, altitude in dm). */
+        const homeTransform = (home: ArrayLike<number>): GpsTransform => {
+            const homeAltitude = home.length > 2 ? home[2] / 10 : 0; // will work after BF firmware improvement
+            return new GpsTransform(home[0] / 10000000, home[1] / 10000000, homeAltitude, 0);
+        };
+
+        /** Give the waiting events the time of the frame that followed them, and stop waiting. */
+        const stampEvents = (eventNeedsTimestamp: LogEvent[], frame: ArrayLike<number | null>): void => {
+            for (const event of eventNeedsTimestamp) {
+                event.time = frame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] as number;
+            }
+            eventNeedsTimestamp.length = 0;
+        };
+
+        /** Reuse the oldest cached chunk's memory if there is one, else start a new chunk. */
+        const recycledChunk = (chunkIndex: number): Chunk => {
+            const chunk = chunkCache.recycle();
+
+            // Were we able to reuse memory from an expired chunk?
+            if (chunk) {
+                chunk.index = chunkIndex;
+                /*
+                 * getSmoothedChunks would like to share this data, so we can't reuse the old arrays without
+                 * accidentally changing data that it might still want to reference:
+                 */
+                chunk.gapStartsHere = {};
+                chunk.events = [];
+                delete chunk.hasAdditionalFields;
+                delete chunk.needsEventTimes;
+
+                //But reuse the old chunk's frames array since getSmoothedChunks has an independent copy
+                return chunk;
+            }
+            return {
+                index: chunkIndex,
+                frames: [],
+                gapStartsHere: {},
+                events: [],
+            };
+        };
+
+        /** What decoding one chunk carries from frame to frame. */
+        interface ChunkParseState {
+            chunk: Chunk;
+            mainFrameIndex: number;
+            eventNeedsTimestamp: LogEvent[];
+            lastSlow: number[];
+            lastGPS: number[];
+            slowFrameLength: number;
+            lastGPSLength: number;
+        }
+
+        const appendMainFrame = (state: ChunkParseState, frame: number[]): void => {
+            //The parser re-uses the "frame" array so we must copy that data somewhere else
+            const { chunk, lastSlow, lastGPS, slowFrameLength, lastGPSLength } = state;
+            const numOutputFields = frame.length + slowFrameLength + lastGPSLength + ADDITIONAL_COMPUTED_FIELD_COUNT;
+            let destFrame: LogFrame;
+
+            //Do we have a recycled chunk to copy on top of?
+            if (chunk.frames[state.mainFrameIndex]) {
+                destFrame = chunk.frames[state.mainFrameIndex];
+                destFrame.length = numOutputFields;
+            } else {
+                // Otherwise allocate a new array; the loop below fills iteration and time first
+                destFrame = new Array(numOutputFields) as LogFrame;
+                chunk.frames.push(destFrame);
+            }
+
+            // Copy the main frame data in
+            for (let i = 0; i < frame.length; i++) {
+                destFrame[i] = frame[i];
+            }
+
+            let destFrame_currentIndex = frame.length; // Keeps track of where to place direct data in the destFrame.
+            // Then merge in the last seen slow-frame data
+            for (let slowFrameIndex = 0; slowFrameIndex < slowFrameLength; slowFrameIndex++) {
+                destFrame[slowFrameIndex + destFrame_currentIndex] = lastSlow[slowFrameIndex] ?? null;
+            }
+            destFrame_currentIndex += slowFrameLength;
+
+            // Also merge last seen gps-frame data
+            for (let gpsFrameIndex = 0; gpsFrameIndex < lastGPSLength; gpsFrameIndex++) {
+                destFrame[gpsFrameIndex + destFrame_currentIndex] = lastGPS[gpsFrameIndex] ?? null;
+            }
+            // destFrame_currentIndex += lastGPSLength; Add this line if you wish to add more fields.
+
+            stampEvents(state.eventNeedsTimestamp, frame);
+
+            state.mainFrameIndex++;
+        };
+
+        const recordChunkEvent = (state: ChunkParseState, event: LogEvent): void => {
+            if (event.event === FlightLogEvent.LOGGING_RESUME) {
+                state.chunk.gapStartsHere[state.mainFrameIndex - 1] = true;
+            }
+
+            /*
+             * If the event was logged during a loop iteration, it will appear in the log
+             * before that loop iteration does (since the main log stream is logged at the very
+             * end of the loop).
+             *
+             * So we want to use the timestamp of that later frame as the timestamp of the loop
+             * iteration this event was logged in.
+             */
+            if (!event.time) {
+                state.eventNeedsTimestamp.push(event);
+            }
+            state.chunk.events.push(event);
+        };
+
+        const chunkFrameHandler = (state: ChunkParseState): FrameReadyHandler =>
+            function (frameValid, frame, frameType, _frameOffset, _frameSize) {
+                // The G frames need to be processed always. They are "invalid" if not H (Home) has been detected
+                // before, but if not processed the viewer shows cuts and gaps. This happens if the quad takes off before
+                // fixing enough satellites.
+                if (!frameValid && !(frameType === "G" && frame)) {
+                    state.chunk.gapStartsHere[state.mainFrameIndex - 1] = true;
+                    return;
+                }
+
+                switch (frameType) {
+                    case "P":
+                    case "I":
+                        appendMainFrame(state, frame);
+                        break;
+                    case "E":
+                        recordChunkEvent(state, frame);
+                        break;
+                    case "S":
+                        for (let i = 0; i < frame.length; i++) {
+                            state.lastSlow[i] = frame[i];
+                        }
+                        break;
+                    case "H":
+                        gpsTransform = homeTransform(frame);
+                        break;
+                    case "G":
+                        // The frameValid can be false, when no GPS home (the G frames contains GPS position as diff of GPS Home position).
+                        // But other data from the G frame can be valid (time, num sats)
+
+                        //H Field G name:time,GPS_numSat,GPS_coord[0],GPS_coord[1],GPS_altitude,GPS_speed,GPS_ground_course
+                        frame.shift(); // remove time
+                        for (let i = 0; i < frame.length; i++) {
+                            state.lastGPS[i] = frame[i];
+                        }
+                        break;
+                }
+            };
+
+        /** Parse the log file to create the chunk with this index, which wasn't cached. */
+        const parseChunk = (chunkIndex: number, eventNeedsTimestamp: LogEvent[]): Chunk => {
+            const chunkStartOffset = iframeDirectory.offsets[chunkIndex];
+            const chunkEndOffset =
+                chunkIndex + 1 < iframeDirectory.offsets.length
+                    ? iframeDirectory.offsets[chunkIndex + 1]
+                    : // We're at the end so parse till end-of-log
+                      logIndexes.getLogBeginOffset(logIndex + 1);
+
+            const chunk = recycledChunk(chunkIndex);
+
+            // We need to store these on the chunk so we can refer to them later when we inject
+            // computed fields (IMU for attitude, GPS home for cartesian/home-distance/azimuth).
+            chunk.initialIMU = iframeDirectory.initialIMU[chunkIndex];
+            chunk.initialGPSHome = iframeDirectory.initialGPSHome?.[chunkIndex] ?? null;
+
+            const state: ChunkParseState = {
+                chunk,
+                mainFrameIndex: 0,
+                eventNeedsTimestamp,
+                slowFrameLength: parser.frameDefs.S ? parser.frameDefs.S.count : 0,
+                // The index keeps initialSlow exactly when the log has S frames
+                lastSlow: parser.frameDefs.S ? iframeDirectory.initialSlow![chunkIndex].slice(0) : [],
+                lastGPSLength: parser.frameDefs.G ? parser.frameDefs.G.count - 1 : 0, // -1 since we exclude the time field
+                lastGPS: parser.frameDefs.G ? iframeDirectory.initialGPS[chunkIndex].slice(0) : [],
+            };
+            parser.onFrameReady = chunkFrameHandler(state);
+
+            parser.resetDataState();
+
+            //Prime the parser with the previous state we get from the flightlog index, so it can base deltas off that data
+            gpsTransform = null;
+            const initialGPSHome = iframeDirectory.initialGPSHome?.[chunkIndex];
+            if (initialGPSHome) {
+                parser.setGPSHomeHistory(initialGPSHome);
+                gpsTransform = homeTransform(initialGPSHome);
+            }
+
+            parser.parseLogData(false, chunkStartOffset, chunkEndOffset);
+
+            //Truncate the array to fit just in case it was recycled and the new one is shorter
+            chunk.frames.length = state.mainFrameIndex;
+
+            chunkCache.add(chunkIndex, chunk);
+            return chunk;
+        };
+
         /**
          * Get the raw chunks in the range [startIndex...endIndex] (inclusive)
          *
@@ -534,13 +1058,8 @@ export class FlightLog {
             const resultChunks: Chunk[] = [],
                 eventNeedsTimestamp: LogEvent[] = [];
 
-            if (startIndex < 0) {
-                startIndex = 0;
-            }
-
-            if (endIndex > iframeDirectory.offsets.length - 1) {
-                endIndex = iframeDirectory.offsets.length - 1;
-            }
+            startIndex = Math.max(startIndex, 0);
+            endIndex = Math.min(endIndex, iframeDirectory.offsets.length - 1);
 
             if (endIndex < startIndex) {
                 return [];
@@ -555,198 +1074,14 @@ export class FlightLog {
             }
 
             for (let chunkIndex = startIndex; chunkIndex <= endIndex; chunkIndex++) {
-                let chunkStartOffset: number,
-                    chunkEndOffset: number,
-                    chunk = chunkCache.get(chunkIndex);
+                const cached = chunkCache.get(chunkIndex);
 
-                // Did we cache this chunk already?
-                if (chunk) {
-                    // Use the first event in the chunk to fill in event times at the trailing end of the previous one
-                    const frame = chunk.frames[0];
-
-                    for (const event of eventNeedsTimestamp) {
-                        event.time = frame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
-                    }
-                    eventNeedsTimestamp.length = 0;
-                } else {
-                    // Parse the log file to create this chunk since it wasn't cached
-                    chunkStartOffset = iframeDirectory.offsets[chunkIndex];
-
-                    if (chunkIndex + 1 < iframeDirectory.offsets.length) {
-                        chunkEndOffset = iframeDirectory.offsets[chunkIndex + 1];
-                    } else {
-                        // We're at the end so parse till end-of-log
-                        chunkEndOffset = logIndexes.getLogBeginOffset(logIndex + 1);
-                    }
-
-                    chunk = chunkCache.recycle() ?? undefined;
-
-                    // Were we able to reuse memory from an expired chunk?
-                    if (chunk) {
-                        chunk.index = chunkIndex;
-                        /*
-                         * getSmoothedChunks would like to share this data, so we can't reuse the old arrays without
-                         * accidentally changing data that it might still want to reference:
-                         */
-                        chunk.gapStartsHere = {};
-                        chunk.events = [];
-                        delete chunk.hasAdditionalFields;
-                        delete chunk.needsEventTimes;
-
-                        //But reuse the old chunk's frames array since getSmoothedChunks has an independent copy
-                    } else {
-                        chunk = {
-                            index: chunkIndex,
-                            frames: [],
-                            gapStartsHere: {},
-                            events: [],
-                        };
-                    }
-
-                    // We need to store these on the chunk so we can refer to them later when we inject
-                    // computed fields (IMU for attitude, GPS home for cartesian/home-distance/azimuth).
-                    const target = chunk;
-                    target.initialIMU = iframeDirectory.initialIMU[chunkIndex];
-                    target.initialGPSHome = iframeDirectory.initialGPSHome?.[chunkIndex] ?? null;
-
-                    let mainFrameIndex = 0;
-                    const slowFrameLength = parser.frameDefs.S ? parser.frameDefs.S.count : 0;
-                    // The index keeps initialSlow exactly when the log has S frames
-                    const lastSlow = parser.frameDefs.S ? iframeDirectory.initialSlow![chunkIndex].slice(0) : [];
-                    const lastGPSLength = parser.frameDefs.G ? parser.frameDefs.G.count - 1 : 0; // -1 since we exclude the time field
-                    const lastGPS = parser.frameDefs.G ? iframeDirectory.initialGPS[chunkIndex].slice(0) : [];
-
-                    parser.onFrameReady = function (frameValid, frame, frameType, _frameOffset, _frameSize) {
-                        let destFrame: LogFrame, destFrame_currentIndex;
-
-                        // The G frames need to be processed always. They are "invalid" if not H (Home) has been detected
-                        // before, but if not processed the viewer shows cuts and gaps. This happens if the quad takes off before
-                        // fixing enough satellites.
-                        if (frameValid || (frameType === "G" && frame)) {
-                            switch (frameType) {
-                                case "P":
-                                case "I": {
-                                    //The parser re-uses the "frame" array so we must copy that data somewhere else
-
-                                    const numOutputFields =
-                                        frame.length +
-                                        slowFrameLength +
-                                        lastGPSLength +
-                                        ADDITIONAL_COMPUTED_FIELD_COUNT;
-
-                                    //Do we have a recycled chunk to copy on top of?
-                                    if (target.frames[mainFrameIndex]) {
-                                        destFrame = target.frames[mainFrameIndex];
-                                        destFrame.length = numOutputFields;
-                                    } else {
-                                        // Otherwise allocate a new array; the loop below fills iteration and time first
-                                        destFrame = new Array(numOutputFields) as LogFrame;
-                                        target.frames.push(destFrame);
-                                    }
-
-                                    // Copy the main frame data in
-                                    for (let i = 0; i < frame.length; i++) {
-                                        destFrame[i] = frame[i];
-                                    }
-
-                                    destFrame_currentIndex = frame.length; // Keeps track of where to place direct data in the destFrame.
-                                    // Then merge in the last seen slow-frame data
-                                    for (let slowFrameIndex = 0; slowFrameIndex < slowFrameLength; slowFrameIndex++) {
-                                        destFrame[slowFrameIndex + destFrame_currentIndex] =
-                                            lastSlow[slowFrameIndex] === undefined ? null : lastSlow[slowFrameIndex];
-                                    }
-                                    destFrame_currentIndex += slowFrameLength;
-
-                                    // Also merge last seen gps-frame data
-                                    for (let gpsFrameIndex = 0; gpsFrameIndex < lastGPSLength; gpsFrameIndex++) {
-                                        destFrame[gpsFrameIndex + destFrame_currentIndex] =
-                                            lastGPS[gpsFrameIndex] === undefined ? null : lastGPS[gpsFrameIndex];
-                                    }
-                                    // destFrame_currentIndex += lastGPSLength; Add this line if you wish to add more fields.
-
-                                    for (const event of eventNeedsTimestamp) {
-                                        event.time = frame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
-                                    }
-                                    eventNeedsTimestamp.length = 0;
-
-                                    mainFrameIndex++;
-
-                                    break;
-                                }
-                                case "E":
-                                    if (frame.event === FlightLogEvent.LOGGING_RESUME) {
-                                        target.gapStartsHere[mainFrameIndex - 1] = true;
-                                    }
-
-                                    /*
-                                     * If the event was logged during a loop iteration, it will appear in the log
-                                     * before that loop iteration does (since the main log stream is logged at the very
-                                     * end of the loop).
-                                     *
-                                     * So we want to use the timestamp of that later frame as the timestamp of the loop
-                                     * iteration this event was logged in.
-                                     */
-                                    if (!frame.time) {
-                                        eventNeedsTimestamp.push(frame);
-                                    }
-                                    target.events.push(frame);
-                                    break;
-                                case "S":
-                                    for (let i = 0; i < frame.length; i++) {
-                                        lastSlow[i] = frame[i];
-                                    }
-                                    break;
-                                case "H": {
-                                    const homeAltitude = frame.length > 2 ? frame[2] / 10 : 0; // will work after BF firmware improvement
-                                    gpsTransform = new GPS_transform(
-                                        frame[0] / 10000000,
-                                        frame[1] / 10000000,
-                                        homeAltitude,
-                                        0,
-                                    );
-                                    break;
-                                }
-                                case "G":
-                                    // The frameValid can be false, when no GPS home (the G frames contains GPS position as diff of GPS Home position).
-                                    // But other data from the G frame can be valid (time, num sats)
-
-                                    //H Field G name:time,GPS_numSat,GPS_coord[0],GPS_coord[1],GPS_altitude,GPS_speed,GPS_ground_course
-                                    frame.shift(); // remove time
-                                    for (let i = 0; i < frame.length; i++) {
-                                        lastGPS[i] = frame[i];
-                                    }
-                                    break;
-                            }
-                        } else {
-                            target.gapStartsHere[mainFrameIndex - 1] = true;
-                        }
-                    };
-
-                    parser.resetDataState();
-
-                    //Prime the parser with the previous state we get from the flightlog index, so it can base deltas off that data
-                    gpsTransform = null;
-                    const initialGPSHome = iframeDirectory.initialGPSHome?.[chunkIndex];
-                    if (initialGPSHome) {
-                        parser.setGPSHomeHistory(initialGPSHome);
-                        const homeAltitude = initialGPSHome.length > 2 ? initialGPSHome[2] / 10 : 0;
-                        gpsTransform = new GPS_transform(
-                            initialGPSHome[0] / 10000000,
-                            initialGPSHome[1] / 10000000,
-                            homeAltitude,
-                            0,
-                        );
-                    }
-
-                    parser.parseLogData(false, chunkStartOffset, chunkEndOffset);
-
-                    //Truncate the array to fit just in case it was recycled and the new one is shorter
-                    target.frames.length = mainFrameIndex;
-
-                    chunkCache.add(chunkIndex, chunk);
+                // Did we cache this chunk already? Use its first frame to fill in event times at the
+                // trailing end of the previous one.
+                if (cached) {
+                    stampEvents(eventNeedsTimestamp, cached.frames[0]);
                 }
-
-                resultChunks.push(chunk);
+                resultChunks.push(cached ?? parseChunk(chunkIndex, eventNeedsTimestamp));
             }
 
             /*
@@ -1248,13 +1583,7 @@ export class FlightLog {
                     gpsTransform = null;
                     const initialGPSHome = sourceChunk.initialGPSHome;
                     if (initialGPSHome) {
-                        const homeAltitude = initialGPSHome.length > 2 ? initialGPSHome[2] / 10 : 0;
-                        gpsTransform = new GPS_transform(
-                            initialGPSHome[0] / 10000000,
-                            initialGPSHome[1] / 10000000,
-                            homeAltitude,
-                            0,
-                        );
+                        gpsTransform = homeTransform(initialGPSHome);
                     }
 
                     for (let i = 0; i < sourceChunk.frames.length; i++) {
@@ -1281,29 +1610,10 @@ export class FlightLog {
                 const chunk = chunks[i];
 
                 if (chunk.needsEventTimes) {
-                    // What is the time of the next frame after the chunk with the trailing events? We'll use that for the event times
-                    let nextTime;
-
-                    if (i + 1 < chunks.length) {
-                        const nextChunk = chunks[i + 1];
-
-                        nextTime = nextChunk.frames[0][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
-                    } else {
-                        //Otherwise we're at the end of the log so assume this event was logged sometime after the final frame
-                        nextTime =
-                            chunk.frames[chunk.frames.length - 1][
-                                FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME
-                            ];
-                    }
-
-                    for (let j = chunk.events.length - 1; j >= 0; j--) {
-                        if (chunk.events[j].time === undefined) {
-                            chunk.events[j].time = nextTime;
-                        } else {
-                            // All events with missing timestamps should appear at the end of the chunk, so we're done
-                            break;
-                        }
-                    }
+                    // What is the time of the next frame after the chunk with the trailing events? We'll use that for
+                    // the event times. At the end of the log, assume they were logged sometime after the final frame.
+                    const nextFrame = i + 1 < chunks.length ? chunks[i + 1].frames[0] : chunk.frames.at(-1)!;
+                    fillTrailingEventTimes(chunk, nextFrame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME]);
 
                     delete chunk.needsEventTimes;
                 }
@@ -1311,12 +1621,51 @@ export class FlightLog {
         }
 
         /**
+         * A smoothed copy of `sourceChunk`, from the cache if it was smoothed already (`done`), else in
+         * recycled or new memory, to be smoothed now.
+         */
+        const smoothedCopy = (sourceChunk: Chunk): { chunk: Chunk; done: boolean } => {
+            const cached = smoothedCache.get(sourceChunk.index);
+            if (cached) {
+                return { chunk: cached, done: true };
+            }
+
+            let resultChunk = smoothedCache.recycle();
+
+            if (resultChunk) {
+                //Reuse the memory from the expired chunk to reduce garbage
+                resultChunk.index = sourceChunk.index;
+                resultChunk.frames.length = sourceChunk.frames.length;
+                resultChunk.gapStartsHere = sourceChunk.gapStartsHere;
+                resultChunk.events = sourceChunk.events;
+
+                //Copy frames onto the expired chunk:
+                for (let j = 0; j < resultChunk.frames.length; j++) {
+                    copyFrameInto(resultChunk.frames, j, sourceChunk.frames[j]);
+                }
+            } else {
+                //Allocate a new chunk
+                resultChunk = {
+                    index: sourceChunk.index,
+                    frames: new Array(sourceChunk.frames.length),
+                    gapStartsHere: sourceChunk.gapStartsHere,
+                    events: sourceChunk.events,
+                };
+
+                for (let j = 0; j < resultChunk.frames.length; j++) {
+                    resultChunk.frames[j] = sourceChunk.frames[j].slice(0) as LogFrame;
+                }
+            }
+
+            smoothedCache.add(resultChunk.index, resultChunk);
+            return { chunk: resultChunk, done: false };
+        };
+
+        /**
          * Get an array of chunk data which has been smoothed by the previously-configured smoothing settings. The frames
          * in the chunks will at least span the range given by [startTime...endTime].
          */
         this.getSmoothedChunksInTimeRange = function (startTime, endTime) {
-            const timeFieldIndex = FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME;
-
             /*
              * Ensure that the range that the caller asked for can be fully smoothed by expanding the request
              * for source chunks on either side of the range asked for (to smooth the chunks on the edges, we
@@ -1347,220 +1696,30 @@ export class FlightLog {
             verifyChunkIndexes(sourceChunks);
 
             //Create an independent copy of the raw frame data to smooth out:
-            const resultChunks = new Array(sourceChunks.length - leadingROChunks - trailingROChunks);
-            const chunkAlreadyDone = new Array(sourceChunks.length);
+            const resultChunks: Chunk[] = new Array(sourceChunks.length - leadingROChunks - trailingROChunks);
+            const chunkAlreadyDone: boolean[] = new Array(sourceChunks.length);
 
             let allDone = true;
 
             //Don't smooth the edge chunks since they can't be fully smoothed
             for (let i = leadingROChunks; i < sourceChunks.length - trailingROChunks; i++) {
-                const sourceChunk = sourceChunks[i];
-                let resultChunk = smoothedCache.get(sourceChunk.index);
-
-                chunkAlreadyDone[i] = Boolean(resultChunk);
-
-                //If we haven't already smoothed this chunk
-                if (!chunkAlreadyDone[i]) {
-                    allDone = false;
-
-                    resultChunk = smoothedCache.recycle() ?? undefined;
-
-                    if (resultChunk) {
-                        //Reuse the memory from the expired chunk to reduce garbage
-                        resultChunk.index = sourceChunk.index;
-                        resultChunk.frames.length = sourceChunk.frames.length;
-                        resultChunk.gapStartsHere = sourceChunk.gapStartsHere;
-                        resultChunk.events = sourceChunk.events;
-
-                        //Copy frames onto the expired chunk:
-                        for (let j = 0; j < resultChunk.frames.length; j++) {
-                            if (resultChunk.frames[j]) {
-                                //Copy on top of the recycled array:
-                                resultChunk.frames[j].length = sourceChunk.frames[j].length;
-
-                                for (let k = 0; k < sourceChunk.frames[j].length; k++) {
-                                    resultChunk.frames[j][k] = sourceChunk.frames[j][k];
-                                }
-                            } else {
-                                //Allocate a new copy of the raw array:
-                                resultChunk.frames[j] = sourceChunk.frames[j].slice(0) as LogFrame;
-                            }
-                        }
-                    } else {
-                        //Allocate a new chunk
-                        resultChunk = {
-                            index: sourceChunk.index,
-                            frames: new Array(sourceChunk.frames.length),
-                            gapStartsHere: sourceChunk.gapStartsHere,
-                            events: sourceChunk.events,
-                        };
-
-                        for (let j = 0; j < resultChunk.frames.length; j++) {
-                            resultChunk.frames[j] = sourceChunk.frames[j].slice(0) as LogFrame;
-                        }
-                    }
-
-                    smoothedCache.add(resultChunk.index, resultChunk);
-                }
-
-                resultChunks[i - leadingROChunks] = resultChunk;
+                const { chunk, done } = smoothedCopy(sourceChunks[i]);
+                chunkAlreadyDone[i] = done;
+                allDone &&= done;
+                resultChunks[i - leadingROChunks] = chunk;
             }
 
             if (!allDone) {
+                const pass: SmoothingPass = {
+                    sourceChunks,
+                    resultChunks,
+                    chunkAlreadyDone,
+                    leadingROChunks,
+                    trailingROChunks,
+                };
                 for (const [fieldKey, radius] of Object.entries(fieldSmoothing)) {
                     // Object.entries() gives the index as a string; an array reads "5" and 5 alike.
-                    const fieldIndex = Number(fieldKey);
-                    //The position we're currently computing the smoothed value for:
-                    let centerChunkIndex, centerFrameIndex;
-
-                    //The outer two loops are used to begin a new partition to smooth within
-                    // Don't bother to smooth the first and last source chunks, since we can't smooth them completely
-                    mainLoop: for (
-                        centerChunkIndex = leadingROChunks;
-                        centerChunkIndex < sourceChunks.length - trailingROChunks;
-                        centerChunkIndex++
-                    ) {
-                        if (chunkAlreadyDone[centerChunkIndex]) {
-                            continue;
-                        }
-
-                        for (centerFrameIndex = 0; centerFrameIndex < sourceChunks[centerChunkIndex].frames.length;) {
-                            let //Current beginning & end of the smoothing window:
-                                leftChunkIndex = centerChunkIndex,
-                                leftFrameIndex = centerFrameIndex,
-                                rightChunkIndex,
-                                rightFrameIndex,
-                                /*
-                                 * The end of the current partition to be smoothed (exclusive, so the partition doesn't
-                                 * contain the value pointed to by chunks[endChunkIndex][endFrameIndex]).
-                                 *
-                                 * We'll refine this guess for the end of the partition later if we find discontinuities:
-                                 */
-                                endChunkIndex = sourceChunks.length - 1 - trailingROChunks,
-                                endFrameIndex = sourceChunks[endChunkIndex].frames.length,
-                                partitionEnded = false,
-                                accumulator = 0,
-                                valuesInHistory = 0,
-                                centerTime = sourceChunks[centerChunkIndex].frames[centerFrameIndex][timeFieldIndex];
-
-                            /*
-                             * This may not be the left edge of a partition, we may just have skipped the previous chunk due to
-                             * it having already been cached. If so, we can read the values from the previous chunk in order
-                             * to prime our history window. Move the left&right indexes to the left so the main loop will read
-                             * those earlier values.
-                             */
-                            while (leftFrameIndex > 0 || (leftFrameIndex === 0 && leftChunkIndex > 0)) {
-                                const oldleftChunkIndex = leftChunkIndex,
-                                    oldleftFrameIndex = leftFrameIndex;
-
-                                //Try moving it left
-                                if (leftFrameIndex === 0) {
-                                    leftChunkIndex--;
-                                    leftFrameIndex = sourceChunks[leftChunkIndex].frames.length - 1;
-                                } else {
-                                    leftFrameIndex--;
-                                }
-
-                                if (
-                                    sourceChunks[leftChunkIndex].gapStartsHere[leftFrameIndex] ||
-                                    sourceChunks[leftChunkIndex].frames[leftFrameIndex][timeFieldIndex] <
-                                        centerTime - radius
-                                ) {
-                                    //We moved the left index one step too far, shift it back
-                                    leftChunkIndex = oldleftChunkIndex;
-                                    leftFrameIndex = oldleftFrameIndex;
-
-                                    break;
-                                }
-                            }
-
-                            rightChunkIndex = leftChunkIndex;
-                            rightFrameIndex = leftFrameIndex;
-
-                            //The main loop, where we march our smoothing window along until we exhaust this partition
-                            while (
-                                centerChunkIndex < endChunkIndex ||
-                                (centerChunkIndex === endChunkIndex && centerFrameIndex < endFrameIndex)
-                            ) {
-                                // Old values fall out of the window
-                                while (
-                                    sourceChunks[leftChunkIndex].frames[leftFrameIndex][timeFieldIndex] <
-                                    centerTime - radius
-                                ) {
-                                    accumulator -= fieldNumber(
-                                        sourceChunks[leftChunkIndex].frames[leftFrameIndex],
-                                        fieldIndex,
-                                    );
-                                    valuesInHistory--;
-
-                                    leftFrameIndex++;
-                                    if (leftFrameIndex === sourceChunks[leftChunkIndex].frames.length) {
-                                        leftFrameIndex = 0;
-                                        leftChunkIndex++;
-                                    }
-                                }
-
-                                //New values are added to the window
-                                while (
-                                    !partitionEnded &&
-                                    sourceChunks[rightChunkIndex].frames[rightFrameIndex][timeFieldIndex] <=
-                                        centerTime + radius
-                                ) {
-                                    accumulator += fieldNumber(
-                                        sourceChunks[rightChunkIndex].frames[rightFrameIndex],
-                                        fieldIndex,
-                                    );
-                                    valuesInHistory++;
-
-                                    //If there is a discontinuity after this point, stop trying to add further values
-                                    if (sourceChunks[rightChunkIndex].gapStartsHere[rightFrameIndex]) {
-                                        partitionEnded = true;
-                                    }
-
-                                    //Advance the right index onward since we read a value
-                                    rightFrameIndex++;
-                                    if (rightFrameIndex === sourceChunks[rightChunkIndex].frames.length) {
-                                        rightFrameIndex = 0;
-                                        rightChunkIndex++;
-
-                                        if (rightChunkIndex === sourceChunks.length) {
-                                            //We reached the end of the region of interest!
-                                            partitionEnded = true;
-                                        }
-                                    }
-
-                                    if (partitionEnded) {
-                                        //Let the center-storing loop know not to advance the center to this position:
-                                        endChunkIndex = rightChunkIndex;
-                                        endFrameIndex = rightFrameIndex;
-                                    }
-                                }
-
-                                // Store the average of the history window into the frame in the center of the window
-                                resultChunks[centerChunkIndex - leadingROChunks].frames[centerFrameIndex][fieldIndex] =
-                                    Math.round(accumulator / valuesInHistory);
-
-                                // Advance the center so we can start computing the next value
-                                centerFrameIndex++;
-                                if (centerFrameIndex === sourceChunks[centerChunkIndex].frames.length) {
-                                    centerFrameIndex = 0;
-                                    centerChunkIndex++;
-
-                                    //Is the next chunk already cached? Then we have nothing to write into there
-                                    if (chunkAlreadyDone[centerChunkIndex]) {
-                                        continue mainLoop;
-                                    }
-
-                                    //Have we covered the whole ROI?
-                                    if (centerChunkIndex === sourceChunks.length - trailingROChunks) {
-                                        break mainLoop;
-                                    }
-                                }
-
-                                centerTime = sourceChunks[centerChunkIndex].frames[centerFrameIndex][timeFieldIndex];
-                            }
-                        }
-                    }
+                    smoothField(pass, Number(fieldKey), radius);
                 }
             }
 
@@ -1699,123 +1858,17 @@ export class FlightLog {
 
     **/
 
-    // Convert rcCommand to degrees per second. Header values below are read through Number(),
-    // the coercion the arithmetic applied to a missing (null) one.
+    // Convert rcCommand to degrees per second
     rcCommandRawToDegreesPerSecond(value: number, axis: number, currentFlightMode: number | null | undefined): number {
         const sysConfig = this.getSysConfig();
 
         if (firmwareGreaterOrEqual(sysConfig, "3.0.0", "2.0.0")) {
-            const RC_RATE_INCREMENTAL = 14.54;
-            const RC_EXPO_POWER = 3;
-
-            const calculateSetpointRate = function (axis: number, rc: number) {
-                let rcCommandf = rc / 500;
-                const rcCommandfAbs = Math.abs(rcCommandf);
-
-                if (sysConfig["rc_expo"][axis]) {
-                    const expof = Number(sysConfig["rc_expo"][axis]) / 100;
-                    rcCommandf = rcCommandf * rcCommandfAbs ** RC_EXPO_POWER * expof + rcCommandf * (1 - expof);
-                }
-
-                let rcRate = Number(sysConfig["rc_rates"][axis]) / 100;
-                if (rcRate > 2) {
-                    rcRate += RC_RATE_INCREMENTAL * (rcRate - 2);
-                }
-
-                let angleRate = 200 * rcRate * rcCommandf;
-                if (sysConfig.rates[axis]) {
-                    const rcSuperfactor =
-                        1 / constrain(1 - rcCommandfAbs * (Number(sysConfig.rates[axis]) / 100), 0.01, 1);
-                    angleRate *= rcSuperfactor;
-                }
-
-                const limit = sysConfig["rate_limits"][axis];
-                if (sysConfig.pidController === 0 || limit == null) {
-                    /* LEGACY */
-                    return constrain(angleRate * 4.1, -8190, 8190) >> 2; // Rate limit protection
-                } else {
-                    return constrain(angleRate, -1 * limit, limit); // Rate limit protection (deg/sec)
-                }
-            };
-
-            return calculateSetpointRate(axis, value);
+            return setpointRate(sysConfig, axis, value);
         } else if (firmwareGreaterOrEqual(sysConfig, "2.8.0")) {
-            const isSuperExpoActive = function () {
-                const FEATURE_SUPEREXPO_RATES = 1 << 23;
-
-                return Number(sysConfig.features) & FEATURE_SUPEREXPO_RATES;
-            };
-
-            const calculateRate = function (value: number, axis: number) {
-                let angleRate;
-
-                if (isSuperExpoActive()) {
-                    let rcFactor =
-                        axis === AXIS.YAW
-                            ? Math.abs(value) / (500 * (validate(sysConfig.rc_rates[2], 100) / 100))
-                            : Math.abs(value) / (500 * (validate(sysConfig.rc_rates[0], 100) / 100));
-                    rcFactor = 1 / constrain(1 - rcFactor * (validate(sysConfig.rates[axis], 100) / 100), 0.01, 1);
-
-                    angleRate = rcFactor * ((27 * value) / 16);
-                } else {
-                    angleRate = ((validate(sysConfig.rates[axis], 100) + 27) * value) / 16;
-                }
-
-                return constrain(angleRate, -8190, 8190); // Rate limit protection
-            };
-
-            return calculateRate(value, axis) >> 2; // the shift by 2 is to counterbalance the divide by 4 that occurs on the gyro to calculate the error
-        } else {
-            // earlier version of betaflight
-
-            const calculateExpoPlus = (value: number, axis: number) => {
-                let propFactor;
-                let superExpoFactor;
-
-                if (axis === AXIS.YAW && !this.getSysConfig().superExpoYawMode) {
-                    propFactor = 1;
-                } else {
-                    superExpoFactor =
-                        axis === AXIS.YAW
-                            ? this.getSysConfig().superExpoFactorYaw
-                            : this.getSysConfig().superExpoFactor;
-                    propFactor = 1 - (Number(superExpoFactor) / 100) * (Math.abs(value) / 500);
-                }
-
-                return propFactor;
-            };
-
-            let superExpoFactor = 1 / calculateExpoPlus(value, axis);
-
-            if (axis === AXIS.YAW /*YAW*/) {
-                // The header logs the mode as an index into SUPER_EXPO_YAW.
-                const SUPER_EXPO_YAW_ON = SUPER_EXPO_YAW.indexOf("ON");
-                const SUPER_EXPO_YAW_ALWAYS = SUPER_EXPO_YAW.indexOf("ALWAYS");
-                if (sysConfig.superExpoYawMode === SUPER_EXPO_YAW_ON && currentFlightMode == null) {
-                    superExpoFactor = 1; // If we don't know the flight mode, then reset the super expo mode.
-                }
-                if (
-                    sysConfig.superExpoYawMode === SUPER_EXPO_YAW_ALWAYS ||
-                    (sysConfig.superExpoYawMode === SUPER_EXPO_YAW_ON &&
-                        this.getFlightMode(Number(currentFlightMode)).SuperExpo)
-                ) {
-                    return (superExpoFactor * ((Number(sysConfig.rates[AXIS.YAW]) + 47) * value)) >> 7;
-                } else {
-                    return ((Number(sysConfig.rates[AXIS.YAW]) + 47) * value) >> 7;
-                }
-            } else {
-                /*ROLL or PITCH */
-                if (currentFlightMode == null) {
-                    superExpoFactor = 1; // If we don't know the flight mode, then reset the super expo mode.
-                }
-                return (
-                    (superExpoFactor *
-                        ((Number(axis === AXIS.ROLL ? sysConfig.rates[AXIS.ROLL] : sysConfig.rates[AXIS.PITCH]) + 27) *
-                            value)) >>
-                    6
-                );
-            }
+            return rateFrom28(sysConfig, value, axis) >> 2; // the shift by 2 is to counterbalance the divide by 4 that occurs on the gyro to calculate the error
         }
+        // earlier version of betaflight
+        return rateBefore28(sysConfig, value, axis, currentFlightMode, (mode) => this.getFlightMode(mode).SuperExpo);
     }
 
     rcCommandRawToThrottle(value: number): number {
@@ -2005,7 +2058,7 @@ export class FlightLog {
             this.getSysConfig().firmwareType === FIRMWARE_TYPE_BETAFLIGHT &&
             firmwareGreaterOrEqual(this.getSysConfig(), "2025.12.0")
         ) {
-            disabledFieldsFlags.PID = (disabledFields & (1 << 0)) !== 0;
+            disabledFieldsFlags.PID = (disabledFields & 1) !== 0;
             disabledFieldsFlags.RC_COMMANDS = (disabledFields & (1 << 1)) !== 0;
             disabledFieldsFlags.SETPOINT = (disabledFields & (1 << 2)) !== 0;
             disabledFieldsFlags.BATTERY = (disabledFields & (1 << 3)) !== 0;
@@ -2022,7 +2075,7 @@ export class FlightLog {
             disabledFieldsFlags.GYROUNFILT = (disabledFields & (1 << 14)) !== 0;
             disabledFieldsFlags.SERVO = (disabledFields & (1 << 15)) !== 0;
         } else {
-            disabledFieldsFlags.PID = (disabledFields & (1 << 0)) !== 0;
+            disabledFieldsFlags.PID = (disabledFields & 1) !== 0;
             disabledFieldsFlags.RC_COMMANDS = (disabledFields & (1 << 1)) !== 0;
             disabledFieldsFlags.SETPOINT = (disabledFields & (1 << 2)) !== 0;
             disabledFieldsFlags.BATTERY = (disabledFields & (1 << 3)) !== 0;

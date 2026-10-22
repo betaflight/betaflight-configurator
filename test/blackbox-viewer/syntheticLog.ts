@@ -112,7 +112,17 @@ export function interFrame(previous: MainFrame, next: MainFrame, timeStep: numbe
  * A log of `groups` runs of one I-frame and three P-frames, 4 iterations and 4 ms per run
  * (the header sets "I interval:4"), with every main frame returned for checking.
  */
-export function mixedLog(groups: number, extraHeader: string[] = []): { bytes: number[]; frames: MainFrame[] } {
+/** A flight mode change event, which carries no time of its own. */
+export function flightModeEvent(newFlags: number, lastFlags: number): number[] {
+    return ["E".codePointAt(0)!, 30, ...unsignedVB(newFlags), ...unsignedVB(lastFlags)];
+}
+
+/** `afterGroup` inserts bytes (an event, say) after the given run. Every 4th run starts a chunk. */
+export function mixedLog(
+    groups: number,
+    extraHeader: string[] = [],
+    afterGroup: Record<number, number[]> = {},
+): { bytes: number[]; frames: MainFrame[] } {
     const bytes = headerBytes([...HEADER, "H I interval:4", ...extraHeader]);
     const frames: MainFrame[] = [];
     for (let g = 0; g < groups; g++) {
@@ -128,6 +138,7 @@ export function mixedLog(groups: number, extraHeader: string[] = []): { bytes: n
             // The straight-line predictor extends the previous step; the I-frame counts as a step of 0.
             bytes.push(...interFrame(run[k - 1], run[k], 1000, k === 1 ? 0 : 1000));
         }
+        bytes.push(...(afterGroup[g] ?? []));
         frames.push(...run);
     }
     return { bytes, frames };

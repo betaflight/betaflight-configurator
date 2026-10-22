@@ -37,7 +37,7 @@ function deg2rad(deg: number): number {
  * Converts WGS84 coordinates to a local frame centred on (Lat0, Lon0, H0) and rotated by
  * Heading: `x` points along the heading, `y` up and `z` to its right.
  */
-export class GPS_transform {
+export class GpsTransform {
     readonly a11: number;
     readonly a12: number;
     readonly a13: number;

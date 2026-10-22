@@ -22,7 +22,7 @@
 import { describe, expect, it } from "vitest";
 import { FlightLog } from "../../src/blackbox-viewer/flightlog";
 import { FIRMWARE_TYPE_BETAFLIGHT } from "../../src/blackbox-viewer/flightlog_fielddefs";
-import { HEADER, headerBytes, mixedLog } from "./syntheticLog";
+import { flightModeEvent, HEADER, headerBytes, mixedLog } from "./syntheticLog";
 
 function open(groups = 6, extraHeader: string[] = []) {
     const { bytes, frames } = mixedLog(groups, extraHeader);
@@ -115,6 +115,20 @@ describe("FlightLog", () => {
         expect(smoothed[motor0]).toBe(Math.round(mean));
         // The raw chunks keep the logged value.
         expect((flightLog.getFrameAtTime(target.time) as number[])[motor0]).toBe(target.motors[0]);
+    });
+
+    it("times an event at the end of a chunk by the next chunk's first frame, even when that one is cached", () => {
+        // The event follows the last frame of chunk 0 (runs 0-3) and has no time of its own.
+        const { bytes, frames } = mixedLog(8, [], { 3: flightModeEvent(1, 0) });
+        const flightLog = new FlightLog(new Uint8Array(bytes));
+        flightLog.openLog(0);
+        const chunkOneStart = frames[16].time;
+        flightLog.getChunksInTimeRange(chunkOneStart, chunkOneStart); // caches chunk 1 only
+
+        const [chunkZero, chunkOne] = flightLog.getChunksInTimeRange(frames[0].time, chunkOneStart);
+
+        expect(chunkOne.index).toBe(1);
+        expect(chunkZero.events.at(-1)).toMatchObject({ event: 30, time: chunkOneStart });
     });
 
     it("compares the logged rate against the one the header asks for", () => {

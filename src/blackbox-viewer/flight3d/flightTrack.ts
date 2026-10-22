@@ -20,7 +20,7 @@
  */
 
 import { FLIGHT_LOG_FLIGHT_STATE_NAME } from "../flightlog_fielddefs";
-import { GPS_transform } from "../gps_transform";
+import { GpsTransform } from "../gps_transform";
 import type { FlightLog } from "../flightlog";
 
 /** Frame time index in a decoded main frame (FlightLogParser.FLIGHT_LOG_FIELD_INDEX_TIME). */
@@ -302,7 +302,7 @@ export function buildTrack(
         return null;
     }
     const origin = { lat: allFixes[0].lat, lon: allFixes[0].lon, altM: allFixes[0].altM };
-    const transform = new GPS_transform(origin.lat, origin.lon, origin.altM, 0);
+    const transform = new GpsTransform(origin.lat, origin.lon, origin.altM, 0);
     const toLocal = (lat: number, lon: number, altM: number): TrackPoint => {
         const p = transform.WGS_BS(lat, lon, altM);
         return { n: p.x, u: p.y, e: p.z };

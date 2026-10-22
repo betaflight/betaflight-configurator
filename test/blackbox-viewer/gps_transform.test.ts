@@ -20,14 +20,14 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { GPS_transform } from "../../src/blackbox-viewer/gps_transform";
+import { GpsTransform } from "../../src/blackbox-viewer/gps_transform";
 
 // Reference values were captured from the JavaScript transform before its conversion.
 const ORIGIN = [52.1, 5.2, 10] as const;
 
-describe("blackbox GPS_transform", () => {
+describe("blackbox GpsTransform", () => {
     it("puts the origin at zero", () => {
-        const p = new GPS_transform(...ORIGIN, 0).WGS_BS(...ORIGIN);
+        const p = new GpsTransform(...ORIGIN, 0).WGS_BS(...ORIGIN);
 
         expect(p.x).toBeCloseTo(0, 9);
         expect(p.y).toBeCloseTo(0, 9);
@@ -35,7 +35,7 @@ describe("blackbox GPS_transform", () => {
     });
 
     it("maps north to x, up to y and east to z at heading 0", () => {
-        const transform = new GPS_transform(...ORIGIN, 0);
+        const transform = new GpsTransform(...ORIGIN, 0);
 
         const north = transform.WGS_BS(52.101, 5.2, 10);
         expect(north.x).toBeCloseTo(111.26943653492377, 6);
@@ -54,7 +54,7 @@ describe("blackbox GPS_transform", () => {
     });
 
     it("rotates the horizontal axes by the heading", () => {
-        const p = new GPS_transform(...ORIGIN, 90).WGS_BS(52.1005, 5.2007, 23);
+        const p = new GpsTransform(...ORIGIN, 90).WGS_BS(52.1005, 5.2007, 23);
 
         expect(p.x).toBeCloseTo(47.967052452471634, 6);
         expect(p.y).toBeCloseTo(12.999577252238627, 6);
