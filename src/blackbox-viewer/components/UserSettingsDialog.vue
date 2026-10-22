@@ -226,7 +226,7 @@ import UiBox from "./UiBox.vue";
 import SettingRow from "./SettingRow.vue";
 import PercentInput from "./PercentInput.vue";
 import { mixerList } from "../user_settings_data";
-import { useSettingsStore } from "../stores/settings.js";
+import { useSettingsStore } from "../stores/settings";
 
 const open = defineModel("open", { type: Boolean, default: false });
 

@@ -124,7 +124,7 @@ import { useGraphStore } from "./stores/graph";
 import { useAppStore } from "./stores/app";
 import { useLogStore, FIRMWARE_CLASSES } from "./stores/log";
 import { usePlaybackStore } from "./stores/playback";
-import { useSettingsStore } from "./stores/settings.js";
+import { useSettingsStore } from "./stores/settings";
 import { useWorkspaceStore } from "./stores/workspace";
 import AppToolbar from "./components/AppToolbar.vue";
 import VideoExportDialog from "./components/VideoExportDialog.vue";

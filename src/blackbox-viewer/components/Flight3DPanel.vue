@@ -95,7 +95,7 @@
 import { computed, onActivated, onDeactivated, onBeforeUnmount, onMounted, ref, shallowRef, toRaw, watch } from "vue";
 import { useGraphStore } from "../stores/graph";
 import { useLogStore } from "../stores/log";
-import { useSettingsStore } from "../stores/settings.js";
+import { useSettingsStore } from "../stores/settings";
 import { setCurrentBlackboxTime } from "../playback_controls.js";
 import { FlightLogFieldPresenter, type PresentedFlightLog } from "../flightlog_fields_presenter";
 import type { FlightLog } from "../flightlog";

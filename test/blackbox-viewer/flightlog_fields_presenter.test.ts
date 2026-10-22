@@ -22,7 +22,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { FlightLog } from "../../src/blackbox-viewer/flightlog";
-import { useSettingsStore } from "../../src/blackbox-viewer/stores/settings.js";
+import { useSettingsStore } from "../../src/blackbox-viewer/stores/settings";
 import { mixedLog } from "./syntheticLog";
 import { FlightLogFieldPresenter } from "../../src/blackbox-viewer/flightlog_fields_presenter";
 import {

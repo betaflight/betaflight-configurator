@@ -30,7 +30,7 @@ import {
     FIRMWARE_TYPE_CLEANFLIGHT,
 } from "./flightlog_fielddefs";
 import { formatTime } from "./tools";
-import { useSettingsStore } from "./stores/settings.js";
+import { useSettingsStore } from "./stores/settings";
 import type { FlightLog } from "./flightlog";
 import {
     type DebugContext,

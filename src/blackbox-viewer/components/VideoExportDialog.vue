@@ -5,7 +5,7 @@ import { useLogStore } from "../stores/log";
 import { usePlaybackStore } from "../stores/playback";
 import { useAppStore } from "../stores/app";
 import { useGraphStore } from "../stores/graph";
-import { useSettingsStore } from "../stores/settings.js";
+import { useSettingsStore } from "../stores/settings";
 import { PrefStorage } from "../pref_storage";
 import {
     cancelActiveVideoExport,
