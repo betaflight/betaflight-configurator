@@ -31,13 +31,15 @@ const { fileSystem } = vi.hoisted(() => ({
 vi.mock("../../src/js/FileSystem", () => ({ default: fileSystem }));
 
 import { exportGpx } from "../../src/blackbox-viewer/export_utils";
+import type { SysConfig } from "../../src/blackbox-viewer/flightlog_parser";
+import { chunksOf } from "./fakeChunks";
 import { FakeWorker } from "./fakeWorker";
 
 const flightLog = {
-    getChunksInTimeRange: () => [{ frames: [[0, 1]] }],
+    getChunksInTimeRange: () => chunksOf([[0, 1]]),
     getMinTime: () => 0,
     getMaxTime: () => 125,
-    getSysConfig: () => ({}),
+    getSysConfig: () => ({}) as SysConfig,
     getMainFieldNames: () => ["time"],
 };
 

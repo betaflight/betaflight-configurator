@@ -19,17 +19,16 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** What the CSV and GPX exports read from a FlightLog (flightlog.js is still JavaScript). */
-export interface ExportableFlightLog {
-    getChunksInTimeRange(startTime: number, endTime: number): Array<{ frames: number[][] }>;
-    getMinTime(): number;
-    getMaxTime(): number;
-    getSysConfig(): Record<string, unknown>;
-    getMainFieldNames(): string[];
-}
+import type { FlightLog, LogFrame } from "./flightlog";
+
+/** What the CSV and GPX exports read from a FlightLog. */
+export type ExportableFlightLog = Pick<
+    FlightLog,
+    "getChunksInTimeRange" | "getMinTime" | "getMaxTime" | "getSysConfig" | "getMainFieldNames"
+>;
 
 /** The whole log's frames, chunk by chunk, as the export workers take them. */
-export function logFrames(flightLog: ExportableFlightLog): number[][][] {
+export function logFrames(flightLog: ExportableFlightLog): LogFrame[][] {
     return flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime()).map((chunk) => chunk.frames);
 }
 

@@ -21,6 +21,7 @@
 
 import { Quaternion, Vector3 } from "three";
 import { FRAME_TIME_INDEX } from "./flightTrack";
+import type { FlightLog } from "../flightlog";
 
 // Attitude comes only from the flight controller's logged quaternion (imuQuaternion): what the FC
 // believed, including its magnetometer when one is fitted (without one, Betaflight corrects yaw
@@ -73,12 +74,9 @@ export interface AttitudeTrack {
  * updates slower than the main frames, which hold each value in between; this keeps only the
  * updates and blends between them, so slow-motion playback rotates smoothly instead of stepping.
  */
-export function buildAttitudeTrack(flightLog: {
-    getMainFieldIndexByName(name: string): number | undefined;
-    getChunksInTimeRange(startTime: number, endTime: number): { frames: ArrayLike<number>[] }[];
-    getMinTime(): number;
-    getMaxTime(): number;
-}): AttitudeTrack | null {
+export function buildAttitudeTrack(
+    flightLog: Pick<FlightLog, "getMainFieldIndexByName" | "getChunksInTimeRange" | "getMinTime" | "getMaxTime">,
+): AttitudeTrack | null {
     const [ix, iy, iz] = [0, 1, 2].map((i) => flightLog.getMainFieldIndexByName(`imuQuaternion[${i}]`));
     if (ix === undefined || iy === undefined || iz === undefined) {
         return null;
@@ -92,7 +90,8 @@ export function buildAttitudeTrack(flightLog: {
                 continue;
             }
             times.push(frame[FRAME_TIME_INDEX]);
-            raw.push(frame[ix], frame[iy], frame[iz]);
+            // The quaternion is a main-frame field, which is never one of the null slots.
+            raw.push(Number(frame[ix]), Number(frame[iy]), Number(frame[iz]));
         }
     }
     if (!times.length) {
