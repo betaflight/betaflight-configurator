@@ -80,7 +80,7 @@ describe("FlightLogIndex", () => {
 
         const dir = index(bytes).getIntraframeDirectory(0);
 
-        expect(dir.error).toBeTruthy();
+        expect(String(dir.error)).toContain("missing required definitions for I frames");
         expect(dir.stats).toBeUndefined();
         expect(dir.times).toEqual([]);
     });
