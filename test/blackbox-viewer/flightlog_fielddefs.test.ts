@@ -116,14 +116,24 @@ describe("adjustFieldDefsList hardware names", () => {
         expect(fieldDefs.MAG_HARDWARE).toEqual(MAG_COMPLETE);
     });
 
-    it("hands out frozen lists, so a reader cannot corrupt them for the next log", () => {
+    it("keeps each list and replaces its contents, so a reader holding one sees the next log's", () => {
+        const acc = fieldDefs.ACC_HARDWARE;
         adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "2025.12.0");
-        expect(Object.isFrozen(fieldDefs.ACC_HARDWARE)).toBe(true);
-        expect(Object.isFrozen(fieldDefs.MAG_HARDWARE)).toBe(true);
-        expect(Object.isFrozen(fieldDefs.FLIGHT_LOG_FLIGHT_MODE_NAME)).toBe(true);
+        expect(fieldDefs.ACC_HARDWARE).toBe(acc);
+        expect(acc).toContain("IIM42653");
 
-        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "3.2.0");
-        expect(Object.isFrozen(fieldDefs.FLIGHT_LOG_FLIGHT_MODE_NAME)).toBe(true);
+        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "4.4.0");
+        expect(acc).toEqual(ACC_COMPLETE);
+    });
+});
+
+describe("adjustFieldDefsList 3.3 flight mode names", () => {
+    it("adds GPSRESCUE from 3.4", () => {
+        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "3.3.0");
+        expect(fieldDefs.FLIGHT_LOG_FLIGHT_MODE_NAME).not.toContain("GPSRESCUE");
+
+        adjustFieldDefsList(FIRMWARE_TYPE_BETAFLIGHT, "3.4.0");
+        expect(fieldDefs.FLIGHT_LOG_FLIGHT_MODE_NAME[11]).toBe("GPSRESCUE");
     });
 });
 

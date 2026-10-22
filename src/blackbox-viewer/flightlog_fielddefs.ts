@@ -71,8 +71,8 @@ export const AXIS = makeReadOnly({
     YAW: 2,
 });
 
-/** Flight mode names for the loaded log's firmware; set by adjustFieldDefsList(). */
-export let FLIGHT_LOG_FLIGHT_MODE_NAME: readonly string[] = [];
+/** Flight mode names for the loaded log's firmware; adjustFieldDefsList() replaces the contents. */
+export const FLIGHT_LOG_FLIGHT_MODE_NAME: readonly string[] = [];
 
 export const FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3 = makeReadOnly([
     "ARM",
@@ -298,8 +298,8 @@ export const GYRO_HARDWARE_LPF = makeReadOnly(["NORMAL", "EXPERIMENTAL", "1KHZ_S
 
 export const GYRO_32KHZ_HARDWARE_LPF = makeReadOnly(["NORMAL", "EXPERIMENTAL"]);
 
-/** Accelerometer names for the loaded log's firmware; set by adjustFieldDefsList(). */
-export let ACC_HARDWARE: readonly string[] = [];
+/** Accelerometer names for the loaded log's firmware; adjustFieldDefsList() replaces the contents. */
+export const ACC_HARDWARE: readonly string[] = [];
 
 const ACC_HARDWARE_COMPLETE = makeReadOnly([
     "AUTO",
@@ -339,8 +339,8 @@ export const BARO_HARDWARE = makeReadOnly([
     "2SMPB_02B",
 ]);
 
-/** Magnetometer names for the loaded log's firmware; set by adjustFieldDefsList(). */
-export let MAG_HARDWARE: readonly string[] = [];
+/** Magnetometer names for the loaded log's firmware; adjustFieldDefsList() replaces the contents. */
+export const MAG_HARDWARE: readonly string[] = [];
 
 const MAG_HARDWARE_COMPLETE = makeReadOnly([
     "AUTO",
@@ -402,69 +402,78 @@ export const SIMPLIFIED_PIDS_MODE = makeReadOnly(["OFF", "ON - RP", "ON - RPY"])
 
 export const THROTTLE_LIMIT_TYPE = makeReadOnly(["OFF", "SCALE", "CLIP"]);
 
+/** Replace the contents of one of the per-log lists, which are read-only to everyone else. */
+function replaceNames(list: readonly string[], names: readonly string[]): void {
+    const target = list as string[];
+    target.length = 0;
+    target.push(...names);
+}
+
+function isBetaflightFrom(firmwareType: number, firmwareVersion: string, version: string): boolean {
+    return firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(firmwareVersion, version);
+}
+
+function accHardwareFor(firmwareType: number, firmwareVersion: string): string[] {
+    const accHardware = ACC_HARDWARE_COMPLETE.slice(0);
+    if (isBetaflightFrom(firmwareType, firmwareVersion, "2025.12.0")) {
+        accHardware.splice(accHardware.indexOf("ADXL345"), 1);
+        accHardware.splice(accHardware.indexOf("MMA8452"), 1);
+        accHardware.splice(accHardware.indexOf("BMA280"), 1);
+        accHardware.splice(accHardware.indexOf("LSM303DLHC"), 1);
+        accHardware.splice(accHardware.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
+    }
+    return accHardware;
+}
+
+function magHardwareFor(firmwareType: number, firmwareVersion: string): string[] {
+    const magHardware = MAG_HARDWARE_COMPLETE.slice(0);
+    if (isBetaflightFrom(firmwareType, firmwareVersion, "4.5.0")) {
+        magHardware.splice(magHardware.indexOf("LIS3MDL"), 0, "LIS2MDL");
+        magHardware.push("IST8310");
+    }
+    return magHardware;
+}
+
+/** Flight mode names for Betaflight 3.3 and later. */
+function modernFlightModeNames(firmwareVersion: string): string[] {
+    if (semver.gte(firmwareVersion, "2025.12.0")) {
+        return FLIGHT_LOG_FLIGHT_MODE_NAME_POST_4_5.slice(0);
+    }
+    const modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_POST_3_3.slice(0);
+    const drop = (name: string) => modeNames.splice(modeNames.indexOf(name), 1);
+    if (semver.lt(firmwareVersion, "3.4.0")) {
+        drop("GPSRESCUE");
+    }
+    if (semver.gte(firmwareVersion, "3.5.0")) {
+        ["RANGEFINDER", "CAMTRIG", "LEDMAX", "LLIGHTS", "GOV", "GTUNE"].forEach(drop);
+    }
+    if (semver.gte(firmwareVersion, "4.0.0")) {
+        ["BARO", "GPSHOME", "GPSHOLD"].forEach(drop);
+    }
+    return modeNames;
+}
+
+function flightModeNamesFor(firmwareType: number, firmwareVersion: string): string[] {
+    if (!isBetaflightFrom(firmwareType, firmwareVersion, "3.3.0")) {
+        const modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);
+        if (firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.lte(firmwareVersion, "3.1.6")) {
+            modeNames.splice(modeNames.indexOf("ANTIGRAVITY"), 1);
+        }
+        return modeNames;
+    }
+    const modeNames = modernFlightModeNames(firmwareVersion);
+    if (semver.gte(firmwareVersion, "2026.6.0")) {
+        modeNames.splice(modeNames.indexOf("GPSRESCUE") + 1, 0, "AUTOPILOT");
+    }
+    return modeNames;
+}
+
 /**
  * Point the hardware and flight mode name lists at the ones the given firmware uses. The
  * lists are module state, so this has to run before anything reads them for a new log.
  */
 export function adjustFieldDefsList(firmwareType: number, firmwareVersion: string): void {
-    if (firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(firmwareVersion, "3.3.0")) {
-        // Hardware names
-        const accHardware = ACC_HARDWARE_COMPLETE.slice(0);
-        const magHardware = MAG_HARDWARE_COMPLETE.slice(0);
-
-        if (semver.gte(firmwareVersion, "4.5.0")) {
-            magHardware.splice(magHardware.indexOf("LIS3MDL"), 0, "LIS2MDL");
-            magHardware.push("IST8310");
-        }
-        if (semver.gte(firmwareVersion, "2025.12.0")) {
-            accHardware.splice(accHardware.indexOf("ADXL345"), 1);
-            accHardware.splice(accHardware.indexOf("MMA8452"), 1);
-            accHardware.splice(accHardware.indexOf("BMA280"), 1);
-            accHardware.splice(accHardware.indexOf("LSM303DLHC"), 1);
-            accHardware.splice(accHardware.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
-        }
-
-        ACC_HARDWARE = makeReadOnly(accHardware);
-        MAG_HARDWARE = makeReadOnly(magHardware);
-
-        // Flight mode names
-        let modeNames: string[];
-        if (semver.gte(firmwareVersion, "2025.12.0")) {
-            modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_POST_4_5.slice(0);
-        } else {
-            modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_POST_3_3.slice(0);
-            if (semver.lt(firmwareVersion, "3.4.0")) {
-                modeNames.splice(modeNames.indexOf("GPSRESCUE"), 1);
-            }
-            if (semver.gte(firmwareVersion, "3.5.0")) {
-                modeNames.splice(modeNames.indexOf("RANGEFINDER"), 1);
-                modeNames.splice(modeNames.indexOf("CAMTRIG"), 1);
-                modeNames.splice(modeNames.indexOf("LEDMAX"), 1);
-                modeNames.splice(modeNames.indexOf("LLIGHTS"), 1);
-                modeNames.splice(modeNames.indexOf("GOV"), 1);
-                modeNames.splice(modeNames.indexOf("GTUNE"), 1);
-            }
-            if (semver.gte(firmwareVersion, "4.0.0")) {
-                modeNames.splice(modeNames.indexOf("BARO"), 1);
-                modeNames.splice(modeNames.indexOf("GPSHOME"), 1);
-                modeNames.splice(modeNames.indexOf("GPSHOLD"), 1);
-            }
-        }
-        if (semver.gte(firmwareVersion, "2026.6.0")) {
-            modeNames.splice(modeNames.indexOf("GPSRESCUE") + 1, 0, "AUTOPILOT");
-        }
-
-        FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(modeNames);
-    } else {
-        ACC_HARDWARE = makeReadOnly(ACC_HARDWARE_COMPLETE.slice(0));
-        MAG_HARDWARE = makeReadOnly(MAG_HARDWARE_COMPLETE.slice(0));
-
-        const modeNames = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);
-
-        if (firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.lte(firmwareVersion, "3.1.6")) {
-            modeNames.splice(modeNames.indexOf("ANTIGRAVITY"), 1);
-        }
-
-        FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(modeNames);
-    }
+    replaceNames(ACC_HARDWARE, accHardwareFor(firmwareType, firmwareVersion));
+    replaceNames(MAG_HARDWARE, magHardwareFor(firmwareType, firmwareVersion));
+    replaceNames(FLIGHT_LOG_FLIGHT_MODE_NAME, flightModeNamesFor(firmwareType, firmwareVersion));
 }
