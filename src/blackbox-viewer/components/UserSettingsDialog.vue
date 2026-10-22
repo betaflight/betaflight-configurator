@@ -225,17 +225,17 @@ import { ref, watch, computed, toRaw } from "vue";
 import UiBox from "./UiBox.vue";
 import SettingRow from "./SettingRow.vue";
 import PercentInput from "./PercentInput.vue";
-import { mixerList } from "../user_settings_data";
+import { mixerList, type CustomMix, type OverlayPosition, type UserSettings } from "../user_settings_data";
 import { useSettingsStore } from "../stores/settings";
 
 const open = defineModel("open", { type: Boolean, default: false });
 
 const settingsStore = useSettingsStore();
 
-const emit = defineEmits(["save"]);
+const emit = defineEmits<{ save: [settings: UserSettings] }>();
 
 // Deep-clone store settings into local state for editing
-function cloneSettings() {
+function cloneSettings(): UserSettings {
     return JSON.parse(JSON.stringify(toRaw(settingsStore.userSettings))); // NOSONAR
 }
 
@@ -248,11 +248,17 @@ watch(open, (val) => {
     }
 });
 
-// customMix is truthy object or null — expose as boolean for USwitch
+/** The chosen mixer's own motor order, which the craft is drawn with while Custom is on. */
+function mixFor(mixerConfiguration: number): CustomMix {
+    const mixer = mixerList[(mixerConfiguration || 3) - 1] ?? mixerList[2];
+    return { motorOrder: [...mixer.defaultMotorOrder], yawOffset: mixer.defaultYawOffset };
+}
+
+// customMix is a mix or null — expose as boolean for USwitch
 const customMixBool = computed({
     get: () => !!local.value.customMix,
-    set: (val) => {
-        local.value.customMix = val ? {} : null;
+    set: (val: boolean) => {
+        local.value.customMix = val ? mixFor(local.value.mixerConfiguration) : null;
     },
 });
 
@@ -292,10 +298,10 @@ const altitudeOptions = [
 interface PositionRow {
     label: string;
     /** Positions are stored as percentage strings ("50%"); pv() parses, writes re-append %. */
-    obj: Record<string, string>;
-    topKey: string;
-    leftKey: string;
-    sizeKey?: string;
+    obj: OverlayPosition & { size?: string; width?: string };
+    topKey: "top";
+    leftKey: "left";
+    sizeKey?: "size" | "width";
     sizeLabel?: string;
 }
 
@@ -323,8 +329,9 @@ const positionRows = computed(() => {
     return rows;
 });
 
-function pv(v: string) {
-    return Number.parseInt(v) || 0;
+// A missing value parses as NaN either way, so it reads as 0.
+function pv(v: string | undefined) {
+    return Number.parseInt(v ?? "") || 0;
 }
 
 function onLogoChange(e: Event) {
@@ -334,12 +341,17 @@ function onLogoChange(e: Event) {
     }
     const reader = new FileReader();
     reader.onload = () => {
-        local.value.watermark.logo = reader.result;
+        // readAsDataURL() always gives a string once loaded
+        local.value.watermark.logo = typeof reader.result === "string" ? reader.result : null;
     };
     reader.readAsDataURL(file);
 }
 
 function onSave() {
+    // The mixer can change after Custom was switched on; save the mix of the one chosen.
+    if (local.value.customMix) {
+        local.value.customMix = mixFor(local.value.mixerConfiguration);
+    }
     const raw = JSON.parse(JSON.stringify(toRaw(local.value))); // NOSONAR
     emit("save", raw);
     open.value = false;
