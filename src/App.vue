@@ -51,6 +51,7 @@
             </div>
         </div>
         <GlobalDialogs />
+        <LogPanel />
     </UApp>
 </template>
 
@@ -60,6 +61,7 @@ import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "v
 import { onKeyStroke, useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
+import LogPanel from "./components/log/LogPanel.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
 import PortUsageModule from "./js/port_usage";
 import { i18n } from "./js/localization";
