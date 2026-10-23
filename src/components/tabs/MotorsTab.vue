@@ -123,7 +123,7 @@
                                 <USwitch v-model="useDshotTelemetry" size="xs" />
                             </SettingRow>
                             <SettingRow
-                                v-if="protocolConfigured && rpmFeaturesVisible"
+                                v-if="!isMotorKvSupported && protocolConfigured && rpmFeaturesVisible"
                                 :label="$t('configurationMotorPolesLong')"
                                 :help="$t('configurationMotorPolesHelp')"
                                 fullWidth
@@ -218,7 +218,7 @@
                                 />
                             </SettingRow>
                         </UiBox>
-                        <!-- Advanced motor settings: motor data for the RPM limiter and the motor thermal estimator -->
+                        <!-- Advanced motor settings: motor data (KV, stator size, magnets) for the RPM limiter and the motor thermal estimator; the magnets stay in the main box on firmware without this box -->
                         <UiBox
                             v-if="isMotorKvSupported"
                             :title="$t('configurationMotorAdvanced')"
@@ -287,6 +287,22 @@
                                     <option v-for="size in motorStatorSizes" :key="size" :value="size" />
                                 </datalist>
                                 <span class="ml-2 text-xs text-muted">{{ motorStatorPreview }}</span>
+                            </SettingRow>
+                            <SettingRow
+                                v-if="protocolConfigured && rpmFeaturesVisible"
+                                :label="$t('configurationMotorPolesLong')"
+                                :help="$t('configurationMotorPolesHelp')"
+                                fullWidth
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.motor_poles"
+                                    :min="4"
+                                    :max="255"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
+                                    class="w-16"
+                                />
                             </SettingRow>
                         </UiBox>
                         <!-- 3D -->
