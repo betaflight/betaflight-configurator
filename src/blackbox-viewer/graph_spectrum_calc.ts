@@ -173,6 +173,112 @@ function sampleValue(frame: LogFrame, index: number | undefined): number {
     return Number(index === undefined ? undefined : frame[index]);
 }
 
+/** A run of samples: a chunk of a heat map, `length` samples from `start`. */
+interface SampleRun {
+    start: number;
+    length: number;
+}
+
+/** A heat map being summed: a row per VS bin, and how many chunks each row holds. */
+interface VsBins {
+    matrix: Float64Array[];
+    counts: Uint32Array;
+}
+
+function chunkAverage(values: Float64Array, run: SampleRun): number {
+    let sum = 0;
+    for (let i = run.start; i < run.start + run.length; i++) {
+        sum += values[i];
+    }
+    return sum / run.length;
+}
+
+/**
+ * Adds a chunk's spectrum to the row of each VS field's average over the chunk. The bin is clamped:
+ * a degenerate or out-of-range average must never index outside the matrix (issue #922).
+ */
+function addChunkToVsBins(
+    bins: VsBins,
+    spectrum: Float64Array,
+    length: number,
+    flightSamples: FlightSamplesVsX,
+    run: SampleRun,
+): void {
+    const { minValue, maxValue } = flightSamples;
+    for (const vsValueArray of flightSamples.vsValues) {
+        const avgVsValue = chunkAverage(vsValueArray, run);
+        const vsBinIndex = Math.max(
+            0,
+            Math.min(
+                NUM_VS_BINS - 1,
+                Math.round(((NUM_VS_BINS - 1) * (avgVsValue - minValue)) / (maxValue - minValue)),
+            ),
+        );
+        bins.counts[vsBinIndex]++;
+        for (let i = 0; i < length; i++) {
+            bins.matrix[vsBinIndex][i] += spectrum[i];
+        }
+    }
+}
+
+/** Divides the first `length` values of each row by the chunks it holds, where it holds more than one. */
+function averageVsBins(bins: VsBins, length: number): void {
+    for (let i = 0; i < NUM_VS_BINS; i++) {
+        if (bins.counts[i] > 1) {
+            for (let j = 0; j < length; j++) {
+                bins.matrix[i][j] /= bins.counts[i];
+            }
+        }
+    }
+}
+
+/** An eRPM value clamped to 0..the eRPM of MAX_RPM_HZ_VALUE. */
+function clampRpm(value: number, maxRPM: number): number {
+    if (value > maxRPM) {
+        return maxRPM;
+    }
+    return value < 0 ? 0 : value;
+}
+
+/** Welch's scale for the PSD: by the window's power ("density") or its sum ("spectrum"). */
+function psdScale(
+    calc: GraphSpectrumCalcModule,
+    hanning: boolean,
+    pointsPerSegment: number,
+    scaling: PsdScaling,
+): number {
+    if (hanning) {
+        const window = new Array(pointsPerSegment).fill(1);
+        calc._hanningWindow(window, pointsPerSegment);
+        if (scaling === "density") {
+            let skSum = 0;
+            for (const value of window) {
+                skSum += value ** 2;
+            }
+            return 1 / (calc._blackBoxRate * skSum);
+        }
+        let sum = 0;
+        for (const value of window) {
+            sum += value;
+        }
+        return 1 / sum ** 2;
+    }
+    return scaling === "density" ? 1 / pointsPerSegment : 1 / pointsPerSegment ** 2;
+}
+
+/** A bin's scaled power summed over the segments, doubled for the bins mirrored in the other half. */
+function binPower(fftOutput: Float64Array[], i: number, scale: number): number {
+    const dataCount = fftOutput[0].length;
+    const even = dataCount % 2 === 0;
+    const mirrored = i !== 0 && (!even || i !== dataCount - 1);
+    let total = 0;
+    for (const segment of fftOutput) {
+        const p = scale * segment[i] ** 2;
+        total += mirrored ? p * 2 : p;
+    }
+    return total;
+}
+
 /** The calculation behind the spectrum analyser; one log at a time, set by initialize(). */
 export const GraphSpectrumCalc = {
     _analyserTimeRange: {
@@ -353,44 +459,18 @@ GraphSpectrumCalc._dataLoadFrequencyVsX = function (vsFieldNames, minValue = Inf
             maxNoise = Math.max(magnitudes[i], maxNoise);
         }
 
-        // calculate a bin index and put the fft value in that bin for each field (e.g. eRPM[0], eRPM[1]..) sepparately
-        for (const vsValueArray of flightSamples.vsValues) {
-            // Calculate average of the VS values in the chunk
-            let sumVsValues = 0;
-            for (let indexVs = fftChunkIndex; indexVs < fftChunkIndex + fftChunkLength; indexVs++) {
-                sumVsValues += vsValueArray[indexVs];
-            }
-            // Translate the average vs value to a bin index
-            const avgVsValue = sumVsValues / fftChunkLength;
-            // Clamp to a valid bin: a degenerate or out-of-range average must never index
-            // outside the matrix (would dereference an undefined row — issue #922).
-            const vsBinIndex = Math.max(
-                0,
-                Math.min(
-                    NUM_VS_BINS - 1,
-                    Math.round(
-                        ((NUM_VS_BINS - 1) * (avgVsValue - flightSamples.minValue)) /
-                            (flightSamples.maxValue - flightSamples.minValue),
-                    ),
-                ),
-            );
-            numberSamples[vsBinIndex]++;
-
-            // add the output from the fft to the row given by the vs value bin index
-            for (let i = 0; i < magnitudeLength; i++) {
-                matrixFftOutput[vsBinIndex][i] += magnitudes[i];
-            }
-        }
+        // put the fft value in the bin of each field (e.g. eRPM[0], eRPM[1]..) separately
+        addChunkToVsBins(
+            { matrix: matrixFftOutput, counts: numberSamples },
+            magnitudes,
+            magnitudeLength,
+            flightSamples,
+            { start: fftChunkIndex, length: fftChunkLength },
+        );
     }
 
     // Divide the values from the fft in each row (vs value bin) by the number of samples in the bin
-    for (let i = 0; i < NUM_VS_BINS; i++) {
-        if (numberSamples[i] > 1) {
-            for (let j = 0; j < matrixFftOutput[i].length; j++) {
-                matrixFftOutput[i][j] /= numberSamples[i];
-            }
-        }
-    }
+    averageVsBins({ matrix: matrixFftOutput, counts: numberSamples }, fftBufferSize * 2);
 
     // The output data needs to be smoothed, the sampling is not perfect
     // but after some tests we let the data as is, an we prefer to apply a
@@ -425,7 +505,7 @@ GraphSpectrumCalc._dataLoadPowerSpectralDensityVsX = function (
     let psdLength = 0;
     // Matrix where each row represents a bin of vs values, and the columns are amplitudes at frequencies
     const BACKGROUND_PSD_VALUE = -200;
-    let matrixPsdOutput;
+    let matrixPsdOutput: Float64Array[] | undefined;
 
     const numberSamples = new Uint32Array(NUM_VS_BINS); // Number of samples in each vs value, used to average them later.
 
@@ -444,50 +524,19 @@ GraphSpectrumCalc._dataLoadPowerSpectralDensityVsX = function (
                 .fill(null)
                 .map(() => new Float64Array(psdLength).fill(BACKGROUND_PSD_VALUE));
         }
-        // calculate a bin index and put the fft value in that bin for each field (e.g. eRPM[0], eRPM[1]..) sepparately
-        for (const vsValueArray of flightSamples.vsValues) {
-            // Calculate average of the VS values in the chunk
-            let sumVsValues = 0;
-            for (let indexVs = fftChunkIndex; indexVs < fftChunkIndex + fftChunkLength; indexVs++) {
-                sumVsValues += vsValueArray[indexVs];
-            }
-            // Translate the average vs value to a bin index
-            const avgVsValue = sumVsValues / fftChunkLength;
-            // Clamp to a valid bin: a degenerate or out-of-range average must never index
-            // outside the matrix (would dereference an undefined row — issue #922).
-            const vsBinIndex = Math.max(
-                0,
-                Math.min(
-                    NUM_VS_BINS - 1,
-                    Math.round(
-                        ((NUM_VS_BINS - 1) * (avgVsValue - flightSamples.minValue)) /
-                            (flightSamples.maxValue - flightSamples.minValue),
-                    ),
-                ),
-            );
-            numberSamples[vsBinIndex]++;
-
-            // add the output from the fft to the row given by the vs value bin index
-            for (let i = 0; i < psdLength; i++) {
-                matrixPsdOutput[vsBinIndex][i] += psd.psdOutput[i];
-            }
-        }
+        // put the psd value in the bin of each field (e.g. eRPM[0], eRPM[1]..) separately
+        addChunkToVsBins({ matrix: matrixPsdOutput, counts: numberSamples }, psd.psdOutput, psdLength, flightSamples, {
+            start: fftChunkIndex,
+            length: fftChunkLength,
+        });
     }
 
     // Empty selected range: no chunks were processed, so the lazily-created matrix is
     // still undefined. Return an empty matrix so fftOutput is never undefined.
-    if (matrixPsdOutput === undefined) {
-        matrixPsdOutput = new Array(NUM_VS_BINS).fill(null).map(() => new Float64Array(0));
-    }
+    matrixPsdOutput ??= new Array(NUM_VS_BINS).fill(null).map(() => new Float64Array(0));
 
     // Divide the values from the fft in each row (vs value bin) by the number of samples in the bin
-    for (let i = 0; i < NUM_VS_BINS; i++) {
-        if (numberSamples[i] > 1) {
-            for (let j = 0; j < psdLength; j++) {
-                matrixPsdOutput[i][j] /= numberSamples[i];
-            }
-        }
-    }
+    averageVsBins({ matrix: matrixPsdOutput, counts: numberSamples }, psdLength);
 
     // The output data needs to be smoothed, the sampling is not perfect
     // but after some tests we let the data as is, an we prefer to apply a
@@ -676,28 +725,16 @@ GraphSpectrumCalc._getFlightSamplesFreqVsX = function (
     const samples = new Float64Array(frameCount);
     const vsValues = new Array(vsIndexes.length).fill(null).map(() => new Float64Array(frameCount));
 
+    const isRpm = vsFieldNames === FIELD_RPM_NAMES;
+    const maxRPM = (MAX_RPM_HZ_VALUE * Number(this._motorPoles)) / 3.333;
     let samplesCount = 0;
     for (const chunk of allChunks) {
-        for (let frameIndex = 0; frameIndex < chunk.frames.length; frameIndex++) {
-            if (scaled) {
-                samples[samplesCount] = curveOf(this).lookupRaw(
-                    sampleValue(chunk.frames[frameIndex], this._dataBuffer.fieldIndex),
-                );
-            } else {
-                samples[samplesCount] = sampleValue(chunk.frames[frameIndex], this._dataBuffer.fieldIndex);
-            }
+        for (const frame of chunk.frames) {
+            const value = sampleValue(frame, this._dataBuffer.fieldIndex);
+            samples[samplesCount] = scaled ? curveOf(this).lookupRaw(value) : value;
             for (let i = 0; i < vsIndexes.length; i++) {
-                const vsFieldIx = vsIndexes[i];
-                let value = sampleValue(chunk.frames[frameIndex], vsFieldIx);
-                if (vsFieldNames === FIELD_RPM_NAMES) {
-                    const maxRPM = (MAX_RPM_HZ_VALUE * Number(this._motorPoles)) / 3.333;
-                    if (value > maxRPM) {
-                        value = maxRPM;
-                    } else if (value < 0) {
-                        value = 0;
-                    }
-                }
-                vsValues[i][samplesCount] = value;
+                const vsValue = sampleValue(frame, vsIndexes[i]);
+                vsValues[i][samplesCount] = isRpm ? clampRpm(vsValue, maxRPM) : vsValue;
             }
             samplesCount++;
         }
@@ -708,13 +745,8 @@ GraphSpectrumCalc._getFlightSamplesFreqVsX = function (
     const fftChunkWindow = Math.round(fftChunkLength / FREQ_VS_THR_WINDOW_DIVISOR);
     for (let fftChunkIndex = 0; fftChunkIndex + fftChunkLength < samplesCount; fftChunkIndex += fftChunkWindow) {
         for (const vsValueArray of vsValues) {
-            // Calculate average of the VS values in the chunk
-            let sumVsValues = 0;
-            for (let indexVs = fftChunkIndex; indexVs < fftChunkIndex + fftChunkLength; indexVs++) {
-                sumVsValues += vsValueArray[indexVs];
-            }
             // Find min max average of the VS values in the chunk
-            const avgVsValue = sumVsValues / fftChunkLength;
+            const avgVsValue = chunkAverage(vsValueArray, { start: fftChunkIndex, length: fftChunkLength });
             maxValue = Math.max(maxValue, avgVsValue);
             minValue = Math.min(minValue, avgVsValue);
         }
@@ -869,33 +901,13 @@ GraphSpectrumCalc._psd = function (samples, pointsPerSegment, overlapCount, scal
     // Compute FFT for samples segments
     const fftOutput = this._fft_segmented(samples, pointsPerSegment, overlapCount);
 
+    // With no segments this throws before the early exit below; no caller asks for fewer samples than a segment.
     const dataCount = fftOutput[0].length;
     const segmentsCount = fftOutput.length;
     const psdOutput = new Float64Array(dataCount);
 
     // Compute power scale coef
-    let scale = 1;
-    if (userSettings.analyserHanning) {
-        const window = Array(pointsPerSegment).fill(1);
-        this._hanningWindow(window, pointsPerSegment);
-        if (scaling === "density") {
-            let skSum = 0;
-            for (const value of window) {
-                skSum += value ** 2;
-            }
-            scale = 1 / (this._blackBoxRate * skSum);
-        } else if (scaling === "spectrum") {
-            let sum = 0;
-            for (const value of window) {
-                sum += value;
-            }
-            scale = 1 / sum ** 2;
-        }
-    } else if (scaling === "density") {
-        scale = 1 / pointsPerSegment;
-    } else if (scaling === "spectrum") {
-        scale = 1 / pointsPerSegment ** 2;
-    }
+    const scale = psdScale(this, userSettings.analyserHanning, pointsPerSegment, scaling);
 
     // Compute average for scaled power
     let min = 1e6,
@@ -915,17 +927,7 @@ GraphSpectrumCalc._psd = function (samples, pointsPerSegment, overlapCount, scal
     let maxNoiseIdx = 0;
     let maxNoise = -100;
     for (let i = 0; i < dataCount; i++) {
-        psdOutput[i] = 0;
-        for (let j = 0; j < segmentsCount; j++) {
-            let p = scale * fftOutput[j][i] ** 2;
-            if (i !== 0) {
-                const even = dataCount % 2 === 0;
-                if (!even || (even && i !== dataCount - 1)) {
-                    p *= 2;
-                }
-            }
-            psdOutput[i] += p;
-        }
+        psdOutput[i] = binPower(fftOutput, i, scale);
 
         const min_avg = 1e-7; // limit min value for -70db
         let avg = psdOutput[i] / segmentsCount;
