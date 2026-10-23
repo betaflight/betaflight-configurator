@@ -27,7 +27,7 @@ import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import { RATES_TYPE } from "./flightlog_fielddefs";
 import { escapeRegExp } from "./tools";
 import { debugContextFromSysConfig, getDebugFieldAxis } from "../js/utils/debugModes";
-import type { DisabledFields, FieldRange, FlightLog } from "./flightlog";
+import type { FieldRange, FlightLog } from "./flightlog";
 
 /**
  * A field's curve: how its values are scaled onto the graph.
@@ -1107,17 +1107,10 @@ export class GraphConfig {
     static getExampleGraphConfigs(flightLog: FlightLog, graphNames?: string[]): GraphPanelConfig[] {
         const result: GraphPanelConfig[] = [];
         const EXAMPLE_GRAPHS: { label: string; height?: number; fields: string[] }[] = [];
-        // isFieldDisabled() never sets HEADING, so the Heading graph is always offered.
-        const disabled: DisabledFields & { HEADING?: boolean } = flightLog.isFieldDisabled();
-
         if (!flightLog.isFieldDisabled().MOTORS) {
             EXAMPLE_GRAPHS.push({
                 label: "Motors",
                 fields: ["motor[all]", "servo[5]"],
-            });
-            EXAMPLE_GRAPHS.push({
-                label: "Motors (Legacy)",
-                fields: ["motorLegacy[all]", "servo[5]"],
             });
         }
         if (!flightLog.isFieldDisabled().RPM) {
@@ -1164,7 +1157,8 @@ export class GraphConfig {
                 fields: ["accSmooth[all]"],
             });
         }
-        if (!disabled.HEADING) {
+        // Computed from the IMU quaternion, or from the gyro and accelerometer; no mask names it.
+        if (flightLog.getMainFieldIndexByName("heading[0]") !== undefined) {
             EXAMPLE_GRAPHS.push({ label: "Heading", fields: ["heading[all]"] });
         }
         if (!flightLog.isFieldDisabled().MAGNETOMETER) {
