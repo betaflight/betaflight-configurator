@@ -899,14 +899,14 @@ export class GraphConfig {
         const FIELD_RULES: [test: () => boolean, curve: () => DefaultCurve][] = [
             [
                 () =>
-                    /^motor\[/.test(fieldName) ||
+                    fieldName.startsWith("motor[") ||
                     fieldName === "rcCommands[3]" || // Throttle scaled
-                    /^rssi.*/.test(fieldName) ||
+                    fieldName.startsWith("rssi") ||
                     fieldName === "pitot[0]",
                 fixed(0, 100),
             ],
             [
-                () => /^eRPM\[/.test(fieldName),
+                () => fieldName.startsWith("eRPM["),
                 () =>
                     getCurveForMinMaxFields(
                         "eRPM[0]",
@@ -919,25 +919,25 @@ export class GraphConfig {
                         "eRPM[7]",
                     ),
             ],
-            [() => /^accSmooth\[/.test(fieldName), fixed(-16, 16)],
+            [() => fieldName.startsWith("accSmooth["), fixed(-16, 16)],
             [
                 () =>
-                    /^axisError\[/.test(fieldName) || // Gyro, Gyro Scaled, RC Command Scaled and axisError
-                    /^rcCommands\[/.test(fieldName) || // These use the same scaling as they are in the
-                    /^gyroADC\[/.test(fieldName) || // same range.
-                    /^gyroUnfilt\[/.test(fieldName),
+                    fieldName.startsWith("axisError[") || // Gyro, Gyro Scaled, RC Command Scaled and axisError
+                    fieldName.startsWith("rcCommands[") || // These use the same scaling as they are in the
+                    fieldName.startsWith("gyroADC[") || // same range.
+                    fieldName.startsWith("gyroUnfilt["),
                 () => curves.gyro(),
             ],
             [() => /^axis.+\[/.test(fieldName) || fieldName === "GPS_speed", fixed(-100, 100)],
-            [() => /^servo\[/.test(fieldName) || /^rcCommand\[/.test(fieldName), fixed(1000, 2000)],
+            [() => fieldName.startsWith("servo[") || fieldName.startsWith("rcCommand["), fixed(1000, 2000)],
             [
                 () => fieldName === "heading[2]" || fieldName === "GPS_ground_course" || fieldName === "gpsHomeAzimuth",
                 fixed(0, 360),
             ],
-            [() => /^heading\[/.test(fieldName), fixed(-180, 180)],
-            [() => /^sonar.*/.test(fieldName), fixed(0, 400)],
+            [() => fieldName.startsWith("heading["), fixed(-180, 180)],
+            [() => fieldName.startsWith("sonar"), fixed(0, 400)],
             [() => fieldName === "GPS_numSat", fixed(0, 40)],
-            [() => /^GPS_velned\[/.test(fieldName), fixed(-25, 25)],
+            [() => fieldName.startsWith("GPS_velned["), fixed(-25, 25)],
             [() => fieldName === "gpsTrajectoryTiltAngle", fixed(-90, 90)],
             [() => fieldName === "pitot[1]", fixed(0, 1000)],
         ];
@@ -949,7 +949,7 @@ export class GraphConfig {
             }
 
             // Debug-mode field handling — extracted to keep this function flat.
-            if (/^debug.*/.test(fieldName) && sysConfig.debug_mode != null) {
+            if (fieldName.startsWith("debug") && sysConfig.debug_mode != null) {
                 const debugCurve = debugFieldCurve(
                     flightLog,
                     fieldName,
@@ -1175,17 +1175,8 @@ export class GraphConfig {
             }
 
             // If graphNames is given, include only the requested graphs (in TABLE order).
-            if (graphNames !== undefined) {
-                let found = false;
-                for (const name of graphNames) {
-                    if (srcGraph.label === name) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    continue;
-                }
+            if (graphNames !== undefined && !graphNames.includes(srcGraph.label)) {
+                continue;
             }
 
             const destGraph: GraphPanelConfig = {
