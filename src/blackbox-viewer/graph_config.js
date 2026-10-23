@@ -62,13 +62,15 @@ export function GraphConfig(graphConfig) {
                 if (fieldName.match(nameRegex)) {
                     // forceNewCurve must be true for min max computing extended curves.
                     const forceNewCurve = true;
+                    // Colour the copy, not the [all] template: the template is the saved graph config, and
+                    // overwriting its -1 would leave every later adaptGraphs() with no colour to assign.
                     const color = GraphConfig.PALETTE[colorIndex++ % GraphConfig.PALETTE.length].color;
-                    field.color = setupColor ? color : undefined;
                     fields.push(
                         adaptField(
                             flightLog,
                             {
                                 ...field,
+                                color: setupColor ? color : undefined,
                                 curve: { ...field.curve },
                                 name: fieldName,
                                 friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(
@@ -135,6 +137,13 @@ export function GraphConfig(graphConfig) {
                 const fields = this.extendFields(flightLog, field);
                 newGraph.fields = newGraph.fields.concat(fields);
             }
+
+            // The legend and the plot both need a real colour; a field without one takes its palette slot.
+            newGraph.fields.forEach((field, index) => {
+                if (typeof field.color !== "string") {
+                    field.color = GraphConfig.PALETTE[index % GraphConfig.PALETTE.length].color;
+                }
+            });
 
             newGraphs.push(newGraph);
         }

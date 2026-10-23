@@ -881,7 +881,7 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
                         field.index,
                         field.curve,
                         (canvas.height * graph.height) / 2,
-                        field.color ? field.color : GraphConfig.PALETTE[j % GraphConfig.PALETTE.length],
+                        field.color ? field.color : GraphConfig.PALETTE[j % GraphConfig.PALETTE.length].color,
                         field.lineWidth ? field.lineWidth : null,
                         graphConfig.highlightGraphIndex === i && graphConfig.highlightFieldIndex === j,
                     );
