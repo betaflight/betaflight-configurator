@@ -76,7 +76,7 @@ interface PlottedGraph {
 interface CustomEvent {
     event: number;
     time: number;
-    label: string | number;
+    label: string;
     align?: CanvasTextAlign;
 }
 
@@ -515,7 +515,7 @@ export class FlightLogGrapher {
             x: number,
             // Only drawn with a label; a bare line passes neither.
             labelY: number = Number.NaN,
-            label?: string | number,
+            label?: string,
             color?: string,
             width?: number,
             labelColor?: string | null,
@@ -535,7 +535,7 @@ export class FlightLogGrapher {
 
             if (label) {
                 const margin = 8,
-                    labelWidth = canvasContext.measureText(String(label)).width + 2 * margin;
+                    labelWidth = canvasContext.measureText(label).width + 2 * margin;
 
                 align = align || "left";
                 canvasContext.textAlign = align;
@@ -555,7 +555,7 @@ export class FlightLogGrapher {
                 canvasContext.stroke();
                 canvasContext.fillStyle = labelColor || "rgba(200,200,200,0.9)";
                 canvasContext.closePath();
-                canvasContext.fillText(String(label), x + labelDirection * (width + 8), labelY);
+                canvasContext.fillText(label, x + labelDirection * (width + 8), labelY);
             }
         }
 
@@ -741,7 +741,7 @@ export class FlightLogGrapher {
                                     {
                                         event: FlightLogEvent.CUSTOM,
                                         time: bookmark.time,
-                                        label: i,
+                                        label: String(i),
                                     },
                                     sequenceNum++,
                                 );
