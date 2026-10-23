@@ -2,7 +2,7 @@ import "./vendor.js";
 
 import { MapGrapher } from "./graph_map.js";
 import { FlightLogGrapher } from "./grapher.js";
-import { Configuration, ConfigurationDefaults } from "./configuration.js";
+import { loadConfigurationFile, ConfigurationDefaults } from "./configuration";
 import { GraphConfig } from "./graph_config.js";
 import { SeekBar } from "./seekbar.js";
 import ctzsnoozeWorkspace from "./ws_ctzsnooze.json";
@@ -257,7 +257,7 @@ export function bootstrapViewer() {
                     if (file.name.match(/default/i)) {
                         configurationDefaults.loadFile(file);
                     } else {
-                        new Configuration(file); // NOSONAR — side effect: sets graphStore.configLines
+                        loadConfigurationFile(file);
                         graphStore.hasConfig = true;
                     }
                 } catch {
