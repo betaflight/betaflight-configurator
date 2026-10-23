@@ -25,7 +25,7 @@ import { chunksOf } from "./fakeChunks";
 
 const FIELDS = ["loopIteration", "time", "rcCommand[0]", "rcCommand[3]", "BaroAlt", "vbatLatest"];
 
-function statsOf(rows: number[][][], fields = FIELDS) {
+function statsOf(rows: (number | null)[][][], fields = FIELDS) {
     return SimpleStats({
         getChunksInTimeRange: () => chunksOf(...rows),
         getMinTime: () => 0,
@@ -57,5 +57,33 @@ describe("SimpleStats", () => {
         expect(statsOf(ROWS).yaw).toBeUndefined();
         expect(statsOf(ROWS).alt_gps).toBeUndefined();
         expect(statsOf([[]]).roll).toBeUndefined();
+    });
+
+    it("keeps a field whose value happens to be 0 in the frame numbered by its index", () => {
+        // rcCommand[0] is field 2; frame 2 has it at 0.
+        const rows = [Array.from({ length: 5 }, (_, i) => [i, i * 10, i - 2, 1500, 50, 1680])];
+
+        expect(statsOf(rows).roll).toEqual({ name: "rcCommand[0]", min: -2, max: 2, mean: 0 });
+    });
+
+    it("summarises a log with fewer frames than the field's index", () => {
+        const rows = [[[0, 0, 5, 1500, 50, 1680]]];
+
+        expect(statsOf(rows).vbat).toEqual({ name: "vbatLatest", min: 1680, max: 1680, mean: 1680 });
+    });
+
+    it("leaves null slots out of the range but counts them in the mean as 0", () => {
+        const fields = ["loopIteration", "time", "GPS_altitude"];
+        const rows = [
+            [
+                [0, 0, null],
+                [1, 10, 100],
+                [2, 20, 300],
+                [3, 30, null],
+            ],
+        ];
+
+        expect(statsOf(rows, fields).alt_gps).toEqual({ name: "GPS_altitude", min: 100, max: 300, mean: 100 });
+        expect(statsOf([[[0, 0, null]]], fields).alt_gps).toBeUndefined();
     });
 });

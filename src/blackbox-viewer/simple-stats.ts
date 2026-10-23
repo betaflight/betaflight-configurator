@@ -40,15 +40,19 @@ export function SimpleStats(
 
     const getMinMaxMean = (fieldName: string): FieldSummary | undefined => {
         const index = fields.indexOf(fieldName);
-        if (index === -1 || !frames.length || !(index in frames[0]) || !frames[index][index]) {
+        if (index === -1 || !frames.length || !(index in frames[0])) {
             return undefined;
         }
         let min = Infinity,
             max = -Infinity,
             sum = 0;
         for (const f of frames) {
-            // A null slot (a GPS field before the first fix) compares and sums as 0, as `<` and `+=` made it.
-            const v = f[index] as number;
+            const v = f[index];
+            // A null slot (a GPS field before the first fix) has no value to compare; it still counts
+            // towards the mean as 0.
+            if (v == null) {
+                continue;
+            }
             if (v < min) {
                 min = v;
             }
@@ -56,6 +60,10 @@ export function SimpleStats(
                 max = v;
             }
             sum += v;
+        }
+        if (min === Infinity) {
+            // Every frame had the slot null: there is nothing to summarise.
+            return undefined;
         }
         return {
             name: fieldName,
