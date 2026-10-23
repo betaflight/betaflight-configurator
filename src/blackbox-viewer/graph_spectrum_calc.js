@@ -1,4 +1,4 @@
-import { FFTComplex } from "./fft_complex.js";
+import { ComplexFFT } from "../js/blackbox/fft";
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import { useSettingsStore } from "./stores/settings.js";
 
@@ -101,7 +101,7 @@ GraphSpectrumCalc.setPointsPerSegmentPSD = function (pointsCount) {
 GraphSpectrumCalc.dataLoadPSD = function (_analyserZoomY) {
     const flightSamples = this._getFlightSamplesFreq(false);
     const totalCount = flightSamples.count; // actual samples, not padded length
-    // Guard an empty selected range: getNearPower2Value(0) is 0 and FFTComplex(0) throws,
+    // Guard an empty selected range: getNearPower2Value(0) is 0 and ComplexFFT(0) throws,
     // so short-circuit before the FFT with a valid empty result the caller can render.
     if (totalCount === 0) {
         return {
@@ -153,7 +153,7 @@ GraphSpectrumCalc._dataLoadFrequencyVsX = function (vsFieldNames, minValue = Inf
     // Matrix where each row represents a bin of vs values, and the columns are amplitudes at frequencies
     const matrixFftOutput = new Array(NUM_VS_BINS).fill(null).map(() => new Float64Array(fftBufferSize * 2));
     const numberSamples = new Uint32Array(NUM_VS_BINS); // Number of samples in each vs value, used to average them later.
-    const fft = new FFTComplex(fftBufferSize, false);
+    const fft = new ComplexFFT(fftBufferSize, false);
     const fftInput = new Float64Array(fftBufferSize);
     const fftOutput = new Float64Array(fftBufferSize * 2);
 
@@ -635,7 +635,7 @@ GraphSpectrumCalc._fft = function (samples, type) {
 
     const fftLength = samples.length;
     const fftOutput = new Float64Array(fftLength * 2);
-    const fft = new FFTComplex(fftLength, false);
+    const fft = new ComplexFFT(fftLength, false);
 
     fft.simple(fftOutput, samples, type);
 
