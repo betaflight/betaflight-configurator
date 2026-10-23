@@ -1,4 +1,4 @@
-import "./vendor.js";
+import "./vendor";
 
 import { MapGrapher } from "./graph_map.js";
 import { FlightLogGrapher } from "./grapher.js";
