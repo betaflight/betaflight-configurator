@@ -64,10 +64,12 @@ export function renderSelectedLogInfo() {
     );
     appStore.statusLooptime = looptimeText;
 
+    // The rate is unknown without a looptime header; the P interval is still worth showing.
     const blackboxRate = logStore.flightLog.getBlackboxRate();
+    const rateText = blackboxRate === null ? "" : ` (${blackboxRate.toFixed(0)}Hz)`;
     const lograteText =
         sysConfig["frameIntervalPDenom"] != null && sysConfig["frameIntervalPNum"] != null
-            ? `Sample Rate : ${sysConfig["frameIntervalPNum"]}/${sysConfig["frameIntervalPDenom"]} (${blackboxRate.toFixed(0)}Hz)`
+            ? `Sample Rate : ${sysConfig["frameIntervalPNum"]}/${sysConfig["frameIntervalPDenom"]}${rateText}`
             : "";
     appStore.statusLograte = lograteText;
 
