@@ -40,6 +40,7 @@ export interface WebUsbDevice {
     reset(): Promise<void>;
     selectConfiguration(configurationValue: number): Promise<void>;
     claimInterface(interfaceNumber: number): Promise<void>;
+    selectAlternateInterface(interfaceNumber: number, alternateSetting: number): Promise<void>;
     releaseInterface(interfaceNumber: number): Promise<void>;
     controlTransferIn(setup: DfuControlSetup, length: number): Promise<{ status: string; data?: DataView }>;
     controlTransferOut(setup: DfuControlSetup, data?: Uint8Array): Promise<{ status: string }>;
@@ -206,6 +207,12 @@ class WebUsbDfuTransport extends UsbDfuDescriptors implements DfuTransport {
     async claimInterface(interfaceNumber: number): Promise<void> {
         await this.usbDevice!.claimInterface(interfaceNumber);
         console.log(`${this.logHead} Claimed interface: ${interfaceNumber}`);
+    }
+
+    /** Only called on an open device with the interface claimed. */
+    async selectAlternateInterface(interfaceNumber: number, alternateSetting: number): Promise<void> {
+        await this.usbDevice!.selectAlternateInterface(interfaceNumber, alternateSetting);
+        console.log(`${this.logHead} Selected interface ${interfaceNumber}, alternate setting ${alternateSetting}`);
     }
 
     async releaseInterface(interfaceNumber: number): Promise<void> {

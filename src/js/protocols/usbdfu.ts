@@ -112,6 +112,8 @@ export interface DfuTransport extends EventTarget {
     open(devicePort: DfuPort): Promise<void>;
     close(): Promise<void>;
     claimInterface(interfaceNumber: number): Promise<void>;
+    /** SET_INTERFACE: selects the memory of a DfuSe device with one alternate setting per memory. */
+    selectAlternateInterface?(interfaceNumber: number, alternateSetting: number): Promise<void>;
     releaseInterface(interfaceNumber: number): Promise<void>;
     reset(): Promise<void>;
     getString(index: number): Promise<string>;
@@ -145,6 +147,10 @@ interface FlashLayout {
 /** One memory region parsed from a DFU interface string such as "@Internal Flash  /0x08000000/04*016Kg". */
 interface DfuMemory extends FlashLayout {
     type: string;
+    /** Alternate setting the descriptor came from (its position in the interface's list). */
+    alt?: number;
+    /** Attribute letter of the last sector run has the write bit ('d'..'g'). */
+    writable?: boolean;
 }
 
 /** Memory regions keyed by their lower-cased type ("internal_flash", "option_bytes", ...). */
@@ -241,6 +247,11 @@ export class UsbDfuProtocol extends EventTarget {
 
     chipInfo: ChipInfo | null = null; // information about chip's memory
     flash_layout: FlashLayout = { start_address: 0, total_size: 0, sectors: [] };
+    // Every memory the hex writes to, flash_layout first. More than one when the hex also holds
+    // blocks for another writable flash on its own alternate setting (UM324xF: the in-package
+    // QSPI flash at 0x38000000, alt 1, next to the internal flash, alt 0).
+    flashTargets: DfuMemory[] = [];
+    currentAlt = 0;
     transferSize = 2048; // Default USB DFU transfer size for F3,F4 and F7
 
     constructor(transport: DfuTransport) {
@@ -344,6 +355,8 @@ export class UsbDfuProtocol extends EventTarget {
         // reset and set some variables before we start
         this.upload_time_start = Date.now();
         this.verify_hex = [];
+        this.flashTargets = [];
+        this.currentAlt = 0; // a freshly opened device starts in alternate setting 0
 
         // reset progress bar to initial state
         this.options?.flashingMessage?.(null, this.options?.flashMessageTypes?.NEUTRAL);
@@ -606,6 +619,7 @@ export class UsbDfuProtocol extends EventTarget {
                 // split sectors into array
                 const sectors: DfuSector[] = [];
                 let total_size = 0;
+                let writable = false;
                 const tmp2 = tmp1[2].split(",");
 
                 if (tmp2.length < 1) {
@@ -626,6 +640,9 @@ export class UsbDfuProtocol extends EventTarget {
                         return null;
                     }
                     const unit = tmp3[1].slice(-2, -1);
+                    // DfuSe attribute: 'a' + (bit0 readable | bit1 erasable | bit2 writable) - 1
+                    const attribute = tmp3[1].trim().charCodeAt(tmp3[1].trim().length - 1) - 0x60;
+                    writable = attribute >= 1 && attribute <= 7 && (attribute & 4) !== 0;
 
                     switch (unit) {
                         case "M":
@@ -650,6 +667,7 @@ export class UsbDfuProtocol extends EventTarget {
                     start_address,
                     sectors,
                     total_size,
+                    writable,
                 };
                 return memory;
             };
@@ -660,13 +678,14 @@ export class UsbDfuProtocol extends EventTarget {
             // Some bootloaders pack several regions into one string. The UM32 ROM reports
             // "@Internal Flash   /0x08000000/64*8Kg  @External Flash   /0x38000000/128*4Kg",
             // so split at each "@" and parse every region on its own.
-            const regions = descriptors.flatMap((str) =>
-                str
+            // Each region keeps the alternate setting of the string it came from.
+            const regions = descriptors.flatMap((descriptor, alt) =>
+                descriptor
                     .split(/(?=@)/)
-                    .map((region) => region.trim())
-                    .filter((region) => region.length > 0),
+                    .map((region) => ({ str: region.trim(), alt }))
+                    .filter((region) => region.str.length > 0),
             );
-            const chipInfo = regions.reduce<ChipInfo>((o, str) => {
+            const chipInfo = regions.reduce<ChipInfo>((o, { str, alt }) => {
                 let memory: DfuMemory | null = null;
                 try {
                     memory = parseDescriptor(str);
@@ -679,6 +698,7 @@ export class UsbDfuProtocol extends EventTarget {
                     console.warn(`${this.logHead} Skipping unparseable memory descriptor: "${str}"`);
                     return o;
                 }
+                memory.alt = alt;
                 o[memory.type.toLowerCase().replace(" ", "_")] = memory;
                 return o;
             }, {});
@@ -892,7 +912,7 @@ export class UsbDfuProtocol extends EventTarget {
         return true;
     }
 
-    isBlockUsable(startAddress: number, length: number): boolean {
+    isBlockUsable(startAddress: number, length: number, layout: FlashLayout = this.flash_layout): boolean {
         let result = false;
 
         let searchAddress = startAddress;
@@ -903,7 +923,7 @@ export class UsbDfuProtocol extends EventTarget {
         do {
             restart = false;
 
-            for (const sector of this.flash_layout.sectors) {
+            for (const sector of layout.sectors) {
                 const sectorStart = sector.start_address;
                 const sectorLength = sector.num_pages * sector.page_size;
                 const sectorEnd = sectorStart + sectorLength - 1; // - 1 for inclusive
@@ -1026,12 +1046,66 @@ export class UsbDfuProtocol extends EventTarget {
         return undefined;
     }
 
+    /**
+     * The memories the hex writes to: flash_layout, plus every other writable flash of the
+     * device holding a hex block that flash_layout does not.
+     */
+    private collectFlashTargets(chipInfo: ChipInfo): DfuMemory[] {
+        const primary = this.flash_layout as DfuMemory;
+        const targets: DfuMemory[] = [primary];
+        const outside = this.hex!.data.filter((block) => !this.isBlockUsable(block.address, block.bytes, primary));
+        for (const memory of Object.values(chipInfo)) {
+            if (!memory || memory === primary || !memory.writable || !/flash/i.test(memory.type)) {
+                continue;
+            }
+            if (outside.some((block) => this.isBlockUsable(block.address, block.bytes, memory))) {
+                console.log(`${this.logHead} Hex also writes to ${memory.type} (alternate setting ${memory.alt})`);
+                targets.push(memory);
+            }
+        }
+        return targets;
+    }
+
+    /** The target memory holding address, if any. */
+    private memoryFor(address: number): DfuMemory | undefined {
+        return this.flashTargets.find(
+            (memory) => address >= memory.start_address && address < memory.start_address + memory.total_size,
+        );
+    }
+
+    /**
+     * Brings the device to dfuIDLE in the alternate setting of the memory holding address, then
+     * calls next. Single-memory devices never switch: their memory is alternate setting 0.
+     */
+    private selectAltFor(address: number, next: () => void): void {
+        const alt = this.memoryFor(address)?.alt ?? 0;
+        if (alt === this.currentAlt || !this.transport.selectAlternateInterface) {
+            next();
+            return;
+        }
+        this.clearStatus(() => {
+            this.transport.selectAlternateInterface!(0, alt)
+                .then(() => {
+                    this.currentAlt = alt;
+                    next();
+                })
+                .catch((error: unknown) => {
+                    console.log(`${this.logHead} Failed to select alternate setting ${alt}: ${error}`);
+                    this.cleanup();
+                });
+        });
+    }
+
     /** Refuses a hex with addresses outside the flash, else reads the transfer size and goes on. */
     private checkHexAndContinue(nextStep: 1 | 2): void {
         gui_log(i18n.getMessage("dfu_device_flash_info", (this.flash_layout.total_size / 1024).toString()));
 
+        this.flashTargets = this.collectFlashTargets(this.chipInfo!);
+
         // verify all addresses in the hex are writable.
-        const unusableBlocks = this.hex!.data.filter((block) => !this.isBlockUsable(block.address, block.bytes));
+        const unusableBlocks = this.hex!.data.filter(
+            (block) => !this.flashTargets.some((memory) => this.isBlockUsable(block.address, block.bytes, memory)),
+        );
 
         if (unusableBlocks.length > 0) {
             gui_log(i18n.getMessage("dfu_hex_address_errors"));
@@ -1181,15 +1255,21 @@ export class UsbDfuProtocol extends EventTarget {
         }
     }
 
-    /** The pages to erase: every page for a full chip erase, else the ones the hex writes to. */
-    private pagesToErase(): { sector: number; page: number }[] {
-        const erase_pages: { sector: number; page: number }[] = [];
-        for (let i = 0; i < this.flash_layout.sectors.length; i++) {
-            const sector = this.flash_layout.sectors[i];
-            for (let j = 0; j < sector.num_pages; j++) {
-                const page_start = sector.start_address + j * sector.page_size;
-                if (this.options!.erase_chip || this.pageHoldsHexData(page_start, sector.page_size)) {
-                    erase_pages.push({ sector: i, page: j });
+    /**
+     * The pages to erase in every target memory: all of them for a full chip erase, else the
+     * ones the hex writes to.
+     */
+    private pagesToErase(): { sector: number; page: number; address: number; size: number }[] {
+        const erase_pages: { sector: number; page: number; address: number; size: number }[] = [];
+        const layouts = this.flashTargets.length > 0 ? this.flashTargets : [this.flash_layout];
+        for (const layout of layouts) {
+            for (let i = 0; i < layout.sectors.length; i++) {
+                const sector = layout.sectors[i];
+                for (let j = 0; j < sector.num_pages; j++) {
+                    const page_start = sector.start_address + j * sector.page_size;
+                    if (this.options!.erase_chip || this.pageHoldsHexData(page_start, sector.page_size)) {
+                        erase_pages.push({ sector: i, page: j, address: page_start, size: sector.page_size });
+                    }
                 }
             }
         }
@@ -1242,8 +1322,11 @@ export class UsbDfuProtocol extends EventTarget {
         };
 
         const erase_page = () => {
-            const sector = this.flash_layout.sectors[erase_pages[page].sector];
-            const page_addr = erase_pages[page].page * sector.page_size + sector.start_address;
+            this.selectAltFor(erase_pages[page].address, erase_selected_page);
+        };
+
+        const erase_selected_page = () => {
+            const page_addr = erase_pages[page].address;
             const cmd = [
                 0x41,
                 page_addr & 0xff,
@@ -1251,7 +1334,7 @@ export class UsbDfuProtocol extends EventTarget {
                 (page_addr >> 16) & 0xff,
                 (page_addr >> 24) & 0xff,
             ];
-            total_erased += sector.page_size;
+            total_erased += erase_pages[page].size;
             console.log(
                 `${this.logHead} Erasing. sector ${erase_pages[page].sector}, page ${
                     erase_pages[page].page
@@ -1367,7 +1450,7 @@ export class UsbDfuProtocol extends EventTarget {
                 bytes_flashed = 0;
                 wBlockNum = 2;
 
-                this.loadAddress(address, write);
+                this.selectAltFor(address, () => this.loadAddress(address, write));
             } else {
                 // all blocks flashed
                 console.log(`${this.logHead} Writing: done`);
@@ -1378,7 +1461,7 @@ export class UsbDfuProtocol extends EventTarget {
         };
 
         // start
-        this.loadAddress(address, write);
+        this.selectAltFor(address, () => this.loadAddress(address, write));
     }
 
     private confirmChunkWritten(onWritten: () => void, onFailed: () => void): void {
@@ -1444,8 +1527,10 @@ export class UsbDfuProtocol extends EventTarget {
                 wBlockNum = 2;
 
                 this.clearStatus(() => {
-                    this.loadAddress(address, () => {
-                        this.clearStatus(read);
+                    this.selectAltFor(address, () => {
+                        this.loadAddress(address, () => {
+                            this.clearStatus(read);
+                        });
                     });
                 });
             } else {
@@ -1455,8 +1540,10 @@ export class UsbDfuProtocol extends EventTarget {
 
         // start
         this.clearStatus(() => {
-            this.loadAddress(address, () => {
-                this.clearStatus(read);
+            this.selectAltFor(address, () => {
+                this.loadAddress(address, () => {
+                    this.clearStatus(read);
+                });
             });
         });
     }
@@ -1503,11 +1590,15 @@ export class UsbDfuProtocol extends EventTarget {
         const address = this.hex ? this.hex.data[0].address : 0x08000000;
 
         this.clearStatus(() => {
-            this.loadAddress(address, () => {
-                // 'downloading' 0 bytes to the program start address followed by a GETSTATUS is used to trigger DFU exit on STM32
-                this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, 0, () => {
-                    this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, () => {
-                        this.cleanup(succeeded);
+            // the program start address lies in the first target memory, maybe not the one
+            // the verify step ended in
+            this.selectAltFor(address, () => {
+                this.loadAddress(address, () => {
+                    // 'downloading' 0 bytes to the program start address followed by a GETSTATUS is used to trigger DFU exit on STM32
+                    this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, 0, () => {
+                        this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, () => {
+                            this.cleanup(succeeded);
+                        });
                     });
                 });
             });
