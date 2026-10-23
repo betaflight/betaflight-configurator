@@ -25,7 +25,7 @@ import { useSettingsStore } from "./settings.js";
 import { useLogStore } from "./log";
 import { PrefStorage } from "../pref_storage";
 import type { FlightLogGrapher } from "../grapher.js";
-import type { GraphConfig } from "../graph_config.js";
+import type { GraphConfig, GraphFieldConfig, GraphPanelConfig } from "../graph_config";
 import type { MapGrapher } from "../graph_map";
 import type { SeekBar } from "../seekbar.js";
 
@@ -35,28 +35,7 @@ export type GrapherInstance = InstanceType<typeof FlightLogGrapher>;
 export type SeekBarMode = "avgThrottle" | "maxRC" | "maxMotorDiff";
 export type GraphConfigInstance = InstanceType<typeof GraphConfig>;
 
-/** A field of a graph panel, as saved and as GraphConfig.getGraphs() returns it. */
-export interface GraphFieldConfig {
-    name: string;
-    friendlyName?: string;
-    smoothing?: number;
-    curve?: {
-        power?: number;
-        MinMax?: { min?: number; max?: number };
-        highPrecise?: boolean;
-    };
-    default?: { smoothing?: number; power?: number; MinMax?: { min?: number; max?: number } };
-    /** A palette colour, or -1 for "assign one from the palette" (see GraphConfig.extendFields). */
-    color?: string | -1;
-    lineWidth?: number;
-}
-
-/** A graph panel, as saved and as GraphConfig.getGraphs() returns it. */
-export interface GraphPanelConfig {
-    label: string;
-    height?: number;
-    fields: GraphFieldConfig[];
-}
+export type { GraphFieldConfig, GraphPanelConfig };
 
 export interface LegendField {
     name: string;
@@ -177,8 +156,9 @@ export const useGraphStore = defineStore("graph", () => {
             label: g.label,
             fields: g.fields.map((f, fi) => ({
                 name: f.name,
-                friendlyName: f.friendlyName,
-                color: f.color,
+                // adaptGraphs() gives every field both before the legend is built; the config type cannot say so.
+                friendlyName: f.friendlyName ?? f.name,
+                color: typeof f.color === "string" ? f.color : "",
                 hidden: config.isGraphFieldHidden(gi, fi),
             })),
         }));
@@ -233,7 +213,7 @@ export const useGraphStore = defineStore("graph", () => {
             if (!config || graphs.length === 0 || graphs[0].fields.length === 0) {
                 hasAnalyser.value = false;
             } else {
-                config.selectedFieldName = graphs[0].fields[0].friendlyName;
+                config.selectedFieldName = graphs[0].fields[0].friendlyName ?? null;
                 config.selectedGraphIndex = 0;
                 config.selectedFieldIndex = 0;
                 hasAnalyser.value = true;

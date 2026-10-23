@@ -288,7 +288,7 @@ import { ref, watch, computed, onBeforeUnmount, type PropType } from "vue";
 import type { ContextMenuItem, DropdownMenuItem } from "@nuxt/ui";
 import Sortable from "sortablejs";
 import UiBox from "./UiBox.vue";
-import { GraphConfig } from "../graph_config.js";
+import { GraphConfig } from "../graph_config";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter";
 import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../curve_step";
 import { debugContextFromSysConfig } from "../../js/utils/debugModes";
@@ -883,6 +883,20 @@ function setMinMaxSelectedZoom(zoom: number) {
     }
 }
 
+// The windowed ranges read the grapher; with none they threw, as they do here.
+function requireGrapher(grapher: GrapherInstance | null): GrapherInstance {
+    if (!grapher) {
+        throw new TypeError("No grapher to read the time window from");
+    }
+    return grapher;
+}
+
+const minMaxDuringWindowTime: MinMaxFunction = (flightLog, grapher, fieldName) =>
+    GraphConfig.getMinMaxForFieldDuringWindowTimeInterval(flightLog, requireGrapher(grapher), fieldName);
+
+const minMaxDuringMarkedTime: MinMaxFunction = (flightLog, grapher, fieldName) =>
+    GraphConfig.getMinMaxForFieldDuringMarkedInterval(flightLog, requireGrapher(grapher), fieldName);
+
 function setFieldsMinMaxToFullRange(setCheckedOnly: boolean | undefined, getMinMaxFunction: MinMaxFunction) {
     if (currentState.value.graph?.fields && props.flightLog) {
         for (const [index, field] of currentState.value.graph.fields.entries()) {
@@ -905,11 +919,11 @@ function setFieldsMinMaxToFullRangeDuringAllTime(setCheckedOnly?: boolean) {
 }
 
 function setFieldsMinMaxToFullRangeDuringWindowTime(setCheckedOnly?: boolean) {
-    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringWindowTimeInterval);
+    setFieldsMinMaxToFullRange(setCheckedOnly, minMaxDuringWindowTime);
 }
 
 function setFieldsMinMaxToFullRangeDuringMarkedTime(setCheckedOnly?: boolean) {
-    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringMarkedInterval);
+    setFieldsMinMaxToFullRange(setCheckedOnly, minMaxDuringMarkedTime);
 }
 
 function setSelectedFieldMinMaxToFullRange(getMinMaxFunction: MinMaxFunction) {
@@ -931,11 +945,11 @@ function setSelectedFieldMinMaxToFullRangeDuringAllTime() {
 }
 
 function setSelectedFieldMinMaxToFullRangeDuringWindowTime() {
-    setSelectedFieldMinMaxToFullRange(GraphConfig.getMinMaxForFieldDuringWindowTimeInterval);
+    setSelectedFieldMinMaxToFullRange(minMaxDuringWindowTime);
 }
 
 function setSelectedFieldMinMaxToFullRangeDuringMarkedTime() {
-    setSelectedFieldMinMaxToFullRange(GraphConfig.getMinMaxForFieldDuringMarkedInterval);
+    setSelectedFieldMinMaxToFullRange(minMaxDuringMarkedTime);
 }
 
 const zoom = 1.1;
