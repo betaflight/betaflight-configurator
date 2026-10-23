@@ -21,25 +21,26 @@
 
 import { describe, expect, it } from "vitest";
 import { GraphConfig } from "../../src/blackbox-viewer/graph_config.js";
+import type { GraphPanelConfig } from "../../src/blackbox-viewer/stores/graph";
 
 const PALETTE = GraphConfig.PALETTE.map((entry) => entry.color);
 
 // Just enough of a FlightLog for adaptGraphs: four motors and a throttle setpoint.
 const flightLog = {
     getMainFieldNames: () => ["motor[0]", "motor[1]", "motor[2]", "motor[3]", "setpoint[3]"],
-    getMainFieldIndexByName: (name) => (name === "setpoint[3]" ? 4 : undefined),
+    getMainFieldIndexByName: (name: string) => (name === "setpoint[3]" ? 4 : undefined),
     getSysConfig: () => ({ debug_mode: 0, firmwareType: 3, firmwareVersion: "4.6.0" }),
 };
 
-function adaptedColors(config, graphs) {
+function adaptedColors(config: InstanceType<typeof GraphConfig>, graphs: GraphPanelConfig[]) {
     config.adaptGraphs(flightLog, graphs);
-    return config.getGraphs().map((graph) => graph.fields.map((field) => field.color));
+    return (config.getGraphs() as GraphPanelConfig[]).map((graph) => graph.fields.map((field) => field.color));
 }
 
 describe("GraphConfig.adaptGraphs colours", () => {
     it("keeps palette colours when the same config is adapted again", () => {
         const config = new GraphConfig();
-        const graphs = [{ label: "Motors", fields: [{ name: "motor[all]", color: -1 }] }];
+        const graphs: GraphPanelConfig[] = [{ label: "Motors", fields: [{ name: "motor[all]", color: -1 }] }];
         const expected = [PALETTE.slice(0, 4)];
 
         expect(adaptedColors(config, graphs)).toEqual(expected);
@@ -49,7 +50,7 @@ describe("GraphConfig.adaptGraphs colours", () => {
 
     it("gives a field with no colour its palette slot", () => {
         const config = new GraphConfig();
-        const graphs = [
+        const graphs: GraphPanelConfig[] = [
             {
                 label: "Mixed",
                 fields: [
