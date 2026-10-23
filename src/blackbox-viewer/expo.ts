@@ -40,9 +40,8 @@ export class ExpoCurve {
     declare lookupRaw: (input: number) => number;
     declare getCurve: () => ExpoCurveSettings;
 
-    constructor(offset: number, power: number, inputRange: number, outputRange: number, steps?: number) {
-        // If steps argument isn't supplied, use a reasonable default
-        const stepCount = steps ?? 12;
+    constructor(offset: number, power: number, inputRange: number, outputRange: number, stepCount = 12) {
+        // stepCount defaults to a reasonable 12 when it isn't supplied
         let curve: number[], inputScale: number;
         const rawInputScale = outputRange / inputRange;
 
