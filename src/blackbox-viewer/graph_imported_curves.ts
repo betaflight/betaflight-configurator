@@ -55,9 +55,10 @@ export class ImportedCurves {
     declare importCurvesFromCSV: (files: Iterable<File>) => void;
     /** Does nothing when already full. */
     declare addCurve: (points: CurvePoint[], name: string) => void;
-    declare isNewCurve: (name: string) => boolean;
+    /** The analyser asks with a null name before any field is selected; no curve has that name. */
+    declare isNewCurve: (name: string | null) => boolean;
     declare removeAllCurves: () => void;
-    declare removeCurve: (name: string) => void;
+    declare removeCurve: (name: string | null) => void;
     declare isFull: () => boolean;
     declare isEmpty: () => boolean;
 
