@@ -157,6 +157,15 @@ describe("MapGrapher", () => {
         expect([optionIdxFn({ alt: 12 }), optionIdxFn({ alt: 12.5 }), optionIdxFn({ alt: 54 })]).toEqual([0, 1, 6]);
     });
 
+    // The maximum used to start at Number.MIN_VALUE, the smallest positive number, so a trail
+    // entirely below 0 m reported a maximum of 0 and its colour bands were stretched up to it.
+    it("finds the altitude range of a trail entirely below 0 m", () => {
+        map.setFlightLog(fakeLog([[GPS(-500), GPS(-100), GPS(-300)]]).log);
+
+        const { maxAlt, minAlt } = map.getPolylinesData();
+        expect([minAlt, maxAlt]).toEqual([-50, -10]);
+    });
+
     it("draws nothing and marks the container for a log with no GPS data", () => {
         document.body.innerHTML = '<div id="mapContainer"></div>';
         map.setFlightLog(fakeLog([[frame(null, null, null)]]).log);

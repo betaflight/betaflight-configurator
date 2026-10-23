@@ -305,7 +305,7 @@ export class MapGrapher {
         this.getPolylinesData = function () {
             const flightLog = getFlightLog();
             const latlngs: AltitudeLatLng[] = [];
-            let maxAlt = Number.MIN_VALUE;
+            let maxAlt = -Number.MAX_VALUE;
             let minAlt = Number.MAX_VALUE;
 
             const chunks = flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime());
