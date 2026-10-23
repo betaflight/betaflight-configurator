@@ -899,7 +899,9 @@ function setFieldsMinMaxToFullRange(setCheckedOnly: boolean | undefined, getMinM
 }
 
 function setFieldsMinMaxToFullRangeDuringAllTime(setCheckedOnly?: boolean) {
-    setFieldsMinMaxToFullRange(setCheckedOnly, GraphConfig.getMinMaxForFieldDuringAllTimeInterval);
+    setFieldsMinMaxToFullRange(setCheckedOnly, (flightLog, _grapher, fieldName) =>
+        GraphConfig.getMinMaxForFieldDuringAllTimeInterval(flightLog, fieldName),
+    );
 }
 
 function setFieldsMinMaxToFullRangeDuringWindowTime(setCheckedOnly?: boolean) {
