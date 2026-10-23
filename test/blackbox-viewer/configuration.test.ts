@@ -29,6 +29,12 @@ function textFile(text: string, name: string): File {
     return new File([text], name, { type: "text/plain" });
 }
 
+/** A file whose read fails, as one removed while it is being read does. */
+function unreadableFile(name: string): File {
+    // Only name and text() are read.
+    return { name, text: () => Promise.reject(new DOMException("gone", "NotReadableError")) } as unknown as File;
+}
+
 describe("loadConfigurationFile", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
@@ -41,6 +47,17 @@ describe("loadConfigurationFile", () => {
         await vi.waitFor(() => expect(graphStore.configFileName).toBe("craft.txt"));
         expect(graphStore.configLines).toEqual(["# diff", "set a = 1", "", "set b = 2"]);
     });
+
+    it("clears the configuration when the file cannot be read", async () => {
+        const graphStore = useGraphStore();
+        graphStore.configLines = ["old"];
+        graphStore.configFileName = "old.txt";
+
+        loadConfigurationFile(unreadableFile("craft.txt"));
+
+        await vi.waitFor(() => expect(graphStore.configFileName).toBe(""));
+        expect(graphStore.configLines).toEqual([]);
+    });
 });
 
 describe("ConfigurationDefaults", () => {
@@ -52,5 +69,15 @@ describe("ConfigurationDefaults", () => {
 
         await vi.waitFor(() => expect(set).toHaveBeenCalledOnce());
         expect(set).toHaveBeenCalledWith("configurationDefaults", ["# dump", "set a = 0"]);
+    });
+
+    it("leaves the cached defaults alone when the file cannot be read", async () => {
+        const set = vi.fn();
+        const defaults = new ConfigurationDefaults({ set } as unknown as PrefStorage);
+
+        defaults.loadFile(unreadableFile("defaults.txt"));
+
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(set).not.toHaveBeenCalled();
     });
 });

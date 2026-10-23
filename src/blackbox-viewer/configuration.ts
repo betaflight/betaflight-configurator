@@ -30,20 +30,18 @@ import type { PrefStorage } from "./pref_storage";
 import { useGraphStore } from "./stores/graph";
 
 export function loadConfigurationFile(file: File): void {
-    const reader = new FileReader();
-
-    reader.onload = function () {
-        const graphStore = useGraphStore();
-        graphStore.configLines = (reader.result as string).split("\n");
-        graphStore.configFileName = file.name;
-    };
-    reader.onerror = reader.onabort = function () {
-        const graphStore = useGraphStore();
-        graphStore.configLines = [];
-        graphStore.configFileName = "";
-    };
-
-    reader.readAsText(file);
+    file.text().then(
+        (text) => {
+            const graphStore = useGraphStore();
+            graphStore.configLines = text.split("\n");
+            graphStore.configFileName = file.name;
+        },
+        () => {
+            const graphStore = useGraphStore();
+            graphStore.configLines = [];
+            graphStore.configFileName = "";
+        },
+    );
 }
 
 /** Special configuration file that holds default values only. */
@@ -51,12 +49,10 @@ export class ConfigurationDefaults {
     constructor(private readonly prefs: PrefStorage) {}
 
     loadFile(file: File): void {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            this.prefs.set("configurationDefaults", (reader.result as string).split("\n"));
-        };
-
-        reader.readAsText(file);
+        // A file that cannot be read leaves the defaults as they were.
+        file.text().then(
+            (text) => this.prefs.set("configurationDefaults", text.split("\n")),
+            () => {},
+        );
     }
 }
