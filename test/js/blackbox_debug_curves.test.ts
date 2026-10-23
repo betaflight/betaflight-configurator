@@ -1,6 +1,28 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import { GraphConfig } from "../../src/blackbox-viewer/graph_config.js";
+import { GraphConfig } from "../../src/blackbox-viewer/graph_config";
+import type { FlightLog } from "../../src/blackbox-viewer/flightlog";
 import { getDebugModes } from "../../src/js/utils/debugModes";
 
 // getDefaultCurveForField swallows every error and falls back to a +/-500 curve, so a missing
@@ -14,7 +36,16 @@ const LOGGED_RANGE = { min: -123, max: 456 };
 // field with its neighbours cannot change what any existing case here asserts.
 const ALL_DEBUG_FIELDS = Object.fromEntries(Array.from({ length: 8 }, (_, index) => [`debug[${index}]`, LOGGED_RANGE]));
 
-function flightLogFor(apiVersion, debugMode, sysConfigOverrides = {}, loggedFields = ALL_DEBUG_FIELDS) {
+type LoggedFields = Record<string, { min: number; max: number }>;
+
+// Only the FlightLog members getDefaultCurveForField and the unit conversions call are faked: the stats,
+// the main field table and the scaling helpers. Anything else (isFieldDisabled, getMinTime, ...) is absent.
+function flightLogFor(
+    apiVersion: string,
+    debugMode: number,
+    sysConfigOverrides: Record<string, unknown> = {},
+    loggedFields: LoggedFields = ALL_DEBUG_FIELDS,
+): FlightLog {
     return {
         getSysConfig: () => ({
             apiVersion,
@@ -25,20 +56,26 @@ function flightLogFor(apiVersion, debugMode, sysConfigOverrides = {}, loggedFiel
             motor_poles: 14,
             ...sysConfigOverrides,
         }),
-        getMinMaxForFieldDuringAllTime: (field) => ({ ...(loggedFields[field] ?? LOGGED_RANGE) }),
-        getMainFieldIndexByName: (name) => (loggedFields[name] === undefined ? undefined : 0),
-        rcCommandRawToDegreesPerSecond: (value, axis) => value * (axis + 2) * 0.5,
+        getMinMaxForFieldDuringAllTime: (field: string) => ({ ...(loggedFields[field] ?? LOGGED_RANGE) }),
+        getMainFieldIndexByName: (name: string) => (loggedFields[name] === undefined ? undefined : 0),
+        rcCommandRawToDegreesPerSecond: (value: number, axis: number) => value * (axis + 2) * 0.5,
         // The debug field unit conversions reach back into the flight log for hardware scaling.
         // Without these the conversion throws and the catch quietly hands back the fallback curve.
-        gyroRawToDegreesPerSecond: (value) => value / 16.4,
-        accRawToGs: (value) => value / 2048,
-        rcCommandRawToThrottle: (value) => (value - 1000) / 10,
-        ThrottleTorcCommandRaw: (value) => value * 10 + 1000,
+        gyroRawToDegreesPerSecond: (value: number) => value / 16.4,
+        accRawToGs: (value: number) => value / 2048,
+        rcCommandRawToThrottle: (value: number) => (value - 1000) / 10,
+        ThrottleTorcCommandRaw: (value: number) => value * 10 + 1000,
         getMainFieldNames: () => [],
-    };
+    } as unknown as FlightLog;
 }
 
-function curveFor(apiVersion, debugModeName, fieldName, sysConfigOverrides, loggedFields) {
+function curveFor(
+    apiVersion: string,
+    debugModeName: string,
+    fieldName: string,
+    sysConfigOverrides?: Record<string, unknown>,
+    loggedFields?: LoggedFields,
+) {
     const debugMode = getDebugModes(apiVersion).indexOf(debugModeName);
     expect(debugMode, `${debugModeName} is not a debug mode on API ${apiVersion}`).toBeGreaterThan(-1);
     return GraphConfig.getDefaultCurveForField(
@@ -47,7 +84,7 @@ function curveFor(apiVersion, debugModeName, fieldName, sysConfigOverrides, logg
     );
 }
 
-function rangeFor(...args) {
+function rangeFor(...args: Parameters<typeof curveFor>) {
     return curveFor(...args).MinMax;
 }
 
@@ -102,13 +139,27 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.49.0", "GYRO_RAW", "debug[0]")).toEqual(gyro);
     });
 
-    it("keeps EZLANDING on its own curve shape", () => {
-        expect(curveFor("1.49.0", "EZLANDING", "debug[0]")).toEqual({
-            offset: -5000,
-            power: 1,
-            inputRange: 5000,
-            outputRange: 1,
-        });
+    it("scales a gyro field to the fastest axis plus the 20% margin", () => {
+        // The stubbed rcCommand conversion puts the fastest axis at 1000 deg/s.
+        expect(rangeFor("1.49.0", "CYCLETIME", "gyroADC[0]")).toEqual({ min: -1200, max: 1200 });
+        expect(rangeFor("1.49.0", "CYCLETIME", "gyroUnfilt[1]")).toEqual({ min: -1200, max: 1200 });
+    });
+
+    it("centres a zero-centred debug field on zero, at least one unit wide", () => {
+        const flat = { "debug[2]": { min: 0, max: 0 } };
+        expect(rangeFor("1.49.0", "ITERM_RELAX", "debug[2]", undefined, flat)).toEqual({ min: -1, max: 1 });
+        expect(rangeFor("1.49.0", "ITERM_RELAX", "debug[2]", undefined, { "debug[2]": { min: -30, max: 20 } })).toEqual(
+            {
+                min: -30,
+                max: 30,
+            },
+        );
+    });
+
+    // EZLANDING used to give an offset/inputRange curve with no MinMax, which the grapher and the
+    // graph dialog's reset both read unguarded, so adding an EZ Landing field threw.
+    it("gives EZLANDING the 0-100 % range its fields log, as percent * 100", () => {
+        expect(curveFor("1.49.0", "EZLANDING", "debug[0]")).toEqual({ power: 1, MinMax: { min: 0, max: 10000 } });
     });
 
     it("picks the API 1.49 field layout only for API 1.49 and later logs", () => {
@@ -168,13 +219,10 @@ describe("blackbox debug mode curves", () => {
                     const where = `${apiVersion} ${debugModes[debugMode]} ${fieldName}`;
                     const curve = GraphConfig.getDefaultCurveForField(flightLog, fieldName);
                     expect(curve.power, where).toBe(1);
-                    if (curve.MinMax) {
-                        expect(Number.isFinite(curve.MinMax.min), where).toBe(true);
-                        expect(Number.isFinite(curve.MinMax.max), where).toBe(true);
-                        expect(curve.MinMax.min, where).toBeLessThan(curve.MinMax.max);
-                    } else {
-                        expect(Number.isFinite(curve.inputRange), where).toBe(true);
-                    }
+                    // The grapher reads MinMax for every field.
+                    expect(Number.isFinite(curve.MinMax.min), where).toBe(true);
+                    expect(Number.isFinite(curve.MinMax.max), where).toBe(true);
+                    expect(curve.MinMax.min, where).toBeLessThan(curve.MinMax.max);
                 }
             }
         }

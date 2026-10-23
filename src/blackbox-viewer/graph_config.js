@@ -529,7 +529,7 @@ const DEBUG_MODE_CURVES = {
         5: [-2, 2], // read state check
         6: [-10000, 10000], // time since previous task uS
     },
-    EZLANDING: { default: () => ({ offset: -5000, power: 1, inputRange: 5000, outputRange: 1 }) },
+    EZLANDING: { default: [0, 10000] }, // percent * 100
     ATTITUDE: {
         0: [-180, 180], // roll angle
         1: [-180, 180], // pitch angle
