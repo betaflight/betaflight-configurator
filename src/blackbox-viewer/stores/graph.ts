@@ -26,7 +26,7 @@ import { useLogStore } from "./log";
 import { PrefStorage } from "../pref_storage";
 import type { FlightLogGrapher } from "../grapher.js";
 import type { GraphConfig } from "../graph_config.js";
-import type { MapGrapher } from "../graph_map.js";
+import type { MapGrapher } from "../graph_map";
 import type { SeekBar } from "../seekbar.js";
 
 export type GrapherInstance = InstanceType<typeof FlightLogGrapher>;
