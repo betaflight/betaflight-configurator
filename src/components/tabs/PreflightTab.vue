@@ -854,7 +854,7 @@ import { i18n } from "@/js/localization";
 import { usePreflight, type ForecastDay, type Reading } from "@/composables/usePreflight";
 import { useMapViewport } from "@/composables/useMapViewport";
 import { getNotamStatus, type NotamItem, type NotamStatus } from "@/js/notam/index";
-import { initMap } from "../../js/utils/map";
+import { initMap, type MapLayer } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 
 function getWeatherEmoji(weatherCode: number | null): string {
@@ -1000,7 +1000,7 @@ export default defineComponent({
             observeContainer,
             teardown: teardownMapViewport,
         } = useMapViewport(mapContainerRef, () => mapInstance.value?.map);
-        const activeLayer = ref("street");
+        const activeLayer = ref<MapLayer>("street");
         const detectingLocation = ref(false);
         const locationError = ref<string | null>(null);
         const manualLat = ref("");
@@ -1409,7 +1409,7 @@ export default defineComponent({
             });
         }
 
-        function setLayer(layerKey: string) {
+        function setLayer(layerKey: MapLayer) {
             if (!mapInstance.value?.layers) {
                 return;
             }
