@@ -30,7 +30,8 @@ const { fileSystem } = vi.hoisted(() => ({
 
 vi.mock("../../src/js/FileSystem", () => ({ default: fileSystem }));
 
-import { exportGpx } from "../../src/blackbox-viewer/export_utils";
+import { exportGpx, exportSpectrumToCsv } from "../../src/blackbox-viewer/export_utils";
+import { SpectrumExporter } from "../../src/blackbox-viewer/spectrum-exporter";
 import type { SysConfig } from "../../src/blackbox-viewer/flightlog_parser";
 import { chunksOf } from "./fakeChunks";
 import { FakeWorker } from "./fakeWorker";
@@ -88,6 +89,71 @@ describe("exportGpx", () => {
         "finishes without saving when the worker reports %s",
         async (handler) => {
             const { worker, done, isSettled } = await startGpxExport();
+
+            worker[handler]?.(new Event("error"));
+            await vi.waitFor(() => expect(isSettled()).toBe(true));
+            await done;
+
+            expect(worker.terminated).toBe(true);
+            expect(fileSystem.writeFile).not.toHaveBeenCalled();
+        },
+    );
+});
+
+describe("exportSpectrumToCsv", () => {
+    const fftData = { fftOutput: Float64Array.from([1, 2]), blackBoxRate: 4000 };
+    // What FlightLogAnalyser.exportSpectrumToCSV does with the callbacks it is given.
+    const analyser = {
+        getExportedFileName: () => "LOG_psd",
+        exportSpectrumToCSV: vi.fn(
+            (
+                onSuccess: (csv: string) => void,
+                options: Parameters<typeof SpectrumExporter>[1],
+                onFailure: (error: unknown) => void,
+            ) => SpectrumExporter(fftData, options).dump(onSuccess, onFailure),
+        ),
+    };
+
+    beforeEach(() => {
+        FakeWorker.instances.length = 0;
+        vi.stubGlobal("Worker", FakeWorker);
+        fileSystem.pickSaveFile.mockResolvedValue({ name: "LOG_psd.csv", _download: true });
+        fileSystem.writeFile.mockResolvedValue(undefined);
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        vi.spyOn(console, "debug").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+        fileSystem.pickSaveFile.mockReset();
+        fileSystem.writeFile.mockReset();
+    });
+
+    async function startSpectrumExport() {
+        let settled = false;
+        const done = exportSpectrumToCsv(analyser, "LOG.BBL")!.then(() => {
+            settled = true;
+        });
+        await vi.waitFor(() => expect(FakeWorker.instances).toHaveLength(1));
+        return { worker: FakeWorker.instances[0], done, isSettled: () => settled };
+    }
+
+    it("saves the CSV the worker returns", async () => {
+        const { worker, done } = await startSpectrumExport();
+
+        worker.onmessage?.({ data: "x,y\n" });
+        await done;
+
+        expect(fileSystem.pickSaveFile).toHaveBeenCalledWith("LOG_psd.csv", "CSV file", ".csv", "blackbox-export-file");
+        expect(fileSystem.writeFile).toHaveBeenCalledWith({ name: "LOG_psd.csv", _download: true }, "x,y\n");
+    });
+
+    // The spectrum export dropped the failure callback, so a failing worker left it waiting forever.
+    it.each(["onerror", "onmessageerror"] as const)(
+        "finishes without saving when the worker reports %s",
+        async (handler) => {
+            const { worker, done, isSettled } = await startSpectrumExport();
 
             worker[handler]?.(new Event("error"));
             await vi.waitFor(() => expect(isSettled()).toBe(true));

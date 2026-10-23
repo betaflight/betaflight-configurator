@@ -308,8 +308,8 @@ export function FlightLogAnalyser(flightLog, canvas, analyserCanvas) {
             });
         }
 
-        this.exportSpectrumToCSV = function (onSuccess, options) {
-            SpectrumExporter(fftData, options).dump(onSuccess);
+        this.exportSpectrumToCSV = function (onSuccess, options, onFailure) {
+            SpectrumExporter(fftData, options).dump(onSuccess, onFailure);
         };
 
         this.importSpectrumFromCSV = function (files) {
