@@ -290,7 +290,7 @@ import Sortable from "sortablejs";
 import UiBox from "./UiBox.vue";
 import { GraphConfig } from "../graph_config.js";
 import { FlightLogFieldPresenter } from "../flightlog_fields_presenter";
-import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../curve_step.js";
+import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../curve_step";
 import { debugContextFromSysConfig } from "../../js/utils/debugModes";
 import type { FlightLogInstance } from "../stores/log";
 import type { GraphConfigInstance, GraphFieldConfig, GraphPanelConfig, GrapherInstance } from "../stores/graph";

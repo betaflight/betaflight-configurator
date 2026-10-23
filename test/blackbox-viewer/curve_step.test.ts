@@ -1,5 +1,26 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it } from "vitest";
-import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../../src/blackbox-viewer/curve_step.js";
+import { coarseMinMaxStep, FINE_MIN_MAX_STEP, needsFineStep } from "../../src/blackbox-viewer/curve_step";
 
 describe("curve min/max spinner step", () => {
     it("keeps tens for wide ranges", () => {
@@ -57,6 +78,9 @@ describe("curve min/max fine step", () => {
         expect(needsFineStep({ min: 0, max: 1e10 + 1 })).toBe(true);
         expect(needsFineStep({ min: 0, max: 1e13 })).toBe(false);
         expect(needsFineStep({ min: 0, max: 1e13 + 1 })).toBe(true);
+        // Within one ULP of the quotient is aligned: (1e15 + 0.125) / 10 lands 0.0156 off a whole
+        // number, under its ULP of 0.022, so a fixed absolute tolerance would wrongly call it off-step.
+        expect(needsFineStep({ min: 0, max: 1e15 + 0.125 })).toBe(false);
     });
 
     it("accepts aligned bounds across the range each step covers", () => {
