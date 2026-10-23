@@ -203,7 +203,7 @@ export class FlightLogGrapher {
         };
 
         function onMouseDown(e: MouseEvent) {
-            if (e.which === 1) {
+            if (e.button === 0) {
                 //Left mouse button only for seeking
                 lastMouseX = e.pageX;
 
@@ -297,9 +297,7 @@ export class FlightLogGrapher {
             canvasContext.font = `${drawingParams.fontSizeFrameLabel}pt ${DEFAULT_FONT_FACE}`;
             canvasContext.fillStyle = ThemeColors.getGraphTextSecondary();
 
-            if (frameLabelTextWidthFrameNumber == null) {
-                frameLabelTextWidthFrameNumber = canvasContext.measureText("#0000000").width;
-            }
+            frameLabelTextWidthFrameNumber ??= canvasContext.measureText("#0000000").width;
 
             canvasContext.fillText(
                 `#${leftPad(frameIndex, "0", 7)}`,
@@ -307,15 +305,95 @@ export class FlightLogGrapher {
                 canvas.height - 8,
             );
 
-            if (frameLabelTextWidthFrameTime == null) {
-                frameLabelTextWidthFrameTime = canvasContext.measureText("00:00.000").width;
-            }
+            frameLabelTextWidthFrameTime ??= canvasContext.measureText("00:00.000").width;
 
             canvasContext.fillText(
                 formatTime(timeMsec, true),
                 canvas.width - frameLabelTextWidthFrameTime - 8,
                 canvas.height - 8 - drawingParams.fontSizeFrameLabel - 8,
             );
+        }
+
+        /** Where a plotted line is: drawing or not, how long it has been clamped, and whether it is in a gap. */
+        interface LineState {
+            drawingLine: boolean;
+            /** When < 0 the line is always drawn; counting up while clamped dashes it. */
+            notInBounds: number;
+            inGap: boolean;
+        }
+
+        const GAP_WARNING_BOX_RADIUS = 3;
+
+        function drawGapBox(x: number, y: number) {
+            canvasContext.strokeRect(
+                x - GAP_WARNING_BOX_RADIUS,
+                y - GAP_WARNING_BOX_RADIUS,
+                GAP_WARNING_BOX_RADIUS * 2,
+                GAP_WARNING_BOX_RADIUS * 2,
+            );
+        }
+
+        /** Clamps y to the graph, so a zoomed field does not bleed into the next graph, and counts the clamping. */
+        function clampToGraph(y: number, plotHeight: number, line: LineState): number {
+            let clamped = y;
+            if (y > plotHeight) {
+                clamped = plotHeight;
+                line.notInBounds++;
+            } else if (y < -1 * plotHeight) {
+                clamped = -1 * plotHeight;
+                line.notInBounds++;
+            } else {
+                line.notInBounds = -5;
+            }
+
+            if (line.notInBounds > 5) {
+                line.notInBounds = -5; // reset it every 5th line draw (to simulate dashing)
+            }
+            return clamped;
+        }
+
+        /**
+         * Draws one point of a line, marking a gap in the data with a box at either end. Returns false
+         * where the point leaves the line broken, so the caller does not count it as drawn.
+         */
+        function plotPoint(line: LineState, x: number, y: number, gapStartsHere: boolean): boolean {
+            if (line.drawingLine && line.notInBounds <= 0) {
+                canvasContext.lineTo(x, y);
+
+                if (!options.gapless && gapStartsHere) {
+                    drawGapBox(x, y);
+                    line.inGap = true;
+                    line.drawingLine = false;
+                    return false;
+                }
+                return true;
+            }
+
+            canvasContext.moveTo(x, y);
+
+            if (!options.gapless) {
+                // Is this the end of a gap to be marked?
+                if (line.inGap) {
+                    drawGapBox(x, y);
+                    if (gapStartsHere) {
+                        return false;
+                    }
+                    line.inGap = false;
+                } else if (gapStartsHere) {
+                    //Must be right at the beginning of drawing
+                    line.inGap = true;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /** A field's line as plotField() draws it. */
+        interface FieldLine {
+            index: number | undefined;
+            curve: ExpoCurve;
+            color: string;
+            lineWidth: number | null;
         }
 
         /**
@@ -325,108 +403,49 @@ export class FlightLogGrapher {
         function plotField(
             chunks: Chunk[],
             startFrameIndex: number,
-            fieldIndex: number | undefined,
-            curve: ExpoCurve,
+            field: FieldLine,
             plotHeight: number,
-            color: string,
-            lineWidth: number | null,
             highlight: boolean,
         ) {
-            const GAP_WARNING_BOX_RADIUS = 3;
-            let chunkIndex, frameIndex;
-            let drawingLine = false,
-                notInBounds = -5, // when <0, then line is always drawn, (this allows us to paritially dash the line when the bounds is exceeded)
-                inGap = false;
+            const line: LineState = { drawingLine: false, notInBounds: -5, inGap: false };
             const yScale = -plotHeight;
             const xScale = canvas.width / windowWidthMicros;
 
-            //Draw points from this line until we leave the window
-
-            //We may start partway through the first chunk:
-            frameIndex = startFrameIndex;
-
-            canvasContext.strokeStyle = color;
-            canvasContext.lineWidth = lineWidth || drawingParams.plotLineWidth;
+            canvasContext.strokeStyle = field.color;
+            canvasContext.lineWidth = field.lineWidth || drawingParams.plotLineWidth;
 
             canvasContext.beginPath();
 
-            plottingLoop: for (chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
-                const chunk = chunks[chunkIndex];
-
+            //Draw points from this line until we leave the window; we may start partway through the first chunk
+            let frameIndex = startFrameIndex;
+            for (const chunk of chunks) {
                 for (; frameIndex < chunk.frames.length; frameIndex++) {
                     // lookup() does arithmetic on the value, where a null slot counts as 0 and a missing field as NaN.
-                    const fieldValue = Number(valueAt(chunk.frames[frameIndex], fieldIndex));
+                    const fieldValue = Number(valueAt(chunk.frames[frameIndex], field.index));
                     const frameTime = chunk.frames[frameIndex][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME];
 
-                    let nextY = curve.lookup(fieldValue) * yScale;
+                    const nextY = clampToGraph(field.curve.lookup(fieldValue) * yScale, plotHeight, line);
                     const nextX = (frameTime - windowStartTime) * xScale;
 
-                    // clamp the Y to the range of the graph to prevent bleed into next graph if zoomed in (for example)
-
-                    if (nextY > plotHeight) {
-                        nextY = plotHeight;
-                        notInBounds++;
-                    } else if (nextY < -1 * plotHeight) {
-                        nextY = -1 * plotHeight;
-                        notInBounds++;
-                    } else {
-                        notInBounds = -5;
+                    if (!plotPoint(line, nextX, nextY, !!chunk.gapStartsHere[frameIndex])) {
+                        continue;
                     }
 
-                    if (notInBounds > 5) {
-                        notInBounds = -5; // reset it every 5th line draw (to simulate dashing)
-                    }
-
-                    if (drawingLine && notInBounds <= 0) {
-                        canvasContext.lineTo(nextX, nextY);
-
-                        if (!options.gapless && chunk.gapStartsHere[frameIndex]) {
-                            canvasContext.strokeRect(
-                                nextX - GAP_WARNING_BOX_RADIUS,
-                                nextY - GAP_WARNING_BOX_RADIUS,
-                                GAP_WARNING_BOX_RADIUS * 2,
-                                GAP_WARNING_BOX_RADIUS * 2,
-                            );
-                            inGap = true;
-                            drawingLine = false;
-                            continue;
-                        }
-                    } else {
-                        canvasContext.moveTo(nextX, nextY);
-
-                        if (!options.gapless) {
-                            // Is this the end of a gap to be marked?
-                            if (inGap) {
-                                canvasContext.strokeRect(
-                                    nextX - GAP_WARNING_BOX_RADIUS,
-                                    nextY - GAP_WARNING_BOX_RADIUS,
-                                    GAP_WARNING_BOX_RADIUS * 2,
-                                    GAP_WARNING_BOX_RADIUS * 2,
-                                );
-
-                                if (chunk.gapStartsHere[frameIndex]) {
-                                    continue;
-                                } else {
-                                    inGap = false;
-                                }
-                            } else if (chunk.gapStartsHere[frameIndex]) {
-                                //Must be right at the beginning of drawing
-                                inGap = true;
-                                continue;
-                            }
-                        }
-                    }
-
-                    drawingLine = true;
+                    line.drawingLine = true;
 
                     if (frameTime >= windowEndTime) {
-                        break plottingLoop;
+                        strokeField(highlight);
+                        return;
                     }
                 }
 
                 frameIndex = 0;
             }
 
+            strokeField(highlight);
+        }
+
+        function strokeField(highlight: boolean) {
             if (highlight) {
                 // Draw semi-transparent stroke with wider line to simulate glow
                 // Decided not to use canvasContext.shadowBlur for performance reasons
@@ -655,34 +674,97 @@ export class FlightLogGrapher {
             }
         }
 
-        function drawEvents(chunks: Chunk[]) {
-            /*
-             * Also draw events that are a little left of the window, so that their labels don't suddenly
-             * disappear when they scroll out of view:
-             */
-            const BEGIN_MARGIN_MICROSECONDS = 100000;
-            let shouldSetFont = true,
-                sequenceNum = 0;
+        /*
+         * Also draw events that are a little left of the window, so that their labels don't suddenly
+         * disappear when they scroll out of view:
+         */
+        const BEGIN_MARGIN_MICROSECONDS = 100000;
 
+        /** Event labels stack downwards; the font is only set once something is drawn. */
+        interface EventRows {
+            sequenceNum: number;
+            shouldSetFont: boolean;
+        }
+
+        function inEventWindow(time: number): boolean {
+            return time >= windowStartTime - BEGIN_MARGIN_MICROSECONDS && time < windowEndTime;
+        }
+
+        function setEventFont() {
+            canvasContext.fillStyle = ThemeColors.getGraphText();
+            canvasContext.font = `${drawingParams.fontSizeEventLabel}pt ${DEFAULT_FONT_FACE}`;
+        }
+
+        /** Draws the log's own events; true once one lies past the window, which ends all event drawing. */
+        function drawLogEvents(chunks: Chunk[], rows: EventRows): boolean {
             for (const chunk of chunks) {
-                const events = chunk.events;
-
-                for (const event of events) {
+                for (const event of chunk.events) {
                     if (Number(event.time) > windowEndTime) {
-                        return;
+                        return true;
                     }
 
                     if (Number(event.time) >= windowStartTime - BEGIN_MARGIN_MICROSECONDS) {
                         // Avoid setting the font if we don't draw any events
-                        if (shouldSetFont) {
-                            canvasContext.fillStyle = ThemeColors.getGraphText();
-                            canvasContext.font = `${drawingParams.fontSizeEventLabel}pt ${DEFAULT_FONT_FACE}`;
-                            shouldSetFont = false;
+                        if (rows.shouldSetFont) {
+                            setEventFont();
+                            rows.shouldSetFont = false;
                         }
 
-                        drawEvent(event, sequenceNum++);
+                        drawEvent(event, rows.sequenceNum++);
                     }
                 }
+            }
+            return false;
+        }
+
+        /** The marker's line and, at the window centre, the time and frequency from it. */
+        function drawMarker(markerTime: number, rows: EventRows) {
+            if (inEventWindow(markerTime)) {
+                drawEvent(
+                    {
+                        event: FlightLogEvent.CUSTOM,
+                        time: markerTime,
+                        label: `Marker:${formatTime((markerTime - flightLog.getMinTime()) / 1000, true)}`,
+                        align: markerTime < windowCenterTime ? "left" : "right",
+                    },
+                    rows.sequenceNum++,
+                );
+            }
+
+            const timeDelta = windowCenterTime - markerTime;
+            const markerFrequency = timeDelta === 0 ? "" : `${(1000000 / timeDelta).toFixed(0)}Hz`;
+            drawEvent(
+                {
+                    event: FlightLogEvent.CUSTOM_BLANK, // Blank doesnt show a vertical line
+                    time: windowCenterTime,
+                    label: `${formatTime((windowCenterTime - markerTime) / 1000, true)}ms ${markerFrequency}`,
+                    align: markerTime < windowCenterTime ? "right" : "left",
+                },
+                rows.sequenceNum++,
+            );
+        }
+
+        function drawBookmarks(bookmarkEvents: ({ state: boolean; time: number } | null)[], rows: EventRows) {
+            for (let i = 0; i <= 9; i++) {
+                const bookmark = bookmarkEvents[i];
+                if (bookmark?.state && inEventWindow(bookmark.time)) {
+                    drawEvent(
+                        {
+                            event: FlightLogEvent.CUSTOM,
+                            time: bookmark.time,
+                            label: String(i),
+                        },
+                        rows.sequenceNum++,
+                    );
+                }
+            }
+        }
+
+        function drawEvents(chunks: Chunk[]) {
+            const rows: EventRows = { sequenceNum: 0, shouldSetFont: true };
+
+            if (drawLogEvents(chunks, rows)) {
+                return;
             }
 
             // Add custom markers
@@ -690,107 +772,71 @@ export class FlightLogGrapher {
             const markerEvent = { state: graphStore.hasMarker, time: graphStore.markerTime };
             const bookmarkEvents =
                 workspaceStore.bookmarkTimes?.map((t) => (t == null ? null : { state: t !== 0, time: t })) ?? null;
-            if (shouldSetFont && (markerEvent != null || bookmarkEvents != null)) {
-                canvasContext.fillStyle = ThemeColors.getGraphText();
-                canvasContext.font = `${drawingParams.fontSizeEventLabel}pt ${DEFAULT_FONT_FACE}`;
+            // The marker event always exists, so the font is set whenever no log event set it.
+            if (rows.shouldSetFont) {
+                setEventFont();
             }
 
             // Draw Marker Event Line
-            if (markerEvent != null) {
-                if (markerEvent.state) {
-                    if (
-                        markerEvent.time >= windowStartTime - BEGIN_MARGIN_MICROSECONDS &&
-                        markerEvent.time < windowEndTime
-                    ) {
-                        drawEvent(
-                            {
-                                event: FlightLogEvent.CUSTOM,
-                                time: markerEvent.time,
-                                label: `Marker:${formatTime((markerEvent.time - flightLog.getMinTime()) / 1000, true)}`,
-                                align: markerEvent.time < windowCenterTime ? "left" : "right",
-                            },
-                            sequenceNum++,
-                        );
-                    }
-
-                    const timeDelta = windowCenterTime - markerEvent.time;
-                    const markerFrequency = timeDelta === 0 ? "" : `${(1000000 / timeDelta).toFixed(0)}Hz`;
-                    drawEvent(
-                        {
-                            event: FlightLogEvent.CUSTOM_BLANK, // Blank doesnt show a vertical line
-                            time: windowCenterTime,
-                            label: `${formatTime((windowCenterTime - markerEvent.time) / 1000, true)}ms ${markerFrequency}`,
-                            align: markerEvent.time < windowCenterTime ? "right" : "left",
-                        },
-                        sequenceNum++,
-                    );
-                }
+            if (markerEvent.state) {
+                drawMarker(markerEvent.time, rows);
             }
 
             // Draw Bookmarks Event Line
             if (bookmarkEvents != null) {
-                for (let i = 0; i <= 9; i++) {
-                    const bookmark = bookmarkEvents[i];
-                    if (bookmark != null) {
-                        if (bookmark.state) {
-                            if (
-                                bookmark.time >= windowStartTime - BEGIN_MARGIN_MICROSECONDS &&
-                                bookmark.time < windowEndTime
-                            ) {
-                                drawEvent(
-                                    {
-                                        event: FlightLogEvent.CUSTOM,
-                                        time: bookmark.time,
-                                        label: String(i),
-                                    },
-                                    sequenceNum++,
-                                );
-                            }
-                        }
-                    }
-                }
+                drawBookmarks(bookmarkEvents, rows);
             }
         }
 
         /**
          *  Mark the in/out of the video region (if present) and dim the view outside this region
          */
+        /** A marker's x on the canvas, or null where it is not set or not on the canvas. */
+        function visibleMarkerX(time: number | null): number | null {
+            if (time === null) {
+                return null;
+            }
+            const x = timeToCanvasX(time);
+            return x >= 0 && x <= canvas.width ? x : null;
+        }
+
+        function drawRegionEdge(x: number) {
+            canvasContext.beginPath();
+            canvasContext.moveTo(x, 0);
+            canvasContext.lineTo(x, canvas.height);
+            canvasContext.stroke();
+        }
+
         function drawInOutRegion() {
-            if ((inTime !== null && inTime >= windowStartTime) || (outTime !== null && outTime < windowEndTime)) {
-                const inMarkerX = inTime === null ? null : timeToCanvasX(inTime),
-                    outMarkerX = outTime === null ? null : timeToCanvasX(outTime);
+            const dimsBefore = inTime !== null && inTime >= windowStartTime;
+            const dimsAfter = outTime !== null && outTime < windowEndTime;
+            if (!dimsBefore && !dimsAfter) {
+                return;
+            }
 
-                canvasContext.fillStyle = "rgba(0,0,0,0.8)";
+            canvasContext.fillStyle = "rgba(0,0,0,0.8)";
 
-                if (inMarkerX !== null && inTime! >= windowStartTime) {
-                    canvasContext.fillRect(0, 0, Math.min(inMarkerX, canvas.width), canvas.height);
+            if (dimsBefore) {
+                canvasContext.fillRect(0, 0, Math.min(timeToCanvasX(inTime!), canvas.width), canvas.height);
+            }
+
+            if (dimsAfter) {
+                const outMarkerXClipped = Math.max(timeToCanvasX(outTime!), 0);
+                canvasContext.fillRect(outMarkerXClipped, 0, canvas.width - outMarkerXClipped, canvas.height);
+            }
+
+            const inMarkerX = visibleMarkerX(inTime),
+                outMarkerX = visibleMarkerX(outTime);
+            if (inMarkerX !== null || outMarkerX !== null) {
+                canvasContext.strokeStyle = ThemeColors.getGraphText();
+                canvasContext.lineWidth = 4;
+
+                if (inMarkerX !== null) {
+                    drawRegionEdge(inMarkerX);
                 }
 
-                if (outMarkerX !== null && outTime! < windowEndTime) {
-                    const outMarkerXClipped = Math.max(outMarkerX, 0);
-                    canvasContext.fillRect(outMarkerXClipped, 0, canvas.width - outMarkerXClipped, canvas.height);
-                }
-
-                if (
-                    (inMarkerX !== null && inMarkerX >= 0 && inMarkerX <= canvas.width) ||
-                    (outMarkerX !== null && outMarkerX >= 0 && outMarkerX <= canvas.width)
-                ) {
-                    canvasContext.strokeStyle = ThemeColors.getGraphText();
-                    canvasContext.lineWidth = 4;
-
-                    if (inMarkerX !== null && inMarkerX >= 0 && inMarkerX <= canvas.width) {
-                        canvasContext.beginPath();
-                        canvasContext.moveTo(inMarkerX, 0);
-                        canvasContext.lineTo(inMarkerX, canvas.height);
-                        canvasContext.stroke();
-                    }
-
-                    if (outMarkerX !== null && outMarkerX >= 0 && outMarkerX <= canvas.width) {
-                        canvasContext.beginPath();
-                        canvasContext.moveTo(outMarkerX, 0);
-                        canvasContext.lineTo(outMarkerX, canvas.height);
-                        canvasContext.stroke();
-                    }
+                if (outMarkerX !== null) {
+                    drawRegionEdge(outMarkerX);
                 }
             }
         }
@@ -860,11 +906,7 @@ export class FlightLogGrapher {
             computeDrawingParameters();
         };
 
-        this.render = function (windowCenterTimeMicros) {
-            windowCenterTime = windowCenterTimeMicros;
-            windowStartTime = windowCenterTime - windowWidthMicros / 2;
-            windowEndTime = windowStartTime + windowWidthMicros;
-
+        function eraseBackground() {
             if (options.eraseBackground) {
                 // Work-around: The webm-writer does not like transparent backgrounds. Fill canvas with graph background color.
                 if (options.fillBackground) {
@@ -874,146 +916,177 @@ export class FlightLogGrapher {
                     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
                 }
             }
+        }
+
+        /** The frame before the first one inside the window, so the lines start off the left edge. */
+        function firstPlottedFrame(chunks: Chunk[]): number {
+            let startFrameIndex;
+            //Find the first sample that lies inside the window
+            for (startFrameIndex = 0; startFrameIndex < chunks[0].frames.length; startFrameIndex++) {
+                if (
+                    chunks[0].frames[startFrameIndex][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] >=
+                    windowStartTime
+                ) {
+                    break;
+                }
+            }
+
+            // Pick the sample before that to begin plotting from
+            return startFrameIndex > 0 ? startFrameIndex - 1 : startFrameIndex;
+        }
+
+        function drawGraph(graph: PlottedGraph, i: number, chunks: Chunk[], startFrameIndex: number) {
+            canvasContext.save();
+
+            canvasContext.translate(0, canvas.height * graph.y);
+
+            drawAxisLine();
+
+            if (!options.graphGridOverride && graph.fields.length > 0) {
+                drawGrid(graph.fields[0].curve, canvas.height * graph.height);
+            }
+
+            if (options.drawGradient && graphs.length > 1) {
+                // only draw the background if more than one graph set.
+                drawAxisBackground(canvas.height * graph.height);
+            }
+
+            for (let j = 0; j < graph.fields.length; j++) {
+                if (graphConfig.isGraphFieldHidden(i, j)) {
+                    continue;
+                }
+                const field = graph.fields[j];
+                plotField(
+                    chunks,
+                    startFrameIndex,
+                    {
+                        index: field.index,
+                        curve: field.curve,
+                        // adaptGraphs() gives every field a palette colour, never the -1 placeholder.
+                        color: field.color
+                            ? String(field.color)
+                            : GraphConfig.PALETTE[j % GraphConfig.PALETTE.length].color,
+                        lineWidth: field.lineWidth ? field.lineWidth : null,
+                    },
+                    (canvas.height * graph.height) / 2,
+                    graphConfig.highlightGraphIndex === i && graphConfig.highlightFieldIndex === j,
+                );
+            }
+
+            if (graph.label) {
+                drawAxisLabel(graph.label);
+            }
+
+            canvasContext.restore();
+        }
+
+        //Draw a bar highlighting the current time
+        function drawCurrentTimeBar() {
+            const centerX = canvas.width / 2;
+
+            canvasContext.strokeStyle = "rgba(255, 64, 64, 0.2)";
+            canvasContext.lineWidth = 11;
+
+            canvasContext.beginPath();
+            canvasContext.moveTo(centerX, 0);
+            canvasContext.lineTo(centerX, canvas.height);
+            canvasContext.stroke();
+
+            canvasContext.strokeStyle = "rgba(255, 128, 128, 0.7)";
+            canvasContext.lineWidth = 1;
+            canvasContext.beginPath();
+            canvasContext.moveTo(centerX, 0);
+            canvasContext.lineTo(centerX, canvas.height);
+            canvasContext.stroke();
+        }
+
+        /** The sticks, the frame label and the craft at the current time. */
+        function drawCenterFrame(centerFrame: LogFrame, chunks: Chunk[], startFrameIndex: number) {
+            // The sticks and the craft for the current craftType are made in the constructor.
+            if (options.drawSticks) {
+                sticks!.render(centerFrame, chunks, startFrameIndex, windowCenterTime);
+            }
+
+            if (options.drawTime) {
+                drawFrameLabel(
+                    centerFrame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_ITERATION],
+                    Math.round((windowCenterTime - flightLog.getMinTime()) / 1000),
+                );
+            }
+
+            if (options.craftType === "3D") {
+                craft3D!.render(centerFrame, flightLog.getMainFieldIndexes());
+            } else if (options.craftType === "2D") {
+                craft2D!.render(centerFrame, flightLog.getMainFieldIndexes());
+            }
+        }
+
+        function drawSelectedSpectrum() {
+            try {
+                // If we do not select a graph/field, then the analyser is hidden
+                const graph = graphs[graphConfig.selectedGraphIndex];
+                const field = graph.fields[graphConfig.selectedFieldIndex];
+                // A field the log lacks has no index; NaN compares and tests like undefined there.
+                analyser.plotSpectrum(Number(field.index), field.curve, field.friendlyName ?? null);
+            } catch (err) {
+                console.log(`Cannot plot analyser ${err}`);
+            }
+        }
+
+        function drawWindow(chunks: Chunk[]) {
+            const startFrameIndex = firstPlottedFrame(chunks);
+
+            // Plot graphs
+            for (let i = 0; i < graphs.length; i++) {
+                drawGraph(graphs[i], i, chunks, startFrameIndex);
+            }
+
+            //Draw a bar highlighting the current time if we are drawing any graphs
+            if (options.drawVerticalBar && graphs.length) {
+                drawCurrentTimeBar();
+            }
+
+            // Draw events - if option set or even if option is not set but there are graphs
+            // the option is for video export; if you export the video without any graphs set,
+            // then the events are not shown either (to keep the video clean. but
+            // if you export the video with a graph selected, then the events are also shown.
+
+            if (options.drawEvents || graphs.length > 0) {
+                drawEvents(chunks);
+            }
+
+            // Draw details at the current time
+            const centerFrame = flightLog.getSmoothedFrameAtTime(windowCenterTime);
+            if (centerFrame) {
+                drawCenterFrame(centerFrame, chunks, startFrameIndex);
+            }
+
+            // Draw Analyser
+            if (options.drawAnalyser && graphConfig.selectedFieldName) {
+                drawSelectedSpectrum();
+            }
+
+            //Draw Watermark
+            if (options.drawWatermark && watermarkLogo) {
+                drawWaterMark(watermarkLogo);
+            }
+
+            //Draw Lap Timer
+            if (options.drawLapTimer && lapTimer) {
+                drawLapTimer();
+            }
+        }
+
+        this.render = function (windowCenterTimeMicros) {
+            windowCenterTime = windowCenterTimeMicros;
+            windowStartTime = windowCenterTime - windowWidthMicros / 2;
+            windowEndTime = windowStartTime + windowWidthMicros;
+
+            eraseBackground();
 
             const chunks = flightLog.getSmoothedChunksInTimeRange(windowStartTime, windowEndTime);
-            let startFrameIndex, i, j;
-
             if (chunks.length) {
-                //Find the first sample that lies inside the window
-                for (startFrameIndex = 0; startFrameIndex < chunks[0].frames.length; startFrameIndex++) {
-                    if (
-                        chunks[0].frames[startFrameIndex][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] >=
-                        windowStartTime
-                    ) {
-                        break;
-                    }
-                }
-
-                // Pick the sample before that to begin plotting from
-                if (startFrameIndex > 0) {
-                    startFrameIndex--;
-                }
-
-                // Plot graphs
-                for (i = 0; i < graphs.length; i++) {
-                    const graph = graphs[i];
-
-                    canvasContext.save();
-
-                    canvasContext.translate(0, canvas.height * graph.y);
-
-                    drawAxisLine();
-
-                    if (!options.graphGridOverride && graph.fields.length > 0) {
-                        drawGrid(graph.fields[0].curve, canvas.height * graph.height);
-                    }
-
-                    if (options.drawGradient && graphs.length > 1) {
-                        // only draw the background if more than one graph set.
-                        drawAxisBackground(canvas.height * graph.height);
-                    }
-
-                    for (j = 0; j < graph.fields.length; j++) {
-                        if (graphConfig.isGraphFieldHidden(i, j)) {
-                            continue;
-                        }
-                        const field = graph.fields[j];
-                        plotField(
-                            chunks,
-                            startFrameIndex,
-                            field.index,
-                            field.curve,
-                            (canvas.height * graph.height) / 2,
-                            // adaptGraphs() gives every field a palette colour, never the -1 placeholder.
-                            field.color
-                                ? String(field.color)
-                                : GraphConfig.PALETTE[j % GraphConfig.PALETTE.length].color,
-                            field.lineWidth ? field.lineWidth : null,
-                            graphConfig.highlightGraphIndex === i && graphConfig.highlightFieldIndex === j,
-                        );
-                    }
-
-                    if (graph.label) {
-                        drawAxisLabel(graph.label);
-                    }
-
-                    canvasContext.restore();
-                }
-
-                //Draw a bar highlighting the current time if we are drawing any graphs
-                if (options.drawVerticalBar && graphs.length) {
-                    const centerX = canvas.width / 2;
-
-                    canvasContext.strokeStyle = "rgba(255, 64, 64, 0.2)";
-                    canvasContext.lineWidth = 11;
-
-                    canvasContext.beginPath();
-                    canvasContext.moveTo(centerX, 0);
-                    canvasContext.lineTo(centerX, canvas.height);
-                    canvasContext.stroke();
-
-                    canvasContext.strokeStyle = "rgba(255, 128, 128, 0.7)";
-                    canvasContext.lineWidth = 1;
-                    canvasContext.beginPath();
-                    canvasContext.moveTo(centerX, 0);
-                    canvasContext.lineTo(centerX, canvas.height);
-                    canvasContext.stroke();
-                }
-
-                // Draw events - if option set or even if option is not set but there are graphs
-                // the option is for video export; if you export the video without any graphs set,
-                // then the events are not shown either (to keep the video clean. but
-                // if you export the video with a graph selected, then the events are also shown.
-
-                if (options.drawEvents || (!options.drawEvents && graphs.length > 0)) {
-                    drawEvents(chunks);
-                }
-
-                // Draw details at the current time
-                const centerFrame = flightLog.getSmoothedFrameAtTime(windowCenterTime);
-
-                // The sticks and the craft for the current craftType are made in the constructor.
-                if (centerFrame) {
-                    if (options.drawSticks) {
-                        sticks!.render(centerFrame, chunks, startFrameIndex, windowCenterTime);
-                    }
-
-                    if (options.drawTime) {
-                        drawFrameLabel(
-                            centerFrame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_ITERATION],
-                            Math.round((windowCenterTime - flightLog.getMinTime()) / 1000),
-                        );
-                    }
-
-                    if (options.craftType === "3D") {
-                        craft3D!.render(centerFrame, flightLog.getMainFieldIndexes());
-                    } else if (options.craftType === "2D") {
-                        craft2D!.render(centerFrame, flightLog.getMainFieldIndexes());
-                    }
-                }
-
-                // Draw Analyser
-                if (options.drawAnalyser && graphConfig.selectedFieldName) {
-                    try {
-                        // If we do not select a graph/field, then the analyser is hidden
-                        const graph = graphs[graphConfig.selectedGraphIndex];
-                        const field = graph.fields[graphConfig.selectedFieldIndex];
-                        // A field the log lacks has no index; NaN compares and tests like undefined there.
-                        analyser.plotSpectrum(Number(field.index), field.curve, field.friendlyName ?? null);
-                    } catch (err) {
-                        console.log(`Cannot plot analyser ${err}`);
-                    }
-                }
-
-                //Draw Watermark
-                if (options.drawWatermark && watermarkLogo) {
-                    drawWaterMark(watermarkLogo);
-                }
-
-                //Draw Lap Timer
-                if (options.drawLapTimer && lapTimer) {
-                    drawLapTimer();
-                }
+                drawWindow(chunks);
             }
 
             if (drawInOutRegionEnabled) {
