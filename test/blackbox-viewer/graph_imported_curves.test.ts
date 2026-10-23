@@ -162,6 +162,19 @@ describe("ImportedCurves", () => {
             expect(changed).not.toHaveBeenCalled();
         });
 
+        it("keeps the range when a file fails part way through", async () => {
+            const alert = vi.fn();
+            vi.stubGlobal("alert", alert);
+            const curves = new ImportedCurves(() => {});
+            curves.addCurve(pts([0, -20], [100, -10]), "held");
+            // The row without a comma fails the parse after two good rows were read.
+            curves.importCurvesFromCSV([csv("broken.csv", "x,y\n0,-90\n500,40\n7\n")]);
+
+            await vi.waitFor(() => expect(alert).toHaveBeenCalledTimes(1));
+            expect(curves.curvesCount()).toBe(1);
+            expect([curves.minX, curves.maxX, curves.minY, curves.maxY]).toEqual([0, 100, -20, -10]);
+        });
+
         it("reads only as many files as there are free slots", async () => {
             const changed = vi.fn();
             const curves = new ImportedCurves(changed);

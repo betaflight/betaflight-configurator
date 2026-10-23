@@ -111,10 +111,6 @@ export class ImportedCurves {
                             const data = row.split(","),
                                 x = Number.parseFloat(data[0].trim()),
                                 y = Number.parseFloat(data[1].trim());
-                            this.minX = Math.min(x, this.minX);
-                            this.maxX = Math.max(x, this.maxX);
-                            this.minY = Math.min(y, this.minY);
-                            this.maxY = Math.max(y, this.maxY);
                             return {
                                 x: x,
                                 y: y,
@@ -127,6 +123,11 @@ export class ImportedCurves {
                             range: getCurveRange(curvesData),
                         };
                         _curvesData.push(curve);
+                        // Widen only once the whole file has parsed, so a file that fails leaves the range alone.
+                        this.minX = Math.min(curve.range.minX, this.minX);
+                        this.maxX = Math.max(curve.range.maxX, this.maxX);
+                        this.minY = Math.min(curve.range.minY, this.minY);
+                        this.maxY = Math.max(curve.range.maxY, this.maxY);
                         curvesChanged();
                     } catch (e) {
                         alert(`Curves data import error: ${(e as Error).message}`);
