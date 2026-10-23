@@ -12,7 +12,7 @@ import {
 import { useAppStore } from "./stores/app.js";
 import { useSettingsStore } from "./stores/settings.js";
 import { FlightLogParser } from "./flightlog_parser.js";
-import { blackboxTimeFromVideoTime, syncLogToVideo, setVideoTime, setVideoOffset } from "./video_handler.js";
+import { blackboxTimeFromVideoTime, syncLogToVideo, setVideoTime, setVideoOffset } from "./video_handler";
 import { updateValuesChart } from "./values_display.js";
 
 const SMALL_JUMP_TIME = 100 * 1000;

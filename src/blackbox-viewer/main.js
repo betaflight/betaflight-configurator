@@ -22,7 +22,7 @@ import {
     setVideoOutTime,
     loadVideo,
     reportVideoError,
-} from "./video_handler.js";
+} from "./video_handler";
 import { renderLogFileInfo, renderSelectedLogInfo, setSeekBarMode } from "./log_lifecycle.js";
 import {
     invalidateGraph,
