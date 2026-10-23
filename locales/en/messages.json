@@ -7061,6 +7061,18 @@
     "osdWarningFilterTune": {
         "message": "FILTER TUNE state: HOVER, n/60, READY, SAVED, MORE n/60, SHORT, NO MAP, NO RPM"
     },
+    "osdTextElementFilterTune": {
+        "message": "Filter tune progress"
+    },
+    "osdDescElementFilterTune": {
+        "message": "The autotune's block while the FILTER TUNE mode is on: a row per manoeuvre category it still needs data for (PROPWASH, FALL, PUNCH, LOOP, SPLIT, HOVER, SWEEP) with its percent, which blinks while events come in. A row drops once its category has enough; once all are in, the state word."
+    },
+    "osdTextElementMotorTempEst": {
+        "message": "Motor temperature (estimated)"
+    },
+    "osdDescElementMotorTempEst": {
+        "message": "Estimated winding temperature of each motor, from rpm, battery voltage and the motor-command noise index. Blinks above the warning threshold."
+    },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
     },

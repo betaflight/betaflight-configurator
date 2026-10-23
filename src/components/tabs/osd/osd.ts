@@ -1717,6 +1717,30 @@ OSD.loadDisplayFields = function () {
                 return `${FONT.symbol(SYM.SPEED)}a30${unit}`;
             },
         },
+        FILTER_TUNE: {
+            name: "FILTER_TUNE",
+            text: "osdTextElementFilterTune",
+            desc: "osdDescElementFilterTune",
+            defaultPosition: -1,
+            draw_order: 910,
+            positionable: true,
+            // a row per manoeuvre category the autotune still needs (the flight phase), its percent blinking at each event
+            preview: ["PROPWASH: 40%", "FALL: 75%", "LOOP: 16%", "SPLIT: 50%"],
+        },
+        MOTOR_TEMP_EST: {
+            name: "MOTOR_TEMP_EST",
+            text: "osdTextElementMotorTempEst",
+            desc: "osdDescElementMotorTempEst",
+            defaultPosition: -1,
+            draw_order: 905,
+            positionable: true,
+            preview(osdData) {
+                // per-motor estimated winding temperatures, unit symbol once at the end (unit_mode 0 = imperial)
+                const imperial = osdData.unit_mode === 0;
+                const t = (c: number) => String(imperial ? Math.floor((c * 9) / 5 + 32) : c).padStart(3);
+                return `M${FONT.symbol(SYM.TEMPERATURE)}${t(48)}${t(51)}${t(47)}${t(52)}${FONT.symbol(imperial ? SYM.TEMP_F : SYM.TEMP_C)}`;
+            },
+        },
     };
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
@@ -1992,6 +2016,13 @@ function chooseDisplayFields(fcStore: FcStore) {
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+        }
+        // The motor thermal estimator and the filter autotune's block follow AIRSPEED, as in the firmware enum,
+        // which keeps them in every build (positions never depend on compile options). Listed always: gating
+        // MOTOR_TEMP_EST on the stator geometry would shift FILTER_TUNE onto the wrong position, and a firmware
+        // without them sends fewer positions, so it never reaches these entries.
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.MOTOR_TEMP_EST, F.FILTER_TUNE]);
         }
     }
 }
