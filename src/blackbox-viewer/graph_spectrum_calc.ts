@@ -234,10 +234,8 @@ function averageVsBins(bins: VsBins, length: number): void {
 
 /** An eRPM value clamped to 0..the eRPM of MAX_RPM_HZ_VALUE. */
 function clampRpm(value: number, maxRPM: number): number {
-    if (value > maxRPM) {
-        return maxRPM;
-    }
-    return value < 0 ? 0 : value;
+    // Math.max() differs from the old `< 0 ? 0 :` only for -0, which integer log values never are.
+    return value > maxRPM ? maxRPM : Math.max(value, 0);
 }
 
 /** Welch's scale for the PSD: by the window's power ("density") or its sum ("spectrum"). */
@@ -277,6 +275,48 @@ function binPower(fftOutput: Float64Array[], i: number, scale: number): number {
         total += mirrored ? p * 2 : p;
     }
     return total;
+}
+
+/**
+ * Widens `range` to the average of every VS field over every chunk (chunks of `chunk.length`
+ * samples, `chunk.step` apart, while one more sample follows the chunk).
+ */
+function vsChunkRange(
+    vsValues: Float64Array[],
+    samples: SampleRun,
+    chunk: { length: number; step: number },
+    range: ValueRange,
+): ValueRange {
+    let { min, max } = range;
+    for (let start = samples.start; start + chunk.length < samples.length; start += chunk.step) {
+        for (const vsValueArray of vsValues) {
+            // Find min max average of the VS values in the chunk
+            const avgVsValue = chunkAverage(vsValueArray, { start, length: chunk.length });
+            max = Math.max(max, avgVsValue);
+            min = Math.min(min, avgVsValue);
+        }
+    }
+    return { min, max };
+}
+
+/**
+ * Rejects any non-usable range: non-finite bounds (empty/too-short window leaves the
+ * Infinity/-Infinity defaults, or a buffer overflow would leave NaN) and the
+ * degenerate equal-bounds case (constant VS value → maxValue - minValue === 0 →
+ * divide-by-zero in the bin index), falling back to a safe 0..100 range.
+ */
+function usableVsRange(range: ValueRange): ValueRange {
+    const { min, max } = range;
+    if (!Number.isFinite(min) || !Number.isFinite(max) || min >= max) {
+        if (min === Infinity) {
+            // this should never happen
+            console.warn("Invalid minimum value");
+        } else {
+            console.warn("Invalid value range for spectrum binning (min %s, max %s)", min, max);
+        }
+        return { min: 0, max: 100 };
+    }
+    return range;
 }
 
 /** The calculation behind the spectrum analyser; one log at a time, set by initialize(). */
@@ -742,35 +782,18 @@ GraphSpectrumCalc._getFlightSamplesFreqVsX = function (
 
     // Calculate min max average of the VS values in the chunk what will used by spectrum data definition
     const fftChunkLength = Math.round((this._blackBoxRate * FREQ_VS_THR_CHUNK_TIME_MS) / 1000);
-    const fftChunkWindow = Math.round(fftChunkLength / FREQ_VS_THR_WINDOW_DIVISOR);
-    for (let fftChunkIndex = 0; fftChunkIndex + fftChunkLength < samplesCount; fftChunkIndex += fftChunkWindow) {
-        for (const vsValueArray of vsValues) {
-            // Find min max average of the VS values in the chunk
-            const avgVsValue = chunkAverage(vsValueArray, { start: fftChunkIndex, length: fftChunkLength });
-            maxValue = Math.max(maxValue, avgVsValue);
-            minValue = Math.min(minValue, avgVsValue);
-        }
-    }
+    const range = vsChunkRange(
+        vsValues,
+        { start: 0, length: samplesCount },
+        { length: fftChunkLength, step: Math.round(fftChunkLength / FREQ_VS_THR_WINDOW_DIVISOR) },
+        { min: minValue, max: maxValue },
+    );
 
     // Use small top margin for RPM axis only. Because it has bad axis view for throttle
     if (vsFieldNames === FIELD_RPM_NAMES) {
-        maxValue += ((maxValue - minValue) * RPM_AXIS_TOP_MARGIN_PERCENT) / 100;
+        range.max += ((range.max - range.min) * RPM_AXIS_TOP_MARGIN_PERCENT) / 100;
     }
-
-    // Reject any non-usable range: non-finite bounds (empty/too-short window leaves the
-    // Infinity/-Infinity defaults, or a buffer overflow would leave NaN) and the
-    // degenerate equal-bounds case (constant VS value → maxValue - minValue === 0 →
-    // divide-by-zero in the bin index). Fall back to a safe 0..100 range.
-    if (!Number.isFinite(minValue) || !Number.isFinite(maxValue) || minValue >= maxValue) {
-        if (minValue === Infinity) {
-            // this should never happen
-            console.warn("Invalid minimum value");
-        } else {
-            console.warn("Invalid value range for spectrum binning (min %s, max %s)", minValue, maxValue);
-        }
-        minValue = 0;
-        maxValue = 100;
-    }
+    ({ min: minValue, max: maxValue } = usableVsRange(range));
 
     const slicedVsValues = [];
     for (const vsValueArray of vsValues) {
