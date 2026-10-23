@@ -42,7 +42,7 @@ export class ExpoCurve {
 
     constructor(offset: number, power: number, inputRange: number, outputRange: number, steps?: number) {
         // If steps argument isn't supplied, use a reasonable default
-        const stepCount = steps === undefined ? 12 : steps;
+        const stepCount = steps ?? 12;
         let curve: number[], inputScale: number;
         const rawInputScale = outputRange / inputRange;
 
