@@ -24,7 +24,7 @@ import { ref, shallowRef, computed, nextTick } from "vue";
 import { useSettingsStore } from "./settings.js";
 import { useLogStore } from "./log";
 import { PrefStorage } from "../pref_storage";
-import type { FlightLogGrapher } from "../grapher.js";
+import type { FlightLogGrapher } from "../grapher";
 import type { GraphConfig, GraphFieldConfig, GraphPanelConfig } from "../graph_config";
 import type { MapGrapher } from "../graph_map";
 import type { SeekBar } from "../seekbar.js";
