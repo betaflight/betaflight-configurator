@@ -173,8 +173,8 @@ export function bootstrapViewer() {
         );
         graphStore.graph = graph;
 
-        setVideoInTime(false);
-        setVideoOutTime(false);
+        setVideoInTime(null);
+        setVideoOutTime(null);
 
         graphStore.activeGraphConfig.adaptGraphs(logStore.flightLog, graphStore.graphConfig);
 

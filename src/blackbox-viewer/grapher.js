@@ -12,6 +12,7 @@ import { leftPad, formatTime } from "./tools";
 import { useGraphStore } from "./stores/graph.js";
 import { useWorkspaceStore } from "./stores/workspace.js";
 import { ThemeColors } from "./theme_colors";
+import { withInTime, withOutTime } from "./marked_range";
 
 function extend(base, top) {
     return { ...base, ...top };
@@ -61,8 +62,8 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
     let windowWidthMicros = WINDOW_WIDTH_MICROS_DEFAULT,
         idents,
         graphs = [],
-        inTime = false,
-        outTime = false,
+        inTime = null,
+        outTime = null,
         drawInOutRegionEnabled = true,
         lastMouseX,
         sticks = null,
@@ -713,36 +714,36 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
      *  Mark the in/out of the video region (if present) and dim the view outside this region
      */
     function drawInOutRegion() {
-        if ((inTime !== false && inTime >= windowStartTime) || (outTime !== false && outTime < windowEndTime)) {
-            const inMarkerX = inTime === false ? false : timeToCanvasX(inTime),
-                outMarkerX = outTime === false ? false : timeToCanvasX(outTime);
+        if ((inTime !== null && inTime >= windowStartTime) || (outTime !== null && outTime < windowEndTime)) {
+            const inMarkerX = inTime === null ? null : timeToCanvasX(inTime),
+                outMarkerX = outTime === null ? null : timeToCanvasX(outTime);
 
             canvasContext.fillStyle = "rgba(0,0,0,0.8)";
 
-            if (inTime !== false && inTime >= windowStartTime) {
+            if (inTime !== null && inTime >= windowStartTime) {
                 canvasContext.fillRect(0, 0, Math.min(inMarkerX, canvas.width), canvas.height);
             }
 
-            if (outTime !== false && outTime < windowEndTime) {
+            if (outTime !== null && outTime < windowEndTime) {
                 const outMarkerXClipped = Math.max(outMarkerX, 0);
                 canvasContext.fillRect(outMarkerXClipped, 0, canvas.width - outMarkerXClipped, canvas.height);
             }
 
             if (
-                (inMarkerX !== false && inMarkerX >= 0 && inMarkerX <= canvas.width) ||
-                (outMarkerX !== false && outMarkerX >= 0 && outMarkerX <= canvas.width)
+                (inMarkerX !== null && inMarkerX >= 0 && inMarkerX <= canvas.width) ||
+                (outMarkerX !== null && outMarkerX >= 0 && outMarkerX <= canvas.width)
             ) {
                 canvasContext.strokeStyle = ThemeColors.getGraphText();
                 canvasContext.lineWidth = 4;
 
-                if (inMarkerX !== false && inMarkerX >= 0 && inMarkerX <= canvas.width) {
+                if (inMarkerX !== null && inMarkerX >= 0 && inMarkerX <= canvas.width) {
                     canvasContext.beginPath();
                     canvasContext.moveTo(inMarkerX, 0);
                     canvasContext.lineTo(inMarkerX, canvas.height);
                     canvasContext.stroke();
                 }
 
-                if (outMarkerX !== false && outMarkerX >= 0 && outMarkerX <= canvas.width) {
+                if (outMarkerX !== null && outMarkerX >= 0 && outMarkerX <= canvas.width) {
                     canvasContext.beginPath();
                     canvasContext.moveTo(outMarkerX, 0);
                     canvasContext.lineTo(outMarkerX, canvas.height);
@@ -1086,21 +1087,23 @@ export function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, cr
     };
 
     this.setInTime = function (time) {
-        inTime = time;
+        const range = withInTime({ in: inTime, out: outTime }, time);
+        inTime = range.in;
         analyser.setInTime(inTime);
 
-        if (outTime <= inTime) {
-            outTime = false;
+        if (range.out !== outTime) {
+            outTime = range.out;
             analyser.setOutTime(outTime);
         }
     };
 
     this.setOutTime = function (time) {
-        outTime = time;
+        const range = withOutTime({ in: inTime, out: outTime }, time);
+        outTime = range.out;
         analyser.setOutTime(outTime);
 
-        if (inTime >= outTime) {
-            inTime = false;
+        if (range.in !== inTime) {
+            inTime = range.in;
             analyser.setInTime(inTime);
         }
     };

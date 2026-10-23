@@ -940,10 +940,10 @@ GraphConfig.getMinMaxForFieldDuringWindowTimeInterval = function (flightLog, log
 GraphConfig.getMinMaxForFieldDuringMarkedInterval = function (flightLog, logGrapher, fieldName) {
     let minTime = logGrapher.getMarkedInTime();
     let maxTime = logGrapher.getMarkedOutTime();
-    if (minTime === false) {
+    if (minTime === null) {
         minTime = flightLog.getMinTime();
     }
-    if (maxTime === false) {
+    if (maxTime === null) {
         maxTime = flightLog.getMaxTime();
     }
 

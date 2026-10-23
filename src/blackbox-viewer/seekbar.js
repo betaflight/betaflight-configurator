@@ -43,8 +43,8 @@ export function SeekBar(canvas) {
     const canvasContext = canvas.getContext("2d");
     const background = document.createElement("canvas");
     const backgroundContext = background.getContext("2d");
-    let inTime = false;
-    let outTime = false;
+    let inTime = null;
+    let outTime = null;
     let backgroundValid = false;
     let dirtyRegion = false;
     //Current time cursor:
@@ -263,14 +263,14 @@ export function SeekBar(canvas) {
             }
 
             // Paint in/out region
-            if (inTime !== false || outTime !== false) {
+            if (inTime !== null || outTime !== null) {
                 backgroundContext.fillStyle = getOutsideExportRangeStyle();
 
-                if (inTime !== false) {
+                if (inTime !== null) {
                     backgroundContext.fillRect(0, 0, (inTime - min) / pixelTimeStep + BAR_INSET, canvas.height);
                 }
 
-                if (outTime !== false) {
+                if (outTime !== null) {
                     const barStartX = (outTime - min) / pixelTimeStep + BAR_INSET;
 
                     backgroundContext.fillRect(barStartX, 0, canvas.width - barStartX, canvas.height);
