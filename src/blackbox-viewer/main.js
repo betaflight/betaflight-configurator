@@ -11,7 +11,7 @@ import { FlightLog } from "./flightlog.js";
 import { stringTimetoMsec, validate, mouseNotification } from "./tools.js";
 import { restorePenDefaults, changePenSmoothing, changePenZoom, changePenExpo } from "./pen_adjustment.js";
 import { createKeydownHandler, createDropdownSpaceGuard } from "./keyboard_handler.js";
-import { upgradeWorkspaceFormat, saveWorkspaces, loadWorkspaces } from "./workspace_io.js";
+import { upgradeWorkspaceFormat, saveWorkspaces, loadWorkspaces } from "./workspace_io";
 import { exportCsv, exportGpx, exportSpectrumToCsv } from "./export_utils.js";
 import { cancelActiveVideoExport } from "./video_export.js";
 import {

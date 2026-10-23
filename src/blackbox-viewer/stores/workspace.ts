@@ -21,9 +21,18 @@
 
 import { defineStore } from "pinia";
 import { ref, shallowRef } from "vue";
+import type { GraphPanelConfig } from "./graph";
+
+export interface Workspace {
+    title: string;
+    graphConfig: GraphPanelConfig[] | null;
+}
+
+/** Slots 0-9; an empty slot is null, or a hole in a list that was never filled. */
+export type WorkspaceList = Array<Workspace | null | undefined>;
 
 export const useWorkspaceStore = defineStore("workspace", () => {
-    const workspaceGraphConfigs = ref<Array<{ title: string; [key: string]: unknown } | undefined>>([]);
+    const workspaceGraphConfigs = ref<WorkspaceList>([]);
     const activeWorkspace = ref(1);
     const bookmarkTimes = ref<Array<number | null | undefined>>([]);
 
@@ -31,7 +40,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         activeWorkspace.value = id;
     }
 
-    function setWorkspaceGraphConfigs(configs: Array<{ title: string; [key: string]: unknown } | undefined>) {
+    function setWorkspaceGraphConfigs(configs: WorkspaceList) {
         workspaceGraphConfigs.value = configs;
     }
 
