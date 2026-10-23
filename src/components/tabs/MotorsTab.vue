@@ -290,7 +290,7 @@
                             </SettingRow>
                             <SettingRow
                                 v-if="protocolConfigured && rpmFeaturesVisible"
-                                :label="$t('configurationMotorPolesLong')"
+                                :label="$t('configurationMotorMagnets')"
                                 :help="$t('configurationMotorPolesHelp')"
                                 fullWidth
                             >

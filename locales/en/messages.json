@@ -1749,14 +1749,17 @@
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle (Highest ESC value when armed)"
     },
+    "configurationMotorMagnets": {
+        "message": "Magnets (poles)"
+    },
     "configurationMotorKv": {
-        "message": "Motor KV"
+        "message": "KV"
     },
     "configurationMotorKvHelp": {
         "message": "Motor velocity constant from the motor label (rpm per volt). Used by the RPM limiter and the motor thermal estimator."
     },
     "configurationMotorStator": {
-        "message": "Motor stator size"
+        "message": "Stator size"
     },
     "configurationMotorStatorHelp": {
         "message": "Stator size as printed on the motor, e.g. 2207 or 2203.5 (diameter 22 mm, height 3.5 mm). Used by the motor thermal estimator to scale heat capacity and cooling."
@@ -1765,7 +1768,7 @@
         "message": "Advanced motor settings"
     },
     "configurationMotorBrand": {
-        "message": "Motor"
+        "message": "Brand / model"
     },
     "configurationMotorBrandHelp": {
         "message": "Pick the brand and model to fill in the KV, stator size and magnet count. Values can still be edited below; Generic: a motor not in the list, entered by hand."
