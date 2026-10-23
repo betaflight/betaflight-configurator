@@ -757,10 +757,7 @@ GraphSpectrumCalc._getFlightSamplesFreqVsX = function (
     // A _blackBoxRate estimate can undershoot the actual frame count for long logs,
     // overflowing the buffers; the out-of-range reads then poisoned minValue/maxValue
     // with NaN and crashed the binning in _dataLoadFrequencyVsX (issue #922).
-    let frameCount = 0;
-    for (const chunk of allChunks) {
-        frameCount += chunk.frames.length;
-    }
+    const frameCount = allChunks.reduce((count, chunk) => count + chunk.frames.length, 0);
 
     const samples = new Float64Array(frameCount);
     const vsValues = new Array(vsIndexes.length).fill(null).map(() => new Float64Array(frameCount));
@@ -790,15 +787,12 @@ GraphSpectrumCalc._getFlightSamplesFreqVsX = function (
     );
 
     // Use small top margin for RPM axis only. Because it has bad axis view for throttle
-    if (vsFieldNames === FIELD_RPM_NAMES) {
+    if (isRpm) {
         range.max += ((range.max - range.min) * RPM_AXIS_TOP_MARGIN_PERCENT) / 100;
     }
     ({ min: minValue, max: maxValue } = usableVsRange(range));
 
-    const slicedVsValues = [];
-    for (const vsValueArray of vsValues) {
-        slicedVsValues.push(vsValueArray.slice(0, samplesCount));
-    }
+    const slicedVsValues = vsValues.map((vsValueArray) => vsValueArray.slice(0, samplesCount));
 
     return {
         samples: samples.slice(0, samplesCount),
