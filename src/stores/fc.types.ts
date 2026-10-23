@@ -463,6 +463,8 @@ export interface MotorConfig {
     use_dshot_telemetry: boolean;
     use_esc_sensor: boolean;
     motor_kv: number;
+    /** Bidirectional DShot telemetry rotation: 0 off, 1 on, 2 auto (API 1.50). */
+    dshot_bidir_rotate: number;
 }
 
 // Reset as 8 undefined slots; MSP_MOTOR / MSP_SERVO fill as many as the FC reports.

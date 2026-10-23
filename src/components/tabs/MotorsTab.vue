@@ -123,6 +123,19 @@
                                 <USwitch v-model="useDshotTelemetry" size="xs" />
                             </SettingRow>
                             <SettingRow
+                                v-if="dshotBidirRotateVisible"
+                                :label="$t('configurationDshotBidirRotate')"
+                                :help="$t('configurationDshotBidirRotateHelp')"
+                                fullWidth
+                            >
+                                <USelect
+                                    v-model="fcStore.motorConfig.dshot_bidir_rotate"
+                                    :items="dshotBidirRotateItems"
+                                    size="xs"
+                                    class="min-w-32"
+                                />
+                            </SettingRow>
+                            <SettingRow
                                 v-if="protocolConfigured && rpmFeaturesVisible"
                                 :label="$t('configurationMotorPolesLong')"
                                 :help="$t('configurationMotorPolesHelp')"
@@ -588,7 +601,8 @@ import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { runTabLoad } from "@/composables/useTabLoad";
-import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
+import { API_VERSION_1_47, API_VERSION_1_49, API_VERSION_1_50 } from "@/js/data_storage";
+import { i18n } from "@/js/localization";
 
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
@@ -858,6 +872,19 @@ const useDshotTelemetry = computed({
         fcStore.motorConfig.use_dshot_telemetry = !!val;
     },
 });
+
+// Bidirectional DShot telemetry rotation (API 1.50): decode one motor's telemetry per update instead of all of them
+const dshotBidirRotateVisible = computed(
+    () =>
+        digitalProtocolConfigured.value &&
+        fcStore.motorConfig.use_dshot_telemetry &&
+        semver.gte(fcStore.config.apiVersion, API_VERSION_1_50),
+);
+const dshotBidirRotateItems = computed(() => [
+    { label: i18n.getMessage("configurationDshotBidirRotateOff"), value: 0 },
+    { label: i18n.getMessage("configurationDshotBidirRotateOn"), value: 1 },
+    { label: i18n.getMessage("configurationDshotBidirRotateAuto"), value: 2 },
+]);
 
 // Watch for bidirectional DShot changes
 watch(
