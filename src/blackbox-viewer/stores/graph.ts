@@ -25,7 +25,7 @@ import { useSettingsStore } from "./settings.js";
 import { useLogStore } from "./log";
 import { PrefStorage } from "../pref_storage";
 import type { FlightLogGrapher } from "../grapher";
-import type { GraphConfig, GraphFieldConfig, GraphPanelConfig } from "../graph_config";
+import type { GraphConfig, GraphPanelConfig } from "../graph_config";
 import type { MapGrapher } from "../graph_map";
 import type { SeekBar } from "../seekbar.js";
 
@@ -35,7 +35,7 @@ export type GrapherInstance = InstanceType<typeof FlightLogGrapher>;
 export type SeekBarMode = "avgThrottle" | "maxRC" | "maxMotorDiff";
 export type GraphConfigInstance = InstanceType<typeof GraphConfig>;
 
-export type { GraphFieldConfig, GraphPanelConfig };
+export type { GraphFieldConfig, GraphPanelConfig } from "../graph_config";
 
 export interface LegendField {
     name: string;
