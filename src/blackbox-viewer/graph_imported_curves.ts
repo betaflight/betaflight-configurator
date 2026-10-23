@@ -91,11 +91,9 @@ export class ImportedCurves {
                 if (importsLeft-- === 0) {
                     break;
                 }
-                const reader = new FileReader();
-                reader.onload = () => {
+                const onText = (text: string) => {
                     try {
-                        // readAsText() always yields a string
-                        const stringRows = (reader.result as string).split("\n");
+                        const stringRows = text.split("\n");
 
                         const header = stringRows[0].split(",");
                         if (header.length !== 2 || header[0].trim() !== "x" || header[1].trim() !== "y") {
@@ -136,7 +134,8 @@ export class ImportedCurves {
                     }
                 };
 
-                reader.readAsText(file);
+                // A file that cannot be read is skipped, as it always was.
+                file.text().then(onText, () => {});
             }
         };
 

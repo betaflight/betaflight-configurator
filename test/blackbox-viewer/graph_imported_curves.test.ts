@@ -175,6 +175,24 @@ describe("ImportedCurves", () => {
             expect([curves.minX, curves.maxX, curves.minY, curves.maxY]).toEqual([0, 100, -20, -10]);
         });
 
+        it("skips a file that cannot be read", async () => {
+            const alert = vi.fn();
+            vi.stubGlobal("alert", alert);
+            const changed = vi.fn();
+            const curves = new ImportedCurves(changed);
+            // Only name and text() are read.
+            const unreadable = {
+                name: "gone.csv",
+                text: () => Promise.reject(new DOMException("gone", "NotReadableError")),
+            } as unknown as File;
+
+            curves.importCurvesFromCSV([unreadable, csv("ok.csv", "x,y\n1,2\n")]);
+
+            await vi.waitFor(() => expect(changed).toHaveBeenCalledTimes(1));
+            expect(curves.getCurve(0).name).toBe("ok");
+            expect(alert).not.toHaveBeenCalled();
+        });
+
         it("reads only as many files as there are free slots", async () => {
             const changed = vi.fn();
             const curves = new ImportedCurves(changed);
