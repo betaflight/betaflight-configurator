@@ -27,7 +27,7 @@ import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
 import { RATES_TYPE } from "./flightlog_fielddefs";
 import { escapeRegExp } from "./tools";
 import { debugContextFromSysConfig, getDebugFieldAxis } from "../js/utils/debugModes";
-import type { FieldRange, FlightLog } from "./flightlog";
+import type { DisabledFields, FieldRange, FlightLog } from "./flightlog";
 
 /**
  * A field's curve: how its values are scaled onto the graph.
@@ -494,6 +494,66 @@ const adaptField = function (flightLog: FlightLog, field: GraphFieldConfig, forc
 /**
  * The graphs on screen: their fields, colours and curves, and the listeners told when they change.
  */
+/**
+ * Resolve the curve for a "debug[N]" field.
+ *
+ * Called from getDefaultCurveForField inside the try-catch so that any thrown
+ * value is caught and replaced with the -500…500 fallback exactly as before.
+ */
+function debugFieldCurve(
+    flightLog: FlightLog,
+    fieldName: string,
+    curves: CurveHelpers,
+    debugModeCurve: (debugModeName: string | undefined) => DefaultCurve | null,
+    buildFallback: (...fieldNames: string[]) => DefaultCurve,
+    maxAccelerometerG: () => number,
+): DefaultCurve | null {
+    const debugContext = debugContextFromSysConfig(flightLog.getSysConfig());
+    const debugModeName = debugContext.modeName;
+
+    // Firmware annotates what each debug field holds - in the log's own
+    // header where it has the flash for it, otherwise through the generated
+    // table - so the axis follows from the field's own shape and
+    // DEBUG_MODE_CURVES is never consulted. That table remains for logs
+    // recorded before the annotations.
+    const axis = getDebugFieldAxis(fieldName, debugContext);
+
+    // A bounded unit or a device-native one fixes the axis outright, and the
+    // firmware is a better authority on that than any table here.
+    if (axis?.range) {
+        return minMaxPower1(axis.range.min, axis.range.max);
+    }
+    if (axis?.dynamic === "gyro") {
+        return curves.gyro();
+    }
+    if (axis?.dynamic === "acc") {
+        return minMaxPower1(-maxAccelerometerG(), maxAccelerometerG());
+    }
+
+    // An unbounded unit says only which fields share an axis, not how wide it
+    // should be, so a curated range still wins where somebody wrote one.
+    const curve = debugModeCurve(debugModeName);
+    if (curve) {
+        return curve;
+    }
+
+    if (axis) {
+        // The group names every field firmware writes in that unit, but a
+        // log only holds the fields it was configured to record; asking for
+        // an absent one yields the generic fallback range.
+        if (axis.fit === undefined) {
+            // A "throttle" axis names no group; reading its absent list threw,
+            // and the catch in getDefaultCurveForField took over.
+            throw new TypeError(`${fieldName} has no field group`);
+        }
+        const logged = axis.fit.filter((name) => flightLog.getMainFieldIndexByName?.(name) !== undefined);
+        return buildFallback(...(logged.length > 0 ? logged : [fieldName]));
+    }
+
+    // Neither the firmware nor the table knows this field: the caller scales it to its own range.
+    return null;
+}
+
 export class GraphConfig {
     declare selectedFieldName: string | null;
     declare selectedGraphIndex: number;
@@ -744,11 +804,11 @@ export class GraphConfig {
             let min = Number.MAX_VALUE,
                 max = -Number.MAX_VALUE;
 
-            for (const fieldName of fieldNames) {
-                const mm = flightLog.getMinMaxForFieldDuringAllTime(fieldName);
+            for (const logField of fieldNames) {
+                const mm = flightLog.getMinMaxForFieldDuringAllTime(logField);
                 // A field the log lacks has no range; reading .min of it threw, and the catch below took over.
                 if (mm === undefined) {
-                    throw new TypeError(`${fieldName} has no range`);
+                    throw new TypeError(`${logField} has no range`);
                 }
                 min = Math.min(mm.min, min);
                 max = Math.max(mm.max, max);
@@ -833,173 +893,77 @@ export class GraphConfig {
             return typeof spec === "function" ? spec(curves) : null;
         };
 
+        const fixed = (min: number, max: number) => () => minMaxPower1(min, max);
+        // The first rule whose test matches decides, in the order of the original if/else-if chain:
+        // the gyro-scaled rule must come before `axis.+[`, which also matches axisError[...].
+        const FIELD_RULES: [test: () => boolean, curve: () => DefaultCurve][] = [
+            [
+                () =>
+                    /^motor\[/.test(fieldName) ||
+                    fieldName === "rcCommands[3]" || // Throttle scaled
+                    /^rssi.*/.test(fieldName) ||
+                    fieldName === "pitot[0]",
+                fixed(0, 100),
+            ],
+            [
+                () => /^eRPM\[/.test(fieldName),
+                () =>
+                    getCurveForMinMaxFields(
+                        "eRPM[0]",
+                        "eRPM[1]",
+                        "eRPM[2]",
+                        "eRPM[3]",
+                        "eRPM[4]",
+                        "eRPM[5]",
+                        "eRPM[6]",
+                        "eRPM[7]",
+                    ),
+            ],
+            [() => /^accSmooth\[/.test(fieldName), fixed(-16, 16)],
+            [
+                () =>
+                    /^axisError\[/.test(fieldName) || // Gyro, Gyro Scaled, RC Command Scaled and axisError
+                    /^rcCommands\[/.test(fieldName) || // These use the same scaling as they are in the
+                    /^gyroADC\[/.test(fieldName) || // same range.
+                    /^gyroUnfilt\[/.test(fieldName),
+                () => curves.gyro(),
+            ],
+            [() => /^axis.+\[/.test(fieldName) || fieldName === "GPS_speed", fixed(-100, 100)],
+            [() => /^servo\[/.test(fieldName) || /^rcCommand\[/.test(fieldName), fixed(1000, 2000)],
+            [
+                () => fieldName === "heading[2]" || fieldName === "GPS_ground_course" || fieldName === "gpsHomeAzimuth",
+                fixed(0, 360),
+            ],
+            [() => /^heading\[/.test(fieldName), fixed(-180, 180)],
+            [() => /^sonar.*/.test(fieldName), fixed(0, 400)],
+            [() => fieldName === "GPS_numSat", fixed(0, 40)],
+            [() => /^GPS_velned\[/.test(fieldName), fixed(-25, 25)],
+            [() => fieldName === "gpsTrajectoryTiltAngle", fixed(-90, 90)],
+            [() => fieldName === "pitot[1]", fixed(0, 1000)],
+        ];
+
         try {
-            if (
-                /^motor\[/.exec(fieldName) != null ||
-                fieldName === "rcCommands[3]" || // Throttle scaled
-                /^rssi.*/.exec(fieldName) != null ||
-                fieldName === "pitot[0]"
-            ) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: 0,
-                        max: 100,
-                    },
-                };
-            } else if (/^eRPM\[/.exec(fieldName) != null) {
-                return getCurveForMinMaxFields(
-                    "eRPM[0]",
-                    "eRPM[1]",
-                    "eRPM[2]",
-                    "eRPM[3]",
-                    "eRPM[4]",
-                    "eRPM[5]",
-                    "eRPM[6]",
-                    "eRPM[7]",
+            const rule = FIELD_RULES.find(([test]) => test());
+            if (rule) {
+                return rule[1]();
+            }
+
+            // Debug-mode field handling — extracted to keep this function flat.
+            if (/^debug.*/.test(fieldName) && sysConfig.debug_mode != null) {
+                const debugCurve = debugFieldCurve(
+                    flightLog,
+                    fieldName,
+                    curves,
+                    debugModeCurve,
+                    getCurveForMinMaxFields,
+                    maxAccelerometerG,
                 );
-            } else if (/^accSmooth\[/.exec(fieldName) != null) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: -16,
-                        max: 16,
-                    },
-                };
-            } else if (
-                /^axisError\[/.exec(fieldName) != null || // Gyro, Gyro Scaled, RC Command Scaled and axisError
-                /^rcCommands\[/.exec(fieldName) != null || // These use the same scaling as they are in the
-                /^gyroADC\[/.exec(fieldName) != null || // same range.
-                /^gyroUnfilt\[/.exec(fieldName) != null
-            ) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: -maxDegreesSecond(gyroScaleMargin),
-                        max: maxDegreesSecond(gyroScaleMargin),
-                    },
-                };
-            } else if (/^axis.+\[/.exec(fieldName) != null || fieldName === "GPS_speed") {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: -100,
-                        max: 100,
-                    },
-                };
-            } else if (/^servo\[/.exec(fieldName) != null || /^rcCommand\[/.exec(fieldName) != null) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: 1000,
-                        max: 2000,
-                    },
-                };
-            } else if (
-                fieldName === "heading[2]" ||
-                fieldName === "GPS_ground_course" ||
-                fieldName === "gpsHomeAzimuth"
-            ) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: 0,
-                        max: 360,
-                    },
-                };
-            } else if (/^heading\[/.exec(fieldName) != null) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: -180,
-                        max: 180,
-                    },
-                };
-            } else if (/^sonar.*/.exec(fieldName) != null) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: 0,
-                        max: 400,
-                    },
-                };
-            } else if (fieldName === "GPS_numSat") {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: 0,
-                        max: 40,
-                    },
-                };
-            } else if (/^GPS_velned\[/.exec(fieldName) != null) {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: -25,
-                        max: 25,
-                    },
-                };
-            } else if (fieldName === "gpsTrajectoryTiltAngle") {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: -90,
-                        max: 90,
-                    },
-                };
-            } else if (fieldName === "pitot[1]") {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: 0,
-                        max: 1000,
-                    },
-                };
-            } else if (/^debug.*/.exec(fieldName) != null && sysConfig.debug_mode != null) {
-                const debugContext = debugContextFromSysConfig(sysConfig);
-                const debugModeName = debugContext.modeName;
-
-                // Firmware annotates what each debug field holds - in the log's own
-                // header where it has the flash for it, otherwise through the generated
-                // table - so the axis follows from the field's own shape and
-                // DEBUG_MODE_CURVES is never consulted. That table remains for logs
-                // recorded before the annotations.
-                const axis = getDebugFieldAxis(fieldName, debugContext);
-
-                // A bounded unit or a device-native one fixes the axis outright, and the
-                // firmware is a better authority on that than any table here.
-                if (axis?.range) {
-                    return minMaxPower1(axis.range.min, axis.range.max);
-                }
-                if (axis?.dynamic === "gyro") {
-                    return curves.gyro();
-                }
-                if (axis?.dynamic === "acc") {
-                    return minMaxPower1(-maxAccelerometerG(), maxAccelerometerG());
-                }
-
-                // An unbounded unit says only which fields share an axis, not how wide it
-                // should be, so a curated range still wins where somebody wrote one.
-                const curve = debugModeCurve(debugModeName);
-                if (curve) {
-                    return curve;
-                }
-
-                if (axis) {
-                    // The group names every field firmware writes in that unit, but a
-                    // log only holds the fields it was configured to record; asking for
-                    // an absent one yields the generic fallback range.
-                    if (axis.fit === undefined) {
-                        // A "throttle" axis names no group; reading its absent list threw, and the catch below took over.
-                        throw new TypeError(`${fieldName} has no field group`);
-                    }
-                    const logged = axis.fit.filter((name) => flightLog.getMainFieldIndexByName?.(name) !== undefined);
-                    return getCurveForMinMaxFields(...(logged.length > 0 ? logged : [fieldName]));
+                if (debugCurve) {
+                    return debugCurve;
                 }
             }
 
-            // if not found above then
-            // Scale and center the field based on the whole-log observed ranges for that field
+            // Fallback: scale and centre from whole-log observed ranges.
             return getCurveForMinMaxFields(fieldName);
         } catch {
             return {
@@ -1097,118 +1061,144 @@ export class GraphConfig {
      * Supply an array of strings `graphNames` to only fetch the graph with the given names.
      */
     static getExampleGraphConfigs(flightLog: FlightLog, graphNames?: string[]): GraphPanelConfig[] {
-        const result: GraphPanelConfig[] = [];
-        const EXAMPLE_GRAPHS: { label: string; height?: number; fields: string[] }[] = [];
-        if (!flightLog.isFieldDisabled().MOTORS) {
-            EXAMPLE_GRAPHS.push({
+        const disabled = flightLog.isFieldDisabled();
+
+        // Ordered table of candidate example graphs.
+        // Each entry's `show` decides whether it should appear in the output for this log.
+        const EXAMPLE_GRAPHS: {
+            label: string;
+            height?: number;
+            fields: string[];
+            show: (disabled: DisabledFields, flightLog: FlightLog) => boolean;
+        }[] = [
+            {
                 label: "Motors",
                 fields: ["motor[all]", "servo[5]"],
-            });
-        }
-        if (!flightLog.isFieldDisabled().RPM) {
-            EXAMPLE_GRAPHS.push({ label: "RPM", fields: ["eRPM[all]"] });
-        }
-        if (!flightLog.isFieldDisabled().GYRO) {
-            EXAMPLE_GRAPHS.push({ label: "Gyros", fields: ["gyroADC[all]"] });
-        }
-        if (!flightLog.isFieldDisabled().GYROUNFILT) {
-            EXAMPLE_GRAPHS.push({
+                show: (d) => !d.MOTORS,
+            },
+            {
+                label: "RPM",
+                fields: ["eRPM[all]"],
+                show: (d) => !d.RPM,
+            },
+            {
+                label: "Gyros",
+                fields: ["gyroADC[all]"],
+                show: (d) => !d.GYRO,
+            },
+            {
                 label: "Unfiltered Gyros",
                 fields: ["gyroUnfilt[all]"],
-            });
-        }
-        if (!flightLog.isFieldDisabled().SETPOINT) {
-            EXAMPLE_GRAPHS.push({ label: "Setpoint", fields: ["rcCommands[all]"] });
-        }
-        if (!flightLog.isFieldDisabled().RC_COMMANDS) {
-            EXAMPLE_GRAPHS.push({ label: "RC Command", fields: ["rcCommand[all]"] });
-        }
-        if (!flightLog.isFieldDisabled().PID) {
-            EXAMPLE_GRAPHS.push({ label: "PIDs", fields: ["axisSum[all]"] });
-        }
-        if (!(flightLog.isFieldDisabled().GYRO || flightLog.isFieldDisabled().PID)) {
-            EXAMPLE_GRAPHS.push(
-                { label: "PID Error", fields: ["axisError[all]"] },
-                {
-                    label: "Gyro + PID roll",
-                    fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "gyroADC[0]"],
-                },
-                {
-                    label: "Gyro + PID pitch",
-                    fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "gyroADC[1]"],
-                },
-                {
-                    label: "Gyro + PID yaw",
-                    fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "gyroADC[2]"],
-                },
-            );
-        }
-        if (!flightLog.isFieldDisabled().ACC) {
-            EXAMPLE_GRAPHS.push({
+                show: (d) => !d.GYROUNFILT,
+            },
+            {
+                label: "Setpoint",
+                fields: ["rcCommands[all]"],
+                show: (d) => !d.SETPOINT,
+            },
+            {
+                label: "RC Command",
+                fields: ["rcCommand[all]"],
+                show: (d) => !d.RC_COMMANDS,
+            },
+            {
+                label: "PIDs",
+                fields: ["axisSum[all]"],
+                show: (d) => !d.PID,
+            },
+            {
+                label: "PID Error",
+                fields: ["axisError[all]"],
+                show: (d) => !(d.GYRO || d.PID),
+            },
+            {
+                label: "Gyro + PID roll",
+                fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "gyroADC[0]"],
+                show: (d) => !(d.GYRO || d.PID),
+            },
+            {
+                label: "Gyro + PID pitch",
+                fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "gyroADC[1]"],
+                show: (d) => !(d.GYRO || d.PID),
+            },
+            {
+                label: "Gyro + PID yaw",
+                fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "gyroADC[2]"],
+                show: (d) => !(d.GYRO || d.PID),
+            },
+            {
                 label: "Accelerometers",
                 fields: ["accSmooth[all]"],
-            });
-        }
-        // Computed from the IMU quaternion, or from the gyro and accelerometer; no mask names it.
-        if (flightLog.getMainFieldIndexByName("heading[0]") !== undefined) {
-            EXAMPLE_GRAPHS.push({ label: "Heading", fields: ["heading[all]"] });
-        }
-        if (!flightLog.isFieldDisabled().MAGNETOMETER) {
-            EXAMPLE_GRAPHS.push({ label: "Compass", fields: ["magADC[all]"] });
-        }
-        if (!flightLog.isFieldDisabled().DEBUG) {
-            EXAMPLE_GRAPHS.push({ label: "Debug", fields: ["debug[all]"] });
-        }
+                show: (d) => !d.ACC,
+            },
+            // Computed from the IMU quaternion, or from the gyro and accelerometer;
+            // no mask names it.
+            {
+                label: "Heading",
+                fields: ["heading[all]"],
+                show: (_d, fl) => fl.getMainFieldIndexByName("heading[0]") !== undefined,
+            },
+            {
+                label: "Compass",
+                fields: ["magADC[all]"],
+                show: (d) => !d.MAGNETOMETER,
+            },
+            {
+                label: "Debug",
+                fields: ["debug[all]"],
+                show: (d) => !d.DEBUG,
+            },
+            {
+                label: "GPS",
+                fields: [
+                    "GPS_numSat",
+                    "GPS_altitude",
+                    "GPS_speed",
+                    "GPS_ground_course",
+                    "gpsTrajectoryTiltAngle",
+                    "GPS_coord[all]",
+                ],
+                show: (d) => !d.GPS,
+            },
+            {
+                label: "GPS Cartesian coords",
+                fields: ["gpsCartesianCoords[all]", "gpsDistance", "gpsHomeAzimuth"],
+                show: (d) => !d.GPS,
+            },
+        ];
 
-        if (!flightLog.isFieldDisabled().GPS) {
-            EXAMPLE_GRAPHS.push(
-                {
-                    label: "GPS",
-                    fields: [
-                        "GPS_numSat",
-                        "GPS_altitude",
-                        "GPS_speed",
-                        "GPS_ground_course",
-                        "gpsTrajectoryTiltAngle",
-                        "GPS_coord[all]",
-                    ],
-                },
-                {
-                    label: "GPS Cartesian coords",
-                    fields: ["gpsCartesianCoords[all]", "gpsDistance", "gpsHomeAzimuth"],
-                },
-            );
-        }
+        const result: GraphPanelConfig[] = [];
 
         for (const srcGraph of EXAMPLE_GRAPHS) {
-            const destGraph: GraphPanelConfig = {
-                label: srcGraph.label,
-                fields: [],
-                height: srcGraph.height || 1,
-            };
-            let found;
+            if (!srcGraph.show(disabled, flightLog)) {
+                continue;
+            }
 
+            // If graphNames is given, include only the requested graphs (in TABLE order).
             if (graphNames !== undefined) {
-                found = false;
+                let found = false;
                 for (const name of graphNames) {
                     if (srcGraph.label === name) {
                         found = true;
                         break;
                     }
                 }
-
                 if (!found) {
                     continue;
                 }
             }
 
+            const destGraph: GraphPanelConfig = {
+                label: srcGraph.label,
+                fields: [],
+                height: srcGraph.height || 1,
+            };
+
             for (const srcFieldName of srcGraph.fields) {
-                const destField: GraphFieldConfig = {
+                destGraph.fields.push({
                     name: srcFieldName,
                     color: -1,
-                };
-
-                destGraph.fields.push(destField);
+                });
             }
 
             result.push(destGraph);
