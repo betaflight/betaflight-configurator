@@ -475,6 +475,23 @@ const DEBUG_MODE_CURVES: Record<string, DebugFieldCurves | ApiGatedCurves> = {
 };
 
 /**
+ * Apply a default curve and smoothing to a field config before it's used in the graph.
+ */
+const adaptField = function (flightLog: FlightLog, field: GraphFieldConfig, forceNewCurve?: boolean): GraphFieldConfig {
+    const defaultCurve = GraphConfig.getDefaultCurveForField(flightLog, field.name);
+    if (field.curve === undefined || forceNewCurve) {
+        field.curve = defaultCurve;
+    } else {
+        // Saved configs never hold null here, so ??= fills exactly what === undefined did.
+        field.curve.MinMax ??= defaultCurve.MinMax;
+    }
+
+    field.smoothing ??= GraphConfig.getDefaultSmoothingForField(flightLog, field.name);
+
+    return field;
+};
+
+/**
  * The graphs on screen: their fields, colours and curves, and the listeners told when they change.
  */
 export class GraphConfig {
@@ -534,7 +551,7 @@ export class GraphConfig {
         };
 
         this.extendFields = function (flightLog, field) {
-            const matches = field.name.match(/^(.+)\[all\]$/);
+            const matches = /^(.+)\[all]$/.exec(field.name);
             const logFieldNames = flightLog.getMainFieldNames();
             const fields: GraphFieldConfig[] = [];
             const setupColor = field?.color === -1;
@@ -544,7 +561,7 @@ export class GraphConfig {
                     nameRegex = new RegExp(String.raw`^${escapeRegExp(nameRoot)}\[[0-9]+\]$`);
                 let colorIndex = 0;
                 for (const fieldName of logFieldNames) {
-                    if (fieldName.match(nameRegex)) {
+                    if (nameRegex.exec(fieldName)) {
                         // forceNewCurve must be true for min max computing extended curves.
                         const forceNewCurve = true;
                         // Colour the copy, not the [all] template: the template is the saved graph config, and
@@ -568,37 +585,22 @@ export class GraphConfig {
                         );
                     }
                 }
-            } else {
+            } else if (
                 // Don't add fields if they don't exist in this log
-                if (flightLog.getMainFieldIndexByName(field.name) !== undefined) {
-                    fields.push(
-                        adaptField(flightLog, {
-                            ...field,
-                            curve: { ...field.curve },
-                            friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(
-                                field.name,
-                                debugContextFromSysConfig(sysConfig),
-                            ),
-                        }),
-                    );
-                }
+                flightLog.getMainFieldIndexByName(field.name) !== undefined
+            ) {
+                fields.push(
+                    adaptField(flightLog, {
+                        ...field,
+                        curve: { ...field.curve },
+                        friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(
+                            field.name,
+                            debugContextFromSysConfig(sysConfig),
+                        ),
+                    }),
+                );
             }
             return fields;
-        };
-
-        const adaptField = function (flightLog: FlightLog, field: GraphFieldConfig, forceNewCurve?: boolean) {
-            const defaultCurve = GraphConfig.getDefaultCurveForField(flightLog, field.name);
-            if (field.curve === undefined || forceNewCurve) {
-                field.curve = defaultCurve;
-            } else if (field.curve.MinMax === undefined) {
-                field.curve.MinMax = defaultCurve.MinMax;
-            }
-
-            if (field.smoothing === undefined) {
-                field.smoothing = GraphConfig.getDefaultSmoothingForField(flightLog, field.name);
-            }
-
-            return field;
         };
 
         /**
@@ -654,7 +656,7 @@ export class GraphConfig {
         };
     }
 
-    static PALETTE: { color: string; name: string }[] = [
+    static readonly PALETTE: { color: string; name: string }[] = [
         { color: "#fb8072", name: "Red" },
         { color: "#8dd3c7", name: "Cyan" },
         { color: "#ffffb3", name: "Yellow" },
@@ -674,7 +676,7 @@ export class GraphConfig {
         if (config) {
             for (const graph of config) {
                 for (const field of graph.fields) {
-                    const matches = field.name.match(/^gyroData(.+)$/);
+                    const matches = /^gyroData(.+)$/.exec(field.name);
                     if (matches) {
                         field.name = `gyroADC${matches[1]}`;
                     }
@@ -690,17 +692,17 @@ export class GraphConfig {
     // The flight log is part of the signature its callers use, though no default depends on it.
     static getDefaultSmoothingForField(_flightLog: FlightLog, fieldName: string): number {
         try {
-            if (fieldName.match(/^motor(Raw)?\[/)) {
+            if (/^motor(Raw)?\[/.exec(fieldName) != null) {
                 return 5000;
-            } else if (fieldName.match(/^servo\[/)) {
+            } else if (/^servo\[/.exec(fieldName) != null) {
                 return 5000;
-            } else if (fieldName.match(/^gyroADC.*\[/)) {
+            } else if (/^gyroADC.*\[/.exec(fieldName) != null) {
                 return 3000;
-            } else if (fieldName.match(/^gyroUnfilt.*\[/)) {
+            } else if (/^gyroUnfilt.*\[/.exec(fieldName) != null) {
                 return 3000;
-            } else if (fieldName.match(/^accSmooth\[/)) {
+            } else if (/^accSmooth\[/.exec(fieldName) != null) {
                 return 3000;
-            } else if (fieldName.match(/^axis.+\[/)) {
+            } else if (/^axis.+\[/.exec(fieldName) != null) {
                 return 3000;
             } else {
                 return 0;
@@ -812,14 +814,16 @@ export class GraphConfig {
             // A mode with no name, as with no entry, has no curated curve.
             const entry: DebugFieldCurves | ApiGatedCurves | undefined =
                 debugModeName === undefined ? undefined : DEBUG_MODE_CURVES[debugModeName];
-            const fields: DebugFieldCurves | undefined =
-                entry !== undefined && "fromApi149" in entry
-                    ? isApi149OrLater(sysConfig.apiVersion)
-                        ? entry.fromApi149
-                        : entry.beforeApi149
-                    : entry;
 
-            const index = fieldName.match(/^debug\[(\d+)\]$/)?.[1] as `${number}` | undefined;
+            let fields: DebugFieldCurves | undefined;
+            if (entry !== undefined && "fromApi149" in entry) {
+                fields = isApi149OrLater(sysConfig.apiVersion) ? entry.fromApi149 : entry.beforeApi149;
+            } else {
+                fields = entry;
+            }
+
+            const debugMatch = /^debug\[(\d+)\]$/.exec(fieldName);
+            const index = debugMatch == null ? undefined : (debugMatch[1] as `${number}`);
             const spec = (index === undefined ? undefined : fields?.[index]) ?? fields?.default;
             if (Array.isArray(spec)) {
                 const [min, max] = spec;
@@ -831,9 +835,10 @@ export class GraphConfig {
 
         try {
             if (
-                fieldName.match(/^motor\[/) ||
+                /^motor\[/.exec(fieldName) != null ||
                 fieldName === "rcCommands[3]" || // Throttle scaled
-                fieldName.match(/^rssi.*/)
+                /^rssi.*/.exec(fieldName) != null ||
+                fieldName === "pitot[0]"
             ) {
                 return {
                     power: 1,
@@ -842,7 +847,7 @@ export class GraphConfig {
                         max: 100,
                     },
                 };
-            } else if (fieldName.match(/^eRPM\[/)) {
+            } else if (/^eRPM\[/.exec(fieldName) != null) {
                 return getCurveForMinMaxFields(
                     "eRPM[0]",
                     "eRPM[1]",
@@ -853,7 +858,7 @@ export class GraphConfig {
                     "eRPM[6]",
                     "eRPM[7]",
                 );
-            } else if (fieldName.match(/^accSmooth\[/)) {
+            } else if (/^accSmooth\[/.exec(fieldName) != null) {
                 return {
                     power: 1,
                     MinMax: {
@@ -862,10 +867,10 @@ export class GraphConfig {
                     },
                 };
             } else if (
-                fieldName.match(/^axisError\[/) || // Gyro, Gyro Scaled, RC Command Scaled and axisError
-                fieldName.match(/^rcCommands\[/) || // These use the same scaling as they are in the
-                fieldName.match(/^gyroADC\[/) || // same range.
-                fieldName.match(/^gyroUnfilt\[/)
+                /^axisError\[/.exec(fieldName) != null || // Gyro, Gyro Scaled, RC Command Scaled and axisError
+                /^rcCommands\[/.exec(fieldName) != null || // These use the same scaling as they are in the
+                /^gyroADC\[/.exec(fieldName) != null || // same range.
+                /^gyroUnfilt\[/.exec(fieldName) != null
             ) {
                 return {
                     power: 1,
@@ -874,7 +879,7 @@ export class GraphConfig {
                         max: maxDegreesSecond(gyroScaleMargin),
                     },
                 };
-            } else if (fieldName.match(/^axis.+\[/) || fieldName === "GPS_speed") {
+            } else if (/^axis.+\[/.exec(fieldName) != null || fieldName === "GPS_speed") {
                 return {
                     power: 1,
                     MinMax: {
@@ -882,7 +887,7 @@ export class GraphConfig {
                         max: 100,
                     },
                 };
-            } else if (fieldName.match(/^servo\[/) || fieldName.match(/^rcCommand\[/)) {
+            } else if (/^servo\[/.exec(fieldName) != null || /^rcCommand\[/.exec(fieldName) != null) {
                 return {
                     power: 1,
                     MinMax: {
@@ -902,7 +907,7 @@ export class GraphConfig {
                         max: 360,
                     },
                 };
-            } else if (fieldName.match(/^heading\[/)) {
+            } else if (/^heading\[/.exec(fieldName) != null) {
                 return {
                     power: 1,
                     MinMax: {
@@ -910,7 +915,7 @@ export class GraphConfig {
                         max: 180,
                     },
                 };
-            } else if (fieldName.match(/^sonar.*/)) {
+            } else if (/^sonar.*/.exec(fieldName) != null) {
                 return {
                     power: 1,
                     MinMax: {
@@ -926,7 +931,7 @@ export class GraphConfig {
                         max: 40,
                     },
                 };
-            } else if (fieldName.match(/^GPS_velned\[/)) {
+            } else if (/^GPS_velned\[/.exec(fieldName) != null) {
                 return {
                     power: 1,
                     MinMax: {
@@ -942,14 +947,6 @@ export class GraphConfig {
                         max: 90,
                     },
                 };
-            } else if (fieldName === "pitot[0]") {
-                return {
-                    power: 1,
-                    MinMax: {
-                        min: 0,
-                        max: 100,
-                    },
-                };
             } else if (fieldName === "pitot[1]") {
                 return {
                     power: 1,
@@ -958,7 +955,7 @@ export class GraphConfig {
                         max: 1000,
                     },
                 };
-            } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode != null) {
+            } else if (/^debug.*/.exec(fieldName) != null && sysConfig.debug_mode != null) {
                 const debugContext = debugContextFromSysConfig(sysConfig);
                 const debugModeName = debugContext.modeName;
 
@@ -1077,14 +1074,9 @@ export class GraphConfig {
         logGrapher: GraphWindowSource,
         fieldName: string,
     ): FieldRange {
-        let minTime = logGrapher.getMarkedInTime();
-        let maxTime = logGrapher.getMarkedOutTime();
-        if (minTime === null) {
-            minTime = flightLog.getMinTime();
-        }
-        if (maxTime === null) {
-            maxTime = flightLog.getMaxTime();
-        }
+        // An unset mark is null, never undefined, so ??= takes the log's own bound exactly when === null did.
+        const minTime = logGrapher.getMarkedInTime() ?? flightLog.getMinTime();
+        const maxTime = logGrapher.getMarkedOutTime() ?? flightLog.getMaxTime();
 
         const mm = flightLog.getMinMaxForFieldDuringTimeInterval(fieldName, minTime, maxTime);
         if (mm === undefined) {
@@ -1169,21 +1161,23 @@ export class GraphConfig {
         }
 
         if (!flightLog.isFieldDisabled().GPS) {
-            EXAMPLE_GRAPHS.push({
-                label: "GPS",
-                fields: [
-                    "GPS_numSat",
-                    "GPS_altitude",
-                    "GPS_speed",
-                    "GPS_ground_course",
-                    "gpsTrajectoryTiltAngle",
-                    "GPS_coord[all]",
-                ],
-            });
-            EXAMPLE_GRAPHS.push({
-                label: "GPS Cartesian coords",
-                fields: ["gpsCartesianCoords[all]", "gpsDistance", "gpsHomeAzimuth"],
-            });
+            EXAMPLE_GRAPHS.push(
+                {
+                    label: "GPS",
+                    fields: [
+                        "GPS_numSat",
+                        "GPS_altitude",
+                        "GPS_speed",
+                        "GPS_ground_course",
+                        "gpsTrajectoryTiltAngle",
+                        "GPS_coord[all]",
+                    ],
+                },
+                {
+                    label: "GPS Cartesian coords",
+                    fields: ["gpsCartesianCoords[all]", "gpsDistance", "gpsHomeAzimuth"],
+                },
+            );
         }
 
         for (const srcGraph of EXAMPLE_GRAPHS) {
