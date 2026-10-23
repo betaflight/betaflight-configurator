@@ -1,6 +1,30 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { ComplexFFT } from "../js/blackbox/fft";
+import type { ExpoCurve } from "./expo";
+import type { FlightLog, LogFrame, Chunk } from "./flightlog";
+import type { SysConfig } from "./flightlog_parser";
 import { FlightLogFieldPresenter } from "./flightlog_fields_presenter";
-import { useSettingsStore } from "./stores/settings.js";
+import { useSettingsStore } from "./stores/settings";
 
 const FIELD_THROTTLE_NAME = ["rcCommands[3]"],
     FIELD_RPM_NAMES = ["eRPM[0]", "eRPM[1]", "eRPM[2]", "eRPM[3]", "eRPM[4]", "eRPM[5]", "eRPM[6]", "eRPM[7]"],
@@ -12,6 +36,144 @@ const FIELD_THROTTLE_NAME = ["rcCommands[3]"],
     MIN_SPECTRUM_SAMPLES_COUNT = 2048;
 export const NUM_VS_BINS = 100;
 
+export interface ValueRange {
+    min: number;
+    max: number;
+}
+
+interface SpectrumSource {
+    fieldIndex: number;
+    fieldName: string | null;
+}
+
+/** The magnitude spectrum: one side of the FFT, `fftLength` bins up to half the log rate. */
+export interface FrequencySpectrum extends SpectrumSource {
+    fftLength: number;
+    fftOutput: Float64Array;
+    maxNoiseFrequency: number;
+    blackBoxRate: number;
+}
+
+/** The Welch power spectral density, in dBm/Hz. */
+export interface PsdSpectrum extends SpectrumSource {
+    fftLength: number;
+    fftOutput: Float64Array;
+    blackBoxRate: number;
+    minimum: number;
+    maximum: number;
+    maxNoiseFrequency: number;
+    maximalSegmentsLength: number;
+    /** Not computed here: the plot stores its dB axis range on the data it draws. */
+    vsRange?: ValueRange;
+}
+
+/** A heat map: `NUM_VS_BINS` rows of throttle or RPM bins, each `fftLength` frequency bins. */
+export interface VsSpectrum extends SpectrumSource {
+    fftLength: number;
+    fftOutput: Float64Array[];
+    maxNoise: number;
+    blackBoxRate: number;
+    vsRange: ValueRange;
+}
+
+/** Mean absolute PID error per whole deg/s of setpoint; null where no sample had that setpoint. */
+export interface PidErrorVsSetpoint extends SpectrumSource {
+    axisName: string;
+    fftOutput: (number | null)[];
+    fftMaxOutput: number;
+}
+
+export type SpectrumData = FrequencySpectrum | PsdSpectrum | VsSpectrum | PidErrorVsSetpoint;
+
+/** Set when the log's own rate and the measured one disagree; the analysis then runs at the measured rate. */
+export interface LogRateInfo {
+    actualRate: number;
+    /** null when the header gives no rate (no looptime). */
+    betaflightRate: number | null;
+}
+
+type PsdScaling = "density" | "spectrum";
+
+interface FlightSamples {
+    samples: Float64Array;
+    count: number;
+}
+
+interface FlightSamplesVsX extends FlightSamples {
+    vsValues: Float64Array[];
+    minValue: number;
+    maxValue: number;
+}
+
+interface PsdResult {
+    psdOutput: Float64Array;
+    min: number;
+    max: number;
+    maxNoiseFrequency: number;
+}
+
+interface GraphSpectrumCalcModule {
+    /** null or 0 means the log's own start or end. */
+    _analyserTimeRange: { in: number | null; out: number | null };
+    /** The rate the analysis runs at: the log's own, or the measured one when they disagree. */
+    _blackBoxRate: number;
+    /** The rate the log header gives. */
+    _BetaflightRate: number | null;
+    _actualeRate: number;
+    /** `curve` is set together with the field, before any load. */
+    _dataBuffer: { fieldIndex: number; curve: ExpoCurve | null; fieldName: string | null };
+    _flightLog: FlightLog | null;
+    _sysConfig: SysConfig | null;
+    /** Raw from the header: the RPM arithmetic reads it through Number(), so a missing value stays NaN. */
+    _motorPoles: number | null | undefined;
+    _pointsPerSegmentPSD: number;
+
+    initialize(flightLog: FlightLog, sysConfig: SysConfig): LogRateInfo | undefined;
+    setInTime(time: number | null): number | null;
+    setOutTime(time: number | null): number | null;
+    setDataBuffer(fieldIndex: number, curve: ExpoCurve, fieldName: string): undefined;
+    getNearPower2Value(size: number): number;
+    dataLoadFrequency(): FrequencySpectrum;
+    setPointsPerSegmentPSD(pointsCount: number): void;
+    dataLoadPSD(_analyserZoomY?: number): PsdSpectrum;
+    _dataLoadFrequencyVsX(vsFieldNames: string[], minValue?: number, maxValue?: number): VsSpectrum;
+    _dataLoadPowerSpectralDensityVsX(vsFieldNames: string[], minValue?: number, maxValue?: number): VsSpectrum;
+    dataLoadFrequencyVsThrottle(): VsSpectrum;
+    dataLoadPowerSpectralDensityVsThrottle(): VsSpectrum;
+    dataLoadFrequencyVsRpm(): VsSpectrum;
+    dataLoadPowerSpectralDensityVsRpm(): VsSpectrum;
+    dataLoadPidErrorVsSetpoint(): PidErrorVsSetpoint;
+    _getFlightChunks(): Chunk[];
+    _getFlightSamplesFreq(scaled?: boolean): FlightSamples;
+    _getVsIndexes(vsFieldNames: string[]): number[];
+    _getFlightSamplesFreqVsX(
+        vsFieldNames: string[],
+        minValue?: number,
+        maxValue?: number,
+        scaled?: boolean,
+    ): FlightSamplesVsX;
+    _getFlightSamplesPidErrorVsSetpoint(axisIndex: number | undefined): {
+        piderror: Int16Array;
+        setpoint: Int16Array;
+        maxSetpoint: number;
+        count: number;
+    };
+    _hanningWindow(samples: Float64Array | number[], size?: number): void;
+    _fft(samples: Float64Array, type?: string): Float64Array;
+    _normalizeFft(fftOutput: Float64Array): FrequencySpectrum;
+    _psd(samples: Float64Array, pointsPerSegment: number, overlapCount: number, scaling?: PsdScaling): PsdResult;
+    _fft_segmented(samples: Float64Array, pointsPerSegment: number, overlapCount: number): Float64Array[];
+}
+
+/**
+ * A frame's value as the typed sample arrays store it: null (no slow frame yet) becomes 0 and a
+ * field the log lacks NaN, the coercion a Float64Array or Int16Array store applies anyway.
+ */
+function sampleValue(frame: LogFrame, index: number | undefined): number {
+    return Number(index === undefined ? undefined : frame[index]);
+}
+
+/** The calculation behind the spectrum analyser; one log at a time, set by initialize(). */
 export const GraphSpectrumCalc = {
     _analyserTimeRange: {
         in: 0,
@@ -27,20 +189,28 @@ export const GraphSpectrumCalc = {
     _sysConfig: null,
     _motorPoles: null,
     _pointsPerSegmentPSD: 64,
-};
+} as GraphSpectrumCalcModule;
+
+/** The log the analyser was initialised with; the loaders are only reached after initialize(). */
+function flightLogOf(calc: GraphSpectrumCalcModule): FlightLog {
+    return calc._flightLog!;
+}
+
+/** The field curve; setDataBuffer() runs before any scaled load. */
+function curveOf(calc: GraphSpectrumCalcModule): ExpoCurve {
+    return calc._dataBuffer.curve!;
+}
 
 GraphSpectrumCalc.initialize = function (flightLog, sysConfig) {
     this._flightLog = flightLog;
     this._sysConfig = sysConfig;
 
     this._motorPoles = sysConfig["motor_poles"];
-    this._blackBoxRate = flightLog.getBlackboxRate();
-    this._BetaflightRate = this._blackBoxRate;
+    this._BetaflightRate = flightLog.getBlackboxRate();
 
     this._actualeRate = flightLog.getActualLogRate();
-    if (flightLog.isWrongLogRate()) {
-        this._blackBoxRate = Math.round(this._actualeRate);
-    }
+    // isWrongLogRate() is true whenever the header gives no rate, so the analysis rate is never null.
+    this._blackBoxRate = flightLog.isWrongLogRate() ? Math.round(this._actualeRate) : Number(this._BetaflightRate);
 
     if (this._BetaflightRate !== this._blackBoxRate) {
         return {
@@ -58,10 +228,11 @@ GraphSpectrumCalc.setInTime = function (time) {
 };
 
 GraphSpectrumCalc.setOutTime = function (time) {
-    if (time - this._analyserTimeRange.in <= MAX_ANALYSER_LENGTH) {
+    // A cleared (null) mark counts as 0 in the length check, as it always has.
+    if (Number(time) - Number(this._analyserTimeRange.in) <= MAX_ANALYSER_LENGTH) {
         this._analyserTimeRange.out = time;
     } else {
-        this._analyserTimeRange.out = this._analyserTimeRange.in + MAX_ANALYSER_LENGTH;
+        this._analyserTimeRange.out = Number(this._analyserTimeRange.in) + MAX_ANALYSER_LENGTH;
     }
     return this._analyserTimeRange.out;
 };
@@ -345,34 +516,36 @@ GraphSpectrumCalc.dataLoadPowerSpectralDensityVsThrottle = function () {
 
 GraphSpectrumCalc.dataLoadFrequencyVsRpm = function () {
     const fftData = this._dataLoadFrequencyVsX(FIELD_RPM_NAMES, 0);
-    fftData.vsRange.max *= 3.333 / this._motorPoles;
-    fftData.vsRange.min *= 3.333 / this._motorPoles;
+    fftData.vsRange.max *= 3.333 / Number(this._motorPoles);
+    fftData.vsRange.min *= 3.333 / Number(this._motorPoles);
     return fftData;
 };
 
 GraphSpectrumCalc.dataLoadPowerSpectralDensityVsRpm = function () {
     const fftData = this._dataLoadPowerSpectralDensityVsX(FIELD_RPM_NAMES, 0);
-    fftData.vsRange.max *= 3.333 / this._motorPoles;
-    fftData.vsRange.min *= 3.333 / this._motorPoles;
+    fftData.vsRange.max *= 3.333 / Number(this._motorPoles);
+    fftData.vsRange.min *= 3.333 / Number(this._motorPoles);
     return fftData;
 };
 
 GraphSpectrumCalc.dataLoadPidErrorVsSetpoint = function () {
     // Detect the axis
+    // Only offered for a selected field, so the name is set.
+    const fieldName = this._dataBuffer.fieldName!;
     let axisIndex;
-    if (this._dataBuffer.fieldName.includes("[roll]")) {
+    if (fieldName.includes("[roll]")) {
         axisIndex = 0;
-    } else if (this._dataBuffer.fieldName.includes("[pitch]")) {
+    } else if (fieldName.includes("[pitch]")) {
         axisIndex = 1;
-    } else if (this._dataBuffer.fieldName.includes("[yaw]")) {
+    } else if (fieldName.includes("[yaw]")) {
         axisIndex = 2;
     }
 
     const flightSamples = this._getFlightSamplesPidErrorVsSetpoint(axisIndex);
 
     // Add the total error by absolute position
-    const errorBySetpoint = Array.from({ length: flightSamples.maxSetpoint + 1 });
-    const numberOfSamplesBySetpoint = Array.from({
+    const errorBySetpoint = Array.from<number | null>({ length: flightSamples.maxSetpoint + 1 });
+    const numberOfSamplesBySetpoint = Array.from<number>({
         length: flightSamples.maxSetpoint + 1,
     });
 
@@ -387,7 +560,7 @@ GraphSpectrumCalc.dataLoadPidErrorVsSetpoint = function () {
         const pidErrorValue = Math.abs(flightSamples.piderror[i]);
         const setpointValue = Math.abs(flightSamples.setpoint[i]);
 
-        errorBySetpoint[setpointValue] += pidErrorValue;
+        errorBySetpoint[setpointValue]! += pidErrorValue;
         numberOfSamplesBySetpoint[setpointValue]++;
     }
 
@@ -395,9 +568,10 @@ GraphSpectrumCalc.dataLoadPidErrorVsSetpoint = function () {
     let maxErrorBySetpoint = 0;
     for (let i = 0; i <= flightSamples.maxSetpoint; i++) {
         if (numberOfSamplesBySetpoint[i] > 0) {
-            errorBySetpoint[i] = errorBySetpoint[i] / numberOfSamplesBySetpoint[i];
-            if (errorBySetpoint[i] > maxErrorBySetpoint) {
-                maxErrorBySetpoint = errorBySetpoint[i];
+            const meanError = errorBySetpoint[i]! / numberOfSamplesBySetpoint[i];
+            errorBySetpoint[i] = meanError;
+            if (meanError > maxErrorBySetpoint) {
+                maxErrorBySetpoint = meanError;
             }
         } else {
             errorBySetpoint[i] = null;
@@ -414,14 +588,15 @@ GraphSpectrumCalc.dataLoadPidErrorVsSetpoint = function () {
 };
 
 GraphSpectrumCalc._getFlightChunks = function () {
-    const logStart = this._analyserTimeRange.in || this._flightLog.getMinTime();
+    const flightLog = flightLogOf(this);
+    const logStart = this._analyserTimeRange.in || flightLog.getMinTime();
 
-    let logEnd = this._analyserTimeRange.out || this._flightLog.getMaxTime();
+    let logEnd = this._analyserTimeRange.out || flightLog.getMaxTime();
 
     // Limit size
     logEnd = logEnd - logStart <= MAX_ANALYSER_LENGTH ? logEnd : logStart + MAX_ANALYSER_LENGTH;
 
-    const allChunks = this._flightLog.getChunksInTimeRange(logStart, logEnd);
+    const allChunks = flightLog.getChunksInTimeRange(logStart, logEnd);
 
     return allChunks;
 };
@@ -455,9 +630,9 @@ GraphSpectrumCalc._getFlightSamplesFreq = function (scaled = true) {
     for (const chunk of allChunks) {
         for (const frame of chunk.frames) {
             if (scaled) {
-                samples[samplesCount] = this._dataBuffer.curve.lookupRaw(frame[this._dataBuffer.fieldIndex]);
+                samples[samplesCount] = curveOf(this).lookupRaw(sampleValue(frame, this._dataBuffer.fieldIndex));
             } else {
-                samples[samplesCount] = frame[this._dataBuffer.fieldIndex];
+                samples[samplesCount] = sampleValue(frame, this._dataBuffer.fieldIndex);
             }
             samplesCount++;
         }
@@ -470,10 +645,11 @@ GraphSpectrumCalc._getFlightSamplesFreq = function (scaled = true) {
 };
 
 GraphSpectrumCalc._getVsIndexes = function (vsFieldNames) {
-    const fieldIndexes = [];
+    const fieldIndexes: number[] = [];
+    const logFieldIndexes = flightLogOf(this).getMainFieldIndexes();
     for (const fieldName of vsFieldNames) {
-        if (Object.hasOwn(this._flightLog.getMainFieldIndexes(), fieldName)) {
-            fieldIndexes.push(this._flightLog.getMainFieldIndexByName(fieldName));
+        if (Object.hasOwn(logFieldIndexes, fieldName)) {
+            fieldIndexes.push(logFieldIndexes[fieldName]);
         }
     }
     return fieldIndexes;
@@ -504,17 +680,17 @@ GraphSpectrumCalc._getFlightSamplesFreqVsX = function (
     for (const chunk of allChunks) {
         for (let frameIndex = 0; frameIndex < chunk.frames.length; frameIndex++) {
             if (scaled) {
-                samples[samplesCount] = this._dataBuffer.curve.lookupRaw(
-                    chunk.frames[frameIndex][this._dataBuffer.fieldIndex],
+                samples[samplesCount] = curveOf(this).lookupRaw(
+                    sampleValue(chunk.frames[frameIndex], this._dataBuffer.fieldIndex),
                 );
             } else {
-                samples[samplesCount] = chunk.frames[frameIndex][this._dataBuffer.fieldIndex];
+                samples[samplesCount] = sampleValue(chunk.frames[frameIndex], this._dataBuffer.fieldIndex);
             }
             for (let i = 0; i < vsIndexes.length; i++) {
                 const vsFieldIx = vsIndexes[i];
-                let value = chunk.frames[frameIndex][vsFieldIx];
+                let value = sampleValue(chunk.frames[frameIndex], vsFieldIx);
                 if (vsFieldNames === FIELD_RPM_NAMES) {
-                    const maxRPM = (MAX_RPM_HZ_VALUE * this._motorPoles) / 3.333;
+                    const maxRPM = (MAX_RPM_HZ_VALUE * Number(this._motorPoles)) / 3.333;
                     if (value > maxRPM) {
                         value = maxRPM;
                     } else if (value < 0) {
@@ -590,8 +766,9 @@ GraphSpectrumCalc._getFlightSamplesPidErrorVsSetpoint = function (axisIndex) {
     }
 
     // Get the PID Error field
-    const FIELD_PIDERROR_INDEX = this._flightLog.getMainFieldIndexByName(`axisError[${axisIndex}]`);
-    const FIELD_SETPOINT_INDEX = this._flightLog.getMainFieldIndexByName(`setpoint[${axisIndex}]`);
+    const flightLog = flightLogOf(this);
+    const FIELD_PIDERROR_INDEX = flightLog.getMainFieldIndexByName(`axisError[${axisIndex}]`);
+    const FIELD_SETPOINT_INDEX = flightLog.getMainFieldIndexByName(`setpoint[${axisIndex}]`);
 
     const piderror = new Int16Array(frameCount);
     const setpoint = new Int16Array(frameCount);
@@ -601,8 +778,8 @@ GraphSpectrumCalc._getFlightSamplesPidErrorVsSetpoint = function (axisIndex) {
     let maxSetpoint = 0;
     for (const chunk of allChunks) {
         for (const frame of chunk.frames) {
-            piderror[samplesCount] = frame[FIELD_PIDERROR_INDEX];
-            setpoint[samplesCount] = frame[FIELD_SETPOINT_INDEX];
+            piderror[samplesCount] = sampleValue(frame, FIELD_PIDERROR_INDEX);
+            setpoint[samplesCount] = sampleValue(frame, FIELD_SETPOINT_INDEX);
             if (setpoint[samplesCount] > maxSetpoint) {
                 maxSetpoint = setpoint[samplesCount];
             }
