@@ -1830,8 +1830,10 @@ GraphSpectrumPlot._drawRateWarning = function (canvasCtx) {
         canvasCtx.shadowColor = "black";
         canvasCtx.strokeStyle = "black";
 
-        const actualRate = this._logRateWarning.actualRate.toFixed(0),
-            betaflightRate = this._logRateWarning.betaflightRate!.toFixed(0);
+        // A log without a looptime header has no configured rate to compare with.
+        const { actualRate: measured, betaflightRate: configured } = this._logRateWarning;
+        const actualRate = measured.toFixed(0),
+            betaflightRate = configured === null ? "unknown" : configured.toFixed(0);
         const WarningText = `THE ACTUAL AND CONFIG LOG DATA RATE DIFFERENCE: ${actualRate} : ${betaflightRate}`;
         const X = canvasCtx.canvas.width / 2,
             Y = canvasCtx.canvas.height / 12;

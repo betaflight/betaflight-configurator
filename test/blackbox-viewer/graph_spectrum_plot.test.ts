@@ -77,6 +77,14 @@ describe("GraphSpectrumPlot", () => {
             expect(texts).toContain("THE ACTUAL AND CONFIG LOG DATA RATE DIFFERENCE: 2000 : 4000");
         });
 
+        // A log without a looptime header has no configured rate; the draw used to throw on it.
+        it("calls a missing configured rate unknown", () => {
+            GraphSpectrumPlot.setLogRateWarningInfo({ actualRate: 4000, betaflightRate: null });
+            GraphSpectrumPlot.setData(psd([0, 1, 2, 3]), SPECTRUM_TYPE.POWER_SPECTRAL_DENSITY);
+            expect(() => GraphSpectrumPlot.draw()).not.toThrow();
+            expect(texts).toContain("THE ACTUAL AND CONFIG LOG DATA RATE DIFFERENCE: 4000 : unknown");
+        });
+
         it("draws no warning when the rates agree", () => {
             GraphSpectrumPlot.setLogRateWarningInfo(undefined);
             GraphSpectrumPlot.setData(psd([0, 1, 2, 3]), SPECTRUM_TYPE.POWER_SPECTRAL_DENSITY);
