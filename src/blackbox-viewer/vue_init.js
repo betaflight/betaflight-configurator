@@ -2,17 +2,13 @@ import { pinia } from "@/js/pinia_instance.js";
 import { useAppStore } from "./stores/app.js";
 import { usePlaybackStore, GRAPH_STATE_PLAY, GRAPH_STATE_PAUSED } from "./stores/playback.js";
 import { setGraphState, updateCanvasSize } from "./playback_controls.js";
-import { DarkTheme } from "./dark_theme.js";
 import "./css/main.css";
 
 /**
- * Force the embedded viewer's theme to follow the host configurator instead of its own
- * auto/prefers-color-scheme logic. Sets the mode away from AUTO so the matchMedia listener
- * can't override the host, and drives appStore.darkThemeEnabled (which toggles .dark on the
- * viewer root via App.vue's watchEffect).
+ * The embedded viewer's theme follows the host configurator: this drives
+ * appStore.darkThemeEnabled, which toggles .dark on the viewer root via App.vue's watchEffect.
  */
 export function setBlackboxViewerDark(enabled) {
-    DarkTheme.currentMode = enabled ? DarkTheme.modes.ON : DarkTheme.modes.OFF;
     useAppStore(pinia).darkThemeEnabled = enabled;
 }
 

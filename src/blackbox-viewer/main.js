@@ -46,7 +46,6 @@ import {
     videoLoaded,
 } from "./playback_controls.js";
 import { PrefStorage } from "./pref_storage.js";
-import { DarkTheme } from "./dark_theme.js";
 import { ThemeColors } from "./theme_colors.js";
 import { pinia } from "@/js/pinia_instance.js";
 import { useLogStore } from "./stores/log.js";
@@ -399,9 +398,6 @@ export function bootstrapViewer() {
 
     // Initialize on DOM ready (modules are deferred, DOM is ready)
     {
-        // Initialize dark theme
-        DarkTheme.init(prefs);
-
         // Version information
         appStore.statusViewerVersion = `v${__APP_VERSION__}`;
 
