@@ -24,7 +24,7 @@ import { pinia } from "../../src/js/pinia_instance";
 import { useAppStore } from "../../src/blackbox-viewer/stores/app";
 import { useGraphStore } from "../../src/blackbox-viewer/stores/graph";
 import { useLogStore } from "../../src/blackbox-viewer/stores/log";
-import { renderSelectedLogInfo } from "../../src/blackbox-viewer/log_lifecycle";
+import { renderLogFileInfo, renderSelectedLogInfo } from "../../src/blackbox-viewer/log_lifecycle";
 
 type FlightLogInstance = NonNullable<ReturnType<typeof useLogStore>["flightLog"]>;
 type SeekBarInstance = NonNullable<ReturnType<typeof useGraphStore>["seekBar"]>;
@@ -78,5 +78,40 @@ describe("renderSelectedLogInfo", () => {
 
         expect(useAppStore(pinia).statusLograte).toBe("Sample Rate : 1/2");
         expect(seekBar.repaint).toHaveBeenCalled();
+    });
+});
+
+describe("renderLogFileInfo", () => {
+    function logsWithErrors(errors: unknown[]) {
+        return {
+            getLogCount: () => errors.length,
+            getLogError: (index: number) => errors[index],
+            getMinTime: () => 0,
+            getMaxTime: () => 61_000_000,
+        } as unknown as FlightLogInstance;
+    }
+
+    it("labels a log that failed to parse with the error's text", () => {
+        useLogStore(pinia).flightLog = logsWithErrors([new Error("Unsupported field encoding 99")]);
+
+        renderLogFileInfo(new File([""], "LOG00001.BFL"));
+
+        expect(useLogStore(pinia).logIndexEntries).toEqual([
+            { label: "Error: Unsupported field encoding 99", value: 0, disabled: true },
+        ]);
+    });
+
+    it("numbers the logs and gives each good one its time span", () => {
+        useLogStore(pinia).flightLog = logsWithErrors([false, "Log truncated, no data"]);
+
+        renderLogFileInfo(new File([""], "LOG00002.BFL"));
+
+        const logStore = useLogStore(pinia);
+        expect(logStore.logIndexEntries).toEqual([
+            { label: "1/2: 00:00 - 01:01 [01:01]", value: 0, disabled: false },
+            { label: "2/2: Log truncated, no data", value: 1, disabled: true },
+        ]);
+        expect(logStore.activeLogIndex).toBe(0);
+        expect(useAppStore(pinia).logFilename).toBe("LOG00002.BFL");
     });
 });

@@ -16,7 +16,8 @@ export function renderLogFileInfo(file) {
         const error = logStore.flightLog.getLogError(index);
         let logLabel;
         if (error) {
-            logLabel = error;
+            // A header or data error is usually a thrown Error, which a select would render as "{}".
+            logLabel = String(error);
         } else {
             logLabel = `${formatTime(logStore.flightLog.getMinTime(index) / 1000, false)} - ${formatTime(
                 logStore.flightLog.getMaxTime(index) / 1000,
