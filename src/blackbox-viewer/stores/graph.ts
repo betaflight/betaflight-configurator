@@ -30,6 +30,9 @@ import type { MapGrapher } from "../graph_map.js";
 import type { SeekBar } from "../seekbar.js";
 
 export type GrapherInstance = InstanceType<typeof FlightLogGrapher>;
+
+/** The activity summary series the seekbar draws. */
+export type SeekBarMode = "avgThrottle" | "maxRC" | "maxMotorDiff";
 export type GraphConfigInstance = InstanceType<typeof GraphConfig>;
 
 /** A field of a graph panel, as saved and as GraphConfig.getGraphs() returns it. */
@@ -134,7 +137,7 @@ export const useGraphStore = defineStore("graph", () => {
 
     const isFullscreen = ref(false);
     const markerTime = ref(0);
-    const seekBarMode = ref("avgThrottle");
+    const seekBarMode = ref<SeekBarMode>("avgThrottle");
 
     // Callbacks registered by main.js
     const invalidateGraph = shallowRef<Action | null>(null);
@@ -159,7 +162,7 @@ export const useGraphStore = defineStore("graph", () => {
     const spectrumClear = shallowRef<Action | null>(null);
     const applyGraphZoom = shallowRef<((zoom: number) => void) | null>(null);
     const selectLogIndex = shallowRef<((index: number) => void) | null>(null);
-    const setSeekBarMode = shallowRef<((mode: string) => void) | null>(null);
+    const setSeekBarMode = shallowRef<((mode: SeekBarMode) => void) | null>(null);
 
     // --- Legend actions ---
 

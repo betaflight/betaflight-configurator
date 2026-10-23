@@ -23,7 +23,7 @@ import {
     loadVideo,
     reportVideoError,
 } from "./video_handler";
-import { renderLogFileInfo, renderSelectedLogInfo, setSeekBarMode } from "./log_lifecycle.js";
+import { renderLogFileInfo, renderSelectedLogInfo, setSeekBarMode } from "./log_lifecycle";
 import {
     invalidateGraph,
     updateCanvasSize,
