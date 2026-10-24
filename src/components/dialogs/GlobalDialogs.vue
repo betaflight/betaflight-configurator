@@ -2,7 +2,7 @@
     <div v-if="dialogStore.activeDialog">
         <component
             ref="currentDialogRef"
-            :is="dialogComponents[dialogStore.activeDialog.type as keyof typeof dialogComponents]"
+            :is="dialogComponents[dialogStore.activeDialog.type]"
             v-bind="dialogStore.activeDialog.props"
             v-on="dialogStore.activeDialog.listeners"
         />
@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import { useDialogStore } from "@/stores/dialog";
-import { ref, watch, nextTick } from "vue";
+import { useDialogStore, type DialogType } from "@/stores/dialog";
+import { ref, watch, nextTick, type Component } from "vue";
 import YesNoDialog from "./YesNoDialog.vue";
 import InformationDialog from "./InformationDialog.vue";
 import WaitDialog from "./WaitDialog.vue";
@@ -46,7 +46,7 @@ const dialogComponents = {
     ReportProblemsDialog,
     InteractiveDialog,
     BoardAlignmentWizardDialog,
-};
+} satisfies Record<DialogType, Component>;
 
 watch(
     () => dialogStore.activeDialog,

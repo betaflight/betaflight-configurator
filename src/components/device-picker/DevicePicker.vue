@@ -110,7 +110,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .web-device-picker {
     display: flex;
     flex-wrap: wrap;

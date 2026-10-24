@@ -53,6 +53,10 @@ export const useConnectionStore = defineStore("connection", () => {
     // True while the firmware flasher is writing; it blocks connecting and tab switches.
     const flashingInProgress = ref(false);
 
+    // The MSP_SET_REBOOT mode the STM32 serial flasher sends. Non-zero while a reboot into the
+    // bootloader is pending (1 = ROM bootloader, 4 = flash bootloader); 0 reboots to firmware.
+    const bootloaderRebootMode = ref(0);
+
     const connectLock = computed<boolean>({
         get: () => getLockManager().locked,
         set: (val) => (getLockManager().locked = val),
@@ -93,6 +97,7 @@ export const useConnectionStore = defineStore("connection", () => {
         connectedTo,
         connectLock,
         flashingInProgress,
+        bootloaderRebootMode,
         connectionValid,
         virtualMode,
         virtualApiVersion,

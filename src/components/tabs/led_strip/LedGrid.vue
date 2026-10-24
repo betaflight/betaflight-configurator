@@ -251,7 +251,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .led-grid-container {
     position: relative;
     width: 100%;
@@ -265,24 +265,25 @@ onUnmounted(() => {
     flex-wrap: wrap;
     align-content: flex-start;
     z-index: 1;
-}
 
-/* Ensure LED points are above grid sections */
-.led-grid-container :deep(.gPoint) {
-    position: relative;
-    z-index: 2;
-}
+    /* Ensure LED points are above grid sections */
 
-.led-grid-container.grid-wire {
-    background: rgba(15, 171, 22, 0.5) !important;
-}
+    & .gPoint {
+        position: relative;
+        z-index: 2;
+    }
 
-.selection-box {
-    position: absolute;
-    background: color-mix(in srgb, var(--primary-500) 30%, transparent);
-    border: 2px solid var(--primary-500);
-    border-radius: 4px;
-    pointer-events: none;
-    z-index: 1000;
+    &.grid-wire {
+        background: rgba(15, 171, 22, 0.5) !important;
+    }
+
+    .selection-box {
+        position: absolute;
+        background: color-mix(in srgb, var(--primary-500) 30%, transparent);
+        border: 2px solid var(--primary-500);
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 1000;
+    }
 }
 </style>

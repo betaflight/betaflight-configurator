@@ -24,7 +24,7 @@ import { computed, reactive, ref, toRefs } from "vue";
 import semver from "semver";
 import { bit_check } from "../js/bit";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
-import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options.js";
+import { FIRMWARE_BUILD_OPTIONS } from "../js/build_options";
 import type { FcState } from "./fc.types";
 
 export type { FcState } from "./fc.types";
@@ -359,21 +359,6 @@ export function createInitialState(): FcState {
             disarm_kill_switch: 0,
             small_angle: 0,
             gyro_cal_on_first_arm: 0,
-        },
-        fcConfig: {
-            loopTime: 0,
-        },
-        misc: {
-            // DEPRECATED = only used to store values that are written back to the fc as-is, do NOT use for any other purpose
-            failsafe_throttle: 0,
-            gps_baudrate: 0,
-            multiwiicurrentoutput: 0,
-            placeholder2: 0,
-            vbatscale: 0,
-            vbatmincellvoltage: 0,
-            vbatmaxcellvoltage: 0,
-            vbatwarningcellvoltage: 0,
-            batterymetertype: 1, // 1=ADC, 2=ESC
         },
         motorConfig: {
             minthrottle: 0,

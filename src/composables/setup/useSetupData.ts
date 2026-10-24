@@ -68,7 +68,7 @@ export function useSetupData() {
                 ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH
                 : mspHelper.REBOOT_TYPES.BOOTLOADER,
         );
-        MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+        MSP.send_message(MSPCodes.MSP_REBOOT, buffer, false);
     };
 
     /**
@@ -86,7 +86,7 @@ export function useSetupData() {
 
     /** @param onData called once the store holds the new sonar reading */
     const requestSonar = (onData: () => void) => {
-        MSP.send_message(MSPCodes.MSP_SONAR, false, false, onData);
+        MSP.send_message(MSPCodes.MSP_SONAR_ALTITUDE, false, false, onData);
     };
 
     return { loadSetupData, rebootToBootloader, resetSettings, requestAttitude, requestSonar };

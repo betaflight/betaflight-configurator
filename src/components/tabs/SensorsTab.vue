@@ -12,7 +12,12 @@
                     <UiBox :title="$t('sensorConfigHardware')" type="neutral" collapsible>
                         <!-- Active Gyro / IMU (API 1.47+) -->
                         <template v-if="showMultiGyro">
-                            <SettingRow v-for="gyro in gyroList" :key="gyro.index" fullWidth>
+                            <SettingRow
+                                v-for="gyro in gyroList"
+                                :key="gyro.index"
+                                data-setting-search-key="sensorConfigActiveGyros"
+                                fullWidth
+                            >
                                 <template #label>
                                     {{ $t("sensorConfigGyroLabel", { 1: gyro.index + 1 }) }}
                                     <span v-if="gyro.name" class="text-dimmed font-normal"
@@ -217,6 +222,7 @@
                             <span>{{ $t("sensorConfigAccNeedsCalibration") }}</span>
                         </div>
                         <UButton
+                            data-setting-search-key="sensorConfigCalibrate"
                             :label="
                                 calibratingAccel ? $t('initialSetupButtonCalibratingText') : $t('sensorConfigCalibrate')
                             "
@@ -2576,7 +2582,7 @@ onMounted(() => {
         position: relative;
         aspect-ratio: 1;
         border-radius: 0.5rem;
-        background: #1a1a2e;
+        background: var(--scene-background);
         min-height: 200px;
         max-height: 350px;
     }
@@ -2593,17 +2599,17 @@ onMounted(() => {
     }
 
     .mag-viz-mode-selector button {
-        color: #c6c6cb; /* rgba(255,255,255,0.75) over #1a1a2e — contrast 10:1 */
+        color: var(--scene-overlay-text); /* contrast 10:1 */
     }
 
     .mag-viz-mode-selector button:hover {
-        color: #fff;
-        background: #313143; /* rgba(255,255,255,0.1) over #1a1a2e */
+        color: var(--scene-overlay-text-active);
+        background: var(--scene-overlay-hover);
     }
 
     .mag-viz-mode-selector .mag-viz-active {
-        color: #fff;
-        background: #5f5f6d; /* rgba(255,255,255,0.3) over #1a1a2e — contrast 5.5:1 */
+        color: var(--scene-overlay-text-active);
+        background: var(--scene-overlay-active); /* contrast 5.5:1 */
     }
 
     .mag-cal-live-inline {

@@ -74,6 +74,7 @@ interface HexFlashSettings {
     flashManualBaudRate?: number;
     filename?: string | null;
     resetFlashingState?: () => void;
+    requestDfuPermission?: () => void;
     selectedBoard?: string;
     localFirmwareLoaded?: boolean;
     showDialogVerifyBoard?: ShowDialogVerifyBoard;
@@ -381,6 +382,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashManualBaudRate,
             filename,
             resetFlashingState,
+            requestDfuPermission,
             selectedBoard,
             localFirmwareLoaded,
             showDialogVerifyBoard,
@@ -390,6 +392,8 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashingMessage,
             flashProgress,
             flashMessageTypes: FLASH_MESSAGE_TYPES,
+            resetFlashingState,
+            requestDfuPermission,
             selectedBoard,
             localFirmwareLoaded,
             showDialogVerifyBoard,
@@ -494,6 +498,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashManualBaudRate,
             filename,
             resetFlashingState,
+            requestDfuPermission,
             setFlashOnConnect,
             selectedBoard,
             localFirmwareLoaded,
@@ -511,7 +516,8 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         }
 
         try {
-            if (config && !parsedHexData.configInserted) {
+            // No board config is `{}`, which is truthy: only a loaded config text is written.
+            if (typeof config === "string" && config && !parsedHexData.configInserted) {
                 const configInserter = new ConfigInserter();
 
                 if (configInserter.insertConfig(parsedHexData, config)) {
@@ -530,6 +536,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 flashManualBaudRate,
                 filename,
                 resetFlashingState,
+                requestDfuPermission,
                 selectedBoard,
                 localFirmwareLoaded,
                 showDialogVerifyBoard,
@@ -721,21 +728,21 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             console.log(
                 `${logHead} Detected USB device:`,
                 device,
-                `rebootMode=${STM32.rebootMode}`,
+                `bootloaderRebootMode=${connectionStore.bootloaderRebootMode}`,
                 `connectLock=${connectionStore.connectLock}`,
                 `flashOnConnect=${isFlashOnConnect}`,
             );
 
             updateDfuExitButtonState?.();
 
-            if (connectionStore.connectLock && !STM32.rebootMode) {
+            if (connectionStore.connectLock && !connectionStore.bootloaderRebootMode) {
                 console.log(`${logHead} Port event ignored: connect_lock active, no reboot pending`);
                 return;
             }
 
-            if (STM32.rebootMode || isFlashOnConnect) {
-                const wasReboot = !!STM32.rebootMode;
-                STM32.rebootMode = 0;
+            if (connectionStore.bootloaderRebootMode || isFlashOnConnect) {
+                const wasReboot = !!connectionStore.bootloaderRebootMode;
+                connectionStore.bootloaderRebootMode = 0;
                 if (wasReboot) {
                     connectionStore.connectLock = false;
                 }
@@ -757,7 +764,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         const onDeviceRemoved = async (devicePath: unknown) => {
             console.log(`${logHead} Device removed:`, devicePath);
 
-            if (connectionStore.connectLock || STM32.rebootMode) {
+            if (connectionStore.connectLock || connectionStore.bootloaderRebootMode) {
                 return;
             }
 

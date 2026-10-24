@@ -290,10 +290,6 @@ export interface FailsafeConfig {
     failsafe_procedure: number;
 }
 
-export interface FcLoopConfig {
-    loopTime: number;
-}
-
 // The mask starts as null and becomes a Features instance when a connection is established.
 export interface FeatureConfig {
     features: Features | null;
@@ -433,18 +429,6 @@ export interface McuInfo {
     id: number;
     // Reset to 0; MSP2_MCU_INFO sets the MCU name string.
     name: string | number;
-}
-
-export interface MiscConfig {
-    failsafe_throttle: number;
-    gps_baudrate: number;
-    multiwiicurrentoutput: number;
-    placeholder2: number;
-    vbatscale: number;
-    vbatmincellvoltage: number;
-    vbatmaxcellvoltage: number;
-    vbatwarningcellvoltage: number;
-    batterymetertype: number;
 }
 
 export interface MixerConfig {
@@ -604,8 +588,6 @@ export interface RxConfig {
     elrsUid: number[];
     // Only sent for API >= 1.47.
     elrsModelId?: number;
-    // Set by MSP_MISC only.
-    midrc?: number;
 }
 
 export interface SdcardSummary {
@@ -838,7 +820,6 @@ export interface FcState {
     defaultPids: DefaultPids;
     defaultTuningSliders: DefaultTuningSliders;
     failsafeConfig: FailsafeConfig;
-    fcConfig: FcLoopConfig;
     features: FeatureConfig;
     filterConfig: FilterConfig;
     gyroSensor: GyroSensor;
@@ -852,7 +833,6 @@ export interface FcState {
     ledStrip: LedStripEntry[];
     ledConfigValues: LedConfigValues;
     mcuInfo: McuInfo;
-    misc: MiscConfig;
     mixerConfig: MixerConfig;
     modeRanges: ModeRange[];
     modeRangesExtra: ModeRangeExtra[];
