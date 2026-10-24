@@ -230,9 +230,7 @@ export function setPlaybackRate(rate: number): void {
 /** Zoom the graph to a percentage, or back to the zoom before the last change when none is given. */
 export function setGraphZoom(zoom?: number | null): void {
     const graphStore = useGraphStore(pinia);
-    if (zoom == null) {
-        zoom = graphStore.lastGraphZoom;
-    }
+    zoom ??= graphStore.lastGraphZoom;
     if (zoom >= GRAPH_MIN_ZOOM && zoom <= GRAPH_MAX_ZOOM) {
         graphStore.lastGraphZoom = graphStore.graphZoom;
         graphStore.graphZoom = zoom;
@@ -271,31 +269,37 @@ export function showValueTable(state?: boolean | null): void {
     updateValuesChart(logStore, graphStore, appStore, settingsStore.userSettings);
 }
 
+/** 100 ms, or `fast` window widths when given and non-zero. */
+function jumpTime(fast: number | null | undefined): number {
+    if (fast == null || fast === 0) {
+        return SMALL_JUMP_TIME;
+    }
+    return useGraphStore(pinia).graph!.getWindowWidthTime() * fast;
+}
+
+/** The time of the log frame before or after the current one, or null at either end. */
+function neighbourFrameTime(direction: 1 | -1): number | null {
+    const currentFrame = loadedFlightLog().getCurrentFrameAtTime(useLogStore(pinia).currentBlackboxTime);
+    if (!currentFrame) {
+        return null;
+    }
+    const neighbour = direction < 0 ? currentFrame.previous : currentFrame.next;
+    return neighbour ? neighbour[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] : null;
+}
+
 /**
  * Jump by 100 ms, or by `fast` window widths when given and non-zero. With `slow`, step one
  * frame of the log, or a 60th of a second of the video.
  */
 function logJump(direction: 1 | -1, fast: number | null | undefined, slow: boolean | undefined): void {
     const logStore = useLogStore(pinia);
-    const graphStore = useGraphStore(pinia);
 
-    let scrollTime = SMALL_JUMP_TIME;
-    if (fast != null) {
-        scrollTime = fast === 0 ? scrollTime : graphStore.graph!.getWindowWidthTime() * fast;
-    }
     if (logStore.hasVideo) {
-        if (slow) {
-            scrollTime = (1 / 60) * 1000000;
-        }
+        const scrollTime = slow ? (1 / 60) * 1000000 : jumpTime(fast);
         setVideoTime(videoElement().currentTime + (direction * scrollTime) / 1000000);
     } else {
-        const currentFrame = loadedFlightLog().getCurrentFrameAtTime(logStore.currentBlackboxTime);
-        const neighbour = currentFrame ? (direction < 0 ? currentFrame.previous : currentFrame.next) : null;
-        if (neighbour && slow) {
-            setCurrentBlackboxTime(neighbour[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME]);
-        } else {
-            setCurrentBlackboxTime(logStore.currentBlackboxTime + direction * scrollTime);
-        }
+        const frameTime = slow ? neighbourFrameTime(direction) : null;
+        setCurrentBlackboxTime(frameTime ?? logStore.currentBlackboxTime + direction * jumpTime(fast));
     }
 
     setGraphState(GRAPH_STATE_PAUSED);
