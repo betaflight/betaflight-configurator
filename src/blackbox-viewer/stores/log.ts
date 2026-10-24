@@ -26,8 +26,8 @@ import {
     FIRMWARE_TYPE_CLEANFLIGHT,
     FIRMWARE_TYPE_BETAFLIGHT,
     FIRMWARE_TYPE_INAV,
-} from "../flightlog_fielddefs.js";
-import type { FlightLog } from "../flightlog.js";
+} from "../flightlog_fielddefs";
+import type { FlightLog } from "../flightlog";
 
 export type FlightLogInstance = InstanceType<typeof FlightLog>;
 
@@ -52,8 +52,8 @@ export const useLogStore = defineStore("blackboxLog", () => {
     });
     const videoURL = ref<string | null>(null);
 
-    // Field values table data (updated by updateValuesChart in main.js)
-    const fieldValues = shallowRef<{ name: string; raw: string; decoded: string }[]>([]);
+    // Field values table data (updated by updateValuesChart in values_display.ts)
+    const fieldValues = shallowRef<{ name: string; raw: number | string; decoded: number | string | undefined }[]>([]);
     const fieldStats = shallowRef<{ name: string; min: string; max: string; mean: string }[]>([]);
 
     // Log index picker (multiple logs in one file)
@@ -66,7 +66,7 @@ export const useLogStore = defineStore("blackboxLog", () => {
 
     const firmwareClass = computed(() => {
         const type = flightLog.value?.getSysConfig?.()?.firmwareType;
-        return FIRMWARE_CLASS_MAP[type] ?? null;
+        return type === undefined ? null : (FIRMWARE_CLASS_MAP[type] ?? null);
     });
 
     function setFlightLog(log: FlightLogInstance | null) {

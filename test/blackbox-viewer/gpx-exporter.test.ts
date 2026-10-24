@@ -21,13 +21,15 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { GpxExporter } from "../../src/blackbox-viewer/gpx-exporter";
+import type { SysConfig } from "../../src/blackbox-viewer/flightlog_parser";
+import { chunksOf } from "./fakeChunks";
 import { FakeWorker } from "./fakeWorker";
 
 const flightLog = {
-    getChunksInTimeRange: vi.fn(() => [{ frames: [[0, 1]] }, { frames: [[125, 2]] }]),
+    getChunksInTimeRange: vi.fn(() => chunksOf([[0, 1]], [[125, 2]])),
     getMinTime: () => 0,
     getMaxTime: () => 125,
-    getSysConfig: () => ({ "Log start datetime": "2024-01-02T03:04:05.000Z" }),
+    getSysConfig: () => ({ "Log start datetime": "2024-01-02T03:04:05.000Z" }) as SysConfig,
     getMainFieldNames: () => ["time", "GPS_coord[0]"],
 };
 

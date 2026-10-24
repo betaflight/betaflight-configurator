@@ -4,7 +4,7 @@
     "exclude": ["src/dist", "dist", "node_modules"],
     "compilerOptions": {
         "strict": true,
-        "allowJs": true,
+        "allowJs": false,
         "checkJs": false,
         "noEmit": true,
         "skipLibCheck": true,

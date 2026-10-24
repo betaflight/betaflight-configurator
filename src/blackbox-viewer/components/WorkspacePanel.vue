@@ -79,7 +79,7 @@ const workspaceStore = useWorkspaceStore();
 
 const menuOpen = ref(false);
 
-// Shift+W raises showDefaultMenu (keyboard_handler.js). Open the menu — which is where
+// Shift+W raises showDefaultMenu (keyboard_handler.ts). Open the menu — which is where
 // the default workspace presets live — and lower the flag again so a later press re-opens.
 watch(
     () => workspaceStore.showDefaultMenu,

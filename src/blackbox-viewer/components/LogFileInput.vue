@@ -56,7 +56,7 @@ async function openFilePicker() {
             return;
         }
         const blob = await FileSystem.readFileAsBlob(descriptor);
-        // File carries .name/.size for the FileReader path in main.js.
+        // File carries .name/.size for the FileReader path in main.ts.
         const file = new File([blob], descriptor.name, { type: blob.type });
         emit("files-selected", [file]);
     } catch (error) {
