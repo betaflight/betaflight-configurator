@@ -146,13 +146,9 @@ export function createKeydownHandler(ctx: KeydownContext): (e: KeyboardEvent) =>
         }
     }
 
-    function handleKeyAnalyser(e: KeyboardEvent, shifted: boolean) {
-        if (shifted) {
-            graphStore.toggleAnalyserFullscreen();
-        } else {
-            graphStore.toggleAnalyser();
-            e.preventDefault();
-        }
+    function handleKeyAnalyser(e: KeyboardEvent) {
+        graphStore.toggleAnalyser();
+        e.preventDefault();
     }
 
     function handleKeyVideoIn(e: KeyboardEvent, shifted: boolean) {
@@ -256,7 +252,7 @@ export function createKeydownHandler(ctx: KeydownContext): (e: KeyboardEvent) =>
         ["o", handleKeyVideoOut],
         ["m", handleKeyMarker],
         ["c", handleKeyConfig],
-        ["a", handleKeyAnalyser],
+        ["a", (e, shifted) => (shifted ? graphStore.toggleAnalyserFullscreen() : handleKeyAnalyser(e))],
         [
             "h",
             (e, shifted) => {

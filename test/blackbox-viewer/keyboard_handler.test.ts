@@ -139,6 +139,20 @@ describe("createKeydownHandler", () => {
         expect(ctx.appStore.statusMarkerOffset).toBe("");
     });
 
+    it("toggles the analyser with A and its fullscreen with Shift+A, keeping the browser default only for the latter", () => {
+        const plain = key("KeyA", "a", { cancelable: true });
+        press(plain);
+        expect(ctx.graphStore.toggleAnalyser).toHaveBeenCalledOnce();
+        expect(ctx.graphStore.toggleAnalyserFullscreen).not.toHaveBeenCalled();
+        expect(plain.defaultPrevented).toBe(true);
+
+        const shifted = key("KeyA", "A", { shiftKey: true, cancelable: true });
+        press(shifted);
+        expect(ctx.graphStore.toggleAnalyserFullscreen).toHaveBeenCalledOnce();
+        expect(ctx.graphStore.toggleAnalyser).toHaveBeenCalledOnce();
+        expect(shifted.defaultPrevented).toBe(false);
+    });
+
     it("leaves fullscreen with Escape, unless a dialog has the key", () => {
         press(key("Escape", "Escape"));
         expect(ctx.graphStore.toggleFullscreen).not.toHaveBeenCalled();
