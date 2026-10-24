@@ -60,6 +60,9 @@ const ANDROID_CHUNK_SIZE = 256 * 1024;
 const YIELD_BUDGET_MS = 12;
 const HIDDEN_YIELD_BUDGET_MS = 250;
 
+/** A marked in or out time; false or null when it is not set, and the log's own end applies. */
+export type ExportBound = number | false | null;
+
 export interface VideoExportProgress {
     frame: number;
     totalFrames: number;
@@ -128,8 +131,8 @@ export interface VideoExportOptions {
     frameRate: number;
     width: number;
     height: number;
-    inTime?: number | false | null;
-    outTime?: number | false | null;
+    inTime?: ExportBound;
+    outTime?: ExportBound;
     userSettings?: OverlaySettings | Pick<UserSettings, "sticks" | "craft" | "analyser">;
     includeSticks?: boolean;
     includeCraft?: boolean;
@@ -163,13 +166,13 @@ function saveMode(): "stream" | "buffered" {
         : "buffered";
 }
 
-function normalizeBound(value: number | false | null | undefined, fallback: () => number): number {
+function normalizeBound(value: ExportBound | undefined, fallback: () => number): number {
     return value === false || value == null ? fallback() : value;
 }
 
 interface RangeSource {
-    inTime?: number | false | null;
-    outTime?: number | false | null;
+    inTime?: ExportBound;
+    outTime?: ExportBound;
     getMinTime?: () => number;
     getMaxTime?: () => number;
 }
@@ -562,7 +565,8 @@ async function renderVideoFrames({
             includeAnalyser: options.includeAnalyser,
             analyserLayout: options.getAnalyserLayout?.(),
         });
-        await source.add(frame / options.frameRate, 1 / options.frameRate);
+        // Frames go to the encoder one at a time and in order, so this await belongs in the loop.
+        await source.add(frame / options.frameRate, 1 / options.frameRate); // NOSONAR typescript:S9382
 
         const now = performance.now();
         const frameMs = Math.max(0.1, now - lastFrameAt);
@@ -572,7 +576,8 @@ async function renderVideoFrames({
 
         const budget = typeof document !== "undefined" && document.hidden ? HIDDEN_YIELD_BUDGET_MS : YIELD_BUDGET_MS;
         if (now - lastYieldAt >= budget) {
-            await yieldToBrowser();
+            // Hands the main thread back between frames, which is the point of awaiting in the loop.
+            await yieldToBrowser(); // NOSONAR typescript:S9382
             lastYieldAt = performance.now();
         }
     }
