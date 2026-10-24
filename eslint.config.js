@@ -5,6 +5,7 @@ import vueParser from "vue-eslint-parser";
 import tseslint from "typescript-eslint";
 import globals from "globals";
 import boundariesPlugin from "eslint-plugin-boundaries";
+import noHexColours from "./scripts/eslint/no-hex-colours.mjs";
 
 export default [
     {
@@ -90,6 +91,8 @@ export default [
             // Shared styles belong in theme.css or nuxt-ui.css; a component's own styles nest
             // under its root class instead of relying on `scoped` (#4995, #5542).
             "vue/enforce-style-attribute": ["error", { allow: ["plain", "module"] }],
+            // Colours are theme tokens from src/css/theme.css, so light, dark and the colour themes apply.
+            "betaflight/no-hex-colours": "error",
         },
     },
     {
@@ -101,6 +104,9 @@ export default [
             },
         },
         processor: "vue/vue",
+        plugins: {
+            betaflight: { rules: { "no-hex-colours": noHexColours } },
+        },
     },
     {
         // Build and release tooling: real Node scripts, not browser code. Without this
