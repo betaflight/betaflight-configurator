@@ -52,8 +52,8 @@ export const useLogStore = defineStore("blackboxLog", () => {
     });
     const videoURL = ref<string | null>(null);
 
-    // Field values table data (updated by updateValuesChart in main.js)
-    const fieldValues = shallowRef<{ name: string; raw: string; decoded: string }[]>([]);
+    // Field values table data (updated by updateValuesChart in values_display.ts)
+    const fieldValues = shallowRef<{ name: string; raw: number | string; decoded: number | string | undefined }[]>([]);
     const fieldStats = shallowRef<{ name: string; min: string; max: string; mean: string }[]>([]);
 
     // Log index picker (multiple logs in one file)
