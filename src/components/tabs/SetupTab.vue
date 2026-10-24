@@ -319,7 +319,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 
 import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
-import { flightIndicator } from "../../../libraries/flightIndicators";
+import { flightIndicator } from "../../js/flightIndicators";
 import { tabSwitchCleanup } from "../../js/tab_adapters";
 
 const { t } = useTranslation();

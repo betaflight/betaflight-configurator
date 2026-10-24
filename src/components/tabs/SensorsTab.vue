@@ -872,7 +872,7 @@ import { buildCharacterizationModel } from "../../js/utils/magModelExport";
 import { useTimeout } from "../../composables/useTimeout";
 import { useInterval } from "../../composables/useInterval";
 import Model from "../../js/model";
-import { flightIndicator } from "../../../libraries/flightIndicators";
+import { flightIndicator } from "../../js/flightIndicators";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";

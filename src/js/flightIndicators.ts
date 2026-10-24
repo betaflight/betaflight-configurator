@@ -1,11 +1,48 @@
 /*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * Flight Indicators module (jQuery-free)
  * Based on jQuery Flight Indicators plugin by Sébastien Matton
  * Original: https://github.com/sebmatton/jQuery-Flight-Indicators
  * Published under GPLv3 License.
  */
 
-const DEFAULTS = {
+export type FlightIndicatorType = "attitude" | "heading" | "variometer" | "turn_coordinator" | "airspeed" | "altimeter";
+
+export interface FlightIndicatorSettings {
+    size: number;
+    roll: number;
+    pitch: number;
+    turn: number;
+    heading: number;
+    vario: number;
+    airspeed: number;
+    altitude: number;
+    pressure: number;
+    showBox: boolean;
+    img_directory: string;
+}
+
+const DEFAULTS: FlightIndicatorSettings = {
     size: 200,
     roll: 0,
     pitch: 0,
@@ -27,18 +64,26 @@ const CONSTANTS = {
 };
 
 class FlightIndicator {
-    constructor(selector, type, options) {
-        this._el = typeof selector === "string" ? document.querySelector(selector) : selector;
+    private readonly _el: HTMLElement | null;
+    private readonly _settings: FlightIndicatorSettings;
+    private readonly _type: FlightIndicatorType;
+
+    constructor(
+        selector: string | HTMLElement | null,
+        type: FlightIndicatorType,
+        options?: Partial<FlightIndicatorSettings>,
+    ) {
+        this._el = typeof selector === "string" ? document.querySelector<HTMLElement>(selector) : selector;
         this._settings = { ...DEFAULTS, ...options };
         this._type = type;
 
         if (!this._el) {
             return;
         }
-        this._build();
+        this._build(this._el);
     }
 
-    _build() {
+    private _build(element: HTMLElement): void {
         const s = this._settings;
         const d = s.img_directory;
         let html;
@@ -65,15 +110,15 @@ class FlightIndicator {
                 break;
         }
 
-        this._el.innerHTML = html;
+        element.innerHTML = html;
 
-        const instrument = this._el.querySelector("div.instrument");
+        const instrument = element.querySelector<HTMLElement>("div.instrument");
         if (instrument) {
             instrument.style.height = `${s.size}px`;
             instrument.style.width = `${s.size}px`;
         }
 
-        const bg = this._el.querySelector("div.instrument img.box.background");
+        const bg = element.querySelector<HTMLElement>("div.instrument img.box.background");
         if (bg) {
             bg.style.display = s.showBox ? "" : "none";
         }
@@ -103,18 +148,18 @@ class FlightIndicator {
         }
     }
 
-    _q(selector) {
-        return this._el?.querySelector(selector);
+    private _q(selector: string): HTMLElement | null | undefined {
+        return this._el?.querySelector<HTMLElement>(selector);
     }
 
-    setRoll(roll) {
+    setRoll(roll: number): void {
         const el = this._q("div.instrument.attitude div.roll");
         if (el) {
             el.style.transform = `rotate(${-roll}deg)`;
         }
     }
 
-    setPitch(pitch) {
+    setPitch(pitch: number): void {
         if (pitch > CONSTANTS.pitch_bound) {
             pitch = CONSTANTS.pitch_bound;
         } else if (pitch < -CONSTANTS.pitch_bound) {
@@ -126,21 +171,21 @@ class FlightIndicator {
         }
     }
 
-    setHeading(heading) {
+    setHeading(heading: number): void {
         const el = this._q("div.instrument.heading div.heading");
         if (el) {
             el.style.transform = `rotate(${-heading}deg)`;
         }
     }
 
-    setTurn(turn) {
+    setTurn(turn: number): void {
         const el = this._q("div.instrument.turn_coordinator div.turn");
         if (el) {
             el.style.transform = `rotate(${turn}deg)`;
         }
     }
 
-    setVario(vario) {
+    setVario(vario: number): void {
         if (vario > CONSTANTS.vario_bound) {
             vario = CONSTANTS.vario_bound;
         } else if (vario < -CONSTANTS.vario_bound) {
@@ -153,7 +198,7 @@ class FlightIndicator {
         }
     }
 
-    setAirSpeed(speed) {
+    setAirSpeed(speed: number): void {
         if (speed > CONSTANTS.airspeed_bound_h) {
             speed = CONSTANTS.airspeed_bound_h;
         } else if (speed < CONSTANTS.airspeed_bound_l) {
@@ -166,7 +211,7 @@ class FlightIndicator {
         }
     }
 
-    setAltitude(altitude) {
+    setAltitude(altitude: number): void {
         const needle = 90 + ((altitude % 1000) * 360) / 1000;
         const needleSmall = (altitude / 10000) * 360;
         const el1 = this._q("div.instrument.altimeter div.needle");
@@ -179,7 +224,7 @@ class FlightIndicator {
         }
     }
 
-    setPressure(pressure) {
+    setPressure(pressure: number): void {
         pressure = 2 * pressure - 1980;
         const el = this._q("div.instrument.altimeter div.pressure");
         if (el) {
@@ -187,7 +232,7 @@ class FlightIndicator {
         }
     }
 
-    resize(size) {
+    resize(size: number): void {
         const el = this._q("div.instrument");
         if (el) {
             el.style.height = `${size}px`;
@@ -195,14 +240,14 @@ class FlightIndicator {
         }
     }
 
-    showBox() {
+    showBox(): void {
         const el = this._q("img.box.background");
         if (el) {
             el.style.display = "";
         }
     }
 
-    hideBox() {
+    hideBox(): void {
         const el = this._q("img.box.background");
         if (el) {
             el.style.display = "none";
@@ -210,6 +255,10 @@ class FlightIndicator {
     }
 }
 
-export function flightIndicator(selector, type, options) {
+export function flightIndicator(
+    selector: string | HTMLElement | null,
+    type: FlightIndicatorType,
+    options?: Partial<FlightIndicatorSettings>,
+): FlightIndicator {
     return new FlightIndicator(selector, type, options);
 }
