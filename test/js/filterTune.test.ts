@@ -285,11 +285,17 @@ describe("filter autotune status", () => {
         });
     });
 
-    it("rejects other versions and truncated payloads", () => {
+    it("rejects version 0 and truncated payloads", () => {
         const other = statusPayload();
-        other[0] = 2;
+        other[0] = 0;
         expect(parseFilterTuneStatus(other)).toBeNull();
         expect(parseFilterTuneStatus(statusPayload().slice(0, 40))).toBeNull();
+    });
+
+    it("reads a newer version's payload by its version 1 fields", () => {
+        const newer = statusPayload();
+        newer[0] = 3;
+        expect(parseFilterTuneStatus(newer)).toEqual(parseFilterTuneStatus(statusPayload()));
     });
 });
 

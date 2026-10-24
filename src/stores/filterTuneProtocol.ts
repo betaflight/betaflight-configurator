@@ -377,7 +377,7 @@ function readSweep(r: Reader): SweepResult | null {
         return null;
     }
     const phase = SWEEP_PHASES[r.u8()] ?? "none";
-    const end = SWEEP_ENDS[r.u8()] ?? "none";
+    const end = SWEEP_ENDS[r.u8() & 0x0f] ?? "none"; // newer firmware keeps the retry count in the high nibble
     const amplitudeDps = r.u16() / 10;
     const hz = (v: number) => (v ? v / 10 : null);
     const crossoverHz = { roll: hz(r.u16()), pitch: hz(r.u16()) };
@@ -404,7 +404,8 @@ function readSweep(r: Reader): SweepResult | null {
 export function parseFilterTuneStatus(data: ArrayBufferView | ArrayLike<number>): FilterTuneStatus | null {
     const r = new Reader(toBytes(data));
     try {
-        if (r.u8() !== FILTER_TUNE_VERSION) {
+        // newer firmware appends blocks and bumps the version: its first fields are still these
+        if (r.u8() < FILTER_TUNE_VERSION) {
             return null;
         }
         const stateCode = r.u8();
