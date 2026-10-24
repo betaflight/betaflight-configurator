@@ -66,7 +66,7 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         }
     },
 }));
-vi.mock("../../src/blackbox-viewer/playback_controls.js", () => ({ setCurrentBlackboxTime: vi.fn() }));
+vi.mock("../../src/blackbox-viewer/playback_controls", () => ({ setCurrentBlackboxTime: vi.fn() }));
 
 describe("Flight3DPanel", () => {
     beforeEach(() => {

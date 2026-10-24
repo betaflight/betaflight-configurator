@@ -96,7 +96,7 @@ import { computed, onActivated, onDeactivated, onBeforeUnmount, onMounted, ref, 
 import { useGraphStore } from "../stores/graph";
 import { useLogStore } from "../stores/log";
 import { useSettingsStore } from "../stores/settings";
-import { setCurrentBlackboxTime } from "../playback_controls.js";
+import { setCurrentBlackboxTime } from "../playback_controls";
 import { FlightLogFieldPresenter, type PresentedFlightLog } from "../flightlog_fields_presenter";
 import type { FlightLog } from "../flightlog";
 import { buildFlightTrack, type FlightLogSource, type FlightTrack } from "../flight3d/flightTrack";

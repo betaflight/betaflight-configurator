@@ -19,8 +19,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-// throttle-debounce ships no types; this covers only what the blackbox viewer's
-// spectrum analyser calls. @types/throttle-debounce would replace it.
+// throttle-debounce ships no types; this covers only what the blackbox viewer calls:
+// debounce in the spectrum analyser, throttle in playback. @types/throttle-debounce would replace it.
 declare module "throttle-debounce" {
     /** The wrapped callback, plus cancel() to drop a pending call. */
     type Debounced<T extends (...args: never[]) => void> = T & { cancel(options?: { upcomingOnly?: boolean }): void };
@@ -29,5 +29,11 @@ declare module "throttle-debounce" {
         delay: number,
         callback: T,
         options?: { atBegin?: boolean },
+    ): Debounced<T>;
+
+    export function throttle<T extends (...args: never[]) => void>(
+        delay: number,
+        callback: T,
+        options?: { noTrailing?: boolean; noLeading?: boolean; debounceMode?: boolean },
     ): Debounced<T>;
 }
