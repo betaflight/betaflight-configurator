@@ -189,6 +189,7 @@ import { usePortsRules } from "../../../composables/ports/usePortsRules";
 import { usePortsState } from "../../../composables/ports/usePortsState";
 import { usePortsConfiguration } from "../../../composables/ports/usePortsConfiguration";
 import type { PortRow } from "../../../composables/ports/usePortsState";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const { t } = useTranslation();
 
@@ -204,6 +205,7 @@ const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfigurat
     analyticsChanges,
     functionRules,
 );
+registerTabSave(() => saveConfig());
 
 const tabReady = ref(false);
 

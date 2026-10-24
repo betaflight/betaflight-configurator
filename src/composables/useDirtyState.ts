@@ -20,6 +20,7 @@
  */
 
 import { computed, ref, type ComputedRef } from "vue";
+import { registerUnsavedChangesForComponent } from "../js/unsaved_changes";
 
 export interface DirtyState {
     dirty: ComputedRef<boolean>;
@@ -38,6 +39,11 @@ export interface DirtyState {
  * left Modes permanently dirty in #5385. A null baseline means "not tracking yet", so a tab
  * whose load failed never reports dirty.
  *
+ * Called from a component, the dirty flag is also registered for the unsaved-changes prompt
+ * shown when leaving the tab. That holds for any component that calls it, directly or through a
+ * composable such as useVtx, usePower, useAdjustmentsState or usePortsState: each such dirty
+ * flag takes part in the prompt for as long as the component is mounted.
+ *
  * @param serialize side-effect free, since `dirty` calls it during render
  */
 export function useDirtyState(serialize: () => string): DirtyState {
@@ -50,6 +56,8 @@ export function useDirtyState(serialize: () => string): DirtyState {
     }
 
     const takeSnapshot = () => serialize();
+
+    registerUnsavedChangesForComponent(() => dirty.value);
 
     return { dirty, markClean, takeSnapshot };
 }
