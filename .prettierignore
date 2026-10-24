@@ -31,8 +31,7 @@ nbproject/
 .settings/
 test-results-junit/
 
-# Vendored third-party libraries -- analytics.js is minified upstream output and
-# must not be reformatted.
+# Vendored third-party styles.
 libraries/
 
 # Tool-owned JSON -- written by npm, Tauri and the 3D model exporter; keep
