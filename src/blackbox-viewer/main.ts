@@ -325,7 +325,8 @@ export function bootstrapViewer(): () => void {
         reader.onload = function () {
             const bytes = reader.result as ArrayBuffer;
 
-            const fileContents = String.fromCodePoint(...new Uint8Array(bytes, 0, 100));
+            // The first 100 bytes say whether it is a CLI dump; a shorter file is read whole.
+            const fileContents = String.fromCodePoint(...new Uint8Array(bytes, 0, Math.min(100, bytes.byteLength)));
 
             if (/# dump|# diff/i.exec(fileContents)) {
                 // this is actually a configuration file

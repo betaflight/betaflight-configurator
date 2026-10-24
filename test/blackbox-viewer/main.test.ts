@@ -151,6 +151,22 @@ describe("bootstrapViewer", () => {
         expect(graphs).toHaveLength(0);
     });
 
+    it("reports a log file too short to hold a log", async () => {
+        vi.useRealTimers();
+        useAppStore(pinia).loadFiles!([new File([new Uint8Array(40)], "tiny.bbl")]);
+
+        await vi.waitFor(() => expect(alert).toHaveBeenCalled());
+        expect(graphs).toHaveLength(0);
+    });
+
+    it("reads a short CLI dump as a configuration file, not a log", async () => {
+        vi.useRealTimers();
+        useAppStore(pinia).loadFiles!([new File(["# diff\nset a = 1\n"], "cli.txt")]);
+
+        await vi.waitFor(() => expect(useGraphStore(pinia).hasConfig).toBe(true));
+        expect(alert).not.toHaveBeenCalled();
+    });
+
     it("splits a graph into one graph per field", () => {
         useAppStore(pinia).loadLogBuffer!(LOG_BYTES);
         const graphStore = useGraphStore(pinia);
