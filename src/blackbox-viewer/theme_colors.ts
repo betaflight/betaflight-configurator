@@ -23,7 +23,7 @@
  * Theme Colors Helper
  *
  * Provides JavaScript access to CSS variables defined in theme.css.
- * Used by canvas rendering code (grapher.js, seekbar.js) to get
+ * Used by canvas rendering code (grapher.ts, seekbar.ts) to get
  * theme-aware colors that update when the theme changes.
  */
 

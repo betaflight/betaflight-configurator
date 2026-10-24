@@ -27,7 +27,7 @@ import { PrefStorage } from "../pref_storage";
 import type { FlightLogGrapher } from "../grapher";
 import type { GraphConfig, GraphPanelConfig } from "../graph_config";
 import type { MapGrapher } from "../graph_map";
-import type { SeekBar } from "../seekbar.js";
+import type { SeekBar } from "../seekbar";
 
 export type GrapherInstance = InstanceType<typeof FlightLogGrapher>;
 
