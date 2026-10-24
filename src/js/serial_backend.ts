@@ -139,6 +139,29 @@ function isDrivenRebootTarget(port: string): boolean {
     return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual");
 }
 
+/** The open link is a BLE-UART bridge (WebBluetooth / CapacitorBle). */
+function isBluetoothLink(): boolean {
+    const port = DeviceHandler.devicePicker.selectedDevice;
+    return typeof port === "string" && port.startsWith("bluetooth");
+}
+
+// Live-data polling cadence and MSP request timeout, by link type. A BLE-UART bridge of the
+// HM-10 / CC2541 class delivers one 20-byte notification per connection interval — a few
+// hundred bytes per second, measured ~330 B/s on a Flywoo BT-NANO V2. At that rate a single
+// MSP_BOXNAMES reply (a 360-byte jumbo frame) outlasts the 1 s request timeout, the retry
+// asks the FC for it again while the first copy is still draining, and the bridge's UART
+// buffer overflows until the link drops. Box names never change while connected, so over
+// BLE the live cycle fetches them once, polls at a quarter of the serial rate and waits
+// longer for each reply.
+const LIVE_DATA_INTERVAL_MS = 250;
+const LIVE_DATA_INTERVAL_BLE_MS = 1000;
+const MSP_TIMEOUT_DEFAULT_MS = 1000;
+const MSP_TIMEOUT_BLE_MS = 3000;
+// Identical requests allowed on the wire at once (see MSP.MAX_SAME_IN_FLIGHT): a second copy
+// in flight over a BLE bridge lifts a tab's attitude polling from ~7 to ~15 replies/s.
+const MSP_SAME_IN_FLIGHT_DEFAULT = 1;
+const MSP_SAME_IN_FLIGHT_BLE = 2;
+
 /**
  * Reconnect-window duration for the currently-selected target: driven (BLE/manual) reboots
  * get the longer window, serial re-enumeration keeps the original. Evaluated once per reboot
@@ -775,6 +798,8 @@ function resetConnection() {
 
     MSP.clearListeners();
     MSP.onTimeout = null;
+    MSP.TIMEOUT = MSP_TIMEOUT_DEFAULT_MS;
+    MSP.MAX_SAME_IN_FLIGHT = MSP_SAME_IN_FLIGHT_DEFAULT;
     // Clear the FC-liveness timestamp so the next connection can't inherit stale traffic state
     // from this one and mis-classify a fresh link as still-alive in handleConnectionTimeout.
     MSP.last_received_timestamp = null;
@@ -912,6 +937,8 @@ function onOpen(openInfo: unknown) {
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
         MSP.onTimeout = handleConnectionTimeout;
+        MSP.TIMEOUT = isBluetoothLink() ? MSP_TIMEOUT_BLE_MS : MSP_TIMEOUT_DEFAULT_MS;
+        MSP.MAX_SAME_IN_FLIGHT = isBluetoothLink() ? MSP_SAME_IN_FLIGHT_BLE : MSP_SAME_IN_FLIGHT_DEFAULT;
 
         console.log(`${logHead} Requesting configuration data`);
 
@@ -1465,7 +1492,10 @@ export async function update_sensor_status() {
     if (!(await requestLiveData(MSPCodes.MSP_BATTERY_STATE, "MSP_BATTERY_STATE"))) {
         return;
     }
-    if (!(await requestLiveData(MSPCodes.MSP_BOXNAMES, "MSP_BOXNAMES"))) {
+    // Static while connected and too big for a slow BLE bridge to refresh every cycle, so over
+    // BLE it is fetched only until the names are in (the status bar needs them).
+    const needBoxNames = !isBluetoothLink() || fcStore.auxConfig.length === 0;
+    if (needBoxNames && !(await requestLiveData(MSPCodes.MSP_BOXNAMES, "MSP_BOXNAMES"))) {
         return;
     }
     if (!(await requestLiveData(MSPCodes.MSP_STATUS_EX, "MSP_STATUS_EX"))) {
@@ -1509,7 +1539,10 @@ function clearLiveDataRefreshTimer() {
 function startLiveDataRefreshTimer() {
     // live data refresh
     clearLiveDataRefreshTimer();
-    liveDataRefreshTimerId = setInterval(update_live_status, 250);
+    liveDataRefreshTimerId = setInterval(
+        update_live_status,
+        isBluetoothLink() ? LIVE_DATA_INTERVAL_BLE_MS : LIVE_DATA_INTERVAL_MS,
+    );
 }
 
 export function reinitializeConnection() {
