@@ -1749,8 +1749,32 @@
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle (Highest ESC value when armed)"
     },
+    "configurationMotorMagnets": {
+        "message": "Magnets (poles)"
+    },
     "configurationMotorKv": {
-        "message": "Motor KV"
+        "message": "KV"
+    },
+    "configurationMotorKvHelp": {
+        "message": "Motor velocity constant from the motor label (rpm per volt). Used by the RPM limiter and the motor thermal estimator."
+    },
+    "configurationMotorStator": {
+        "message": "Stator size"
+    },
+    "configurationMotorStatorHelp": {
+        "message": "Stator size as printed on the motor, e.g. 2207 or 2203.5 (diameter 22 mm, height 3.5 mm). Used by the motor thermal estimator to scale heat capacity and cooling."
+    },
+    "configurationMotorAdvanced": {
+        "message": "Advanced motor settings"
+    },
+    "configurationMotorBrand": {
+        "message": "Brand / model"
+    },
+    "configurationMotorBrandHelp": {
+        "message": "Pick the brand and model to fill in the KV, stator size and magnet count. Values can still be edited below; Generic: a motor not in the list, entered by hand."
+    },
+    "configurationMotorModel": {
+        "message": "Model"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (ESC value when disarmed)"
@@ -6945,6 +6969,25 @@
     "osdWarningTextAutopilotAbort": {
         "message": "Autopilot mission aborted",
         "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningTextMotorTemp": {
+        "message": "Motor hot (estimated)"
+    },
+    "osdWarningMotorTemp": {
+        "message": "Shows MOTOR HOT with the estimated winding temperature when it exceeds motor_thermal_warning"
+    },
+    "osdTextElementMotorTempEst": {
+        "message": "Motor temperature (estimated)"
+    },
+    "osdDescElementMotorTempEst": {
+        "message": "Estimated winding temperature of each motor, from rpm, battery voltage and the motor-command noise index. Blinks above the warning threshold."
+    },
+    "osdTextStatMotorTempEst": {
+        "message": "Motor temperature max/avg (estimated)",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMotorTempEst": {
+        "message": "Hottest estimated motor winding temperature during the flight and the average over motors and time"
     },
     "osdWarningAutopilotAbort": {
         "message": "Autopilot mission aborted",

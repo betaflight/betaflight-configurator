@@ -463,6 +463,9 @@ export interface MotorConfig {
     use_dshot_telemetry: boolean;
     use_esc_sensor: boolean;
     motor_kv: number;
+    motor_stator_diameter: number; // mm, 0 = firmware without the thermal estimator
+    motor_stator_height: number; // 0.1 mm
+    motor_prop_diameter: number; // 0.1 inch, 0 = auto
 }
 
 // Reset as 8 undefined slots; MSP_MOTOR / MSP_SERVO fill as many as the FC reports.
