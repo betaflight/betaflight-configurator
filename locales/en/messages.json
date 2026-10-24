@@ -2583,7 +2583,7 @@
         "message": "Trimming tau reset"
     },
     "psasTrimmingTauResetHelp": {
-        "message": "Tau reset when trimming off, s"
+        "message": "Tau reset when trimming off, ms"
     },
     "receiverRcSmoothing": {
         "message": "RC Smoothing"
