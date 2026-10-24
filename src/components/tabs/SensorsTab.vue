@@ -739,6 +739,7 @@
                         size="xs"
                         class="w-fit"
                         :label="$t('sensorConfigCalibrate')"
+                        :loading="calIsCalibrating"
                         @click="startLegacyFirmwareCal()"
                     >
                         <template #trailing>

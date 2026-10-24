@@ -193,7 +193,9 @@ export function useMagCalibration() {
      *   'check': real-time validation without altering calibration.
      */
     async function startCalibration(calMode: MagCalibrationMode = "full") {
-        if (phase.value !== "idle" || starting) {
+        // Only an active session blocks a new one. A finished one ('complete' or 'error') must
+        // not: the legacy Calibrate button has no Retry/Close to reset the phase to idle (#5650).
+        if (phase.value === "waiting" || phase.value === "collecting" || starting) {
             return;
         }
 
