@@ -87,6 +87,7 @@ const { useWorkspaceStore } = await import("../../src/blackbox-viewer/stores/wor
 const { useAppStore } = await import("../../src/blackbox-viewer/stores/app");
 const playback = await import("../../src/blackbox-viewer/playback_controls");
 const lifecycle = await import("../../src/blackbox-viewer/log_lifecycle");
+const videoHandler = await import("../../src/blackbox-viewer/video_handler");
 const { cancelActiveVideoExport } = await import("../../src/blackbox-viewer/video_export");
 const { bootstrapViewer } = await import("../../src/blackbox-viewer/main");
 
@@ -149,6 +150,13 @@ describe("bootstrapViewer", () => {
 
         expect(alert).toHaveBeenCalled();
         expect(graphs).toHaveLength(0);
+    });
+
+    it("sends a video by its extension, and a big file without a known one, to the video player", () => {
+        const mp4 = new File([], "flight.MP4");
+        const big = { name: "capture.dat", size: 11 * 1024 * 1024 } as File;
+        useAppStore(pinia).loadFiles!([mp4, big]);
+        expect(vi.mocked(videoHandler.loadVideo).mock.calls).toEqual([[mp4], [big]]);
     });
 
     it("reports a log file too short to hold a log", async () => {
@@ -229,7 +237,12 @@ describe("bootstrapViewer", () => {
         expect(cancelActiveVideoExport).toHaveBeenCalled();
         expect(graphs[0].calls).toContain("destroy");
         expect(useGraphStore(pinia).graph).toBeNull();
-        expect(removed.mock.calls.map(([type]) => type).sort()).toEqual(["keydown", "keydown", "wheel"]);
+        // Newest first: the capture-phase Space guard went on last.
+        expect(removed.mock.calls.map(([type, , capture]) => [type, capture === true])).toEqual([
+            ["keydown", true],
+            ["keydown", false],
+            ["wheel", false],
+        ]);
         expect(removedFromWindow.mock.calls.map(([type]) => type)).toContain("resize");
     });
 });

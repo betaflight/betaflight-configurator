@@ -90,6 +90,31 @@ function viewerElement<T extends HTMLElement>(id: string): T {
     return document.getElementById(id) as T;
 }
 
+function supportsRequiredAPIs() {
+    return (
+        globalThis.File &&
+        globalThis.FileList &&
+        typeof globalThis.Blob?.prototype.arrayBuffer === "function" &&
+        !!document.createElement("canvas").getContext
+    );
+}
+
+type DroppedFileKind = "log" | "video" | "workspaces";
+
+/** What a dropped file holds, by its extension; without a known one, small files are logs and big ones videos. */
+function droppedFileKind(file: Pick<File, "name" | "size">): DroppedFileKind {
+    if (/\.(BBL|TXT|CFL|BFL|LOG)$/i.test(file.name)) {
+        return "log";
+    }
+    if (/\.(AVI|MOV|MP4|MPEG)$/i.test(file.name)) {
+        return "video";
+    }
+    if (/\.(JSON)$/i.test(file.name)) {
+        return "workspaces";
+    }
+    return file.size < 10 * 1024 * 1024 ? "log" : "video";
+}
+
 /**
  * Start the viewer in the mounted App.vue: create the renderers, register the store callbacks and
  * the document handlers. Returns the teardown, which undoes all of it so the tab can mount again.
@@ -97,15 +122,6 @@ function viewerElement<T extends HTMLElement>(id: string): T {
 export function bootstrapViewer(): () => void {
     // Teardown callbacks, run in reverse on destroy to allow clean re-mount as a tab.
     const cleanupFns: (() => void)[] = [];
-
-    function supportsRequiredAPIs() {
-        return (
-            globalThis.File &&
-            globalThis.FileReader &&
-            globalThis.FileList &&
-            !!document.createElement("canvas").getContext
-        );
-    }
 
     if (!supportsRequiredAPIs()) {
         alert("Your browser does not support the APIs required for reading log files.");
@@ -252,23 +268,12 @@ export function bootstrapViewer(): () => void {
 
     function loadFiles(files: FileList | File[]) {
         for (const file of files) {
-            let isLog = /\.(BBL|TXT|CFL|BFL|LOG)$/i.test(file.name);
-            let isVideo = /\.(AVI|MOV|MP4|MPEG)$/i.test(file.name);
-            const isWorkspaces = /\.(JSON)$/i.test(file.name);
-
-            if (!isLog && !isVideo && !isWorkspaces) {
-                if (file.size < 10 * 1024 * 1024) {
-                    isLog = true; //Assume small files are logs rather than videos
-                } else {
-                    isVideo = true;
-                }
-            }
-
-            if (isLog) {
+            const kind = droppedFileKind(file);
+            if (kind === "log") {
                 loadLogFile(file);
-            } else if (isVideo) {
+            } else if (kind === "video") {
                 loadVideo(file);
-            } else if (isWorkspaces) {
+            } else {
                 void loadWorkspaces(file, workspaceStore, onSwitchWorkspace);
             }
         }
@@ -320,11 +325,11 @@ export function bootstrapViewer(): () => void {
     }
 
     function loadLogFile(file: File) {
-        const reader = new FileReader();
+        void file.arrayBuffer().then(onLogFileRead, (error: unknown) => {
+            console.error(`blackbox-viewer: cannot read ${file.name}`, error);
+        });
 
-        reader.onload = function () {
-            const bytes = reader.result as ArrayBuffer;
-
+        function onLogFileRead(bytes: ArrayBuffer) {
             // The first 100 bytes say whether it is a CLI dump; a shorter file is read whole.
             const fileContents = String.fromCodePoint(...new Uint8Array(bytes, 0, Math.min(100, bytes.byteLength)));
 
@@ -347,9 +352,7 @@ export function bootstrapViewer(): () => void {
             }
 
             openLogData(new Uint8Array(bytes), file);
-        };
-
-        reader.readAsArrayBuffer(file);
+        }
     }
 
     // Load a log directly from an in-memory buffer (e.g. pulled from a connected FC's
@@ -832,9 +835,10 @@ export function bootstrapViewer(): () => void {
             console.error("blackbox-viewer: seekBar.destroy failed", e);
         }
 
-        for (const fn of cleanupFns.reverse()) {
+        // Newest first, without reordering the list itself.
+        for (let i = cleanupFns.length - 1; i >= 0; i--) {
             try {
-                fn();
+                cleanupFns[i]();
             } catch (e) {
                 console.error("blackbox-viewer: cleanup failed", e);
             }
