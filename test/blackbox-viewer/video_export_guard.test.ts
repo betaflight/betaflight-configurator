@@ -1,10 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-    invalidateGraph,
-    isExportInProgress,
-    setExportInProgress,
-} from "../../src/blackbox-viewer/playback_controls.js";
-import { createKeydownHandler } from "../../src/blackbox-viewer/keyboard_handler.js";
+import { invalidateGraph, isExportInProgress, setExportInProgress } from "../../src/blackbox-viewer/playback_controls";
+import { createKeydownHandler, type KeydownContext } from "../../src/blackbox-viewer/keyboard_handler";
 
 afterEach(() => {
     setExportInProgress(false);
@@ -13,14 +9,14 @@ afterEach(() => {
 
 describe("video export playback guard", () => {
     it("releases the queued-frame latch when an animation frame is suppressed", () => {
-        const callbacks = [];
-        const requestAnimationFrame = vi.fn((callback) => callbacks.push(callback));
+        const callbacks: FrameRequestCallback[] = [];
+        const requestAnimationFrame = vi.fn((callback: FrameRequestCallback) => callbacks.push(callback));
         vi.stubGlobal("requestAnimationFrame", requestAnimationFrame);
 
         setExportInProgress(true);
         invalidateGraph();
         expect(requestAnimationFrame).toHaveBeenCalledTimes(1);
-        callbacks.shift()();
+        callbacks.shift()!(0);
 
         setExportInProgress(false);
         invalidateGraph();
@@ -28,7 +24,7 @@ describe("video export playback guard", () => {
 
         // Reset the module latch without entering the store-dependent render path.
         setExportInProgress(true);
-        callbacks.shift()();
+        callbacks.shift()!(0);
         expect(isExportInProgress()).toBe(true);
     });
 
@@ -38,7 +34,7 @@ describe("video export playback guard", () => {
             appStore: { viewerActive: true },
             hasGraph: () => true,
             logPlayPause,
-        });
+        } as unknown as KeydownContext);
         const event = {
             code: "Space",
             key: " ",
@@ -47,7 +43,7 @@ describe("video export playback guard", () => {
         };
 
         setExportInProgress(true);
-        handler(event);
+        handler(event as unknown as KeyboardEvent);
 
         expect(logPlayPause).not.toHaveBeenCalled();
         expect(event.preventDefault).not.toHaveBeenCalled();

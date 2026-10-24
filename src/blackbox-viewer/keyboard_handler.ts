@@ -1,38 +1,81 @@
-import { formatTime } from "./tools.js";
-import { GRAPH_MIN_ZOOM } from "./stores/graph.js";
-import { isExportInProgress } from "./playback_controls.js";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { formatTime } from "./tools";
+import { GRAPH_MIN_ZOOM, type GraphPanelConfig, type useGraphStore } from "./stores/graph";
+import { isExportInProgress } from "./playback_controls";
+import type { useLogStore } from "./stores/log";
+import type { usePlaybackStore } from "./stores/playback";
+import type { useWorkspaceStore, WorkspaceList } from "./stores/workspace";
+import type { useAppStore } from "./stores/app";
+import type { UserSettings } from "./user_settings_data";
+
+/** The user settings a key toggles. */
+type OverrideSetting = "graphSmoothOverride" | "graphExpoOverride" | "graphGridOverride";
+
+/**
+ * The element a key event came from. A keydown on the document targets an element, so the
+ * JavaScript read these without checking; `type` is set on inputs only.
+ */
+type KeyTarget = HTMLElement & { type?: string };
+
+/** The viewer's state and actions the keyboard shortcuts drive, from main.ts. */
+export interface KeydownContext {
+    /** Returns true if a graph is loaded. */
+    hasGraph: () => boolean;
+    graphStore: ReturnType<typeof useGraphStore>;
+    logStore: ReturnType<typeof useLogStore>;
+    playbackStore: ReturnType<typeof usePlaybackStore>;
+    workspaceStore: ReturnType<typeof useWorkspaceStore>;
+    appStore: ReturnType<typeof useAppStore>;
+    logPlayPause: () => void;
+    logJumpBack: (fast?: number | null, slow?: boolean) => void;
+    logJumpForward: (fast?: number | null, slow?: boolean) => void;
+    logJumpStart: () => void;
+    logJumpEnd: () => void;
+    logSmartSync: () => void;
+    /** Zoom to a percentage, or back to the previous zoom for null. */
+    setGraphZoom: (zoom: number | null) => void;
+    setVideoInTime: (time: number | null) => void;
+    setVideoOutTime: (time: number | null) => void;
+    setMarker: (state: boolean) => void;
+    setCurrentBlackboxTime: (time: number) => void;
+    /** Show or hide the value table, or toggle it with no argument. */
+    showValueTable: (state?: boolean) => void;
+    /** Show or hide the config file, or toggle it with no argument. */
+    showConfigFile: (state?: boolean) => void;
+    newGraphConfig: (config: GraphPanelConfig[]) => void;
+    toggleOverrideStatus: (setting: OverrideSetting & keyof UserSettings) => void;
+    invalidateGraph: () => void;
+    onSwitchWorkspace: (workspaces: WorkspaceList, id: number) => void;
+    onSaveWorkspace: (id: number, title: string) => void;
+    lastGraphConfig: () => GraphPanelConfig[] | null;
+}
+
+type LetterKeyHandler = (e: KeyboardEvent, shifted: boolean) => void;
 
 /**
  * Create a keydown event handler for the document.
- *
- * @param {Object} ctx - Context object with dependencies from main.js
- * @param {Function} ctx.hasGraph - Returns true if a graph is loaded
- * @param {Object} ctx.graphStore - Graph Pinia store
- * @param {Object} ctx.logStore - Log Pinia store
- * @param {Object} ctx.playbackStore - Playback Pinia store
- * @param {Object} ctx.workspaceStore - Workspace Pinia store
- * @param {Object} ctx.appStore - App Pinia store
- * @param {Function} ctx.logPlayPause - Toggle play/pause
- * @param {Function} ctx.logJumpBack - Jump backward
- * @param {Function} ctx.logJumpForward - Jump forward
- * @param {Function} ctx.logJumpStart - Jump to log start
- * @param {Function} ctx.logJumpEnd - Jump to log end
- * @param {Function} ctx.logSmartSync - Smart video sync
- * @param {Function} ctx.setGraphZoom - Set graph zoom level
- * @param {Function} ctx.setVideoInTime - Set video export in-point
- * @param {Function} ctx.setVideoOutTime - Set video export out-point
- * @param {Function} ctx.setMarker - Set marker state
- * @param {Function} ctx.setCurrentBlackboxTime - Set current time
- * @param {Function} ctx.showValueTable - Toggle value table overlay
- * @param {Function} ctx.showConfigFile - Toggle config file overlay
- * @param {Function} ctx.newGraphConfig - Apply new graph configuration
- * @param {Function} ctx.toggleOverrideStatus - Toggle a user setting override
- * @param {Function} ctx.invalidateGraph - Queue graph re-render
- * @param {Function} ctx.onSwitchWorkspace - Switch to workspace
- * @param {Function} ctx.onSaveWorkspace - Save workspace
- * @returns {Function} keydown event handler
  */
-export function createKeydownHandler(ctx) {
+export function createKeydownHandler(ctx: KeydownContext): (e: KeyboardEvent) => void {
     const {
         hasGraph,
         graphStore,
@@ -61,19 +104,20 @@ export function createKeydownHandler(ctx) {
         lastGraphConfig,
     } = ctx;
 
-    function handleWorkspaceKey(id, shiftKey) {
+    function handleWorkspaceKey(id: number, shiftKey: boolean) {
+        const workspace = workspaceStore.workspaceGraphConfigs[id];
         if (!shiftKey) {
-            if (workspaceStore.workspaceGraphConfigs[id] != null) {
+            if (workspace != null) {
                 onSwitchWorkspace(workspaceStore.workspaceGraphConfigs, id);
             }
-        } else if (workspaceStore.workspaceGraphConfigs[id]) {
-            onSaveWorkspace(id, workspaceStore.workspaceGraphConfigs[id].title);
+        } else if (workspace) {
+            onSaveWorkspace(id, workspace.title);
         } else {
             onSaveWorkspace(id, "Unnamed");
         }
     }
 
-    function handleBookmarkSave(id) {
+    function handleBookmarkSave(id: number) {
         if (id === 0) {
             workspaceStore.bookmarkTimes = [];
         } else if (workspaceStore.bookmarkTimes == null) {
@@ -87,19 +131,22 @@ export function createKeydownHandler(ctx) {
         invalidateGraph();
     }
 
-    function handleDigitKey(e) {
+    function handleDigitKey(e: KeyboardEvent) {
         const id = Number.parseInt(e.code.slice(5), 10);
         if (!e.altKey) {
             handleWorkspaceKey(id, e.shiftKey);
         } else if (e.shiftKey) {
             handleBookmarkSave(id);
-        } else if (workspaceStore.bookmarkTimes[id] != null) {
-            setCurrentBlackboxTime(workspaceStore.bookmarkTimes[id]);
-            invalidateGraph();
+        } else {
+            const bookmark = workspaceStore.bookmarkTimes[id];
+            if (bookmark != null) {
+                setCurrentBlackboxTime(bookmark);
+                invalidateGraph();
+            }
         }
     }
 
-    function handleAnalyserKey(shifted) {
+    function handleAnalyserKey(shifted: boolean) {
         if (shifted) {
             graphStore.toggleAnalyserFullscreen();
         } else {
@@ -107,7 +154,7 @@ export function createKeydownHandler(ctx) {
         }
     }
 
-    function handleKeyVideoIn(e, shifted) {
+    function handleKeyVideoIn(e: KeyboardEvent, shifted: boolean) {
         if (!shifted) {
             setVideoInTime(
                 playbackStore.videoExportInTime === logStore.currentBlackboxTime ? null : logStore.currentBlackboxTime,
@@ -116,7 +163,7 @@ export function createKeydownHandler(ctx) {
         e.preventDefault();
     }
 
-    function handleKeyVideoOut(e, shifted) {
+    function handleKeyVideoOut(e: KeyboardEvent, shifted: boolean) {
         if (!shifted) {
             setVideoOutTime(
                 playbackStore.videoExportOutTime === logStore.currentBlackboxTime ? null : logStore.currentBlackboxTime,
@@ -125,7 +172,7 @@ export function createKeydownHandler(ctx) {
         e.preventDefault();
     }
 
-    function handleKeyMarker(e) {
+    function handleKeyMarker(e: KeyboardEvent) {
         if (e.altKey) {
             logSmartSync();
         } else {
@@ -137,7 +184,7 @@ export function createKeydownHandler(ctx) {
         e.preventDefault();
     }
 
-    function handleKeyConfig(e, shifted) {
+    function handleKeyConfig(e: KeyboardEvent, shifted: boolean) {
         if (!shifted) {
             appStore.headerDialogOpen = false;
             showValueTable(false);
@@ -146,7 +193,7 @@ export function createKeydownHandler(ctx) {
         }
     }
 
-    function handleKeyTable(e, shifted) {
+    function handleKeyTable(e: KeyboardEvent, shifted: boolean) {
         if (!shifted) {
             appStore.headerDialogOpen = false;
             showValueTable();
@@ -156,16 +203,17 @@ export function createKeydownHandler(ctx) {
         }
     }
 
-    function handleKeyZoom(e) {
+    function handleKeyZoom(e: KeyboardEvent) {
         try {
             if (e.ctrlKey) {
-                if (lastGraphConfig() != null) {
-                    newGraphConfig(lastGraphConfig());
+                const last = lastGraphConfig();
+                if (last != null) {
+                    newGraphConfig(last);
                 }
             } else if (graphStore.graphZoom === GRAPH_MIN_ZOOM) {
-                setGraphZoom(null, true);
+                setGraphZoom(null);
             } else {
-                setGraphZoom(GRAPH_MIN_ZOOM, true);
+                setGraphZoom(GRAPH_MIN_ZOOM);
             }
         } catch {
             // Intentionally ignored — zoom toggle gracefully degrades when graph state is incomplete
@@ -173,14 +221,15 @@ export function createKeydownHandler(ctx) {
         e.preventDefault();
     }
 
-    function handleKeySave(e, shifted) {
+    function handleKeySave(e: KeyboardEvent, shifted: boolean) {
         try {
             if (!shifted) {
                 toggleOverrideStatus("graphSmoothOverride");
             } else if (e.shiftKey) {
+                // A missing active workspace throws here, and the catch below drops the key.
                 onSaveWorkspace(
                     workspaceStore.activeWorkspace,
-                    workspaceStore.workspaceGraphConfigs[workspaceStore.activeWorkspace].title,
+                    workspaceStore.workspaceGraphConfigs[workspaceStore.activeWorkspace]!.title,
                 );
             }
         } catch {
@@ -189,7 +238,7 @@ export function createKeydownHandler(ctx) {
         e.preventDefault();
     }
 
-    function handleKeyOverride(settingKey, e, shifted) {
+    function handleKeyOverride(settingKey: OverrideSetting, e: KeyboardEvent, shifted: boolean) {
         try {
             if (!shifted) {
                 toggleOverrideStatus(settingKey);
@@ -200,55 +249,64 @@ export function createKeydownHandler(ctx) {
         e.preventDefault();
     }
 
-    const letterKeyHandlers = {
-        i: handleKeyVideoIn,
-        o: handleKeyVideoOut,
-        m: handleKeyMarker,
-        c: handleKeyConfig,
-        a(e, shifted) {
-            handleAnalyserKey(shifted);
-            if (!shifted) {
-                e.preventDefault();
-            }
-        },
-        h(e, shifted) {
-            if (!shifted) {
-                if (!appStore.headerDialogOpen) {
-                    showValueTable(false);
-                    showConfigFile(false);
+    // A Map, so a key such as "constructor" finds no handler, as it never had one.
+    const letterKeyHandlers = new Map<string, LetterKeyHandler>([
+        ["i", handleKeyVideoIn],
+        ["o", handleKeyVideoOut],
+        ["m", handleKeyMarker],
+        ["c", handleKeyConfig],
+        [
+            "a",
+            (e, shifted) => {
+                handleAnalyserKey(shifted);
+                if (!shifted) {
+                    e.preventDefault();
                 }
-                appStore.headerDialogOpen = !appStore.headerDialogOpen;
-                e.preventDefault();
-            }
-        },
-        t: handleKeyTable,
-        w(e) {
-            if (e.shiftKey) {
-                workspaceStore.showDefaultMenu = true;
-            }
-        },
-        f(e, shifted) {
-            if (!shifted) {
-                graphStore.toggleFullscreen();
-                e.preventDefault();
-            }
-        },
-        z: handleKeyZoom,
-        s: handleKeySave,
-        x(e, shifted) {
-            handleKeyOverride("graphExpoOverride", e, shifted);
-        },
-        g(e, shifted) {
-            handleKeyOverride("graphGridOverride", e, shifted);
-        },
-    };
+            },
+        ],
+        [
+            "h",
+            (e, shifted) => {
+                if (!shifted) {
+                    if (!appStore.headerDialogOpen) {
+                        showValueTable(false);
+                        showConfigFile(false);
+                    }
+                    appStore.headerDialogOpen = !appStore.headerDialogOpen;
+                    e.preventDefault();
+                }
+            },
+        ],
+        ["t", handleKeyTable],
+        [
+            "w",
+            (e) => {
+                if (e.shiftKey) {
+                    workspaceStore.showDefaultMenu = true;
+                }
+            },
+        ],
+        [
+            "f",
+            (e, shifted) => {
+                if (!shifted) {
+                    graphStore.toggleFullscreen();
+                    e.preventDefault();
+                }
+            },
+        ],
+        ["z", handleKeyZoom],
+        ["s", handleKeySave],
+        ["x", (e, shifted) => handleKeyOverride("graphExpoOverride", e, shifted)],
+        ["g", (e, shifted) => handleKeyOverride("graphGridOverride", e, shifted)],
+    ]);
 
-    function handleLetterKey(e, shifted) {
+    function handleLetterKey(e: KeyboardEvent, shifted: boolean) {
         // Use e.key.toLowerCase() instead of e.code to support non-QWERTY layouts.
         // e.code reports physical key position (e.g., "KeyM" is always the M key position),
         // but e.key reports the actual character produced based on the user's keyboard layout.
         // On AZERTY, the physical M key produces e.key === "m" but e.code === "Semicolon".
-        const handler = letterKeyHandlers[e.key.toLowerCase()];
+        const handler = letterKeyHandlers.get(e.key.toLowerCase());
         if (!handler) {
             return false;
         }
@@ -256,21 +314,21 @@ export function createKeydownHandler(ctx) {
         return true;
     }
 
-    function handleNavigationKey(e) {
+    function handleNavigationKey(e: KeyboardEvent) {
         switch (e.code) {
             case "Space":
                 logPlayPause();
                 break;
             case "ArrowLeft":
                 if (e.shiftKey) {
-                    setGraphZoom(graphStore.graphZoom - 10 - (e.altKey ? 15 : 0), true);
+                    setGraphZoom(graphStore.graphZoom - 10 - (e.altKey ? 15 : 0));
                 } else {
                     logJumpBack(null, e.altKey);
                 }
                 break;
             case "ArrowRight":
                 if (e.shiftKey) {
-                    setGraphZoom(graphStore.graphZoom + 10 + (e.altKey ? 15 : 0), true);
+                    setGraphZoom(graphStore.graphZoom + 10 + (e.altKey ? 15 : 0));
                 } else {
                     logJumpForward(null, e.altKey);
                 }
@@ -291,7 +349,7 @@ export function createKeydownHandler(ctx) {
                 // Leave fullscreen, unless Escape is already busy dismissing a dialog — that
                 // traps focus inside itself, so the target tells us. Open popups never get
                 // here; they are filtered out before dispatch.
-                if (!graphStore.isFullscreen || e.target.closest?.("[role='dialog']")) {
+                if (!graphStore.isFullscreen || (e.target as KeyTarget).closest?.("[role='dialog']")) {
                     return false;
                 }
                 graphStore.toggleFullscreen();
@@ -314,11 +372,12 @@ export function createKeydownHandler(ctx) {
         if (!appStore.viewerActive || isExportInProgress()) {
             return;
         }
+        const target = e.target as KeyTarget;
         const shifted = e.altKey || e.shiftKey || e.ctrlKey || e.metaKey;
-        if (e.key === "Enter" && e.target.type === "text" && !e.target.closest(".modal")) {
-            e.target.blur();
+        if (e.key === "Enter" && target.type === "text" && !target.closest(".modal")) {
+            target.blur();
         }
-        if (hasGraph() && e.target.type !== "text" && !e.target.closest(".modal") && !e.target.closest?.(OPEN_POPUP)) {
+        if (hasGraph() && target.type !== "text" && !target.closest(".modal") && !target.closest?.(OPEN_POPUP)) {
             if (e.code.startsWith("Digit")) {
                 try {
                     handleDigitKey(e);
@@ -334,6 +393,14 @@ export function createKeydownHandler(ctx) {
             handleNavigationKey(e);
         }
     };
+}
+
+/** What the Space guard needs from main.ts. */
+export interface DropdownSpaceGuardContext {
+    appStore: Pick<ReturnType<typeof useAppStore>, "viewerActive">;
+    /** Returns true if a graph is loaded. */
+    hasGraph: () => boolean;
+    logPlayPause: () => void;
 }
 
 /**
@@ -352,25 +419,20 @@ export function createKeydownHandler(ctx) {
  * trigger element is matched (menu button via `aria-haspopup="menu"`, select
  * button via `role="combobox"`), so arrow-key navigation inside an open popup is
  * untouched.
- *
- * @param {Object} ctx - Context object
- * @param {Object} ctx.appStore - App Pinia store
- * @param {Function} ctx.hasGraph - Returns true if a graph is loaded
- * @param {Function} ctx.logPlayPause - Toggle play/pause
- * @returns {Function} capture-phase keydown handler
  */
-export function createDropdownSpaceGuard(ctx) {
+export function createDropdownSpaceGuard(ctx: DropdownSpaceGuardContext): (e: KeyboardEvent) => void {
     const { appStore, hasGraph, logPlayPause } = ctx;
 
     return function (e) {
         if (e.code !== "Space" || !appStore.viewerActive || isExportInProgress() || !hasGraph()) {
             return;
         }
+        const target = e.target as KeyTarget | null;
         // Match a reka-ui dropdown-menu trigger (aria-haspopup="menu") or select
         // trigger (role="combobox") only — never the items inside an open popup.
         // Skip text-input comboboxes so typing a space there still works.
-        const trigger = e.target?.closest?.("[aria-haspopup='menu'], [role='combobox']");
-        if (!trigger || trigger.tagName === "INPUT" || e.target.type === "text") {
+        const trigger = target?.closest?.<HTMLElement>("[aria-haspopup='menu'], [role='combobox']");
+        if (!trigger || trigger.tagName === "INPUT" || target!.type === "text") {
             return;
         }
         // Stop the event from reaching the trigger's own keydown handler, drop

@@ -4,14 +4,15 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { createKeydownHandler } from "../src/blackbox-viewer/keyboard_handler.js";
+import { createKeydownHandler, type KeydownContext } from "../../src/blackbox-viewer/keyboard_handler";
+import type { WorkspaceList } from "../../src/blackbox-viewer/stores/workspace";
 
 /**
  * Test helper to create a keyboard event with proper target mocking.
  * The keyboard handler checks e.target.type and e.target.closest(),
  * so we need to mock these for the tests to work in jsdom.
  */
-function createKeyboardEvent(key, code, options = {}) {
+function createKeyboardEvent(key: string, code: string, options: KeyboardEventInit = {}) {
     const event = new KeyboardEvent("keydown", {
         key,
         code,
@@ -38,63 +39,66 @@ function createKeyboardEvent(key, code, options = {}) {
  * using event.key.toLowerCase() instead of event.code for letter keys.
  */
 
+/** A minimal mocked context: the stores hold only what the shortcuts read. */
+function makeCtx() {
+    return {
+        hasGraph: vi.fn(() => true),
+        graphStore: {
+            markerTime: null,
+            hasMarker: false,
+            toggleAnalyserFullscreen: vi.fn(),
+            toggleAnalyser: vi.fn(),
+            toggleFullscreen: vi.fn(),
+            graphZoom: 100,
+        },
+        logStore: {
+            currentBlackboxTime: 1000,
+        },
+        playbackStore: {
+            videoExportInTime: null,
+            videoExportOutTime: null,
+        },
+        workspaceStore: {
+            bookmarkTimes: [] as (number | null)[],
+            workspaceGraphConfigs: [] as WorkspaceList,
+            activeWorkspace: 1,
+            showDefaultMenu: false,
+        },
+        appStore: {
+            viewerActive: true,
+            headerDialogOpen: false,
+            statusMarkerOffset: "",
+        },
+        // Action spies
+        logPlayPause: vi.fn(),
+        logJumpBack: vi.fn(),
+        logJumpForward: vi.fn(),
+        logJumpStart: vi.fn(),
+        logJumpEnd: vi.fn(),
+        logSmartSync: vi.fn(),
+        setGraphZoom: vi.fn(),
+        setVideoInTime: vi.fn(),
+        setVideoOutTime: vi.fn(),
+        setMarker: vi.fn(),
+        setCurrentBlackboxTime: vi.fn(),
+        showValueTable: vi.fn(),
+        showConfigFile: vi.fn(),
+        newGraphConfig: vi.fn(),
+        toggleOverrideStatus: vi.fn(),
+        invalidateGraph: vi.fn(),
+        onSwitchWorkspace: vi.fn(),
+        onSaveWorkspace: vi.fn(),
+        lastGraphConfig: vi.fn(() => null),
+    };
+}
+
 describe("Keyboard Handler - Layout Independence", () => {
-    let mockCtx;
-    let handler;
+    let mockCtx: ReturnType<typeof makeCtx>;
+    let handler: (e: KeyboardEvent) => void;
 
     beforeEach(() => {
-        // Create minimal mocked context for testing
-        mockCtx = {
-            hasGraph: vi.fn(() => true),
-            graphStore: {
-                markerTime: null,
-                hasMarker: false,
-                toggleAnalyserFullscreen: vi.fn(),
-                toggleAnalyser: vi.fn(),
-                toggleFullscreen: vi.fn(),
-                graphZoom: 100,
-            },
-            logStore: {
-                currentBlackboxTime: 1000,
-            },
-            playbackStore: {
-                videoExportInTime: null,
-                videoExportOutTime: null,
-            },
-            workspaceStore: {
-                bookmarkTimes: [],
-                workspaceGraphConfigs: {},
-                activeWorkspace: 1,
-                showDefaultMenu: false,
-            },
-            appStore: {
-                viewerActive: true,
-                headerDialogOpen: false,
-                statusMarkerOffset: "",
-            },
-            // Action spies
-            logPlayPause: vi.fn(),
-            logJumpBack: vi.fn(),
-            logJumpForward: vi.fn(),
-            logJumpStart: vi.fn(),
-            logJumpEnd: vi.fn(),
-            logSmartSync: vi.fn(),
-            setGraphZoom: vi.fn(),
-            setVideoInTime: vi.fn(),
-            setVideoOutTime: vi.fn(),
-            setMarker: vi.fn(),
-            setCurrentBlackboxTime: vi.fn(),
-            showValueTable: vi.fn(),
-            showConfigFile: vi.fn(),
-            newGraphConfig: vi.fn(),
-            toggleOverrideStatus: vi.fn(),
-            invalidateGraph: vi.fn(),
-            onSwitchWorkspace: vi.fn(),
-            onSaveWorkspace: vi.fn(),
-            lastGraphConfig: vi.fn(() => null),
-        };
-
-        handler = createKeydownHandler(mockCtx);
+        mockCtx = makeCtx();
+        handler = createKeydownHandler(mockCtx as unknown as KeydownContext);
         // Attach handler to document
         document.addEventListener("keydown", handler);
     });
@@ -261,7 +265,7 @@ describe("Keyboard Handler - Layout Independence", () => {
 
     describe('Digit keys - Use event.code.startsWith("Digit") (unchanged)', () => {
         it("should handle workspace switch on digit 1", () => {
-            mockCtx.workspaceStore.workspaceGraphConfigs[1] = { title: "Test" };
+            mockCtx.workspaceStore.workspaceGraphConfigs[1] = { title: "Test", graphConfig: null };
 
             const event = createKeyboardEvent("1", "Digit1");
 
@@ -272,7 +276,7 @@ describe("Keyboard Handler - Layout Independence", () => {
         });
 
         it("should handle workspace switch on digit 5", () => {
-            mockCtx.workspaceStore.workspaceGraphConfigs[5] = { title: "Test" };
+            mockCtx.workspaceStore.workspaceGraphConfigs[5] = { title: "Test", graphConfig: null };
 
             const event = createKeyboardEvent("5", "Digit5");
 
