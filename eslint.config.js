@@ -54,10 +54,11 @@ export default [
         ignores: ["dist/", "src/dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
     },
     {
-        // vendor.js pulls in Leaflet and its plugins for their side effects, and they register
+        // vendor.ts pulls in Leaflet and its plugins for their side effects, and they register
         // themselves on `window.L` rather than exporting anything. `chrome` is the Chrome Apps
         // storage path, absent everywhere else, which is why pref_storage guards on it.
-        files: ["src/blackbox-viewer/**/*.js", "src/blackbox-viewer/**/*.vue"],
+        // TypeScript files get both from their declarations; a .vue file still runs no-undef.
+        files: ["src/blackbox-viewer/**/*.vue"],
         languageOptions: {
             globals: {
                 L: "readonly",
@@ -133,18 +134,18 @@ export default [
         },
     },
     {
-        // Folders that are fully TypeScript. `allowJs` is project-wide and TypeScript checks
-        // everything a file imports, so `allowJs: false` cannot be scoped to one folder.
-        files: ["src/components/**/*.js", "src/composables/**/*.js", "src/stores/**/*.js", "src/js/**/*.js"],
-        // The MSP debug tools are dev-only and loaded on demand, so they stay JavaScript. The
-        // vendored three.js renderer stays close to its upstream source, typed by a .d.ts.
+        // The app is TypeScript (#5542), and tsconfig.json has `allowJs: false`.
+        files: ["src/**/*.js"],
+        // The MSP debug tools are dev-only and loaded on demand, so they stay JavaScript behind a
+        // .d.ts for their entry point. The vendored three.js renderer stays close to its upstream
+        // source, typed by a .d.ts.
         ignores: ["src/js/msp/debug/**", "src/js/utils/three/**"],
         rules: {
             "no-restricted-syntax": [
                 "error",
                 {
                     selector: "Program",
-                    message: "This folder is TypeScript-only: write a .ts file instead (#5542).",
+                    message: "The app is TypeScript-only: write a .ts file instead (#5542).",
                 },
             ],
         },
