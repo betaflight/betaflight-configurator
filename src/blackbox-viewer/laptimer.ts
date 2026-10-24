@@ -1,32 +1,48 @@
-import { formatTime, roundRect } from "./tools";
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 
-export function LapTimer() {
-    const lapTime = {
+import { formatTime, roundRect } from "./tools";
+import type { UserSettings } from "./user_settings_data";
+
+/** Lap times in seconds, from the bookmarks; null until the first refresh() inside a lap. */
+interface LapTimes {
+    current: number | null;
+    last: number | null;
+    best: number | null;
+    laps: number[];
+}
+
+/** Draws the lap times between the workspace's bookmarks, the end time closing the last lap. */
+export class LapTimer {
+    private readonly lapTime: LapTimes = {
         current: null,
         last: null,
         best: null,
         laps: [],
     };
 
-    this.currentLapTime = function () {
-        return lapTime.current || "00:00.000";
-    };
-
-    this.lastLapTime = function () {
-        return lapTime.last || "00:00.000";
-    };
-
-    this.bestLapTime = function () {
-        return lapTime.best || "00:00.000";
-    };
-
-    this.laps = function () {
-        return lapTime.laps;
-    };
-
-    this.drawCanvas = function (canvas, options) {
+    drawCanvas(canvas: HTMLCanvasElement, options: Pick<UserSettings, "laptimer">): void {
+        const lapTime = this.lapTime;
         // Draw the LapTimes using a canvas
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d")!;
 
         const lineHeight = 14, //px
             DEFAULT_FONT_FACE = "8pt Verdana, Arial, sans-serif",
@@ -71,14 +87,26 @@ export function LapTimer() {
 
         currentRow++;
 
-        // Summary
+        // Summary. A time not yet set shows as zero, as formatTime() reads null.
         ctx.font = DEFAULT_FONT_FACE;
         ctx.fillText("Current", margin, lineHeight * currentRow);
-        ctx.fillText(formatTime(lapTime.current, true), margin + firstColumnWidth + margin, lineHeight * currentRow++);
+        ctx.fillText(
+            formatTime(Number(lapTime.current), true),
+            margin + firstColumnWidth + margin,
+            lineHeight * currentRow++,
+        );
         ctx.fillText("Last", margin, lineHeight * currentRow);
-        ctx.fillText(formatTime(lapTime.last, true), margin + firstColumnWidth + margin, lineHeight * currentRow++);
+        ctx.fillText(
+            formatTime(Number(lapTime.last), true),
+            margin + firstColumnWidth + margin,
+            lineHeight * currentRow++,
+        );
         ctx.fillText("Best", margin, lineHeight * currentRow);
-        ctx.fillText(formatTime(lapTime.best, true), margin + firstColumnWidth + margin, lineHeight * currentRow++);
+        ctx.fillText(
+            formatTime(Number(lapTime.best), true),
+            margin + firstColumnWidth + margin,
+            lineHeight * currentRow++,
+        );
 
         // Laps
         if (lapTime.laps.length > 0) {
@@ -106,29 +134,37 @@ export function LapTimer() {
         }
 
         ctx.restore();
-    };
+    }
 
-    this.refresh = function (currentTime, maxTime, bookmarkTimes) {
+    refresh(
+        currentTime: number | null | undefined,
+        maxTime: number,
+        bookmarkTimes: (number | null | undefined)[] | null | undefined,
+    ): void {
+        const lapTime = this.lapTime;
         // Update the lapTimeTable with the current information
 
         if (currentTime != null && bookmarkTimes != null) {
             if (bookmarkTimes.length > 0) {
                 const bookmarkTimesSorted = bookmarkTimes.slice(0);
                 bookmarkTimesSorted.push(maxTime); // add end time
-                bookmarkTimesSorted.sort((a, b) => a - b); // sort on value (rather than default alphabetically)
+                // Sort on value rather than alphabetically. A cleared bookmark (null) compares as 0, as it did in
+                // JavaScript, and an unset slot sorts to the end.
+                bookmarkTimesSorted.sort((a, b) => Number(a) - Number(b));
 
                 lapTime.laps = []; // Clear the array
 
                 for (let i = 0; i < bookmarkTimesSorted.length - 1; i++) {
-                    if (i > 0 && currentTime >= bookmarkTimesSorted[0]) {
+                    const lapStart = Number(bookmarkTimesSorted[i]);
+                    if (i > 0 && currentTime >= Number(bookmarkTimesSorted[0])) {
                         // Calculate all the laps so far
-                        lapTime.laps.push((bookmarkTimesSorted[i] - bookmarkTimesSorted[i - 1]) / 1000);
+                        lapTime.laps.push((lapStart - Number(bookmarkTimesSorted[i - 1])) / 1000);
                     }
-                    if (currentTime < bookmarkTimesSorted[i + 1] && currentTime >= bookmarkTimesSorted[i]) {
+                    if (currentTime < Number(bookmarkTimesSorted[i + 1]) && currentTime >= lapStart) {
                         // We have found the current lap
-                        lapTime.current = (currentTime - bookmarkTimesSorted[i]) / 1000;
+                        lapTime.current = (currentTime - lapStart) / 1000;
                         if (i > 0) {
-                            lapTime.last = (bookmarkTimesSorted[i] - bookmarkTimesSorted[i - 1]) / 1000;
+                            lapTime.last = (lapStart - Number(bookmarkTimesSorted[i - 1])) / 1000;
                         } else {
                             lapTime.last = 0; // we are in the first lap, there is no last or best value
                             lapTime.best = 0;
@@ -142,7 +178,7 @@ export function LapTimer() {
                     }
                 }
 
-                if (lapTime.laps.length > 0 && currentTime > bookmarkTimesSorted[0]) {
+                if (lapTime.laps.length > 0 && currentTime > Number(bookmarkTimesSorted[0])) {
                     lapTime.best = maxTime;
                     for (const lap of lapTime.laps) {
                         if (lap < lapTime.best) {
@@ -152,9 +188,5 @@ export function LapTimer() {
                 }
             }
         }
-    };
-
-    // Initialisation Code
-
-    // None
+    }
 }
