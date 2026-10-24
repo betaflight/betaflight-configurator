@@ -1,19 +1,40 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import "./vendor";
 
-import { MapGrapher } from "./graph_map.js";
-import { FlightLogGrapher } from "./grapher.js";
+import { MapGrapher } from "./graph_map";
+import { FlightLogGrapher } from "./grapher";
 import { loadConfigurationFile, ConfigurationDefaults } from "./configuration";
-import { GraphConfig } from "./graph_config.js";
-import { SeekBar } from "./seekbar.js";
+import { GraphConfig, type GraphPanelConfig } from "./graph_config";
+import { SeekBar } from "./seekbar";
 import ctzsnoozeWorkspace from "./ws_ctzsnooze.json";
 import supaflyWorkspace from "./ws_supafly.json";
-import { FlightLog } from "./flightlog.js";
-import { stringTimetoMsec, validate, mouseNotification } from "./tools.js";
-import { restorePenDefaults, changePenSmoothing, changePenZoom, changePenExpo } from "./pen_adjustment.js";
-import { createKeydownHandler, createDropdownSpaceGuard } from "./keyboard_handler.js";
+import { FlightLog } from "./flightlog";
+import { stringTimetoMsec, validate, mouseNotification } from "./tools";
+import { restorePenDefaults, changePenSmoothing, changePenZoom, changePenExpo } from "./pen_adjustment";
+import { createKeydownHandler, createDropdownSpaceGuard } from "./keyboard_handler";
 import { upgradeWorkspaceFormat, saveWorkspaces, loadWorkspaces } from "./workspace_io";
-import { exportCsv, exportGpx, exportSpectrumToCsv } from "./export_utils.js";
-import { cancelActiveVideoExport } from "./video_export.js";
+import { exportCsv, exportGpx, exportSpectrumToCsv } from "./export_utils";
+import { cancelActiveVideoExport } from "./video_export";
 import {
     syncLogToVideo,
     setVideoOffset,
@@ -44,21 +65,38 @@ import {
     logSyncForward,
     logSmartSync,
     videoLoaded,
-} from "./playback_controls.js";
-import { PrefStorage } from "./pref_storage.js";
-import { ThemeColors } from "./theme_colors.js";
-import { pinia } from "@/js/pinia_instance.js";
-import { useLogStore } from "./stores/log.js";
-import { useGraphStore } from "./stores/graph.js";
-import { usePlaybackStore, GRAPH_STATE_PAUSED } from "./stores/playback.js";
-import { useWorkspaceStore } from "./stores/workspace.js";
-import { useAppStore } from "./stores/app.js";
-import { useSettingsStore } from "./stores/settings.js";
+} from "./playback_controls";
+import { PrefStorage } from "./pref_storage";
+import { ThemeColors } from "./theme_colors";
+import { pinia } from "@/js/pinia_instance";
+import { useLogStore } from "./stores/log";
+import { useGraphStore } from "./stores/graph";
+import { usePlaybackStore, GRAPH_STATE_PAUSED, type OffsetCacheEntry } from "./stores/playback";
+import { useWorkspaceStore, type WorkspaceList } from "./stores/workspace";
+import { useAppStore } from "./stores/app";
+import { useSettingsStore } from "./stores/settings";
 import { watch } from "vue";
 
-export function bootstrapViewer() {
+type OverrideSetting = "graphSmoothOverride" | "graphExpoOverride" | "graphGridOverride";
+
+/** The built-in workspaces, as JSON gives them; they are valid workspace lists. */
+const DEFAULT_WORKSPACES = {
+    ctzsnooze: ctzsnoozeWorkspace as WorkspaceList,
+    supafly: supaflyWorkspace as WorkspaceList,
+};
+
+/** An element of the viewer's template; App.vue renders them all before bootstrapViewer() runs. */
+function viewerElement<T extends HTMLElement>(id: string): T {
+    return document.getElementById(id) as T;
+}
+
+/**
+ * Start the viewer in the mounted App.vue: create the renderers, register the store callbacks and
+ * the document handlers. Returns the teardown, which undoes all of it so the tab can mount again.
+ */
+export function bootstrapViewer(): () => void {
     // Teardown callbacks, run in reverse on destroy to allow clean re-mount as a tab.
-    const cleanupFns = [];
+    const cleanupFns: (() => void)[] = [];
 
     function supportsRequiredAPIs() {
         return (
@@ -73,18 +111,18 @@ export function bootstrapViewer() {
         alert("Your browser does not support the APIs required for reading log files.");
     }
 
-    let graph = null;
+    let graph: FlightLogGrapher | null = null;
     const prefs = new PrefStorage();
     const configurationDefaults = new ConfigurationDefaults(prefs);
-    const video = document.getElementById("logVideo");
-    const canvas = document.getElementById("graphCanvas");
-    const analyserCanvas = document.getElementById("analyserCanvas");
-    const stickCanvas = document.getElementById("stickCanvas");
-    const craftCanvas = document.getElementById("craftCanvas");
-    let userSettings;
-    const seekBarCanvas = document.getElementById("seekbarCanvas");
+    const video = viewerElement<HTMLVideoElement>("logVideo");
+    const canvas = viewerElement<HTMLCanvasElement>("graphCanvas");
+    const analyserCanvas = viewerElement<HTMLCanvasElement>("analyserCanvas");
+    const stickCanvas = viewerElement<HTMLCanvasElement>("stickCanvas");
+    const craftCanvas = viewerElement<HTMLCanvasElement>("craftCanvas");
+    const seekBarCanvas = viewerElement<HTMLCanvasElement>("seekbarCanvas");
     const seekBar = new SeekBar(seekBarCanvas);
     const mapGrapher = new MapGrapher();
+    const activeGraphConfig = new GraphConfig();
 
     // --- Pinia store sync ---
     // Initialize stores outside Vue component context using the shared Pinia instance.
@@ -96,7 +134,8 @@ export function bootstrapViewer() {
     const workspaceStore = useWorkspaceStore(pinia);
     const appStore = useAppStore(pinia);
     const settingsStore = useSettingsStore(pinia);
-    graphStore.activeGraphConfig = new GraphConfig();
+    const userSettings = settingsStore.userSettings;
+    graphStore.activeGraphConfig = activeGraphConfig;
     graphStore.mapGrapher = mapGrapher;
     graphStore.seekBar = seekBar;
     graphStore.canvasRefs = { canvas, analyserCanvas, stickCanvas, craftCanvas };
@@ -114,17 +153,23 @@ export function bootstrapViewer() {
     graphStore.invalidateGraph = invalidateGraph;
     graphStore.updateCanvasSize = updateCanvasSize;
 
+    // Only called once a log has been loaded into the store.
+    function loadedFlightLog(): FlightLog {
+        return logStore.flightLog!;
+    }
+
     /**
-     * Set the index of the log from the log file that should be viewed. Pass "null" as the index to open the first
+     * Set the index of the log from the log file that should be viewed. Pass null as the index to open the first
      * available log.
      */
-    function selectLog(logIndex) {
+    function selectLog(logIndex: number | null) {
+        const flightLog = loadedFlightLog();
         let success = false;
 
         try {
             if (logIndex === null) {
-                for (let i = 0; i < logStore.flightLog.getLogCount(); i++) {
-                    if (logStore.flightLog.openLog(i)) {
+                for (let i = 0; i < flightLog.getLogCount(); i++) {
+                    if (flightLog.openLog(i)) {
                         success = true;
                         playbackStore.currentOffsetCache.index = i;
                         break;
@@ -135,7 +180,7 @@ export function bootstrapViewer() {
                     throw new Error("No logs in this file could be parsed successfully");
                 }
             } else {
-                logStore.flightLog.openLog(logIndex);
+                flightLog.openLog(logIndex);
                 playbackStore.currentOffsetCache.index = logIndex;
             }
         } catch (e) {
@@ -148,36 +193,37 @@ export function bootstrapViewer() {
             graph.destroy();
         }
 
+        const sysConfig = flightLog.getSysConfig();
         if (
-            logStore.flightLog.getSysConfig().looptime != null &&
-            logStore.flightLog.getSysConfig().frameIntervalPNum != null &&
-            logStore.flightLog.getSysConfig().frameIntervalPDenom != null
+            sysConfig.looptime != null &&
+            sysConfig.frameIntervalPNum != null &&
+            sysConfig.frameIntervalPDenom != null
         ) {
             userSettings.analyserSampleRate =
                 1000000 /
-                ((logStore.flightLog.getSysConfig().looptime *
-                    validate(logStore.flightLog.getSysConfig().pid_process_denom, 1) *
-                    logStore.flightLog.getSysConfig().frameIntervalPDenom) /
-                    logStore.flightLog.getSysConfig().frameIntervalPNum);
+                ((sysConfig.looptime * validate(sysConfig.pid_process_denom, 1) * sysConfig.frameIntervalPDenom) /
+                    sysConfig.frameIntervalPNum);
         }
 
-        graph = new FlightLogGrapher(
-            logStore.flightLog,
-            graphStore.activeGraphConfig,
+        const newGraph = new FlightLogGrapher(
+            flightLog,
+            activeGraphConfig,
             canvas,
             stickCanvas,
             craftCanvas,
             analyserCanvas,
             userSettings,
         );
-        graphStore.graph = graph;
+        graph = newGraph;
+        graphStore.graph = newGraph;
 
         setVideoInTime(null);
         setVideoOutTime(null);
 
-        graphStore.activeGraphConfig.adaptGraphs(logStore.flightLog, graphStore.graphConfig);
+        // A log only loads once graphConfig holds the saved or the example graphs.
+        activeGraphConfig.adaptGraphs(flightLog, graphStore.graphConfig!);
 
-        graph.onSeek = function (offset) {
+        newGraph.onSeek = function (offset) {
             //Seek faster
             offset *= 2;
 
@@ -193,7 +239,7 @@ export function bootstrapViewer() {
             syncLogToVideo();
         } else {
             // Start at beginning:
-            logStore.currentBlackboxTime = logStore.flightLog.getMinTime();
+            logStore.currentBlackboxTime = flightLog.getMinTime();
         }
 
         renderSelectedLogInfo();
@@ -201,14 +247,14 @@ export function bootstrapViewer() {
         updateCanvasSize();
 
         setGraphState(GRAPH_STATE_PAUSED);
-        setGraphZoom(graphStore.graphZoom, true);
+        setGraphZoom(graphStore.graphZoom);
     }
 
-    function loadFiles(files) {
+    function loadFiles(files: FileList | File[]) {
         for (const file of files) {
-            let isLog = file.name.match(/\.(BBL|TXT|CFL|BFL|LOG)$/i);
-            let isVideo = file.name.match(/\.(AVI|MOV|MP4|MPEG)$/i);
-            const isWorkspaces = file.name.match(/\.(JSON)$/i);
+            let isLog = /\.(BBL|TXT|CFL|BFL|LOG)$/i.test(file.name);
+            let isVideo = /\.(AVI|MOV|MP4|MPEG)$/i.test(file.name);
+            const isWorkspaces = /\.(JSON)$/i.test(file.name);
 
             if (!isLog && !isVideo && !isWorkspaces) {
                 if (file.size < 10 * 1024 * 1024) {
@@ -223,27 +269,61 @@ export function bootstrapViewer() {
             } else if (isVideo) {
                 loadVideo(file);
             } else if (isWorkspaces) {
-                loadWorkspaces(file, workspaceStore, onSwitchWorkspace);
+                void loadWorkspaces(file, workspaceStore, onSwitchWorkspace);
             }
         }
 
         // finally, see if there is an offsetCache value already, and auto set the offset
-        for (const cahesOffset of playbackStore.offsetCache) {
+        for (const cachedOffset of playbackStore.offsetCache) {
             if (
-                playbackStore.currentOffsetCache.log === cahesOffset.log &&
-                playbackStore.currentOffsetCache.index === cahesOffset.index &&
-                playbackStore.currentOffsetCache.video === cahesOffset.video
+                playbackStore.currentOffsetCache.log === cachedOffset.log &&
+                playbackStore.currentOffsetCache.index === cachedOffset.index &&
+                playbackStore.currentOffsetCache.video === cachedOffset.video
             ) {
-                setVideoOffset(cahesOffset.offset, true);
+                // A cached entry always has its offset; one without it seeks to NaN, as the JavaScript did.
+                setVideoOffset(Number(cachedOffset.offset ?? undefined), true);
             }
         }
     }
 
-    function loadLogFile(file) {
+    /** Parse a log already read into memory, and show its first log that opens. */
+    function openLogData(data: Uint8Array, fileInfo: Pick<File, "name">) {
+        logStore.flightLogDataArray = data;
+
+        let flightLog: FlightLog;
+        try {
+            flightLog = new FlightLog(data);
+        } catch (err) {
+            alert(`Sorry, an error occurred while trying to open this log:\n\n${err}`);
+            return;
+        }
+        logStore.flightLog = flightLog;
+
+        graphStore.graphConfig ??= GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+
+        renderLogFileInfo(fileInfo);
+        graphStore.seekBarMode = "avgThrottle";
+        playbackStore.currentOffsetCache.log = fileInfo.name; // store the name of the loaded log file
+        playbackStore.currentOffsetCache.index = null; // and clear the index
+
+        logStore.hasLog = true;
+
+        setTimeout(function () {
+            globalThis.dispatchEvent(new Event("resize"));
+        }, 500); // refresh the window size;
+
+        selectLog(null);
+
+        if (graph) {
+            graph.setAnalyser(graphStore.hasAnalyserFullscreen);
+        }
+    }
+
+    function loadLogFile(file: File) {
         const reader = new FileReader();
 
-        reader.onload = function (e) {
-            const bytes = e.target.result;
+        reader.onload = function () {
+            const bytes = reader.result as ArrayBuffer;
 
             const fileContents = String.fromCodePoint(...new Uint8Array(bytes, 0, 100));
 
@@ -253,7 +333,7 @@ export function bootstrapViewer() {
                     // Firstly, is this a configuration defaults file
                     // (the filename contains the word 'default')
 
-                    if (file.name.match(/default/i)) {
+                    if (/default/i.exec(file.name)) {
                         configurationDefaults.loadFile(file);
                     } else {
                         loadConfigurationFile(file);
@@ -265,35 +345,7 @@ export function bootstrapViewer() {
                 return;
             }
 
-            logStore.flightLogDataArray = new Uint8Array(bytes);
-
-            try {
-                logStore.flightLog = new FlightLog(logStore.flightLogDataArray);
-            } catch (err) {
-                alert(`Sorry, an error occurred while trying to open this log:\n\n${err}`);
-                return;
-            }
-
-            if (!graphStore.graphConfig) {
-                graphStore.graphConfig = GraphConfig.getExampleGraphConfigs(logStore.flightLog, ["Motors", "Gyros"]);
-            }
-
-            renderLogFileInfo(file);
-            graphStore.seekBarMode = "avgThrottle";
-            playbackStore.currentOffsetCache.log = file.name; // store the name of the loaded log file
-            playbackStore.currentOffsetCache.index = null; // and clear the index
-
-            logStore.hasLog = true;
-
-            setTimeout(function () {
-                globalThis.dispatchEvent(new Event("resize"));
-            }, 500); // refresh the window size;
-
-            selectLog(null);
-
-            if (graph) {
-                graph.setAnalyser(graphStore.hasAnalyserFullscreen);
-            }
+            openLogData(new Uint8Array(bytes), file);
         };
 
         reader.readAsArrayBuffer(file);
@@ -301,38 +353,8 @@ export function bootstrapViewer() {
 
     // Load a log directly from an in-memory buffer (e.g. pulled from a connected FC's
     // dataflash) rather than a File picked from disk. Mirrors loadLogFile's log branch.
-    function loadLogBuffer(data, name) {
-        const fileInfo = { name: name || "BLACKBOX_LOG.BBL" };
-
-        logStore.flightLogDataArray = data instanceof Uint8Array ? data : new Uint8Array(data);
-
-        try {
-            logStore.flightLog = new FlightLog(logStore.flightLogDataArray);
-        } catch (err) {
-            alert(`Sorry, an error occurred while trying to open this log:\n\n${err}`);
-            return;
-        }
-
-        if (!graphStore.graphConfig) {
-            graphStore.graphConfig = GraphConfig.getExampleGraphConfigs(logStore.flightLog, ["Motors", "Gyros"]);
-        }
-
-        renderLogFileInfo(fileInfo);
-        graphStore.seekBarMode = "avgThrottle";
-        playbackStore.currentOffsetCache.log = fileInfo.name;
-        playbackStore.currentOffsetCache.index = null;
-
-        logStore.hasLog = true;
-
-        setTimeout(function () {
-            globalThis.dispatchEvent(new Event("resize"));
-        }, 500);
-
-        selectLog(null);
-
-        if (graph) {
-            graph.setAnalyser(graphStore.hasAnalyserFullscreen);
-        }
+    function loadLogBuffer(data: ArrayBuffer | Uint8Array, name?: string) {
+        openLogData(data instanceof Uint8Array ? data : new Uint8Array(data), { name: name || "BLACKBOX_LOG.BBL" });
     }
 
     appStore.refreshGraph = () => {
@@ -341,36 +363,35 @@ export function bootstrapViewer() {
             graph.refreshTheme();
             invalidateGraph();
         }
-        if (seekBar !== null && typeof seekBar.refreshTheme === "function") {
-            seekBar.refreshTheme();
-        }
+        seekBar.refreshTheme();
     };
 
-    function newGraphConfig(newConfig, noRedraw) {
+    function newGraphConfig(newConfig: GraphPanelConfig[], noRedraw?: boolean) {
         graphStore.lastGraphConfig = graphStore.graphConfig; // Remember the last configuration.
         graphStore.graphConfig = newConfig;
-        graphStore.activeGraphConfig.setRedrawChart(!noRedraw);
-        graphStore.activeGraphConfig.adaptGraphs(logStore.flightLog, graphStore.graphConfig);
+        activeGraphConfig.setRedrawChart(!noRedraw);
+        activeGraphConfig.adaptGraphs(loadedFlightLog(), newConfig);
 
-        prefs.set("graphConfig", graphStore.graphConfig);
+        prefs.set("graphConfig", newConfig);
     }
 
     // Store to local cache and update Workspace Selector control
-    function onSwitchWorkspace(newWorkspaces, newActiveId) {
+    function onSwitchWorkspace(newWorkspaces: WorkspaceList, newActiveId: number) {
         prefs.set("activeWorkspace", newActiveId);
         prefs.set("workspaceGraphConfigs", newWorkspaces);
         workspaceStore.workspaceGraphConfigs = newWorkspaces || [];
         workspaceStore.activeWorkspace = newActiveId;
-        if (logStore.flightLog && newWorkspaces[newActiveId]?.graphConfig) {
-            newGraphConfig(newWorkspaces[newActiveId].graphConfig);
-            graphStore.legendTitle = newWorkspaces[newActiveId].title;
+        const workspace = newWorkspaces[newActiveId];
+        if (logStore.flightLog && workspace?.graphConfig) {
+            newGraphConfig(workspace.graphConfig);
+            graphStore.legendTitle = workspace.title;
         }
     }
 
     // Retitle a slot in place. Unlike onSaveWorkspace this keeps the stored graphConfig
     // instead of replacing it with whatever happens to be on screen, so renaming a
     // workspace never costs the user the setup they saved into it.
-    function onRenameWorkspace(id, title) {
+    function onRenameWorkspace(id: number, title: string) {
         const entry = workspaceStore.workspaceGraphConfigs[id];
         if (!entry) {
             return;
@@ -383,7 +404,7 @@ export function bootstrapViewer() {
     }
 
     // Save current config
-    function onSaveWorkspace(id, title) {
+    function onSaveWorkspace(id: number, title: string) {
         workspaceStore.workspaceGraphConfigs[id] = {
             title: title,
             graphConfig: graphStore.graphConfig,
@@ -391,7 +412,7 @@ export function bootstrapViewer() {
         onSwitchWorkspace(workspaceStore.workspaceGraphConfigs, id);
     }
 
-    graphStore.activeGraphConfig.addListener(function () {
+    activeGraphConfig.addListener(function () {
         graphStore.buildLegendGraphs();
         invalidateGraph();
     });
@@ -406,15 +427,17 @@ export function bootstrapViewer() {
         // initial load of the configuration defaults if we have them
         prefs.get("workspaceGraphConfigs", function (item) {
             if (item) {
-                workspaceStore.workspaceGraphConfigs = upgradeWorkspaceFormat(item);
+                workspaceStore.workspaceGraphConfigs = upgradeWorkspaceFormat(
+                    item as Parameters<typeof upgradeWorkspaceFormat>[0],
+                );
             } else {
-                workspaceStore.workspaceGraphConfigs = structuredClone(ctzsnoozeWorkspace);
+                workspaceStore.workspaceGraphConfigs = structuredClone(DEFAULT_WORKSPACES.ctzsnooze);
             }
         });
 
         prefs.get("activeWorkspace", function (id) {
             if (id) {
-                workspaceStore.activeWorkspace = id;
+                workspaceStore.activeWorkspace = id as number;
             } else {
                 workspaceStore.activeWorkspace = 1;
             }
@@ -433,64 +456,69 @@ export function bootstrapViewer() {
         // Reset the analyser window on application startup.
         graphStore.hasAnalyser = false;
 
-        function expandGraphConfig(index) {
+        // The graph actions below come from the legend, which only shows once graphs are configured.
+        const graphConfig = () => graphStore.graphConfig!;
+
+        function expandGraphConfig(index: number) {
             // Put each of the fields into a separate graph
 
-            const expandedGraphConfig = [];
+            const expandedGraphConfig: GraphPanelConfig[] = [];
 
-            for (const field of graphStore.graphConfig[index].fields) {
+            for (const field of graphConfig()[index].fields) {
                 // Loop through each of the fields
-                const singleGraph = { fields: [], label: "", height: 1 };
-                singleGraph.fields.push(field);
-                singleGraph.label = field.name;
-                expandedGraphConfig.push(singleGraph);
+                expandedGraphConfig.push({ fields: [field], label: field.name, height: 1 });
             }
 
             newGraphConfig(expandedGraphConfig);
             invalidateGraph();
         }
 
-        function zoomGraphConfig(index) {
+        function zoomGraphConfig(index: number) {
             // Put each of the fields onto one graph and clear the others
 
-            if (graphStore.graphConfig.length === 1) {
+            if (graphConfig().length === 1) {
                 // if there is only one graph, then return to previous configuration
                 if (graphStore.lastGraphConfig != null) {
                     newGraphConfig(graphStore.lastGraphConfig);
                 }
             } else {
-                const expandedGraphConfig = [];
-                const singleGraph = { fields: [], label: "", height: 1 };
+                const singleGraph: GraphPanelConfig = { fields: [], label: "", height: 1 };
 
-                for (const field of graphStore.graphConfig[index].fields) {
+                for (const field of graphConfig()[index].fields) {
                     // Loop through each of the fields
                     singleGraph.fields.push(field);
-                    singleGraph.label = graphStore.graphConfig[index].label;
+                    singleGraph.label = graphConfig()[index].label;
                 }
-                expandedGraphConfig.push(singleGraph);
 
-                newGraphConfig(expandedGraphConfig);
+                newGraphConfig([singleGraph]);
             }
             invalidateGraph();
         }
-        userSettings = settingsStore.userSettings;
         workspaceStore.gotoBookmark = (index) => {
-            if (workspaceStore.bookmarkTimes?.[index] != null) {
-                setCurrentBlackboxTime(workspaceStore.bookmarkTimes[index]);
+            const bookmark = workspaceStore.bookmarkTimes?.[index];
+            if (bookmark != null) {
+                setCurrentBlackboxTime(bookmark);
                 invalidateGraph();
             }
         };
 
-        // Spectrum callbacks registered on graphStore
-        graphStore.spectrumExport = () => exportSpectrumToCsv(graph.getAnalyser(), appStore.logFilename);
-        graphStore.spectrumImport = (files) => graph.getAnalyser()?.importSpectrumFromCSV(files);
-        graphStore.spectrumClear = () => graph.getAnalyser()?.removeImportedSpectrums();
+        // Spectrum callbacks registered on graphStore. The analyser panel only shows with a graph.
+        graphStore.spectrumExport = () => {
+            void exportSpectrumToCsv(graph!.getAnalyser(), appStore.logFilename);
+        };
+        graphStore.spectrumImport = (files) => {
+            // A file input's change event always has its list.
+            if (files) {
+                graph!.getAnalyser()?.importSpectrumFromCSV(files);
+            }
+        };
+        graphStore.spectrumClear = () => graph!.getAnalyser()?.removeImportedSpectrums();
 
         const onWindowResize = () => updateCanvasSize();
         window.addEventListener("resize", onWindowResize);
         cleanupFns.push(() => window.removeEventListener("resize", onWindowResize));
 
-        function toggleOverrideStatus(userSetting) {
+        function toggleOverrideStatus(userSetting: OverrideSetting) {
             settingsStore.saveSetting(userSetting, !userSettings[userSetting]);
         }
 
@@ -519,27 +547,25 @@ export function bootstrapViewer() {
         );
         cleanupFns.push(stopSticksWatch);
 
-        function handleGraphCanvasWheel(e, delta) {
+        function handleGraphCanvasWheel(e: WheelEvent, delta: number) {
             const zoomStep = 10 + (e.altKey ? 15 : 0);
             if (delta < 0) {
                 if (e.altKey || e.shiftKey) {
-                    setGraphZoom(graphStore.graphZoom - zoomStep, true);
+                    setGraphZoom(graphStore.graphZoom - zoomStep);
                 } else {
                     logJumpBack(0.1);
                 }
+            } else if (e.altKey || e.shiftKey) {
+                setGraphZoom(graphStore.graphZoom + zoomStep);
             } else {
-                if (e.altKey || e.shiftKey) {
-                    setGraphZoom(graphStore.graphZoom + zoomStep, true);
-                } else {
-                    logJumpForward(0.1);
-                }
+                logJumpForward(0.1);
             }
             e.preventDefault();
         }
 
-        function applyPenChange(refreshRequired) {
+        function applyPenChange(refreshRequired: string | null) {
             if (refreshRequired) {
-                graph.refreshGraphConfig();
+                graph!.refreshGraphConfig();
                 invalidateGraph();
                 mouseNotification.show(
                     document.getElementById("log-graph"),
@@ -554,16 +580,18 @@ export function bootstrapViewer() {
             }
         }
 
-        const onDocumentWheel = function (e) {
+        const onDocumentWheel = function (e: WheelEvent) {
             if (!appStore.viewerActive) {
                 return;
             }
-            if (e.target.classList.contains("no-wheel")) {
+            // A wheel event on the document targets an element.
+            const target = e.target as HTMLElement;
+            if (target.classList.contains("no-wheel")) {
                 e.preventDefault();
                 return;
             }
 
-            if (graph && !e.target.closest(".modal")) {
+            if (graph && !target.closest(".modal")) {
                 let rawDelta = 0;
                 if (e.deltaY < 0) {
                     rawDelta = 1;
@@ -571,13 +599,13 @@ export function bootstrapViewer() {
                     rawDelta = -1;
                 }
                 const delta = Math.max(-1, Math.min(1, rawDelta));
-                if (delta !== 0 && e.target.id === "graphCanvas") {
+                if (delta !== 0 && target.id === "graphCanvas") {
                     handleGraphCanvasWheel(e, delta);
                 }
             }
         };
         document.addEventListener("wheel", onDocumentWheel, { passive: false });
-        cleanupFns.push(() => document.removeEventListener("wheel", onDocumentWheel, { passive: false }));
+        cleanupFns.push(() => document.removeEventListener("wheel", onDocumentWheel));
 
         const keydownHandler = createKeydownHandler({
             hasGraph: () => graph != null,
@@ -630,9 +658,10 @@ export function bootstrapViewer() {
 
         seekBar.onSeek = setCurrentBlackboxTime;
 
+        // The stored settings are what this viewer saved, so they have the shapes it saves.
         prefs.get("videoConfig", function (item) {
             if (item) {
-                playbackStore.videoConfig = item;
+                playbackStore.videoConfig = item as typeof playbackStore.videoConfig;
             } else {
                 playbackStore.videoConfig = {
                     width: 1280,
@@ -644,32 +673,33 @@ export function bootstrapViewer() {
         });
 
         prefs.get("graphConfig", function (item) {
-            if (item) {
-                graphStore.graphConfig = GraphConfig.load(item);
+            const saved = GraphConfig.load(item as GraphPanelConfig[] | null);
+            if (saved) {
+                graphStore.graphConfig = saved;
             }
         });
 
         // Get the offsetCache buffer
         prefs.get("offsetCache", function (item) {
             if (item) {
-                playbackStore.offsetCache = item;
+                playbackStore.offsetCache = item as OffsetCacheEntry[];
             }
         });
 
         graphStore.zoomGraphConfig = (gi) => zoomGraphConfig(gi);
         graphStore.expandGraphConfig = (gi) => expandGraphConfig(gi);
         graphStore.reorderGraphs = (newOrder) => {
-            const oldGraphs = graphStore.graphConfig;
+            const oldGraphs = graphConfig();
             const newGraphs = newOrder.map((i) => oldGraphs[i]);
             newGraphConfig(newGraphs);
         };
         graphStore.resetPen = (gi, fi) => {
-            const graphs = graphStore.activeGraphConfig.getGraphs();
+            const graphs = activeGraphConfig.getGraphs();
             const msg = restorePenDefaults(graphs, String(gi), fi == null ? null : String(fi));
             applyPenChange(msg);
         };
         graphStore.fieldWheel = (gi, fi, delta, shiftKey, altKey, ctrlKey) => {
-            const graphs = graphStore.activeGraphConfig.getGraphs();
+            const graphs = activeGraphConfig.getGraphs();
             const g = gi == null ? gi : String(gi);
             const f = fi == null ? fi : String(fi);
             const increase = delta >= 0;
@@ -682,7 +712,7 @@ export function bootstrapViewer() {
                 msg = changePenSmoothing(graphs, g, f, increase);
             }
             if (msg) {
-                graphStore.activeGraphConfig.setGraphs(graphs);
+                activeGraphConfig.setGraphs(graphs);
                 applyPenChange(msg);
             }
         };
@@ -691,7 +721,7 @@ export function bootstrapViewer() {
         playbackStore.logSyncForward = logSyncForward;
         playbackStore.logSmartSync = logSmartSync;
         playbackStore.setVideoOffsetValue = (val) => {
-            const offset = Number.parseFloat(val);
+            const offset = Number.parseFloat(String(val));
             if (!Number.isNaN(offset)) {
                 setVideoOffset(offset, true);
             }
@@ -710,7 +740,7 @@ export function bootstrapViewer() {
         };
         graphStore.setSeekBarMode = setSeekBarMode;
         graphStore.selectLogIndex = (index) => {
-            selectLog(Number.parseInt(index, 10));
+            selectLog(Number.parseInt(String(index), 10));
             if (graph) {
                 graph.setAnalyser(graphStore.hasAnalyserFullscreen);
             }
@@ -723,9 +753,14 @@ export function bootstrapViewer() {
         workspaceStore.saveWorkspace = (id, title) => onSaveWorkspace(id, title);
         workspaceStore.renameWorkspace = (id, title) => onRenameWorkspace(id, title);
         workspaceStore.applyDefaultWorkspace = (index) => {
-            const presets = [null, structuredClone(ctzsnoozeWorkspace), structuredClone(supaflyWorkspace)];
-            if (presets[index]) {
-                onSwitchWorkspace(presets[index], 1);
+            const presets = [
+                null,
+                structuredClone(DEFAULT_WORKSPACES.ctzsnooze),
+                structuredClone(DEFAULT_WORKSPACES.supafly),
+            ];
+            const preset = presets[index];
+            if (preset) {
+                onSwitchWorkspace(preset, 1);
             }
         };
     }
@@ -736,15 +771,15 @@ export function bootstrapViewer() {
     appStore.newGraphConfig = (newConfig, redrawChart) => newGraphConfig(newConfig, !redrawChart);
     appStore.exportCsv = () => {
         setGraphState(GRAPH_STATE_PAUSED);
-        exportCsv(logStore.flightLog, appStore.logFilename);
+        void exportCsv(loadedFlightLog(), appStore.logFilename);
     };
     appStore.exportGpx = () => {
         setGraphState(GRAPH_STATE_PAUSED);
-        exportGpx(logStore.flightLog, appStore.logFilename);
+        void exportGpx(loadedFlightLog(), appStore.logFilename);
     };
     appStore.exportWorkspaces = () => {
         setGraphState(GRAPH_STATE_PAUSED);
-        saveWorkspaces(workspaceStore.workspaceGraphConfigs);
+        void saveWorkspaces(workspaceStore.workspaceGraphConfigs);
     };
     appStore.saveUserSettings = (newSettings) => {
         settingsStore.saveAll(newSettings);

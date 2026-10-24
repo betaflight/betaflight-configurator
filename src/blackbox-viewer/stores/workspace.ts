@@ -46,7 +46,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
 
     const showDefaultMenu = ref(false);
 
-    // Callbacks registered by main.js
+    // Callbacks registered by main.ts
     const switchWorkspace = shallowRef<((id: number) => void) | null>(null);
     const saveWorkspace = shallowRef<((id: number, title: string) => void) | null>(null);
     const renameWorkspace = shallowRef<((id: number, title: string) => void) | null>(null);

@@ -42,7 +42,7 @@ function mountedSeekBar() {
     return seekBar;
 }
 
-export function renderLogFileInfo(file: File): void {
+export function renderLogFileInfo(file: Pick<File, "name">): void {
     const logStore = useLogStore(pinia);
     const appStore = useAppStore(pinia);
     const flightLog = loadedFlightLog();

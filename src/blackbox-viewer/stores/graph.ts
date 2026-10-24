@@ -72,14 +72,14 @@ export const GRAPH_DEFAULT_ZOOM = 100;
 export const useGraphStore = defineStore("graph", () => {
     const prefs = new PrefStorage();
 
-    // Renderer instances — registered by main.js after creation
+    // Renderer instances — registered by main.ts after creation
     const graph = shallowRef<GrapherInstance | null>(null);
     const mapGrapher = shallowRef<InstanceType<typeof MapGrapher> | null>(null);
     /** The mounted 3D flight panel, or null while it is hidden, so playback and log loading do no 3D work. */
     const flight3d = shallowRef<Flight3DHandle | null>(null);
     const seekBar = shallowRef<InstanceType<typeof SeekBar> | null>(null);
 
-    // Canvas DOM refs — registered by main.js
+    // Canvas DOM refs — registered by main.ts
     const canvasRefs = shallowRef<CanvasRefs | null>(null);
 
     const graphConfig = ref<GraphPanelConfig[] | null>(null);
@@ -118,7 +118,7 @@ export const useGraphStore = defineStore("graph", () => {
     const markerTime = ref(0);
     const seekBarMode = ref<SeekBarMode>("avgThrottle");
 
-    // Callbacks registered by main.js
+    // Callbacks registered by main.ts
     const invalidateGraph = shallowRef<Action | null>(null);
     const updateCanvasSize = shallowRef<Action | null>(null);
     const zoomGraphConfig = shallowRef<((graphIndex: number) => void) | null>(null);

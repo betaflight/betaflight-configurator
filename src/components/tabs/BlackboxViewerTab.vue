@@ -50,7 +50,7 @@
 import { nextTick, onActivated, onDeactivated, onMounted, onBeforeUnmount, provide, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import BlackboxViewerApp from "../../blackbox-viewer/App.vue";
-import { bootstrapViewer } from "../../blackbox-viewer/main.js";
+import { bootstrapViewer } from "../../blackbox-viewer/main";
 import { setBlackboxViewerDark, setViewerActive } from "../../blackbox-viewer/vue_init";
 import { useGraphStore } from "../../blackbox-viewer/stores/graph";
 import { useDataflashPull } from "../../composables/useDataflashPull";
