@@ -171,6 +171,7 @@ export default defineConfig({
             input: {
                 main: resolve(import.meta.dirname, "src/index.html"),
                 receiver_msp: resolve(import.meta.dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
+                log_window: resolve(import.meta.dirname, "src/components/log/log_window.html"),
             },
             onwarn(warning, defaultHandler) {
                 if (warning.code === "INEFFECTIVE_DYNAMIC_IMPORT" && isCycleBreakingImport(warning)) {
