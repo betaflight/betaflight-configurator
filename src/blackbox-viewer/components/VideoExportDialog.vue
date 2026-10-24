@@ -14,18 +14,8 @@ import {
     probeVideoExport,
     runVideoExport,
     suggestedName,
-} from "../video_export.js";
-
-/** What probeVideoExport() reports for one resolution. */
-interface VideoExportProbe {
-    canEncode: boolean;
-    reason?: string;
-    codec?: string;
-    extension?: string;
-    description?: string;
-    saveMode?: string;
-    androidBridge?: boolean;
-}
+    type VideoExportProbe,
+} from "../video_export";
 
 type VideoExportOutcome = Awaited<ReturnType<typeof runVideoExport>> & { name: string };
 
@@ -68,6 +58,8 @@ let cancelRequested = false;
 
 const resolution = computed(() => RESOLUTIONS.find((item) => item.value === resolutionValue.value) ?? RESOLUTIONS[0]);
 const probeResult = computed(() => probes.value[resolution.value.value] ?? null);
+/** The probe for the selected resolution when it can encode, which is when it has a codec and a container. */
+const encodableProbe = computed(() => (probeResult.value?.canEncode ? probeResult.value : null));
 const estimatedFrames = computed(() =>
     estimateFrameCount({
         inTime: playbackStore.videoExportInTime,
@@ -82,7 +74,7 @@ const estimatedBytes = computed(() =>
         frameCount: estimatedFrames.value,
         width: resolution.value.width,
         height: resolution.value.height,
-        codec: probeResult.value?.codec,
+        codec: encodableProbe.value?.codec,
     }),
 );
 const progressPercent = computed(() =>
@@ -166,7 +158,8 @@ async function startExport() {
         return;
     }
 
-    const selectedProbe = probeResult.value;
+    // canStart only allows a probe that can encode.
+    const selectedProbe = encodableProbe.value;
     if (!selectedProbe) {
         return;
     }
@@ -305,14 +298,14 @@ onUnmounted(cancelExport);
                     {{ estimatedFrames }} frames · estimated {{ humanSize(estimatedBytes) }}
                 </p>
                 <UAlert
-                    v-if="probeResult?.saveMode === 'buffered'"
+                    v-if="encodableProbe?.saveMode === 'buffered'"
                     color="warning"
                     variant="subtle"
                     title="This browser cannot stream the video directly to disk."
                     :description="`The complete file (about ${humanSize(estimatedBytes)}) is held until export finishes. Keep the export short.`"
                 />
                 <UAlert
-                    v-if="probeResult?.androidBridge"
+                    v-if="encodableProbe?.androidBridge"
                     color="warning"
                     variant="subtle"
                     title="Video export can be slow on Android."

@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {
     Output,
     Mp4OutputFormat,
@@ -6,17 +27,27 @@ import {
     CanvasSource,
     getFirstEncodableVideoCodec,
     QUALITY_MEDIUM,
+    type StreamTargetChunk,
+    type VideoCodec,
 } from "mediabunny";
 
-import FileSystem from "@/js/FileSystem.js";
-import { isAndroid, isTauriDesktop } from "@/js/utils/checkCompatibility.js";
-import { ThemeColors } from "./theme_colors.js";
-import { getGraphState, invalidateGraph, setExportInProgress, setGraphState } from "./playback_controls.js";
-import { GRAPH_STATE_PAUSED } from "./stores/playback.js";
+import FileSystem, { type FileWriter, type PickedFile } from "@/js/FileSystem";
+import { isAndroid, isTauriDesktop } from "@/js/utils/checkCompatibility";
+import { ThemeColors } from "./theme_colors";
+import { getGraphState, invalidateGraph, setExportInProgress, setGraphState } from "./playback_controls";
+import { GRAPH_STATE_PAUSED } from "./stores/playback";
+import type { UserSettings } from "./user_settings_data";
 
 const MICROSECONDS_PER_SECOND = 1e6;
-const CODEC_PROBE_ORDER = ["avc", "vp9", "vp8", "av1"];
-const CODEC_CONTAINERS = {
+const CODEC_PROBE_ORDER: VideoCodec[] = ["avc", "vp9", "vp8", "av1"];
+
+interface VideoContainer {
+    container: "mp4" | "webm";
+    extension: string;
+    description: string;
+}
+
+const CODEC_CONTAINERS: Partial<Record<VideoCodec, VideoContainer>> = {
     avc: { container: "mp4", extension: "mp4", description: "MP4 video" },
     hevc: { container: "mp4", extension: "mp4", description: "MP4 video" },
     vp9: { container: "webm", extension: "webm", description: "WebM video" },
@@ -29,97 +60,141 @@ const ANDROID_CHUNK_SIZE = 256 * 1024;
 const YIELD_BUDGET_MS = 12;
 const HIDDEN_YIELD_BUDGET_MS = 250;
 
-/**
- * @typedef {object} VideoExportProgress
- * @property {number} frame
- * @property {number} totalFrames
- * @property {number} bytesWritten
- * @property {number} etaSecs
- */
+export interface VideoExportProgress {
+    frame: number;
+    totalFrames: number;
+    bytesWritten: number;
+    etaSecs: number;
+}
 
-/**
- * @typedef {object} VideoExportResult
- * @property {number} frames
- * @property {number} bytes
- * @property {boolean} cancelled
- */
+export interface VideoExportResult {
+    frames: number;
+    bytes: number;
+    cancelled: boolean;
+}
 
-/**
- * @typedef {object} VideoExportFileSystem
- * @property {(file: unknown) => Promise<unknown>} openFile
- * @property {(writable: unknown, data: Blob) => Promise<void>} writeChunck
- * @property {(writable: unknown) => Promise<void>} closeFile
- */
+/** What probeVideoExport() reports for one resolution. */
+export type VideoExportProbe =
+    | { canEncode: false; reason: string }
+    | (VideoContainer & {
+          canEncode: true;
+          codec: VideoCodec;
+          saveMode: "stream" | "buffered";
+          androidBridge: boolean;
+      });
 
-/**
- * @typedef {StreamTarget & {
- *   exportWritable: WritableStream,
- *   bytesWritten: () => number,
- *   closeFile: () => Promise<void>
- * }} VideoExportTarget
- */
+/** The part of FileSystem the export streams through. */
+export interface VideoExportFileSystem {
+    openFile(file: PickedFile): Promise<FileWriter>;
+    writeChunck(writable: FileWriter, data: Blob): Promise<void>;
+    closeFile(writable: FileWriter): Promise<void>;
+}
 
-/**
- * @typedef {object} VideoExportOptions
- * @property {HTMLCanvasElement} canvas Private encoder canvas.
- * @property {{canvas: HTMLCanvasElement, stickCanvas?: HTMLCanvasElement,
- *   craftCanvas?: HTMLCanvasElement, analyserCanvas?: HTMLCanvasElement}} canvasRefs
- * @property {{render: (time: number) => void, resize: (width: number, height: number) => void,
- *   setDrawInOutRegion?: (enabled: boolean) => void}} graph
- * @property {{getMinTime: () => number, getMaxTime: () => number}} log
- * @property {unknown} file Picked FileSystem descriptor.
- * @property {VideoExportFileSystem} [fileSystem]
- * @property {number} frameRate
- * @property {number} width
- * @property {number} height
- * @property {number | false | null} [inTime]
- * @property {number | false | null} [outTime]
- * @property {object} [userSettings]
- * @property {boolean} [includeSticks]
- * @property {boolean} [includeCraft]
- * @property {boolean} [includeAnalyser]
- * @property {() => {left?: number, top?: number}} [getAnalyserLayout]
- * @property {() => void} [restoreCanvasSize]
- * @property {() => void} [invalidateGraph]
- * @property {() => boolean} [shouldCancel]
- * @property {(phase: "preparing" | "rendering") => void} [onPhase]
- * @property {(progress: VideoExportProgress) => void} [onProgress]
- */
+export type VideoExportTarget = StreamTarget & {
+    exportWritable: WritableStream<StreamTargetChunk>;
+    bytesWritten: () => number;
+    closeFile: () => Promise<void>;
+};
 
-const probeCache = new Map();
-let activeExport = null;
+interface VideoExportCanvases {
+    canvas: HTMLCanvasElement;
+    stickCanvas?: HTMLCanvasElement;
+    craftCanvas?: HTMLCanvasElement;
+    analyserCanvas?: HTMLCanvasElement;
+}
 
-function saveMode() {
-    return typeof globalThis.showSaveFilePicker === "function" || isAndroid() || isTauriDesktop()
+/** Where the analyser sits on the graph canvas. */
+interface AnalyserPosition {
+    left?: number;
+    top?: number;
+}
+
+/** The overlays the export draws, each shown when its size is a positive percentage. */
+type OverlaySettings = Partial<Record<"sticks" | "craft" | "analyser", { size?: string | number }>>;
+
+export interface VideoExportOptions {
+    /** Private encoder canvas. */
+    canvas: HTMLCanvasElement;
+    canvasRefs: VideoExportCanvases;
+    graph: {
+        render: (time: number) => void;
+        resize: (width: number, height: number) => void;
+        setDrawInOutRegion?: (enabled: boolean) => void;
+    };
+    log: { getMinTime: () => number; getMaxTime: () => number };
+    /** Picked FileSystem descriptor. */
+    file: PickedFile;
+    fileSystem?: VideoExportFileSystem;
+    frameRate: number;
+    width: number;
+    height: number;
+    inTime?: number | false | null;
+    outTime?: number | false | null;
+    userSettings?: OverlaySettings | Pick<UserSettings, "sticks" | "craft" | "analyser">;
+    includeSticks?: boolean;
+    includeCraft?: boolean;
+    includeAnalyser?: boolean;
+    getAnalyserLayout?: () => AnalyserPosition;
+    restoreCanvasSize?: () => void;
+    invalidateGraph?: () => void;
+    shouldCancel?: () => boolean;
+    onPhase?: (phase: "preparing" | "rendering") => void;
+    onProgress?: (progress: VideoExportProgress) => void;
+}
+
+interface ExportState {
+    cancelled: boolean;
+}
+
+/** What the export borrowed from the live viewer, to give back when it ends. */
+interface ViewerState {
+    borrowed: boolean;
+    graphState: number;
+}
+
+const probeCache = new Map<string, Promise<VideoExportProbe>>();
+let activeExport: ExportState | null = null;
+
+function saveMode(): "stream" | "buffered" {
+    return typeof (globalThis as { showSaveFilePicker?: unknown }).showSaveFilePicker === "function" ||
+        isAndroid() ||
+        isTauriDesktop()
         ? "stream"
         : "buffered";
 }
 
-function normalizeBound(value, fallback) {
+function normalizeBound(value: number | false | null | undefined, fallback: () => number): number {
     return value === false || value == null ? fallback() : value;
 }
 
-function exportRange({ inTime, outTime, getMinTime, getMaxTime }) {
+interface RangeSource {
+    inTime?: number | false | null;
+    outTime?: number | false | null;
+    getMinTime?: () => number;
+    getMaxTime?: () => number;
+}
+
+function exportRange({ inTime, outTime, getMinTime, getMaxTime }: RangeSource): { start: number; end: number } {
     return {
         start: normalizeBound(inTime, typeof getMinTime === "function" ? getMinTime : () => 0),
         end: normalizeBound(outTime, typeof getMaxTime === "function" ? getMaxTime : () => 0),
     };
 }
 
-function sizeEnabled(settings) {
-    return Number.parseInt(settings?.size, 10) > 0;
+function sizeEnabled(settings: { size?: string | number } | undefined): boolean {
+    return Number.parseInt(String(settings?.size), 10) > 0;
 }
 
-function canvasPosition(value) {
+function canvasPosition(value: string): number {
     const parsed = Number.parseFloat(value);
     return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function yieldToBrowser() {
+function yieldToBrowser(): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-function evictFailedProbe(cacheKey, pending) {
+function evictFailedProbe(cacheKey: string, pending: Promise<VideoExportProbe>): void {
     pending.then(
         (result) => {
             if (!result?.canEncode && probeCache.get(cacheKey) === pending) {
@@ -135,14 +210,18 @@ function evictFailedProbe(cacheKey, pending) {
 }
 
 /** Check encoder and save capabilities, cached per output resolution. */
-export async function probeVideoExport({ width, height } = {}) {
+export async function probeVideoExport({
+    width,
+    height,
+}: { width?: number; height?: number } = {}): Promise<VideoExportProbe> {
     const cacheKey = `${width || 0}x${height || 0}`;
-    if (probeCache.has(cacheKey)) {
-        return probeCache.get(cacheKey);
+    const cached = probeCache.get(cacheKey);
+    if (cached) {
+        return cached;
     }
 
-    const pending = (async () => {
-        if (typeof globalThis.VideoEncoder !== "function") {
+    const pending = (async (): Promise<VideoExportProbe> => {
+        if (typeof (globalThis as { VideoEncoder?: unknown }).VideoEncoder !== "function") {
             return {
                 canEncode: false,
                 reason: "This browser cannot encode video (WebCodecs unavailable)",
@@ -158,7 +237,7 @@ export async function probeVideoExport({ width, height } = {}) {
         } catch (error) {
             return {
                 canEncode: false,
-                reason: `Video codec detection failed: ${error?.message ?? String(error)}`,
+                reason: `Video codec detection failed: ${(error as Error | null)?.message ?? String(error)}`,
             };
         }
         if (!codec) {
@@ -188,7 +267,13 @@ export async function probeVideoExport({ width, height } = {}) {
 }
 
 /** Frames in the marked range at the selected framerate. */
-export function estimateFrameCount({ inTime, outTime, frameRate, getMinTime, getMaxTime }) {
+export function estimateFrameCount({
+    inTime,
+    outTime,
+    frameRate,
+    getMinTime,
+    getMaxTime,
+}: RangeSource & { frameRate: number }): number {
     if (!Number.isFinite(frameRate) || frameRate <= 0) {
         return 0;
     }
@@ -198,7 +283,17 @@ export function estimateFrameCount({ inTime, outTime, frameRate, getMinTime, get
 }
 
 /** Rough output size shown before a buffered export starts. */
-export function estimateOutputBytes({ frameCount, width, height, codec }) {
+export function estimateOutputBytes({
+    frameCount,
+    width,
+    height,
+    codec,
+}: {
+    frameCount: number;
+    width: number;
+    height: number;
+    codec?: string;
+}): number {
     if (!frameCount || frameCount <= 0 || !width || !height) {
         return 0;
     }
@@ -207,28 +302,32 @@ export function estimateOutputBytes({ frameCount, width, height, codec }) {
 }
 
 /** Chunk size tuned to avoid the Android hex-bridge allocation spike documented in #5396. */
-export function videoExportChunkSize(android = isAndroid()) {
+export function videoExportChunkSize(android = isAndroid()): number {
     return android ? ANDROID_CHUNK_SIZE : DEFAULT_CHUNK_SIZE;
+}
+
+interface TargetOptions {
+    fileSystem?: VideoExportFileSystem;
+    chunkSize?: number;
 }
 
 /**
  * Adapt an already-open FileSystem writable to mediabunny's positioned stream contract.
  * The selected container is append-only, so any non-sequential write is a hard error.
  */
-/** @returns {VideoExportTarget} */
-export function createFileSystemTarget(writableToken, options = {}) {
+export function createFileSystemTarget(writableToken: FileWriter, options: TargetOptions = {}): VideoExportTarget {
     const fileSystem = options.fileSystem ?? FileSystem;
     const chunkSize = options.chunkSize ?? videoExportChunkSize();
     let bytesWritten = 0;
     let nextPosition = 0;
-    let closePromise = null;
+    let closePromise: Promise<void> | null = null;
 
     const closeFile = () => {
         closePromise ??= Promise.resolve(fileSystem.closeFile(writableToken));
         return closePromise;
     };
 
-    const writable = new WritableStream({
+    const writable = new WritableStream<StreamTargetChunk>({
         async write(chunk) {
             if (chunk?.type !== "write" || !(chunk.data instanceof Uint8Array)) {
                 throw new TypeError("Video export received an invalid muxer write");
@@ -249,7 +348,7 @@ export function createFileSystemTarget(writableToken, options = {}) {
         abort: closeFile,
     });
 
-    const target = new StreamTarget(writable, { chunked: true, chunkSize });
+    const target = new StreamTarget(writable, { chunked: true, chunkSize }) as VideoExportTarget;
     target.exportWritable = writable;
     target.bytesWritten = () => bytesWritten;
     target.closeFile = closeFile;
@@ -257,15 +356,14 @@ export function createFileSystemTarget(writableToken, options = {}) {
 }
 
 /** Open a picked descriptor before adapting its production writable token. */
-/** @returns {Promise<VideoExportTarget>} */
-export async function openFileSystemTarget(file, options = {}) {
+export async function openFileSystemTarget(file: PickedFile, options: TargetOptions = {}): Promise<VideoExportTarget> {
     const fileSystem = options.fileSystem ?? FileSystem;
     const writableToken = await fileSystem.openFile(file);
     return createFileSystemTarget(writableToken, { ...options, fileSystem });
 }
 
 /** Create a mediabunny source that rejects unexpected canvas size changes. */
-export function createCanvasSource(canvas, codec) {
+export function createCanvasSource(canvas: HTMLCanvasElement, codec: VideoCodec): CanvasSource {
     return new CanvasSource(canvas, {
         codec,
         quality: QUALITY_MEDIUM,
@@ -283,7 +381,12 @@ export function compositeVideoFrame({
     includeCraft,
     includeAnalyser,
     analyserLayout,
-}) {
+}: Pick<
+    VideoExportOptions,
+    "canvas" | "canvasRefs" | "userSettings" | "includeSticks" | "includeCraft" | "includeAnalyser"
+> & {
+    analyserLayout?: AnalyserPosition;
+}): void {
     const context = canvas.getContext("2d");
     if (!context) {
         throw new Error("A 2D canvas is required to export video");
@@ -293,27 +396,22 @@ export function compositeVideoFrame({
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.drawImage(canvasRefs.canvas, 0, 0);
 
+    // Each overlay's canvas is mounted whenever the overlay is enabled, as the JavaScript assumed.
     if (includeSticks && sizeEnabled(userSettings?.sticks)) {
-        context.drawImage(
-            canvasRefs.stickCanvas,
-            canvasPosition(canvasRefs.stickCanvas.style.left),
-            canvasPosition(canvasRefs.stickCanvas.style.top),
-        );
+        const stickCanvas = canvasRefs.stickCanvas!;
+        context.drawImage(stickCanvas, canvasPosition(stickCanvas.style.left), canvasPosition(stickCanvas.style.top));
     }
     if (includeCraft && sizeEnabled(userSettings?.craft)) {
-        context.drawImage(
-            canvasRefs.craftCanvas,
-            canvasPosition(canvasRefs.craftCanvas.style.left),
-            canvasPosition(canvasRefs.craftCanvas.style.top),
-        );
+        const craftCanvas = canvasRefs.craftCanvas!;
+        context.drawImage(craftCanvas, canvasPosition(craftCanvas.style.left), canvasPosition(craftCanvas.style.top));
     }
     if (includeAnalyser && sizeEnabled(userSettings?.analyser)) {
-        context.drawImage(canvasRefs.analyserCanvas, analyserLayout?.left ?? 0, analyserLayout?.top ?? 0);
+        context.drawImage(canvasRefs.analyserCanvas!, analyserLayout?.left ?? 0, analyserLayout?.top ?? 0);
     }
 }
 
 /** Replace a log extension with the selected video container extension. */
-export function suggestedName(logName, extension) {
+export function suggestedName(logName: string | null | undefined, extension: string): string {
     const base =
         typeof logName === "string" && logName.includes(".")
             ? logName.slice(0, logName.lastIndexOf("."))
@@ -322,14 +420,13 @@ export function suggestedName(logName, extension) {
 }
 
 /** Ask the active loop to stop at its next frame boundary. Safe to call repeatedly. */
-export function cancelActiveVideoExport() {
+export function cancelActiveVideoExport(): void {
     if (activeExport) {
         activeExport.cancelled = true;
     }
 }
 
-/** @param {VideoExportOptions} options */
-function validateVideoExportOptions(options) {
+function validateVideoExportOptions(options: VideoExportOptions): void {
     if (activeExport) {
         throw new Error("A video export is already running");
     }
@@ -338,8 +435,9 @@ function validateVideoExportOptions(options) {
     }
 }
 
-/** @param {VideoExportOptions} options */
-async function buildVideoExportPlan(options) {
+async function buildVideoExportPlan(
+    options: VideoExportOptions,
+): Promise<{ probe: Extract<VideoExportProbe, { canEncode: true }>; start: number; totalFrames: number }> {
     const probe = await probeVideoExport({ width: options.width, height: options.height });
     if (!probe.canEncode) {
         throw new Error(probe.reason);
@@ -359,7 +457,11 @@ async function buildVideoExportPlan(options) {
     return { probe, start, totalFrames };
 }
 
-async function borrowExportGrapher(options, start, viewerState) {
+async function borrowExportGrapher(
+    options: VideoExportOptions,
+    start: number,
+    viewerState: ViewerState,
+): Promise<void> {
     viewerState.graphState = getGraphState();
     viewerState.borrowed = true;
     setExportInProgress(true);
@@ -377,7 +479,15 @@ async function borrowExportGrapher(options, start, viewerState) {
     }
 }
 
-function createVideoOutput({ options, target, probe }) {
+function createVideoOutput({
+    options,
+    target,
+    probe,
+}: {
+    options: VideoExportOptions;
+    target: VideoExportTarget;
+    probe: Extract<VideoExportProbe, { canEncode: true }>;
+}): { output: Output; source: CanvasSource } {
     const format =
         probe.container === "mp4"
             ? new Mp4OutputFormat({ fastStart: "fragmented" })
@@ -388,12 +498,24 @@ function createVideoOutput({ options, target, probe }) {
     return { output, source };
 }
 
-async function startVideoOutput(options, output) {
+async function startVideoOutput(options: VideoExportOptions, output: Output): Promise<void> {
     await output.start();
     options.onPhase?.("rendering");
 }
 
-function reportVideoExportProgress({ options, target, frame, totalFrames, smoothedFrameMs }) {
+function reportVideoExportProgress({
+    options,
+    target,
+    frame,
+    totalFrames,
+    smoothedFrameMs,
+}: {
+    options: VideoExportOptions;
+    target: VideoExportTarget;
+    frame: number;
+    totalFrames: number;
+    smoothedFrameMs: number;
+}): void {
     options.onProgress?.({
         frame: frame + 1,
         totalFrames,
@@ -402,8 +524,23 @@ function reportVideoExportProgress({ options, target, frame, totalFrames, smooth
     });
 }
 
-/** @returns {Promise<VideoExportResult>} */
-async function renderVideoFrames({ options, output, source, target, exportState, start, totalFrames }) {
+async function renderVideoFrames({
+    options,
+    output,
+    source,
+    target,
+    exportState,
+    start,
+    totalFrames,
+}: {
+    options: VideoExportOptions;
+    output: Output;
+    source: CanvasSource;
+    target: VideoExportTarget;
+    exportState: ExportState;
+    start: number;
+    totalFrames: number;
+}): Promise<VideoExportResult> {
     const frameDurationMicros = MICROSECONDS_PER_SECOND / options.frameRate;
     let lastFrameAt = performance.now();
     let lastYieldAt = lastFrameAt;
@@ -444,7 +581,7 @@ async function renderVideoFrames({ options, output, source, target, exportState,
     return { frames: totalFrames, bytes: target.bytesWritten(), cancelled: false };
 }
 
-async function cancelFailedVideoOutput(output) {
+async function cancelFailedVideoOutput(output: Output | null): Promise<void> {
     if (!output || output.state === "canceled" || output.state === "finalized") {
         return;
     }
@@ -455,7 +592,19 @@ async function cancelFailedVideoOutput(output) {
     }
 }
 
-async function closeAndRestoreVideoExport({ options, target, exportState, viewerState, failed }) {
+async function closeAndRestoreVideoExport({
+    options,
+    target,
+    exportState,
+    viewerState,
+    failed,
+}: {
+    options: VideoExportOptions;
+    target: VideoExportTarget | null;
+    exportState: ExportState;
+    viewerState: ViewerState;
+    failed: boolean;
+}): Promise<void> {
     try {
         await target?.closeFile();
     } catch (error) {
@@ -484,18 +633,16 @@ async function closeAndRestoreVideoExport({ options, target, exportState, viewer
 /**
  * Borrow the live grapher, render the selected range, and stream the encoded file.
  * The writable and viewer state are restored on success, cancellation, and failure.
- * @param {VideoExportOptions} options
- * @returns {Promise<VideoExportResult>}
  */
-export async function runVideoExport(options) {
+export async function runVideoExport(options: VideoExportOptions): Promise<VideoExportResult> {
     validateVideoExportOptions(options);
-    const exportState = { cancelled: false };
+    const exportState: ExportState = { cancelled: false };
     activeExport = exportState;
 
-    let target = null;
-    let output = null;
+    let target: VideoExportTarget | null = null;
+    let output: Output | null = null;
     let failed = false;
-    const viewerState = { borrowed: false, graphState: GRAPH_STATE_PAUSED };
+    const viewerState: ViewerState = { borrowed: false, graphState: GRAPH_STATE_PAUSED };
     try {
         const { probe, start, totalFrames } = await buildVideoExportPlan(options);
         const fileSystem = options.fileSystem ?? FileSystem;

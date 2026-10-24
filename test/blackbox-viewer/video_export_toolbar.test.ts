@@ -1,12 +1,13 @@
-import { createApp, h, nextTick } from "vue";
+import { createApp, h, nextTick, type App } from "vue";
 import { createPinia, setActivePinia } from "pinia";
 import { TooltipProvider } from "reka-ui";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import AppToolbar from "../../src/blackbox-viewer/components/AppToolbar.vue";
-import { useLogStore } from "../../src/blackbox-viewer/stores/log.js";
-import { probeVideoExport } from "../../src/blackbox-viewer/video_export.js";
+import { useLogStore } from "../../src/blackbox-viewer/stores/log";
+import { probeVideoExport } from "../../src/blackbox-viewer/video_export";
+import type { FlightLog } from "../../src/blackbox-viewer/flightlog";
 
-vi.mock("../../src/blackbox-viewer/video_export.js", () => ({
+vi.mock("../../src/blackbox-viewer/video_export", () => ({
     probeVideoExport: vi.fn(),
 }));
 
@@ -17,9 +18,17 @@ async function flushProbe() {
     await nextTick();
 }
 
+function findExportButton(host: HTMLElement): HTMLButtonElement {
+    const button = [...host.querySelectorAll("button")].find((element) =>
+        element.textContent?.includes("Export Video"),
+    );
+    expect(button).toBeTruthy();
+    return button!;
+}
+
 describe("blackbox video export toolbar", () => {
-    let app;
-    let host;
+    let app: App | null = null;
+    let host: HTMLDivElement | null = null;
 
     afterEach(() => {
         app?.unmount();
@@ -31,11 +40,11 @@ describe("blackbox video export toolbar", () => {
 
     it("exposes an unavailable encoder reason from the disabled Export Video control", async () => {
         const reason = "No supported video codec found; install the required Linux encoder plugins";
-        probeVideoExport.mockResolvedValue({ canEncode: false, reason });
+        vi.mocked(probeVideoExport).mockResolvedValue({ canEncode: false, reason });
 
         const pinia = createPinia();
         setActivePinia(pinia);
-        useLogStore().setFlightLog({});
+        useLogStore().setFlightLog({} as FlightLog);
 
         host = document.createElement("div");
         document.body.appendChild(host);
@@ -46,13 +55,10 @@ describe("blackbox video export toolbar", () => {
         app.mount(host);
         await flushProbe();
 
-        const button = [...host.querySelectorAll("button")].find((element) =>
-            element.textContent.includes("Export Video"),
-        );
-        expect(button).toBeTruthy();
+        const button = findExportButton(host);
         expect(button.disabled).toBe(true);
 
-        const explanationTrigger = button.closest('[data-testid="video-export-capability"]');
+        const explanationTrigger = button.closest<HTMLElement>('[data-testid="video-export-capability"]')!;
         expect(explanationTrigger).toBeTruthy();
         expect(explanationTrigger.getAttribute("role")).toBe("group");
         expect(explanationTrigger.getAttribute("aria-disabled")).toBe("true");
@@ -67,12 +73,20 @@ describe("blackbox video export toolbar", () => {
     });
 
     it("keeps Export Video interactive when an encoder is available", async () => {
-        probeVideoExport.mockResolvedValue({ canEncode: true, codec: "avc" });
+        vi.mocked(probeVideoExport).mockResolvedValue({
+            canEncode: true,
+            codec: "avc",
+            container: "mp4",
+            extension: "mp4",
+            description: "MP4 video",
+            saveMode: "stream",
+            androidBridge: false,
+        });
 
         const pinia = createPinia();
         const onExportVideo = vi.fn();
         setActivePinia(pinia);
-        useLogStore().setFlightLog({});
+        useLogStore().setFlightLog({} as FlightLog);
 
         host = document.createElement("div");
         document.body.appendChild(host);
@@ -83,10 +97,8 @@ describe("blackbox video export toolbar", () => {
         app.mount(host);
         await flushProbe();
 
-        const button = [...host.querySelectorAll("button")].find((element) =>
-            element.textContent.includes("Export Video"),
-        );
-        const explanationTrigger = button.closest('[data-testid="video-export-capability"]');
+        const button = findExportButton(host);
+        const explanationTrigger = button.closest<HTMLElement>('[data-testid="video-export-capability"]')!;
 
         expect(button.disabled).toBe(false);
         expect(button.classList.contains("pointer-events-none")).toBe(false);

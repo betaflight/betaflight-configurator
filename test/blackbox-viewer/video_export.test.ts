@@ -1,15 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { GRAPH_STATE_PAUSED, GRAPH_STATE_PLAY } from "../../src/blackbox-viewer/stores/playback.js";
+import { GRAPH_STATE_PAUSED, GRAPH_STATE_PLAY } from "../../src/blackbox-viewer/stores/playback";
+
+import type { VideoExportOptions } from "../../src/blackbox-viewer/video_export";
 
 const mod = await import("../../src/blackbox-viewer/video_export");
 
-/** @typedef {Parameters<typeof mod.runVideoExport>[0]} VideoExportOptions */
-/**
- * @typedef {object} RuntimeHarness
- * @property {typeof mod} fresh
- * @property {{getGraphState: import("vitest").Mock, invalidateGraph: import("vitest").Mock,
- *   setExportInProgress: import("vitest").Mock, setGraphState: import("vitest").Mock}} controls
- */
+/** A stand-in canvas with only the members the export reads. */
+function fakeCanvas(members: object): HTMLCanvasElement {
+    return members as HTMLCanvasElement;
+}
 
 describe("estimateFrameCount", () => {
     it("rounds the marker range at the chosen framerate", () => {
@@ -34,9 +33,9 @@ describe("estimateFrameCount", () => {
         expect(
             mod.estimateFrameCount({
                 inTime: false,
-                outTime: 2e6,
+                outTime: 3e6,
                 frameRate: 50,
-                getMinTime: () => 0,
+                getMinTime: () => 1e6,
             }),
         ).toBe(100);
     });
@@ -72,7 +71,7 @@ describe("probeVideoExport", () => {
         vi.resetModules();
     });
 
-    async function loadWithCodec(codec) {
+    async function loadWithCodec(codec: string | null) {
         vi.stubGlobal(
             "VideoEncoder",
             class VideoEncoder {
@@ -96,8 +95,7 @@ describe("probeVideoExport", () => {
     it("reports WebCodecs absence with its reason", async () => {
         const fresh = await import("../../src/blackbox-viewer/video_export");
         const result = await fresh.probeVideoExport({ width: 1280, height: 720 });
-        expect(result.canEncode).toBe(false);
-        expect(result.reason).toMatch(/WebCodecs/i);
+        expect(result).toMatchObject({ canEncode: false, reason: expect.stringMatching(/WebCodecs/i) });
     });
 
     it("threads a supported codec through to container + extension + saveMode", async () => {
@@ -117,13 +115,13 @@ describe("probeVideoExport", () => {
     it("reports buffered save mode without showSaveFilePicker", async () => {
         const fresh = await loadWithCodec("vp9");
         const result = await fresh.probeVideoExport({ width: 1280, height: 720 });
-        expect(result.saveMode).toBe("buffered");
-        expect(result.extension).toBe("webm");
+        expect(result).toMatchObject({ saveMode: "buffered", extension: "webm" });
     });
 
     it("caches per canvas size", async () => {
         const codecSpy = vi.fn().mockResolvedValue("avc");
         vi.stubGlobal("showSaveFilePicker", () => {});
+        // H.264 first: it is the one hardware encoders most often have.
         vi.stubGlobal(
             "VideoEncoder",
             class VideoEncoder {
@@ -145,6 +143,7 @@ describe("probeVideoExport", () => {
         await fresh.probeVideoExport({ width: 1920, height: 1080 });
         await fresh.probeVideoExport({ width: 1920, height: 1080 });
         expect(codecSpy).toHaveBeenCalledTimes(1);
+        expect(codecSpy).toHaveBeenCalledWith(["avc", "vp9", "vp8", "av1"], expect.anything());
     });
 
     it("retries a failed probe instead of disabling the resolution for the session", async () => {
@@ -176,8 +175,8 @@ describe("probeVideoExport", () => {
 
 describe("createFileSystemTarget", () => {
     it("hands every muxer chunk to the opened writable as a Blob and closes once", async () => {
-        const writableToken = { id: "production-writable" };
-        const fileSystem = { writeChunck: vi.fn(), closeFile: vi.fn() };
+        const writableToken = "production-writable";
+        const fileSystem = { openFile: vi.fn(), writeChunck: vi.fn(), closeFile: vi.fn() };
         const target = mod.createFileSystemTarget(writableToken, { fileSystem, chunkSize: 1024 });
         const writer = target.exportWritable.getWriter();
 
@@ -198,8 +197,8 @@ describe("createFileSystemTarget", () => {
     });
 
     it("throws on a non-sequential position instead of corrupting downstream", async () => {
-        const fileSystem = { writeChunck: vi.fn(), closeFile: vi.fn() };
-        const target = mod.createFileSystemTarget({}, { fileSystem, chunkSize: 1024 });
+        const fileSystem = { openFile: vi.fn(), writeChunck: vi.fn(), closeFile: vi.fn() };
+        const target = mod.createFileSystemTarget("writable", { fileSystem, chunkSize: 1024 });
         const writer = target.exportWritable.getWriter();
 
         await writer.write({ type: "write", data: new Uint8Array(4), position: 0 });
@@ -215,8 +214,8 @@ describe("createFileSystemTarget", () => {
     });
 
     it("uses the production pick → open → write → close lifecycle", async () => {
-        const descriptor = { name: "flight.mp4", _fileHandle: {} };
-        const writableToken = { id: "opened-token" };
+        const descriptor = { name: "flight.mp4", _fileHandle: "file-id" };
+        const writableToken = "opened-token";
         const fileSystem = {
             openFile: vi.fn().mockResolvedValue(writableToken),
             writeChunck: vi.fn(),
@@ -237,11 +236,11 @@ describe("createFileSystemTarget", () => {
 describe("compositeVideoFrame", () => {
     it("draws the graph and enabled overlays at their export-scale positions", () => {
         const context = { fillRect: vi.fn(), drawImage: vi.fn(), fillStyle: "" };
-        const graphCanvas = {};
-        const stickCanvas = { style: { left: "12.5px", top: "24px" } };
-        const craftCanvas = { style: { left: "30px", top: "40px" } };
-        const analyserCanvas = {};
-        const canvas = { width: 1280, height: 720, getContext: () => context };
+        const graphCanvas = fakeCanvas({});
+        const stickCanvas = fakeCanvas({ style: { left: "12.5px", top: "24px" } });
+        const craftCanvas = fakeCanvas({ style: { left: "30px", top: "40px" } });
+        const analyserCanvas = fakeCanvas({});
+        const canvas = fakeCanvas({ width: 1280, height: 720, getContext: () => context });
 
         mod.compositeVideoFrame({
             canvas,
@@ -263,20 +262,36 @@ describe("compositeVideoFrame", () => {
     });
 });
 
+describe("compositeVideoFrame overlays", () => {
+    it("leaves out an overlay whose size is 0, even when it is included", () => {
+        const context = { fillRect: vi.fn(), drawImage: vi.fn(), fillStyle: "" };
+        const graphCanvas = fakeCanvas({});
+        mod.compositeVideoFrame({
+            canvas: fakeCanvas({ width: 1280, height: 720, getContext: () => context }),
+            canvasRefs: { canvas: graphCanvas, analyserCanvas: fakeCanvas({}) },
+            userSettings: { analyser: { size: "0%" } },
+            includeAnalyser: true,
+        });
+        expect(context.drawImage.mock.calls).toEqual([[graphCanvas, 0, 0]]);
+    });
+});
+
 describe("runVideoExport lifecycle", () => {
     afterEach(() => {
         vi.doUnmock("mediabunny");
-        vi.doUnmock("../../src/blackbox-viewer/playback_controls.js");
+        vi.doUnmock("../../src/blackbox-viewer/playback_controls");
         vi.restoreAllMocks();
         vi.unstubAllGlobals();
         vi.resetModules();
     });
 
-    /**
-     * @param {{codec: Promise<string | null>, graphState?: number}} settings
-     * @returns {Promise<RuntimeHarness>}
-     */
-    async function loadRuntime({ codec, graphState = GRAPH_STATE_PLAY }) {
+    async function loadRuntime({
+        codec,
+        graphState = GRAPH_STATE_PLAY,
+    }: {
+        codec: Promise<string | null>;
+        graphState?: number;
+    }) {
         vi.resetModules();
         const controls = {
             getGraphState: vi.fn(() => graphState),
@@ -286,9 +301,7 @@ describe("runVideoExport lifecycle", () => {
         };
 
         class FakeOutput {
-            constructor() {
-                this.state = "pending";
-            }
+            state = "pending";
 
             addVideoTrack() {}
 
@@ -317,39 +330,35 @@ describe("runVideoExport lifecycle", () => {
             getFirstEncodableVideoCodec: vi.fn(() => codec),
             QUALITY_MEDIUM: "medium",
         }));
-        vi.doMock("../../src/blackbox-viewer/playback_controls.js", () => controls);
+        vi.doMock("../../src/blackbox-viewer/playback_controls", () => controls);
 
         return { fresh: await import("../../src/blackbox-viewer/video_export"), controls };
     }
 
-    /**
-     * @param {Partial<VideoExportOptions>} [overrides]
-     * @returns {VideoExportOptions}
-     */
-    function runtimeOptions(overrides = {}) {
+    function runtimeOptions(overrides: Partial<VideoExportOptions> = {}) {
         const context = { fillRect: vi.fn(), drawImage: vi.fn(), fillStyle: "" };
-        const graphCanvas = {};
+        const fileSystem = {
+            openFile: vi.fn().mockResolvedValue("writable"),
+            writeChunck: vi.fn(),
+            closeFile: vi.fn(),
+        };
         return {
-            canvas: { width: 0, height: 0, getContext: () => context },
-            canvasRefs: { canvas: graphCanvas },
+            canvas: fakeCanvas({ width: 0, height: 0, getContext: () => context }),
+            canvasRefs: { canvas: fakeCanvas({}) },
             graph: { render: vi.fn(), resize: vi.fn(), setDrawInOutRegion: vi.fn() },
             log: { getMinTime: () => 0, getMaxTime: () => 1e6 },
             file: { name: "flight.mp4" },
-            fileSystem: {
-                openFile: vi.fn().mockResolvedValue({ id: "writable" }),
-                writeChunck: vi.fn(),
-                closeFile: vi.fn(),
-            },
             frameRate: 30,
             width: 1280,
             height: 720,
             ...overrides,
+            fileSystem,
         };
     }
 
     it("reserves the grapher before codec planning and releases it after planning fails", async () => {
-        let resolveCodec;
-        const codec = new Promise((resolve) => {
+        let resolveCodec: (codec: string | null) => void = () => {};
+        const codec = new Promise<string | null>((resolve) => {
             resolveCodec = resolve;
         });
         const { fresh } = await loadRuntime({ codec });
@@ -411,7 +420,7 @@ describe("runVideoExport lifecycle", () => {
         options.fileSystem.closeFile.mockRejectedValue(new Error("file close failed"));
 
         let rejected = false;
-        let reason = "not rejected";
+        let reason: unknown = "not rejected";
         try {
             await fresh.runVideoExport(options);
         } catch (error) {
