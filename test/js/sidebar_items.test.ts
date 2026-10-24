@@ -171,3 +171,34 @@ describe("isItemVisible", () => {
         expect(isItemVisible(item, { expertMode: false })).toBe(true);
     });
 });
+
+describe("Frame tab: quads only", () => {
+    const frame = sidebarItems.find((item) => item.key === "frame") as SidebarItem;
+    const ctx = (mixer?: number) => ({ expertMode: false, config: null, features: null, mixer });
+
+    it("uses the drone icon", () => {
+        expect(frame.icon).toBe("i-lucide-drone");
+    });
+
+    it("shows for Quad +, Quad X and Quad X 1234", () => {
+        expect([2, 3, 26].map((mixer) => isItemVisible(frame, ctx(mixer)))).toEqual([true, true, true]);
+    });
+
+    it("shows for a generic Custom mixer with 4 motors (a deadcat mmix), not with others", () => {
+        const custom = (motorCount: number) => ({ ...ctx(23), motorCount });
+        expect([4, 3, 6, 0].map((n) => isItemVisible(frame, custom(n)))).toEqual([true, false, false, false]);
+    });
+
+    it("hides for other mixers and before the mixer is known", () => {
+        // tricopter, hex X, octo X8, airplane, V-tail quad (4 motors but not a quad frame), unknown
+        expect([1, 10, 11, 14, 17, 0, undefined].map((mixer) => isItemVisible(frame, ctx(mixer)))).toEqual([
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+        ]);
+    });
+});

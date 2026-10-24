@@ -17,6 +17,7 @@
                             >
                                 <USwitch v-model="reverseMotorDir" size="xs" />
                             </SettingRow>
+                            <MotorSpinCheckNote />
                             <div
                                 class="flex justify-center p-2.5 [&_svg]:w-[150px] [&_svg]:h-[150px] [&_svg]:ml-[15px]"
                                 v-html="mixerPreviewSvg"
@@ -564,6 +565,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onUnmounted } from "vue";
+import MotorSpinCheckNote from "@/components/frame-test/MotorSpinCheckNote.vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
