@@ -1717,6 +1717,42 @@ OSD.loadDisplayFields = function () {
                 return `${FONT.symbol(SYM.SPEED)}a30${unit}`;
             },
         },
+        PSAS_AOA_LIMITER: {
+            name: "PSAS AOA LIMITER",
+            text: "osdPsasAoALimiter",
+            desc: "osdDescPsasAoALimiter",
+            defaultPosition: -1,
+            draw_order: 680,
+            positionable: true,
+            preview: "AOA ON",
+        },
+        PSAS_TRIM_ROLL: {
+            name: "PSAS TRIM ROLL",
+            text: "osdPsasTrimRoll",
+            desc: "osdDescPsasTrimRoll",
+            defaultPosition: -1,
+            draw_order: 681,
+            positionable: true,
+            preview: `R10.1${FONT.symbol(SYM.ARROW_EAST)}A`,
+        },
+        PSAS_TRIM_PITCH: {
+            name: "PSAS TRIM PITCH",
+            text: "osdPsasTrimPitch",
+            desc: "osdDescPsasTrimPitch",
+            defaultPosition: -1,
+            draw_order: 682,
+            positionable: true,
+            preview: `P10.1${FONT.symbol(SYM.ARROW_NORTH)}A`,
+        },
+        PSAS_TRIM_YAW: {
+            name: "PSAS TRIM YAW",
+            text: "osdPsasTrimYaw",
+            desc: "osdDescPsasTrimYaw",
+            defaultPosition: -1,
+            draw_order: 683,
+            positionable: true,
+            preview: `Y10.1${FONT.symbol(SYM.ARROW_EAST)}A`,
+        },
     };
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
@@ -1871,6 +1907,11 @@ OSD.chooseFields = function () {
 
 type FcStore = ReturnType<typeof useFlightControllerStore>;
 
+const hasPSAS = () => {
+    const fcStore = useFlightControllerStore();
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
+};
+
 function chooseDisplayFields(fcStore: FcStore) {
     const F = OSD.ALL_DISPLAY_FIELDS;
 
@@ -1992,6 +2033,15 @@ function chooseDisplayFields(fcStore: FcStore) {
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+        }
+
+        if (hasPSAS()) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.PSAS_AOA_LIMITER,
+                F.PSAS_TRIM_ROLL,
+                F.PSAS_TRIM_PITCH,
+                F.PSAS_TRIM_YAW,
+            ]);
         }
     }
 }
