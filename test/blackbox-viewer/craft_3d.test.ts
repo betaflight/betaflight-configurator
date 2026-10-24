@@ -1,20 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
+import type * as Three from "three";
+import type { FlightLog, LogFrame } from "../../src/blackbox-viewer/flightlog";
 
 // The only part of three.js that needs a real GPU. Everything else, in particular the
 // geometry construction this test is here to guard, runs unchanged.
-const meshGeometries = [];
+const meshGeometries: Three.BufferGeometry[] = [];
 
 vi.mock("three", async (importOriginal) => {
-    const three = await importOriginal();
+    const three = await importOriginal<typeof Three>();
     return {
         ...three,
         // Record what each mesh is actually built from. An empty geometry renders as nothing,
         // which looks the same as a working 3D view until you load a log and see no propellers.
         Mesh: class extends three.Mesh {
-            constructor(geometry, material) {
+            constructor(geometry?: Three.BufferGeometry, material?: Three.Material) {
                 super(geometry, material);
-                meshGeometries.push(geometry);
+                meshGeometries.push(this.geometry);
             }
         },
         WebGLRenderer: class {
@@ -24,30 +26,36 @@ vi.mock("three", async (importOriginal) => {
     };
 });
 
-// Mirrors NUM_PROP_LEVELS in craft_3d.js. Level 0 is deliberately empty, the rest are the
+// Mirrors NUM_PROP_LEVELS in craft_3d.ts. Level 0 is deliberately empty, the rest are the
 // widening prop disc.
 const PROP_LEVELS = 100;
 
-function vertexCount(geometry) {
+function vertexCount(geometry: Three.BufferGeometry) {
     return geometry.getAttribute("position")?.count ?? 0;
 }
 
-const { Craft3D } = await import("../../src/blackbox-viewer/craft_3d.js");
+const { Craft3D } = await import("../../src/blackbox-viewer/craft_3d");
 
 // Craft3D is built entirely in its constructor, and grapher.initializeCraftModel wraps that in a
 // try/catch that treats any throw as "WebGL not supported" and silently drops to the 2D craft.
 // A legacy three.js API therefore disables the 3D view without a trace, which is exactly what
 // THREE.Geometry did. Constructing it here is the only thing that catches that.
 function buildCraft(numMotors = 4) {
-    const canvas = { width: 100, height: 100 };
-    const flightLog = { getSysConfig: () => ({ motorOutput: [0, 2047] }) };
-    const propColors = Array.from({ length: numMotors }, (_, i) => 0x100000 * (i + 1));
+    const canvas = { width: 100, height: 100 } as HTMLCanvasElement;
+    const flightLog = { getSysConfig: () => ({ motorOutput: [0, 2047] }) } as unknown as Pick<
+        FlightLog,
+        "getSysConfig"
+    >;
+    const propColors = Array.from(
+        { length: numMotors },
+        (_, i) => `#${(0x100000 * (i + 1)).toString(16).padStart(6, "0")}`,
+    );
     return new Craft3D(flightLog, canvas, propColors);
 }
 
-function frameFor(numMotors) {
-    const frame = [];
-    const frameFieldIndexes = {};
+function frameFor(numMotors: number): [LogFrame, Record<string, number>] {
+    const frame = [0, 0] as LogFrame;
+    const frameFieldIndexes: Record<string, number> = {};
     for (let i = 0; i < numMotors; i++) {
         frameFieldIndexes[`motor[${i}]`] = frame.push(1000) - 1;
     }
@@ -90,7 +98,7 @@ describe("blackbox 3D craft model", () => {
     it("builds every prop level from empty through to a full disc", () => {
         const craft = buildCraft(4);
         const [frame, frameFieldIndexes] = frameFor(4);
-        const propGeometries = new Set();
+        const propGeometries = new Set<Three.BufferGeometry>();
 
         // motorOutput spans 0 to 2047, so this walks the whole prop level table.
         for (let throttle = 0; throttle <= 2047; throttle++) {
