@@ -69,6 +69,23 @@ describe("LapTimer", () => {
         expect(drawnRows(timer).slice(0, 3)).toEqual(["Current 00:00.500", "Last 00:02.000", "Best 00:00.500"]);
     });
 
+    it("leaves out a bookmark that was cleared", () => {
+        const timer = new LapTimer();
+        // The keyboard handler stores a cleared bookmark as null, and slot 0 is never set.
+        const bookmarks: (number | null)[] = [];
+        bookmarks[1] = 1_000_000;
+        bookmarks[2] = null;
+        bookmarks[3] = 3_000_000;
+        timer.refresh(3_500_000, MAX, bookmarks);
+        expect(drawnRows(timer)).toEqual(["Current 00:00.500", "Last 00:02.000", "Best 00:02.000", "Lap 1 00:02.000"]);
+    });
+
+    it("shows nothing once every bookmark is cleared", () => {
+        const timer = new LapTimer();
+        timer.refresh(3_500_000, MAX, [null, null]);
+        expect(drawnRows(timer)).toEqual(["Current 00:00.000", "Last 00:00.000", "Best 00:00.000"]);
+    });
+
     it("counts nothing before the first bookmark", () => {
         const timer = new LapTimer();
         timer.refresh(500_000, MAX, [1_000_000, 2_000_000]);

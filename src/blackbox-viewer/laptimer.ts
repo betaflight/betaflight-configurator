@@ -145,26 +145,25 @@ export class LapTimer {
         // Update the lapTimeTable with the current information
 
         if (currentTime != null && bookmarkTimes != null) {
-            if (bookmarkTimes.length > 0) {
-                const bookmarkTimesSorted = bookmarkTimes.slice(0);
+            // A cleared bookmark is null and a slot never set is a hole: neither is a lap boundary.
+            const bookmarkTimesSorted = bookmarkTimes.filter((time): time is number => time != null);
+            if (bookmarkTimesSorted.length > 0) {
                 bookmarkTimesSorted.push(maxTime); // add end time
-                // Sort on value rather than alphabetically. A cleared bookmark (null) compares as 0, as it did in
-                // JavaScript, and an unset slot sorts to the end.
-                bookmarkTimesSorted.sort((a, b) => Number(a) - Number(b));
+                bookmarkTimesSorted.sort((a, b) => a - b); // sort on value (rather than default alphabetically)
 
                 lapTime.laps = []; // Clear the array
 
                 for (let i = 0; i < bookmarkTimesSorted.length - 1; i++) {
-                    const lapStart = Number(bookmarkTimesSorted[i]);
-                    if (i > 0 && currentTime >= Number(bookmarkTimesSorted[0])) {
+                    const lapStart = bookmarkTimesSorted[i];
+                    if (i > 0 && currentTime >= bookmarkTimesSorted[0]) {
                         // Calculate all the laps so far
-                        lapTime.laps.push((lapStart - Number(bookmarkTimesSorted[i - 1])) / 1000);
+                        lapTime.laps.push((lapStart - bookmarkTimesSorted[i - 1]) / 1000);
                     }
-                    if (currentTime < Number(bookmarkTimesSorted[i + 1]) && currentTime >= lapStart) {
+                    if (currentTime < bookmarkTimesSorted[i + 1] && currentTime >= lapStart) {
                         // We have found the current lap
                         lapTime.current = (currentTime - lapStart) / 1000;
                         if (i > 0) {
-                            lapTime.last = (lapStart - Number(bookmarkTimesSorted[i - 1])) / 1000;
+                            lapTime.last = (lapStart - bookmarkTimesSorted[i - 1]) / 1000;
                         } else {
                             lapTime.last = 0; // we are in the first lap, there is no last or best value
                             lapTime.best = 0;
@@ -178,7 +177,7 @@ export class LapTimer {
                     }
                 }
 
-                if (lapTime.laps.length > 0 && currentTime > Number(bookmarkTimesSorted[0])) {
+                if (lapTime.laps.length > 0 && currentTime > bookmarkTimesSorted[0]) {
                     lapTime.best = maxTime;
                     for (const lap of lapTime.laps) {
                         if (lap < lapTime.best) {
