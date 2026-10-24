@@ -99,7 +99,8 @@ export class FlightLogSticks {
     /** The positions of the sticks over the last 500 ms up to the centre of the window. */
     private stickTrail(chunks: Chunk[] | null, startFrameIndex: number, windowCenterTime: number): StickQuad<number>[] {
         const stickPositionsTrail: StickQuad<number>[] = [];
-        if (chunks && startFrameIndex) {
+        // Index 0 is a real start: the window begins at the first frame of its first chunk.
+        if (chunks) {
             // we have the data for the stick trails
 
             //We may start partway through the first chunk:

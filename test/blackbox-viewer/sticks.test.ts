@@ -135,6 +135,12 @@ describe("FlightLogSticks", () => {
             expect(trailDots(drawn)).toHaveLength(3 * 2);
         });
 
+        it("draws the trail when the window starts at the first frame of its first chunk", () => {
+            const frames = [600_000, 800_000, 1_000_000].map((time) => frame(time, [0, 0, 0, 1500]));
+            const drawn = render(makeSticks(), frames[2], [chunk(frames)], 0);
+            expect(trailDots(drawn)).toHaveLength(3 * 2);
+        });
+
         it("draws no trail without the chunks", () => {
             const drawn = render(makeSticks(), frame(1e6, [0, 0, 0, 1500]), null, 2);
             expect(trailDots(drawn)).toHaveLength(0);
