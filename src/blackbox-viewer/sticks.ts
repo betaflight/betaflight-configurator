@@ -40,6 +40,21 @@ const DEFAULT_FONT_FACE = "Verdana, Arial, sans-serif",
 /** Left stick x, left stick y, right stick x, right stick y. */
 type StickQuad<T> = T[];
 
+/** The RC command index of each axis: rcCommand[0..3] are roll, pitch, yaw and throttle. */
+const ROLL = 0,
+    PITCH = 1,
+    YAW = 2,
+    THROTTLE = 3;
+
+/** The axis on each stick direction, per stick mode; any other mode is drawn as mode 2. */
+const MODE_2_LAYOUT: StickQuad<number> = [YAW, THROTTLE, ROLL, PITCH];
+const STICK_LAYOUTS = new Map<number, StickQuad<number>>([
+    [STICK_MODE_1, [YAW, PITCH, ROLL, THROTTLE]],
+    [STICK_MODE_2, MODE_2_LAYOUT],
+    [STICK_MODE_3, [ROLL, PITCH, YAW, THROTTLE]],
+    [STICK_MODE_4, [ROLL, THROTTLE, YAW, PITCH]],
+]);
+
 type SticksFlightLog = Pick<FlightLog, "getSysConfig" | "getMainFieldIndexByName" | "getMainFieldNames"> &
     Parameters<typeof FlightLogFieldPresenter.decodeFieldToFriendly>[0];
 
@@ -253,74 +268,56 @@ export class FlightLogSticks {
         }
     }
 
+    /** A stick's label: its RC command, or with stick units its value in friendly units. */
+    private stickLabelText(frame: LogFrame, stickIndex: number, rcCommand: number): string {
+        const { flightLog, rcCommandFields } = this;
+        if (!this.userSettings.stickUnits) {
+            return `${rcCommand * (stickIndex === YAW ? -1 : 1)}`; // correct the value for Yaw being inverted
+        }
+        const currentFlightMode = frame[flightLog.getMainFieldIndexByName("flightModeFlags")!];
+        return String(
+            FlightLogFieldPresenter.decodeFieldToFriendly(
+                flightLog,
+                flightLog.getMainFieldNames()[rcCommandFields[stickIndex]],
+                frame[rcCommandFields[stickIndex]],
+                currentFlightMode,
+            ),
+        );
+    }
+
     private getStickValues(
         frame: LogFrame,
         stickPositions: StickQuad<number>,
         stickLabel: StickQuad<string> | null,
     ): void {
         const { flightLog, rcCommandFields, userSettings, pitchStickCurve } = this;
-        const rcCommand: number[] = [];
-        const rcCommandLabels: string[] = [];
+        //Check that stick data is present to be drawn:
+        if ([ROLL, PITCH, YAW, THROTTLE].some((stickIndex) => rcCommandFields[stickIndex] === undefined)) {
+            return;
+        }
 
         const highResolutionScale = Number(flightLog.getSysConfig().blackbox_high_resolution) > 0 ? 10 : 1;
+        const rcCommand = [ROLL, PITCH, YAW, THROTTLE].map(
+            (stickIndex) => Number(frame[rcCommandFields[stickIndex]]) / highResolutionScale,
+        );
 
-        for (let stickIndex = 0; stickIndex < 4; stickIndex++) {
-            //Check that stick data is present to be drawn:
-            if (rcCommandFields[stickIndex] === undefined) {
-                return;
-            }
+        // The position of each axis in the range [-1..1].
+        const axisPosition = [
+            pitchStickCurve.lookup(rcCommand[ROLL]),
+            pitchStickCurve.lookup(-rcCommand[PITCH]),
+            ((userSettings.stickInvertYaw ? 1 : -1) * rcCommand[YAW]) / YAW_STICK_MAX,
+            (1500 - rcCommand[THROTTLE]) / 500,
+        ];
 
-            rcCommand[stickIndex] = Number(frame[rcCommandFields[stickIndex]]) / highResolutionScale;
-            if (stickLabel != null) {
-                rcCommandLabels[stickIndex] = `${rcCommand[stickIndex] * (stickIndex === 2 ? -1 : 1)}`; // correct the value for Yaw being inverted
-                if (userSettings.stickUnits) {
-                    const currentFlightMode = frame[flightLog.getMainFieldIndexByName("flightModeFlags")!];
-                    rcCommandLabels[stickIndex] = String(
-                        FlightLogFieldPresenter.decodeFieldToFriendly(
-                            flightLog,
-                            flightLog.getMainFieldNames()[rcCommandFields[stickIndex]],
-                            frame[rcCommandFields[stickIndex]],
-                            currentFlightMode,
-                        ),
-                    );
-                }
-            }
-        }
-
-        const yawValue = (userSettings.stickInvertYaw ? 1 : -1) * rcCommand[2];
-        const yaw = yawValue / YAW_STICK_MAX,
-            pitch = pitchStickCurve.lookup(-rcCommand[1]),
-            roll = pitchStickCurve.lookup(rcCommand[0]),
-            throttle = (1500 - rcCommand[3]) / 500;
         // map the stick positions based upon selected stick mode (default is mode 2)
-
-        //Compute the position of the sticks in the range [-1..1] (left stick x, left stick y, right stick x, right stick y)
-        // and which RC command labels each one.
-        let positions: StickQuad<number>, labelOrder: StickQuad<number>;
-        switch (userSettings.stickMode) {
-            case STICK_MODE_1:
-                positions = [yaw, pitch, roll, throttle];
-                labelOrder = [2, 1, 0, 3];
-                break;
-            case STICK_MODE_3:
-                positions = [roll, pitch, yaw, throttle];
-                labelOrder = [0, 1, 2, 3];
-                break;
-            case STICK_MODE_4:
-                positions = [roll, throttle, yaw, pitch];
-                labelOrder = [0, 3, 2, 1];
-                break;
-            default: // Mode 2
-                positions = [yaw, throttle, roll, pitch];
-                labelOrder = [2, 3, 0, 1];
-        }
-
+        const layout = STICK_LAYOUTS.get(userSettings.stickMode) ?? MODE_2_LAYOUT;
         for (let stickIndex = 0; stickIndex < 4; stickIndex++) {
+            const axis = layout[stickIndex];
             //Clamp to [-1..1], then scale to our stick size
             stickPositions[stickIndex] =
-                Math.max(-1, Math.min(1, positions[stickIndex])) * this.drawingParams.stickSurroundRadius;
+                Math.max(-1, Math.min(1, axisPosition[axis])) * this.drawingParams.stickSurroundRadius;
             if (stickLabel != null) {
-                stickLabel[stickIndex] = rcCommandLabels[labelOrder[stickIndex]];
+                stickLabel[stickIndex] = this.stickLabelText(frame, axis, rcCommand[axis]);
             }
         }
     }

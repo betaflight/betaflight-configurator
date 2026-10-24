@@ -93,6 +93,38 @@ describe("FlightLogSticks", () => {
         expect(right[1]).toBeGreaterThan(0);
     });
 
+    it("lays the axes out by stick mode", () => {
+        const sticks = makeSticks();
+        // Full roll right and low throttle, so each shows on one axis.
+        const at = (stickMode: number) => {
+            useSettingsStore().userSettings.stickMode = stickMode;
+            const [left, right] = stickDots(render(sticks, frame(1e6, [5000, 0, 0, 1000])));
+            return { left, right };
+        };
+        const radius = at(2).right[0];
+        expect(radius).toBeGreaterThan(0);
+        // Mode 2: yaw and throttle left, roll and pitch right.
+        expect(at(2)).toEqual({ left: [0, radius], right: [radius, 0] });
+        // Mode 1: yaw and pitch left, roll and throttle right.
+        expect(at(1)).toEqual({ left: [0, 0], right: [radius, radius] });
+        // Mode 3: roll and pitch left, yaw and throttle right.
+        expect(at(3)).toEqual({ left: [radius, 0], right: [0, radius] });
+        // Mode 4: roll and throttle left, yaw and pitch right.
+        expect(at(4)).toEqual({ left: [radius, radius], right: [0, 0] });
+    });
+
+    it("draws yaw the other way round when the user inverts it", () => {
+        useSettingsStore().userSettings.stickInvertYaw = true;
+        const [left] = stickDots(render(makeSticks(), frame(1e6, [0, 0, 500, 1500])));
+        expect(left[0]).toBeGreaterThan(0);
+    });
+
+    it("labels in microseconds with stick units", () => {
+        useSettingsStore().userSettings.stickUnits = true;
+        const drawn = render(makeSticks(RC_FIELDS, 600), frame(1e6, [10, 20, 30, 1400]));
+        expect(drawn.texts).toEqual(["1530 us", "1400 us", "Mode 2", "1510 us", "1520 us"]);
+    });
+
     it("labels each stick axis with its command, yaw sign corrected", () => {
         const drawn = render(makeSticks(), frame(1e6, [10, 20, 30, 1400]));
         expect(drawn.texts).toEqual(["-30", "1400", "Mode 2", "10", "20"]);
