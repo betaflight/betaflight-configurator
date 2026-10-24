@@ -370,37 +370,39 @@ interface MouseNotification {
      * Show `message` (HTML) over `target` for `delay` ms, at the mouse position or, with `align`
      * ("top"/"middle"/"bottom" plus "left"/"center"/"right"), at that corner of the target.
      */
-    show(
-        target: Element | string | null,
-        x: number | null,
-        y: number | null,
-        message: string,
-        delay?: number | null,
-        messageClass?: string | null,
-        align?: string | null,
-        margin?: number | null,
-    ): boolean;
+    show(target: Element | string | null, message: string, options?: MouseNotificationOptions): boolean;
+}
+
+/** Where and how long mouseNotification.show() shows its message. */
+export interface MouseNotificationOptions {
+    /** The mouse position, used when there is no `align`. */
+    x?: number | null;
+    y?: number | null;
+    /** How long to show it, in ms; 1000 when not given. */
+    delay?: number | null;
+    /** The class of the message box; `mouseNotification-box` when not given. */
+    messageClass?: string | null;
+    align?: string | null;
+    /** Pixels from the mouse or the target's edge; 10 when not given. */
+    margin?: number | null;
 }
 
 export const mouseNotification: MouseNotification = {
     enabled: true,
     elem: null,
     timeout: null,
-    // Eight positional parameters (Sonar S107): its one caller is main.js, which batch G of #5542
-    // converts; show() takes an options object then.
-    show: function (target, x, y, message, delay, messageClass, align, margin) /* NOSONAR */ {
+    show: function (target, message, { x, y, delay, messageClass, align, margin: marginOption } = {}) {
         if (!this.enabled) {
             return false;
         }
 
         this.elem ??= document.getElementById("mouseNotification");
 
-        messageClass = messageClass || "mouseNotification-box";
-        margin = margin || 10;
+        const margin = marginOption || 10;
 
         // The viewer's markup always has #mouseNotification; without it this throws, as it always did.
         const elem = this.elem!;
-        getOrCreateNotifElem(elem, messageClass, message, this.timeout);
+        getOrCreateNotifElem(elem, messageClass || "mouseNotification-box", message, this.timeout);
         this.timeout = setTimeout(function () {
             document.getElementById("mouse-notification")?.remove();
         }, delay || 1000);

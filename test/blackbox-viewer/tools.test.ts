@@ -247,7 +247,7 @@ describe("mouseNotification", () => {
         vi.useFakeTimers();
         mount();
 
-        expect(mouseNotification.show("#target", 0, 0, "<b>hi</b>", 500)).toBe(true);
+        expect(mouseNotification.show("#target", "<b>hi</b>", { x: 0, y: 0, delay: 500 })).toBe(true);
 
         const note = document.getElementById("mouse-notification");
         expect(note?.parentElement?.id).toBe("mouseNotification");
@@ -264,9 +264,14 @@ describe("mouseNotification", () => {
         vi.useFakeTimers();
         mount();
 
-        mouseNotification.show("#target", 0, 0, "first", 500, "first-class");
+        mouseNotification.show("#target", "first", { x: 0, y: 0, delay: 500, messageClass: "first-class" });
         vi.advanceTimersByTime(400);
-        mouseNotification.show(document.getElementById("target"), 0, 0, "second", 500, "second-class");
+        mouseNotification.show(document.getElementById("target"), "second", {
+            x: 0,
+            y: 0,
+            delay: 500,
+            messageClass: "second-class",
+        });
         vi.advanceTimersByTime(400);
 
         const notes = document.querySelectorAll("#mouse-notification");
@@ -286,7 +291,7 @@ describe("mouseNotification", () => {
         mount();
         rects({ left: 10, top: 20, right: 500, width: 490, height: 300 }, { right: 0, width: 100, height: 50 });
 
-        mouseNotification.show("#target", 30, 40, "hi", 500, null, null, 5);
+        mouseNotification.show("#target", "hi", { x: 30, y: 40, delay: 500, margin: 5 });
 
         expect(mouseNotification.elem?.style.left).toBe("25px");
         expect(mouseNotification.elem?.style.top).toBe("25px");
@@ -296,7 +301,7 @@ describe("mouseNotification", () => {
         mount();
         rects({ left: 10, top: 20, right: 500, width: 490, height: 300 }, { right: 0, width: 100, height: 50 });
 
-        mouseNotification.show("#target", 30, 40, "hi", 500, null, "bottom-right", 0);
+        mouseNotification.show("#target", "hi", { x: 30, y: 40, delay: 500, align: "bottom-right", margin: 0 });
 
         // A margin of 0 falls back to the default 10.
         expect(mouseNotification.elem?.style.left).toBe("380px");
@@ -307,7 +312,7 @@ describe("mouseNotification", () => {
         mount();
         rects({ left: 10, top: 20, right: 500, width: 490, height: 300 }, { right: 600, width: 100, height: 50 });
 
-        mouseNotification.show("#target", 30, 40, "hi", 500, null, null, 5);
+        mouseNotification.show("#target", "hi", { x: 30, y: 40, delay: 500, margin: 5 });
 
         expect(mouseNotification.elem?.style.left).toBe("395px");
     });
@@ -316,7 +321,7 @@ describe("mouseNotification", () => {
         mount();
         mouseNotification.enabled = false;
 
-        expect(mouseNotification.show("#target", 0, 0, "hi")).toBe(false);
+        expect(mouseNotification.show("#target", "hi", { x: 0, y: 0 })).toBe(false);
         expect(document.getElementById("mouse-notification")).toBeNull();
     });
 });

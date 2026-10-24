@@ -568,16 +568,11 @@ export function bootstrapViewer(): () => void {
             if (refreshRequired) {
                 graph!.refreshGraphConfig();
                 invalidateGraph();
-                mouseNotification.show(
-                    document.getElementById("log-graph"),
-                    null,
-                    null,
-                    refreshRequired,
-                    750,
-                    null,
-                    "bottom-right",
-                    0,
-                );
+                mouseNotification.show(document.getElementById("log-graph"), refreshRequired, {
+                    delay: 750,
+                    align: "bottom-right",
+                    margin: 0,
+                });
             }
         }
 
