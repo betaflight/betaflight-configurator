@@ -910,13 +910,6 @@ function openBuildOptionsDialog() {
 }
 
 /* The build info dialog is teleported out of the tab, so its rules sit outside .tab-setup. */
-.dialogBuildInfo {
-    transition: all 0.2s;
-    overflow-x: hidden;
-    overflow-y: auto;
-    width: min-content;
-    height: min-content;
-}
 .dialogBuildInfoGrid-container {
     display: grid;
     grid-template-columns: auto auto;
