@@ -1763,32 +1763,20 @@ const itermRelaxEnabled = computed({
 });
 
 const antiGravityEnabled = computed({
-    get: () =>
-        isPreApi145.value
-            ? fcStore.advancedTuning.itermAcceleratorGain !== 0
-            : fcStore.advancedTuning.antiGravityGain !== 0,
+    get: () => fcStore.advancedTuning.antiGravityGain !== 0,
     set: (val) => {
-        if (isPreApi145.value) {
-            fcStore.advancedTuning.itermAcceleratorGain = val ? fcStore.advancedTuning.itermAcceleratorGain || 1000 : 0;
-        } else {
-            fcStore.advancedTuning.antiGravityGain = val ? fcStore.advancedTuning.antiGravityGain || 80 : 0;
-        }
+        const defaultGain = isPreApi145.value ? 1000 : 80;
+        fcStore.advancedTuning.antiGravityGain = val ? fcStore.advancedTuning.antiGravityGain || defaultGain : 0;
     },
 });
 
 // Anti-gravity gain display value (divided by 10 for API 1.45+, divided by 1000 for older)
+const antiGravityGainScale = computed(() => (isPreApi145.value ? 1000 : 10));
 const antiGravityGainValue = computed({
-    get: () =>
-        isPreApi145.value
-            ? fcStore.advancedTuning.itermAcceleratorGain / 1000
-            : fcStore.advancedTuning.antiGravityGain / 10,
+    get: () => fcStore.advancedTuning.antiGravityGain / antiGravityGainScale.value,
     set: (val) => {
         const parsed = Number.parseFloat(String(val));
-        if (isPreApi145.value) {
-            fcStore.advancedTuning.itermAcceleratorGain = Math.round(parsed * 1000);
-        } else {
-            fcStore.advancedTuning.antiGravityGain = Math.round(parsed * 10);
-        }
+        fcStore.advancedTuning.antiGravityGain = Math.round(parsed * antiGravityGainScale.value);
     },
 });
 
