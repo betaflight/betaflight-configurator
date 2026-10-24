@@ -46,6 +46,7 @@ export interface MotorDefaults {
     mincommand: number;
     motorPoles: number;
     dshotbidir: boolean;
+    dshotBidirRotate: number;
     ESC_SENSOR: boolean;
     use_unsyncedPwm: number;
     motor_pwm_rate: number;
@@ -97,6 +98,7 @@ export function useMotorsState() {
             mincommand: fcStore.motorConfig.mincommand,
             motorPoles: fcStore.motorConfig.motor_poles,
             dshotbidir: fcStore.motorConfig.use_dshot_telemetry,
+            dshotBidirRotate: fcStore.motorConfig.dshot_bidir_rotate,
             ESC_SENSOR: fcStore.features.features!.isEnabled("ESC_SENSOR"),
             use_unsyncedPwm: fcStore.pidAdvancedConfig.use_unsyncedPwm,
             motor_pwm_rate: fcStore.pidAdvancedConfig.motor_pwm_rate,
