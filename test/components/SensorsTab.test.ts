@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { ref } from "vue";
@@ -7,6 +7,9 @@ import SensorsTab from "../../src/components/tabs/SensorsTab.vue";
 import * as timers from "../../src/js/timers";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import { ipCoordinates } from "../../src/js/utils/ipGeolocation";
+import MSP from "../../src/js/msp";
+import MSPCodes from "../../src/js/msp/MSPCodes";
+import { gui_log } from "../../src/js/gui_log";
 
 const data = vi.hoisted(() => ({
     loadSensorsConfig: vi.fn(),
@@ -75,7 +78,14 @@ vi.mock("../../src/js/utils/ipGeolocation", async (importOriginal) => ({
     ...(await importOriginal<typeof import("../../src/js/utils/ipGeolocation")>()),
     ipCoordinates: vi.fn(),
 }));
-vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
+vi.mock("../../src/js/localization", () => ({
+    i18n: {
+        // Keep the key as the text; append placeholder values so labels that carry data can be asserted.
+        getMessage: (key: string, params?: Record<string, unknown>) =>
+            params ? `${key}:${JSON.stringify(params)}` : key,
+    },
+}));
+vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 
 function mountTab() {
     return shallowMount(SensorsTab, { global: { renderStubDefaultSlot: true, mocks: { $t: (key: string) => key } } });
@@ -228,5 +238,96 @@ describe("SensorsTab MSP wiring", () => {
         await flushPromises();
         expect(writeFeaturePort).toHaveBeenCalled();
         expect(saveAndReboot).toHaveBeenCalledOnce();
+    });
+});
+
+describe("SensorsTab legacy magnetometer calibration", () => {
+    const CALIBRATING = 1 << 12; // ARMING_DISABLE_BIT_CALIBRATING
+
+    beforeEach(() => {
+        vi.resetAllMocks();
+        vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+        gates.length = 0;
+        setActivePinia(createPinia());
+        localStorage.clear();
+        data.loadSensorsConfig.mockResolvedValue(undefined);
+        data.loadGpsData.mockResolvedValue(undefined);
+
+        const fcStore = useFlightControllerStore();
+        fcStore.config.apiVersion = "1.46.0"; // no guided calibration: plain Calibrate button
+        fcStore.config.activeSensors = 0b100; // mag only
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    function calButton(wrapper: Wrapper) {
+        const buttons = wrapper
+            .findAllComponents(UButton)
+            .filter(
+                (b) =>
+                    String(b.props("label")).startsWith("magCalibrationLegacy") ||
+                    b.props("label") === "sensorConfigCalibrate",
+            );
+        expect(buttons).toHaveLength(1);
+        return buttons[0];
+    }
+
+    /** Answer the latest MSP_STATUS_EX poll with the given arming-disable flags. */
+    function replyStatus(flags: number) {
+        const polls = vi.mocked(MSP.send_message).mock.calls.filter((args) => args[0] === MSPCodes.MSP_STATUS_EX);
+        const call = polls[polls.length - 1];
+        if (!call) {
+            throw new Error("no MSP_STATUS_EX poll");
+        }
+        useFlightControllerStore().config.armingDisableFlags = flags;
+        (call[3] as () => void)();
+    }
+
+    it("shows the firmware countdown on the button and logs start and finish", async () => {
+        const wrapper = mountTab();
+        await flushPromises();
+
+        calButton(wrapper).vm.$emit("click", new MouseEvent("click"));
+        await flushPromises();
+        expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        expect(gui_log).toHaveBeenCalledWith("initialSetupMagCalibStarted");
+        expect(calButton(wrapper).props()).toMatchObject({
+            label: "magCalibrationLegacyStarting",
+            loading: true,
+        });
+
+        // Firmware raises the calibrating flag: the 30 s countdown starts.
+        vi.advanceTimersByTime(1000);
+        replyStatus(CALIBRATING);
+        await flushPromises();
+        expect(calButton(wrapper).props()).toMatchObject({
+            label: 'magCalibrationLegacyCountdown:{"seconds":30}',
+            loading: true,
+        });
+        vi.advanceTimersByTime(1000);
+        await flushPromises();
+        expect(calButton(wrapper).props("label")).toBe('magCalibrationLegacyCountdown:{"seconds":29}');
+        expect(wrapper.text()).toContain("magCalibrationCollecting");
+
+        // Firmware clears the flag: calibration is done and the button is usable again.
+        vi.advanceTimersByTime(1000);
+        replyStatus(0);
+        await flushPromises();
+        expect(gui_log).toHaveBeenCalledWith("initialSetupMagCalibEnded");
+        expect(calButton(wrapper).props()).toMatchObject({ label: "sensorConfigCalibrate", loading: false });
+        expect(wrapper.text()).toContain("magCalibrationUnguidedDone");
+    });
+    it("does not log a start or spin when the calibration command is not sent", async () => {
+        vi.mocked(MSP.send_message).mockReturnValue(false);
+        const wrapper = mountTab();
+        await flushPromises();
+
+        calButton(wrapper).vm.$emit("click", new MouseEvent("click"));
+        await flushPromises();
+        expect(gui_log).not.toHaveBeenCalledWith("initialSetupMagCalibStarted");
+        expect(calButton(wrapper).props()).toMatchObject({ label: "sensorConfigCalibrate", loading: false });
+        expect(wrapper.text()).toContain("magCalibrationNotSent");
     });
 });
