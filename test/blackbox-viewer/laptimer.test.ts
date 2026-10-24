@@ -86,6 +86,12 @@ describe("LapTimer", () => {
         expect(drawnRows(timer)).toEqual(["Current 00:00.000", "Last 00:00.000", "Best 00:00.000"]);
     });
 
+    it("counts two bookmarks at the same time as a lap of zero", () => {
+        const timer = new LapTimer();
+        timer.refresh(1_000_000, MAX, [1_000_000, 1_000_000, 2_000_000]);
+        expect(drawnRows(timer)).toEqual(["Current 00:00.000", "Last 00:00.000", "Best 00:00.000", "Lap 1 00:00.000"]);
+    });
+
     it("counts nothing before the first bookmark", () => {
         const timer = new LapTimer();
         timer.refresh(500_000, MAX, [1_000_000, 2_000_000]);

@@ -141,51 +141,60 @@ export class LapTimer {
         maxTime: number,
         bookmarkTimes: (number | null | undefined)[] | null | undefined,
     ): void {
-        const lapTime = this.lapTime;
-        // Update the lapTimeTable with the current information
+        if (currentTime == null || bookmarkTimes == null) {
+            return;
+        }
+        // A cleared bookmark is null and a slot never set is a hole: neither is a lap boundary.
+        const boundaries = bookmarkTimes.filter((time): time is number => time != null);
+        if (boundaries.length === 0) {
+            return;
+        }
+        boundaries.push(maxTime); // add end time
+        boundaries.sort((a, b) => a - b); // sort on value (rather than default alphabetically)
 
-        if (currentTime != null && bookmarkTimes != null) {
-            // A cleared bookmark is null and a slot never set is a hole: neither is a lap boundary.
-            const bookmarkTimesSorted = bookmarkTimes.filter((time): time is number => time != null);
-            if (bookmarkTimesSorted.length > 0) {
-                bookmarkTimesSorted.push(maxTime); // add end time
-                bookmarkTimesSorted.sort((a, b) => a - b); // sort on value (rather than default alphabetically)
+        this.lapTime.laps = [];
+        this.timeLaps(currentTime, boundaries);
 
-                lapTime.laps = []; // Clear the array
-
-                for (let i = 0; i < bookmarkTimesSorted.length - 1; i++) {
-                    const lapStart = bookmarkTimesSorted[i];
-                    if (i > 0 && currentTime >= bookmarkTimesSorted[0]) {
-                        // Calculate all the laps so far
-                        lapTime.laps.push((lapStart - bookmarkTimesSorted[i - 1]) / 1000);
-                    }
-                    if (currentTime < bookmarkTimesSorted[i + 1] && currentTime >= lapStart) {
-                        // We have found the current lap
-                        lapTime.current = (currentTime - lapStart) / 1000;
-                        if (i > 0) {
-                            lapTime.last = (lapStart - bookmarkTimesSorted[i - 1]) / 1000;
-                        } else {
-                            lapTime.last = 0; // we are in the first lap, there is no last or best value
-                            lapTime.best = 0;
-                        }
-
-                        break;
-                    } else {
-                        // We are before the first bookmark (i.e. the start of the race)
-                        lapTime.current = 0;
-                        lapTime.last = 0;
-                    }
-                }
-
-                if (lapTime.laps.length > 0 && currentTime > bookmarkTimesSorted[0]) {
-                    lapTime.best = maxTime;
-                    for (const lap of lapTime.laps) {
-                        if (lap < lapTime.best) {
-                            lapTime.best = lap;
-                        }
-                    }
-                }
-            }
+        if (this.lapTime.laps.length > 0 && currentTime > boundaries[0]) {
+            this.lapTime.best = shortest(this.lapTime.laps, maxTime);
         }
     }
+
+    /** Collect the completed laps up to the one `currentTime` is in, and time that one. */
+    private timeLaps(currentTime: number, boundaries: number[]): void {
+        const lapTime = this.lapTime;
+        const started = currentTime >= boundaries[0];
+        for (let i = 0; i < boundaries.length - 1; i++) {
+            const lapStart = boundaries[i];
+            if (i > 0 && started) {
+                // Calculate all the laps so far
+                lapTime.laps.push((lapStart - boundaries[i - 1]) / 1000);
+            }
+            if (currentTime < boundaries[i + 1] && currentTime >= lapStart) {
+                // We have found the current lap
+                lapTime.current = (currentTime - lapStart) / 1000;
+                if (i > 0) {
+                    lapTime.last = (lapStart - boundaries[i - 1]) / 1000;
+                } else {
+                    lapTime.last = 0; // we are in the first lap, there is no last or best value
+                    lapTime.best = 0;
+                }
+                return;
+            }
+            // We are before the first bookmark (i.e. the start of the race)
+            lapTime.current = 0;
+            lapTime.last = 0;
+        }
+    }
+}
+
+/** The shortest lap, or `limit` when none is shorter. */
+function shortest(laps: number[], limit: number): number {
+    let best = limit;
+    for (const lap of laps) {
+        if (lap < best) {
+            best = lap;
+        }
+    }
+    return best;
 }
