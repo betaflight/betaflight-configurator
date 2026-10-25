@@ -67,4 +67,21 @@ describe("SpectrumExporter", () => {
         expect(success).toHaveBeenCalledWith("x,y\n");
         expect(worker.terminated).toBe(true);
     });
+
+    it.each(["onerror", "onmessageerror"] as const)(
+        "reports %s to the failure callback and stops the worker",
+        (handler) => {
+            const success = vi.fn();
+            const failure = vi.fn();
+            SpectrumExporter(fftData).dump(success, failure);
+            const [worker] = FakeWorker.instances;
+            const event = new Event("error");
+
+            worker[handler]?.(event);
+
+            expect(failure).toHaveBeenCalledWith(event);
+            expect(success).not.toHaveBeenCalled();
+            expect(worker.terminated).toBe(true);
+        },
+    );
 });
