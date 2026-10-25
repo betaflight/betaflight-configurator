@@ -457,6 +457,7 @@ export default defineComponent({
             conflict: blackboxPortConflict,
             load: loadBlackboxPort,
             write: writeBlackboxPort,
+            markSaved: markBlackboxPortSaved,
         } = useFeaturePort({
             setting: "blackbox_uart",
             baud: { setting: "blackbox_baud" },
@@ -679,6 +680,7 @@ export default defineComponent({
                 await writeBlackboxPort();
 
                 await saveAndReboot();
+                markBlackboxPortSaved();
 
                 markClean(savedSnapshot);
             });

@@ -923,6 +923,7 @@ const {
     selection: rangefinderPortSelection,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
+    markSaved: markRangefinderPortSaved,
 } = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
@@ -934,6 +935,7 @@ const {
     selection: opticalFlowPortSelection,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
+    markSaved: markOpticalFlowPortSaved,
 } = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { confirmPortConflicts } = usePortConflicts(
@@ -2501,6 +2503,8 @@ const saveConfig = () =>
 
         // Save to EEPROM and reboot
         await saveAndReboot();
+        markRangefinderPortSaved();
+        markOpticalFlowPortSaved();
 
         markClean(savedSnapshot);
     });
