@@ -20,7 +20,7 @@
  */
 
 import { reactive } from "vue";
-import { VueTabComponents } from "./vue_tab_registry.js";
+import { VueTabComponents } from "./vue_tab_registry";
 import { TABS, type TabAdapter } from "./tab_adapters";
 import { useNavigationStore } from "../stores/navigation";
 

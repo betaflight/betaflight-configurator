@@ -31,11 +31,10 @@
  * suite asserts against the same builders so the tested shape cannot drift from
  * the shipped shape.
  */
-import { matrixToEuler } from "./magCharacterization.js";
-import { ALIGNMENT_MATRICES } from "./magAlignment.js";
+import { matrixToEuler } from "./magCharacterization";
+import { ALIGNMENT_MATRICES, type Mat3 } from "./magAlignment";
 
 type Vec3 = { x: number; y: number; z: number };
-type Mat3 = number[][];
 
 /** ZYX Euler angles in degrees. */
 export interface EulerAngles {
@@ -171,9 +170,6 @@ export interface CharacterizationModel {
     downstream_fusion: DownstreamFusion;
 }
 
-// ALIGNMENT_MATRICES comes from the untyped JS module keyed by the 1..8 preset ids.
-const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
-
 export const MODEL_SCHEMA_VERSION = "2.2";
 export const MODEL_SCHEMA_URL = `https://betaflight.com/blackbox/mag-characterization-model/${MODEL_SCHEMA_VERSION}`;
 
@@ -210,8 +206,8 @@ export function getEulerAngles(solverResultVal: SolverResult | null): EulerAngle
         const { roll, pitch, yaw } = solverResultVal.customAngles;
         return { roll, pitch, yaw };
     }
-    if (typeof preset === "number" && preset >= 1 && preset <= 8 && alignmentMatrices[preset]) {
-        return matrixToEuler(alignmentMatrices[preset]);
+    if (typeof preset === "number" && preset >= 1 && preset <= 8 && ALIGNMENT_MATRICES[preset]) {
+        return matrixToEuler(ALIGNMENT_MATRICES[preset]);
     }
     return { roll: 0, pitch: 0, yaw: 0 };
 }

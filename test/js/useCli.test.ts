@@ -284,4 +284,25 @@ describe("useCli", () => {
             expect(sentText(send)).toBe("set a = 1\n");
         });
     });
+
+    describe("saveFile", () => {
+        it("writes nothing when the picker returns no file (Android cancel)", async () => {
+            vi.spyOn(FileSystem, "pickSaveFile").mockResolvedValue(null);
+            const writeFile = vi.spyOn(FileSystem, "writeFile");
+
+            await expect(useCli().saveFile()).resolves.toBeUndefined();
+
+            expect(writeFile).not.toHaveBeenCalled();
+        });
+
+        it("writes the output to the picked file", async () => {
+            const file = { name: "cli.txt", _download: { name: "cli.txt", chunks: [] } };
+            vi.spyOn(FileSystem, "pickSaveFile").mockResolvedValue(file);
+            const writeFile = vi.spyOn(FileSystem, "writeFile").mockResolvedValue();
+
+            await useCli().saveFile();
+
+            expect(writeFile).toHaveBeenCalledWith(file, expect.any(String));
+        });
+    });
 });

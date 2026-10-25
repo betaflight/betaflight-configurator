@@ -251,7 +251,7 @@
                     <div class="col-span-6 text-xs text-dimmed">{{ $t("pidTuningBasic") }}</div>
 
                     <!-- ROLL -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs">ROLL</div>
                     <UInputNumber
                         v-model="pidRollP"
                         :step="1"
@@ -305,7 +305,7 @@
                     />
 
                     <!-- PITCH -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">PITCH</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs">PITCH</div>
                     <UInputNumber
                         v-model="pidPitchP"
                         :step="1"
@@ -359,7 +359,7 @@
                     />
 
                     <!-- YAW -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">YAW</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs">YAW</div>
                     <UInputNumber
                         v-model="pidYawP"
                         :step="1"
@@ -1075,13 +1075,13 @@
                     class="grid grid-cols-[repeat(3,minmax(4rem,4rem))] gap-x-3 gap-y-1 items-center justify-items-center min-w-0"
                 >
                     <!-- Header -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs w-full">
                         ROLL
                     </div>
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs w-full">
                         PITCH
                     </div>
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs w-full">
                         YAW
                     </div>
                     <UInputNumber
@@ -1351,7 +1351,7 @@
                     </div>
 
                     <!-- ROLL -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs">ROLL</div>
                     <USelect v-model="wingConfig.spa_mode[0]" :items="wingSpaModesItems" size="xs" class="w-24" />
                     <UInputNumber
                         v-model="wingConfig.spa_center[0]"
@@ -1373,7 +1373,7 @@
                     />
 
                     <!-- PITCH -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">PITCH</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs">PITCH</div>
                     <USelect v-model="wingConfig.spa_mode[1]" :items="wingSpaModesItems" size="xs" class="w-24" />
                     <UInputNumber
                         v-model="wingConfig.spa_center[1]"
@@ -1395,7 +1395,7 @@
                     />
 
                     <!-- YAW -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">YAW</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs">YAW</div>
                     <USelect v-model="wingConfig.spa_mode[2]" :items="wingSpaModesItems" size="xs" class="w-24" />
                     <UInputNumber
                         v-model="wingConfig.spa_center[2]"

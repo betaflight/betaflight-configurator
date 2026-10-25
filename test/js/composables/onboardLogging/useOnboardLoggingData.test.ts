@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import MSP, { type MspCallback } from "../../../../src/js/msp";
@@ -6,6 +27,7 @@ import { mspHelper } from "../../../../src/js/msp/MSPHelper";
 import { MspCancelledError, MspTimeoutError } from "../../../../src/js/msp/mspErrors";
 import { useFlightControllerStore } from "../../../../src/stores/fc";
 import { useAppInfoStore } from "../../../../src/stores/appInfo";
+import type { OperatingSystem } from "../../../../src/js/utils/checkCompatibility";
 import {
     SdcardState,
     isMspCancelled,
@@ -99,7 +121,7 @@ describe("useOnboardLoggingData", () => {
         expect(() => (withoutCallback[3] as MspCallback)(null)).not.toThrow();
     });
 
-    it.each([
+    it.each<[OperatingSystem, number]>([
         ["Linux", 3],
         ["Windows", 2],
     ])("on %s reboots into mass storage with type %i", (os, rebootType) => {
@@ -107,7 +129,7 @@ describe("useOnboardLoggingData", () => {
 
         useOnboardLoggingData().rebootToMassStorage();
 
-        expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_SET_REBOOT, [rebootType], false);
+        expect(MSP.send_message).toHaveBeenCalledExactlyOnceWith(MSPCodes.MSP_REBOOT, [rebootType], false);
     });
 
     it("tells a cancelled read from a failed one", () => {

@@ -56,7 +56,7 @@ export function useSensorsData(isApi146: ApiGate, isApi147: ApiGate) {
         }
 
         if (isApi147.value) {
-            await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR);
+            await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR_ACTIVE);
         }
     };
 
