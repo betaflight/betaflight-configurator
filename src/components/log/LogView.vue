@@ -112,7 +112,7 @@ defineExpose({ scrollToBottom });
     .log-view__entry {
         margin: 0;
         color: var(--text);
-        word-break: break-word;
+        overflow-wrap: anywhere;
         white-space: pre-wrap;
     }
 
