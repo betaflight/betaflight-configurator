@@ -31,8 +31,11 @@ interface GpxExportRequest {
     /** Log header values; "Log start datetime" anchors the track's timestamps. */
     sysConfig: Record<string, unknown>;
     fieldNames: string[];
-    /** The log's chunks, each a list of frames, each a row of field values. */
-    frames: number[][][];
+    /**
+     * The log's chunks, each a list of frames, each a row of field values. The GPS slots are null
+     * until the log's first GPS frame.
+     */
+    frames: (number | null)[][][];
 }
 
 /** The dedicated worker scope; the project's lib.dom describes a window instead. */
@@ -63,13 +66,16 @@ gpxWorker.onmessage = function (event) {
     let trkpts = "";
     for (const chunk of event.data.frames) {
         for (const frame of chunk) {
-            if (!frame[latIndex] || !frame[lngIndex]) {
+            const latValue = frame[latIndex];
+            const lngValue = frame[lngIndex];
+            if (!latValue || !lngValue) {
                 continue;
             }
-            const timeMillis = Math.floor(frame[timeIndex] / 1000);
-            const lat = frame[latIndex] / 10000000;
-            const lng = frame[lngIndex] / 10000000;
-            const altitude = frame[altitudeIndex] / 10;
+            const timeMillis = Math.floor(Number(frame[timeIndex]) / 1000);
+            const lat = latValue / 10000000;
+            const lng = lngValue / 10000000;
+            // A null altitude counts as 0, as `/` made it.
+            const altitude = Number(frame[altitudeIndex]) / 10;
 
             // A log without the header gives an Invalid Date, and toISOString() throws, as before.
             const date = new Date(event.data.sysConfig["Log start datetime"] as string);

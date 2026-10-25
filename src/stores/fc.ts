@@ -194,8 +194,7 @@ export function createInitialState(): FcState {
         levelAngleLimit: 0,
         levelSensitivity: 0,
         itermThrottleThreshold: 0,
-        itermAcceleratorGain: 0, // depecrated in API 1.45
-        antiGravityGain: 0, // was itermAccelatorGain till API 1.45
+        antiGravityGain: 0, // scaled x1000 before API 1.45, x10 since
         itermRotation: 0,
         smartFeedforward: 0,
         itermRelax: 0,

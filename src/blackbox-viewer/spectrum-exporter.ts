@@ -46,8 +46,9 @@ export function SpectrumExporter(fftData: SpectrumData, opts: Partial<SpectrumEx
 
     /**
      * @param success is a callback triggered when export is done
+     * @param failure is called instead if the worker fails
      */
-    function dump(success: (csv: string) => void): void {
+    function dump(success: (csv: string) => void, failure?: (event: Event) => void): void {
         const worker = new Worker(new URL("../js/webworkers/spectrum-export-worker.ts", import.meta.url));
         runExportWorker(
             worker,
@@ -57,6 +58,7 @@ export function SpectrumExporter(fftData: SpectrumData, opts: Partial<SpectrumEx
                 opts: options,
             },
             success,
+            failure,
         );
     }
 
