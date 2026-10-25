@@ -73,6 +73,7 @@ describe("useMotorsSave", () => {
             writeEscSensorPort: vi.fn(async () => {
                 events.push("writePort");
             }),
+            markEscSensorPortSaved: vi.fn(() => events.push("portSaved")),
             motorsTestingEnabled,
             stopAllMotors: vi.fn((value?: number) => events.push(`stop:${value}`)),
             zeroThrottleValue: ref(1500),
@@ -118,6 +119,7 @@ describe("useMotorsSave", () => {
             ...WRITE_ORDER.map((code) => `msp:${code}`),
             "writePort",
             "saveAndReboot",
+            "portSaved",
             "sync",
             "analytics",
             "reset",
@@ -151,6 +153,7 @@ describe("useMotorsSave", () => {
         expect(options.stopAllMotors).not.toHaveBeenCalled();
         expect(MSP.promise).not.toHaveBeenCalled();
         expect(options.writeEscSensorPort).not.toHaveBeenCalled();
+        expect(options.markEscSensorPortSaved).not.toHaveBeenCalled();
     });
 
     it("ends a running motor test and waits 50 ms before the stop, then 100 ms before the first write", async () => {
@@ -205,11 +208,13 @@ describe("useMotorsSave", () => {
 
         const done = useMotorsSave(options).saveMotors(reboot);
         await vi.runAllTimersAsync();
+        expect(options.markEscSensorPortSaved).not.toHaveBeenCalled();
         expect(options.syncAppliedMotorStopState).not.toHaveBeenCalled();
         expect(options.motorsState.resetChanges).not.toHaveBeenCalled();
 
         release();
         await done;
+        expect(options.markEscSensorPortSaved).toHaveBeenCalledOnce();
         expect(options.syncAppliedMotorStopState).toHaveBeenCalledOnce();
         expect(options.motorsState.resetChanges).toHaveBeenCalledOnce();
     });
@@ -236,6 +241,7 @@ describe("useMotorsSave", () => {
         await vi.runAllTimersAsync();
         await done;
 
+        expect(options.markEscSensorPortSaved).not.toHaveBeenCalled();
         expect(options.syncAppliedMotorStopState).not.toHaveBeenCalled();
         expect(tracking.sendSaveAndChangeEvents).not.toHaveBeenCalled();
         expect(options.motorsState.resetChanges).not.toHaveBeenCalled();

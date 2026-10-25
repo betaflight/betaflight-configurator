@@ -108,8 +108,8 @@ async function saveThenLeave(save: TabSaveAction, tab: string, mode: string): Pr
     // A save that reboots the FC cancels its own in-flight MSP request, so runSave resolves false
     // even though the save went through. Inside the reboot window that false is expected; outside
     // it a false is a real failure (or a cancel), and the user stays on the tab. Checked as well as
-    // the dirty state, because some steps mark their part clean before the EEPROM write (a port
-    // assignment, say), so a save that fails at the last step can leave the tab looking clean.
+    // the dirty state, so a failed save keeps the user on the tab whatever a step's own dirty
+    // tracking reports.
     const rebooting = getConnectionState().isRebootWindowOpen;
     if (result === false && !rebooting) {
         return false;
