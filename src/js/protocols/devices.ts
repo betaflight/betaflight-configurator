@@ -104,6 +104,7 @@ const defaultSerialDevices: UsbDeviceId[] = [
     { vendorId: 6790, productId: 21795 }, // CH341 USB-to-Serial
     { vendorId: 6790, productId: 30084 }, // CH340S USB-to-Serial
     { vendorId: 14743, productId: 22336 }, // X32 VCP
+    { vendorId: 14698, productId: 4096 }, // UM32 VCP
     { vendorId: 1027, productId: 24592 }, // FT2232H (also ESP-Prog)
     { vendorId: 1027, productId: 24593 }, // FT4232H
     { vendorId: 1027, productId: 24596 }, // FT232H
@@ -156,6 +157,7 @@ const defaultUsbFilters: UsbDeviceId[] = [
     { vendorId: 12619, productId: 262 }, // APM32 DFU Bootloader
     { vendorId: 11914, productId: 15 }, // Raspberry Pi Pico in Bootloader mode
     { vendorId: 14743, productId: 57105 }, // X32 DFU Bootloader
+    { vendorId: 14698, productId: 57088 }, // UM32 DFU Bootloader
 ];
 
 const defaultVendorIdNames: Record<string, string> = {
@@ -171,6 +173,7 @@ const defaultVendorIdNames: Record<string, string> = {
     11914: "Raspberry Pi Pico",
     14743: "X-CORE LABS",
     10473: "GDMicroelectronics",
+    14698: "UnicMicro",
 };
 
 // Updated in place by loadDeviceFilters, so every importer sees the build server's lists.
