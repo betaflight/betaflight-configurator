@@ -25,13 +25,13 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { checkSetupAnalytics } from "./Analytics";
 import { tabSwitchCleanup } from "./tab_adapters";
 import { mountVueTab, vueTabState } from "./vue_tab_mounter";
-import { sidebarItems } from "../components/sidebar/sidebar_items.js";
+import { sidebarItems } from "../components/sidebar/sidebar_items";
 import { useConnectionStore } from "../stores/connection";
 import { useNavigationStore } from "../stores/navigation";
 
 export interface SwitchTabOptions {
     /**
-     * The sidebar mode the tab is opened from (sidebar_items.js): `connected` and `cli` need a
+     * The sidebar mode the tab is opened from (sidebar_items.ts): `connected` and `cli` need a
      * valid connection, `loggedin` tabs bypass the allowed-tabs list, and anything else
      * (`disconnected`, `shared`) is treated as disconnected. Defaults to `disconnected`.
      */

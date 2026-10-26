@@ -251,7 +251,7 @@
                     <div class="col-span-6 text-xs text-dimmed">{{ $t("pidTuningBasic") }}</div>
 
                     <!-- ROLL -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs">ROLL</div>
                     <UInputNumber
                         v-model="pidRollP"
                         :step="1"
@@ -305,7 +305,7 @@
                     />
 
                     <!-- PITCH -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">PITCH</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs">PITCH</div>
                     <UInputNumber
                         v-model="pidPitchP"
                         :step="1"
@@ -359,7 +359,7 @@
                     />
 
                     <!-- YAW -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">YAW</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs">YAW</div>
                     <UInputNumber
                         v-model="pidYawP"
                         :step="1"
@@ -1075,13 +1075,13 @@
                     class="grid grid-cols-[repeat(3,minmax(4rem,4rem))] gap-x-3 gap-y-1 items-center justify-items-center min-w-0"
                 >
                     <!-- Header -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs w-full">
                         ROLL
                     </div>
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs w-full">
                         PITCH
                     </div>
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs w-full">
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs w-full">
                         YAW
                     </div>
                     <UInputNumber
@@ -1351,7 +1351,7 @@
                     </div>
 
                     <!-- ROLL -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#e24761] rounded text-xs">ROLL</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-roll rounded text-xs">ROLL</div>
                     <USelect v-model="wingConfig.spa_mode[0]" :items="wingSpaModesItems" size="xs" class="w-24" />
                     <UInputNumber
                         v-model="wingConfig.spa_center[0]"
@@ -1373,7 +1373,7 @@
                     />
 
                     <!-- PITCH -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#49c747] rounded text-xs">PITCH</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-pitch rounded text-xs">PITCH</div>
                     <USelect v-model="wingConfig.spa_mode[1]" :items="wingSpaModesItems" size="xs" class="w-24" />
                     <UInputNumber
                         v-model="wingConfig.spa_center[1]"
@@ -1395,7 +1395,7 @@
                     />
 
                     <!-- YAW -->
-                    <div class="font-bold text-white text-center py-0.5 px-1 bg-[#477ac7] rounded text-xs">YAW</div>
+                    <div class="font-bold text-white text-center py-0.5 px-1 bg-axis-yaw rounded text-xs">YAW</div>
                     <USelect v-model="wingConfig.spa_mode[2]" :items="wingSpaModesItems" size="xs" class="w-24" />
                     <UInputNumber
                         v-model="wingConfig.spa_center[2]"
@@ -1763,32 +1763,20 @@ const itermRelaxEnabled = computed({
 });
 
 const antiGravityEnabled = computed({
-    get: () =>
-        isPreApi145.value
-            ? fcStore.advancedTuning.itermAcceleratorGain !== 0
-            : fcStore.advancedTuning.antiGravityGain !== 0,
+    get: () => fcStore.advancedTuning.antiGravityGain !== 0,
     set: (val) => {
-        if (isPreApi145.value) {
-            fcStore.advancedTuning.itermAcceleratorGain = val ? fcStore.advancedTuning.itermAcceleratorGain || 1000 : 0;
-        } else {
-            fcStore.advancedTuning.antiGravityGain = val ? fcStore.advancedTuning.antiGravityGain || 80 : 0;
-        }
+        const defaultGain = isPreApi145.value ? 1000 : 80;
+        fcStore.advancedTuning.antiGravityGain = val ? fcStore.advancedTuning.antiGravityGain || defaultGain : 0;
     },
 });
 
 // Anti-gravity gain display value (divided by 10 for API 1.45+, divided by 1000 for older)
+const antiGravityGainScale = computed(() => (isPreApi145.value ? 1000 : 10));
 const antiGravityGainValue = computed({
-    get: () =>
-        isPreApi145.value
-            ? fcStore.advancedTuning.itermAcceleratorGain / 1000
-            : fcStore.advancedTuning.antiGravityGain / 10,
+    get: () => fcStore.advancedTuning.antiGravityGain / antiGravityGainScale.value,
     set: (val) => {
         const parsed = Number.parseFloat(String(val));
-        if (isPreApi145.value) {
-            fcStore.advancedTuning.itermAcceleratorGain = Math.round(parsed * 1000);
-        } else {
-            fcStore.advancedTuning.antiGravityGain = Math.round(parsed * 10);
-        }
+        fcStore.advancedTuning.antiGravityGain = Math.round(parsed * antiGravityGainScale.value);
     },
 });
 

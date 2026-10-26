@@ -64,7 +64,7 @@ export function useGpsData() {
         };
 
         const getGpsSvInfo = () => {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, getAttitudeData);
+            MSP.send_message(MSPCodes.MSP_GPSSVINFO, false, false, getAttitudeData);
         };
 
         const getCompGpsData = () => {

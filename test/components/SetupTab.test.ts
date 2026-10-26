@@ -100,7 +100,9 @@ describe("Setup MSP wiring", () => {
         await flushPromises();
 
         tick("setup_data_pull_fast")();
-        const sonarCall = vi.mocked(MSP.send_message).mock.calls.find(([code]) => code === MSPCodes.MSP_SONAR)!;
+        const sonarCall = vi
+            .mocked(MSP.send_message)
+            .mock.calls.find(([code]) => code === MSPCodes.MSP_SONAR_ALTITUDE)!;
         fcStore.sensorData.sonar = 42;
         (sonarCall[3] as Tick)();
 
@@ -113,7 +115,7 @@ describe("Setup MSP wiring", () => {
 
         (wrapper.vm as unknown as { onRebootBootloader: () => void }).onRebootBootloader();
 
-        expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, [101], false);
+        expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_REBOOT, [101], false);
     });
 
     it("after a confirmed reset logs it and reloads the tab", async () => {

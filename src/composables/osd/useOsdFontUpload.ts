@@ -30,7 +30,7 @@ export function useOsdFontUpload() {
         // CRC errors from residual serial data before the reboot command.
         MSP.disconnect_cleanup();
         // Reboot FC to apply the new font — reinitializeConnection sends
-        // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
+        // MSP_REBOOT (fire-and-forget) and sets rebootTimestamp so the
         // serial backend auto-reconnects after the device comes back.
         reinitializeConnection();
     };

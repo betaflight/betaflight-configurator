@@ -319,7 +319,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 
 import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
-import { flightIndicator } from "../../../libraries/flightIndicators";
+import { flightIndicator } from "../../js/flightIndicators";
 import { tabSwitchCleanup } from "../../js/tab_adapters";
 
 const { t } = useTranslation();
@@ -806,14 +806,14 @@ function openBuildOptionsDialog() {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .tab-setup {
     #interactive_block {
         position: relative;
         background-color: var(--surface-200);
         border-radius: 1rem;
         border: 2px solid var(--surface-400);
-        :deep(.reset-zaxis) {
+        .reset-zaxis {
             position: absolute;
             top: 0.75rem;
             inset-inline-end: 0.75rem;
@@ -863,42 +863,53 @@ function openBuildOptionsDialog() {
             vertical-align: baseline;
         }
     }
-}
-#canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-.attitude_info {
-    position: absolute;
-    top: 1rem;
-    inset-inline-start: 1rem;
-    margin: 0;
-    font-weight: normal;
-    color: var(--surface-950);
-    dl {
+    #canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .attitude_info {
+        position: absolute;
+        top: 1rem;
+        inset-inline-start: 1rem;
+        margin: 0;
+        font-weight: normal;
+        color: var(--surface-950);
+        dl {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        dd {
+            white-space: pre;
+        }
+    }
+    .instruments-right {
+        position: absolute;
+        bottom: 1rem;
+        inset-inline-end: 1rem;
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        pointer-events: none;
+    }
+    .buttons {
+        bottom: 20px;
+    }
+    .disarm-flag {
+        padding-inline-end: 5px;
+        display: inline-block;
+    }
+
+    /* semantic label/value grid used to replace layout tables for accessibility */
+    .cf-info-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 0.25rem 1rem;
+        align-items: baseline;
+        width: 100%;
     }
-    dd {
-        white-space: pre;
-    }
 }
-.instruments-right {
-    position: absolute;
-    bottom: 1rem;
-    inset-inline-end: 1rem;
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    pointer-events: none;
-}
-.dialogBuildInfo {
-    transition: all 0.2s;
-    overflow-x: hidden;
-    overflow-y: auto;
-    width: min-content;
-    height: min-content;
-}
+
+/* The build info dialog is teleported out of the tab, so its rules sit outside .tab-setup. */
 .dialogBuildInfoGrid-container {
     display: grid;
     grid-template-columns: auto auto;
@@ -907,30 +918,5 @@ function openBuildOptionsDialog() {
 .dialogBuildInfoGrid-item {
     padding: 5px 5px 3px 5px;
     user-select: text;
-}
-.buttons {
-    bottom: 20px;
-}
-.disarm-flag {
-    padding-inline-end: 5px;
-    display: inline-block;
-}
-
-/* semantic label/value grid used to replace layout tables for accessibility */
-.cf-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.25rem 1rem;
-    align-items: baseline;
-    width: 100%;
-}
-.cf-info-grid dt {
-    font-weight: bold;
-    margin: 0;
-}
-.cf-info-grid dd {
-    margin: 0;
-    min-width: 0;
-    overflow-wrap: break-word;
 }
 </style>

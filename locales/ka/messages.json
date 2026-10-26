@@ -2927,6 +2927,10 @@
         "message": "გადართეთ VTX ორმოს რეჟიმში (დაბალი გამომავალი სიმძლავრე, მხარდაჭერის შემთხვევაში)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "ფრენისას მარშრუტის წერტილების დამახსოვრება: გადამრთველზე მოკლე დაჭერა ამატებს მიმდინარე პოზიციას ფრენის გეგმაში, როგორც მარშრუტის წერტილს, ხოლო გადამრთველის 1.5 წამის განმავლობაში დაჭერა და გაჩერება შლის ბოლო წერტილს",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "ტრანსპონდერის წრის ტაიმერის განულება",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3264,11 +3268,31 @@
     "flightPlanLongitude": {
         "message": "გრძედი <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "სიმაღლე <span class=\"units\">ft AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "Altitude <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "სიჩქარე <span class=\"units\">კვანძები</span>"
+    "flightPlanAltitudeAria": {
+        "message": "Altitude in {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "სიჩქარე <span class=\"units\">კვანძები</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "სიჩქარეში{{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "ერთეული",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "იმპერიული"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "მეტრიკული"
     },
     "flightPlanType": {
         "message": "გზის წერტილის ტიპი"
