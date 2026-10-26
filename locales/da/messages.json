@@ -31,6 +31,18 @@
     "search": {
         "message": "Søg"
     },
+    "settingsSearchTitle": {
+        "message": "Indstillinger for søgning",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Indstillinger for søgning...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "Ingen indstillinger fundet",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Vis ikke igen"
     },
@@ -905,6 +917,9 @@
     },
     "defaultHardwareHead": {
         "message": "Hardware"
+    },
+    "defaultHardwareText": {
+        "message": "Programmet understøtter hardware fra mange producenter, og vises på Brænd firmware menu, se mere på <a href=\"https://betaflight.com/support\" target=\"_blank\" rel=\"noopener noreferrer\">Hardware support</a>.<br /><br />Nyttige hardware værktøjer / drivere:<ul><li>For ældre hardware kan du have brug for den seneste CP210x USB driver til seriel chip <b>CP210x drivere</b> kan hentes fra <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her</a></li><li>Den seneste <b>Zadig</b> til Windows USB driverinstallation kan hentes fra <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">her</a></li><li><b>ImpulseRC Driver Fixer</b> kan hentes <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">her</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -2075,6 +2090,9 @@
     "portsConflictSaveAnyway": {
         "message": "Gem alligevel"
     },
+    "portsConflictCancel": {
+        "message": "Annuller"
+    },
     "portsSensorGyro": {
         "message": "Gyro"
     },
@@ -2653,6 +2671,10 @@
     },
     "auxiliaryToggleUnused": {
         "message": "Skjul ubrugte kanaler"
+    },
+    "auxiliarySearch": {
+        "message": "Søg kanal",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
     },
     "auxiliaryNoModesFound": {
         "message": "Ingen tilstande matcher de aktuelle filtre."
@@ -3233,11 +3255,31 @@
     "flightPlanLongitude": {
         "message": "Længdegrad <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Højde <span class=\"units\">ft AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "Højde <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "Hastighed <span class=\"units\">knob</span>"
+    "flightPlanAltitudeAria": {
+        "message": "Højde i {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "Hastighed <span class=\"units\">{{unit}}</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "Hastighed i {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "Enhed",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "Imperial (ft, kts, nm)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "Metrisk (m, km/h, km)"
     },
     "flightPlanType": {
         "message": "Vejpunkt type"
@@ -9134,6 +9176,12 @@
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "Avanceret hastigheds konfiguration"
     },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "Forsinkelse"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "Forsinkelse af lufthastighedsestimering fra gas indstilling i millisekunder (tid på at nå 50% af mål for hastighed i vandret flyvning ved fuld gas"
+    },
     "pidTuningWingTpaBasicSpeedGravity": {
         "message": "Tyngdekraft"
     },
@@ -9158,6 +9206,24 @@
     "pidTuningWingTpaAdvSpeedMotorKvHelp": {
         "message": "Motor KV. Værdien kan ændres på fanen Motor styring."
     },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "Højde offset"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "Højde offset i grader*10 til estimering af fartøj hastighed"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "Stall hastighed, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "Hastighed, hvormed PID'er skal maximeres (stall hastighed), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "Stall hastighed PID'er"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "Expo"
+    },
     "pidTuningWingMiscSettings": {
         "message": "Diverse indstillinger"
     },
@@ -9172,5 +9238,11 @@
     },
     "pidTuningWingYawTypeDiffThrust": {
         "message": "Differentialtræk"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "Højde offset"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "Højde forskydning for vinkel tilstande i decigrader. Positive værdier vipper vingen ned"
     }
 }

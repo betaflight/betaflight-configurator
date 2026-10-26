@@ -36,17 +36,17 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .wiki-btn-wrapper {
     float: inline-end;
     margin-top: -45px;
-}
 
-.wiki-btn {
-    padding: 1px 9px;
-    font-size: 10px;
-    line-height: 17px;
-    letter-spacing: 0.03em;
-    transition: all ease 0.2s;
+    .wiki-btn {
+        padding: 1px 9px;
+        font-size: 10px;
+        line-height: 17px;
+        letter-spacing: 0.03em;
+        transition: all ease 0.2s;
+    }
 }
 </style>

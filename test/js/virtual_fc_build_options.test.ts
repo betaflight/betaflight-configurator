@@ -22,7 +22,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import VirtualFC from "../../src/js/VirtualFC";
-import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options.js";
+import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options";
 import {
     API_VERSION_1_44,
     API_VERSION_1_45,

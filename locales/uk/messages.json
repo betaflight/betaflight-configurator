@@ -70,6 +70,10 @@
         "message": "Від'єднати (Ручний режим)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "Від'єднати ($1)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "Від'єднати (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -80,6 +84,23 @@
     },
     "portsSelectManual": {
         "message": "Ручний вибір"
+    },
+    "networkOnlyBrowserTitle": {
+        "message": "Лише мережеві підключення",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "Цей браузер може під'єднатися до польотного контролера лише через мережу, наприклад через міст Wi-Fi, модуль ELRS або SITL. Для USB або Bluetooth скористайтеся Chrome чи Edge або встановіть застосунок Betaflight на комп'ютер. Тут недоступні:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "Web Serial недоступний."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "Web Bluetooth недоступний."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "WebUSB недоступний, тому прошивання через DFU вимкнено."
     },
     "portsSelectNone": {
         "message": "Немає доступних з'єднань"
@@ -129,6 +150,30 @@
     "connectManualDescription": {
         "message": "Введіть шлях до серійного порту або URL для підключення.",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "Збережені з'єднання",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "Назва:",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "Назва цього з'єднання",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "Зберегти",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "Оновити",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "Видалити збережене з'єднання",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
     },
     "autoConnect": {
         "message": "Автоматичне підключення"
@@ -231,6 +276,10 @@
     "userLanguageSelect": {
         "message": "Оберіть мову за замовчуванням"
     },
+    "language_DEFAULT": {
+        "message": "Системна мова ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
+    },
     "sensorDataFlashNotFound": {
         "message": "Чіп пам'яті <br>не знайдено",
         "description": "Text of the dataflash image in the header of the page."
@@ -275,6 +324,9 @@
     },
     "rebootFlightControllerReady": {
         "message": "Польотний контролер готовий"
+    },
+    "rebootFlightControllerFailed": {
+        "message": "Польотний контролер не перепідключився"
     },
     "deviceRebooting": {
         "message": "Пристрій - <span class=\"message-negative\">перезавантажується</span>"
@@ -382,8 +434,47 @@
     "autotuneBandwidth": {
         "message": "Смуга пропускання"
     },
+    "autotuneCrossover": {
+        "message": "Частота одиничного підсилення"
+    },
     "autotunePhaseMargin": {
         "message": "Запас по фазі"
+    },
+    "autotuneTargetCrossover": {
+        "message": "Гранична частота одиничного підсилення"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "Макс. запас по фазі"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "Прогнозована пікова чутливість"
+    },
+    "autotuneLoopDelay": {
+        "message": "Затримка циклу керування"
+    },
+    "autotuneTargetMargin": {
+        "message": "Ціль налаштування"
+    },
+    "autotuneMarginAggressive": {
+        "message": "Агресивна"
+    },
+    "autotuneMarginNormal": {
+        "message": "Нормальна"
+    },
+    "autotuneMarginConservative": {
+        "message": "Консервативна"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: цей апарат не може досягти запасу по фазі $2° (його межа приблизно $3), тому коефіцієнт залишається незмінним. Виберіть нижчу ціль або збільште Д, щоб підвищити межу."
+    },
+    "autotuneGainClamped": {
+        "message": "$1: за результатами вимірювання потрібна зміна коефіцієнта $2×, але за один прохід зміна обмежена $3×. Показаної граничної частоти одиничного підсилення не досягнуто — застосуйте налаштування, виконайте ще один політ із чирпом і повторіть."
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: тут коефіцієнт визначає пікова чутливість, а не запас по фазі. На частотах вище частоти одиничного підсилення, частотна характеристика циклу проходить близько до −1, тому рекомендоване значення не досягає цільового запасу по фазі."
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: жоден коефіцієнт у межах одного проходу не утримує пікову чутливість в межах робастності. Запропоноване значення є найкращим із доступних, але не є безпечним — використовуйте його як початкове й повторіть вимірювання."
     },
     "autotuneResonantPeak": {
         "message": "Резонансний пік"
@@ -399,6 +490,12 @@
     },
     "autotuneApplied": {
         "message": "Коефіцієнти застосовані й збережені."
+    },
+    "autotuneApplyConfirmText": {
+        "message": "Застосування записує значення повзунків налаштування на польотний контролер і зберігає їх в EEPROM. Рекомендовані коефіцієнти можуть дестабілізувати апарат під час першого взведення, тому під час першого випробування будьте готові охолостити його."
+    },
+    "autotuneApplyConfirmTitle": {
+        "message": "Застосувати рекомендовані коефіцієнти?"
     },
     "autotuneApplyFailed": {
         "message": "Не вдалося застосувати коефіцієнти"
@@ -693,6 +790,12 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Використана версія застосунку ($1) не підтримує прошивку $2</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Протокол вихідного сигналу мотора не вибрано</strong>.<br>Будь ласка, виберіть протокол виводу мотора, відповідний до вашого електронного контролера швидкості ESC '$t(configurationEscFeatures.message)' на '$t(tabMotorTesting.message)' вкладці.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>Акселерометр увімкнено, але не відкалібровано</strong>.<br>Якщо ви плануєте використовувати акселерометр, дотримуйтеся вказівок для '$t(initialSetupButtonCalibrateAccel.message)' на вкладці '$t(tabSensorConfig.message)'. Якщо ввімкнено будь-яку функцію, що потребує акселерометра (режими з самовирівнюванням, GPS порятунок тощо), взведення апарата буде заблоковано до завершення калібрування акселерометра.<br>Якщо ви не плануєте використовувати акселерометр, радимо вимкнути його в розділі '$t(configurationSystem.message)' на вкладці '$t(tabConfiguration.message)'."
+    },
     "infoVersionOs": {
         "message": "ОС: <strong>{{operatingSystem}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -793,6 +896,14 @@
         "message": "З'єднання:",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "Показати подробиці стану",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "Приховати подробиці стану",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_erased_kilobytes": {
         "message": "Стирання $1 kB флешпам'яті <span class=\"message-positive\">успішне</span>"
     },
@@ -811,8 +922,14 @@
     "defaultHardwareHead": {
         "message": "Апаратне забезпечення"
     },
+    "defaultHardwareText": {
+        "message": "Betaflight працює на польотних контролерах багатьох виробників, перелічених на вкладці «Програматор». Підтримку вашого обладнання надає його виробник, див. <a href=\"https://betaflight.com/support\" target=\"_blank\" rel=\"noopener noreferrer\">Підтримка обладнання</a>.<br /><br />Корисні утиліти та драйвери для обладнання:<ul><li>Для застарілого обладнання з мікросхемою перетворення USB на послідовний інтерфейс CP210x найновіші <b>драйвери CP210x</b> можна завантажити <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a></li><li>Найновішу версію <b>Zadig</b> для встановлення USB-драйверів у Windows можна завантажити <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a></li><li><b>ImpulseRC Driver Fixer</b> можна завантажити <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a></li></ul>"
+    },
     "defaultSoftwareHead": {
         "message": "Програмне забезпечення"
+    },
+    "defaultSoftwareText": {
+        "message": "Переглядач журналів чорної скриньки вбудовано в цей застосунок. Відкрийте вкладку <strong>Переглядач чорної скриньки</strong>, щоб проаналізувати журнали польотів.<br /><br />Наша добірка <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">сценаріїв Lua для передавача</a> доступна на GitHub.<br /><br />Наш <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">вихідний код</a> прошивки та цього застосунку можна завантажити з GitHub."
     },
     "defaultContributingHead": {
         "message": "Сприяння"
@@ -872,6 +989,9 @@
     "defaultSupportSubline2": {
         "message": "Розробник"
     },
+    "defaultSupport": {
+        "message": "Команда Betaflight виправляє помилки в Betaflight: повідомляйте про них на GitHub. По допомогу з вашим обладнанням, звертайтеся до його виробника. По допомогу з вашою збіркою і налаштуванням звертайтеся до спільноти в Discord або шукайте відповіді у вікі.<br /><br />"
+    },
     "defaultSupport2": {
         "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
@@ -880,6 +1000,9 @@
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Спільнота Betaflight у Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Відкалібрувати акселерометр"
@@ -1291,6 +1414,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (напр., вбудований Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "Послідовний порт телеметрії ESC"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "UART, на якому зчитується телеметрія ESC. Задається на самому датчику ESC, починаючи з API 1.49; вкладка Порти лише показує це."
+    },
     "featureESC_SENSOR": {
         "message": "Використовуйте KISS/BLHeli_32 ESC телеметрію <b>через окремий кабель</b>"
     },
@@ -1317,6 +1446,27 @@
     },
     "configurationTelemetry": {
         "message": "Телеметрія"
+    },
+    "telemetryInstanceTitle": {
+        "message": "Телеметрія $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "Протокол"
+    },
+    "telemetryInstancePort": {
+        "message": "Послідовний порт"
+    },
+    "telemetryInstanceBaud": {
+        "message": "Швидкість передачі"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "Керування камерою"
+    },
+    "rcdeviceSerialPort": {
+        "message": "Послідовний порт"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "UART, до якого під'єднано камеру з протоколом RunCam. Починаючи з API 1.49, задається в налаштуваннях самого пристрою; на вкладці Порти лише показується."
     },
     "configurationTelemetryHelp": {
         "message": "Виведення телеметрії з приймача"
@@ -1348,6 +1498,18 @@
     "configurationRangefinder": {
         "message": "Rangefinder",
         "description": "Don't translate!!!"
+    },
+    "rangefinderSerialPort": {
+        "message": "Послідовний порт далекоміра"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "UART, до якого під'єднано далекомір. Починаючи з API 1.49, задається в налаштуваннях самого далекоміра; на вкладці Порти лише показується."
+    },
+    "opticalflowSerialPort": {
+        "message": "Послідовний порт оптичного потоку"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "UART, до якого підключено датчик оптичного потоку. Модуль, що передає дані як про потік, так і про відстань, потребує окремого налаштування кожного з цих параметрів."
     },
     "configurationOpticalflow": {
         "message": "Optical Flow",
@@ -1564,6 +1726,9 @@
     "configurationThrottleMaximum": {
         "message": "Максимальна тяга (найвище значення ESC коли взведений)"
     },
+    "configurationMotorKv": {
+        "message": "KV мотора"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "Мінімальна команда (значення ESC коли охолощений)"
     },
@@ -1706,6 +1871,34 @@
     "configurationGPSubxSbas": {
         "message": "Тип наземної допомоги"
     },
+    "gpsSerialPort": {
+        "message": "Послідовний порт"
+    },
+    "gpsSerialPortHelp": {
+        "message": "UART, до якого під'єднано модуль GPS. Зміна потребує перезавантаження."
+    },
+    "gpsSerialBaud": {
+        "message": "Швидкість передачі даних"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "Очікувана швидкість передачі даних модуля GPS. Якщо з'єднатися не вдається, Betaflight також пробує інші швидкості, тому це початкове, а не фіксоване значення."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "Не вдалося задати послідовний порт GPS, тому нічого не збережено."
+    },
+    "gpsProtocolUnknown": {
+        "message": "Невідомий ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
+        "message": "Шина CAN"
+    },
+    "dronecanCanDeviceHelp": {
+        "message": "Шина CAN, до якої під'єднано модулі DroneCAN. Це налаштування стосується всієї системи DroneCAN, тому його зміна переносить усі пристрої DroneCAN, а не лише GPS. Зміна потребує перезавантаження."
+    },
+    "dronecanSaveFailed": {
+        "message": "Не вдалося змінити налаштування DroneCAN, тому нічого не збережено."
+    },
     "configurationGPSAutoBaud": {
         "message": "Автоматична швидкість"
     },
@@ -1728,8 +1921,24 @@
         "message": "Якщо увімкнено, лише перше взведення після підключення батареї буде використовуватися як домашня точка. Якщо не ввімкнено, щоразу, коли повітряне судно взводиться, домашня точка буде оновлюватися.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSNotInBuild": {
+        "message": "Підтримку GPS не включено до цієї збірки прошивки. Щоб налаштувати й використовувати GPS, зберіть прошивку з підтримкою GPS.",
+        "description": "Shown in the GPS Configuration box when the connected firmware was built without the GPS build option"
+    },
     "configurationSerialRX": {
         "message": "Постачальник послідовного приймача"
+    },
+    "portsPortNone": {
+        "message": "Жоден"
+    },
+    "receiverSerialPort": {
+        "message": "Послідовний порт"
+    },
+    "receiverSerialPortHelp": {
+        "message": "UART, до якого під'єднано послідовний приймач. Швидкість передачі даних визначається протоколом приймача, тому тут її задавати не потрібно. Зміна порту потребує перезавантаження."
+    },
+    "receiverSerialPortSaveFailed": {
+        "message": "Не вдалося задати послідовний порт приймача, тому нічого не збережено."
     },
     "someRXTypesDisabled": {
         "message": "Деякі постачальники приймачів не підтримуються поточною конфігурацією збірки."
@@ -1742,6 +1951,9 @@
     },
     "configurationSaved": {
         "message": "Налаштування збережено"
+    },
+    "configurationSaveFailed": {
+        "message": "Не вдалося зберегти налаштування"
     },
     "configurationButtonSave": {
         "message": "Зберегти та перезавантажити"
@@ -1784,6 +1996,123 @@
     },
     "portsMSPHelp": {
         "message": "<strong>Примітка:</strong>  <span class=\"message-negative\">НЕ</span> вимикайте MSP на першому послідовному порту, якщо не знаєте, що робите.  Якщо ви це зробите, можливо, вам доведеться перепрошити та стерти конфігурацію."
+    },
+    "portsTilesHelp": {
+        "message": "У цій прошивці послідовні порти призначаються на вкладках відповідних функцій. Кожна плитка нижче показує, що під'єднано до плати та яку функцію зараз обслуговує кожен порт."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "Ця прошивка ще не надає переліку периферійних пристроїв."
+    },
+    "portsSectionSerial": {
+        "message": "Послідовні порти"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "Датчики"
+    },
+    "portsTileUnassigned": {
+        "message": "Не призначено"
+    },
+    "portsTileConfigure": {
+        "message": "Налаштувати"
+    },
+    "portsTileCanNode": {
+        "message": "Вузол"
+    },
+    "portsClaimActiveHelp": {
+        "message": "Порт активний для цієї функції"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "Призначено, але неактивний — програш в конфлікті портів або очікується перезавантаження"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "Неактивний — увімкніть функцію SOFTSERIAL на вкладці Конфігурація"
+    },
+    "portsInactiveNoPins": {
+        "message": "Неактивний — цьому порту не призначено контактів"
+    },
+    "portsInactiveReason": {
+        "message": "Неактивний — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "неактивний"
+    },
+    "portsPortFree": {
+        "message": "вільний"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "Послідовний приймач"
+    },
+    "portsClaimBlackbox": {
+        "message": "Журналювання чорної скриньки"
+    },
+    "portsClaimEscSensor": {
+        "message": "Телеметрія ESC"
+    },
+    "portsClaimRcdevice": {
+        "message": "Камера (пристрій RunCam)"
+    },
+    "portsClaimGimbal": {
+        "message": "Підвіс"
+    },
+    "portsClaimVtx": {
+        "message": "Відеопередавач"
+    },
+    "portsClaimRangefinder": {
+        "message": "Далекомір"
+    },
+    "portsClaimOpticalflow": {
+        "message": "Оптичний потік"
+    },
+    "portsClaimOsd": {
+        "message": "Наекранне меню"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "Користувацький текст OSD"
+    },
+    "portsClaimTelemetry": {
+        "message": "Телеметрія"
+    },
+    "portsConflictTitle": {
+        "message": "Порт уже використовується"
+    },
+    "portsConflictWarning": {
+        "message": "Ви призначаєте послідовний порт, який уже використовує інша функція. Збереження скине всі порти до типових значень (неналаштованого стану):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}</strong> зараз використовується функціями {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "Все одно зберегти?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "Все одно зберегти"
+    },
+    "portsConflictCancel": {
+        "message": "Скасувати"
+    },
+    "portsSensorGyro": {
+        "message": "Гіроскоп"
+    },
+    "portsSensorAcc": {
+        "message": "Акселерометр"
+    },
+    "portsSensorBaro": {
+        "message": "Барометр"
+    },
+    "portsSensorMag": {
+        "message": "Магнітометр"
+    },
+    "portsSensorNotDetected": {
+        "message": "Налаштовано, але не виявлено"
     },
     "portsTelemetryDisabled": {
         "message": "Вимкнено"
@@ -1847,6 +2176,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "Підвіс"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "Користувацький текст OSD"
     },
     "pidTuningProfileOption": {
         "message": "Профіль $1"
@@ -2345,6 +2680,13 @@
     },
     "auxiliaryToggleUnused": {
         "message": "Сховати невикористані режими"
+    },
+    "auxiliarySearch": {
+        "message": "Пошук режимів",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
+    },
+    "auxiliaryNoModesFound": {
+        "message": "Жоден режим не відповідає поточним фільтрам."
     },
     "auxiliaryMin": {
         "message": "Мін."
@@ -2922,11 +3264,31 @@
     "flightPlanLongitude": {
         "message": "Довгота <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Висота <span class=\"units\">фути AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "Висота <span class=\"units\">{{unit}} над рівнем моря</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "Швидкість <span class=\"units\">вузлів</span>"
+    "flightPlanAltitudeAria": {
+        "message": "Висота в {{unit}} над рівнем моря",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "Швидкість <span class=\"units\">{{unit}}</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "Швидкість у {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "Одиниці виміру",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "Імперські (фути, вузли, морські милі)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "Метричні (м, км/год, км)"
     },
     "flightPlanType": {
         "message": "Тип точки маршруту"
@@ -3328,6 +3690,9 @@
     "sensorsSonarSelect": {
         "message": "Сонар"
     },
+    "sensorsPitotSelect": {
+        "message": "Трубка Піто"
+    },
     "sensorsDebugSelect": {
         "message": "Інформація для налагоджування"
     },
@@ -3348,6 +3713,9 @@
     },
     "sensorsSonarTitle": {
         "message": "Сонар - сантиметри"
+    },
+    "sensorsPitotTitle": {
+        "message": "Повітряна швидкість — см/с"
     },
     "cliInfo": {
         "message": "<strong>Примітка:</strong> Вихід із вкладки командного рядка, або натискання кнопки Від'єднання <strong>автоматично</strong> надішле \"<strong>вихід</strong>\" на плату.  У найновіших прошивках це призведе до <strong>перезапуску</strong> контролера, і незбережені зміни буде <strong>втрачено</strong>.<p><strong><span class=\"message-negative\">Попередження:</span></strong> Деякі команди у командному рядку можуть призвести до надсилання довільних сигналів на вихідні виводи моторів. Це може призвести до розкручування моторів, якщо підключено батарею. Тому наполегливо рекомендується переконатися, що <strong>акумулятор не підключений, перш ніж вводити команди у командний рядок</strong>."
@@ -3725,6 +4093,9 @@
     },
     "firmwareFlasherFirmwareSize": {
         "message": "{{bytes}} байт"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Завантажено локальну прошивку: {{filename}} ({{bytes}} байтів). Вона не походить із хмарної збірки Betaflight, тому її підтримку надає той, хто її зібрав."
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Завантажено онлайн прошивку: {{filename}} ({{bytes}} байт)"
@@ -5122,6 +5493,9 @@
     "powerBatteryCapacity": {
         "message": "Ємність (мАг)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "Ємність для активного профілю батареї. Коли доступні профілі батареї, прошивка використовує це значення для визначення залишку в мАг і попереджень про ємність у наекранному меню."
+    },
     "osdSetupTitle": {
         "message": "Наекранне меню"
     },
@@ -5207,6 +5581,10 @@
         "message": "Impact Mini",
         "description": "Font Impact Mini"
     },
+    "osdSetupFontTypeFBSmallOne": {
+        "message": "FB маленький",
+        "description": "First small font for FB OSD"
+    },
     "osdSetupVideoFormatTitle": {
         "message": "Формат відео"
     },
@@ -5225,6 +5603,30 @@
     "osdSetupVideoFormatOptionHd": {
         "message": "HD",
         "description": "Option for the video format in the OSD"
+    },
+    "osdProtocol": {
+        "message": "Протокол OSD"
+    },
+    "osdProtocolHelp": {
+        "message": "Протокол відображення наекранного меню. MAX7456 і FrSky OSD керують аналоговою мікросхемою або модулем; MSP передає наекранне меню через UART нижче, як цього потребують окуляри DJI, HDZero та Walksnail."
+    },
+    "osdSerialPort": {
+        "message": "Послідовний порт наекранного меню"
+    },
+    "osdSerialPortHelp": {
+        "message": "UART, до якого під'єднано послідовний пристрій наекранного меню. Починаючи з API 1.49, задається в налаштуваннях самого наекранного меню; на вкладці «Порти» лише відображається."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "Послідовний порт користувацького тексту"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "UART, через який надходить користувацький текст наекранного меню."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "Швидкість передачі користувацького тексту"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "Швидкість передачі даних порту користувацького тексту OSD."
     },
     "osdSetupUnitsTitle": {
         "message": "Одиниці виміру"
@@ -5304,6 +5706,17 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Завантаження невдале"
+    },
+    "osdSetupUploadFontWarningNeedSmallFont": {
+        "message": "Наекранне меню працює в режимі малого шрифту, але вибраний шрифт має стандартний розмір. Він показуватиметься неправильно. Усе одно завантажити?",
+        "description": "Confirmation shown before uploading a standard font to a framebuffer OSD running in small font mode"
+    },
+    "osdSetupUploadFontWarningNeedStandardFont": {
+        "message": "Вибрано малий шрифт для наекранного меню з кадровим буфером, але це наекранне меню використовує шрифти стандартного розміру. Він показуватиметься неправильно. Усе одно завантажити?",
+        "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
+    },
+    "osdSetupSaveReboot": {
+        "message": "Зберегти й перезавантажити"
     },
     "osdSetupSave": {
         "message": "Зберегти"
@@ -5923,6 +6336,14 @@
     "osdDescElementLinkQuality": {
         "message": "Індикатор якості з'єднання показує відсоток успішно отриманих, непошкоджених пакетів даних"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "Радіорежим:Якість зв'язку",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "Лише якість зв'язку",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "Відстань польоту",
         "description": "One of the elements of the OSD"
@@ -6455,6 +6876,9 @@
         "message": "Перевищення ємності акумулятора",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningOverCap": {
+        "message": "Попереджає, коли спожита ємність у мАг перевищує ємність активного профілю батареї або старий поріг попередження про ємність у наекранному меню, якщо ємність профілю не задано"
+    },
     "osdWarningTextRSNR": {
         "message": "Співвідношення сигнал/шум",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6519,9 +6943,16 @@
     "osdButtonSaved": {
         "message": "Збережено"
     },
+    "osdPitotAirSpeed": {
+        "message": "Повітряна швидкість"
+    },
     "vtxHelp": {
         "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">цю сторінку;</a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації Lua для роботи з lua скриптами Betaflight (докладніше <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">тут</a>.)",
         "description": "Introduction message in the VTX tab"
+    },
+    "vtxMessageNotSupported": {
+        "message": "<span class=\"message-negative\">Увага:</span> Відеопередавач ще не відповідає. Виберіть нижче його протокол і UART, до якого він під'єднаний, та збережіть; решта налаштувань з'явиться, коли пристрій відповість.",
+        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Увага:</span> Вам потрібно СПОЧАТКУ налаштувати та зберегти таблицю відеопередавача внизу, перш ніж ви зможете використовувати поля $t(vtxSelectedMode.message).",
@@ -6662,6 +7093,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Частота, на яку переходить відеопередавач при активації режиму ями.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "Відеопередавач"
+    },
+    "vtxProtocol": {
+        "message": "Протокол"
+    },
+    "vtxProtocolHelp": {
+        "message": "Протокол керування відеопередавачем. SmartAudio і Tramp працюють через UART нижче; MSP використовує спільне з'єднання MSP, як у DJI, HDZero та Walksnail."
+    },
+    "vtxSerialPort": {
+        "message": "Послідовний порт"
+    },
+    "vtxSerialPortHelp": {
+        "message": "UART, через який працює протокол керування відеопередавачем. Починаючи з API 1.49, задається в налаштуваннях самого відеопередавача; на вкладці Порти лише показується."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "Відеопередавач MSP відповідає через те саме з'єднання MSP, яким передається наекранне меню в окуляри, тому використовує послідовний порт на вкладці Наекранне меню й не може бути налаштований тут."
     },
     "vtxLowPowerDisarm": {
         "message": "Низька потужність коли охолощений",
@@ -6839,6 +7288,9 @@
     "configurationBaroHardware": {
         "message": "Барометр"
     },
+    "configurationPitot": {
+        "message": "Трубка Піто"
+    },
     "configurationMagHardware": {
         "message": "Магнітометр"
     },
@@ -6947,6 +7399,15 @@
     "magCalibrationSaveError": {
         "message": "Не вдалося зберегти значення калібрування"
     },
+    "magCalibrationFull": {
+        "message": "Відкалібрувати й визначити орієнтацію"
+    },
+    "magCalibrationFullDesc": {
+        "message": "Обертайте апарат у всіх напрямках, щоб відкалібрувати датчик і автоматично визначити орієнтацію його встановлення."
+    },
+    "magCalibrationFullTitle": {
+        "message": "Калібрування й визначення орієнтації"
+    },
     "magCalibrationFullInstruction": {
         "message": "Виконайте наведені нижче кроки, утримуючи апарат нерухомо протягом кожного повного оберту. Лічильник зон зростає, коли ви досягаєте нових кутів — маєте охопити всі 20."
     },
@@ -6980,6 +7441,12 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} / {{total}} зон охоплено"
     },
+    "magCalibrationFullCompute": {
+        "message": "Завершення калібрування"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "Що більше охоплено зон, то вища точність. Ваша мета 20 / 20 для найкращого калібрування й визначення орієнтації."
+    },
     "magCalibrationFullCoverage": {
         "message": "Покриття:"
     },
@@ -7006,6 +7473,27 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "Недостатньо даних — обертайте довше"
+    },
+    "magCalibrationFullRefused": {
+        "message": "Калібрування відхилено: {{reason}}"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "Розташування недоступне через GPS, браузер або IP — введіть координати вручну, щоб продовжити"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "Для калібрування потрібне розташування"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "Введіть широту й довготу вручну, вибравши їх на Картах Google. Ваш дрон не визначив координати за GPS, а ваш пристрій не зміг надати дані про розташування. Розташування потрібне для калібрування магнітометра."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "напр. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "Неправильний формат координат. Введіть їх у форматі: широта, довгота (наприклад, 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "Не вдалося обчислити еталонне магнітне поле для цих координат. Перевірте їх і повторіть спробу."
     },
     "magCalibrationFullCliCopied": {
         "message": "Команди CLI скопійовано до буфера обміну"
@@ -7090,6 +7578,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "Пристрій для запису журналу"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "Послідовний порт"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "UART, який використовується, коли пристроєм для запису журналу є послідовний порт. Починаючи з API 1.49, задається в налаштуваннях самої чорної скрині; на вкладці Порти лише показується."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "Швидкість передачі даних послідовного порту"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "Швидкість передачі даних послідовного порту запису журналу."
     },
     "onboardLoggingRateOfLogging": {
         "message": "Частота записів в чорну скриню"
@@ -7574,8 +8074,20 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Продовжити без протоколу OSD"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ Підтримується Betaflight"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ Підтримується виробником"
+    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Застарілі"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Цільовий пристрій підтримується виробником. По допомогу з цією платою звертайтеся до її виробника."
+    },
+    "firmwareFlasherOptionLabelLegacyTarget": {
+        "message": "⚠️ Застарілий цільовий пристрій, підтримку припинено. Використовуйте на власний розсуд."
     },
     "coreBuild": {
         "message": "Лише ядро"
@@ -7640,6 +8152,76 @@
     "osdDescElementBatteryProfileName": {
         "message": "Показує активну назву профілю батареї або індекс"
     },
+    "osdTextElementWpNumber": {
+        "message": "Номер точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNumber": {
+        "message": "Показує номер поточної точки та загальну кількість точок активного плану польоту"
+    },
+    "osdTextElementWpCurrentLat": {
+        "message": "Широта точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLat": {
+        "message": "Показує широту поточної точки маршруту"
+    },
+    "osdTextElementWpCurrentLon": {
+        "message": "Довгота точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentLon": {
+        "message": "Показує довготу поточної точки маршруту"
+    },
+    "osdTextElementWpCurrentAlt": {
+        "message": "Висота точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpCurrentAlt": {
+        "message": "Показує висоту поточної точки маршруту"
+    },
+    "osdTextElementWpDistance": {
+        "message": "Відстань до точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDistance": {
+        "message": "Показує відстань до поточної точки маршруту"
+    },
+    "osdTextElementWpDirection": {
+        "message": "Напрямок до точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpDirection": {
+        "message": "Показує стрілку в напрямку поточної точки маршруту"
+    },
+    "osdTextElementWpNextNumber": {
+        "message": "Номер наступної точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpNextNumber": {
+        "message": "Показує номер наступної точки маршруту в активному плані польоту"
+    },
+    "osdTextElementWpEta": {
+        "message": "Очікуваний час прибуття до точки маршруту",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWpEta": {
+        "message": "Показує очікуваний час прибуття до поточної точки маршруту"
+    },
+    "osdTextElementNavMap": {
+        "message": "Навігаційна карта",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNavMap": {
+        "message": "Мінікарта, що показує домашню точку, план польоту та пройдений шлях"
+    },
+    "osdTextElementPosHoldReady": {
+        "message": "Готовність до утримання позиції",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPosHoldReady": {
+        "message": "Показує, чи виконуються зараз умови ввімкнення утримання позиції, ще до ввімкнення перемикача режиму"
+    },
     "osdSetupPreviewCheckRulers": {
         "message": "Лінійки",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
@@ -7688,6 +8270,12 @@
     },
     "userProfileUpdateFailed": {
         "message": "Не вдалося оновити профіль"
+    },
+    "userAccountDeleteSuccess": {
+        "message": "Ваш обліковий запис Betaflight видалено"
+    },
+    "userAccountDeleteFailed": {
+        "message": "Не вдалося видалити обліковий запис"
     },
     "userBackupsLoadFailed": {
         "message": "Не вдалося завантажити резервні копії"
@@ -7920,6 +8508,18 @@
     },
     "sectionUserPasskeys": {
         "message": "Користувацькі ключі доступу"
+    },
+    "sectionDeleteAccount": {
+        "message": "Видалити обліковий запис"
+    },
+    "deleteAccountDescription": {
+        "message": "Назавжди видалити ваш обліковий запис Betaflight, зокрема профіль, ключі доступу, токени входу та хмарні резервні копії. Цю дію неможливо скасувати."
+    },
+    "actionDeleteAccount": {
+        "message": "Видалити обліковий запис"
+    },
+    "confirmDeleteAccount": {
+        "message": "Це назавжди видалить ваш обліковий запис Betaflight, зокрема профіль, ключі доступу, токени входу та всі хмарні резервні копії. Цю дію неможливо скасувати, а дані — відновити. Ви впевнені, що хочете продовжити?"
     },
     "osdPresetPositionAlignTitle": {
         "message": "Вирівняти до позиції",
@@ -8540,5 +9140,185 @@
     },
     "preflightNotamLastFetched": {
         "message": "Востаннє завантажено"
+    },
+    "pidTuningWingSettings": {
+        "message": "Налаштування крила"
+    },
+    "pidTuningWingSterm": {
+        "message": "З-складова"
+    },
+    "pidTuningWingSPA": {
+        "message": "ППЗ"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "Режим"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "Режим послаблення ПІД за заданим значенням для кожної осі"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "Центр"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "Задане значення крену, тангажу та рискання, за якого коефіцієнти ПІД зменшуються до 50% (послаблення ПІД за заданим значенням)"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "Ширина"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "Ширина плавного переходу навколо spa_center"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "ВИМК"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "ФІКСАЦІЯ І"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "І"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "ПІД"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "ПД + ФІКСАЦІЯ І"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "Тип оцінки швидкості"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "Тип моделі оцінки повітряної швидкості"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "Базова"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "Розширена"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "Тип кривої"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "Гіперболічна зазвичай використовується для крил. Класична — для мультироторних апаратів і використовує стандартне TPA."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "Класична"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "Гіперболічна"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "Базове налаштування швидкості"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "Розширене налаштування швидкості"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "Затримка"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "Затримка оцінки повітряної швидкості за тягою в мілісекундах (час досягнення 50% усталеної швидкості в горизонтальному польоті на повній тязі)"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "Гравітація"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "Вплив гравітації на оцінку повітряної швидкості у відсотках"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "Крок пропелера"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "Крок пропелера в дюймах * 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "Маса апарата"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "Маса апарата в грамах"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "Коефіцієнт опору K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "Коефіцієнт аеродинамічного опору апарата"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "Тяга"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "Статична тяга в грамах"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "Макс. напруга батареї"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "Теоретична максимальна напруга *100. Використовується для масштабування тяги залежно від напруги під час оцінки повітряної швидкості"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "KV мотора"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "KV мотора. Змінюйте це значення на вкладці «Мотори»."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "Зміщення тангажу"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "Зміщення тангажу в градусах*10 для оцінки швидкості апарата"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "Налаштування гіперболічної кривої"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "Швидкість звалювання, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "Швидкість, за якої ПІД коефіцієнти мають бути максимальними (швидкість звалювання), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "ПІД на швидкості звалювання"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "Множник ПІД на швидкості звалювання"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "ПІД на повній швидкості"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "Множник ПІД на повній швидкості"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "Експо"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "Як швидко змінюються ПІД коефіцієнти зі зростанням швидкості"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "Графік гіперболічних кривих"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "Інші налаштування"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "Тип керування рисканням"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "Тип керування рисканням (кермо напрямку або диференціальна тяга)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "Кермо напрямку"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "Диференціальна тяга"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "Зміщення тангажу"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "Зміщення тангажу для режимів самовирівнювання у десятих частках градуса. Додатні значення нахиляють крило вниз"
     }
 }

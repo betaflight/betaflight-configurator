@@ -404,7 +404,7 @@ describe("serial_backend connect deeplink", () => {
         expect(autoSelect).toBeTypeOf("function");
 
         serial.connect.mockClear();
-        autoSelect();
+        autoSelect!();
 
         // No competing open, and the selection is still the manual deeplink target.
         expect(serial.connect).not.toHaveBeenCalled();
@@ -677,13 +677,13 @@ describe("serial_backend connect-failure dialog", () => {
 
         DeviceHandler.devicePicker.autoConnect = false;
         serial.connect.mockClear();
-        autoSelect();
+        autoSelect!();
         expect(serial.connect).not.toHaveBeenCalled();
 
         // With it on the same listener connects, and its failure stays silent.
         DeviceHandler.devicePicker.autoConnect = true;
         dialogStore.open.mockClear();
-        autoSelect();
+        autoSelect!();
         expect(serial.connect).toHaveBeenCalled();
 
         serialHandlers.connect({ detail: false });
@@ -896,7 +896,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
+    it("sends MSP_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
         const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
@@ -913,7 +913,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
 
             reinitializeConnection();
 
-            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_REBOOT, false, false);
             // The reboot forces the connection invalid so the cycle waits for a real reconnect.
             expect(connectionStore.connectionValid).toBe(false);
 
@@ -1154,7 +1154,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
         resetMocks();
     });
 
-    it("toggles immediately then reconnects after 500ms when auto-connect is on (no MSP_SET_REBOOT)", () => {
+    it("toggles immediately then reconnects after 500ms when auto-connect is on (no MSP_REBOOT)", () => {
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.autoConnect = true;
@@ -1168,7 +1168,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
             reinitializeConnection();
 
             // Virtual path just toggles the link — no reboot command.
-            expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+            expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_REBOOT, false, false);
             expect(mspHelperInstance.enableArming).toHaveBeenCalledTimes(1);
             expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
             // Mocked enableArming doesn't auto-invoke its callback — drive it to finish the close.

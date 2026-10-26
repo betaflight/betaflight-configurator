@@ -29,7 +29,7 @@ export type LiveSensorPull = "imu" | "altitude" | "sonar" | "pitot" | "debug";
 const PULLS: Record<LiveSensorPull, { name: string; code: number }> = {
     imu: { name: "IMU_pull", code: MSPCodes.MSP_RAW_IMU },
     altitude: { name: "altitude_pull", code: MSPCodes.MSP_ALTITUDE },
-    sonar: { name: "sonar_pull", code: MSPCodes.MSP_SONAR },
+    sonar: { name: "sonar_pull", code: MSPCodes.MSP_SONAR_ALTITUDE },
     pitot: { name: "pitot_pull", code: MSPCodes.MSP_PITOT },
     debug: { name: "debug_pull", code: MSPCodes.MSP_DEBUG },
 };

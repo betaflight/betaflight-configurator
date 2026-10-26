@@ -27,7 +27,7 @@ function mountData() {
 const PULLS: [LiveSensorPull, number][] = [
     ["imu", MSPCodes.MSP_RAW_IMU],
     ["altitude", MSPCodes.MSP_ALTITUDE],
-    ["sonar", MSPCodes.MSP_SONAR],
+    ["sonar", MSPCodes.MSP_SONAR_ALTITUDE],
     ["pitot", MSPCodes.MSP_PITOT],
     ["debug", MSPCodes.MSP_DEBUG],
 ];

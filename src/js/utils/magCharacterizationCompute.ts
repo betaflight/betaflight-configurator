@@ -29,12 +29,10 @@
  * unit-tested directly.
  */
 import semver from "semver";
-import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose } from "./magAlignment.js";
+import { eulerToMatrix, ALIGNMENT_MATRICES, mat3mulVec, mat3transpose, type Mat3 } from "./magAlignment";
 import { fitEllipsoid, type EllipsoidFit } from "./ellipsoidFit";
 import { check3DCoverage, fitSphere } from "./sphereFit";
 import { solveTiltAlignment, type TiltAlignmentResult } from "./magTiltAlign";
-
-type Mat3 = number[][];
 
 /** ZYX Euler angles in degrees. */
 export interface EulerAngles {
@@ -89,9 +87,6 @@ export type CharacterizeTumbleResult = TumbleCharacterization | { ok: false; err
 
 export type TumbleVerdict = "clean" | "suspect" | "contaminated";
 
-// ALIGNMENT_MATRICES comes from the untyped JS module keyed by the 1..8 preset ids.
-const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
-
 // ── Firmware version gate ───────────────────────────────────────────────────
 // "Fix mag_align_yaw" (betaflight#14849, merged 2025-12-30, first release
 // 2026.6.0) negates angles before buildRotationMatrix so the net applied
@@ -125,7 +120,7 @@ export function currentMatrixOf(currentAlignment: number, customAngles: EulerAng
         return eulerToMatrix(customAngles.roll, customAngles.pitch, customAngles.yaw);
     }
     const al = currentAlignment >= 1 && currentAlignment <= 8 ? currentAlignment : 1;
-    return alignmentMatrices[al];
+    return ALIGNMENT_MATRICES[al];
 }
 
 /**
@@ -135,11 +130,11 @@ export function currentMatrixOf(currentAlignment: number, customAngles: EulerAng
  * @param result - the tilt-solve result
  * @param fallbackMat - returned when the result carries no usable alignment (defaults to identity/CW0)
  */
-export function proposedMatrixOf(result: TiltProposal, fallbackMat: Mat3 = alignmentMatrices[1]): Mat3 {
+export function proposedMatrixOf(result: TiltProposal, fallbackMat: Mat3 = ALIGNMENT_MATRICES[1]): Mat3 {
     if (result.preset === 9 && result.euler_zyx_deg) {
         return eulerToMatrix(result.euler_zyx_deg.roll, result.euler_zyx_deg.pitch, result.euler_zyx_deg.yaw);
     }
-    return alignmentMatrices[result.preset] ?? fallbackMat;
+    return ALIGNMENT_MATRICES[result.preset] ?? fallbackMat;
 }
 
 /**

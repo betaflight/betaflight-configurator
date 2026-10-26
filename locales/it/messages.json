@@ -2939,6 +2939,10 @@
         "message": "Cambia la VTX in modalità pit (bassa potenza in uscita, se supportata)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Acquisizione dei waypoint in volo: una breve pressione aggiunge la posizione corrente al piano di volo come waypoint, tenendo premuto l'interruttore per 1,5 secondi, elimina l'ultimo waypoint",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Resetta il cronometro del transponder",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3276,11 +3280,31 @@
     "flightPlanLongitude": {
         "message": "Longitudine <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Altitudine <span class=\"units\">ft AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "Altitudine <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "Velocità <span class=\"units\">nodi</span>"
+    "flightPlanAltitudeAria": {
+        "message": "Altitudine {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "Velocità <span class=\"units\">{{unit}}</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "Velocità in {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "Unità",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "Imperiale (ft, kt, nm)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "Metrico (m, km/h, km)"
     },
     "flightPlanType": {
         "message": "Tipo di Waypoint"

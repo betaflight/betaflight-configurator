@@ -1,5 +1,5 @@
 <template>
-    <UModal v-model:open="open" :title="$t('tabLog')" :ui="{ content: 'max-w-4xl h-full' }">
+    <UModal v-model:open="open" :title="$t('tabLog')" class="log-dialog" :ui="{ content: 'max-w-4xl h-full' }">
         <template #body>
             <div class="flex flex-col min-h-full">
                 <div class="log-toolbar">
@@ -76,65 +76,67 @@ watch(open, (isOpen) => {
 });
 </script>
 
-<style scoped lang="less">
-.content_wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
+<style lang="less">
+.log-dialog {
+    .content_wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
-.log-dialog-body {
-    height: min(75vh, 720px);
-}
+    .log-dialog-body {
+        height: min(75vh, 720px);
+    }
 
-.log-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.5rem;
-}
+    .log-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.5rem;
+    }
 
-.log-autoscroll {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 12px;
-    color: var(--text);
-}
+    .log-autoscroll {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 12px;
+        color: var(--text);
+    }
 
-.log-box {
-    display: flex;
-    flex: 1;
-    min-height: 0;
-}
+    .log-box {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+    }
 
-.log-box :deep(> div:last-child) {
-    flex: 1;
-    min-height: 0;
-    padding: 0;
-}
+    .log-box > div:last-child {
+        flex: 1;
+        min-height: 0;
+        padding: 0;
+    }
 
-.log-scroll {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 0.75rem 1rem;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 12px;
-    line-height: 1.4;
-}
+    .log-scroll {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 0.75rem 1rem;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 12px;
+        line-height: 1.4;
+    }
 
-.log-entry {
-    margin: 0;
-    padding: 0;
-    color: var(--text);
-    word-break: break-word;
-    white-space: pre-wrap;
-}
+    .log-entry {
+        margin: 0;
+        padding: 0;
+        color: var(--text);
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
 
-.log-timestamp {
-    color: var(--quietHeader);
-    margin-inline-end: 0.5rem;
+    .log-timestamp {
+        color: var(--quietHeader);
+        margin-inline-end: 0.5rem;
+    }
 }
 </style>

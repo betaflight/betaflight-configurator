@@ -10,6 +10,7 @@ import {
     renderFieldsModule,
     renderModeFields,
     resolveFieldIndex,
+    type ModeFieldConflict,
 } from "../../../scripts/generate-debug-modes.mjs";
 
 /*
@@ -202,7 +203,7 @@ describe("renderModeFields", () => {
     const variant = (label: string, unit: string | null, scale = 1) => ({ label, unit, scale });
 
     it("names both meanings of a field two subsystems write differently, and drops the unit", () => {
-        const conflicts: unknown[] = [];
+        const conflicts: ModeFieldConflict[] = [];
         const source = renderModeFields(
             "BATTERY",
             { 3: [variant("Sag Compensation Attenuation", null, 0.001), variant("Voltage Stable Bits", null)] },
@@ -217,7 +218,7 @@ describe("renderModeFields", () => {
     });
 
     it("names both meanings only when they differ", () => {
-        const conflicts: unknown[] = [];
+        const conflicts: ModeFieldConflict[] = [];
         const source = renderModeFields(
             "LIDAR_TF",
             { 0: [variant("Distance", "cm"), variant("Distance", "m", 0.001)] },
@@ -230,7 +231,7 @@ describe("renderModeFields", () => {
     });
 
     it("keeps the unit and scale of a field with one meaning", () => {
-        const conflicts: unknown[] = [];
+        const conflicts: ModeFieldConflict[] = [];
         const source = renderModeFields("UPT1", { 0: [variant("Distance", "m", 0.001)] }, "1.49.0", conflicts).join(
             "\n",
         );

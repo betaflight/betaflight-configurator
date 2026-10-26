@@ -3128,12 +3128,6 @@
     "flightPlanLongitude": {
         "message": "Бойлық <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Биіктігі <span class=\"units\">фут AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "Жылдамдық <span class=\"units\">түйіндер</span>"
-    },
     "flightPlanType": {
         "message": "Жол нүктесі түрі"
     },
