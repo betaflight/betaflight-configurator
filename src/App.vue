@@ -10,10 +10,10 @@
             <div id="tab-content-container" :class="{ 'has-mobile-topbar': isLandingTab }">
                 <div class="tab_container" :class="{ reveal: isMobileSidebarOpen }">
                     <betaflight-logo
-                        :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                        :firmware-version="FC.CONFIG.flightControllerVersion"
-                        :firmware-id="FC.CONFIG.flightControllerIdentifier"
-                        :hardware-id="FC.CONFIG.hardwareName"
+                        :configurator-version="appInfo.displayVersion"
+                        :firmware-version="fcStore.config.flightControllerVersion"
+                        :firmware-id="fcStore.config.flightControllerIdentifier"
+                        :hardware-id="fcStore.config.hardwareName"
                     ></betaflight-logo>
                     <Teleport to=".floating-connect" :disabled="!useFloatingChrome">
                         <ConnectButton />
@@ -36,13 +36,13 @@
                 :port-usage-down="PortUsage.port_usage_down"
                 :port-usage-up="PortUsage.port_usage_up"
                 :connection-timestamp="CONNECTION.timestamp"
-                :packet-error="MSP.packet_error"
-                :cycle-time="FC.CONFIG.cycleTime"
-                :cpu-load="FC.CONFIG.cpuload"
-                :cpu-temperature="FC.CONFIG.cpuTemp"
-                :configurator-version="CONFIGURATOR.getDisplayVersion()"
-                :firmware-version="FC.CONFIG.flightControllerVersion"
-                :firmware-target="FC.CONFIG.hardwareName"
+                :packet-error="connectionStore.packetErrors"
+                :cycle-time="fcStore.config.cycleTime"
+                :cpu-load="fcStore.config.cpuload"
+                :cpu-temperature="fcStore.config.cpuTemp"
+                :configurator-version="appInfo.displayVersion"
+                :firmware-version="fcStore.config.flightControllerVersion"
+                :firmware-target="fcStore.config.hardwareName"
             ></status-bar>
             <div id="cache">
                 <div class="data-loading">
@@ -55,26 +55,25 @@
 </template>
 
 <script setup lang="ts">
-import { isAndroid, isTauriAndroid, isTauriIOS } from "@/js/utils/checkCompatibility.js";
+import { isAndroid } from "@/js/utils/checkCompatibility";
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
-import { useMediaQuery } from "@vueuse/core";
+import { onKeyStroke, useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
-import FCModule from "./js/fc";
-import MSPModule from "./js/msp";
-import PortUsageModule from "./js/port_usage.js";
-import CONFIGURATORModule from "./js/data_storage";
-import GUI from "./js/gui.js";
+import PortUsageModule from "./js/port_usage";
 import { i18n } from "./js/localization";
 import { useUiLocale } from "./composables/useUiLocale";
+import { useFlightControllerStore } from "./stores/fc";
+import { useConnectionStore } from "./stores/connection";
+import { useAppInfoStore } from "./stores/appInfo";
 import {
     completeVueTabMount,
     tabAdapterRegistration,
     TAB_ADAPTER_REGISTRATION_KEY,
     vueTabState,
 } from "./js/vue_tab_mounter.js";
-import { VueTabComponents } from "./js/vue_tab_registry.js";
+import { VueTabComponents } from "./js/vue_tab_registry";
 
 // Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
 if (!window.vm) {
@@ -104,9 +103,9 @@ function currentVm() {
     return syncedVm.value;
 }
 
-const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
-const FC = computed(() => currentVm()?.FC ?? FCModule);
-const MSP = computed(() => currentVm()?.MSP ?? MSPModule);
+const fcStore = useFlightControllerStore();
+const connectionStore = useConnectionStore();
+const appInfo = useAppInfoStore();
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
@@ -124,6 +123,14 @@ const isCompactBreakpoint = useMediaQuery(
 const isMobileSidebarOpen = computed(() => isCompactBreakpoint.value && isRevealed.value);
 const isSidebarExpanded = computed(() => !sidebarNarrow.value || isRevealed.value);
 
+// Escape closes the open drawer, the keyboard equivalent of a click on the backdrop. The backdrop
+// itself cannot take focus, so the listener is on the window; onKeyStroke removes it on unmount.
+onKeyStroke("Escape", () => {
+    if (isMobileSidebarOpen.value) {
+        isRevealed.value = false;
+    }
+});
+
 // Auto-close the drawer when leaving the mobile drawer breakpoint.
 watch(isCompactBreakpoint, (compact) => {
     if (!compact) {
@@ -137,7 +144,7 @@ const isLandingTab = computed(() => vueTabState.activeTabName === "landing");
 
 // Connecting is the app's primary action and it lives in the drawer, which the phone shell no
 // longer opens. Teleport it into the floating chrome there, and leave it in place everywhere else.
-const isAppShell = isTauriIOS() || isTauriAndroid() || isAndroid();
+const isAppShell = isAndroid();
 const useFloatingChrome = computed(() => isAppShell && isCompactBreakpoint.value);
 
 const topbarHidden = ref(false);
@@ -178,8 +185,8 @@ watch(isLandingTab, (isLanding) => {
 });
 
 const logoTooltip = computed(() => {
-    const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${CONFIGURATOR.value.getDisplayVersion()}`];
-    const cfg = FC.value.CONFIG ?? {};
+    const lines = [`${i18n.getMessage("versionLabelConfigurator")}: ${appInfo.displayVersion}`];
+    const cfg = fcStore.config ?? {};
     if (cfg.flightControllerVersion && cfg.flightControllerIdentifier) {
         lines.push(
             `${i18n.getMessage("versionLabelFirmware")}: ${cfg.flightControllerVersion} ${cfg.flightControllerIdentifier}`,
@@ -203,7 +210,7 @@ provide("closeMobileSidebar", () => {
 
 const activeTabComponent = computed(() => {
     const tabName = vueTabState.activeTabName;
-    return tabName ? (VueTabComponents[tabName] ?? null) : null;
+    return tabName ? (VueTabComponents[tabName as keyof typeof VueTabComponents] ?? null) : null;
 });
 
 // Tabs that keep their state (and heavy resources) alive across switches rather than being torn
@@ -217,7 +224,6 @@ const activeTabKey = computed(() =>
 );
 
 provide("betaflightModel", currentVm());
-provide("gui", GUI);
 provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
 
 watch(
@@ -234,8 +240,8 @@ watch(
 );
 </script>
 
-<style scoped>
-@keyframes spin {
+<style lang="less">
+@keyframes app-spin {
     0% {
         transform: rotate(0deg);
     }

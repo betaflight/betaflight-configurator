@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue";
-import { getCssVar } from "./WingTpaCurvesData";
+import { getCssVar } from "@/js/utils/cssVar";
 
 interface CurvePoint {
     speed: number;
@@ -225,11 +225,11 @@ function drawChart() {
     const h = canvasHeight.value / dpr;
 
     const colors: ChartColors = {
-        axis: getCssVar("--chart-axis-color", "#555555"),
-        axisLabel: getCssVar("--chart-axis-label-color", "#aaaaaa"),
-        tick: getCssVar("--chart-tick-color", "#888888"),
-        grid: getCssVar("--chart-grid-line-color", "#333333"),
-        curve: getCssVar("--chart-curve-color", "#e24761"),
+        axis: getCssVar("--chart-axis-color"),
+        axisLabel: getCssVar("--chart-axis-label-color"),
+        tick: getCssVar("--chart-tick-color"),
+        grid: getCssVar("--chart-grid-line-color"),
+        curve: getCssVar("--chart-curve-color"),
     };
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -322,13 +322,13 @@ watch(
 );
 </script>
 
-<style scoped>
-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
+<style lang="less">
 .chart-container {
+    canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
     width: 100%;
     height: 100%;
     min-height: 150px;

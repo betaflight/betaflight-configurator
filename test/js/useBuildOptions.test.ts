@@ -1,0 +1,233 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { computed } from "vue";
+import { useFlightControllerStore } from "../../src/stores/fc";
+import {
+    buildOptionsReported,
+    type BuildOptionsConfig,
+    configHasBuildOption,
+    configReportsBuildOption,
+    useBuildOptions,
+} from "../../src/composables/useBuildOptions";
+import { FIRMWARE_BUILD_OPTIONS } from "../../src/js/build_options";
+
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
+describe("useBuildOptions", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    describe("buildOptionsAvailable", () => {
+        it("is false on a freshly reset FC (no api version, empty list)", () => {
+            const { buildOptionsAvailable } = useBuildOptions();
+
+            expect(buildOptionsAvailable.value).toBe(false);
+        });
+
+        it("is false when the api version is too old, even with a populated list", () => {
+            fcStore.config.apiVersion = "1.44.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
+            const { buildOptionsAvailable } = useBuildOptions();
+
+            expect(buildOptionsAvailable.value).toBe(false);
+        });
+
+        it("is false when the api version is new enough but the list is empty", () => {
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = [];
+            const { buildOptionsAvailable } = useBuildOptions();
+
+            expect(buildOptionsAvailable.value).toBe(false);
+        });
+
+        it("is false when the api version is not valid semver, and does not throw", () => {
+            fcStore.config.apiVersion = "not-a-version";
+            fcStore.config.buildOptions = ["USE_GPS"];
+            const { buildOptionsAvailable, hasBuildOption } = useBuildOptions();
+
+            expect(() => buildOptionsAvailable.value).not.toThrow();
+            expect(buildOptionsAvailable.value).toBe(false);
+            expect(hasBuildOption("USE_MAG")).toBe(true);
+        });
+
+        it("is false when the firmware reported no build option list at all", () => {
+            fcStore.config.apiVersion = "1.47.0";
+            // Outside FcConfig's type, which promises a list: the gate must not trust that.
+            (fcStore.config as BuildOptionsConfig).buildOptions = undefined;
+            const { buildOptionsAvailable, hasBuildOption } = useBuildOptions();
+
+            expect(buildOptionsAvailable.value).toBe(false);
+            expect(hasBuildOption("USE_MAG")).toBe(true);
+        });
+
+        it("is true from API 1.45 with a populated list", () => {
+            fcStore.config.apiVersion = "1.45.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
+            const { buildOptionsAvailable } = useBuildOptions();
+
+            expect(buildOptionsAvailable.value).toBe(true);
+        });
+
+        it("stays reactive to later fcStore.config changes", () => {
+            const { buildOptionsAvailable } = useBuildOptions();
+            expect(buildOptionsAvailable.value).toBe(false);
+
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
+
+            expect(buildOptionsAvailable.value).toBe(true);
+        });
+    });
+
+    describe("hasBuildOption", () => {
+        it("returns true for everything when gating does not apply", () => {
+            const { hasBuildOption } = useBuildOptions();
+
+            expect(hasBuildOption("USE_GPS")).toBe(true);
+            expect(hasBuildOption("USE_MAG")).toBe(true);
+            expect(hasBuildOption("USE_DRONECAN_ESC")).toBe(true);
+        });
+
+        it("returns true for everything when the firmware is too old to report options", () => {
+            fcStore.config.apiVersion = "1.44.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
+            const { hasBuildOption } = useBuildOptions();
+
+            expect(hasBuildOption("USE_MAG")).toBe(true);
+        });
+
+        it("reports presence and absence when gating applies", () => {
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS", "USE_DSHOT"];
+            const { hasBuildOption } = useBuildOptions();
+
+            expect(hasBuildOption("USE_GPS")).toBe(true);
+            expect(hasBuildOption("USE_DSHOT")).toBe(true);
+            expect(hasBuildOption("USE_MAG")).toBe(false);
+            expect(hasBuildOption("USE_PWM_OUTPUT")).toBe(false);
+        });
+
+        it("re-evaluates on every call rather than capturing a value", () => {
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
+            const { hasBuildOption } = useBuildOptions();
+            expect(hasBuildOption("USE_MAG")).toBe(false);
+
+            fcStore.config.buildOptions = ["USE_GPS", "USE_MAG"];
+
+            expect(hasBuildOption("USE_MAG")).toBe(true);
+        });
+
+        it("drives a computed that a template would render", () => {
+            const { hasBuildOption } = useBuildOptions();
+            const gated = computed(() => hasBuildOption("USE_MAG"));
+            expect(gated.value).toBe(true);
+
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
+
+            expect(gated.value).toBe(false);
+        });
+
+        it("fails open for a name that is not a key of FIRMWARE_BUILD_OPTIONS", () => {
+            vi.spyOn(console, "warn").mockImplementation(() => {});
+            fcStore.config.apiVersion = "1.47.0";
+            fcStore.config.buildOptions = ["USE_GPS"];
+            const { hasBuildOption } = useBuildOptions();
+
+            // Such a name can never be present in fcStore.config.buildOptions, so
+            // answering "absent" would hide the gated UI forever.
+            expect(hasBuildOption("USE_TYPO_NOT_IN_TABLE")).toBe(true);
+            expect(hasBuildOption("USE_MAG")).toBe(false);
+        });
+
+        it("warns once per unknown option name in dev and never throws", () => {
+            const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+            const { hasBuildOption } = useBuildOptions();
+            const unknown = `USE_NOT_A_REAL_OPTION_${Math.random().toString(36).slice(2)}`;
+
+            expect(() => hasBuildOption(unknown)).not.toThrow();
+            hasBuildOption(unknown);
+            hasBuildOption(unknown);
+
+            expect(warn).toHaveBeenCalledTimes(1);
+            expect(warn.mock.calls[0][0]).toContain(unknown);
+        });
+
+        it("does not warn for a known option name", () => {
+            const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+            const { hasBuildOption } = useBuildOptions();
+
+            hasBuildOption("USE_GPS");
+
+            expect(warn).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("FIRMWARE_BUILD_OPTIONS", () => {
+        it("includes the DroneCAN options served by the 2026.12 build API", () => {
+            expect(FIRMWARE_BUILD_OPTIONS.USE_DRONECAN).toBe(16430);
+            expect(FIRMWARE_BUILD_OPTIONS.USE_DRONECAN_ESC).toBe(8236);
+        });
+    });
+});
+
+describe("configHasBuildOption / configReportsBuildOption", () => {
+    const reported = { apiVersion: "1.47.0", buildOptions: ["USE_GPS"] };
+
+    it("agree when the firmware reported its options", () => {
+        expect(configHasBuildOption(reported, "USE_GPS")).toBe(true);
+        expect(configReportsBuildOption(reported, "USE_GPS")).toBe(true);
+        expect(configHasBuildOption(reported, "USE_MAG")).toBe(false);
+        expect(configReportsBuildOption(reported, "USE_MAG")).toBe(false);
+    });
+
+    it("disagree when it did not, which is the whole point of the pair", () => {
+        for (const config of [
+            { apiVersion: "1.44.0", buildOptions: ["USE_GPS"] },
+            { apiVersion: "1.47.0", buildOptions: [] },
+            { apiVersion: "not-a-version", buildOptions: ["USE_GPS"] },
+            { apiVersion: "1.47.0", buildOptions: undefined },
+            undefined,
+        ]) {
+            expect(buildOptionsReported(config)).toBe(false);
+            // Shown-to-the-user gating fails open...
+            expect(configHasBuildOption(config, "USE_GPS")).toBe(true);
+            // ...payload-layout gating fails closed.
+            expect(configReportsBuildOption(config, "USE_GPS")).toBe(false);
+        }
+    });
+
+    it("treats an unknown name as present for UI and absent for payload layout", () => {
+        expect(configHasBuildOption(reported, "USE_NOT_A_REAL_OPTION")).toBe(true);
+        expect(configReportsBuildOption(reported, "USE_NOT_A_REAL_OPTION")).toBe(false);
+    });
+});

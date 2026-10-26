@@ -21,13 +21,13 @@
                         <p v-html="$t('defaultSupport')"></p>
                         <ul>
                             <li>
-                                <span v-html="$t('defaultSupport1')"></span>
-                            </li>
-                            <li>
                                 <span v-html="$t('defaultSupport2')"></span>
                             </li>
                             <li>
                                 <span v-html="$t('defaultSupport3')"></span>
+                            </li>
+                            <li>
+                                <span v-html="$t('defaultSupport5')"></span>
                             </li>
                         </ul>
                         <div class="subline">
@@ -36,9 +36,6 @@
                         <ul>
                             <li>
                                 <span v-html="$t('defaultSupport4')"></span>
-                            </li>
-                            <li>
-                                <span v-html="$t('defaultSupport5')"></span>
                             </li>
                         </ul>
                     </UiBox>
@@ -51,7 +48,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import BaseTab from "./BaseTab.vue";
-import GUI from "../../js/gui";
 import UiBox from "../elements/UiBox.vue";
 
 export default defineComponent({
@@ -59,17 +55,6 @@ export default defineComponent({
     components: {
         BaseTab,
         UiBox,
-    },
-    setup() {
-        // Called after tab is ready - equivalent to old content_ready callback
-        function onTabReady() {
-            GUI.content_ready();
-        }
-
-        return { onTabReady };
-    },
-    mounted() {
-        this.onTabReady();
     },
 });
 </script>

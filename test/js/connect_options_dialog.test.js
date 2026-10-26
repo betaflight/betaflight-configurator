@@ -5,7 +5,7 @@ import { effectScope, nextTick, reactive } from "vue";
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key) => key } }));
 
 import ConnectOptionsDialog from "../../src/components/device-picker/ConnectOptionsDialog.vue";
-import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks.js";
+import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks";
 
 // The dialog's bookmark handling lives entirely in setup(), so drive setup() directly:
 // the repo has no component-rendering harness, and rendering Nuxt UI would test their

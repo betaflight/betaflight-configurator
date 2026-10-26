@@ -21,7 +21,6 @@
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import CONFIGURATOR from "../js/data_storage";
 import DeviceHandler from "../js/device_handler";
 import { getLockManager } from "../js/lock_manager";
 
@@ -30,50 +29,57 @@ import { getLockManager } from "../js/lock_manager";
  * when there is none.
  *
  * `false` rather than `null` or `""` because that is the sentinel the existing code writes —
- * `serial_backend.js` clears both fields with `= false` and every reader tests truthiness
- * (`if (!connectionStore.connectedTo)`, `GUI.connecting_to || ""`). Widening to `string | false`
+ * `serial_backend.ts` clears both fields with `= false` and every reader tests truthiness
+ * (`if (!connectionStore.connectedTo)`, `connectionStore.connectingTo || ""`). Widening to `string | false`
  * rather than leaving the `ref(false)` initializer to infer `boolean` is what makes
  * `connectedTo === "virtual"` in StatusBar.vue typecheck as the comparison it actually is.
  */
 export type ConnectionTarget = string | false;
 
+function clearMspQueue(): Promise<void> {
+    // Dynamic import keeps the store free of a static msp import (msp.ts reaches
+    // this store through its own imports — a static import would cycle).
+    // Returned so callers can await the drain before starting the next handshake.
+    return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
+}
+
 export const useConnectionStore = defineStore("connection", () => {
-    // The store OWNS the connection-target state (was GUI.connecting_to /
-    // GUI.connected_to). gui.js now delegates those fields here, so the store is
-    // the canonical home and the store no longer imports gui.js (which would
-    // cycle: gui -> store -> ... -> msp -> gui). connect_lock delegates to the
-    // reactive LockManager (single source of truth); clearMspQueue reaches msp via
-    // dynamic import to stay cycle-free.
+    // The store owns the connection-target state (was GUI.connecting_to /
+    // GUI.connected_to). connectLock delegates to the reactive LockManager (single
+    // source of truth); clearMspQueue reaches msp via dynamic import to stay cycle-free.
     const connectingTo = ref<ConnectionTarget>(false);
     const connectedTo = ref<ConnectionTarget>(false);
+
+    // True while the firmware flasher is writing; it blocks connecting and tab switches.
+    const flashingInProgress = ref(false);
+
+    // The MSP_SET_REBOOT mode the STM32 serial flasher sends. Non-zero while a reboot into the
+    // bootloader is pending (1 = ROM bootloader, 4 = flash bootloader); 0 reboots to firmware.
+    const bootloaderRebootMode = ref(0);
 
     const connectLock = computed<boolean>({
         get: () => getLockManager().locked,
         set: (val) => (getLockManager().locked = val),
     });
 
-    // CONFIGURATOR is already reactive (wrapped in reactive() in data_storage.ts)
-    const connectionValid = computed<boolean>({
-        get: () => CONFIGURATOR.connectionValid,
-        set: (val) => (CONFIGURATOR.connectionValid = val),
-    });
+    // True once the MSP handshake has finished, the CLI-only fallback has opened, or the
+    // virtual flight controller is connected.
+    const connectionValid = ref(false);
 
-    const virtualMode = computed<boolean>({
-        get: () => CONFIGURATOR.virtualMode,
-        set: (val) => (CONFIGURATOR.virtualMode = val),
-    });
+    // Connected to the virtual flight controller instead of a device.
+    const virtualMode = ref(false);
+    // The MSP API version the virtual flight controller reports, picked in the device picker.
+    const virtualApiVersion = ref("0.0.1");
 
-    const cliActive = computed<boolean>({
-        get: () => CONFIGURATOR.cliActive,
-        set: (val) => (CONFIGURATOR.cliActive = val),
-    });
-
-    const cliValid = computed<boolean>({
-        get: () => CONFIGURATOR.cliValid,
-        set: (val) => (CONFIGURATOR.cliValid = val),
-    });
+    // The CLI tab has put the flight controller in CLI mode, and the CLI has answered.
+    const cliActive = ref(false);
+    const cliValid = ref(false);
 
     const selectedDevice = computed(() => DeviceHandler.devicePicker.selectedDevice);
+
+    // MSP CRC errors this session. msp.ts counts through MSP.packet_error, which delegates
+    // here so the status bar re-renders on every bad packet.
+    const packetErrors = ref(0);
 
     // Live data refresh control
     const liveDataPaused = ref(false);
@@ -86,23 +92,20 @@ export const useConnectionStore = defineStore("connection", () => {
         liveDataPaused.value = false;
     }
 
-    function clearMspQueue(): Promise<void> {
-        // Dynamic import keeps the store free of a static msp import (msp.js imports
-        // gui.js, which now imports this store — a static import would cycle).
-        // Returned so callers can await the drain before starting the next handshake.
-        return import("../js/msp").then(({ default: MSP }) => MSP.callbacks_cleanup());
-    }
-
     return {
         connectingTo,
         connectedTo,
         connectLock,
+        flashingInProgress,
+        bootloaderRebootMode,
         connectionValid,
         virtualMode,
+        virtualApiVersion,
         cliActive,
         cliValid,
         clearMspQueue,
         selectedDevice,
+        packetErrors,
         liveDataPaused,
         pauseLiveData,
         resumeLiveData,

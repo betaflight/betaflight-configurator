@@ -1,5 +1,5 @@
 <template>
-    <UiBox class="release_info col-span-1 mt-4">
+    <UiBox class="flasher-flash-tab release_info col-span-1 mt-4">
         <div class="release_info_grid">
             <!-- Target Row -->
             <div class="info_row">
@@ -146,7 +146,7 @@
         </div>
     </UiBox>
 
-    <div class="flash-extras mt-4">
+    <div class="flasher-flash-tab flash-extras mt-4">
         <!-- Warning and Recovery panes -->
         <div class="grid-box col2 mt-2">
             <UiBox :title="$t('warningTitle')" type="error" highlight class="note-text-format">
@@ -317,56 +317,58 @@ const showRestoreButton = computed(() => {
 });
 </script>
 
-<style scoped>
-.release_info_grid {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0.5rem 1rem;
-    align-items: center;
-}
+<style lang="less">
+.flasher-flash-tab {
+    .release_info_grid {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 0.5rem 1rem;
+        align-items: center;
+    }
 
-.release_info_grid .info_row {
-    display: contents;
-}
+    .release_info_grid .info_row {
+        display: contents;
+    }
 
-.release_info_grid strong {
-    text-align: end;
-    white-space: nowrap;
-}
+    .release_info_grid :where(.info_row) > strong {
+        text-align: end;
+        white-space: nowrap;
+    }
 
-.release_info_grid span,
-.release_info_grid a {
-    text-align: start;
-}
+    .release_info_grid :where(.info_row, .status_text) > span,
+    .release_info_grid :where(.info_row, .board_support) > a {
+        text-align: start;
+    }
 
-.release_info_grid .board_support {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    justify-self: start;
-}
+    .release_info_grid .board_support {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        justify-self: start;
+    }
 
-.status_ring_wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
+    .status_ring_wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
 
-.status_text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    font-size: 0.85rem;
-}
+    .status_text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.85rem;
+    }
 
-.flash-status-error-text {
-    color: var(--error-500);
-    font-weight: 600;
-}
+    .flash-status-error-text {
+        color: var(--error-500);
+        font-weight: 600;
+    }
 
-.flash-extras {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    &.flash-extras {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 }
 </style>

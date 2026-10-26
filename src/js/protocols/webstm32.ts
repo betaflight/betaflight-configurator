@@ -27,10 +27,9 @@
     popular choices - 921600, 460800, 256000, 230400, 153600, 128000, 115200, 57600, 38400, 28800, 19200
 */
 import MSPConnectorImpl from "../msp/MSPConnector";
-import GUI, { TABS as GUI_TABS } from "../gui";
 import { i18n } from "../localization";
 import MSP from "../msp";
-import FC from "../fc";
+import { useFlightControllerStore } from "../../stores/fc";
 import { bit_check } from "../bit";
 import { gui_log } from "../gui_log";
 import { MspCancelledError } from "../msp/mspErrors";
@@ -46,6 +45,8 @@ import DeviceHandler from "../device_handler";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 import { MspBuffer } from "../msp/mspBytes";
+import { addInterval, removeInterval } from "../timers";
+import { useConnectionStore } from "../../stores/connection";
 
 /** One contiguous block from the Intel HEX parser (`workers/hex_parser.ts`). */
 interface HexBlock {
@@ -58,6 +59,8 @@ interface ParsedHex {
     data: HexBlock[];
     bytes_total: number;
 }
+
+type FlashMessageType = "NEUTRAL" | "VALID" | "INVALID" | "ACTION" | "ERASING" | "FLASHING" | "VERIFYING";
 
 /** The flashing options built by useFirmwareFlashing.flashHexFirmware; only the fields read here. */
 export interface STM32FlashOptions {
@@ -72,21 +75,15 @@ export interface STM32FlashOptions {
         onAccept: () => void,
         onAbort: () => void,
     ) => void;
+    // UI callbacks from the flasher tab, so the protocol never reaches into the component.
+    flashingMessage?(message: string | null, type?: string): unknown;
+    flashProgress?(progress: number): unknown;
+    flashMessageTypes?: Partial<Record<FlashMessageType, string>>;
+    /** Restores the flasher UI once a flash ends or fails. */
+    resetFlashingState?(): void;
+    /** Asks the user for WebUSB permission when the browser blocked the request. */
+    requestDfuPermission?(): void;
 }
-
-type FlashMessageType = "NEUTRAL" | "VALID" | "INVALID" | "ACTION" | "ERASING" | "FLASHING" | "VERIFYING";
-
-/** The part of `TABS.firmware_flasher` (registered by FirmwareFlasherTab.vue) that this protocol calls. */
-interface FirmwareFlasherTabApi {
-    flashingMessage(message: string | null, type: string): FirmwareFlasherTabApi;
-    flashProgress(value: number): FirmwareFlasherTabApi;
-    resetFlashingState(): void;
-    requestDfuPermission?: () => void;
-    FLASH_MESSAGE_TYPES: Record<FlashMessageType, string>;
-}
-
-// gui.js types every TABS entry as Record<string, unknown>; the tab registers the shape above.
-const TABS = GUI_TABS as unknown as { firmware_flasher: FirmwareFlasherTabApi };
 
 function readSerialAdapter(event: Event): void {
     // Flashing bytes are always MSP — feed MSP directly (no serial_backend dependency).
@@ -104,7 +101,7 @@ class STM32Protocol {
     baud: number | null = null;
     port!: string;
     serialOptions!: STM32FlashOptions;
-    mspOptions?: { no_reboot: boolean; reboot_baud: number | false | undefined; erase_chip: boolean };
+    mspOptions?: { no_reboot: boolean; reboot_baud: number; erase_chip: boolean };
     callback: (() => void) | null | undefined = null;
     // Set by connect() before any upload step reads it.
     hex: ParsedHex | null = null;
@@ -151,9 +148,17 @@ class STM32Protocol {
     available_flash_size: number = 0;
     page_size: number = 0;
     useExtendedErase: boolean = false;
-    rebootMode: number = 0;
     private readonly _boundHandleConnect: (event: Event) => void;
     private readonly _boundHandleDisconnect: (event: Event) => void;
+
+    // Resolved per access, as the FC shim was: tests install a fresh Pinia after import.
+    private get fcStore() {
+        return useFlightControllerStore();
+    }
+
+    private get connectionStore() {
+        return useConnectionStore();
+    }
 
     constructor() {
         this.handleMSPConnect = this.handleMSPConnect.bind(this);
@@ -169,25 +174,34 @@ class STM32Protocol {
     }
 
     /**
-     * Centralized error handling method that resets UI state and releases connection lock
-     * @param {boolean} resetRebootMode - Whether to reset the reboot mode
+     * Centralized error handling method that resets UI state, releases the connection lock
+     * and drops any pending reboot to the bootloader
      */
-    handleError(resetRebootMode = true): void {
-        GUI.connect_lock = false;
+    handleError(): void {
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = false;
         // Flash aborted/failed — release the FLASHING state alongside the lock so
         // the connection state hard-block can't strand a later connect (endFlashing is idempotent).
         getConnectionState().endFlashing();
-        if (resetRebootMode) {
-            this.rebootMode = 0;
-        }
-        TABS.firmware_flasher.resetFlashingState();
+        // Otherwise a DFU device appearing later would start a flash the UI has already reset.
+        connectionStore.bootloaderRebootMode = 0;
+        this.serialOptions?.resetFlashingState?.();
+    }
+
+    private flashingMessage(message: string | null, type: FlashMessageType): void {
+        this.serialOptions?.flashingMessage?.(message, this.serialOptions.flashMessageTypes?.[type] ?? type);
+    }
+
+    private flashProgress(progress: number): void {
+        this.serialOptions?.flashProgress?.(progress);
     }
 
     handleConnect(connectionResult: unknown): void {
+        const connectionStore = useConnectionStore();
         console.log(`${this.logHead} Connected to serial port`, connectionResult);
         if (connectionResult) {
             // we are connected, disabling connect button in the UI
-            GUI.connect_lock = true;
+            connectionStore.connectLock = true;
             // The flasher now owns the raw port — stand the MSP reconnect down and
             // enter FLASHING (hard-blocks connect/reboot until the flash completes).
             getConnectionState().beginDeviceReplacement();
@@ -204,8 +218,8 @@ class STM32Protocol {
         serial.removeEventListener("connect", this._boundHandleConnect);
         serial.removeEventListener("disconnect", this._boundHandleDisconnect);
 
-        if (!disconnectionResult || !this.rebootMode) {
-            this.handleError(false);
+        if (!disconnectionResult || !this.connectionStore.bootloaderRebootMode) {
+            this.handleError();
             return;
         }
 
@@ -227,12 +241,13 @@ class STM32Protocol {
 
     // The rebooted board is in DFU but was never authorised for WebUSB: ask for it.
     private async requestDfuPermission(): Promise<void> {
+        const connectionStore = useConnectionStore();
         // Device not previously authorized via WebUSB.
         // Try requestPermission directly — browser may still honour the
         // original user gesture from the Flash button click.
         console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
         gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
-        GUI.connect_lock = false;
+        connectionStore.connectLock = false;
 
         const device = await DeviceHandler.dfuProtocol.requestPermission();
         if (device) {
@@ -248,8 +263,8 @@ class STM32Protocol {
         // requestPermission returned null — either the browser blocked it
         // (no user gesture) or user cancelled. Show dialog as fallback.
         console.warn(`${this.logHead} requestPermission failed, showing dialog`);
-        if (TABS.firmware_flasher.requestDfuPermission) {
-            TABS.firmware_flasher.requestDfuPermission();
+        if (this.serialOptions?.requestDfuPermission) {
+            this.serialOptions.requestDfuPermission();
         } else {
             this.handleError();
         }
@@ -265,14 +280,14 @@ class STM32Protocol {
 
     reboot(): void {
         const buffer = new MspBuffer();
-        buffer.push8(this.rebootMode);
+        buffer.push8(this.connectionStore.bootloaderRebootMode);
         setTimeout(() => {
             const disconnectFromMsp = () => {
                 this.mspConnector.disconnect((disconnectionResult: unknown) => {
                     console.log(`${this.logHead} Disconnecting from MSP`, disconnectionResult);
                 });
             };
-            MSP.promise(MSPCodes.MSP_SET_REBOOT, buffer)
+            MSP.promise(MSPCodes.MSP_REBOOT, buffer)
                 .then(() => {
                     // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
                     disconnectFromMsp();
@@ -282,7 +297,7 @@ class STM32Protocol {
                         // Expected: the FC drops the serial link as part of rebooting.
                         disconnectFromMsp();
                     } else {
-                        console.error(`${this.logHead} MSP_SET_REBOOT request failed:`, error);
+                        console.error(`${this.logHead} MSP_REBOOT request failed:`, error);
                         this.handleError();
                     }
                 });
@@ -291,12 +306,13 @@ class STM32Protocol {
     }
 
     onAbort(): void {
-        GUI.connect_lock = false;
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = false;
         getConnectionState().endFlashing();
-        this.rebootMode = 0;
+        this.connectionStore.bootloaderRebootMode = 0;
         console.log(`${this.logHead} User cancelled because selected target does not match verified board`);
         this.reboot();
-        TABS.firmware_flasher.resetFlashingState();
+        this.serialOptions?.resetFlashingState?.();
     }
 
     lookingForCapabilitiesViaMSP(): void {
@@ -304,22 +320,27 @@ class STM32Protocol {
 
         MSP.promise(MSPCodes.MSP_BOARD_INFO)
             .then(() => {
-                if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
+                if (
+                    bit_check(
+                        this.fcStore.config.targetCapabilities,
+                        this.fcStore.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER,
+                    )
+                ) {
                     // Board has flash bootloader
                     gui_log(i18n.getMessage("deviceRebooting_flashBootloader"));
                     console.log(`${this.logHead} flash bootloader detected`);
-                    this.rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
+                    this.connectionStore.bootloaderRebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
                 } else {
                     gui_log(i18n.getMessage("deviceRebooting_romBootloader"));
                     console.log(`${this.logHead} no flash bootloader detected`);
-                    this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
+                    this.connectionStore.bootloaderRebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
                 }
 
                 const selectedBoard =
                     this.serialOptions.selectedBoard && this.serialOptions.selectedBoard !== "0"
                         ? this.serialOptions.selectedBoard
                         : "NONE";
-                const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : "UNKNOWN";
+                const connectedBoard = this.fcStore.config.boardName ? this.fcStore.config.boardName : "UNKNOWN";
 
                 try {
                     if (
@@ -348,7 +369,7 @@ class STM32Protocol {
     }
 
     handleMSPConnect(): void {
-        gui_log(i18n.getMessage("apiVersionReceived", [FC.CONFIG.apiVersion]));
+        gui_log(i18n.getMessage("apiVersionReceived", [this.fcStore.config.apiVersion]));
 
         this.lookingForCapabilitiesViaMSP();
     }
@@ -361,6 +382,7 @@ class STM32Protocol {
         options: STM32FlashOptions,
         callback?: (() => void) | null,
     ): void {
+        const connectionStore = useConnectionStore();
         this.hex = hex;
         this.port = port;
         this.baud = baud;
@@ -368,16 +390,15 @@ class STM32Protocol {
         this.serialOptions = options;
 
         // we will crunch the options here since doing it inside initialization routine would be too late
+        // The reboot runs over MSP, so without an explicit rate use the one picked for MSP.
         this.mspOptions = {
             no_reboot: false,
-            reboot_baud: false,
+            reboot_baud: options.reboot_baud || DeviceHandler.devicePicker.selectedBauds,
             erase_chip: false,
         };
 
         if (options.no_reboot) {
             this.mspOptions.no_reboot = true;
-        } else {
-            this.mspOptions.reboot_baud = options.reboot_baud;
         }
 
         if (options.erase_chip) {
@@ -386,16 +407,12 @@ class STM32Protocol {
 
         if (this.mspOptions.no_reboot) {
             this.prepareSerialPort();
-            // serial.js's JSDoc does not mark the callback optional.
-            serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" }, undefined);
+            void serial.connect(port, { baudRate: this.baud, parityBit: "even", stopBits: "one" });
         } else {
-            this.rebootMode = 0; // FIRMWARE
+            this.connectionStore.bootloaderRebootMode = 0; // FIRMWARE
 
-            GUI.connect_lock = true;
-            TABS.firmware_flasher.flashingMessage(
-                i18n.getMessage("stm32RebootingToBootloader"),
-                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
-            );
+            connectionStore.connectLock = true;
+            this.flashingMessage(i18n.getMessage("stm32RebootingToBootloader"), "NEUTRAL");
 
             serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
 
@@ -419,12 +436,13 @@ class STM32Protocol {
         this.upload_process_alive = false;
 
         // reset progress bar to initial state
-        TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
+        this.flashingMessage(null, "NEUTRAL");
+        this.flashProgress(0);
 
         serial.removeEventListener("receive", readSerialAdapter);
         serial.addEventListener("receive", readSerialAdapter);
 
-        GUI.interval_add(
+        addInterval(
             "STM32_timeout",
             () => {
                 if (this.upload_process_alive) {
@@ -433,13 +451,10 @@ class STM32Protocol {
                 } else {
                     console.log(`${this.logHead} STM32 - timed out, programming failed ...`);
 
-                    TABS.firmware_flasher.flashingMessage(
-                        i18n.getMessage("stm32TimedOut"),
-                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-                    );
+                    this.flashingMessage(i18n.getMessage("stm32TimedOut"), "INVALID");
 
                     // protocol got stuck, clear timer and disconnect
-                    GUI.interval_remove("STM32_timeout");
+                    removeInterval("STM32_timeout");
 
                     // exit
                     this.upload_procedure(99);
@@ -519,10 +534,7 @@ class STM32Protocol {
         if (verify) {
             console.log(`${this.logHead} Programming: SUCCESSFUL`);
             // update progress bar
-            TABS.firmware_flasher.flashingMessage(
-                i18n.getMessage("stm32ProgrammingSuccessful"),
-                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID,
-            );
+            this.flashingMessage(i18n.getMessage("stm32ProgrammingSuccessful"), "VALID");
 
             // Show notification
             if (getConfig("showNotifications").showNotifications) {
@@ -537,10 +549,7 @@ class STM32Protocol {
         } else {
             console.log(`${this.logHead} Programming: FAILED`);
             // update progress bar
-            TABS.firmware_flasher.flashingMessage(
-                i18n.getMessage("stm32ProgrammingFailed"),
-                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-            );
+            this.flashingMessage(i18n.getMessage("stm32ProgrammingFailed"), "INVALID");
 
             // Show notification
             if (getConfig("showNotifications").showNotifications) {
@@ -590,7 +599,7 @@ class STM32Protocol {
         this.receive_buffer = [];
 
         // send over the actual data
-        serial.send(bufferOut);
+        void serial.send(bufferOut);
     }
     // val = single byte to be verified
     // data = response of n bytes from mcu (array)
@@ -601,9 +610,9 @@ class STM32Protocol {
                 16,
             )}) received: ${data[0]} (0x${data[0].toString(16)})`;
             console.error(message);
-            TABS.firmware_flasher.flashingMessage(
+            this.flashingMessage(
                 i18n.getMessage("stm32WrongResponse", [val, val.toString(16), data[0], data[0].toString(16)]),
-                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                "INVALID",
             );
 
             // disconnect
@@ -719,29 +728,23 @@ class STM32Protocol {
         switch (step) {
             case 1: {
                 // initialize serial interface on the MCU side, auto baud rate settings
-                TABS.firmware_flasher.flashingMessage(
-                    i18n.getMessage("stm32ContactingBootloader"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
-                );
+                this.flashingMessage(i18n.getMessage("stm32ContactingBootloader"), "NEUTRAL");
 
                 let sendCounter = 0;
-                GUI.interval_add(
+                addInterval(
                     "stm32_initialize_mcu",
                     () => {
                         this.send([0x7f], 1, (reply) => {
                             if (reply[0] === 0x7f || reply[0] === this.status.ACK || reply[0] === this.status.NACK) {
-                                GUI.interval_remove("stm32_initialize_mcu");
+                                removeInterval("stm32_initialize_mcu");
                                 console.log(`${this.logHead} Serial interface initialized on the MCU side`);
 
                                 // proceed to next step
                                 this.upload_procedure(2);
                             } else {
-                                TABS.firmware_flasher.flashingMessage(
-                                    i18n.getMessage("stm32ContactingBootloaderFailed"),
-                                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-                                );
+                                this.flashingMessage(i18n.getMessage("stm32ContactingBootloaderFailed"), "INVALID");
 
-                                GUI.interval_remove("stm32_initialize_mcu");
+                                removeInterval("stm32_initialize_mcu");
 
                                 // disconnect
                                 this.upload_procedure(99);
@@ -752,13 +755,10 @@ class STM32Protocol {
                             // stop retrying, its too late to get any response from MCU
                             console.log(`${this.logHead} No response from bootloader, disconnecting`);
 
-                            TABS.firmware_flasher.flashingMessage(
-                                i18n.getMessage("stm32ResponseBootloaderFailed"),
-                                TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-                            );
+                            this.flashingMessage(i18n.getMessage("stm32ResponseBootloaderFailed"), "INVALID");
 
-                            GUI.interval_remove("stm32_initialize_mcu");
-                            GUI.interval_remove("STM32_timeout");
+                            removeInterval("stm32_initialize_mcu");
+                            removeInterval("STM32_timeout");
 
                             // exit
                             this.upload_procedure(99);
@@ -816,10 +816,7 @@ class STM32Protocol {
                 if (this.useExtendedErase) {
                     if (this.mspOptions?.erase_chip) {
                         console.log(`${this.logHead} Executing global chip erase (via extended erase)`);
-                        TABS.firmware_flasher.flashingMessage(
-                            i18n.getMessage("stm32GlobalEraseExtended"),
-                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ERASING,
-                        );
+                        this.flashingMessage(i18n.getMessage("stm32GlobalEraseExtended"), "ERASING");
 
                         this.send([this.command.extended_erase, 0xbb], 1, (reply) => {
                             if (this.verify_response(this.status.ACK, reply)) {
@@ -833,10 +830,7 @@ class STM32Protocol {
                         });
                     } else {
                         console.log(`${this.logHead} Executing local erase (via extended erase)`);
-                        TABS.firmware_flasher.flashingMessage(
-                            i18n.getMessage("stm32LocalEraseExtended"),
-                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ERASING,
-                        );
+                        this.flashingMessage(i18n.getMessage("stm32LocalEraseExtended"), "ERASING");
 
                         this.send([this.command.extended_erase, 0xbb], 1, (reply) => {
                             if (this.verify_response(this.status.ACK, reply)) {
@@ -887,10 +881,7 @@ class STM32Protocol {
 
                 if (this.mspOptions?.erase_chip) {
                     console.log(`${this.logHead} Executing global chip erase`);
-                    TABS.firmware_flasher.flashingMessage(
-                        i18n.getMessage("stm32GlobalErase"),
-                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
-                    );
+                    this.flashingMessage(i18n.getMessage("stm32GlobalErase"), "NEUTRAL");
 
                     this.send([this.command.erase, 0xbc], 1, (reply) => {
                         if (this.verify_response(this.status.ACK, reply)) {
@@ -905,10 +896,7 @@ class STM32Protocol {
                     });
                 } else {
                     console.log(`${this.logHead} Executing local erase`);
-                    TABS.firmware_flasher.flashingMessage(
-                        i18n.getMessage("stm32LocalErase"),
-                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
-                    );
+                    this.flashingMessage(i18n.getMessage("stm32LocalErase"), "NEUTRAL");
 
                     this.send([this.command.erase, 0xbc], 1, (reply) => {
                         if (this.verify_response(this.status.ACK, reply)) {
@@ -944,10 +932,7 @@ class STM32Protocol {
             case 5: {
                 // upload
                 console.log(`${this.logHead} Writing data ...`);
-                TABS.firmware_flasher.flashingMessage(
-                    i18n.getMessage("stm32Flashing"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.FLASHING,
-                );
+                this.flashingMessage(i18n.getMessage("stm32Flashing"), "FLASHING");
 
                 const blocks = this.hex!.data.length - 1;
                 let flashing_block = 0,
@@ -1005,7 +990,7 @@ class STM32Protocol {
                                             });
 
                                             // update progress bar
-                                            TABS.firmware_flasher.flashProgress(
+                                            this.flashProgress(
                                                 Math.round((bytes_flashed_total / (this.hex!.bytes_total * 2)) * 100),
                                             );
                                         }
@@ -1038,10 +1023,7 @@ class STM32Protocol {
             case 6: {
                 // verify
                 console.log(`${this.logHead} Verifying data ...`);
-                TABS.firmware_flasher.flashingMessage(
-                    i18n.getMessage("stm32Verifying"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VERIFYING,
-                );
+                this.flashingMessage(i18n.getMessage("stm32Verifying"), "VERIFYING");
 
                 const blocks = this.hex!.data.length - 1;
                 let readingBlock = 0;
@@ -1056,7 +1038,7 @@ class STM32Protocol {
 
                 // update progress bar
                 const updateProgress = () =>
-                    TABS.firmware_flasher.flashProgress(
+                    this.flashProgress(
                         Math.round(((this.hex!.bytes_total + bytesVerifiedTotal) / (this.hex!.bytes_total * 2)) * 100),
                     );
 
@@ -1122,11 +1104,11 @@ class STM32Protocol {
             }
             case 99: {
                 // disconnect
-                GUI.interval_remove("STM32_timeout"); // stop STM32 timeout timer (everything is finished now)
+                removeInterval("STM32_timeout"); // stop STM32 timeout timer (everything is finished now)
 
                 // close connection
                 if (serial.connectionId) {
-                    serial.disconnect(() => this.cleanup());
+                    void serial.disconnect(() => this.cleanup());
                 } else {
                     this.cleanup();
                 }
@@ -1136,10 +1118,11 @@ class STM32Protocol {
         }
     }
     cleanup(): void {
+        const connectionStore = useConnectionStore();
         PortUsage.reset();
 
         // unlocking connect button
-        GUI.connect_lock = false;
+        connectionStore.connectLock = false;
         // Flash complete — leave FLASHING so normal connect/reboot resume.
         getConnectionState().endFlashing();
 

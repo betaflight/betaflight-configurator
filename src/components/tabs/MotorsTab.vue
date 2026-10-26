@@ -74,7 +74,7 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="protocolConfigured" fullWidth>
+                            <SettingRow v-if="protocolConfigured" data-setting-search-key="featureMOTOR_STOP" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('MOTOR_STOP')"
                                     @update:model-value="toggleFeature('MOTOR_STOP', $event)"
@@ -86,7 +86,11 @@
                                     <span class="ml-2" v-html="$t('featureMOTOR_STOPTip')"></span>
                                 </template>
                             </SettingRow>
-                            <SettingRow v-if="digitalProtocolConfigured" fullWidth>
+                            <SettingRow
+                                v-if="digitalProtocolConfigured"
+                                data-setting-search-key="featureESC_SENSOR"
+                                fullWidth
+                            >
                                 <USwitch
                                     :model-value="isFeatureEnabled('ESC_SENSOR')"
                                     @update:model-value="toggleFeature('ESC_SENSOR', $event)"
@@ -228,7 +232,7 @@
                         </UiBox>
                         <!-- 3D -->
                         <UiBox :title="$t('configuration3d')" type="neutral" collapsible>
-                            <SettingRow :help="$t('feature3DTip')" fullWidth>
+                            <SettingRow data-setting-search-key="feature3D" :help="$t('feature3DTip')" fullWidth>
                                 <USwitch
                                     :model-value="isFeatureEnabled('3D')"
                                     @update:model-value="toggleFeature('3D', $event)"
@@ -340,9 +344,9 @@
                                         <span
                                             class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] whitespace-nowrap tabular-nums"
                                             :class="{
-                                                'bg-[#e24761]': axis === 'x',
-                                                'bg-[#49c747]': axis === 'y',
-                                                'bg-[#477ac7]': axis === 'z',
+                                                'bg-axis-roll': axis === 'x',
+                                                'bg-axis-pitch': axis === 'y',
+                                                'bg-axis-yaw': axis === 'z',
                                             }"
                                             >{{ rawDataDisplay[axis] }}</span
                                         >
@@ -350,7 +354,7 @@
                                     <div class="flex justify-between py-0.5">
                                         <span>RMS:</span>
                                         <span
-                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#f5a623] whitespace-nowrap tabular-nums"
+                                            class="min-w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-axis-throttle whitespace-nowrap tabular-nums"
                                             >{{ rawDataDisplay.rms }}</span
                                         >
                                     </div>
@@ -570,23 +574,20 @@ import { mixerList } from "@/js/model";
 import { getMixerImageSrc } from "@/js/utils/common";
 import EscProtocols from "@/js/utils/EscProtocols";
 import semver from "semver";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
 import * as d3 from "d3";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
-import { mspHelper } from "@/js/msp/MSPHelper";
-import { getTracking } from "@/js/Analytics";
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
 import { useMotorTesting } from "@/composables/motors/useMotorTesting";
 import { computeZeroThrottleValue, computeIdleThrottleValue } from "@/composables/motors/useMotorStopValue";
 import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguration";
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
-import { useSaving } from "@/composables/useSaving";
-import { useReboot } from "@/composables/useReboot";
+import { useMotorsData } from "@/composables/motors/useMotorsData";
+import { useMotorsSave } from "@/composables/motors/useMotorsSave";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useBuildOptions } from "@/composables/useBuildOptions";
+import { runTabLoad } from "@/composables/useTabLoad";
 import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 
 const fcStore = useFlightControllerStore();
@@ -595,11 +596,8 @@ const { hasBuildOption } = useBuildOptions();
 
 // Initialize motors state management
 const motorsState = useMotorsState();
-const { configHasChanged, resetChanges } = motorsState;
-
-// Shared save discipline: runSave owns isSaving and swallows benign MspCancelledError.
-const { isSaving, runSave } = useSaving();
-const { saveToEeprom, saveAndReboot } = useReboot();
+const { configHasChanged } = motorsState;
+const { loadMotorsData, requestRawImu } = useMotorsData();
 
 // From API 1.49 the ESC telemetry port lives on the ESC sensor parameter group rather than the
 // shared port function mask, so it is assigned beside the feature that uses it.
@@ -796,11 +794,15 @@ const appliedMotorMincommand = ref(1000);
 // Gates motor testing/reordering until the snapshot above reflects the FC, not ref defaults.
 const appliedStateReady = ref(false);
 
-const syncAppliedMotorStopState = () => {
+const snapshotAppliedMotorStopState = () => {
     appliedIs3dEnabled.value = isFeatureEnabled("3D");
     appliedMotor3dNeutral.value = fcStore.motor3dConfig.neutral;
     appliedIsDigitalProtocol.value = digitalProtocolConfigured.value;
     appliedMotorMincommand.value = fcStore.motorConfig.mincommand;
+};
+
+const syncAppliedMotorStopState = () => {
+    snapshotAppliedMotorStopState();
     appliedStateReady.value = true;
 };
 
@@ -831,6 +833,17 @@ const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTesting
 
 // Initialize data polling
 useMotorDataPolling(motorsTestingEnabled);
+
+const { saveMotors, isSaving } = useMotorsSave({
+    motorsState,
+    escSensorPortChanged,
+    confirmPortConflicts,
+    writeEscSensorPort,
+    motorsTestingEnabled,
+    stopAllMotors,
+    zeroThrottleValue,
+    syncAppliedMotorStopState,
+});
 
 // Button states (central controller like original setContentButtons)
 const buttonStates = computed(() => ({
@@ -875,24 +888,21 @@ watch(
 );
 
 onMounted(async () => {
-    // Request MSP data
-    await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
-    await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-    await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
-    await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
-    if (fcStore.motorConfig.use_dshot_telemetry || fcStore.motorConfig.use_esc_sensor) {
-        await MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY);
+    const loaded = await runTabLoad(
+        async () => {
+            // Request MSP data. fast_pwm_protocol (ESC protocol) is populated by MSP_ADVANCED_CONFIG, not
+            // MSP_PID_ADVANCED — snapshot only after that reply, or the snapshot reads the analog-protocol default.
+            await loadMotorsData(snapshotAppliedMotorStopState);
+            await loadEscSensorPort();
+            // Only now, so a load that fails part-way leaves motor testing disabled
+            appliedStateReady.value = true;
+            return true;
+        },
+        (error) => console.error("Failed to load motors data:", error),
+    );
+    if (!loaded) {
+        return;
     }
-    await MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG);
-    await MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING);
-    // fast_pwm_protocol (ESC protocol) is populated by MSP_ADVANCED_CONFIG, not MSP_PID_ADVANCED —
-    // sync only after this resolves, or the snapshot reads the analog-protocol default.
-    await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-    syncAppliedMotorStopState();
-    await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
-    await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
-
-    await loadEscSensorPort();
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();
@@ -1291,11 +1301,11 @@ const setupGraph = () => {
 
     if (sensorType.value === "gyro") {
         imuPollingIntervalId = setInterval(() => {
-            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, updateGyroGraph);
+            requestRawImu(updateGyroGraph);
         }, sensorRate.value);
     } else {
         imuPollingIntervalId = setInterval(() => {
-            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, updateAccelGraph);
+            requestRawImu(updateAccelGraph);
         }, sensorRate.value);
     }
 };
@@ -1493,70 +1503,7 @@ const openEscDshotDirectionDialog = () => {
 };
 
 // Action Toolbar Buttons
-const handleSave = (reboot = true) => {
-    // Don't save if no changes
-    if (!configHasChanged.value && !escSensorPortChanged.value) {
-        return;
-    }
-
-    return runSave(async () => {
-        // Warn before a pick that would take a port from another feature; a cancel here leaves the
-        // save (and the running motor test state) untouched, before anything has been written.
-        if (!(await confirmPortConflicts())) {
-            return;
-        }
-
-        // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
-        // This prevents motors from spinning after reboot due to DShot beacon commands
-        if (motorsTestingEnabled.value) {
-            motorsTestingEnabled.value = false;
-            // Give a small delay for motor testing disable to complete
-            await new Promise((resolve) => setTimeout(resolve, 50));
-        }
-
-        // Explicitly stop all motors to ensure no spinning after reboot
-        stopAllMotors(zeroThrottleValue.value);
-        // Give time for motor stop command to be processed
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
-        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-
-        // Send all motor configuration changes in sequence
-        await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-
-        // Between the parameter group writes and the persist that serialises them, so a
-        // refused port throws before anything reaches EEPROM.
-        await writeEscSensorPort();
-
-        // Persist to EEPROM, rebooting when requested.
-        if (reboot) {
-            await saveAndReboot();
-        } else {
-            await saveToEeprom();
-        }
-
-        // Only after a successful persist: refresh the applied-state snapshot, record analytics,
-        // and refresh the dirty baseline.
-        syncAppliedMotorStopState();
-        if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
-            const tracking = getTracking();
-            tracking?.sendSaveAndChangeEvents(
-                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-                motorsState.analyticsChanges.value,
-                "motors",
-            );
-        }
-
-        // Reset state (clears changes and updates defaults)
-        resetChanges();
-    });
-};
+const handleSave = (reboot = true) => saveMotors(reboot);
 
 const stopMotors = () => {
     // Stop motor testing (composable handles all cleanup)
@@ -1565,7 +1512,7 @@ const stopMotors = () => {
 
 // Feature Logic
 
-// `fcStore.features` is FC.FEATURE_CONFIG; its `features` is the Features helper, null until connect.
+// `fcStore.features` is the feature-config group; its `features` is the Features helper, null until connect.
 const toggleFeature = (featureName: string, checked: boolean) => {
     const featuresHelper = fcStore.features.features;
     if (checked) {
@@ -1810,6 +1757,12 @@ onUnmounted(() => {
 
 <!-- D3/SVG graph styles — cannot be expressed as Tailwind (generated by D3 at runtime) -->
 <style>
+/* D3 positions every tick label in absolute coordinates and anchors the y labels with
+   text-anchor: end. Under an RTL locale the inherited direction flips that anchor, so the
+   labels spill into the plot area. The graph is numeric, so keep it LTR in every locale. */
+.tab-motors svg#graph {
+    direction: ltr;
+}
 .tab-motors .grid .tick {
     stroke: silver;
     stroke-width: 1px;

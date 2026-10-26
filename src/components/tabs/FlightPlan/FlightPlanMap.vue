@@ -30,6 +30,8 @@ import { Style, Stroke, Circle, Fill, Text } from "ol/style";
 import { DragPan } from "ol/interaction";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { useMapViewport } from "@/composables/useMapViewport";
+import { ipCoordinates } from "@/js/utils/ipGeolocation";
+import { getCssVar } from "@/js/utils/cssVar";
 
 const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
     useFlightPlan();
@@ -60,6 +62,10 @@ const isLoading = ref(true);
 
 // Helper function to initialize map with given coordinates
 const initializeMapAtLocation = (latitude: number, longitude: number, logMessage: string) => {
+    // Location lookups resolve asynchronously; the tab may have been left by then.
+    if (!mapRef.value) {
+        return;
+    }
     mapInstance.value = initMap({
         target: mapRef.value,
         defaultZoom: 15, // Zoom level 15 shows approximately 1 nautical mile (1852m) in view
@@ -72,29 +78,25 @@ const initializeMapAtLocation = (latitude: number, longitude: number, logMessage
     setupMapLayers();
 };
 
-// Fetch location from IP-based geolocation API
-const fetchIPLocation = async () => {
-    try {
-        const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.latitude && data.longitude) {
-            return {
-                latitude: Number(data.latitude),
-                longitude: Number(data.longitude),
-            };
-        }
-        throw new Error("Invalid response from IP geolocation API");
-    } catch (error) {
-        console.warn("IP geolocation failed:", error instanceof Error ? error.message : error);
-        return null;
+// Final fallback coordinates (Sydney Harbour Bridge, Australia)
+const FALLBACK_LAT = -33.8523;
+const FALLBACK_LON = 151.2108;
+
+// Browser location was unavailable: try the consent-gated IP lookup, then the fixed fallback.
+const initializeWithoutBrowserLocation = async () => {
+    if (!mapRef.value) {
+        return;
+    }
+    const ipLocation = await ipCoordinates(true);
+    if (ipLocation) {
+        initializeMapAtLocation(ipLocation.lat, ipLocation.lon, "Map initialized at IP-based location");
+    } else {
+        initializeMapAtLocation(FALLBACK_LAT, FALLBACK_LON, "Map initialized at final fallback location");
     }
 };
 
 // Initialize map and layers
-onMounted(async () => {
+onMounted(() => {
     if (!mapRef.value) {
         console.error("Map ref not available");
         return;
@@ -104,59 +106,28 @@ onMounted(async () => {
     // observer only needs the container.
     observeContainer();
 
-    // Final fallback coordinates (Sydney Harbour Bridge, Australia)
-    const finalFallbackLat = -33.8523;
-    const finalFallbackLon = 151.2108;
-
-    // Try to get user's geolocation via browser API
-    if (navigator.geolocation) {
-        // prettier-ignore
-        navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for map centering
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                console.log("Browser geolocation obtained:", latitude, longitude);
-                initializeMapAtLocation(latitude, longitude, "Map initialized at browser location");
-            },
-            async (error) => {
-                console.warn("Browser geolocation failed:", error.message);
-
-                // Fallback to IP-based geolocation
-                const ipLocation = await fetchIPLocation();
-                if (ipLocation) {
-                    console.log("IP geolocation obtained:", ipLocation.latitude, ipLocation.longitude);
-                    initializeMapAtLocation(
-                        ipLocation.latitude,
-                        ipLocation.longitude,
-                        "Map initialized at IP-based location",
-                    );
-                } else {
-                    console.warn("IP geolocation failed, using final fallback");
-                    initializeMapAtLocation(
-                        finalFallbackLat,
-                        finalFallbackLon,
-                        "Map initialized at final fallback location",
-                    );
-                }
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0,
-            },
-        );
-    } else {
+    if (!navigator.geolocation) {
         console.warn("Browser geolocation not supported");
-
-        // Fallback to IP-based geolocation
-        const ipLocation = await fetchIPLocation();
-        if (ipLocation) {
-            console.log("IP geolocation obtained:", ipLocation.latitude, ipLocation.longitude);
-            initializeMapAtLocation(ipLocation.latitude, ipLocation.longitude, "Map initialized at IP-based location");
-        } else {
-            console.warn("IP geolocation failed, using final fallback");
-            initializeMapAtLocation(finalFallbackLat, finalFallbackLon, "Map initialized at final fallback location");
-        }
+        void initializeWithoutBrowserLocation();
+        return;
     }
+
+    // prettier-ignore
+    navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for map centering
+        (position) => {
+            const { latitude, longitude } = position.coords;
+            initializeMapAtLocation(latitude, longitude, "Map initialized at browser location");
+        },
+        (error) => {
+            console.warn("Browser geolocation failed:", error.message);
+            void initializeWithoutBrowserLocation();
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+        },
+    );
 });
 
 // Setup map layers and event handlers
@@ -174,7 +145,7 @@ const setupMapLayers = () => {
         source: new SourceVector(),
         style: new Style({
             stroke: new Stroke({
-                color: "#FF00FF", // Magenta
+                color: getCssVar("--map-route"),
                 width: 3,
             }),
         }),
@@ -395,18 +366,18 @@ const updateMapFeatures = (autoFit = true) => {
         const isBeingDragged = draggingWaypointUid.value === wp.uid;
 
         // Determine color: green for dragging, orange for selected, blue for normal
-        let fillColor = "#0080FF"; // Blue for normal
+        let fillColor = getCssVar("--map-waypoint");
         let radius = 10;
         let strokeWidth = 2;
         let fontSize = "bold 12px sans-serif";
 
         if (isBeingDragged) {
-            fillColor = "#00FF00"; // Green for dragging
+            fillColor = getCssVar("--map-waypoint-dragging");
             radius = 16;
             strokeWidth = 3;
             fontSize = "bold 14px sans-serif";
         } else if (isSelected) {
-            fillColor = "#FF8C00"; // Orange for selected
+            fillColor = getCssVar("--map-waypoint-selected");
             radius = 14;
             strokeWidth = 3;
             fontSize = "bold 13px sans-serif";
@@ -421,14 +392,14 @@ const updateMapFeatures = (autoFit = true) => {
                         color: fillColor,
                     }),
                     stroke: new Stroke({
-                        color: "#FFFFFF",
+                        color: getCssVar("--map-waypoint-text"),
                         width: strokeWidth,
                     }),
                 }),
                 text: new Text({
                     text: String(wp.order + 1),
                     fill: new Fill({
-                        color: "#FFFFFF",
+                        color: getCssVar("--map-waypoint-text"),
                     }),
                     font: fontSize,
                 }),
@@ -521,69 +492,69 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .flight-plan-map {
     display: flex;
     flex-direction: column;
     height: 100%;
-}
 
-.flight-plan-map :deep(> div:last-child) {
-    flex: 1;
-    min-height: 0;
-}
+    & > div:last-child {
+        flex: 1;
+        min-height: 0;
+    }
 
-.map-container {
-    flex: 1;
-    min-height: 480px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid var(--surface-500);
-    background: var(--surface-100);
-    position: relative;
-}
-
-.map {
-    width: 100%;
-    height: 100%;
-}
-
-.map-loading {
-    position: absolute;
-    top: 0;
-    inset-inline-start: 0;
-    inset-inline-end: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface-100);
-    z-index: 1000;
-}
-
-.loading-message {
-    font-size: 1rem;
-    color: var(--text);
-    font-weight: 500;
-}
-
-.map-instructions {
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    background: var(--surface-100);
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: var(--surface-700);
-    text-align: center;
-}
-
-.map-instructions p {
-    margin: 0;
-}
-
-@media (max-width: 1055px) {
     .map-container {
-        min-height: 320px;
+        flex: 1;
+        min-height: 480px;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid var(--surface-500);
+        background: var(--surface-100);
+        position: relative;
+    }
+
+    .map {
+        width: 100%;
+        height: 100%;
+    }
+
+    .map-loading {
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface-100);
+        z-index: 1000;
+    }
+
+    .loading-message {
+        font-size: 1rem;
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .map-instructions {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: var(--surface-100);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        color: var(--surface-700);
+        text-align: center;
+    }
+
+    .map-instructions p {
+        margin: 0;
+    }
+
+    @media (max-width: 1055px) {
+        .map-container {
+            min-height: 320px;
+        }
     }
 }
 </style>

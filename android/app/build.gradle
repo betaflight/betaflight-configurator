@@ -13,10 +13,9 @@ android {
     namespace = "betaflight.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.betaflight.app.capacitor"
+        applicationId "com.betaflight.android"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        // Mirrors the Tauri Android scheme in src-tauri/gen/android/app/build.gradle.kts:
         // <calendar year>000000 + CI build number, floored at 2026006000, so every
         // build outranks the last. Valid until 2099 (< 2.1e9 cap).
         versionCode Math.max(Year.now().value * 1000000, 2026006000) + buildNumber

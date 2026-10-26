@@ -1,15 +1,13 @@
 //! Native BLE (GATT central) commands for the configurator.
 //!
-//! Used wherever the webview exposes no usable Web Bluetooth: iOS and macOS
-//! (WKWebView) and Android (System WebView). The JS `TauriBle` protocol drives
-//! these commands and receives notification bytes via the `ble-data` event, with
-//! `ble-disconnected` when the link drops.
+//! Used on macOS, whose webview (WKWebView) exposes no Web Bluetooth. The JS
+//! `TauriBle` protocol drives these commands and receives notification bytes via
+//! the `ble-data` event, with `ble-disconnected` when the link drops.
 //!
-//! Backed by `tauri-plugin-blec`, which speaks to a Kotlin GATT client on Android
-//! and to btleplug/CoreBluetooth on Apple. The plugin owns the connection state;
-//! this module keeps only the write target chosen at connect time, plus a
-//! generation counter so a superseded attempt's notifications can never be
-//! emitted against a newer connection.
+//! Backed by `tauri-plugin-blec`, which speaks to CoreBluetooth through btleplug.
+//! The plugin owns the connection state; this module keeps only the write target
+//! chosen at connect time, plus a generation counter so a superseded attempt's
+//! notifications can never be emitted against a newer connection.
 
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
@@ -74,10 +72,9 @@ pub struct BleState {
     transition: TokioMutex<()>,
 }
 
-/// blec substitutes an identifier for the advertised name when a peripheral has
-/// none: the empty string on Android, and the CoreBluetooth UUID (i.e. the
-/// address) on Apple. Such a peripheral is almost never a user-selectable FC
-/// bridge and only clutters the picker.
+/// blec substitutes the CoreBluetooth UUID (i.e. the address) for the advertised
+/// name when a peripheral has none. Such a peripheral is almost never a
+/// user-selectable FC bridge and only clutters the picker.
 fn is_nameless(device: &BleDevice) -> bool {
     device.name.is_empty() || device.name == device.address
 }
@@ -87,15 +84,6 @@ fn is_nameless(device: &BleDevice) -> bool {
 /// last message is the full result. The receiver must stay alive for the whole
 /// window: the scan task panics if it can no longer send.
 async fn scan_devices() -> Result<Vec<BleDevice>, String> {
-    // blec never asks for the Android runtime permissions on its own, and its scan
-    // hard-rejects without them. A no-op on every other platform.
-    //
-    // This covers the Bluetooth permissions only. Below API 31 Android also withholds
-    // scan results until location is granted, and this wrapper cannot ask for it — it
-    // does not forward the flag the plugin gates that on. TauriBle requests it directly
-    // on the versions that need it, before calling this.
-    tauri_plugin_blec::check_permissions(true).map_err(|e| e.to_string())?;
-
     let handler = get_handler().map_err(|e| e.to_string())?;
     let (tx, mut rx) = tokio::sync::mpsc::channel(8);
     handler

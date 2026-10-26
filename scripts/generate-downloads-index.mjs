@@ -222,16 +222,11 @@ function renderWebAppSection(masterUrl, releaseUrl) {
 
 function renderNightlySection(nightly) {
     const desktop = nightly?.desktop || {};
-    const platforms = [
-        { key: "windows", title: "Windows" },
-        { key: "macos", title: "macOS" },
-        { key: "linux", title: "Linux" },
-    ];
-    const hasDesktop = platforms.some((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0);
-    const android = [nightly?.android, nightly?.tauriAndroid].filter(Boolean);
-    const hasAndroid = android.length > 0;
+    const entries = [...Object.values(desktop).flat(), nightly?.android]
+        .filter(Boolean)
+        .map((entry) => ({ ...entry, filename: filenameFrom(entry) }));
 
-    if (!nightly || (!hasDesktop && !hasAndroid)) {
+    if (!entries.length) {
         return `
             <section>
                 <h2>Nightly build</h2>
@@ -239,12 +234,9 @@ function renderNightlySection(nightly) {
             </section>`;
     }
 
-    const platformBlocks = platforms
-        .filter((p) => Array.isArray(desktop[p.key]) && desktop[p.key].length > 0)
-        .map((p) => `<h3>${escapeHtml(p.title)}</h3>${fileList(desktop[p.key])}`)
+    const blocks = groupAssetsByPlatform(entries)
+        .map((group) => `<h3>${escapeHtml(group.title)}</h3>${fileList(group.entries)}`)
         .join("");
-
-    const androidBlock = hasAndroid ? `<h3>Android</h3>${fileList(android)}` : "";
 
     const commitShort = nightly.commit ? nightly.commit.slice(0, 8) : "";
     const metaParts = [];
@@ -265,8 +257,7 @@ function renderNightlySection(nightly) {
             <section>
                 <h2>Nightly build</h2>
                 ${meta}
-                ${platformBlocks}
-                ${androidBlock}
+                ${blocks}
             </section>`;
 }
 

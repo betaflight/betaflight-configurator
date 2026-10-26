@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import RateCurve from "../../src/js/RateCurve";
-import FC from "../../src/js/fc";
+import { RATES_TYPE, useFlightControllerStore } from "../../src/stores/fc";
 import type { RcDeadbandConfig, RcTuning } from "../../src/stores/fc.types";
 import type Features from "../../src/js/Features";
 
@@ -18,6 +19,13 @@ const featuresAllDisabled = { isEnabled: () => false } as unknown as Features;
 function makeRateCurve() {
     return new RateCurve(false);
 }
+
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
+beforeEach(() => {
+    setActivePinia(createPinia());
+    fcStore = useFlightControllerStore();
+});
 
 describe("RateCurve.constrain", () => {
     const rc = makeRateCurve();
@@ -370,7 +378,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     const rc = makeRateCurve();
 
     it("returns undefined when rate, rcRate or rcExpo is undefined", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(2000, {
                 rate: undefined,
@@ -404,7 +412,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getBetaflightRates by default and applies the limit clamp", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(2000, {
                 rate: 0.7,
@@ -428,7 +436,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getRaceflightRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.RACEFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.RACEFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(2000, {
                 rate: 40,
@@ -442,7 +450,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getKISSRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.KISS });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.KISS });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1750, {
                 rate: 0.3,
@@ -456,7 +464,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getActualRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.ACTUAL });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.ACTUAL });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1750, {
                 rate: 400,
@@ -470,7 +478,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("dispatches to getQuickRates and ignores the limit parameter entirely", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.QUICKRATES });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.QUICKRATES });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1750, {
                 rate: 100,
@@ -484,7 +492,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
     });
 
     it("subtracts the deadband before normalising rcCommandf", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         expect(
             rc.rcCommandRawToDegreesPerSecond(1520, {
                 rate: 0.7,
@@ -510,7 +518,7 @@ describe("RateCurve.rcCommandRawToDegreesPerSecond", () => {
 
 describe("RateCurve.getMaxAngularVel / setMaxAngularVel", () => {
     it("computes the degrees/sec at full deflection for the non-legacy curve", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         expect(
             rc.getMaxAngularVel({ rate: 0.7, rcRate: 1.0, rcExpo: 0, superExpoActive: true, deadband: 0, limit: 1000 }),
@@ -518,7 +526,7 @@ describe("RateCurve.getMaxAngularVel / setMaxAngularVel", () => {
     });
 
     it("returns undefined for the legacy curve (no maxAngularVel axis is drawn)", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         const legacyRc = new RateCurve(true);
         expect(
             legacyRc.getMaxAngularVel({
@@ -569,13 +577,13 @@ describe("RateCurve.getCurrentRates", () => {
     }
 
     function setupFc(ratesType: number) {
-        FC.RC_TUNING = baseRcTuning(ratesType);
-        FC.FEATURE_CONFIG = { features: featuresAllDisabled };
-        FC.RC_DEADBAND_CONFIG = rcDeadband({ deadband: 5, yaw_deadband: 3 });
+        fcStore.rcTuning = baseRcTuning(ratesType);
+        fcStore.features = { features: featuresAllDisabled };
+        fcStore.rcDeadbandConfig = rcDeadband({ deadband: 5, yaw_deadband: 3 });
     }
 
     it("leaves rates unscaled for BETAFLIGHT", () => {
-        setupFc(FC.RATES_TYPE.BETAFLIGHT);
+        setupFc(RATES_TYPE.BETAFLIGHT);
         const rates = makeRateCurve().getCurrentRates();
         expect(rates.roll_rate).toBe(0.7);
         expect(rates.rc_rate).toBe(1.0);
@@ -583,7 +591,7 @@ describe("RateCurve.getCurrentRates", () => {
     });
 
     it("scales rates by 100 and RC_RATE/expo by 1000/100 for RACEFLIGHT", () => {
-        setupFc(FC.RATES_TYPE.RACEFLIGHT);
+        setupFc(RATES_TYPE.RACEFLIGHT);
         const rates = makeRateCurve().getCurrentRates();
         expect(rates.roll_rate).toBe(70);
         expect(rates.pitch_rate).toBe(70);
@@ -595,7 +603,7 @@ describe("RateCurve.getCurrentRates", () => {
     });
 
     it("scales rates and RC_RATE by 1000 for ACTUAL, leaving expo unscaled", () => {
-        setupFc(FC.RATES_TYPE.ACTUAL);
+        setupFc(RATES_TYPE.ACTUAL);
         const rates = makeRateCurve().getCurrentRates();
         expect(rates.roll_rate).toBe(700);
         expect(rates.rc_rate).toBe(1000);
@@ -603,7 +611,7 @@ describe("RateCurve.getCurrentRates", () => {
     });
 
     it("scales only rates (not rc_rate) by 1000 for QUICKRATES", () => {
-        setupFc(FC.RATES_TYPE.QUICKRATES);
+        setupFc(RATES_TYPE.QUICKRATES);
         const rates = makeRateCurve().getCurrentRates();
         expect(rates.roll_rate).toBe(700);
         expect(rates.pitch_rate).toBe(700);
@@ -612,15 +620,15 @@ describe("RateCurve.getCurrentRates", () => {
     });
 
     it("passes through the deadband configuration unchanged", () => {
-        setupFc(FC.RATES_TYPE.BETAFLIGHT);
+        setupFc(RATES_TYPE.BETAFLIGHT);
         const rates = makeRateCurve().getCurrentRates();
         expect(rates.deadband).toBe(5);
         expect(rates.yawDeadband).toBe(3);
     });
 
     it("always forces superexpo=true, overriding the SUPEREXPO_RATES feature flag", () => {
-        setupFc(FC.RATES_TYPE.BETAFLIGHT);
-        FC.FEATURE_CONFIG = { features: featuresAllDisabled };
+        setupFc(RATES_TYPE.BETAFLIGHT);
+        fcStore.features = { features: featuresAllDisabled };
         const rates = makeRateCurve().getCurrentRates();
         expect(rates.superexpo).toBe(true);
     });
@@ -672,7 +680,7 @@ describe("RateCurve.drawStickPosition return value", () => {
     }
 
     it("snaps to 0 when the computed rate is below 0.5 deg/s in magnitude", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400);
         const result = rc.drawStickPosition(
@@ -685,7 +693,7 @@ describe("RateCurve.drawStickPosition return value", () => {
     });
 
     it("returns the rounded degrees/sec as a string otherwise", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400);
         const result = rc.drawStickPosition(
@@ -698,7 +706,7 @@ describe("RateCurve.drawStickPosition return value", () => {
     });
 
     it("draws an aspect-compensated ellipse when the context supports it", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const height = 400;
         const context = makeContext(height, { clientWidth: 800, clientHeight: 400 });
@@ -722,7 +730,7 @@ describe("RateCurve.drawStickPosition return value", () => {
     });
 
     it("uses a round ellipse when the display aspect ratio is unavailable", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400); // no clientWidth/clientHeight
         rc.drawStickPosition(
@@ -738,7 +746,7 @@ describe("RateCurve.drawStickPosition return value", () => {
     });
 
     it("falls back to arc when the context has no ellipse method", () => {
-        FC.RC_TUNING = rcTuning({ rates_type: FC.RATES_TYPE.BETAFLIGHT });
+        fcStore.rcTuning = rcTuning({ rates_type: RATES_TYPE.BETAFLIGHT });
         const rc = makeRateCurve();
         const context = makeContext(400, { withEllipse: false, clientWidth: 800, clientHeight: 400 });
         rc.drawStickPosition(

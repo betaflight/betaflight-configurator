@@ -6,9 +6,7 @@ const { timeoutAdd, timeoutRemove } = vi.hoisted(() => ({
     timeoutRemove: vi.fn(),
 }));
 
-vi.mock("../../src/js/gui", () => ({
-    default: { timeout_add: timeoutAdd, timeout_remove: timeoutRemove },
-}));
+vi.mock("../../src/js/timers", () => ({ addTimeout: timeoutAdd, removeTimeout: timeoutRemove }));
 
 import { useTimeout, type TimeoutRegistry } from "../../src/composables/useTimeout";
 
@@ -24,7 +22,7 @@ describe("useTimeout", () => {
         timeoutRemove.mockClear();
     });
 
-    it("registers the timeout with GUI", () => {
+    it("registers the timeout with the timer registry", () => {
         const { scope, addTimeout } = inScope();
         const code = () => {};
 

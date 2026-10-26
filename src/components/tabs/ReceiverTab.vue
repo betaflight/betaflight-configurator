@@ -2,7 +2,7 @@
     <BaseTab tab-name="receiver">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabReceiver')"></div>
-            <WikiButton docUrl="Receiver" />
+            <WikiButton docUrl="receiver" />
             <UiBox highlight class="mb-3">
                 <p v-html="$t('receiverHelp')"></p>
             </UiBox>
@@ -196,7 +196,7 @@
 
                         <!-- Channel Map -->
                         <UiBox :title="$t('receiverChannelMap')" type="neutral" collapsible class="col-span-1">
-                            <SettingRow>
+                            <SettingRow data-setting-search-key="receiverChannelMap">
                                 <UFieldGroup>
                                     <UInput
                                         v-model="channelMapString"
@@ -623,15 +623,13 @@ import { useDirtyState } from "@/composables/useDirtyState";
 import { useReboot } from "@/composables/useReboot";
 import { useSaving, withSaveFailureMessage } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
-import { useInterval } from "../../composables/useInterval";
+import { useReceiverData } from "@/composables/receiver/useReceiverData";
+import { useReceiverSave } from "@/composables/receiver/useReceiverSave";
+import { useReceiverCommands } from "@/composables/receiver/useReceiverCommands";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
 import { entriesFromModeRanges } from "@/js/utils/modeRanges";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
-import { mspHelper } from "@/js/msp/MSPHelper";
-import GUI from "@/js/gui";
 import Model from "@/js/model";
 import RateCurve, { axisRateCurveParams, type CurrentRates } from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
@@ -639,8 +637,6 @@ import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
-import DarkTheme from "@/js/DarkTheme";
-import windowWatcherUtil from "@/js/utils/window_watchers";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { MD5 } from "crypto-es";
 import semver from "semver";
@@ -652,12 +648,16 @@ import { PORT_NONE } from "@/composables/ports/portNames";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
+import { useNavigationStore } from "@/stores/navigation";
 
 const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
+const navigationStore = useNavigationStore();
 const { saveAndReboot, saveToEeprom } = useReboot();
-const { addInterval, removeInterval } = useInterval();
+const { loadReceiverData, startModelPreviewPolling, startRcPolling, restartRcPolling } = useReceiverData();
+const { sendReceiverSettings, sendFeatureConfig } = useReceiverSave();
+const { bindReceiver, sendRawRx } = useReceiverCommands();
 
 // Template refs
 const modelPreviewContainer = ref<HTMLElement | null>(null);
@@ -1194,7 +1194,7 @@ function resetRefreshRate() {
 }
 
 function sendBind() {
-    MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
+    bindReceiver();
     gui_log(t("receiverButtonBindMessage"));
 }
 
@@ -1206,8 +1206,8 @@ function openSticksWindow() {
     const windowHeight = 600;
 
     const rxFunction = (channels: number[]) => {
-        if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
-            mspHelper.setRawRx(channels);
+        if (connectionStore.connectionValid && navigationStore.activeTab !== "cli") {
+            sendRawRx(channels);
             return true;
         }
         return false;
@@ -1229,9 +1229,6 @@ function openSticksWindow() {
         // initialised i18n instance — hand it over the same way as setRawRx above. This used to
         // reach the popup as a `window.i18n` global, dropped in 58e84750 during the ESM cleanup.
         createdWindow.i18n = i18n;
-        DarkTheme.isDarkThemeEnabled((isEnabled: boolean) => {
-            windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
-        });
     }
 }
 
@@ -1262,17 +1259,7 @@ function findElrsBindingPhrase(elrsUid: number[] | undefined) {
 async function loadConfig() {
     await runTabLoad(
         async () => {
-            await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-            await MSP.promise(MSPCodes.MSP_RC);
-            await MSP.promise(MSPCodes.MSP_MODE_RANGES);
-            await MSP.promise(MSPCodes.MSP_MODE_RANGES_EXTRA);
-            await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-            await MSP.promise(MSPCodes.MSP_RC_TUNING);
-            await MSP.promise(MSPCodes.MSP_RX_MAP);
-            await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-            await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-            await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
-            await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+            await loadReceiverData();
             await loadRxPort();
             await loadRcdevicePort();
             for (const port of telemetryPorts) {
@@ -1351,10 +1338,7 @@ const saveConfig = (withReboot = false) =>
         }
 
         // Save sequence
-        await MSP.promise(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP));
-        await MSP.promise(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND));
-        await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
+        await sendReceiverSettings();
 
         // rx_uart shares the RX parameter group with everything MSP_SET_RX_CONFIG just wrote,
         // and the persist below serialises that group, so this has to sit between the two.
@@ -1371,7 +1355,7 @@ const saveConfig = (withReboot = false) =>
 
         // Unconditional: the telemetry feature switch lives on this tab, and a mask change has
         // to reach the FC whether or not the save also reboots.
-        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+        await sendFeatureConfig();
 
         if (withReboot) {
             await saveAndReboot();
@@ -1494,16 +1478,10 @@ function updateRxPlot() {
     samples++;
 }
 
-// RC Data polling
-function getRcData() {
-    MSP.send_message(MSPCodes.MSP_RC, false, false, updateRxPlot);
-}
-
 // Watch refresh rate changes
 watch(refreshRate, (newRate) => {
     setConfig({ rx_refresh_rate: newRate });
-    removeInterval("receiver_pull");
-    addInterval("receiver_pull", getRcData, newRate, true);
+    restartRcPolling(newRate, updateRxPlot);
 });
 
 // Lifecycle
@@ -1519,20 +1497,11 @@ onMounted(async () => {
     renderModel();
 
     // Start model preview polling
-    addInterval(
-        "receiver_pull_for_model_preview",
-        () => {
-            MSP.send_message(MSPCodes.MSP_RC, false, false);
-        },
-        33,
-        false,
-    );
+    startModelPreviewPolling();
 
     // Setup and start RC plot
     setupRxPlot();
-    addInterval("receiver_pull", getRcData, refreshRate.value, true);
-
-    GUI.content_ready();
+    startRcPolling(refreshRate.value, updateRxPlot);
 });
 
 onUnmounted(() => {
@@ -1549,274 +1518,282 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="less" scoped>
-.content_wrapper {
-    padding-bottom: 60px;
-}
+<style lang="less">
+.tab-receiver {
+    .content_wrapper {
+        padding-bottom: 60px;
+    }
 
-.bars {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    font-weight: bold;
-    ul {
+    .bars {
         display: flex;
+        flex-direction: column;
         gap: 0.5rem;
-        &:nth-of-type(1) {
-            :deep([data-slot="indicator"]) {
-                background-color: #e24761;
+        font-weight: bold;
+        ul {
+            display: flex;
+            gap: 0.5rem;
+            &:nth-of-type(1) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-1);
+                }
+            }
+            &:nth-of-type(2) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-2);
+                }
+            }
+            &:nth-of-type(3) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-3);
+                }
+            }
+            &:nth-of-type(4) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-4);
+                }
+            }
+            &:nth-of-type(5) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-5);
+                }
+            }
+            &:nth-of-type(6) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-6);
+                }
+            }
+            &:nth-of-type(7) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-7);
+                }
+            }
+            &:nth-of-type(8) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-8);
+                }
+            }
+            &:nth-of-type(9) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-9);
+                }
+            }
+            &:nth-of-type(10) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-10);
+                }
+            }
+            &:nth-of-type(11) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-11);
+                }
+            }
+            &:nth-of-type(12) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-12);
+                }
+            }
+            &:nth-of-type(13) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-13);
+                }
+            }
+            &:nth-of-type(14) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-14);
+                }
+            }
+            &:nth-of-type(15) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-15);
+                }
+            }
+            &:nth-of-type(16) {
+                [data-slot="indicator"] {
+                    background-color: var(--color-channel-16);
+                }
             }
         }
-        &:nth-of-type(2) {
-            :deep([data-slot="indicator"]) {
-                background-color: #49c747;
+        /* Same specificity as the per-channel colours above, so these win by coming after them. */
+        ul.aux-unused {
+            [data-slot="indicator"] {
+                background-color: var(--color-channel-aux-unused);
             }
         }
-        &:nth-of-type(3) {
-            :deep([data-slot="indicator"]) {
-                background-color: #477ac7;
-            }
-        }
-        &:nth-of-type(4) {
-            :deep([data-slot="indicator"]) {
-                background-color: #f5a623;
-            }
-        }
-        &:nth-of-type(5) {
-            :deep([data-slot="indicator"]) {
-                background-color: #159588;
-            }
-        }
-        &:nth-of-type(6) {
-            :deep([data-slot="indicator"]) {
-                background-color: #50ae55;
-            }
-        }
-        &:nth-of-type(7) {
-            :deep([data-slot="indicator"]) {
-                background-color: #cdda49;
-            }
-        }
-        &:nth-of-type(8) {
-            :deep([data-slot="indicator"]) {
-                background-color: #fdc02f;
-            }
-        }
-        &:nth-of-type(9) {
-            :deep([data-slot="indicator"]) {
-                background-color: #fc5830;
-            }
-        }
-        &:nth-of-type(10) {
-            :deep([data-slot="indicator"]) {
-                background-color: #785549;
-            }
-        }
-        &:nth-of-type(11) {
-            :deep([data-slot="indicator"]) {
-                background-color: #9e9e9e;
-            }
-        }
-        &:nth-of-type(12) {
-            :deep([data-slot="indicator"]) {
-                background-color: #617d8a;
-            }
-        }
-        &:nth-of-type(13) {
-            :deep([data-slot="indicator"]) {
-                background-color: #cf267d;
-            }
-        }
-        &:nth-of-type(14) {
-            :deep([data-slot="indicator"]) {
-                background-color: #7a1464;
-            }
-        }
-        &:nth-of-type(15) {
-            :deep([data-slot="indicator"]) {
-                background-color: #3a7a14;
-            }
-        }
-        &:nth-of-type(16) {
-            :deep([data-slot="indicator"]) {
-                background-color: #14407a;
-            }
-        }
-    }
-    ul.aux-unused {
-        :deep([data-slot="indicator"]) {
-            background-color: #6b7280 !important;
-        }
-    }
 
-    ul.aux-used {
-        :deep([data-slot="indicator"]) {
-            background-color: #0891b2 !important;
+        ul.aux-used {
+            [data-slot="indicator"] {
+                background-color: var(--color-channel-aux-used);
+            }
         }
-    }
 
-    ul.aux-active {
-        :deep([data-slot="indicator"]) {
-            background-color: #22d3ee !important;
-            box-shadow: 0 0 7px rgba(34, 211, 238, 0.65);
+        ul.aux-active {
+            [data-slot="indicator"] {
+                background-color: var(--color-channel-aux-active);
+                box-shadow: 0 0 7px rgba(34, 211, 238, 0.65);
+            }
         }
-    }
 
-    .name {
-        width: 5rem;
-        text-align: end;
-    }
-    .meter {
-        width: 100%;
-    }
-    .meter-bar {
-        position: relative;
-        container-type: inline-size;
-        width: 100%;
-        height: 1rem;
-        border: 1px solid var(--surface-500);
-        background-color: var(--surface-200);
-        border-radius: 0.3rem;
-        .label {
-            position: absolute;
-            width: 50px;
-            text-align: center;
-            inset-inline-start: calc(50cqi - 25px);
-            color: var(--text);
+        .name {
+            width: 5rem;
+            text-align: end;
         }
-        .fill {
+        .meter {
+            width: 100%;
+        }
+        .meter-bar {
             position: relative;
-            overflow: hidden;
-            border-radius: 0.3rem;
-            width: 50%;
+            container-type: inline-size;
+            width: 100%;
             height: 1rem;
-            background-color: var(--primary-500);
+            border: 1px solid var(--surface-500);
+            background-color: var(--surface-200);
+            border-radius: 0.3rem;
             .label {
-                color: white;
+                position: absolute;
+                width: 50px;
+                text-align: center;
+                inset-inline-start: calc(50cqi - 25px);
+                color: var(--text);
+            }
+            .fill {
+                position: relative;
+                overflow: hidden;
+                border-radius: 0.3rem;
+                width: 50%;
+                height: 1rem;
+                background-color: var(--primary-500);
+                .label {
+                    color: white;
+                }
             }
         }
     }
-}
 
-.graphAndLabel {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0.5rem;
-}
+    .graphAndLabel {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+    }
 
-:deep(svg:not(.iconify)) {
-    width: 100%;
-    height: 100%;
-}
+    svg:not(.iconify) {
+        width: 100%;
+        height: 100%;
+    }
 
-.plot_control {
-    width: 14rem;
-    margin: 0;
-    border-start-end-radius: 3px;
-    border-end-end-radius: 3px;
-    .value {
-        padding: 4px;
-        color: #fff;
-        border-radius: 3px;
+    .plot_control {
+        width: 14rem;
+        margin: 0;
+        border-start-end-radius: 3px;
+        border-end-end-radius: 3px;
+        .value {
+            padding: 4px;
+            color: white;
+            border-radius: 3px;
+        }
+        .ch1 {
+            background-color: var(--color-channel-1);
+        }
+        .ch2 {
+            background-color: var(--color-channel-2);
+        }
+        .ch3 {
+            background-color: var(--color-channel-3);
+        }
+        .ch4 {
+            background-color: var(--color-channel-4);
+        }
     }
-    .ch1 {
-        background-color: #e24761;
-    }
-    .ch2 {
-        background-color: #49c747;
-    }
-    .ch3 {
-        background-color: #477ac7;
-    }
-    .ch4 {
-        background-color: #f5a623;
-    }
-}
 
-:deep(#RX_plot) {
-    height: 208px;
-    color: var(--text);
+    /* D3 positions every tick label in absolute coordinates and anchors the y labels with
+   text-anchor: end. Under an RTL locale the inherited direction flips that anchor, so the
+   labels spill into the plot area. The graph is numeric, so keep it LTR in every locale. */
+
+    #RX_plot {
+        direction: ltr;
+        height: 208px;
+        color: var(--text);
+        .line {
+            &:nth-child(1) {
+                stroke: var(--color-channel-1);
+            }
+            &:nth-child(2) {
+                stroke: var(--color-channel-2);
+            }
+            &:nth-child(3) {
+                stroke: var(--color-channel-3);
+            }
+            &:nth-child(4) {
+                stroke: var(--color-channel-4);
+            }
+            &:nth-child(5) {
+                stroke: var(--color-channel-5);
+            }
+            &:nth-child(6) {
+                stroke: var(--color-channel-6);
+            }
+            &:nth-child(7) {
+                stroke: var(--color-channel-7);
+            }
+            &:nth-child(8) {
+                stroke: var(--color-channel-8);
+            }
+            &:nth-child(9) {
+                stroke: var(--color-channel-9);
+            }
+            &:nth-child(10) {
+                stroke: var(--color-channel-10);
+            }
+            &:nth-child(11) {
+                stroke: var(--color-channel-11);
+            }
+            &:nth-child(12) {
+                stroke: var(--color-channel-12);
+            }
+            &:nth-child(13) {
+                stroke: var(--color-channel-13);
+            }
+            &:nth-child(14) {
+                stroke: var(--color-channel-14);
+            }
+            &:nth-child(15) {
+                stroke: var(--color-channel-15);
+            }
+            &:nth-child(16) {
+                stroke: var(--color-channel-16);
+            }
+        }
+    }
+
+    .grid-display {
+        .tick {
+            stroke: silver;
+            stroke-width: 1px;
+            shape-rendering: crispEdges;
+        }
+        path {
+            stroke-width: 0;
+        }
+    }
+
     .line {
-        &:nth-child(1) {
-            stroke: #e24761;
-        }
-        &:nth-child(2) {
-            stroke: #49c747;
-        }
-        &:nth-child(3) {
-            stroke: #477ac7;
-        }
-        &:nth-child(4) {
-            stroke: #f5a623;
-        }
-        &:nth-child(5) {
-            stroke: #159588;
-        }
-        &:nth-child(6) {
-            stroke: #50ae55;
-        }
-        &:nth-child(7) {
-            stroke: #cdda49;
-        }
-        &:nth-child(8) {
-            stroke: #fdc02f;
-        }
-        &:nth-child(9) {
-            stroke: #fc5830;
-        }
-        &:nth-child(10) {
-            stroke: #785549;
-        }
-        &:nth-child(11) {
-            stroke: #9e9e9e;
-        }
-        &:nth-child(12) {
-            stroke: #7a6614;
-        }
-        &:nth-child(13) {
-            stroke: #cf267d;
-        }
-        &:nth-child(14) {
-            stroke: #7a1464;
-        }
-        &:nth-child(15) {
-            stroke: #3a7a14;
-        }
-        &:nth-child(16) {
-            stroke: #14407a;
-        }
+        stroke-width: 2px;
+        fill: none;
     }
-}
 
-:deep(.grid-display) {
-    .tick {
-        stroke: silver;
-        stroke-width: 1px;
-        shape-rendering: crispEdges;
+    text {
+        stroke: none;
+        fill: var(--text);
+        font-size: 10px;
     }
-    path {
-        stroke-width: 0;
-    }
-}
 
-:deep(.line) {
-    stroke-width: 2px;
-    fill: none;
-}
-
-:deep(text) {
-    stroke: none;
-    fill: var(--text);
-    font-size: 10px;
-}
-
-@media all and (max-width: 1055px) {
-    :deep(.grid-box) {
-        &.col5 {
-            grid-template-columns: 1fr !important;
-        }
-        &.col6 {
-            column-gap: 0.5rem;
+    @media all and (max-width: 1055px) {
+        .grid-box {
+            &.col5 {
+                grid-template-columns: 1fr !important;
+            }
+            &.col6 {
+                column-gap: 0.5rem;
+            }
         }
     }
 }

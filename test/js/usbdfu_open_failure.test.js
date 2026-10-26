@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
 // Regression tests for the DFU open-failure path.
@@ -13,12 +14,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // device.
 // ---------------------------------------------------------------------------
 
-vi.mock("../../src/js/gui", () => ({ default: { connect_lock: false } }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key) => key } }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/utils/notifications", () => ({ default: { showNotification: vi.fn() } }));
 vi.mock("../../src/js/ConfigStorage", () => ({ get: () => ({}) }));
-vi.mock("../../src/js/utils/checkCompatibility", () => ({ getOS: vi.fn() }));
+vi.mock("../../src/js/utils/checkCompatibility", async (importOriginal) => ({
+    ...(await importOriginal()),
+    getOS: vi.fn(),
+}));
 // Prevent the module-bottom `new WebUsbDfuTransport()` from touching navigator.usb.
 vi.mock("../../src/js/protocols/WebUsbDfuTransport", () => ({ default: class extends EventTarget {} }));
 
@@ -70,6 +73,8 @@ async function runOpen(transport) {
 
 describe("DFU open failure diagnostics", () => {
     beforeEach(() => {
+        // usbdfu releases the connect lock through the connection store.
+        setActivePinia(createPinia());
         vi.clearAllMocks();
     });
 

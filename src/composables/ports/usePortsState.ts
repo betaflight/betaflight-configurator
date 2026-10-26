@@ -19,9 +19,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { reactive, ref, computed, nextTick, onMounted } from "vue";
-import GUI from "../../js/gui";
-import FC from "../../js/fc";
+import { reactive, ref, computed, onMounted } from "vue";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -49,6 +48,7 @@ export interface PortRow {
 export type PortAnalyticsChanges = Record<string, string>;
 
 export function usePortsState(getRules: (group: PortFunctionGroup) => PortFunctionRule[]) {
+    const fcStore = useFlightControllerStore();
     const ports = reactive<PortRow[]>([]);
     const analyticsChanges = reactive<PortAnalyticsChanges>({});
     const isLoading = ref(true);
@@ -72,14 +72,11 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
 
     const handleSerialConfigLoaded = () => {
         ports.length = 0;
-        FC.SERIAL_CONFIG.ports.forEach((p) => {
+        fcStore.serialConfig.ports.forEach((p) => {
             ports.push(transformPortData(p));
         });
         markClean();
         isLoading.value = false;
-        nextTick(() => {
-            GUI.content_ready();
-        });
     };
 
     const loadConfig = () => {
@@ -90,18 +87,15 @@ export function usePortsState(getRules: (group: PortFunctionGroup) => PortFuncti
             .catch((error) => {
                 console.error("Failed to load VTX config for ports tab:", error);
                 isLoading.value = false;
-                nextTick(() => {
-                    GUI.content_ready();
-                });
             });
     };
 
     const vtxTableNotConfigured = computed(() => {
         return (
-            FC.VTX_CONFIG?.vtx_table_available &&
-            (FC.VTX_CONFIG.vtx_table_bands === 0 ||
-                FC.VTX_CONFIG.vtx_table_channels === 0 ||
-                FC.VTX_CONFIG.vtx_table_powerlevels === 0)
+            fcStore.vtxConfig?.vtx_table_available &&
+            (fcStore.vtxConfig.vtx_table_bands === 0 ||
+                fcStore.vtxConfig.vtx_table_channels === 0 ||
+                fcStore.vtxConfig.vtx_table_powerlevels === 0)
         );
     });
 

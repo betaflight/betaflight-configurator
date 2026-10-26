@@ -127,7 +127,6 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-blec",
- "tauri-plugin-dfu",
  "tauri-plugin-dialog",
  "tauri-plugin-fs",
  "tauri-plugin-serialplugin",
@@ -4145,19 +4144,6 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "uuid",
-]
-
-[[package]]
-name = "tauri-plugin-dfu"
-version = "0.1.0"
-dependencies = [
- "jni 0.21.1",
- "libc",
- "nusb",
- "serde",
- "serde_json",
- "tauri",
- "tauri-plugin",
 ]
 
 [[package]]

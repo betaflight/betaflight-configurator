@@ -23,37 +23,19 @@ import { defineStore } from "pinia";
 import { ref, shallowRef, computed, nextTick } from "vue";
 import { useSettingsStore } from "./settings.js";
 import { useLogStore } from "./log";
-import { PrefStorage } from "../pref_storage.js";
-import type { FlightLogGrapher } from "../grapher.js";
-import type { GraphConfig } from "../graph_config.js";
-import type { MapGrapher } from "../graph_map.js";
-import type { SeekBar } from "../seekbar.js";
+import { PrefStorage } from "../pref_storage";
+import type { FlightLogGrapher } from "../grapher";
+import type { GraphConfig, GraphPanelConfig } from "../graph_config";
+import type { MapGrapher } from "../graph_map";
+import type { SeekBar } from "../seekbar";
 
 export type GrapherInstance = InstanceType<typeof FlightLogGrapher>;
+
+/** The activity summary series the seekbar draws. */
+export type SeekBarMode = "avgThrottle" | "maxRC" | "maxMotorDiff";
 export type GraphConfigInstance = InstanceType<typeof GraphConfig>;
 
-/** A field of a graph panel, as saved and as GraphConfig.getGraphs() returns it. */
-export interface GraphFieldConfig {
-    name: string;
-    friendlyName?: string;
-    smoothing?: number;
-    curve?: {
-        power?: number;
-        MinMax?: { min?: number; max?: number };
-        highPrecise?: boolean;
-    };
-    default?: { smoothing?: number; power?: number; MinMax?: { min?: number; max?: number } };
-    /** A palette colour, or -1 for "assign one from the palette" (see GraphConfig.extendFields). */
-    color?: string | -1;
-    lineWidth?: number;
-}
-
-/** A graph panel, as saved and as GraphConfig.getGraphs() returns it. */
-export interface GraphPanelConfig {
-    label: string;
-    height?: number;
-    fields: GraphFieldConfig[];
-}
+export type { GraphFieldConfig, GraphPanelConfig } from "../graph_config";
 
 export interface LegendField {
     name: string;
@@ -76,6 +58,13 @@ export interface CanvasRefs {
 
 type Action = () => void;
 
+/** What the open 3D flight panel exposes to playback and log loading. */
+export interface Flight3DHandle {
+    setCurrentTime(tUs: number): void;
+    resize(width: number, height: number): void;
+    setFlightLog(flightLog: unknown): void;
+}
+
 export const GRAPH_MIN_ZOOM = 1;
 export const GRAPH_MAX_ZOOM = 1000;
 export const GRAPH_DEFAULT_ZOOM = 100;
@@ -83,12 +72,14 @@ export const GRAPH_DEFAULT_ZOOM = 100;
 export const useGraphStore = defineStore("graph", () => {
     const prefs = new PrefStorage();
 
-    // Renderer instances — registered by main.js after creation
+    // Renderer instances — registered by main.ts after creation
     const graph = shallowRef<GrapherInstance | null>(null);
     const mapGrapher = shallowRef<InstanceType<typeof MapGrapher> | null>(null);
+    /** The mounted 3D flight panel, or null while it is hidden, so playback and log loading do no 3D work. */
+    const flight3d = shallowRef<Flight3DHandle | null>(null);
     const seekBar = shallowRef<InstanceType<typeof SeekBar> | null>(null);
 
-    // Canvas DOM refs — registered by main.js
+    // Canvas DOM refs — registered by main.ts
     const canvasRefs = shallowRef<CanvasRefs | null>(null);
 
     const graphConfig = ref<GraphPanelConfig[] | null>(null);
@@ -105,6 +96,7 @@ export const useGraphStore = defineStore("graph", () => {
     const hasCraft = computed(() => !!settingsStore.userSettings.drawCraft);
     const hasSticks = computed(() => !!settingsStore.userSettings.drawSticks);
     const hasMap = ref(false);
+    const hasFlight3d = ref(false);
     const hasMarker = ref(false);
     const hasConfig = ref(false);
     const hasConfigOverlay = ref(false);
@@ -124,9 +116,9 @@ export const useGraphStore = defineStore("graph", () => {
 
     const isFullscreen = ref(false);
     const markerTime = ref(0);
-    const seekBarMode = ref("avgThrottle");
+    const seekBarMode = ref<SeekBarMode>("avgThrottle");
 
-    // Callbacks registered by main.js
+    // Callbacks registered by main.ts
     const invalidateGraph = shallowRef<Action | null>(null);
     const updateCanvasSize = shallowRef<Action | null>(null);
     const zoomGraphConfig = shallowRef<((graphIndex: number) => void) | null>(null);
@@ -149,7 +141,7 @@ export const useGraphStore = defineStore("graph", () => {
     const spectrumClear = shallowRef<Action | null>(null);
     const applyGraphZoom = shallowRef<((zoom: number) => void) | null>(null);
     const selectLogIndex = shallowRef<((index: number) => void) | null>(null);
-    const setSeekBarMode = shallowRef<((mode: string) => void) | null>(null);
+    const setSeekBarMode = shallowRef<((mode: SeekBarMode) => void) | null>(null);
 
     // --- Legend actions ---
 
@@ -164,8 +156,9 @@ export const useGraphStore = defineStore("graph", () => {
             label: g.label,
             fields: g.fields.map((f, fi) => ({
                 name: f.name,
-                friendlyName: f.friendlyName,
-                color: f.color,
+                // adaptGraphs() gives every field both before the legend is built; the config type cannot say so.
+                friendlyName: f.friendlyName ?? f.name,
+                color: typeof f.color === "string" ? f.color : "",
                 hidden: config.isGraphFieldHidden(gi, fi),
             })),
         }));
@@ -220,7 +213,7 @@ export const useGraphStore = defineStore("graph", () => {
             if (!config || graphs.length === 0 || graphs[0].fields.length === 0) {
                 hasAnalyser.value = false;
             } else {
-                config.selectedFieldName = graphs[0].fields[0].friendlyName;
+                config.selectedFieldName = graphs[0].fields[0].friendlyName ?? null;
                 config.selectedGraphIndex = 0;
                 config.selectedFieldIndex = 0;
                 hasAnalyser.value = true;
@@ -256,10 +249,20 @@ export const useGraphStore = defineStore("graph", () => {
 
     function toggleMap() {
         hasMap.value = !hasMap.value;
+        if (hasMap.value) {
+            hasFlight3d.value = false; // the 2D map and the 3D view share one screen slot
+        }
         prefs.set("hasMap", hasMap.value);
         const logStore = useLogStore();
         if (logStore.flightLog?.hasGpsData()) {
             mapGrapher.value?.initialize();
+        }
+    }
+
+    function toggleFlight3d() {
+        hasFlight3d.value = !hasFlight3d.value;
+        if (hasFlight3d.value) {
+            hasMap.value = false;
         }
     }
 
@@ -279,6 +282,7 @@ export const useGraphStore = defineStore("graph", () => {
     return {
         graph,
         mapGrapher,
+        flight3d,
         seekBar,
         canvasRefs,
         graphConfig,
@@ -293,6 +297,7 @@ export const useGraphStore = defineStore("graph", () => {
         hasCraft,
         hasSticks,
         hasMap,
+        hasFlight3d,
         hasMarker,
         hasConfig,
         hasConfigOverlay,
@@ -330,6 +335,7 @@ export const useGraphStore = defineStore("graph", () => {
         toggleAnalyserFullscreen,
         toggleFullscreen,
         toggleMap,
+        toggleFlight3d,
         setGraphZoom,
         quickZoomToggle,
     };

@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { findCliError, isMspCliSupported, send as cliSend } from "../useMspCliSession";
 import { parsePeripherals } from "./usePeripherals";
 
@@ -31,7 +31,7 @@ import { parsePeripherals } from "./usePeripherals";
 export type PortClaims = Record<string, string[]>;
 
 /**
- * The claims ride on FC.SERIAL_CONFIG so they live exactly as long as the connection's serial
+ * The claims ride on fcStore.serialConfig so they live exactly as long as the connection's serial
  * config does - a connect or disconnect resets both together - and are read once per connection
  * rather than once per select: a tab loads its feature ports in turn, and five identical CLI
  * round trips for one answer is what that would cost. A port assignment written from the app
@@ -78,7 +78,7 @@ async function readClaims(): Promise<PortClaims | null | undefined> {
  * @param options.refresh ask the FC again even if the answer is already held
  */
 export function loadPortClaims({ refresh = false }: { refresh?: boolean } = {}): Promise<PortClaims | null> {
-    const config = FC.SERIAL_CONFIG as SerialConfigWithClaims | null;
+    const config = useFlightControllerStore().serialConfig as SerialConfigWithClaims | null;
     if (!config) {
         return Promise.resolve(null);
     }

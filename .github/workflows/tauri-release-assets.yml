@@ -1,14 +1,11 @@
 name: Release platform assets
 
-# Builds the Tauri desktop bundles (Windows/macOS/Linux) and a signed Tauri
-# Android APK for a published release, then attaches them to that release.
+# Builds the Tauri desktop bundles (Windows/macOS/Linux) for a published
+# release, then attaches them to that release.
 #
 # Called by build-release.yml on `release: published`, and runnable on its own
 # via workflow_dispatch to (re)build and attach assets to an existing tag —
 # e.g. to backfill a release cut before this workflow existed.
-#
-# The Tauri APK signs with RELEASE_KEYSTORE via the keystore.properties the
-# Tauri Gradle project reads.
 #
 # The macOS DMGs are signed with a Developer ID Application certificate and
 # notarised. That needs:
@@ -17,9 +14,8 @@ name: Release platform assets
 #   APPLE_API_ISSUER            App Store Connect API issuer id
 #   APPLE_API_KEY               App Store Connect API key id
 #   APPLE_API_KEY_P8            contents of the AuthKey_<keyid>.p8 file
-# plus the MACOS_SIGNING_IDENTITY and APPLE_DEVELOPMENT_TEAM variables. All but
-# MACOS_CERTIFICATE* are shared with the iOS release. Without them the macOS
-# jobs still build, just unsigned.
+# plus the MACOS_SIGNING_IDENTITY and APPLE_DEVELOPMENT_TEAM variables. Without
+# them the macOS jobs still build, just unsigned.
 
 on:
   workflow_call:
@@ -28,22 +24,10 @@ on:
         description: 'Release tag to build and attach assets to'
         required: true
         type: string
-    # Only the signing secrets are passed through; the Linux and Windows builds
-    # need none, and the attach job uses the auto-provided GITHUB_TOKEN. The
-    # Apple ones are optional so a caller without them still gets a build.
+    # Only the macOS signing secrets are passed through; the Linux and Windows
+    # builds need none, and the attach job uses the auto-provided GITHUB_TOKEN.
+    # They are optional so a caller without them still gets a build.
     secrets:
-      RELEASE_KEYSTORE:
-        description: 'Base64-encoded Android signing keystore'
-        required: true
-      RELEASE_KEYSTORE_PASSWORD:
-        description: 'Keystore password'
-        required: true
-      RELEASE_KEY_ALIAS:
-        description: 'Signing key alias'
-        required: true
-      RELEASE_KEY_ALIAS_PASSWORD:
-        description: 'Signing key alias password'
-        required: true
       MACOS_CERTIFICATE:
         description: 'Base64-encoded Developer ID Application .p12'
         required: false
@@ -68,9 +52,6 @@ on:
 
 permissions:
   contents: read
-
-env:
-  NDK_VERSION: 27.2.12479018
 
 jobs:
   desktop:
@@ -277,122 +258,9 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  android:
-    name: Android (Tauri APK)
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ inputs.tag }}
-          persist-credentials: false
-
-      - name: Setup Node
-        uses: actions/setup-node@v5
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      # Default 'packages' input includes the legacy 'tools' package, which
-      # Google removed from the SDK repository — sdkmanager fails to find it.
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
-        with:
-          packages: platform-tools
-
-      - name: Install NDK
-        run: |
-          sdkmanager "ndk;${NDK_VERSION}"
-          echo "NDK_HOME=$ANDROID_HOME/ndk/${NDK_VERSION}" >> "$GITHUB_ENV"
-
-      - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
-        with:
-          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
-
-      - name: Cache Cargo registry and target
-        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
-        with:
-          workspaces: src-tauri
-          key: tauri-android
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      # Keep the APK's internal version in step with package.json (see desktop job).
-      - name: Sync bundle version to package.json
-        run: |
-          node -e '
-            const fs = require("node:fs");
-            const version = JSON.parse(fs.readFileSync("package.json", "utf8")).version;
-            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
-            conf.version = version;
-            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
-            const cargo = fs.readFileSync("src-tauri/Cargo.toml", "utf8").replace(/^version = ".*"$/m, `version = "${version}"`);
-            fs.writeFileSync("src-tauri/Cargo.toml", cargo);
-            console.log("Synced bundle version to", version);
-          '
-
-      # Sign with the same RELEASE_KEYSTORE the nightly Tauri APK uses, via the
-      # keystore.properties the Tauri Gradle project reads.
-      - name: Configure signing
-        env:
-          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
-          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-          RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
-        run: |
-          : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret (base64 keystore)}"
-          : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret}"
-          : "${RELEASE_KEY_ALIAS:?Set the RELEASE_KEY_ALIAS secret}"
-          : "${RELEASE_KEY_ALIAS_PASSWORD:?Set the RELEASE_KEY_ALIAS_PASSWORD secret}"
-          KS="$RUNNER_TEMP/betaflight-release.jks"
-          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "$KS"
-          {
-            printf 'storeFile=%s\n' "$KS"
-            printf 'storePassword=%s\n' "$RELEASE_KEYSTORE_PASSWORD"
-            printf 'keyAlias=%s\n' "$RELEASE_KEY_ALIAS"
-            printf 'keyPassword=%s\n' "$RELEASE_KEY_ALIAS_PASSWORD"
-          } > src-tauri/gen/android/keystore.properties
-
-      - name: Build signed APK
-        run: npx --no tauri android build --apk
-
-      - name: Stage APK
-        run: |
-          mkdir -p staging
-          VERSION=$(jq -r '.version' package.json)
-          APK_NAME="betaflight-${VERSION}-tauri.apk"
-          APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | grep -i universal | head -1)
-          if [ -z "$APK" ]; then
-            APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*.apk' -path '*release*' | grep -iv unsigned | head -1)
-          fi
-          if [ -z "$APK" ]; then
-            echo "No signed release APK produced" >&2
-            exit 1
-          fi
-          cp "$APK" "staging/${APK_NAME}"
-          ls -la staging
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: release-android-apk
-          path: staging/*
-          if-no-files-found: error
-          retention-days: 30
-
   attach:
     name: Attach assets to release
-    needs: [desktop, android]
+    needs: desktop
     runs-on: ubuntu-latest
     permissions:
       contents: write

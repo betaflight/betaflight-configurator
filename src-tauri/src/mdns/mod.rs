@@ -5,19 +5,16 @@
 //! is bridges and nothing else. Each `mdns_browse` call returns the current snapshot,
 //! so the frontend can poll it like a port list.
 //!
-//! Two backends, because Apple platforms will not let an app browse for itself: since
-//! iOS 14 a multicast datagram sent from an app's own socket is dropped unless the app
-//! holds `com.apple.developer.networking.multicast`, which Apple grants only on request.
-//! The failure is silent — the browse simply never hears an answer — so `apple.rs` goes
-//! through mDNSResponder via `dns_sd.h` instead, which needs no entitlement and is the
-//! same machinery Bonjour itself uses. Everything else keeps the in-process browser in
+//! Two backends: macOS already runs mDNSResponder, the system daemon Bonjour itself
+//! uses, so `apple.rs` browses through it via `dns_sd.h` rather than opening a second
+//! multicast responder in the app. Everything else keeps the in-process browser in
 //! `generic.rs`.
 
-#[cfg(any(target_os = "ios", target_os = "macos"))]
+#[cfg(target_os = "macos")]
 #[path = "apple.rs"]
 mod backend;
 
-#[cfg(not(any(target_os = "ios", target_os = "macos")))]
+#[cfg(not(target_os = "macos"))]
 #[path = "generic.rs"]
 mod backend;
 

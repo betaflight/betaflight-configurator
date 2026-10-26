@@ -1,7 +1,4 @@
 {
-    "translation_version": {
-        "message": "0"
-    },
     "yes": {
         "message": "Bai",
         "description": "General Yes message to be used across the application"
@@ -30,9 +27,6 @@
     },
     "noticeTitle": {
         "message": "Oharra"
-    },
-    "operationNotSupported": {
-        "message": "Zure hardware ez du lan hau onartzen."
     },
     "storageDeviceNotReady": {
         "message": "Biltegiratzeko gailua ez dago prest. MikroSD txartelaren kasuan, ziurtatu hegaldi kontroladorea behar bezala aitortzen duela."
@@ -73,18 +67,12 @@
     "analyticsOptOut": {
         "message": "Ez parte hartu datu estatistikoen bilduma anonimoan"
     },
-    "cordovaForceComputerUI": {
-        "message": "Ordenagailuen interfazea erabili telefonoen interfazearen ordez"
-    },
     "language_changed": {
         "message": "Hizkuntza aldaketa gorde da"
     },
     "language_choice_message": {
         "message": "Hizkuntza aldatu:",
         "description": "Try and be brief"
-    },
-    "language_default": {
-        "message": "Sistema Lehenetsia"
     },
     "sensorDataFlashNotFound": {
         "message": "Flash memoria <br> ez dago erabilgarri",
@@ -104,58 +92,32 @@
     "sensorStatusAccel": {
         "message": "Azelerometroa"
     },
-    "sensorStatusAccelShort": {
-        "message": "Azel",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
     "sensorStatusMag": {
         "message": "Magnetometroa"
-    },
-    "sensorStatusMagShort": {
-        "message": "Mag",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
         "message": "Barometroa"
     },
-    "sensorStatusBaroShort": {
-        "message": "Baro",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
     "sensorStatusGPS": {
         "message": "GPSa"
     },
-    "sensorStatusGPSShort": {
-        "message": "GPSa",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
     "sensorStatusSonar": {
-        "message": "Sonar \/ Telemetroa"
-    },
-    "sensorStatusSonarShort": {
-        "message": "Sonar",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
+        "message": "Sonar / Telemetroa"
     },
     "deviceRebooting": {
-        "message": "Device - <span class=\"message-negative\">Abiarazten<\/span>"
+        "message": "Device - <span class=\"message-negative\">Abiarazten</span>"
     },
     "deviceRebooting_flashBootloader": {
-        "message": "Device - <span class=\"message-negative\">FLASH BOOTLOADERrera abiarazten<\/span>"
+        "message": "Device - <span class=\"message-negative\">FLASH BOOTLOADERrera abiarazten</span>"
     },
     "deviceRebooting_romBootloader": {
-        "message": "Gailua - <span class=\"message-negative\">ROM BOOTLOADERrera abiarazten<\/span>"
-    },
-    "deviceReady": {
-        "message": "Device - <span class=\"message-positive\">Prest<\/span>"
+        "message": "Gailua - <span class=\"message-negative\">ROM BOOTLOADERrera abiarazten</span>"
     },
     "tabFirmwareFlasher": {
         "message": "Firmware Flasheatzailea"
     },
     "tabLanding": {
         "message": "Ongi Etorri"
-    },
-    "tabPrivacyPolicy": {
-        "message": "Pribautasun Agiriak"
     },
     "tabHelp": {
         "message": "Dokumentazioa eta laguntza"
@@ -165,9 +127,6 @@
     },
     "tabSetup": {
         "message": "Konfigurazioa"
-    },
-    "tabSetupOSD": {
-        "message": "OSD konfigurazioa"
     },
     "tabConfiguration": {
         "message": "Konfigurazioa"
@@ -180,9 +139,6 @@
     },
     "tabReceiver": {
         "message": "Hargailua"
-    },
-    "tabModeSelection": {
-        "message": "Modu Haukerak"
     },
     "tabServos": {
         "message": "Serboak"
@@ -223,50 +179,32 @@
     "tabAuxiliary": {
         "message": "Moduak"
     },
-    "logActionHide": {
-        "message": "Log-ak Eskutatzea"
-    },
     "logActionShow": {
         "message": "Log-ak Erakutsi"
     },
-    "serialErrorFrameError": {
-        "message": "Serie Konexioaren errorea: Sarrera txarra"
-    },
-    "serialErrorParityError": {
-        "message": "Serie Konexioaren errorea: Parekotasun txarra"
-    },
     "serialPortOpened": {
-        "message": "Serie Ataka <span class=\"message-positive\">arrakastaz<\/span> irekia ID: $1 -rekin"
+        "message": "Serie Ataka <span class=\"message-positive\">arrakastaz</span> irekia ID: $1 -rekin"
     },
     "serialPortOpenFail": {
-        "message": "Serieko ataka irekitzerakoan <span class=\"message-negative\">huts<\/span>"
+        "message": "Serieko ataka irekitzerakoan <span class=\"message-negative\">huts</span>"
     },
     "serialPortClosedOk": {
-        "message": "Serieko ataka <span class=\"message-positive\">arrakastaz<\/span> itxita"
+        "message": "Serieko ataka <span class=\"message-positive\">arrakastaz</span> itxita"
     },
     "serialPortClosedFail": {
-        "message": "Serieko ataka izterakoan <span class=\"message-negative\">huts<\/span>"
-    },
-    "serialUnrecoverable": {
-        "message": "<span class=\"message-negative\">Huts<\/span> berreskuraezina serieko loturarekin, deskonektatzen..."
-    },
-    "serialPortLoading": {
-        "message": "Lanean ..."
-    },
-    "usbDeviceOpened": {
-        "message": "USB gailua <span class=\"message-positive\">arrakaztaz<\/span> irekia ID: $1 -rekin"
+        "message": "Serieko ataka izterakoan <span class=\"message-negative\">huts</span>"
     },
     "usbDeviceOpenFail": {
-        "message": "USB gailua irekitzerakoan<span class=\"message-negative\">huts<\/span>!"
+        "message": "USB gailua irekitzerakoan<span class=\"message-negative\">huts</span>!"
     },
     "usbDeviceClosed": {
-        "message": "USB gailua <span class=\"message-positive\">arrakaztaz<\/span> itxia"
+        "message": "USB gailua <span class=\"message-positive\">arrakaztaz</span> itxia"
     },
     "usbDeviceCloseFail": {
-        "message": "Serieko ataka izterakoan <span class=\"message-negative\">huts<\/span>"
+        "message": "Serieko ataka izterakoan <span class=\"message-negative\">huts</span>"
     },
     "usbDeviceUdevNotice": {
-        "message": "<strong>Udev arauak<\/strong> behar bezala instalatu dira? Ikusi argibideak lortzeko"
+        "message": "<strong>Udev arauak</strong> behar bezala instalatu dira? Ikusi argibideak lortzeko"
     },
     "stm32UsbDfuNotFound": {
         "message": "USB gailuaren DFU-a ez topatua"
@@ -325,9 +263,6 @@
     "stm32AddressLoadFailed": {
         "message": "Byten Sectoreerako Aukeren helbide-karga huts egin du. Oso litekeena da irakurtzeko babesa izatea."
     },
-    "stm32AddressLoadSuccess": {
-        "message": "Byten Sectoreerako Aukeren helbide-kargatua arrakaztaz."
-    },
     "stm32AddressLoadUnknown": {
         "message": "Byten Sectoreerako Aukeren helbide-karga huts egin du errore ezezagun batengatik. Bertan behera uzten."
     },
@@ -350,102 +285,72 @@
         "message": "HUTS Babeza kentzen asterakoan"
     },
     "noConfigurationReceived": {
-        "message": "Ez zaio heldu konfigurazioa <span class=\"message-negative\">10 segunduko<\/span> epean, komunikazioa <span class=\"message-negative\">HUTS<\/span> egin du"
+        "message": "Ez zaio heldu konfigurazioa <span class=\"message-negative\">10 segunduko</span> epean, komunikazioa <span class=\"message-negative\">HUTS</span> egin du"
     },
     "firmwareTypeNotSupported": {
-        "message": "Betaflight ez den firmwarea <span class=\"message-negative\">ez da onartzen<\/span>, CLI moduan izan ezik."
+        "message": "Betaflight ez den firmwarea <span class=\"message-negative\">ez da onartzen</span>, CLI moduan izan ezik."
     },
     "resetToCustomDefaultsDialog": {
-        "message": "Lehenetsi pertsonalizatuak daude eskuragarri kontrolatzaile honetarako. Normalki, kontrolatzailea ez da behar bezela ibiliko ez badinba zaizkiao bere lehenetsi pertsonalizatuak ipintzen.<br \/>Nahi duzu kontroladore honi bere lehenetsi pertsonalizatuak ipintzea?"
+        "message": "Lehenetsi pertsonalizatuak daude eskuragarri kontrolatzaile honetarako. Normalki, kontrolatzailea ez da behar bezela ibiliko ez badinba zaizkiao bere lehenetsi pertsonalizatuak ipintzen.<br />Nahi duzu kontroladore honi bere lehenetsi pertsonalizatuak ipintzea?"
     },
     "resetToCustomDefaultsAccept": {
         "message": "Aplikatu lehenetsi pertsonalizatua"
     },
     "reportProblemsDialogHeader": {
-        "message": "Zure konfigurazioarekin <strong>lotutako arazo hauek<\/strong> atzeman dira:"
+        "message": "Zure konfigurazioarekin <strong>lotutako arazo hauek</strong> atzeman dira:"
     },
     "buildServerUsingCached": {
         "message": "$1 -rako aurrememorian dauden konpilazioen informazioa erabiltzen."
     },
-    "releaseCheckLoaded": {
-        "message": "$1 -aren bertsioen informazioa GitHub-etik kargatuta."
-    },
-    "releaseCheckFailed": {
-        "message": "<b>$1 bertsioen zerbitzariaren kontsultak huts egin du, cachean oinarritutako informazioa erabiliz. Arrazoia: <code>$2<\/code><\/b>"
-    },
-    "releaseCheckCached": {
-        "message": "$1 -aren aurretik gordetako bertsioen informazioa erabiltzen."
-    },
-    "releaseCheckNoInfo": {
-        "message": "$1 -rako bertsioen informazioa ez dago eskuragarri."
-    },
     "tabSwitchConnectionRequired": {
-        "message": "Aurretik <strong>Konektatu<\/strong> behar zara, edozein atal ikusi ahal izateko."
+        "message": "Aurretik <strong>Konektatu</strong> behar zara, edozein atal ikusi ahal izateko."
     },
     "tabSwitchWaitForOperation": {
-        "message": "Eragiketa hau <span class=\"message-negative\">Ezin duzu<\/span> egin momentu honetan. Mesedez, itxaron uneko eragiketa amaitu arte..."
+        "message": "Eragiketa hau <span class=\"message-negative\">Ezin duzu</span> egin momentu honetan. Mesedez, itxaron uneko eragiketa amaitu arte..."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "Zure \"Firmware\"-a Betafligth-eko azkenengo bertsiora <strong>eguneratu<\/strong> behar duzu $1 fitxa erabili ahal izateko."
+        "message": "Zure \"Firmware\"-a Betafligth-eko azkenengo bertsiora <strong>eguneratu</strong> behar duzu $1 fitxa erabili ahal izateko."
     },
     "firmwareVersion": {
-        "message": "\"Firmware\"-n Bertsioa: <strong>$1<\/strong>"
+        "message": "\"Firmware\"-n Bertsioa: <strong>$1</strong>"
     },
     "apiVersionReceived": {
-        "message": "MultiWii API bertsioa: <strong>$1<\/strong>"
+        "message": "MultiWii API bertsioa: <strong>$1</strong>"
     },
     "uniqueDeviceIdReceived": {
-        "message": "Gailuaren ID bakarra: <strong>=x$1<\/strong>"
+        "message": "Gailuaren ID bakarra: <strong>=x$1</strong>"
     },
     "armingDisabled": {
-        "message": "<strong>Armatua desgaitua<\/strong>"
+        "message": "<strong>Armatua desgaitua</strong>"
     },
     "armingEnabled": {
-        "message": "<strong>Armatua gaitua<\/strong>"
+        "message": "<strong>Armatua gaitua</strong>"
     },
     "runawayTakeoffPreventionDisabled": {
-        "message": "<strong>Kontrolik gabeko aireratze prebentzio sistema, aldi baterako desgaitua<\/strong>"
+        "message": "<strong>Kontrolik gabeko aireratze prebentzio sistema, aldi baterako desgaitua</strong>"
     },
     "runawayTakeoffPreventionEnabled": {
-        "message": "<strong>Kontrolik gabeko aireratze prebentzio sistema aktibatuta<\/strong>"
+        "message": "<strong>Kontrolik gabeko aireratze prebentzio sistema aktibatuta</strong>"
     },
     "boardInfoReceived": {
-        "message": "Taula:<strong>$1<\/strong>, bertsioa: <strong>$2<\/strong>"
+        "message": "Taula:<strong>$1</strong>, bertsioa: <strong>$2</strong>"
     },
     "buildInfoReceived": {
-        "message": "<strong>$1<\/strong> -an argitaratutako Firmware-a exekutatzen"
+        "message": "<strong>$1</strong> -an argitaratutako Firmware-a exekutatzen"
     },
     "fcInfoReceived": {
-        "message": "Hegaldi kontroladorearen informazioa, identifikatzailea: <strong>$1<\/strong>, bertsioa:<strong>$2<\/strong>"
+        "message": "Hegaldi kontroladorearen informazioa, identifikatzailea: <strong>$1</strong>, bertsioa:<strong>$2</strong>"
     },
     "versionLabelTarget": {
         "message": "Target"
-    },
-    "notifications_app_just_updated_to_version": {
-        "message": "Aplikazioa:$1 bertsiora eguneratu da"
-    },
-    "notifications_click_here_to_start_app": {
-        "message": "Klikatu hemen aplikazioa hasteko"
     },
     "statusbar_port_utilization": {
         "message": "Atakaren erabilera:",
         "description": "Port utilization text shown in the status bar"
     },
-    "statusbar_usage_download": {
-        "message": "D:",
-        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
-    },
-    "statusbar_usage_upload": {
-        "message": "U:",
-        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
-    },
     "statusbar_packet_error": {
         "message": "Pakete errorea:",
         "description": "Packet error text shown in the status bar"
-    },
-    "statusbar_i2c_error": {
-        "message": "I2C errorea:",
-        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
         "message": "Zikloaren denbora:",
@@ -455,132 +360,72 @@
         "message": "CPU Karga:",
         "description": "CPU load text shown in the status bar"
     },
-    "dfu_connect_message": {
-        "message": "Mesedez, Firmware Flasher erabili DFU gailuak sartzeko"
-    },
     "dfu_erased_kilobytes": {
-        "message": "$1 kB flash memoria <span class=\"message-positive\">arrakastaz<\/span> ezabatuta"
+        "message": "$1 kB flash memoria <span class=\"message-positive\">arrakastaz</span> ezabatuta"
     },
     "dfu_device_flash_info": {
         "message": "Gailua detektatuta $1 KiB flash tamaina osoarekin"
     },
-    "dfu_error_image_size": {
-        "message": "<span class=\"message-negative\">Errorea<\/span>: Emandako irudia, Chipan erabilgarri dagoen Flash memoria baino handiagoa da! Irudia:$1 KiB, limitea = $2 KiB"
-    },
     "eeprom_saved_ok": {
-        "message": "EEPROM <span class=\"message-positive\">gordeta<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">gordeta</span>"
     },
     "defaultContributingHead": {
         "message": "Hartu parte"
     },
     "defaultFacebookText": {
-        "message": "<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Talde<\/a> bat badaukagu.<br \/>Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
-    },
-    "defaultButtonFirmwareFlasher": {
-        "message": "Firmware Flasheatzailea"
+        "message": "<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Talde</a> bat badaukagu.<br />Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
     },
     "defaultDonateBottom": {
-        "message": "<p>Era erregular baten ekonomikoki laguntzeko idea baduzu, kontuan euki beharko zenuen \"Patron\" bilakatzea gure Patreon portalean $t(patreonLink.message)<\/p>"
+        "message": "<p>Era erregular baten ekonomikoki laguntzeko idea baduzu, kontuan euki beharko zenuen \"Patron\" bilakatzea gure Patreon portalean $t(patreonLink.message)</p>"
     },
     "patreonLink": {
-        "message": "<a href=\"https:\/\/www.patreon.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon<\/a>",
+        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
         "description": "Patreon is name, and should not require translation"
     },
     "defaultDonate": {
         "message": "Dohanintza eman"
     },
-    "defaultSponsorsHead": {
-        "message": "Babesleak"
-    },
     "defaultDocumentationHead": {
-        "message": "Dokumentazioa \/ Eskuliburua"
+        "message": "Dokumentazioa / Eskuliburua"
     },
     "defaultDocumentation": {
-        "message": "Betafligth-eko dokumentazioa, bertsio oharretan eta Wiki-an eskuragarri dago.<br \/><br \/>"
+        "message": "Betafligth-eko dokumentazioa, bertsio oharretan eta Wiki-an eskuragarri dago.<br /><br />"
     },
     "defaultDocumentation2": {
-        "message": "Firmwarearentzako oharrak GitHub-en bertsioen orrian irakur daitezke <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">hemen<\/a>."
+        "message": "Firmwarearentzako oharrak GitHub-en bertsioen orrian irakur daitezke <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a>."
     },
     "defaultSupportHead": {
         "message": "Laguntza"
     },
-    "defaultSupportSubline1": {
-        "message": "Laguntza iturriak"
-    },
     "defaultSupportSubline2": {
         "message": "Garatzailea"
     },
-    "defaultSupport": {
-        "message": "Laguntza lortzeko mesedez, bilatu foro eta wikian edo jarri harremanetan saltzaileekin. <br\/> <br\/>"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups haria<\/a>"
-    },
     "defaultSupport4": {
-        "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Github<\/a>"
+        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Github</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Azelerometroa kalibratu"
     },
     "initialSetupCalibrateMagText": {
-        "message": "Mugi multirotorea gutxienez <strong>360<\/strong> gradu rotazio eje guztietan, 30 segundu dituzu hau egiteko"
+        "message": "Mugi multirotorea gutxienez <strong>360</strong> gradu rotazio eje guztietan, 30 segundu dituzu hau egiteko"
     },
     "initialSetupButtonCalibratingText": {
         "message": "Kalibratzen..."
     },
     "initialSetupButtonRebootBootloader": {
-        "message": "Boot Loader \/ DFU aktibatu"
+        "message": "Boot Loader / DFU aktibatu"
     },
     "initialSetupRebootBootloaderText": {
-        "message": "<strong>Boot loader \/ DFU<\/strong> moduan berrabiarazi."
-    },
-    "initialSetupButtonResetZaxis": {
-        "message": "Berrezarri Z ardatza, desplazatu: 0 gradu"
+        "message": "<strong>Boot loader / DFU</strong> moduan berrabiarazi."
     },
     "initialSetupButtonResetZaxisValue": {
         "message": "Berrezarri Z ardatza, desplazatua: $1 gradu"
-    },
-    "initialSetupMixerHead": {
-        "message": "Nahaste-mota"
-    },
-    "initialSetupThrottleHead": {
-        "message": "Throttle ezarpenak"
-    },
-    "initialSetupMinimum": {
-        "message": "Minimoa:"
-    },
-    "initialSetupMaximum": {
-        "message": "Maximoa:"
-    },
-    "initialSetupFailsafe": {
-        "message": "Segurtasun modua:"
-    },
-    "initialSetupMinCommand": {
-        "message": "MinCommand:"
-    },
-    "initialSetupBatteryHead": {
-        "message": "Bateria"
-    },
-    "initialSetupMinCellV": {
-        "message": "Zeldako gutxienezko tentsioa:"
-    },
-    "initialSetupMaxCellV": {
-        "message": "Zeldako gehienezko tentsioa:"
-    },
-    "initialSetupVoltageScale": {
-        "message": "Boltai eskala:"
-    },
-    "initialSetupAccelTrimsHead": {
-        "message": "Azelerometroaren trimak"
     },
     "initialSetupPitch": {
         "message": "Pitch:"
     },
     "initialSetupRoll": {
         "message": "Roll:"
-    },
-    "initialSetupMagHead": {
-        "message": "Magnetometroa"
     },
     "initialSetupBattery": {
         "message": "Bateriaren tentsioa:"
@@ -687,15 +532,6 @@
     "initialSetupGPSHead": {
         "message": "GPSa"
     },
-    "initialSetupInstrumentsHead": {
-        "message": "Instrumentuak"
-    },
-    "initialSetupButtonSave": {
-        "message": "Gorde"
-    },
-    "initialSetupModel": {
-        "message": "$1: modeloa"
-    },
     "initialSetupAttitude": {
         "message": "$1 gradu"
     },
@@ -703,16 +539,10 @@
         "message": "Azelerometroaren kalibrazioa hasi da"
     },
     "initialSetupAccelCalibEnded": {
-        "message": "Zelerometroaren kalibrazioa <span class=\"message-positive\">amaitu da<\/span>"
-    },
-    "initialSetupMagCalibStarted": {
-        "message": "Magnetometroaren kalibrazioa hasi da"
-    },
-    "initialSetupMagCalibEnded": {
-        "message": "Magnetometroaren kalibrazioa <span class=\"message-positive\">amaitu da<\/span>"
+        "message": "Zelerometroaren kalibrazioa <span class=\"message-positive\">amaitu da</span>"
     },
     "initialSetupSettingsRestored": {
-        "message": "<strong>Lehenetsita<\/strong> ezarpenak ezarrita"
+        "message": "<strong>Lehenetsita</strong> ezarpenak ezarrita"
     },
     "featureNone": {
         "message": "&lt;Bat aukeratu&gt;"
@@ -772,22 +602,13 @@
         "message": "Airmode etengabe gaitu"
     },
     "featureESC_SENSOR": {
-        "message": "KISS\/BLHeli_32 ESC telemetria <b>beste kable baten gainean<\/b> erabili"
+        "message": "KISS/BLHeli_32 ESC telemetria <b>beste kable baten gainean</b> erabili"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Desgaituta badago, 'ANTI GRAVITY' modua erabil dezakezu Anti Gravity-ak etengailu batekin aktibatzeko."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Giro iragazketa dinamikoa"
-    },
-    "configurationFeatureEnabled": {
-        "message": "Gaituta"
-    },
-    "configurationFeatureName": {
-        "message": "Ezaugarria"
-    },
-    "configurationFeatureDescription": {
-        "message": "Deskribapena"
     },
     "configurationMixer": {
         "message": "Nahastailea"
@@ -805,16 +626,16 @@
         "message": "RSSI seinalearen indarraren neurketa da eta oso erabilgarria da, aireontziak noiz irtengo diren barrutitik kanpora edo RF interferentziak jasaten ari den jakiteko."
     },
     "configurationEscFeatures": {
-        "message": "ESC\/Motorren ezaugarriak"
+        "message": "ESC/Motorren ezaugarriak"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Oharra:<\/strong> Funtzioen konbinazio guztiak ez dira baliozkoak. Hegaldi kontroladoreen firmwareak funtzio baliogabeen konbinazio baliogabeak hautematen dituenean, desgaitu egingo dira. <br\/><strong>Oharra:<\/strong>  Serial atakak konfiguratu <span class=\"message-negative\">lehenik eta behin<\/span> atakak behar duten funtzioak gaitzeko."
+        "message": "<strong>Oharra:</strong> Funtzioen konbinazio guztiak ez dira baliozkoak. Hegaldi kontroladoreen firmwareak funtzio baliogabeen konbinazio baliogabeak hautematen dituenean, desgaitu egingo dira. <br/><strong>Oharra:</strong>  Serial atakak konfiguratu <span class=\"message-negative\">lehenik eta behin</span> atakak behar duten funtzioak gaitzeko."
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>Oharra:<\/strong> SPI RX hornitzaileak funtzionatuko du beharrezko hardwarea taula gainean badago edo SPI bus batera konektatuta badago."
+        "message": "<strong>Oharra:</strong> SPI RX hornitzaileak funtzionatuko du beharrezko hardwarea taula gainean badago edo SPI bus batera konektatuta badago."
     },
     "configurationSensorGyroToUse": {
-        "message": "GIRO\/AZEL"
+        "message": "GIRO/AZEL"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Lehen"
@@ -850,19 +671,19 @@
         "message": "Motorren norabidea alderantzizkoa"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Aukera honek nahasgailua motorraren norabidea alderantzikatu eta helizeen arabera egon dadin konfiguratzen du. <strong>Oharra:<\/strong> Horrek ez du motorraren norabidea alderantzikatzen. Erabili zure ESCetarako konfigurazio-tresna edo aldatu ESC - motorren kableatua hori lortzeko. Era berean, ziurtatu zure motorrak goiko diagraman agertzen diren norabideetan biratzen ari direla egiaztatzen armatzen saiatu aurretik."
+        "message": "Aukera honek nahasgailua motorraren norabidea alderantzikatu eta helizeen arabera egon dadin konfiguratzen du. <strong>Oharra:</strong> Horrek ez du motorraren norabidea alderantzikatzen. Erabili zure ESCetarako konfigurazio-tresna edo aldatu ESC - motorren kableatua hori lortzeko. Era berean, ziurtatu zure motorrak goiko diagraman agertzen diren norabideetan biratzen ari direla egiaztatzen armatzen saiatu aurretik."
     },
     "configurationMotorPoles": {
         "message": "Motorren zutoinak",
-        "description": "One of the fields of the ESC\/Motor configuration"
+        "description": "One of the fields of the ESC/Motor configuration"
     },
     "configurationMotorPolesLong": {
         "message": "$t(configurationMotorPoles.message) (motorren kanpaiako iman kopurua)",
-        "description": "One of the fields of the ESC\/Motor configuration"
+        "description": "One of the fields of the ESC/Motor configuration"
     },
     "configurationMotorPolesHelp": {
         "message": "Zutoin kopurua, motorren kanpaiak dituen iman kopurua da. EZ ZENBATU estator tokian daudenak. Normalean 5 \" motorrek 15 iman dituzte, txikienak 3\" edo gutxiago bezala, normalean 12 iman izaten dituzte.",
-        "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
+        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
         "message": "Throttle minimoa (ESCren balio txikiena armatuta dagoenean)"
@@ -877,7 +698,7 @@
         "message": "Mesedez, zure ESCetarako egokia den irteera protokoloa aukeratu. $t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Kontuz:<\/strong> Zure ESC onartzen ez duten ESC protokoloa aukeratzen baduzu, <strong>bateria konektatu bezain laster ESC eta motorrak piztu daitezke<\/strong>. Hori dela eta, <strong>ESC protokoloa aldatu ondoren, eta bateria konektatu aurretik, ziurtatu zure helizeak kendu dituzula<\/strong>."
+        "message": "<strong>Kontuz:</strong> Zure ESC onartzen ez duten ESC protokoloa aukeratzen baduzu, <strong>bateria konektatu bezain laster ESC eta motorrak piztu daitezke</strong>. Hori dela eta, <strong>ESC protokoloa aldatu ondoren, eta bateria konektatu aurretik, ziurtatu zure helizeak kendu dituzula</strong>."
     },
     "configurationDshotBeeper": {
         "message": "Dshot balizaren konfigurazioa"
@@ -898,7 +719,7 @@
         "message": "Soinua ateratzen du TX itzalita edo seinalea galdu duelako(errepikatuko da TX ondo egon arte)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "SOS soinua ateratzen du armatuta eta TX itzalita edo seinalea galtzen duenean (lurreratzea \/ desarmatzea automatikoa)"
+        "message": "SOS soinua ateratzen du armatuta eta TX itzalita edo seinalea galtzen duenean (lurreratzea / desarmatzea automatikoa)"
     },
     "beeperDISARMING": {
         "message": "Bip soinua hegaldi kontroladorea desarmatzerakoan"
@@ -958,7 +779,7 @@
         "message": "Soinua eman armatuta dagoenean eta rc leuntzeak ez ditu iragazkiak hasieratu"
     },
     "configuration3d": {
-        "message": "3D ESC\/Motorren ezaugarriak"
+        "message": "3D ESC/Motorren ezaugarriak"
     },
     "configuration3dDeadbandLow": {
         "message": "3D Deadband balio txikia"
@@ -969,24 +790,15 @@
     "configuration3dNeutral": {
         "message": "3D Neutroa"
     },
-    "configuration3dDeadbandThrottle": {
-        "message": "Azeleragailuaren 3D Deadband"
-    },
     "configurationSystem": {
         "message": "Sistemaren ezarpenak"
-    },
-    "configurationLoopTime": {
-        "message": "Hegaldi-kontroladorearen ziklo denbora"
-    },
-    "configurationCalculatedCyclesSec": {
-        "message": "Zikloak\/seg [Hz]"
     },
     "configurationSpeedGyroNoGyro": {
         "message": "Girorik ez",
         "description": "When no gyro is configured this appears in place of the speed of the gyro in kHz"
     },
     "configurationSpeedPidNoGyro": {
-        "message": "Giro \/ {{value}}",
+        "message": "Giro / {{value}}",
         "description": "When no gyro is configured this appears in place of the speed of the PID in kHz. Try to keep it short."
     },
     "configurationKHzUnitLabel": {
@@ -994,13 +806,10 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Oharra:<\/strong> Ziurtatu zure FC abiadura horietan funtzionatzeko gai dela! Egiaztatu CPU eta Ziklo denboraren egonkortasuna. Aldatzean, beharrezkoa izango da PID berrezartzea. OHARRA: Errendimendu gehiago lortzeko, desgaitu azelerometroa eta bestelako sentsoreak."
+        "message": "<strong>Oharra:</strong> Ziurtatu zure FC abiadura horietan funtzionatzeko gai dela! Egiaztatu CPU eta Ziklo denboraren egonkortasuna. Aldatzean, beharrezkoa izango da PID berrezartzea. OHARRA: Errendimendu gehiago lortzeko, desgaitu azelerometroa eta bestelako sentsoreak."
     },
     "configurationGPSProtocol": {
         "message": "Protokoloa"
-    },
-    "configurationGPSBaudrate": {
-        "message": "Baudrate"
     },
     "configurationGPSubxSbas": {
         "message": "Lurreko Laguntza Mota"
@@ -1035,7 +844,7 @@
         "message": "Identifikatzailea"
     },
     "portsConfiguration": {
-        "message": "MSP\/Konfigurazioa"
+        "message": "MSP/Konfigurazioa"
     },
     "portsSerialRx": {
         "message": "Serial Rx"
@@ -1050,19 +859,13 @@
         "message": "Periferikoak"
     },
     "portsHelp": {
-        "message": "<strong>Oharra:<\/strong> Konbinazio guztiek ez dira balio. Hegaldi-kontroladoreak hori hautematen duenean, serie atakaren konfigurazioa berrabiarazten da."
+        "message": "<strong>Oharra:</strong> Konbinazio guztiek ez dira balio. Hegaldi-kontroladoreak hori hautematen duenean, serie atakaren konfigurazioa berrabiarazten da."
     },
     "portsVtxTableNotSet": {
-        "message": "<span class=\"message-negative\">KONTUZ:<\/span> VTX taula ez da behar bezala konfiguratu eta hori gabe VTX kontrola ezin da erabili. Mesedez VTX taula konfiguratu $t(tabVtx.message) fitxan."
+        "message": "<span class=\"message-negative\">KONTUZ:</span> VTX taula ez da behar bezala konfiguratu eta hori gabe VTX kontrola ezin da erabili. Mesedez VTX taula konfiguratu $t(tabVtx.message) fitxan."
     },
     "portsMSPHelp": {
-        "message": "<strong>Oharra:<\/strong> <span class=\"message-negative\">EZ<\/span> desgaitu MSP lehen serieko ataka, zer egiten ari zaren jakin ezean. Zure konfigurazioa berriro bihurritu eta ezabatu behar izatea baliteke."
-    },
-    "portsFirmwareUpgradeRequired": {
-        "message": "Firmware-aren bertsioa berritzea <span class=\"message-negative\">beharrezkoa<\/span> da. &lt; 1.8.0 Firmwarearean Serial ataka konfigurazioak  ez  dira onartzen."
-    },
-    "portsButtonSave": {
-        "message": "Gorde eta berrabiarazi"
+        "message": "<strong>Oharra:</strong> <span class=\"message-negative\">EZ</span> desgaitu MSP lehen serieko ataka, zer egiten ari zaren jakin ezean. Zure konfigurazioa berriro bihurritu eta ezabatu behar izatea baliteke."
     },
     "portsTelemetryDisabled": {
         "message": "Desgaitua"
@@ -1133,9 +936,6 @@
     "portsFunction_LIDAR_TF": {
         "message": "LIDAR Benewake"
     },
-    "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">PID kontroladorearen aldaketa desgaituta dago - CLI bidez aldatu dezakezu.<\/span> API bertsioarekin Firmwarea duzu <span class=\"message-negative\">$1<\/span>, baina Funtzionalitate honek <span class=\"message-positive\">$2<\/span> behar du."
-    },
     "pidTuningSubTabPid": {
         "message": "PID profilaren ezarpenak"
     },
@@ -1147,9 +947,6 @@
     },
     "pidTuningHideUnusedPids": {
         "message": "Erabili gabeko PIDak ezkutatu"
-    },
-    "pidTuningNonProfilePidSettings": {
-        "message": "Profilaren PID ezarpen independenteak"
     },
     "pidTuningAntiGravity": {
         "message": "Anti Gravity"
@@ -1186,50 +983,23 @@
     "receiverRcSmoothingManual": {
         "message": "Eskuz"
     },
-    "receiverRcSmoothingInterpolation": {
-        "message": "Interpolazioa"
-    },
-    "receiverRcSmoothingFilter": {
-        "message": "Iragazkia"
-    },
-    "rcSmoothingChannelsSmoothedHelp": {
-        "message": "Leuntzea aplikatzeko kanalak"
-    },
-    "pidTuningDtermSetpointTransition": {
-        "message": "D setpoint trantsizioa"
-    },
-    "pidTuningDtermSetpoint": {
-        "message": "D setpoint pisua"
-    },
-    "pidTuningDtermSetpointTransitionWarning": {
-        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message): <\/strong>Ezda gomendagarria 0 Setpoint-en trantsizioa 0 eta 0.1 baino txikiagoa. Hori egitean, ezegonkortasuna eta makilen erantzuna murriztea eragin dezakete, makilek erdiko puntua zeharkatzen duten bitartean.<\/span>"
-    },
     "pidTuningMaxRateWarning": {
-        "message": "<span class=\"message-negative\"><b>Kontuz:<\/b><\/span>tasa oso altuak deselerazio azkarretan desinkronizazioak sor ditzakete."
+        "message": "<span class=\"message-negative\"><b>Kontuz:</b></span>tasa oso altuak deselerazio azkarretan desinkronizazioak sor ditzakete."
     },
     "pidTuningRcRate": {
         "message": "RC Tasa"
     },
     "pidTuningMaxVel": {
-        "message": "Max Abi [gradu\/s]"
+        "message": "Max Abi [gradu/s]"
     },
     "pidTuningRate": {
         "message": "Tasa"
     },
-    "pidTuningSuperRate": {
-        "message": "Super tasa"
-    },
-    "pidTuningRatesPreview": {
-        "message": "Tarifen aurrebista"
-    },
     "pidTuningRatesTuningHelp": {
-        "message": "<b>Tasak eta Expo<\/b>: Zehaztu ezazu kontrol sentimendua parametro hauetan oinarrituta kontroletan. Erabili grafikoa eta 3D zuzeneko eredua zure gogoko tasaren ezarpenak aurkitzeko."
+        "message": "<b>Tasak eta Expo</b>: Zehaztu ezazu kontrol sentimendua parametro hauetan oinarrituta kontroletan. Erabili grafikoa eta 3D zuzeneko eredua zure gogoko tasaren ezarpenak aurkitzeko."
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
-    },
-    "pidTuningTPA": {
-        "message": "TPA"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Azeleragailu kurbaren aurrebista"
@@ -1250,16 +1020,10 @@
         "message": "LABURTU"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Hautatu azeleragailu-muga mota. <b>DESGAITU<\/b>funtzioa desgaitzen du, <b>ESKALATU<\/b> k azeleragailuaren tartea 0-tik hautatutako portzentajea eraldatuko du bide osoa erabiliz, <b>LABURTU<\/b> gehienezko azeleragailuaren ehunekoa ezarriko du eta eragin gehigarririk ez duen gainetik dagoen ibilbidea"
+        "message": "Hautatu azeleragailu-muga mota. <b>DESGAITU</b>funtzioa desgaitzen du, <b>ESKALATU</b> k azeleragailuaren tartea 0-tik hautatutako portzentajea eraldatuko du bide osoa erabiliz, <b>LABURTU</b> gehienezko azeleragailuaren ehunekoa ezarriko du eta eragin gehigarririk ez duen gainetik dagoen ibilbidea"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Ezarri nahi duzun throttle mugaren ehunekoa. 100% ezarrita funtzioa ezgaitzen du."
-    },
-    "pidTuningFilter": {
-        "message": "Iragazkia"
-    },
-    "pidTuningFilterFrequency": {
-        "message": "Frekuentzia"
     },
     "pidTuningRatesCurve": {
         "message": "Tasaren aurrebista"
@@ -1272,12 +1036,6 @@
     },
     "pidTuningButtonRefresh": {
         "message": "Berritu"
-    },
-    "pidTuningProfileHead": {
-        "message": "Profila"
-    },
-    "pidTuningControllerHead": {
-        "message": "PID kontroladorea"
     },
     "dialogCopyProfileText": {
         "message": "Kopiatu hemen uneko profilaren balioak"
@@ -1298,22 +1056,13 @@
         "message": "Ezeztatu"
     },
     "pidTuningReceivedProfile": {
-        "message": "Hegaldi-kontroladorea ezarrita Profila: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Hegaldi-kontroladorea ezarrita Profila: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "Hegaldi-kontroladorea Tasa Profila: <strong class=\"message-positive\">$1<\/strong>"
-    },
-    "pidTuningLoadedProfile": {
-        "message": "Kargatutako profila: <strong class=\"message-positive\">$1<\/strong>"
-    },
-    "pidTuningLoadedRateProfile": {
-        "message": "Kargatutako tasa profila: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Hegaldi-kontroladorea Tasa Profila: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": "PID datuak <strong>berritu<\/strong>"
-    },
-    "tuningHelp": {
-        "message": "<b>Eguneratzeko aholkuak<\/b><br\/><span class=\"message-negative\">GARRANTZITSUA:<\/span> Garrantzitsua da lehen hegaldietan motorren tenperatura egiaztatzea. Iragazkiaren balioa zenbat eta handiagoa izan, orduan eta handiagoa izango da hegan egiteko, baina zarata gehiago lortuko duzu motorretan. <br>100Hz-ko balio lehenetsia ezin hobea da, baina zaratagarrien konfigurazioetarako Dterm iragazkia 50Hz-era jaistea probatu dezakezu eta, agian, giro iragazkia ere."
+        "message": "PID datuak <strong>berritu</strong>"
     },
     "receiverThrottleMid": {
         "message": "Azeleragailu MID"
@@ -1325,7 +1074,7 @@
         "message": "'Stick baxua' atalasea"
     },
     "receiverHelpStickMin": {
-        "message": "Geihenezko balioa (us) stick bat egiteko handiko gisa onartzeko\/ezkerreko komandoaren sarrera-(MIN_CHECK) da."
+        "message": "Geihenezko balioa (us) stick bat egiteko handiko gisa onartzeko/ezkerreko komandoaren sarrera-(MIN_CHECK) da."
     },
     "receiverStickCenter": {
         "message": "Stick Zentroa"
@@ -1337,7 +1086,7 @@
         "message": "'Stick altua' atalasea"
     },
     "receiverHelpStickMax": {
-        "message": "Gutxieneko balioa (us) stick bat egiteko handiko gisa onartzeko\/eskuineko komandoaren sarrera-(MAX_CHECK) da."
+        "message": "Gutxieneko balioa (us) stick bat egiteko handiko gisa onartzeko/eskuineko komandoaren sarrera-(MAX_CHECK) da."
     },
     "receiverDeadband": {
         "message": "RC Deadband"
@@ -1349,13 +1098,13 @@
         "message": "Yaw Deadband"
     },
     "receiverHelpYawDeadband": {
-        "message": "Balioak dira (us) baliozko RC-ren zenbatekoa izan daitekeen kontuan hartuta. Irteeretan jitter-a duten transmisoreentzat, balio hori handitu egin daiteke rc sarrerek inaktibo mantentzen badira. <strong>Ezarpen hau Yawentzat bakarrik da.<\/strong>"
+        "message": "Balioak dira (us) baliozko RC-ren zenbatekoa izan daitekeen kontuan hartuta. Irteeretan jitter-a duten transmisoreentzat, balio hori handitu egin daiteke rc sarrerek inaktibo mantentzen badira. <strong>Ezarpen hau Yawentzat bakarrik da.</strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "3D Throttle Deadband"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": "Hauek dira balioak (us). Eremu neutroa zabaltzeko balioa handitu. <strong>Ezarpen hau 3D motordunetarako da.<\/strong>"
+        "message": "Hauek dira balioak (us). Eremu neutroa zabaltzeko balioa handitu. <strong>Ezarpen hau 3D motordunetarako da.</strong>"
     },
     "receiverChannelMap": {
         "message": "Kanal mapa"
@@ -1363,23 +1112,14 @@
     "receiverChannelDefaultOption": {
         "message": "Lehenetsia"
     },
-    "receiverChannelMapTitle": {
-        "message": "Laukiaren barruan klik eginez zure kanalaren mapa defini dezakezu"
-    },
     "receiverRssiChannel": {
         "message": "RSSI kanala"
     },
     "receiverRssiChannelDisabledOption": {
         "message": "Desgaitua"
     },
-    "receiverRefreshRateTitle": {
-        "message": "Grafikoa berritzeko tasa"
-    },
     "receiverResetRefreshRate": {
         "message": "Leheneratu"
-    },
-    "receiverResetRefreshRateTitle": {
-        "message": "Leheneratu berritzeko tasa"
     },
     "receiverButtonSave": {
         "message": "Gorde"
@@ -1394,7 +1134,7 @@
         "message": "Lotu eskaera hegaldi-kontroladoreari bidalita."
     },
     "receiverDataRefreshed": {
-        "message": "RC sintonizatzeko datuak <strong>berritu<\/strong>"
+        "message": "RC sintonizatzeko datuak <strong>berritu</strong>"
     },
     "receiverModelPreview": {
         "message": "Aurrebista"
@@ -1403,7 +1143,7 @@
         "message": "Kontrolak gaitu"
     },
     "auxiliaryHelp": {
-        "message": "Konfiguratu hemen moduak barruti edo \/ eta beste modu batzuetarako estekak (BF 4.0 edo hurrengoetan onartzen diren estekak) erabiliz. Erabili <strong>barrutiak<\/strong> transmisorearen etengailuak eta dagozkion moduak esleitzeko. Min\/max tartearen arteko irakurketa ematen duen hargailuen kanalak modua aktibatuko du. Erabili <strong>esteka<\/strong> modua beste modu bat aktibatuta dagoenean aktibatzeko. <strong>Salbuespenak:<\/strong>ARM ezin da beste modu batera edo beste batekin lotu; moduak ezin dira lotura batekin konfiguratutako beste modu batzuekin lotu (kateatutako estekak). Multzo eta esteka anitz erabil daitezke edozein modua aktibatzeko. Modu baterako zehaztutako barruti \/ esteka bat baino gehiago badago, horietako bakoitza <strong>ETA<\/strong> edo <strong>EDO<\/strong> ezar daiteke. Modu bat aktibatuko da: <br\/>-ALL<strong>ETA<\/strong> barrutiak\/estekak aktibo daudenean; EDO<br\/> -gutxienez <strong>EDO<\/strong> barruti\/esteka aktibo badago. <br\/><br\/>Ez ahaztu ezarpenak gorde botoiarekin."
+        "message": "Konfiguratu hemen moduak barruti edo / eta beste modu batzuetarako estekak (BF 4.0 edo hurrengoetan onartzen diren estekak) erabiliz. Erabili <strong>barrutiak</strong> transmisorearen etengailuak eta dagozkion moduak esleitzeko. Min/max tartearen arteko irakurketa ematen duen hargailuen kanalak modua aktibatuko du. Erabili <strong>esteka</strong> modua beste modu bat aktibatuta dagoenean aktibatzeko. <strong>Salbuespenak:</strong>ARM ezin da beste modu batera edo beste batekin lotu; moduak ezin dira lotura batekin konfiguratutako beste modu batzuekin lotu (kateatutako estekak). Multzo eta esteka anitz erabil daitezke edozein modua aktibatzeko. Modu baterako zehaztutako barruti / esteka bat baino gehiago badago, horietako bakoitza <strong>ETA</strong> edo <strong>EDO</strong> ezar daiteke. Modu bat aktibatuko da: <br/>-ALL<strong>ETA</strong> barrutiak/estekak aktibo daudenean; EDO<br/> -gutxienez <strong>EDO</strong> barruti/esteka aktibo badago. <br/><br/>Ez ahaztu ezarpenak gorde botoiarekin."
     },
     "auxiliaryToggleUnused": {
         "message": "Ezkutatu ez erabilitako moduak"
@@ -1436,14 +1176,8 @@
     "auxiliaryModeLogicAND": {
         "message": "ETA"
     },
-    "adjustmentsHelp": {
-        "message": "Konfiguratu etengailuak zuzenketak egiteko. Informazio gehiago nahi izanez gero, ikusi eskuliburuko \"hegaldiaren ezarpenak\" atala. Egindako zuzenketak ez dira automatikoki gordetzen."
-    },
     "adjustmentsColumnEnable": {
         "message": "Gaituta badago"
-    },
-    "adjustmentsColumnUsingSlot": {
-        "message": "erretena erabiliz"
     },
     "adjustmentsColumnWhenChannel": {
         "message": "kanala denean"
@@ -1456,24 +1190,6 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "kanal bidez"
-    },
-    "adjustmentsSlot0": {
-        "message": "1. Erretena"
-    },
-    "adjustmentsSlot1": {
-        "message": "2. Erretena"
-    },
-    "adjustmentsSlot2": {
-        "message": "3. Erretena"
-    },
-    "adjustmentsSlot3": {
-        "message": "4. Erretena"
-    },
-    "adjustmentsMin": {
-        "message": "Min"
-    },
-    "adjustmentsMax": {
-        "message": "Max"
     },
     "adjustmentsFunction0": {
         "message": "Aldaketarik ez"
@@ -1565,9 +1281,6 @@
     "adjustmentsSave": {
         "message": "Gorde"
     },
-    "servosFirmwareUpgradeRequired": {
-        "message": "Serboek &gt;=1.10.0. firmwarea eta kontroladoreak onartzea behar du."
-    },
     "servosChangeDirection": {
         "message": "Egokitzeko, aldatu TX norabidea"
     },
@@ -1583,23 +1296,11 @@
     "servosMax": {
         "message": "MAX"
     },
-    "servosAngleAtMin": {
-        "message": "Gutxieneko angelua"
-    },
-    "servosAngleAtMax": {
-        "message": "Gehieneko angelua"
-    },
     "servosLiveMode": {
         "message": "Zuzeneko modua gaitu"
     },
     "servosButtonSave": {
         "message": "Gorde"
-    },
-    "servosNormal": {
-        "message": "Normal"
-    },
-    "servosReverse": {
-        "message": "Alderantzikatu"
     },
     "gpsMapMessage1": {
         "message": "Mesedez, egiaztatu zure Interneteko konexioa"
@@ -1633,15 +1334,6 @@
     },
     "motorsmAhDrawn": {
         "message": "Intents. kontsumituta:"
-    },
-    "motorsVoltageValue": {
-        "message": "$1 V"
-    },
-    "motorsADrawingValue": {
-        "message": "$1 A"
-    },
-    "motorsmAhDrawnValue": {
-        "message": "$1 mAh"
     },
     "motorsText": {
         "message": "Motoreak"
@@ -1703,29 +1395,11 @@
     "motorsResetMaximum": {
         "message": "Denboran geihenezko balioa berrezarri"
     },
-    "motorsSensorAccelSelect": {
-        "message": "azel"
-    },
-    "motorsRPM": {
-        "message": "R: {{motorsRpmValue}}",
-        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
-    },
-    "motorsRPMError": {
-        "message": "E: {{motorsErrorValue}}%",
-        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
-    },
-    "motorsESCTemperature": {
-        "message": "T: {{motorsESCTempValue}}&deg;C",
-        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
-    },
     "motorsMaster": {
         "message": "Nagusia"
     },
     "motorsEnableControl": {
-        "message": "<strong>Arriskuak ulertzen ditut<\/strong>, helizeak kendu-motore eta armatzearen kontrolak gaitu eta ihes egitea saihesteko prebentzioa desgaitu."
-    },
-    "motorOutputReorderDialogClose": {
-        "message": "Utzi"
+        "message": "<strong>Arriskuak ulertzen ditut</strong>, helizeak kendu-motore eta armatzearen kontrolak gaitu eta ihes egitea saihesteko prebentzioa desgaitu."
     },
     "motorOutputReorderDialogAgree": {
         "message": "Hasi"
@@ -1743,19 +1417,16 @@
         "message": "Prest! Konprobatu motorren ordena irudian klik eginez."
     },
     "motorsRemapDialogUnderstandRisks": {
-        "message": "<strong>Arriskuak ulertzen ditut<\/strong>,<br \/>helizeak kendu egin dira."
+        "message": "<strong>Arriskuak ulertzen ditut</strong>,<br />helizeak kendu egin dira."
     },
     "motorsRemapDialogRiskNotice": {
-        "message": "<strong>Segurtasun oharra<\/strong><br \/><strong class=\"message-negative\">Helize guztiak kendu lesioak ekiditeko!<\/strong><br \/>Motorrak <strong>biraka egingo dute!<\/strong>"
+        "message": "<strong>Segurtasun oharra</strong><br /><strong class=\"message-negative\">Helize guztiak kendu lesioak ekiditeko!</strong><br />Motorrak <strong>biraka egingo dute!</strong>"
     },
     "motorsRemapDialogSave": {
         "message": "Gorde"
     },
     "motorsRemapDialogStartOver": {
         "message": "Berriz hasi"
-    },
-    "sensorsInfo": {
-        "message": "Gogoan izan bizkor eguneratzeko aldiak eta grafiko anitzak aldi berean erabiltzeak baliabide ugari kontsumitzen dituela eta bateria azkarrago xahutuko duzula ordenagailu eramangarria erabiltzen baduzu.<br\/> Interesatzen zaizuen sentsoreen grafikoak soilik marraztea gomendatzen dugu eta zentzuzko eguneratze denborak erabili."
     },
     "sensorsRefresh": {
         "message": "Berritu:"
@@ -1782,7 +1453,7 @@
         "message": "Arazketa"
     },
     "sensorsGyroTitle": {
-        "message": "Giroskopoa - grad\/s"
+        "message": "Giroskopoa - grad/s"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitudea - metroak"
@@ -1793,11 +1464,8 @@
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
     },
-    "sensorsDebugTitle": {
-        "message": "Arazketa"
-    },
     "cliInfo": {
-        "message": "<strong>Oharra:<\/strong> CLI fitxa utzita edo Deskonektatu sakatuz <strong>automatikoki<\/strong>ezabatuko da. Bidali \"<strong>exit<\/strong>\" agintean terminalean utzi ahurretik.  Azken firmwarearekin, kontroladorea <strong>itzali eta berriro piztuko da<\/strong> gordegabeko aldaketa guztiak <strong>ezabatuz<\/strong>.<p><strong><span class=\"message-negative\">Oharra:<\/span><\/strong> CLI-ko aginte batzuk motorraren irteera-ko pinetan autazko seinaleak bidal ditzakete. Honek bateria ipintzerakoa motorrak zentzurik gabe bueltaka aztea eragin dezake. Orregatik guztiz komenigarria da <strong>CLI-an aginteak sartu aurretik bateria kenduta dagoela zihurtatzea<\/strong>."
+        "message": "<strong>Oharra:</strong> CLI fitxa utzita edo Deskonektatu sakatuz <strong>automatikoki</strong>ezabatuko da. Bidali \"<strong>exit</strong>\" agintean terminalean utzi ahurretik.  Azken firmwarearekin, kontroladorea <strong>itzali eta berriro piztuko da</strong> gordegabeko aldaketa guztiak <strong>ezabatuz</strong>.<p><strong><span class=\"message-negative\">Oharra:</span></strong> CLI-ko aginte batzuk motorraren irteera-ko pinetan autazko seinaleak bidal ditzakete. Honek bateria ipintzerakoa motorrak zentzurik gabe bueltaka aztea eragin dezake. Orregatik guztiz komenigarria da <strong>CLI-an aginteak sartu aurretik bateria kenduta dagoela zihurtatzea</strong>."
     },
     "cliInputPlaceholder": {
         "message": "Idatzi hemen zure komandoa. Tab sakatu fitxa automatikoki osatzeko."
@@ -1826,20 +1494,14 @@
     "cliLoadFromFileBtn": {
         "message": "Fitxategitik kopiatu"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "<strong>{{fileName}}<\/strong> fitxategia kargatuta. Berrikusi kargatutako komandoak"
-    },
     "cliConfirmSnippetNote": {
-        "message": "<strong>Oharra<\/strong>: komandoak berrikusi eta editatu ditzakezu exekutatu aurretik."
+        "message": "<strong>Oharra</strong>: komandoak berrikusi eta editatu ditzakezu exekutatu aurretik."
     },
     "cliConfirmSnippetBtn": {
         "message": "Exekutatu"
     },
     "loggingSamplesSaved": {
         "message": "Laginak gordeta:"
-    },
-    "loggingLogSize": {
-        "message": "Fitxategiaren tamaina:"
     },
     "loggingButtonLogFile": {
         "message": "Erregistro fitxategia aukeratu"
@@ -1850,11 +1512,8 @@
     "loggingStop": {
         "message": "Erregistroa gelditu"
     },
-    "loggingBack": {
-        "message": "Erregistroa utxi\/deskonektatu"
-    },
     "loggingErrorNotConnected": {
-        "message": "Lehenengo <strong>konektatu<\/strong> behar duzu"
+        "message": "Lehenengo <strong>konektatu</strong> behar duzu"
     },
     "loggingErrorLogFile": {
         "message": "Mesedez, aukeratu erregistro fitxategia"
@@ -1862,14 +1521,8 @@
     "loggingErrorOneProperty": {
         "message": "Mesedez, aukeratu gutxienez propietate bat erregistratzeko"
     },
-    "loggingAutomaticallyRetained": {
-        "message": "Aurreko erregistro fitxategia automatikoki kargatu da: <strong>$1<\/strong>"
-    },
     "blackboxNotSupported": {
         "message": "Zure hegaldiaren kontroladorearen firmwareak ez du Blackbox erregistroa onartzen."
-    },
-    "blackboxMaybeSupported": {
-        "message": "Hegaldiaren kontroladorearen firmwarea oso zaharra da fitxa hau onartzeko, edo Blackbox funtzioa desgaituta dago Konfigurazio fitxan."
     },
     "blackboxConfiguration": {
         "message": "Kutxabeltza konfigurazioa"
@@ -1917,10 +1570,10 @@
         "message": "Flash memoria fitxategira gorde..."
     },
     "dataflashSavetoFileNote": {
-        "message": "Flash memoria fitxategian gordetzea motela da eta berez akatsak \/ fitxategiak hondatzeko joera du.<br>Zenbait kasutan fitxategi txikientzat funtzionatuko du, baina hori ez da onartzen eta laguntza eskaerak itxi egingo dira iruzkinik egin gabe - erabili Biltegiratze Masiboa modua ordez."
+        "message": "Flash memoria fitxategian gordetzea motela da eta berez akatsak / fitxategiak hondatzeko joera du.<br>Zenbait kasutan fitxategi txikientzat funtzionatuko du, baina hori ez da onartzen eta laguntza eskaerak itxi egingo dira iruzkinik egin gabe - erabili Biltegiratze Masiboa modua ordez."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Metodo hau motela da eta berez akatsak \/ fitxategiak hondatzeko joera du, MSP konexioak berak intrintseko eta oinarrizko mugak dituelako, fitxategi transferentzietarako desegokia bihurtzen dutelako. Erregistro fitxategi txikietan bakarrik funtziona dezake. Ez sortu laguntza eskaerarik metodo hau erabiliz gordetako fitxategien transferentziek huts egiten badira. Gomendatutako metodoa '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (behean) erabiltzea da, biltegiratze masiboa modua aktibatzeko eta zure hegaldiaren kontroladorera sartzeko biltegiratze gailu gisa erregistro fitxategiak gordetzeko."
+        "message": "Metodo hau motela da eta berez akatsak / fitxategiak hondatzeko joera du, MSP konexioak berak intrintseko eta oinarrizko mugak dituelako, fitxategi transferentzietarako desegokia bihurtzen dutelako. Erregistro fitxategi txikietan bakarrik funtziona dezake. Ez sortu laguntza eskaerarik metodo hau erabiliz gordetako fitxategien transferentziek huts egiten badira. Gomendatutako metodoa '<b>$t(onboardLoggingRebootMscText.message)</b>' (behean) erabiltzea da, biltegiratze masiboa modua aktibatzeko eta zure hegaldiaren kontroladorera sartzeko biltegiratze gailu gisa erregistro fitxategiak gordetzeko."
     },
     "dataflashButtonErase": {
         "message": "Flash garbitu"
@@ -1982,32 +1635,11 @@
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Bertsioaren orria bisitatu."
     },
-    "firmwareFlasherReleaseNotes": {
-        "message": "Bertsioaren oharrak:"
-    },
     "firmwareFlasherReleaseDate": {
         "message": "Data:"
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
-    },
-    "firmwareFlasherReleaseFileUrl": {
-        "message": "Eskuz deskargatu."
-    },
-    "firmwareFlasherTargetWarning": {
-        "message": "<span class = \"message-negative\"> GARRANTZITSUA <\/span>: Ziurtatu  fitxategi egokia flasheatzen duzula. Fitxategi okerra erabiltzean, zerbait  <span class= \"message-negative\">txarrak<\/span> gerta daitezke."
-    },
-    "firmwareFlasherPath": {
-        "message": "Bide-izena:"
-    },
-    "firmwareFlasherSize": {
-        "message": "Tamaina:"
-    },
-    "firmwareFlasherStatus": {
-        "message": "Egoera:"
-    },
-    "firmwareFlasherProgress": {
-        "message": "Aurrerapena:"
     },
     "firmwareFlasherLoadFirmwareFile": {
         "message": "Mesedez kargatu firmware fitxategia"
@@ -2036,29 +1668,14 @@
     "firmwareFlasherFullChipEraseDescription": {
         "message": "Kontroladorean gordeta dauden konfigurazio datu guztiak ezabatzen ditu."
     },
-    "firmwareFlasherFlashDevelopmentFirmware": {
-        "message": "Garapen Firmwarea Erabili"
-    },
-    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": "Flash berriena (probatu gabekoa) garapen firmwarea."
-    },
-    "firmwareFlasherManualPort": {
-        "message": "Ataka"
-    },
     "firmwareFlasherManualBaud": {
         "message": "Transmisio abiadura"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "Eskuzko aukeraketa baud -tasa ez duten abiadura lehenetsia onartzen kontroladorentzat edo bluetooth bidez. <br\/><span class=\"message-negative\">Oharra:<\/span> Ez da erabiltzen USB DFU bidez egitean"
-    },
-    "firmwareFlasherBaudRate": {
-        "message": "Baud tasa"
+        "message": "Eskuzko aukeraketa baud -tasa ez duten abiadura lehenetsia onartzen kontroladorentzat edo bluetooth bidez. <br/><span class=\"message-negative\">Oharra:</span> Ez da erabiltzen USB DFU bidez egitean"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Erakutsi hautagai bertsioak, egonkor bertsioak gain"
-    },
-    "firmwareFlasherOptionLoading": {
-        "message": "Lanean ..."
     },
     "firmwareFlasherOptionLabelBuildTypeRelease": {
         "message": "Egonkor bertsioa"
@@ -2069,22 +1686,7 @@
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
         "message": "Garapena"
     },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
-        "message": "3.3 AKK & RDQ VTX Patch"
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
-        "message": "3.4 AKK & RDQ VTX Patch"
-    },
-    "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": "Firmware\/hegaldi-kontroladorea aukeratu"
-    },
-    "firmwareFlasherOptionLabelSelectBoard": {
-        "message": "Hegaldi-kontroladore bat aukeratu"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
-        "message": "Firmware bertsioa aukeratu"
-    },
-    "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
         "message": "Firmware bertsioa aukeratu"
     },
     "firmwareFlasherButtonLoadLocal": {
@@ -2102,27 +1704,6 @@
     "firmwareFlasherFlashFirmware": {
         "message": "Firmwarea instalatu"
     },
-    "firmwareFlasherGithubInfoHead": {
-        "message": "Firmware-ren informazioa GitHub-en"
-    },
-    "firmwareFlasherCommiter": {
-        "message": "Sortzailea:"
-    },
-    "firmwareFlasherDate": {
-        "message": "Data:"
-    },
-    "firmwareFlasherHash": {
-        "message": "Hash:"
-    },
-    "firmwareFlasherUrl": {
-        "message": "GitHubera joan aldaketa hau berrikusteko..."
-    },
-    "firmwareFlasherMessage": {
-        "message": "Mezua:"
-    },
-    "firmwareFlasherButtonLeave": {
-        "message": "Firmware Flasheatzailea Utzi"
-    },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmwarea ez da kargatu"
     },
@@ -2137,33 +1718,17 @@
         "message": "Konfigurazio fitxategia hondatuta dagoela dirudi, ASCII onartu da (0-255 karaktereak), tarte honetatik kanpo dauden karaktereak iruzkin gisa onartzen dira",
         "description": "shown in the log, more wordy"
     },
-    "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": "<span class=\"message-positive\">Urruneko firmwareak kargatuta, flashseatzeko prest<\/span>"
-    },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Ezin izan da urruneko firmwarea kargatu"
     },
-    "firmwareFlasherFailedToLoadUnifiedConfig": {
-        "message": "Ezin izan da urruneko konfigurazioa {{remote_file}} kargatu"
-    },
-    "firmwareFlasherLegacyLabel": {
-        "message": "{{target}} (Zaharkituta)",
-        "description": "If we have a Unified target and a old style target available, we are labeling the older one"
-    },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": "<b>Ez da kargatzeko firmwarerik hautatu<\/b>"
+        "message": "<b>Ez da kargatzeko firmwarerik hautatu</b>"
     },
     "firmwareFlasherNoValidPort": {
-        "message": "<span class=\"message-negative\">Mesedez, baliozko serial ataka hautatu<\/span>"
-    },
-    "firmwareFlasherWritePermissions": {
-        "message": "Ez duzu <span class=\"message-negative\">idazteko baimenik<\/span> fitxategi honetarako"
-    },
-    "firmwareFlasherFlashTrigger": {
-        "message": "<strong>$1<\/strong> Detektatuta - Konektatzean instalatu exekutatzen ari da"
+        "message": "<span class=\"message-negative\">Mesedez, baliozko serial ataka hautatu</span>"
     },
     "ledStripHelp": {
-        "message": "Hegaldi-kontroladoreak banda bateko LED banakako koloreak eta efektuak kontrolatu ditzake.<br\/> Konfiguratu saretako LEDak, kableatu ordena konfiguratu eta ondoren itsatsi LED hegazkinaren saretako posizioen arabera. Ez dira alanbreak ordenatzen dituzten LEDak gordeko.<br\/> Egin klik bikoitza kolorean HSVren balioak editatzeko."
+        "message": "Hegaldi-kontroladoreak banda bateko LED banakako koloreak eta efektuak kontrolatu ditzake.<br/> Konfiguratu saretako LEDak, kableatu ordena konfiguratu eta ondoren itsatsi LED hegazkinaren saretako posizioen arabera. Ez dira alanbreak ordenatzen dituzten LEDak gordeko.<br/> Egin klik bikoitza kolorean HSVren balioak editatzeko."
     },
     "ledStripButtonSave": {
         "message": "Gorde"
@@ -2462,25 +2027,13 @@
         "message": "16. AUX"
     },
     "pidTuningBasic": {
-        "message": "Oinarrizko\/Akro"
-    },
-    "pidTuningYawJumpPrevention": {
-        "message": "Yaw Saltoen Prebentzioa"
-    },
-    "pidTuningRcExpoPower": {
-        "message": "RC Expo potentzia"
-    },
-    "pidTuningRcExpoPowerHelp": {
-        "message": "RC Expo kalkulatzeko erabiltzen den esponentea. 3.0 bertsio aurreko Betaflight bertsioetan, balioa 3an finkatzen da."
-    },
-    "pidTuningLevel": {
-        "message": "Angle\/Horizon"
+        "message": "Oinarrizko/Akro"
     },
     "pidTuningAltitude": {
-        "message": "Barometroa eta Sonar\/Altitudea"
+        "message": "Barometroa eta Sonar/Altitudea"
     },
     "pidTuningMag": {
-        "message": "Magnetometroa\/Direkzioa"
+        "message": "Magnetometroa/Direkzioa"
     },
     "pidTuningGps": {
         "message": "GPS Nabigazioa"
@@ -2500,17 +2053,8 @@
     "pidTuningLevelAngleLimit": {
         "message": "Angle muga"
     },
-    "pidTuningLevelSensitivity": {
-        "message": "Sentibera"
-    },
-    "pidTuningLevelHelp": {
-        "message": "Beheko balioek ANGLE eta HORIZON hegaldi moduen portaera aldatzen dute. PID kontrolagailu desberdinak, balio ezberdinean kudeatzen dituzte. Mesedez, dokumentazioa kontsultatu."
-    },
     "pidTuningMotorOutputLimit": {
         "message": "Motor Irteeraren Muga"
-    },
-    "pidTuningMotorLimit": {
-        "message": "Eskala Faktorea [%]"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profileko iragazki-ezarpen independenteak"
@@ -2526,18 +2070,6 @@
     "pidTuningSliderHighFiltering": {
         "message": "Iragazketa Gehiago",
         "description": "Filter tuning slider high header"
-    },
-    "pidTuningSlidersDisabled": {
-        "message": "<strong>Oharra:<\/strong> Graduatzaileak desgaituta daude balioak eskuz aldatu direlako. '$t(pidTuningSliderEnableButton.message)' botoia sakatzen, balioak berrezarriko dira eta gorde gabeko aldaketa guztiak galduko dira.",
-        "description": "Tuning sliders disabled note when manual changes are detected"
-    },
-    "pidTuningSliderEnableButton": {
-        "message": "Graduatzaileak Gaitu",
-        "description": "Button label for enabling sliders"
-    },
-    "pidTuningSlidersNonExpertMode": {
-        "message": "<strong>Oharra:<\/strong> Graduatzaileen barrutia mugatuta dago aditu moduan ez zaudelako. Barruti hau egokia izan daiteke eraikuntza eta hasiberri gehienentzat.",
-        "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
         "message": "Gutxikoa",
@@ -2558,49 +2090,21 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Giro Behe-paseko Iragazkiak"
     },
-    "pidTuningGyroLowpassType": {
-        "message": "1. Giro Behe-paseko Iragazki Mota"
-    },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giro Notch Iragazkiak"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Notch Iragazki Dinamikoa"
     },
-    "pidTuningDynamicNotchRange": {
-        "message": "Notch Dinamikoa Iragazkiaren Barrutia"
-    },
-    "pidTuningDynamicNotchMinHzHelp": {
-        "message": "Notch dinamikoa kontrolatu behar duen zarata maiztasun txikienean ezarri."
-    },
-    "pidTuningDynamicNotchMaxHzHelp": {
-        "message": "Notch dinamikoa kontrolatu behar duen zarata maiztasun handiagoan ezarri."
-    },
     "pidTuningRpmFilterGroup": {
         "message": "Giro RPM Iragazkia",
         "description": "Header text for the RPM Filter group"
-    },
-    "pidTuningRpmMinHzHelp": {
-        "message": "RPM iragazkiak erabiliko duen gutxieneko frekuentzia.",
-        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profileko iragazki-ezarpen independenteak"
     },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Behe-paseko Iragazkiak"
-    },
-    "pidTuningVbatPidCompensation": {
-        "message": "Vbat PID Konpentsazioa"
-    },
-    "pidTuningVbatPidCompensationHelp": {
-        "message": "PID balioak handitzen ditu Vbat jaisten denean konpentsatzeko. Horrek hegaldi ezaugarri konstanteagoak emango ditu hegaldi osoan. Aplikatzen den kalte-ordaina zenbatekoa kalkulatuko da $t(powerBatteryMaximum.message) aren arabera $t(tabPower.message) horrian konfiguraturik, beraz, ziurtatu egokia dela."
-    },
-    "pidTuningVbatSagValue": {
-        "message": "%"
-    },
-    "pidTuningThrustLinearValue": {
-        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I Term Biraketa"
@@ -2644,32 +2148,14 @@
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integratua"
     },
-    "failsafeFeaturesHelpOld": {
-        "message": "Segurtasun moduaren konfigurazioa asko aldatu da. Erabili Betaflight <strong>v1.12.0+<\/strong> konfigurazio panela hobetzeko."
-    },
-    "failsafePaneTitleOld": {
-        "message": "Hartzaileak huts egin du"
-    },
     "failsafePulsrangeTitle": {
         "message": "Baliozko Pultsu Barrutiaren Ezarpenak"
-    },
-    "failsafePulsrangeHelp": {
-        "message": "Minimoak baino luzeagoa edo maximoa baino luzeagoak diren pultsuak baliogabeak dira eta segurtasun-ezarpen indibidualen aplikazioa AUX kanaletara edo 1. faseko hegaldietarako kanaletarako sarrera aktibatuko dute"
     },
     "failsafeRxMinUsecItem": {
         "message": "Gutxieneko luzera"
     },
     "failsafeRxMaxUsecItem": {
         "message": "Gehienezko luzera"
-    },
-    "failsafeChannelFallbackSettingsHelp": {
-        "message": "Ezarpen hauek AUX kanal baliogabeak edo kanal guztiei aplikatzen zaizkie 1. Etapa sartzen denean. <strong>Oharra:<\/strong> Balioak 25usec urratsetan gordetzen dira, beraz aldaketa txikiak desagertzen dira"
-    },
-    "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto<\/strong> Roll, Pitch eta Yaw erdialdean eta Throttle baxuan kokatzeko esan nahi du. <strong>Eutsi<\/strong> jasotako azken balio ona mantentzea esan nahi du"
-    },
-    "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>Eutsi<\/strong> jasotako azken balio ona mantentzea esan nahi du. <strong>Ezarri<\/strong> hemen emandako balioa erabiliko du"
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "2. Etapa - Ezarpenak"
@@ -2702,13 +2188,13 @@
         "message": "Momentuko altitudea"
     },
     "failsafeGpsRescueItemAscendRate": {
-        "message": "Igoera tasa (metro \/ segunduko)"
+        "message": "Igoera tasa (metro / segunduko)"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Jaitsieraren distantzia (metrotan)"
     },
     "failsafeGpsRescueItemDescendRate": {
-        "message": "Jaitsiera tasa (metro \/ segunduko)"
+        "message": "Jaitsiera tasa (metro / segunduko)"
     },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Azeleragailua minimoa"
@@ -2731,12 +2217,6 @@
     "failsafeGpsRescueItemSanityChecksFSOnly": {
         "message": "Segurtasun modua bakarrik"
     },
-    "failsafeKillSwitchItem": {
-        "message": "Failsafe Kill Switch ( Segurtasun modua konfiguratu moduen fitxan)"
-    },
-    "failsafeKillSwitchHelp": {
-        "message": "Ezarri aukera hau segurtasun moduarako etengailuan (Modu Aukeran) itzaltze zuzeneko etena izan dadin, hautatutako hutsegiteen prozedura saihestuz. <strong>Oharra:<\/strong> Armatzea blokeatuta dago failsafe-aren itzaltze etengailua dagoenean"
-    },
     "failsafeSwitchTitle": {
         "message": "Segurtasun moduaren palanka"
     },
@@ -2756,7 +2236,7 @@
         "message": "Gorde"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": "Firmwarea eguneratzea<span class=\"message-negative\">beharrezkoa da<\/span>. Bateria\/Intentsitate\/Tentsio konfigurazioak API &lt; 1.33.0 (Betaflight release &lt;= 3.17) es du onartzen."
+        "message": "Firmwarea eguneratzea<span class=\"message-negative\">beharrezkoa da</span>. Bateria/Intentsitate/Tentsio konfigurazioak API &lt; 1.33.0 (Betaflight release &lt;= 3.17) es du onartzen."
     },
     "powerBatteryVoltageMeterSource": {
         "message": "Tentsio Sentsorearen Iturburua"
@@ -2786,7 +2266,7 @@
         "message": "ESC Sentsorea"
     },
     "powerBatteryCurrentMeterTypeMsp": {
-        "message": "MSP Sentsorea\/OSD Slave"
+        "message": "MSP Sentsorea/OSD Slave"
     },
     "powerBatteryMinimum": {
         "message": "Zeldaren gutxieneko tentsioa"
@@ -2804,13 +2284,13 @@
         "message": "Kalibratzeko Laguntzailea"
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>Oharra:<\/strong> Eskala kalibratu aurretik, ziurtatu tentsiorako eta desplazamenduarentzako zatitzailea eta desplazamendua egokitzea ondo egokitzen dela.<br>0 -ko balioak uztean ez da kalibrazioa aplikatuko.<\/br><strong> Gogoratu bateriak sartu aurretik helizeak kendu behar dituzula!<\/strong>"
+        "message": "<strong>Oharra:</strong> Eskala kalibratu aurretik, ziurtatu tentsiorako eta desplazamenduarentzako zatitzailea eta desplazamendua egokitzea ondo egokitzen dela.<br>0 -ko balioak uztean ez da kalibrazioa aplikatuko.</br><strong> Gogoratu bateriak sartu aurretik helizeak kendu behar dituzula!</strong>"
     },
     "powerCalibrationManagerWarning": {
-        "message": "<span class=\"message-negative\">Kontuz:<\/span> Bateria<span class=\"message-negative\"> ez dago konektaturik<\/span> edo tentsio eta zabalera neurgailuaren iturburua <span class=\"message-\"negative\"> ez da behar bezala ezarri.<\/span> Ziurtatu tentsioa eta\/edo anplifikazioa 0. balioa baino gehiago irakurtzen ari direla. Bestela, ezin izango duzu tresna hau kalibratzeko erabili."
+        "message": "<span class=\"message-negative\">Kontuz:</span> Bateria<span class=\"message-negative\"> ez dago konektaturik</span> edo tentsio eta zabalera neurgailuaren iturburua <span class=\"message-\"negative\"> ez da behar bezala ezarri.</span> Ziurtatu tentsioa eta/edo anplifikazioa 0. balioa baino gehiago irakurtzen ari direla. Bestela, ezin izango duzu tresna hau kalibratzeko erabili."
     },
     "powerCalibrationManagerSourceNote": {
-        "message": "<span class=\"message-negative\">Abisua:<\/span> Tentsio eta\/edo amperage neurgailuen iturburuak <strong>aldatu dira, baina ez dira gorde.<\/strong> Mesedez, zehaztu neurgailu iturburu zuzenak eta gorde itzazu kalibratzen saiatu aurretik."
+        "message": "<span class=\"message-negative\">Abisua:</span> Tentsio eta/edo amperage neurgailuen iturburuak <strong>aldatu dira, baina ez dira gorde.</strong> Mesedez, zehaztu neurgailu iturburu zuzenak eta gorde itzazu kalibratzen saiatu aurretik."
     },
     "powerCalibrationManagerConfirmationTitle": {
         "message": "Kalibrazio Laguntzailearen Konfirmazioa"
@@ -2825,13 +2305,13 @@
         "message": "Kalibrazioa Baztertu"
     },
     "powerCalibrationConfirmHelp": {
-        "message": "Kalibratutako eskala berriak hemen erakusten dira.<br>Hauek aplikatzeak baremoak ezarriko ditu, baina <strong>ez ditu gordeko.<\/strong><\/br> <br>Ziurtatu tentsio berria eta korrontea zuzenak direla gorde ondoren.<\/br>"
+        "message": "Kalibratutako eskala berriak hemen erakusten dira.<br>Hauek aplikatzeak baremoak ezarriko ditu, baina <strong>ez ditu gordeko.</strong></br> <br>Ziurtatu tentsio berria eta korrontea zuzenak direla gorde ondoren.</br>"
     },
     "powerVoltageHead": {
         "message": "Tentsio neurgailua"
     },
     "powerVoltageWarning": {
-        "message": "<span class=\"message-negative\">Abisua:<\/span> 25.5V mugatuta balioak."
+        "message": "<span class=\"message-negative\">Abisua:</span> 25.5V mugatuta balioak."
     },
     "powerVoltageValue": {
         "message": "$1 V"
@@ -2924,7 +2404,7 @@
         "message": "Intentsitate neurgailua"
     },
     "powerAmperageWarning": {
-        "message": "<span class=\"message-negative\">Abisua:<\/span> 63.5A mugatuta balioak."
+        "message": "<span class=\"message-negative\">Abisua:</span> 63.5A mugatuta balioak."
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -2981,7 +2461,7 @@
         "message": "$1 mAh"
     },
     "powerAmperageScale": {
-        "message": "Eskala [1\/10mV\/A]"
+        "message": "Eskala [1/10mV/A]"
     },
     "powerAmperageOffset": {
         "message": "Offset [mA]"
@@ -3023,16 +2503,16 @@
         "message": "OSD"
     },
     "osdSetupNoOsdChipDetectWarning": {
-        "message": "<span class=\"message-negative\"><b>OHARRA:<\/b><\/span> Ez da OSD txip aurkitu. Hegaldi kontrolatzaile batzuek ez dute OSD txipa behar bezala pizten bateria konektatu arte. Mesedez, bateria konektatu USB konektatu aurretik (HELIZEAK Kendu!)."
+        "message": "<span class=\"message-negative\"><b>OHARRA:</b></span> Ez da OSD txip aurkitu. Hegaldi kontrolatzaile batzuek ez dute OSD txipa behar bezala pizten bateria konektatu arte. Mesedez, bateria konektatu USB konektatu aurretik (HELIZEAK Kendu!)."
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Oharra:<\/strong> OSD aurrebistak, ezin da hegaldi kontroladorean instalatutako letra-motak erakutsi. Elementu indibidualen diseinua itxura desberdinak izan daitezke firmwarearen bertsio zaharrakerabiltzen direnean. Mesedez, begiratu betaurrekoen bidez itxura hegan egin aurretik."
+        "message": "<strong>Oharra:</strong> OSD aurrebistak, ezin da hegaldi kontroladorean instalatutako letra-motak erakutsi. Elementu indibidualen diseinua itxura desberdinak izan daitezke firmwarearen bertsio zaharrakerabiltzen direnean. Mesedez, begiratu betaurrekoen bidez itxura hegan egin aurretik."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Hegaldi kontrolatzaileak ez du OSD aginteei erantzuten. Horrek ziur asko esan nahi du ez duela BetaFlight OSD integratua."
     },
     "osdSetupUnsupportedNote2": {
-        "message": "Kontuan izan hegaldi kontrolatzaile batzuek <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD<\/a> bat barruan dutela eta konfigura daiteke <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>, hala ere, MinimOSD ezin da interfaze honen bidez konfiguratu."
+        "message": "Kontuan izan hegaldi kontrolatzaile batzuek <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD</a> bat barruan dutela eta konfigura daiteke <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, hala ere, MinimOSD ezin da interfaze honen bidez konfiguratu."
     },
     "osdSetupProfilesTitle": {
         "message": "OSD Profilaren Zenbakia",
@@ -3045,21 +2525,9 @@
         "message": "Posizioa aldatzeko elementoak arrastatu",
         "description": "Indicates in the preview window of the OSD that the user can drag the elements to reorder them"
     },
-    "osdSetupPreviewSelectProfileTitle": {
-        "message": "Aurreikusi",
-        "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
-    },
-    "osdSetupPreviewForTitle": {
-        "message": "Hemen profila edo letra-tipoak aldatzeak EZ du profila edo letra-tipoak aldatuko, aurrebistaren leihoan bakarrik aldatuko da. Aldatu nahi baduzu, '$t(osdSetupSelectedProfileTitle.message)' aukera edo '$t(osdSetupFontManager.message)' botoia erabili behar duzu hurrenez hurren.",
-        "description": "Help content for the OSD profile and font PREVIEW"
-    },
     "osdSetupSelectedProfileTitle": {
         "message": "OSD profila aktiboa",
         "description": "Title of the box to select the current active OSD profile"
-    },
-    "osdSetupSelectedProfileLabel": {
-        "message": "Unekoa:",
-        "description": "Label for the selection of the curren active OSD profile"
     },
     "osdSetupPreviewSelectProfileElement": {
         "message": "OSD Profila {{profileNumber}}",
@@ -3104,9 +2572,6 @@
     "osdSetupStatsTitle": {
         "message": "Post-hegaldien estatistikak"
     },
-    "osdSetupVtxTitle": {
-        "message": "VTX Ezarpenak"
-    },
     "osdSetupWarningsTitle": {
         "message": "Abisuak"
     },
@@ -3139,7 +2604,7 @@
         "message": "Pixel berde beltz eta zuriak eduki behar ditu"
     },
     "osdSetupCustomLogoInfoUploadHint": {
-        "message": "Sakatu <b>$t(osdSetupUploadFont.message)<\/b> logo pertsonalizatua mantentzeko"
+        "message": "Sakatu <b>$t(osdSetupUploadFont.message)</b> logo pertsonalizatua mantentzeko"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Irudiak pixel baliogabea dauka: rgb({{valueR}}, {{valueG}}, {{valueB}}) koordenatuetan {{posX}}×{{posY}}"
@@ -3155,27 +2620,6 @@
     },
     "osdSetupSave": {
         "message": "Gorde"
-    },
-    "osdSetupFontManager": {
-        "message": "Letra-mota Kargatzailea"
-    },
-    "osdSetupUncheckAll": {
-        "message": "Dena desautatu"
-    },
-    "osdSetupHead": {
-        "message": "Info"
-    },
-    "osdSetupVideoMode": {
-        "message": "Bideo Modua"
-    },
-    "osdSetupCameraConnected": {
-        "message": "Kamera konektatuta"
-    },
-    "osdSetupResetText": {
-        "message": "OSD Lehenetsietara Berrezarri"
-    },
-    "osdSetupButtonReset": {
-        "message": "Ezarpenak berrezarri"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Bateriaren tentsioa",
@@ -3380,7 +2824,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementAvgCellVoltage": {
-        "message": "Bateriaren batez besteko tentsioa (bateriaren tentsio nagusia \/ gelaxka kopurua)"
+        "message": "Bateriaren batez besteko tentsioa (bateriaren tentsio nagusia / gelaxka kopurua)"
     },
     "osdTextElementPitchAngle": {
         "message": "Angelua: Pitch",
@@ -3465,7 +2909,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRtcDateTime": {
-        "message": "Data\/Ordua denbora errealean"
+        "message": "Data/Ordua denbora errealean"
     },
     "osdTextElementAdjustmentRange": {
         "message": "Barrutia egokitu",
@@ -3597,7 +3041,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEfficiency": {
-        "message": "Berehalako bateriaren kontsumoa mAh\/distantzian. (Baliozko GPS konponbidea eskatzen du)"
+        "message": "Berehalako bateriaren kontsumoa mAh/distantzian. (Baliozko GPS konponbidea eskatzen du)"
     },
     "osdTextTotalFlights": {
         "message": "Hegaldi kopurua",
@@ -3668,14 +3112,6 @@
     },
     "osdDescStatEndBattery": {
         "message": "Bateriaren tentsioa desarmatzeko unean"
-    },
-    "osdTextStatFlyTime": {
-        "message": "Hegaldiaren denbora guztira",
-        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdTextStatArmedTime": {
-        "message": "Azken hegaldiaren denbora armatu zenetik",
-        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdTextStatMaxDistance": {
         "message": "Etxea: gehieneko distantzia",
@@ -3793,20 +3229,11 @@
     "osdDescStatUnknown": {
         "message": "Estatistika ezezagunak (xehetasunak etorkizuneko bertsioan gehituko dira)"
     },
-    "osdDescribeFontVersion1": {
-        "message": "Letra-motaren bertsioa: 1 (Betaflight 4.0 edo berriagoa)"
-    },
-    "osdDescribeFontVersion2": {
-        "message": "Letra-motaren bertsioa: 2 (Betaflight 4.1 edo berriagoa)"
-    },
-    "osdDescribeFontVersionCUSTOM": {
-        "message": "Letra-motaren bertsioa: erabiltzaileak emana"
-    },
     "osdTimerSource": {
         "message": "Jatorria:"
     },
     "osdTimerSourceTooltip": {
-        "message": "Aukeratu tenporizadorearen jatorria, kontrolatzaile honek neurtzen duen iraupena\/gertaera kontrolatzen du"
+        "message": "Aukeratu tenporizadorearen jatorria, kontrolatzaile honek neurtzen duen iraupena/gertaera kontrolatzen du"
     },
     "osdTimerSourceOptionOnTime": {
         "message": "Denbora piztuta",
@@ -3821,7 +3248,7 @@
         "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
-        "message": "On\/Armatuta denbora",
+        "message": "On/Armatuta denbora",
         "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
@@ -3907,7 +3334,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningEscFail": {
-        "message": "Zerrendatu huts egiten duten ESC\/Motorren zerrenda (RPM edo tenperatura konfiguratutako atalasetik kanpo dago)"
+        "message": "Zerrendatu huts egiten duten ESC/Motorren zerrenda (RPM edo tenperatura konfiguratutako atalasetik kanpo dago)"
     },
     "osdWarningTextCoreTemperature": {
         "message": "Prozesadorearen tenperatura",
@@ -4003,22 +3430,19 @@
     "osdSettingsSaved": {
         "message": "OSD ezarpenak gorde dira"
     },
-    "osdWritePermissions": {
-        "message": "Ez duzu fitxategi honetan <span class=\"message-negative\">idazteko baimenik<\/span>"
-    },
     "osdButtonSaved": {
         "message": "Gordeta"
     },
     "vtxMessageTableNotConfigured": {
-        "message": "<span class=\"message-negative\">Abisua:<\/span> Lehenik eta behin beheko VTX taula konfiguratu eta gorde behar duzu $t(vtxSelectedMode.message) eremuak erabili ahal izateko.",
+        "message": "<span class=\"message-negative\">Abisua:</span> Lehenik eta behin beheko VTX taula konfiguratu eta gorde behar duzu $t(vtxSelectedMode.message) eremuak erabili ahal izateko.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Arreta:<\/span> Aukeratutako VTX motak ez du banden \"fabrika\" ezarpena onartzen, baina zure banda batzuek ezarpen hau dute. Klik egin '$t(vtxButtonSave.message)' hau konpontzeko.",
+        "message": "<span class=\"message-negative\">Arreta:</span> Aukeratutako VTX motak ez du banden \"fabrika\" ezarpena onartzen, baina zure banda batzuek ezarpen hau dute. Klik egin '$t(vtxButtonSave.message)' hau konpontzeko.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Abisua:<\/span> VTX taulako balioak kargatu dira, baina oraindik ez dira hegaldi kontroladorean gorde. Balioak egiaztatu eta aldatu behar dituzu zure herrialdean baliozkoak eta legezkoak direla ziurtatzeko, eta ondoren $t(vtxButtonSave.message) botoia sakatu hegaldi kontroladorean gordetzeko.",
+        "message": "<span class=\"message-negative\">Abisua:</span> VTX taulako balioak kargatu dira, baina oraindik ez dira hegaldi kontroladorean gorde. Balioak egiaztatu eta aldatu behar dituzu zure herrialdean baliozkoak eta legezkoak direla ziurtatzeko, eta ondoren $t(vtxButtonSave.message) botoia sakatu hegaldi kontroladorean gordetzeko.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -4193,28 +3617,24 @@
         "message": "Fabrika",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
-    "vtxSavedFileOk": {
-        "message": "VTX Konfigurazio fitxategia <span class=\"message-positive\">gordeta<\/span>",
-        "description": "Message in the GUI log when the VTX Config file is saved"
-    },
     "vtxSavedFileKo": {
-        "message": "<span class=\"message-negative\">Akatsa<\/span> VTX-aren konfigurazioa gordetzerakoan",
+        "message": "<span class=\"message-negative\">Akatsa</span> VTX-aren konfigurazioa gordetzerakoan",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
     "vtxLoadFileOk": {
-        "message": "VTX Konfigurazio fitxategia <span class=\"message-positive\">kargatuta<\/span>",
+        "message": "VTX Konfigurazio fitxategia <span class=\"message-positive\">kargatuta</span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
     "vtxLoadFileKo": {
-        "message": "<span class=\"message-negative\">Errorea<\/span> VTX Konfigurazio fitxategia kargatzean",
+        "message": "<span class=\"message-negative\">Errorea</span> VTX Konfigurazio fitxategia kargatzean",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
     "vtxLoadClipboardOk": {
-        "message": "VTX konfigurazioaren informazioa arbeletik <span class=\"message-positive\">kargatuta<\/span>",
+        "message": "VTX konfigurazioaren informazioa arbeletik <span class=\"message-positive\">kargatuta</span>",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
     "vtxLoadClipboardKo": {
-        "message": "<span class=\"message-negative\">Errorea<\/span> arbeletik VTX konfigurazio informazioa kargatzean. Baliteke edukia zuzena ez izatea",
+        "message": "<span class=\"message-negative\">Errorea</span> arbeletik VTX konfigurazio informazioa kargatzean. Baliteke edukia zuzena ez izatea",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
     "vtxButtonSaveFile": {
@@ -4247,7 +3667,7 @@
         "message": "Serial Loturaren Egoera"
     },
     "configurationEscProtocol": {
-        "message": "ESC\/Motor protokoloa"
+        "message": "ESC/Motor protokoloa"
     },
     "configurationunsyndePwm": {
         "message": "PWM motorren abiadura PID abiadurarekiko independentea da"
@@ -4257,23 +3677,17 @@
     },
     "configurationDshotBidir": {
         "message": "Dshot Bidirekzionala (ESC Firmware onartuta behar du)",
-        "description": "Feature for the ESC\/Motor"
+        "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
         "message": "ESC datuak hegaldi-kontroladoreari bidali DShot telemetriaren bidez. Funtzio hau RPM iragazkia eta Idle Dinamikoa erabiltzeko beharrezkoa da. <br> <br>Oharra: ESC firmware egokia behar duzu, adibidez JESC, JazzMac, BLHeli_32.",
-        "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
+        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationPidProcessDenom": {
         "message": "PID, zikloaren frekuentzia"
     },
     "configurationPidProcessDenomHelp": {
-        "message": "PID zikloaren gehienezko frekuentzia eguneratzeak bidal daitezkeen gehieneko frekuentziarekin mugatuta dago, aukeratutako ESC\/Motor protokoloaren arabera."
-    },
-    "configurationGyroUse32kHz": {
-        "message": "32kHz giro laginketa modua gaitu"
-    },
-    "configurationGyroUse32kHzHelp": {
-        "message": "32 kHz-ko eguneratze frekuentzia txanda txipa onartzen duenean bakarrik posible da (gaur egun MPU6500, MPU9259 eta ICM20xxx SPI bidez konektatuta badaude). Zalantzarik baduzu, egiaztatu zure hegaldi kontroladorearen plakaren zehaztapena."
+        "message": "PID zikloaren gehienezko frekuentzia eguneratzeak bidal daitezkeen gehieneko frekuentziarekin mugatuta dago, aukeratutako ESC/Motor protokoloaren arabera."
     },
     "configurationAccHardware": {
         "message": "Azelerometroa"
@@ -4281,47 +3695,11 @@
     "configurationSmallAngle": {
         "message": "Gehieneko ARM Angelua [degrees]"
     },
-    "configurationBatteryVoltage": {
-        "message": "Bateriaren Tentsioa"
-    },
-    "configurationBatteryCurrent": {
-        "message": "Bateriaren Korrontea"
-    },
-    "configurationBatteryMeterType": {
-        "message": "Bateriaren Neurgailu Mota"
-    },
-    "configurationBatteryMinimum": {
-        "message": "Zeldako gutxienezko tentsioa"
-    },
-    "configurationBatteryMaximum": {
-        "message": "Zeldaren gehieneko tentsioa"
-    },
-    "configurationBatteryWarning": {
-        "message": "Zelda tentsio abisua"
-    },
-    "configurationBatteryScale": {
-        "message": "Boltai eskala"
-    },
-    "configurationCurrentMeterType": {
-        "message": "Korrente Neurgailu Mota"
-    },
-    "configurationCurrent": {
-        "message": "Korrente Sensorea"
-    },
-    "configurationCurrentScale": {
-        "message": "Eskalatu irteerako tentsioa milimetrotara [1\/10 mV\/A]"
-    },
-    "configurationCurrentOffset": {
-        "message": "Milibolt pausoetan konpentsazioa"
-    },
-    "configurationBatteryMultiwiiCurrent": {
-        "message": "Multiwii MSP Zaharrerako korrente irteerarako bateragarritasuna piztu"
-    },
     "pidTuningProfile": {
         "message": "Profila"
     },
     "pidTuningProfileTip": {
-        "message": "Gehienez 3 (2 kontroladore batzuentzako) PID profil desberdinak gorde daitezke hegaldi kontroladorean. PID profilak, PID, d-ren balioa eta angle \/ horizon-en cofigurazioa ditu barne fitxa honetan. Behin ipinita, Stik batez erraz (ikus on-line argibideak) erabil daitezke profilen artean aldatzeko."
+        "message": "Gehienez 3 (2 kontroladore batzuentzako) PID profil desberdinak gorde daitezke hegaldi kontroladorean. PID profilak, PID, d-ren balioa eta angle / horizon-en cofigurazioa ditu barne fitxa honetan. Behin ipinita, Stik batez erraz (ikus on-line argibideak) erabil daitezke profilen artean aldatzeko."
     },
     "pidTuningRateProfile": {
         "message": "Rateprofilea"
@@ -4330,26 +3708,7 @@
         "message": "Gehienez 3 tasa profil, profil bakoitzeko gorde daitezke hegaldi kontroladorean. Rateprofilak 'RC Rate', 'Rate', 'RC Expo', 'Throttle', eta 'TPA' valioak ditu barne. Hegaldian aldatu daitezke rateprofilak, 3 posizioko etengailuan ipinita 'Rate Profileko Atala'-n ''Egokitze' fitxan."
     },
     "pidTuningRateSetup": {
-        "message": "Oinarrizko\/Akro Rate-etan"
-    },
-    "pidTuningRateSetupHelp": {
-        "message": "Egokitu balio horiek zure rateak ezartzeko. RC Rate-ak erabili gehineko rate orokorra igotzeko, Erabili Super Rate-a stik-en bukaeran Raterik altuenak izateko, erabili RC Expo stiken erdialdea suabeagoa izateko.",
-        "description": "Rate table helpicon message"
-    },
-    "pidTuningDelta": {
-        "message": "Deribazio Metodoa"
-    },
-    "pidTuningDeltaError": {
-        "message": "Errore"
-    },
-    "pidTuningDeltaMeasurement": {
-        "message": "Neurketa"
-    },
-    "pidTuningPidControllerTip": {
-        "message": "<b>Legacy vs Betaflight (flotatzen):<\/b> PIDaren eskala eta logika berdinak dira. Ez da beharrezkoa berriro egokitzea. Legatua Betaflight eboluzionatu berria da rewrite erabiliz. Oinarrizko matematikaren oinarritutako PID kontroladorea da. Betaflight PID kontroladoreek kontrol flotagarria duten matematika erabiltzen du eta funtzio anitzeko aplikazioetarako bereziki diseinatutako ezaugarri berriak ditu. <br><b>Flotatzen vs Osoa:<\/b> PIDaren eskala eta logika berdinak dira. Ez da beharrezkoa berriro egokitzea. F1 taulek ez dute FPU integratua eta puntu mugikorreko kalkuluak CPUaren karga handitzen du eta matematika osoak errendimendua hobetuko luke, baina puntu flotagarriek matematikako zehaztasun gehiago eman dezakete."
-    },
-    "pidTuningFilterTip": {
-        "message": "<b>Giro Soft iragazkia:<\/b> Giroren Behe-paseko Iragazkia. Erabili iragazki gehiagorako balio txikiagoa. <br><b>D Epe iragazkia:<\/b> Dterm Behe-paseko Iragazkia. D sintonizazioak eragin dezake. Erabili iragazki gehiagorako balio txikiagoa. <br><b>Yaw Iragazkia:<\/b> Yaw irteera iragazten du. Yaw ardatz zaratatsua duten konfigurazioetan lagun dezake."
+        "message": "Oinarrizko/Akro Rate-etan"
     },
     "pidTuningRatesTip": {
         "message": "Tasekin jokatu eta ikusi nola eragiten duten sticks kurban"
@@ -4391,7 +3750,7 @@
         "message": "Biltegiratze Masiboa Modua"
     },
     "onboardLoggingMscNote": {
-        "message": "Berrabiarazi <strong>Biltegiratze Masibo Gailua(MSC)<\/strong> moduan. Behin aktibatuta, zure hegaldi kontroladorearen memoria edo SD txartel integratua ordenagailuak biltegiratze gailu gisa aitortuko du eta zure fitxategiak deskargatzeko aukera emango dizu. Eperatu eta itzali eta berriro piztu zure hegaldi kontroladorea Kanpoko Memoria Modua uzteko."
+        "message": "Berrabiarazi <strong>Biltegiratze Masibo Gailua(MSC)</strong> moduan. Behin aktibatuta, zure hegaldi kontroladorearen memoria edo SD txartel integratua ordenagailuak biltegiratze gailu gisa aitortuko du eta zure fitxategiak deskargatzeko aukera emango dizu. Eperatu eta itzali eta berriro piztu zure hegaldi kontroladorea Kanpoko Memoria Modua uzteko."
     },
     "onboardLoggingRebootMscText": {
         "message": "Biltegiratze Masibo Gailu Modua Piztu"
@@ -4416,9 +3775,6 @@
     },
     "modeCameraChangeMode": {
         "message": "KAMERA ALDATZEKO MODUA"
-    },
-    "flashTab": {
-        "message": "Firmwarea Eguneratu"
     },
     "cliAutoComplete": {
         "message": "CLI AutoBetetzaile Aurreratua"
@@ -4451,7 +3807,7 @@
         "message": "Rate mota aldaketa"
     },
     "dialogRatesTypeNote": {
-        "message": "<span class=\"message-negative\"><b>KONTUZ: Rate mota aldatzen ari zara.<\/b><\/span>Rate mota aldatzen baduzu, zure tasak, kurba lehenetsira berrezarriko dira."
+        "message": "<span class=\"message-negative\"><b>KONTUZ: Rate mota aldatzen ari zara.</b></span>Rate mota aldatzen baduzu, zure tasak, kurba lehenetsira berrezarriko dira."
     },
     "dialogRatesTypeConfirm": {
         "message": "Aldaketa"
@@ -4479,62 +3835,5 @@
     "gpsSbasNone": {
         "message": "Bat ere ez",
         "description": "One of the options selectable for the GPS SBAS system"
-    },
-    "dialogFileNameTitle": {
-        "message": "Fitxategi izena"
-    },
-    "dialogFileAlreadyExistsTitle": {
-        "message": "Fitxategi hau badago!"
-    },
-    "dialogFileAlreadyExistsDescription": {
-        "message": "Gainidatzi ?"
-    },
-    "cordovaCheckingWebview": {
-        "message": "Webview aplikazioak egiaztatzen ..."
-    },
-    "cordovaIncompatibleWebview": {
-        "message": "Webview bateraezina"
-    },
-    "cordovaWebviewTroubleshootingMsg2": {
-        "message": "Beheko tresna webview berria instalatzeko edo instalatutako webview-a eguneratzen laguntzeko balio du."
-    },
-    "cordovaAvailableWebviews": {
-        "message": "Zure gailuan eskuragarri dauden webview aplikazioak"
-    },
-    "cordovaWebviewInstall": {
-        "message": "<b>{{app}}<\/b> aplikazioa instalatzeak bateragarritasun arazoa konpondu dezake."
-    },
-    "cordovaWebviewInstallBtn": {
-        "message": "Google Play Store-tik instalatu"
-    },
-    "cordovaWebviewUninstall": {
-        "message": "<b>{{app}}<\/b> aplikazioa desinstalatzeak bateragarritasun arazo hau konpondu dezake. Desinstalatu ezin baduzu, ezarpenak aplikaziotik desgaitzen saiatu."
-    },
-    "cordovaWebviewUninstallBtn1": {
-        "message": "Google Play Store-tik desinstalatu"
-    },
-    "cordovaWebviewUninstallBtn2": {
-        "message": "Desinstalatu \/ dezgaitu ezarpenetatik"
-    },
-    "cordovaWebviewUpdate": {
-        "message": "<b>{{app}}<\/b> aplikazioa eguneratzeak bateragarritasun arazo hau konpondu dezake."
-    },
-    "cordovaWebviewUpdateBtn": {
-        "message": "Google Play Store-tik eguneratu"
-    },
-    "cordovaWebviewEnableBtn": {
-        "message": "Ezarpenak ireki"
-    },
-    "cordovaWebviewIncompatible": {
-        "message": "Zure gailua ez dela bateragarria badirudi. Saiatu zure webview beste modu batzuekin eguneratzen"
-    },
-    "cordovaNoWebview": {
-        "message": "Ez dago webview aplikaziorik instalatuta \/ gaituta"
-    },
-    "cordovaWebviewUsed": {
-        "message": "erabilita"
-    },
-    "cordovaExitAppTitle": {
-        "message": "Baieztatzea"
     }
 }

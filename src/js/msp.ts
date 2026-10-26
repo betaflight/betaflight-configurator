@@ -19,11 +19,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import GUI from "./gui.js";
-import CONFIGURATOR from "./data_storage";
-import { serial } from "./serial.js";
+import { serial } from "./serial";
 import { MspCancelledError, MspTimeoutError } from "./msp/mspErrors";
 import { MspDataView } from "./msp/mspBytes";
+import { useNavigationStore } from "../stores/navigation";
+import { useConnectionStore } from "../stores/connection";
+import { pinia } from "./pinia_instance";
 
 /** A request payload: the encoders read `.length` and index it, so an array-like of bytes. */
 export type MspPayload = ArrayLike<number> | false | undefined;
@@ -142,7 +143,13 @@ const MSP = {
     callbacks: [] as MspRequest[],
     parked: new Map<number, MspRequest[]>(), // errorAware requests parked behind an in-flight same-code request
     onTimeout: null as ((code: number) => void) | null, // invoked with the code when an errorAware request exhausts MAX_RETRIES
-    packet_error: 0,
+    // CRC error count; lives in the connection store so the status bar stays reactive.
+    get packet_error(): number {
+        return useConnectionStore(pinia).packetErrors;
+    },
+    set packet_error(value: number) {
+        useConnectionStore(pinia).packetErrors = value;
+    },
     unsupported: 0,
 
     TIMEOUT: 1000,
@@ -173,7 +180,8 @@ const MSP = {
     SDCARD_STATE_READY: 4,
 
     read(readInfo: MspReadInfo) {
-        if (CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (connectionStore.virtualMode) {
             return;
         }
 
@@ -211,9 +219,11 @@ const MSP = {
             // message received, store dataview
             this.dataView = new MspDataView(this.message_buffer, 0, this.message_length_expected);
         } else if (
-            (serial._protocol as { shouldBypassCrc?: (checksum: number) => boolean } | null)?.shouldBypassCrc?.(
-                expectedChecksum,
-            )
+            (
+                serial._protocol as {
+                    shouldBypassCrc?: (expectedChecksum: number, computedChecksum: number) => boolean;
+                } | null
+            )?.shouldBypassCrc?.(expectedChecksum, this.message_checksum)
         ) {
             // Capability check: only the Bluetooth protocols implement shouldBypassCrc,
             // for BT-11/CC2541 bridges that corrupt the MSP checksum to 0xff. Not gated
@@ -347,7 +357,7 @@ const MSP = {
             }, entry.timeoutMs);
         }
 
-        serial.send(this.encode_message_cli(entry.command));
+        void serial.send(this.encode_message_cli(entry.command));
     },
     _finish_cli(lines: string[], error: Error | null) {
         const entry = this.cli_in_flight;
@@ -431,7 +441,8 @@ const MSP = {
         callback_sent?: (() => void) | false,
         callback_msp?: MspCallback | false,
     ): boolean {
-        if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || !serial.connected || connectionStore.virtualMode) {
             if (callback_msp) {
                 (callback_msp as () => void)();
             }
@@ -516,7 +527,7 @@ const MSP = {
 
         // always send messages with data payload (even when there is a message already in the queue)
         if (data || !requestExists) {
-            serial.send(bufferOut, (sendInfo: { bytesSent: number }) => {
+            void serial.send(bufferOut, (sendInfo: { bytesSent: number }) => {
                 if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
                     callback_sent();
                 }
@@ -548,9 +559,9 @@ const MSP = {
         if ((obj.attempts ?? 1) < this.MAX_RETRIES) {
             obj.attempts = (obj.attempts ?? 1) + 1;
             console.warn(
-                `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
+                `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${useNavigationStore().activeTab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
-            serial.send(obj.requestBuffer);
+            void serial.send(obj.requestBuffer);
             this._arm_timer(obj);
             return;
         }
@@ -608,7 +619,7 @@ const MSP = {
         this._arm_timer(entry);
         this.callbacks.push(entry);
 
-        serial.send(entry.requestBuffer, (sendInfo: { bytesSent: number }) => {
+        void serial.send(entry.requestBuffer, (sendInfo: { bytesSent: number }) => {
             if (sendInfo.bytesSent === entry.requestBuffer.byteLength && entry.callbackSent) {
                 entry.callbackSent();
             }
@@ -627,7 +638,8 @@ const MSP = {
         data?: MspPayload,
         { notifyTimeout = true }: { notifyTimeout?: boolean } = {},
     ): Promise<MspResponse | undefined> {
-        if (code === undefined || CONFIGURATOR.virtualMode) {
+        const connectionStore = useConnectionStore();
+        if (code === undefined || connectionStore.virtualMode) {
             return undefined;
         }
 

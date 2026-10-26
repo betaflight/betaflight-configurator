@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
@@ -10,30 +31,33 @@ import { createPinia, setActivePinia } from "pinia";
 
 // vi.mock factories are hoisted above all module-level declarations, so any
 // shared mutable objects they reference must be created with vi.hoisted().
-const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspHelperInstance } = vi.hoisted(() => {
+const {
+    timers,
+    connectionStore,
+    serial,
+    serialHandlers,
+    unmountVueTab,
+    switchTab,
+    selectDefaultTabWhenConnected,
+    dialogStore,
+    mspHelperInstance,
+} = vi.hoisted(() => {
     const serialHandlers: Record<string, (event: { detail: unknown }) => void> = {};
     return {
-        // GUI default object — only the members serial_backend touches.
-        GUI: {
-            connect_lock: false,
-            connected_to: false as string | false,
-            connecting_to: false as string | false,
-            configuration_loaded: false,
-            active_tab: "landing",
-            tab_switch_in_progress: false,
-            allowedTabs: [] as string[],
-            defaultAllowedTabsWhenDisconnected: ["landing", "firmware_flasher"],
-            defaultAllowedFCTabsWhenConnected: [],
-            defaultAllowedTabs: [],
-            defaultCloudBuildTabOptions: [],
-            pendingTab: null as string | null,
-            timeout_kill_all: vi.fn(),
-            interval_kill_all: vi.fn(),
-            timeout_add: vi.fn(),
-            timeout_remove: vi.fn(),
-            tab_switch_cleanup: vi.fn((cb) => cb && cb()),
-            showCliPanel: vi.fn(),
-            selectDefaultTabWhenConnected: vi.fn(),
+        // The timer registry: serial_backend's watchdogs never fire on their own here.
+        timers: {
+            addTimeout: vi.fn(),
+            removeTimeout: vi.fn(),
+            killAllTimeouts: vi.fn(),
+            killAllIntervals: vi.fn(),
+        },
+        // One shared object, so what serial_backend writes is what the test reads back.
+        connectionStore: {
+            liveDataPaused: false,
+            connectLock: false,
+            connectedTo: false as string | false,
+            connectingTo: false as string | false,
+            flashingInProgress: false,
         },
         // serial: capture the connect/disconnect handlers registered by beginConnect.
         serialHandlers,
@@ -49,6 +73,7 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
         },
         unmountVueTab: vi.fn(),
         switchTab: vi.fn(),
+        selectDefaultTabWhenConnected: vi.fn(),
         dialogStore: {
             activeDialog: null as { type: string } | null,
             open: vi.fn(),
@@ -65,13 +90,23 @@ const { GUI, serial, serialHandlers, unmountVueTab, switchTab, dialogStore, mspH
     };
 });
 
-vi.mock("../../src/js/gui.js", () => ({
+vi.mock("../../src/js/timers", () => ({
     __esModule: true,
-    default: GUI,
-    TABS: {},
+    ...timers,
 }));
 
-vi.mock("../../src/js/serial.js", () => ({
+vi.mock("../../src/js/tab_adapters", () => ({
+    __esModule: true,
+    TABS: {},
+    tabSwitchCleanup: vi.fn((cb) => cb && cb()),
+}));
+
+vi.mock("../../src/js/cli_panel", () => ({
+    __esModule: true,
+    showCliPanel: vi.fn(),
+}));
+
+vi.mock("../../src/js/serial", () => ({
     __esModule: true,
     serial,
 }));
@@ -136,6 +171,7 @@ vi.mock("../../src/js/vue_tab_mounter", () => ({
 vi.mock("../../src/js/tab_switch", () => ({
     __esModule: true,
     switchTab,
+    selectDefaultTabWhenConnected,
 }));
 
 vi.mock("../../src/stores/dialog", () => ({
@@ -145,39 +181,12 @@ vi.mock("../../src/stores/dialog", () => ({
 
 vi.mock("../../src/stores/connection", () => ({
     __esModule: true,
-    useConnectionStore: () => ({ liveDataPaused: false }),
-}));
-
-vi.mock("../../src/js/fc", () => ({
-    __esModule: true,
-    default: {
-        CONFIG: {
-            apiVersion: "1.47.0",
-            flightControllerVersion: "",
-            flightControllerIdentifier: "BTFL",
-            boardType: 0,
-            buildOptions: [],
-            buildKey: "",
-            targetCapabilities: 0,
-        },
-        FEATURE_CONFIG: { features: {} },
-        BEEPER_CONFIG: {},
-        TARGET_CAPABILITIES_FLAGS: {},
-        CONFIGURATION_STATES: {},
-        CONFIGURATION_PROBLEM_FLAGS: {},
-        resetState: vi.fn(),
-    },
+    useConnectionStore: () => connectionStore,
 }));
 
 vi.mock("../../src/js/data_storage", () => ({
     __esModule: true,
-    default: {
-        connectionValid: false,
-        cliValid: false,
-        cliActive: false,
-        virtualMode: false,
-        API_VERSION_ACCEPTED: "1.46.0",
-    },
+    API_VERSION_ACCEPTED: "1.46.0",
     API_VERSION_1_45: "1.45.0",
     API_VERSION_1_46: "1.46.0",
     API_VERSION_1_47: "1.47.0",
@@ -225,12 +234,13 @@ import {
 } from "../../src/js/serial_backend";
 import DeviceHandler from "../../src/js/device_handler";
 import { set as setConfig } from "../../src/js/ConfigStorage";
-import CONFIGURATOR from "../../src/js/data_storage";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import { EventBus } from "../../src/components/eventBus";
-import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state.js";
+import { __resetConnectionStateForTests, getConnectionState } from "../../src/js/connection_state";
+import { useNavigationStore } from "../../src/stores/navigation";
+import { useConnectionStore } from "../../src/stores/connection";
 
 // Reset all mock state and bring the module to a known DISCONNECTED state
 // before each test. Because module-private state (isConnected,
@@ -239,21 +249,28 @@ import { __resetConnectionStateForTests, getConnectionState } from "../../src/js
 // down so the next test starts clean.
 function resetMocks() {
     vi.clearAllMocks();
+    // serial_backend reads the real flightController store: give every test a fresh one,
+    // whether or not its describe block installs a Pinia of its own.
+    setActivePinia(createPinia());
+    const connectionStore = useConnectionStore();
     Object.keys(serialHandlers).forEach((k) => delete serialHandlers[k]);
-    GUI.connect_lock = false;
-    GUI.connected_to = false;
-    GUI.connecting_to = false;
-    GUI.pendingTab = null;
-    GUI.active_tab = "landing";
-    GUI.allowedTabs = [];
+    connectionStore.liveDataPaused = false;
+    connectionStore.connectLock = false;
+    connectionStore.connectedTo = false;
+    connectionStore.connectingTo = false;
+    connectionStore.flashingInProgress = false;
+    const navigationStore = useNavigationStore();
+    navigationStore.pendingTab = null;
+    navigationStore.activeTab = "landing";
+    navigationStore.allowedTabs = [];
     serial.connected = false;
     dialogStore.activeDialog = null;
     // Restore the port picker (the reboot test mutates these).
     DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
     DeviceHandler.devicePicker.autoConnect = false;
-    // Restore CONFIGURATOR flags the reboot/virtual tests mutate.
-    CONFIGURATOR.virtualMode = false;
-    CONFIGURATOR.connectionValid = false;
+    // Restore the connection flags the reboot/virtual tests mutate.
+    connectionStore.virtualMode = false;
+    connectionStore.connectionValid = false;
     // The reboot tests drive the connection state into REBOOTING/RECONNECTING via
     // reinitializeConnection(); reset the singleton so a later case can't inherit a
     // non-IDLE phase (and a stale isReconnecting) from execution order.
@@ -275,10 +292,11 @@ function establishConnection() {
 // Drive the module into a "connected" state for a VIRTUAL port. beginConnect passes
 // onOpenVirtual as serial.connect's third argument (only for the virtual port); the default
 // mock ignores it, so here we make serial.connect invoke that callback once, which sets
-// module isConnected = true (and CONFIGURATOR.virtualMode).
+// module isConnected = true (and the connection store's virtualMode).
 function establishVirtualConnection() {
+    const connectionStore = useConnectionStore();
     DeviceHandler.devicePicker.selectedDevice = "virtual";
-    CONFIGURATOR.virtualMode = true;
+    connectionStore.virtualMode = true;
     serial.connect.mockImplementationOnce((_port, _opts, onOpenVirtual) => {
         onOpenVirtual?.();
     });
@@ -299,7 +317,7 @@ describe("serial_backend connectDisconnect — attempt already in flight", () =>
         connectDisconnect();
 
         expect(serial.connect).toHaveBeenCalledTimes(1);
-        expect(GUI.connecting_to).toBe("/dev/ttyACM0");
+        expect(connectionStore.connectingTo).toBe("/dev/ttyACM0");
 
         connectDisconnect();
 
@@ -308,7 +326,7 @@ describe("serial_backend connectDisconnect — attempt already in flight", () =>
 
     it("connects again once the attempt has settled", () => {
         connectDisconnect();
-        GUI.connecting_to = false;
+        connectionStore.connectingTo = false;
 
         connectDisconnect();
 
@@ -334,7 +352,7 @@ describe("serial_backend connectDisconnect — manual target", () => {
 
         expect(serial.connect).toHaveBeenCalledTimes(1);
         expect(serial.connect.mock.calls[0][0]).toBe("tcp://192.168.4.1:5761");
-        expect(GUI.connecting_to).toBe("tcp://192.168.4.1:5761");
+        expect(connectionStore.connectingTo).toBe("tcp://192.168.4.1:5761");
     });
 });
 
@@ -372,12 +390,12 @@ describe("serial_backend connect deeplink", () => {
         // The transport is opened on the deeplink address, not the picker's device path.
         expect(serial.connect).toHaveBeenCalledTimes(1);
         expect(serial.connect.mock.calls[0][0]).toBe(DEEPLINK_TARGET);
-        expect(GUI.connecting_to).toBe(DEEPLINK_TARGET);
+        expect(connectionStore.connectingTo).toBe(DEEPLINK_TARGET);
         // Single-use: the parameter must not linger to reconnect on refresh.
         expect(window.location.search).toBe("");
 
         // Device enumeration is asynchronous; let it settle, then deliver the auto-select event it
-        // raises when it finds a serial port. The in-flight deeplink connect (GUI.connecting_to set)
+        // raises when it finds a serial port. The in-flight deeplink connect (connectionStore.connectingTo set)
         // must make that listener stand down instead of stealing the connection.
         await Promise.resolve();
         const autoSelect = vi
@@ -386,7 +404,7 @@ describe("serial_backend connect deeplink", () => {
         expect(autoSelect).toBeTypeOf("function");
 
         serial.connect.mockClear();
-        autoSelect();
+        autoSelect!();
 
         // No competing open, and the selection is still the manual deeplink target.
         expect(serial.connect).not.toHaveBeenCalled();
@@ -408,19 +426,19 @@ describe("serial_backend disconnect convergence", () => {
 
         // Pre-teardown baseline. Simulate leaving a connected tab so teardown takes the
         // blank-and-replace path (unmount old tab, switch to landing).
-        GUI.active_tab = "configuration";
+        useNavigationStore().activeTab = "configuration";
         switchTab.mockClear();
         unmountVueTab.mockClear();
-        GUI.connect_lock = true; // simulate an in-progress operation lock
-        GUI.connected_to = "/dev/ttyACM0";
+        connectionStore.connectLock = true; // simulate an in-progress operation lock
+        connectionStore.connectedTo = "/dev/ttyACM0";
 
         // Fire the protocol "disconnect" event -> disconnectHandler -> onClosed(true).
         serialHandlers.disconnect({ detail: true });
 
         expect(switchTab).toHaveBeenCalledWith("landing", { mode: "disconnected" });
         expect(unmountVueTab).toHaveBeenCalledTimes(1);
-        expect(GUI.connect_lock).toBe(false);
-        expect(GUI.connected_to).toBe(false);
+        expect(connectionStore.connectLock).toBe(false);
+        expect(connectionStore.connectedTo).toBe(false);
     });
 
     it("repeated disconnects while already on landing do NOT blank the content (no stuck black screen)", () => {
@@ -429,7 +447,7 @@ describe("serial_backend disconnect convergence", () => {
         // unmount here previously left a blank content area that switchTab() would not
         // remount (it no-ops on the same tab).
         establishConnection();
-        GUI.active_tab = "landing";
+        useNavigationStore().activeTab = "landing";
         unmountVueTab.mockClear();
 
         serialHandlers.disconnect({ detail: true });
@@ -462,14 +480,14 @@ describe("serial_backend disconnect convergence", () => {
 
     it("clears the dead connection's handshake watchdogs on an UNEXPECTED disconnect", () => {
         establishConnection();
-        GUI.timeout_remove.mockClear();
+        timers.removeTimeout.mockClear();
 
         serialHandlers.disconnect({ detail: true });
 
-        // GUI.timeout_add does not de-duplicate names, so a stale watchdog left armed
+        // addTimeout does not de-duplicate names, so a stale watchdog left armed
         // here would later fire into a healthy successor connection.
-        expect(GUI.timeout_remove).toHaveBeenCalledWith("connecting");
-        expect(GUI.timeout_remove).toHaveBeenCalledWith("connectAttempt");
+        expect(timers.removeTimeout).toHaveBeenCalledWith("connecting");
+        expect(timers.removeTimeout).toHaveBeenCalledWith("connectAttempt");
     });
 
     it("UNEXPECTED disconnect does NOT change the arming state", () => {
@@ -588,14 +606,14 @@ describe("serial_backend connect-failure dialog", () => {
 
         expect(infoDialogCount()).toBe(0);
         // Torn down, so the next event can attempt again and the UI is not stuck mid-connect.
-        expect(GUI.connecting_to).toBe(false);
+        expect(connectionStore.connectingTo).toBe(false);
         expect(DeviceHandler.devicePickerDisabled).toBe(false);
 
         serial.connect.mockClear();
         connectDisconnect({ automatic: true });
         expect(serial.connect).toHaveBeenCalled();
         serialHandlers.connect({ detail: true });
-        expect(GUI.connected_to).toBe("/dev/ttyACM0");
+        expect(connectionStore.connectedTo).toBe("/dev/ttyACM0");
         expect(infoDialogCount()).toBe(0);
     });
 
@@ -607,14 +625,8 @@ describe("serial_backend connect-failure dialog", () => {
         serialHandlers.connect({ detail: true }); // opened -> linkOpen, HANDSHAKING
         dialogStore.open.mockClear();
 
-        // FC.CONFIG is module state on the mock; resetMocks() does not restore it.
-        const apiVersion = FC.CONFIG.apiVersion;
-        try {
-            FC.CONFIG.apiVersion = "0.0.0";
-            (vi.mocked(MSP.send_message).mock.calls.at(-1)?.[3] as (() => void) | undefined)?.(); // MSP_API_VERSION callback -> abortConnection
-        } finally {
-            FC.CONFIG.apiVersion = apiVersion;
-        }
+        useFlightControllerStore().config.apiVersion = "0.0.0";
+        (vi.mocked(MSP.send_message).mock.calls.at(-1)?.[3] as (() => void) | undefined)?.(); // MSP_API_VERSION callback -> abortConnection
 
         expect(infoDialogCount()).toBe(1);
     });
@@ -623,25 +635,20 @@ describe("serial_backend connect-failure dialog", () => {
         // MSP.send_message calls back synchronously when the link dropped again, so
         // abortConnection runs before connectHandler returns.
         DeviceHandler.devicePicker.autoConnect = true;
-        const apiVersion = FC.CONFIG.apiVersion;
 
-        try {
-            connectDisconnect({ automatic: true });
-            dialogStore.open.mockClear();
+        connectDisconnect({ automatic: true });
+        dialogStore.open.mockClear();
 
-            vi.mocked(MSP.send_message).mockImplementationOnce((_code, _data, _sent, callback) => {
-                FC.CONFIG.apiVersion = "0.0.0";
-                (callback as (() => void) | undefined)?.();
-                // The real send_message returns false after calling back synchronously.
-                return false;
-            });
+        vi.mocked(MSP.send_message).mockImplementationOnce((_code, _data, _sent, callback) => {
+            useFlightControllerStore().config.apiVersion = "0.0.0";
+            (callback as (() => void) | undefined)?.();
+            // The real send_message returns false after calling back synchronously.
+            return false;
+        });
 
-            serialHandlers.connect({ detail: true });
+        serialHandlers.connect({ detail: true });
 
-            expect(infoDialogCount()).toBe(1);
-        } finally {
-            FC.CONFIG.apiVersion = apiVersion;
-        }
+        expect(infoDialogCount()).toBe(1);
     });
 
     it("stays silent when a reboot reconnect's open fails (the loop retries)", () => {
@@ -656,7 +663,7 @@ describe("serial_backend connect-failure dialog", () => {
         serialHandlers.connect({ detail: false }); // premature failed open -> abortConnection
 
         expect(infoDialogCount()).toBe(0);
-        expect(GUI.connecting_to).toBe(false);
+        expect(connectionStore.connectingTo).toBe(false);
     });
 
     it("makes no automatic attempt at all with Auto-Connect OFF", () => {
@@ -670,13 +677,13 @@ describe("serial_backend connect-failure dialog", () => {
 
         DeviceHandler.devicePicker.autoConnect = false;
         serial.connect.mockClear();
-        autoSelect();
+        autoSelect!();
         expect(serial.connect).not.toHaveBeenCalled();
 
         // With it on the same listener connects, and its failure stays silent.
         DeviceHandler.devicePicker.autoConnect = true;
         dialogStore.open.mockClear();
-        autoSelect();
+        autoSelect!();
         expect(serial.connect).toHaveBeenCalled();
 
         serialHandlers.connect({ detail: false });
@@ -722,6 +729,7 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
     });
 
     it("forces connectionValid false on reboot so the dialog waits for a real reconnect", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
@@ -731,11 +739,11 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
             // the reboot starts. If left stale-true, the reboot dialog's check-timer would
             // conclude the reboot and null the shared reconnect window before the retry loop
             // arms — no reconnect ever runs. reinitializeConnection must reset it.
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
 
             reinitializeConnection();
 
-            expect(CONFIGURATOR.connectionValid).toBe(false);
+            expect(connectionStore.connectionValid).toBe(false);
         } finally {
             vi.advanceTimersByTime(30000); // drain the loop
             vi.useRealTimers();
@@ -813,7 +821,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
     // disconnect handler so module-private state does not leak into later tests.
     it("removing a DIFFERENT device does NOT disconnect the active connection", () => {
         establishConnection();
-        GUI.connected_to = "serial_1"; // device B is the active connection
+        connectionStore.connectedTo = "serial_1"; // device B is the active connection
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 
@@ -829,7 +837,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 
     it("removing the CONNECTED device DOES disconnect", () => {
         establishConnection();
-        GUI.connected_to = "serial_1";
+        connectionStore.connectedTo = "serial_1";
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 
@@ -845,7 +853,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 
     it("a null/empty removal detail never triggers a disconnect", () => {
         establishConnection();
-        GUI.connected_to = "serial_1";
+        connectionStore.connectedTo = "serial_1";
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 
@@ -862,7 +870,7 @@ describe("serial_backend removedDevice matching is device-specific", () => {
 
     it("an empty removal path does not match connected_to === false", () => {
         establishConnection();
-        GUI.connected_to = false; // guard against the pre-fix empty-path bug
+        connectionStore.connectedTo = false; // guard against the pre-fix empty-path bug
         mspHelperInstance.enableArming.mockClear();
         mspHelperInstance.disableArming.mockClear();
 
@@ -888,14 +896,15 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
         resetMocks();
     });
 
-    it("sends MSP_SET_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
+    it("sends MSP_REBOOT, forces connectionValid false, and leaves a live serial link alone", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             // Plain USB/serial path: not bluetooth, not manual, not virtual.
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.virtualMode = false;
-            CONFIGURATOR.connectionValid = true; // established before the reboot
+            connectionStore.virtualMode = false;
+            connectionStore.connectionValid = true; // established before the reboot
             establishConnection();
 
             vi.mocked(MSP.send_message).mockClear();
@@ -904,9 +913,9 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
 
             reinitializeConnection();
 
-            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_REBOOT, false, false);
             // The reboot forces the connection invalid so the cycle waits for a real reconnect.
-            expect(CONFIGURATOR.connectionValid).toBe(false);
+            expect(connectionStore.connectionValid).toBe(false);
 
             // A serial link that is still open after the flush means the FC did not reboot, or
             // the OS has not noticed yet. Dropping it would tear down a working connection and
@@ -924,11 +933,12 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     // auto-select listener. That listener is still the fast path, but the cycle now backstops it
     // and ends the window either way.
     it("reconnects a serial target from the cycle when no device event arrives", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();
@@ -944,11 +954,12 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     });
 
     it("a user disconnect during the reboot cancels the cycle and closes the window", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();
@@ -969,6 +980,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     // to wait for. For serial that is the port coming back — the user can reconnect to a device
     // that is actually there. (Was shouldConcludeRebootDialog's serial branch.)
     it("with Auto-Connect off, ends the window when OUR device is back — not any port", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
@@ -976,7 +988,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             DeviceHandler.portAvailable = true; // other serial ports are present throughout
             vi.mocked(DeviceHandler.isKnownDevicePath).mockReturnValue(true); // and one shares our path shape
             vi.mocked(DeviceHandler.findDescribedDevice).mockReturnValue(undefined); // but ours is away
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();
@@ -1001,11 +1013,12 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
     // The window is shared: another owner can conclude it first. A closed window reads as
     // NOT expired, so a loop testing expiry alone would spin forever.
     it("stops when another owner concludes the window", () => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.selectedDevice = "/dev/ttyACM0";
             DeviceHandler.devicePicker.autoConnect = true;
-            CONFIGURATOR.connectionValid = true;
+            connectionStore.connectionValid = true;
             establishConnection();
 
             reinitializeConnection();
@@ -1029,7 +1042,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
         resetMocks();
     });
 
-    it("toggles immediately then reconnects after 500ms when auto-connect is on (no MSP_SET_REBOOT)", () => {
+    it("toggles immediately then reconnects after 500ms when auto-connect is on (no MSP_REBOOT)", () => {
         vi.useFakeTimers();
         try {
             DeviceHandler.devicePicker.autoConnect = true;
@@ -1043,7 +1056,7 @@ describe("serial_backend reinitializeConnection — virtualMode reboot path", ()
             reinitializeConnection();
 
             // Virtual path just toggles the link — no reboot command.
-            expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_SET_REBOOT, false, false);
+            expect(MSP.send_message).not.toHaveBeenCalledWith(MSPCodes.MSP_REBOOT, false, false);
             expect(mspHelperInstance.enableArming).toHaveBeenCalledTimes(1);
             expect(mspHelperInstance.disableArming).not.toHaveBeenCalled();
             // Mocked enableArming doesn't auto-invoke its callback — drive it to finish the close.

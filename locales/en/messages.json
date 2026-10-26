@@ -31,6 +31,18 @@
     "search": {
         "message": "Search"
     },
+    "settingsSearchTitle": {
+        "message": "Search settings",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Search settings...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "No settings found",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Don't show again"
     },
@@ -276,12 +288,9 @@
     "userLanguageSelect": {
         "message": "Select default language"
     },
-    "language_default": {
-        "message": "System Default"
-    },
     "language_DEFAULT": {
-        "message": "$t(language_default.message)",
-        "description": "Don't translate!!!"
+        "message": "System default ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
     },
     "language_ar": {
         "message": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
@@ -335,6 +344,10 @@
         "message": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8",
         "description": "Don't translate!!!"
     },
+    "language_kk": {
+        "message": "\u049A\u0430\u0437\u0430\u049B\u0448\u0430",
+        "description": "Don't translate!!!"
+    },
     "language_ko": {
         "message": "\ud55c\uad6d\uc5b4",
         "description": "Don't translate!!!"
@@ -363,7 +376,7 @@
         "message": "Srpski (latinica)",
         "description": "Don't translate!!!"
     },
-    "language_sr_Cyrl": {
+    "language_sr-Cyrl": {
         "message": "\u0421\u0440\u043f\u0441\u043a\u0438 (\u045b\u0438\u0440\u0438\u043b\u0438\u0446\u0430)",
         "description": "Don't translate!!!"
     },
@@ -473,6 +486,9 @@
     "sensorConfigHardware": {
         "message": "Sensor Hardware"
     },
+    "sensorConfigActiveGyros": {
+        "message": "Active Gyros"
+    },
     "sensorConfigGyroLabel": {
         "message": "Gyro $1"
     },
@@ -556,6 +572,10 @@
     "autotuneCurrent": { "message": "Current" },
     "autotuneProposed": { "message": "Proposed" },
     "autotuneApplied": { "message": "Gains applied and saved." },
+    "autotuneApplyConfirmText": {
+        "message": "Applying writes the tuning sliders to the flight controller and saves them to EEPROM. Recommended gains can destabilise the craft on first arm, so be ready to disarm for the first test."
+    },
+    "autotuneApplyConfirmTitle": { "message": "Apply recommended gains?" },
     "autotuneApplyFailed": { "message": "Failed to apply gains" },
     "autotuneConnectRequired": { "message": "Connect to flight controller to apply gains." },
     "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
@@ -663,9 +683,6 @@
     },
     "connectionFailed": {
         "message": "<span class=\"message-negative\">Failed</span> to connect to the selected port. Check that the device is reachable and that the connection settings are correct, then try again."
-    },
-    "connectionFailedLocalNetworkIOS": {
-        "message": "On iOS, allow <strong>Local Network</strong> access for Betaflight under Settings &rarr; Privacy &amp; Security &rarr; Local Network, then try again."
     },
     "connectionLostTitle": {
         "message": "Connection lost"
@@ -929,7 +946,7 @@
         "message": "Hardware"
     },
     "defaultHardwareText": {
-        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+        "message": "Betaflight runs on flight controllers from many manufacturers, listed in the Firmware Flasher tab. Support for your hardware comes from its manufacturer, see <a href=\"https://betaflight.com/support\" target=\"_blank\" rel=\"noopener noreferrer\">Hardware support</a>.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "Software"
@@ -996,10 +1013,7 @@
         "message": "Developer"
     },
     "defaultSupport": {
-        "message": "For support please search the forums and wiki first or contact your vendor.<br /><br />"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread</a>"
+        "message": "The Betaflight team fixes Betaflight: report bugs on GitHub. For help with your hardware, contact its manufacturer. For help with your build and setup, ask the community on Discord or search the wiki.<br /><br />"
     },
     "defaultSupport2": {
         "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
@@ -1011,7 +1025,7 @@
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight devs on Discord</a>"
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight community on Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
@@ -2943,6 +2957,10 @@
         "message": "Switch the VTX into pit mode (low output power, if supported)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Capture waypoints in flight: a short press adds the current position to the flight plan as a waypoint, holding the switch for 1.5 seconds deletes the last waypoint",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Reset the transponder lap timer",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3280,11 +3298,31 @@
     "flightPlanLongitude": {
         "message": "Longitude <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "Altitude <span class=\"units\">ft AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "Altitude <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "Speed <span class=\"units\">knots</span>"
+    "flightPlanAltitudeAria": {
+        "message": "Altitude in {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "Speed <span class=\"units\">{{unit}}</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "Speed in {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "Units",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "Imperial (ft, kts, nm)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "Metric (m, km/h, km)"
     },
     "flightPlanType": {
         "message": "Waypoint Type"
@@ -3981,6 +4019,12 @@
     "firmwareFlasherNoReboot": {
         "message": "No reboot sequence"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Build Type"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "Board"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Select build type to see available boards."
     },
@@ -4091,7 +4135,7 @@
         "message": "{{bytes}} bytes"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes)"
+        "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes). This is not from the Betaflight cloud build, so support for it comes from whoever built it."
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Loaded Online Firmware: {{filename}} ({{bytes}} bytes)"
@@ -8071,16 +8115,19 @@
         "message": "Continue without OSD protocol"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "✅ Verified Partner"
+        "message": "✅ Betaflight Supported"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "⚠️ Vendor / Community"
+        "message": "⚠️ Manufacturer supported"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Legacy"
     },
     "firmwareFlasherOptionLabelNotQualified": {
-        "message": "⚠️ Community / Manufacturer supported target — not officially supported ⚠️"
+        "message": "⚠️ Manufacturer supported target. For support with this board, contact its manufacturer."
+    },
+    "firmwareFlasherOptionLabelLegacyTarget": {
+        "message": "⚠️ Legacy target, no longer maintained. Use at your own discretion."
     },
     "coreBuild": {
         "message": "Core Only"
@@ -8263,6 +8310,12 @@
     },
     "userProfileUpdateFailed": {
         "message": "Failed to update profile"
+    },
+    "userAccountDeleteSuccess": {
+        "message": "Your Betaflight account has been deleted"
+    },
+    "userAccountDeleteFailed": {
+        "message": "Failed to delete account"
     },
     "userBackupsLoadFailed": {
         "message": "Failed to load backups"
@@ -8495,6 +8548,18 @@
     },
     "sectionUserPasskeys": {
         "message": "User Passkeys"
+    },
+    "sectionDeleteAccount": {
+        "message": "Delete account"
+    },
+    "deleteAccountDescription": {
+        "message": "Permanently delete your Betaflight account, including your profile, passkeys, sign-in tokens and cloud backups. This cannot be undone."
+    },
+    "actionDeleteAccount": {
+        "message": "Delete account"
+    },
+    "confirmDeleteAccount": {
+        "message": "This will permanently delete your Betaflight account, including your profile, passkeys, sign-in tokens and all cloud backups. This cannot be undone and the data cannot be recovered. Are you sure you want to continue?"
     },
     "osdPresetPositionAlignTitle": {
         "message": "Align to position",

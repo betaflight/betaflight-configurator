@@ -1,7 +1,4 @@
 {
-    "translation_version": {
-        "message": "0"
-    },
     "yes": {
         "message": "Ja",
         "description": "General Yes message to be used across the application"
@@ -44,9 +41,6 @@
     "pwaOnNeedRefreshText": {
         "message": "Sie müssen die Seite aktualisieren, um die neuesten Änderungen zu erhalten. Wenn Sie sie jetzt aktualisieren, wird die Seite neu geladen und Sie verlieren alle nicht gespeicherten Änderungen und brechen alle laufenden Vorgänge ab.<br><br>Möchten Sie sie jetzt aktualisieren? Sie können diese Nachricht auch schließen und die Seite später manuell aktualisieren.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
-    },
-    "operationNotSupported": {
-        "message": "Diese Funktion wird von deinem System nicht unterstützt."
     },
     "storageDeviceNotReady": {
         "message": "Das Speichermedium ist nicht betriebsbereit. Bei Verwendung einer microSD-Karte sicherstellen, dass diese vom Flugkontroller richtig erkannt wird."
@@ -138,13 +132,9 @@
     "analyticsOptOut": {
         "message": "Keine anonymisierte Erhebung von Statistikdaten"
     },
-    "connectionTimeout": {
-        "message": "Zeitüberschreitung für den Verbindungsaufbau\/Initialisierung festlegen.\n(beim Einstecken oder nach einen Neustart des Geräts.)",
-        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
-    },
     "showAllSerialDevices": {
         "message": "Alle seriellen Geräte anzeigen (für Hersteller oder Entwicklung)",
-        "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
     "showManualMode": {
         "message": "Manuellen Verbindungsmodus aktivieren",
@@ -158,9 +148,6 @@
         "message": "Legacy-Rendering für 3D-Modell aktivieren (für Geräte mit niedriger Performance)",
         "description": "Text for the option to enable or disable legacy rendering of the 3D model"
     },
-    "cordovaForceComputerUI": {
-        "message": "Computerschnittstelle anstelle der Telefonschnittstelle verwenden"
-    },
     "language_changed": {
         "message": "Sprache geändert"
     },
@@ -170,9 +157,6 @@
     },
     "userLanguageSelect": {
         "message": "Standardsprache auswählen"
-    },
-    "language_default": {
-        "message": "Systemstandard"
     },
     "sensorDataFlashNotFound": {
         "message": "Keine Speichermöglichkeit<br>Chip nicht gefunden",
@@ -192,61 +176,35 @@
     "sensorStatusAccel": {
         "message": "Beschleunigungssensor"
     },
-    "sensorStatusAccelShort": {
-        "message": "Beschleunigungssensor",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
     "sensorStatusMag": {
         "message": "Magnetometer"
-    },
-    "sensorStatusMagShort": {
-        "message": "Magnetometer",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
         "message": "Barometer"
     },
-    "sensorStatusBaroShort": {
-        "message": "Barometer",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
     "sensorStatusGPS": {
         "message": "GPS"
     },
-    "sensorStatusGPSShort": {
-        "message": "GPS",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
     "sensorStatusSonar": {
-        "message": "Sonar \/ Entfernungsmesser"
-    },
-    "sensorStatusSonarShort": {
-        "message": "Sonar",
-        "description": "Text of the image in the top sensors icons. Please keep it short."
+        "message": "Sonar / Entfernungsmesser"
     },
     "configuratorUpdateHelp": {
         "message": "Wenn Internet verfügbar ist, sollte die App automatisch nach verfügbaren Updates fragen."
     },
     "deviceRebooting": {
-        "message": "Gerät - <span class=\"message-negative\">startet neu<\/span>"
+        "message": "Gerät - <span class=\"message-negative\">startet neu</span>"
     },
     "deviceRebooting_flashBootloader": {
-        "message": "Gerät - <span class=\"message-negative\">Starte neu im FLASH BOOTLOADER<\/span>"
+        "message": "Gerät - <span class=\"message-negative\">Starte neu im FLASH BOOTLOADER</span>"
     },
     "deviceRebooting_romBootloader": {
-        "message": "Gerät - <span class=\"message-negative\">Starte neu im ROM BOOTLOADER<\/span>"
-    },
-    "deviceReady": {
-        "message": "Gerät - <span class=\"message-positive\">Bereit<\/span>"
+        "message": "Gerät - <span class=\"message-negative\">Starte neu im ROM BOOTLOADER</span>"
     },
     "tabFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
     "tabLanding": {
         "message": "Willkommen"
-    },
-    "tabPrivacyPolicy": {
-        "message": "Datenschutzerklärung"
     },
     "tabHelp": {
         "message": "Dokumentation & Hilfe"
@@ -255,25 +213,19 @@
         "message": "Optionen"
     },
     "tabSetup": {
-        "message": "Einrichtung \/ Sensorkalibrierung"
-    },
-    "tabSetupOSD": {
-        "message": "OSD Einstellungen"
+        "message": "Einrichtung / Sensorkalibrierung"
     },
     "tabConfiguration": {
         "message": "Grundkonfiguration des Copters"
     },
     "tabPorts": {
-        "message": "Anschlüsse \/ Serielle Schnittstellen"
+        "message": "Anschlüsse / Serielle Schnittstellen"
     },
     "tabPidTuning": {
         "message": "PID-Einstellungen"
     },
     "tabReceiver": {
         "message": "Empfänger"
-    },
-    "tabModeSelection": {
-        "message": "Modusauswahl"
     },
     "tabServos": {
         "message": "Servos"
@@ -314,9 +266,6 @@
     "tabAuxiliary": {
         "message": "Modi"
     },
-    "logActionHide": {
-        "message": "Log verbergen"
-    },
     "logActionShow": {
         "message": "Log zeigen"
     },
@@ -324,44 +273,29 @@
         "message": "{{typeof}} Dateien",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
-    "serialErrorFrameError": {
-        "message": "Serieller Verbindungsfehler: Framing-Error"
-    },
-    "serialErrorParityError": {
-        "message": "Serieller Verbindungsfehler: schlechte Parität"
-    },
     "serialPortOpened": {
-        "message": "Serieller Port <span class=\"message-positive\">erfolgreich<\/span> geöffnet mit ID: $1"
+        "message": "Serieller Port <span class=\"message-positive\">erfolgreich</span> geöffnet mit ID: $1"
     },
     "serialPortOpenFail": {
-        "message": "Zugriff auf den seriellen Port <span class=\"message-negative\">fehlgeschlagen<\/span>"
+        "message": "Zugriff auf den seriellen Port <span class=\"message-negative\">fehlgeschlagen</span>"
     },
     "serialPortClosedOk": {
-        "message": "Serieller Port <span class=\"message-positive\">erfolgreich<\/span> geschlossen"
+        "message": "Serieller Port <span class=\"message-positive\">erfolgreich</span> geschlossen"
     },
     "serialPortClosedFail": {
-        "message": "Schliessen des seriellen Ports <span class=\"message-negative\">fehlgeschlagen<\/span>"
-    },
-    "serialUnrecoverable": {
-        "message": "Nicht behebbarer <span class=\"message-negative\">Fehler<\/span> in der seriellen Verbindung, trennen..."
-    },
-    "serialPortLoading": {
-        "message": "Laden ..."
-    },
-    "usbDeviceOpened": {
-        "message": "USB Gerät <span class=\"message-positive\">erfolgreich<\/span> geöffnet mit ID: $1"
+        "message": "Schliessen des seriellen Ports <span class=\"message-negative\">fehlgeschlagen</span>"
     },
     "usbDeviceOpenFail": {
-        "message": "Zugriff auf das USB Gerät <span class=\"message-negative\">fehlgeschlagen<\/span>"
+        "message": "Zugriff auf das USB Gerät <span class=\"message-negative\">fehlgeschlagen</span>"
     },
     "usbDeviceClosed": {
-        "message": "Verbindung zum USB Gerät <span class=\"message-positive\">erfolgreich<\/span> geschlossen"
+        "message": "Verbindung zum USB Gerät <span class=\"message-positive\">erfolgreich</span> geschlossen"
     },
     "usbDeviceCloseFail": {
-        "message": "Schließen der Verbindung zum USB Gerät <span class=\"message-negative\">fehlgeschlagen<\/span>"
+        "message": "Schließen der Verbindung zum USB Gerät <span class=\"message-negative\">fehlgeschlagen</span>"
     },
     "usbDeviceUdevNotice": {
-        "message": "Korrekte <strong>udev-Regeln<\/strong> installiert? Anleitung in der Dokumentation"
+        "message": "Korrekte <strong>udev-Regeln</strong> installiert? Anleitung in der Dokumentation"
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU nicht gefunden"
@@ -420,9 +354,6 @@
     "stm32AddressLoadFailed": {
         "message": "Address load for option bytes sector failed. Very likely due to read protection."
     },
-    "stm32AddressLoadSuccess": {
-        "message": "Address load for option bytes sector succeeded."
-    },
     "stm32AddressLoadUnknown": {
         "message": "Adresslast für Optionsbyte-Sektor ist mit unbekanntem Fehler fehlgeschlagen. Abbrechen."
     },
@@ -445,38 +376,35 @@
         "message": "Failed to initiate unprotect routine"
     },
     "noConfigurationReceived": {
-        "message": "Keine Konfiguration innerhalb <span class=\"message-negative\">10 Sekunden<\/span> erhalten, Kommunikation <span class=\"message-negative\">fehlgeschlagen<\/span>"
+        "message": "Keine Konfiguration innerhalb <span class=\"message-negative\">10 Sekunden</span> erhalten, Kommunikation <span class=\"message-negative\">fehlgeschlagen</span>"
     },
     "firmwareTypeNotSupported": {
-        "message": "Ungültige Betaflight Firmware wird <span class=\"message-negative\">nicht unterstützt<\/span> mit Ausnahme vom CLI Modus."
+        "message": "Ungültige Betaflight Firmware wird <span class=\"message-negative\">nicht unterstützt</span> mit Ausnahme vom CLI Modus."
     },
     "resetToCustomDefaultsDialog": {
-        "message": "Es sind benutzerdefinierte Standards für diesen Flightcontroller verfügbar. Normalerweise funktioniert ein Flightcontroller nicht ordnungsgemäß, wenn keine benutzerdefinierten Standardeinstellungen angewendet werden. <br \/> Möchtest Du die benutzerdefinierten Standardeinstellungen anwenden?"
+        "message": "Es sind benutzerdefinierte Standards für diesen Flightcontroller verfügbar. Normalerweise funktioniert ein Flightcontroller nicht ordnungsgemäß, wenn keine benutzerdefinierten Standardeinstellungen angewendet werden. <br /> Möchtest Du die benutzerdefinierten Standardeinstellungen anwenden?"
     },
     "resetToCustomDefaultsAccept": {
         "message": "Benutzerdefinierte Standardwerte anwenden"
     },
     "reportProblemsDialogHeader": {
-        "message": "Die folgenden <strong>Probleme mit Ihrer Konfiguration<\/strong> wurden entdeckt:"
+        "message": "Die folgenden <strong>Probleme mit Ihrer Konfiguration</strong> wurden entdeckt:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<span class=\"message-negative\"><strong>Sie müssen diese Probleme beheben, bevor Sie versuchen, Ihren Copter zu fliegen<\/span><\/strong>."
+        "message": "<span class=\"message-negative\"><strong>Sie müssen diese Probleme beheben, bevor Sie versuchen, Ihren Copter zu fliegen</span></strong>."
     },
     "infoVersionOs": {
-        "message": "OS: <strong>{{operatingSystem}}<\/strong>",
+        "message": "OS: <strong>{{operatingSystem}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
-    "buildServerSuccess": {
-        "message": "Erfolgreich: $1"
-    },
     "buildServerFailure": {
-        "message": "<b>Build-Server Fehler: $1 <code>$2<\/code><\/b>"
+        "message": "<b>Build-Server Fehler: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "Benutzt zwischengespeicherte Build-Informationen für $1."
     },
     "buildKey": {
-        "message": "Build Key: <strong>$1<\/strong>"
+        "message": "Build Key: <strong>$1</strong>"
     },
     "supportWarningDialogTitle": {
         "message": "Datenübermittlung bestätigen"
@@ -487,88 +415,58 @@
     "supportWarningDialogInputPlaceHolder": {
         "message": "Problembeschreibung "
     },
-    "releaseCheckLoaded": {
-        "message": "Lade Github Information für Version $1."
-    },
-    "releaseCheckFailed": {
-        "message": "<b>Einholen der Informationen für $1 fehlgeschlagen. Gepufferte Informationen werden benutzt. Grund: <code>$2<\/code><\/b>"
-    },
-    "releaseCheckCached": {
-        "message": "Nutze gepufferte Versionsinformationen für $1."
-    },
-    "releaseCheckNoInfo": {
-        "message": "Keine Informationen für Version $1 verfügbar."
-    },
     "tabSwitchConnectionRequired": {
-        "message": "Bitte vor dem Zugriff auf die Tabs ein Gerät <strong>verbinden<\/strong>"
+        "message": "Bitte vor dem Zugriff auf die Tabs ein Gerät <strong>verbinden</strong>"
     },
     "tabSwitchWaitForOperation": {
-        "message": "Ausführung <span class=\"message-negative\">nicht möglich<\/span>. Bitte Warten bis der aktuelle Prozess abgeschossen ist."
+        "message": "Ausführung <span class=\"message-negative\">nicht möglich</span>. Bitte Warten bis der aktuelle Prozess abgeschossen ist."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "Firmwareupdate <strong>erforderlich<\/strong> bevor der $1 Tab genutzt werden kann"
+        "message": "Firmwareupdate <strong>erforderlich</strong> bevor der $1 Tab genutzt werden kann"
     },
     "firmwareVersion": {
-        "message": "Firmware Version: <strong>$1<\/strong>"
+        "message": "Firmware Version: <strong>$1</strong>"
     },
     "apiVersionReceived": {
-        "message": "MultiWii API Version: <strong>$1<\/strong>"
+        "message": "MultiWii API Version: <strong>$1</strong>"
     },
     "uniqueDeviceIdReceived": {
-        "message": "Eindeutige Geräte ID: <strong>0x$1<\/strong>"
+        "message": "Eindeutige Geräte ID: <strong>0x$1</strong>"
     },
     "craftNameReceived": {
-        "message": "Copter Name: <strong>$1<\/strong>"
+        "message": "Copter Name: <strong>$1</strong>"
     },
     "armingDisabled": {
-        "message": "<strong>Arming deaktiviert<\/strong>"
+        "message": "<strong>Arming deaktiviert</strong>"
     },
     "armingEnabled": {
-        "message": "<strong>Arming aktiviert<\/strong>"
+        "message": "<strong>Arming aktiviert</strong>"
     },
     "runawayTakeoffPreventionDisabled": {
-        "message": "<strong>Runaway Abhebeschutz temporär deaktiviert<\/strong>"
+        "message": "<strong>Runaway Abhebeschutz temporär deaktiviert</strong>"
     },
     "runawayTakeoffPreventionEnabled": {
-        "message": "<strong>Runaway Abhebeschutz aktiviert<\/strong>"
+        "message": "<strong>Runaway Abhebeschutz aktiviert</strong>"
     },
     "boardInfoReceived": {
-        "message": "Board: <strong>$1<\/strong>, Version: <strong>$2<\/strong>"
+        "message": "Board: <strong>$1</strong>, Version: <strong>$2</strong>"
     },
     "buildInfoReceived": {
-        "message": "Laufende Firmware veröffentlicht am: <strong>$1<\/strong>"
+        "message": "Laufende Firmware veröffentlicht am: <strong>$1</strong>"
     },
     "fcInfoReceived": {
-        "message": "Flugkontroller Info, Identifikator: <strong>$1<\/strong>, Version: <strong>$2<\/strong>"
+        "message": "Flugkontroller Info, Identifikator: <strong>$1</strong>, Version: <strong>$2</strong>"
     },
     "versionLabelTarget": {
         "message": "Ziel"
-    },
-    "notifications_app_just_updated_to_version": {
-        "message": "Anwendung kürzlich aktualisiert auf: $1"
-    },
-    "notifications_click_here_to_start_app": {
-        "message": "Hier klicken um die Anwendung zu starten"
     },
     "statusbar_port_utilization": {
         "message": "Port-Auslastung:",
         "description": "Port utilization text shown in the status bar"
     },
-    "statusbar_usage_download": {
-        "message": "D:",
-        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
-    },
-    "statusbar_usage_upload": {
-        "message": "U:",
-        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
-    },
     "statusbar_packet_error": {
         "message": "Paket-Fehler:",
         "description": "Packet error text shown in the status bar"
-    },
-    "statusbar_i2c_error": {
-        "message": "I2C-Fehler:",
-        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
         "message": "Zykluszeit:",
@@ -578,11 +476,8 @@
         "message": "CPU-Auslastung:",
         "description": "CPU load text shown in the status bar"
     },
-    "dfu_connect_message": {
-        "message": "Bitte den Firmware Flasher ausführen um auf DFU Geräte zu zugreifen"
-    },
     "dfu_erased_kilobytes": {
-        "message": "<span class=\"message-positive\">Erfolgreich <\/span> $1 kB Speicher gelöscht"
+        "message": "<span class=\"message-positive\">Erfolgreich </span> $1 kB Speicher gelöscht"
     },
     "dfu_device_flash_info": {
         "message": "Gerät mit einer Speicherkapazität von $1 KiB erkannt"
@@ -590,81 +485,60 @@
     "dfu_hex_address_errors": {
         "message": "Das Firmware-Image beinhaltet ungültige Speicheradressen des gewählten Targets"
     },
-    "dfu_error_image_size": {
-        "message": "<span class=\"message-negative\">Fehler<\/span>: Zur Verfügung gestellte Datei ist größer als der Speicherplatz des Chips: $1 KiB, Limit = $2 KiB"
-    },
     "eeprom_saved_ok": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
     },
     "defaultContributingHead": {
         "message": "Mitmachen"
     },
     "defaultFacebookText": {
-        "message": "Wir haben auch eine <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Gruppe<\/a>.<br \/>Trete bei, um über Betaflight zu sprechen,  Konfigurationsfragen zu stellen oder einfach nur um mit anderen Piloten abzuhängen."
+        "message": "Wir haben auch eine <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Gruppe</a>.<br />Trete bei, um über Betaflight zu sprechen,  Konfigurationsfragen zu stellen oder einfach nur um mit anderen Piloten abzuhängen."
     },
     "defaultDiscordText": {
-        "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>Teile deine Flugerfahrung, diskutiere über Betaflight, hilf Anderen oder erhalte Hilfe von der Community."
-    },
-    "defaultButtonFirmwareFlasher": {
-        "message": "Firmware Flasher"
+        "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Teile deine Flugerfahrung, diskutiere über Betaflight, hilf Anderen oder erhalte Hilfe von der Community."
     },
     "defaultDonateBottom": {
-        "message": "<p>Über $t(patreonLink.message) kannst du uns auch kontinuierlich finanziell unterstützen.<\/p>"
+        "message": "<p>Über $t(patreonLink.message) kannst du uns auch kontinuierlich finanziell unterstützen.</p>"
     },
     "patreonLink": {
-        "message": "<a href=\"https:\/\/www.patreon.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon<\/a>",
+        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
         "description": "Patreon is name, and should not require translation"
     },
     "defaultDonate": {
         "message": "Spenden"
     },
-    "defaultSponsorsHead": {
-        "message": "Sponsoren"
-    },
     "defaultDocumentationHead": {
         "message": "Dokumentation"
     },
     "defaultDocumentation": {
-        "message": "Dokumentation zu Betaflight gibt es in den Release Notes und im Wiki.<br \/><br \/>"
+        "message": "Dokumentation zu Betaflight gibt es in den Release Notes und im Wiki.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "Das Betaflight-Wiki ist eine großartige Quelle für Informationen. Es kann <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">hier<\/a> aufgerufen werden."
+        "message": "Das Betaflight-Wiki ist eine großartige Quelle für Informationen. Es kann <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a> aufgerufen werden."
     },
     "defaultDocumentation2": {
-        "message": "Änderungen und Aktualisierungen für die Firmware findest du auf der <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub Release-Seite<\/a>."
+        "message": "Änderungen und Aktualisierungen für die Firmware findest du auf der <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub Release-Seite</a>."
     },
     "defaultSupportHead": {
         "message": "Hilfe"
     },
-    "defaultSupportSubline1": {
-        "message": "Quellen für Hilfe"
-    },
     "defaultSupportSubline2": {
         "message": "Entwickler"
     },
-    "defaultSupport": {
-        "message": "Für Hilfe durchsuche bitte zuerst die Foren und das Wiki oder wende dich an deinen Händler.<br \/><br \/>"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups Forumseite<\/a>"
-    },
     "defaultSupport2": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight-Wiki<\/a>"
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight-Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwells Videos zu Betaflight 4.3 <\/a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwells Videos zu Betaflight 4.3 </a>"
     },
     "defaultSupport4": {
-        "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub<\/a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight-Entwickler auf Discord<\/a>"
+        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Beschleunigungssensor kalibieren"
     },
     "initialSetupCalibrateMagText": {
-        "message": "Copter mindestens <strong>360<\/strong> Grad um alle Achsen, innerhalb von 30 Sekunden, drehen"
+        "message": "Copter mindestens <strong>360</strong> Grad um alle Achsen, innerhalb von 30 Sekunden, drehen"
     },
     "initialSetupButtonCalibratingText": {
         "message": "Kalibriere..."
@@ -673,28 +547,13 @@
         "message": "Einstellungen löschen"
     },
     "initialSetupResetText": {
-        "message": "Zurücksetzen des Flugcontrollers in einen <strong>unkonfigurierten Zustand.<\/strong>"
-    },
-    "initialSetupButtonBackup": {
-        "message": "JSON sichern (Backup)"
-    },
-    "initialSetupButtonRestore": {
-        "message": "JSON wiederherstellen (Restore)"
+        "message": "Zurücksetzen des Flugcontrollers in einen <strong>unkonfigurierten Zustand.</strong>"
     },
     "initialSetupButtonRebootBootloader": {
-        "message": "Boot-Loader\/DFU aktivieren"
-    },
-    "initialSetupBackupRestoreHeader": {
-        "message": "Experimentelle Sicherung und Wiederherstellung (Backup \/ Restore)"
-    },
-    "initialSetupBackupRestoreText": {
-        "message": "<strong>Sichere<\/strong> deine Einstellungen für den Notfall. <strong>Über die Kommandozeile (CLI) vorgenommene Einstellungen <\/strong> sind <span class=\"message-negative\">nicht<\/span> enthalten - verwende den Kommandozeilenbefehl `diff-all` stattdessen."
+        "message": "Boot-Loader/DFU aktivieren"
     },
     "initialSetupRebootBootloaderText": {
-        "message": "Starte im <strong>Boot-Loader\/DFU Modus<\/strong>."
-    },
-    "initialSetupButtonResetZaxis": {
-        "message": "Z Achse zurücksetzen, Abweichung: 0 Grad"
+        "message": "Starte im <strong>Boot-Loader/DFU Modus</strong>."
     },
     "initialSetupButtonResetZaxisValue": {
         "message": "Z Achse zurücksetzen, Abweichung: $1 Grad"
@@ -703,50 +562,11 @@
         "message": "Yaw:",
         "description": "Heading [yaw] attitude value shown on Setup tab when no magnetometer is active"
     },
-    "initialSetupMixerHead": {
-        "message": "Mixer-Typ"
-    },
-    "initialSetupThrottleHead": {
-        "message": "Gas Einstellungen"
-    },
-    "initialSetupMinimum": {
-        "message": "Minimum:"
-    },
-    "initialSetupMaximum": {
-        "message": "Maximum:"
-    },
-    "initialSetupFailsafe": {
-        "message": "Failsafe:"
-    },
-    "initialSetupMinCommand": {
-        "message": "Minimal Gas:"
-    },
-    "initialSetupBatteryHead": {
-        "message": "Akku"
-    },
-    "initialSetupMinCellV": {
-        "message": "Minimale Zellenspannung:"
-    },
-    "initialSetupMaxCellV": {
-        "message": "Maximale Zellspannung:"
-    },
-    "initialSetupVoltageScale": {
-        "message": "Skalierung der Spannung:"
-    },
-    "initialSetupAccelTrimsHead": {
-        "message": "Beschleunigungssensor Anpassung"
-    },
     "initialSetupPitch": {
         "message": "Pitch:"
     },
     "initialSetupRoll": {
         "message": "Roll:"
-    },
-    "initialSetupMagHead": {
-        "message": "Magnetometer"
-    },
-    "initialSetupMagDeclination": {
-        "message": "Mag Abweichung:"
     },
     "initialSetupInfoHead": {
         "message": "Systeminfo"
@@ -754,13 +574,6 @@
     "initialSetupInfoHeadHelp": {
         "message": "FC-Flags für Disarming, Akku-Information, RSSI-Level und Sensor-Hardware anzeigen.",
         "description": "Message that pops up to describe the System info section"
-    },
-    "initialSensorInfoHead": {
-        "message": "Sensor Info"
-    },
-    "initialSensorInfoHeadHelp": {
-        "message": "Zeigt Sensoren-Hardware",
-        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Akku Spannung"
@@ -789,46 +602,11 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
-    "initialSetupNotInBuild": {
-        "message": "Nicht in der Version enthalten",
-        "description": "Message that pops up when hardware support is not included in build"
-    },
-    "initialSetupNotDetected": {
-        "message": "Nicht erkannt oder deaktiviert",
-        "description": "Message that pops up when hardware is not detected or disabled"
-    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
     "initialSetupMCU": {
         "message": "MCU:"
-    },
-    "initialSetupSensorHardware": {
-        "message": "Sensoren:"
-    },
-    "initialSetupSensorGyro": {
-        "message": "Gyro:"
-    },
-    "initialSetupSensorAcc": {
-        "message": "Accel:"
-    },
-    "initialSetupSensorMag": {
-        "message": "Mag:"
-    },
-    "initialSetupSensorBaro": {
-        "message": "Baro:"
-    },
-    "initialSetupSensorGPS": {
-        "message": "GPS:"
-    },
-    "initialSetupSensorSonar": {
-        "message": "Sonar:"
-    },
-    "initialSetupSensorOpticalflow": {
-        "message": "Optischer Fluss:"
-    },
-    "initialSetupSensorRadar": {
-        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Arming deaktiviert aufgrund:"
@@ -964,13 +742,6 @@
     "initialSetupAltitudeSonar": {
         "message": "Höhe"
     },
-    "initialSetupInstrumentsHead": {
-        "message": "Instrumente"
-    },
-    "initialSetupInstrumentsHeadHelp": {
-        "message": "Richtung, Pitch und Rollen in Instrumenten anzeigen",
-        "description": "Message that pops up to describe the Instruments section"
-    },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
     },
@@ -979,16 +750,13 @@
     },
     "initialSetupInfoFirmwareHelp": {
         "message": "Zeigt Informationen zur Firmware-Version, benötigt eine Onlineverbindung zum Versions-Server.<br>Optionen zeigen bestimmte Optionen in der Cloud Version an.<br>Log- und Konfigurationslinks zeigen Cloud-Informationen durch Schlüssel in der Firmware an.<br>Bei der lokalen Version ist der Abschnitt leer.",
-        "description": "Message that pops up to describe the Build \/ Firmware section"
+        "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
         "message": "Erstellungsdatum (build date):"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Erstellungsinfo (build info):"
-    },
-    "initialSetupInfoBuildInfoKey": {
-        "message": "Build Key"
     },
     "initialSetupInfoBuildConfig": {
         "message": "Konfiguration"
@@ -1008,9 +776,6 @@
     "initialSetupInfoBuildOptionList": {
         "message": "In der Firmware definierte Optionen"
     },
-    "initialSetupInfoBuildEmpty": {
-        "message": "Lokale Erstellung - keine Cloud-Informationen"
-    },
     "initialSetupInfoBuildLocal": {
         "message": "Lokaler Build"
     },
@@ -1023,12 +788,6 @@
     "initialSetupNotOnline": {
         "message": "Server unerreichbar"
     },
-    "initialSetupButtonSave": {
-        "message": "Speichern"
-    },
-    "initialSetupModel": {
-        "message": "Model: $1"
-    },
     "initialSetupAttitude": {
         "message": "$1 Grad"
     },
@@ -1036,50 +795,16 @@
         "message": "Beschleunigungssensor Kalibrierung gestartet"
     },
     "initialSetupAccelCalibEnded": {
-        "message": "Beschleunigungssensor Kalibrierung <span class=\"message-positive\">abgeschlossen<\/span>"
-    },
-    "initialSetupMagCalibStarted": {
-        "message": "Magnetometer Kalibrierung gestartet"
-    },
-    "initialSetupMagCalibEnded": {
-        "message": "Magnetometer Kalibrierung<span class=\"message-positive\">abgeschlossen<\/span>"
+        "message": "Beschleunigungssensor Kalibrierung <span class=\"message-positive\">abgeschlossen</span>"
     },
     "initialSetupSettingsRestored": {
-        "message": "<strong>Werkseinstellungen<\/strong> wiederhergestellt"
-    },
-    "initialSetupNetworkInfo": {
-        "message": "Netzwerk-Informationen"
-    },
-    "initialSetupNetworkInfoHelp": {
-        "message": "Zeigt den Status der Netzwerkverbindung an",
-        "description": "Message that pops up to describe the Network Connection section"
-    },
-    "initialSetupNetworkInfoStatus": {
-        "message": "Status:"
-    },
-    "initialSetupNetworkInfoStatusOnline": {
-        "message": "Online"
-    },
-    "initialSetupNetworkInfoStatusOffline": {
-        "message": "Offline"
-    },
-    "initialSetupNetworkInfoStatusSlow": {
-        "message": "Langsam"
-    },
-    "initialSetupNetworkType": {
-        "message": "Typ:"
-    },
-    "initialSetupNetworkRtt": {
-        "message": "RTT:"
-    },
-    "initialSetupNetworkDownlink": {
-        "message": "Downlink:"
+        "message": "<strong>Werkseinstellungen</strong> wiederhergestellt"
     },
     "featureNone": {
         "message": "Bitte einen Empfänger wählen"
     },
     "featureRX_PPM": {
-        "message": "PPM\/CPPM (über einzelnes Kabel)"
+        "message": "PPM/CPPM (über einzelnes Kabel)"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "In-Flug Kalibrierung"
@@ -1103,13 +828,13 @@
         "message": "Aktiviert CPU-basierende serielle Ports "
     },
     "featureSOFTSERIALTip": {
-        "message": "Konfiguriere die Ports im 'Anschlüsse \/ ...'-Tab nach dem Aktivieren."
+        "message": "Konfiguriere die Ports im 'Anschlüsse / ...'-Tab nach dem Aktivieren."
     },
     "featureGPS": {
         "message": "GPS für Navigation und Telemetrie"
     },
     "featureGPSTip": {
-        "message": "Aktivieren \/ Deaktivieren von GPS-Daten. Wenn GPS nicht aktivierbar ist, überprüfen Sie, ob GPS einen Port im Ports-Tab zugewiesen hat.",
+        "message": "Aktivieren / Deaktivieren von GPS-Daten. Wenn GPS nicht aktivierbar ist, überprüfen Sie, ob GPS einen Port im Ports-Tab zugewiesen hat.",
         "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
@@ -1170,7 +895,7 @@
         "message": "SPI Empfänger (z.B. eingebauter Empfänger)"
     },
     "featureESC_SENSOR": {
-        "message": "KISS\/BLHeli_32 ESC Telemetrie <b>über eine separate Leitung<\/b> verwenden"
+        "message": "KISS/BLHeli_32 ESC Telemetrie <b>über eine separate Leitung</b> verwenden"
     },
     "featureANTI_GRAVITY": {
         "message": "Dauerhaft aktivieren"
@@ -1180,15 +905,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamischer Gyro Notch Filter"
-    },
-    "configurationFeatureEnabled": {
-        "message": "Aktiviert"
-    },
-    "configurationFeatureName": {
-        "message": "Funktion"
-    },
-    "configurationFeatureDescription": {
-        "message": "Beschreibung"
     },
     "configurationMixer": {
         "message": "Mischer"
@@ -1212,19 +928,16 @@
         "message": "RRSI ist eine sehr praktische Messung der Signal Stärke wenn dein Fluggerät an die Grenzen der Reichweite kommt oder es Probleme mit der Signalübertragung gibt"
     },
     "configurationEscFeatures": {
-        "message": "ESC\/Motor Funktionen"
+        "message": "ESC/Motor Funktionen"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Hinweis:<\/strong> Nicht alle Konfigurationen sind möglich. Sollte die FC-Firmware hier einen Konflikt feststellen, werden die ungültigen Funktionen deaktiviert. <br \/> <strong>Hinweis:<\/strong> Konfiguriere die seriellen Anschlüsse <span class=\"message-negative\">bevor<\/span> du Funktionen aktivierst, welche diese verwenden."
+        "message": "<strong>Hinweis:</strong> Nicht alle Konfigurationen sind möglich. Sollte die FC-Firmware hier einen Konflikt feststellen, werden die ungültigen Funktionen deaktiviert. <br /> <strong>Hinweis:</strong> Konfiguriere die seriellen Anschlüsse <span class=\"message-negative\">bevor</span> du Funktionen aktivierst, welche diese verwenden."
     },
     "configurationSerialRXHelp": {
-        "message": "&#8226; Die UART für den Empfänger muss auf 'Serial Rx' gestellt werden (im <i>Ports<\/i> Tab)<br>&#8226; Wähle das korrekte Datenformat aus der Dropdown Liste:"
+        "message": "&#8226; Die UART für den Empfänger muss auf 'Serial Rx' gestellt werden (im <i>Ports</i> Tab)<br>&#8226; Wähle das korrekte Datenformat aus der Dropdown Liste:"
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>Hinweis:<\/strong> Der SPI Empfänger wird nur dann funktionieren, wenn eine passende Hardware an dem Board oder dem SPI Bus angeschlossen ist."
-    },
-    "configurationRangefinderHelp": {
-        "message": "Entfernungsmesser zur Messung der Distanz zum Boden in cm aktivieren"
+        "message": "<strong>Hinweis:</strong> Der SPI Empfänger wird nur dann funktionieren, wenn eine passende Hardware an dem Board oder dem SPI Bus angeschlossen ist."
     },
     "configurationBoardAlignment": {
         "message": "Board-Ausrichtung"
@@ -1236,7 +949,7 @@
         "message": "Abweichender FC-Orientierung in Grad, falls der FC anders als vorgesehen (gedreht, verkehrt, seitwärts, usw.) eingebaut wurde. Wenn externe Sensoren verwendet werden, sollte deren Orientierung einzeln (unabhängig vom FC) konfiguriert werden. "
     },
     "configurationSensorGyroToUse": {
-        "message": "GYRO\/ACCEL"
+        "message": "GYRO/ACCEL"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Erster"
@@ -1272,7 +985,7 @@
         "message": "Motordrehrichtung ist umgekehrt"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Diese Option weist den Mixer an, eine umgekehrte Motordrehrichtung zu erwarten. <strong>Warnung:<\/strong> Dies ändert nicht die reale Drehrichtung der Motoren. Das muss in der ESC-Konfiguration geändert oder die Motorverkabelung angepasst werden. Prüfe mit demontierten Propellern, ob die Motoren in die im Diagramm gezeigte Richtung drehen."
+        "message": "Diese Option weist den Mixer an, eine umgekehrte Motordrehrichtung zu erwarten. <strong>Warnung:</strong> Dies ändert nicht die reale Drehrichtung der Motoren. Das muss in der ESC-Konfiguration geändert oder die Motorverkabelung angepasst werden. Prüfe mit demontierten Propellern, ob die Motoren in die im Diagramm gezeigte Richtung drehen."
     },
     "configurationAutoDisarmDelay": {
         "message": "Motoren deaktivieren nach Wartezeit in [Sekunden]"
@@ -1288,15 +1001,15 @@
     },
     "configurationMotorPoles": {
         "message": "Motor Pole",
-        "description": "One of the fields of the ESC\/Motor configuration"
+        "description": "One of the fields of the ESC/Motor configuration"
     },
     "configurationMotorPolesLong": {
         "message": "$t(configurationMotorPoles.message) (Anzahl Magnete an der Motorglocke)",
-        "description": "One of the fields of the ESC\/Motor configuration"
+        "description": "One of the fields of the ESC/Motor configuration"
     },
     "configurationMotorPolesHelp": {
         "message": "Die Polanzahl ist die Anzahl der Magnete auf der Glocke des Motors. Zähle NICHT die Statoren, auf denen die Wicklungen liegen. 5\" Motoren haben in der Regel 14 Magnete, 3\" oder kleiner haben oft 12 Magneten.",
-        "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
+        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
         "message": "Minimum Gas (kleinster Wert für die Regler falls gearmt)"
@@ -1314,7 +1027,7 @@
         "message": "Bitte wählen ein für Deinen ESC geeignetes Motorausgabeprotokoll. $t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Achtung:<\/strong> Auswahl eines nicht vom ESC unterstützen Ansteuerungsprotokolls kann dazu führen, dass <strong>die Motoren sich sofort drehen, sobald ein Akku angeschlossen wird.<\/strong> Aus diesem Grund: <strong>nach Änderung des Ansteuerungsprotokolls immer die Propeller entfernen, bevor erstmals wieder ein Akku angeschlossen wird.<\/strong>"
+        "message": "<strong>Achtung:</strong> Auswahl eines nicht vom ESC unterstützen Ansteuerungsprotokolls kann dazu führen, dass <strong>die Motoren sich sofort drehen, sobald ein Akku angeschlossen wird.</strong> Aus diesem Grund: <strong>nach Änderung des Ansteuerungsprotokolls immer die Propeller entfernen, bevor erstmals wieder ein Akku angeschlossen wird.</strong>"
     },
     "configurationDshotBeeper": {
         "message": "Dshot Beacon Konfiguration"
@@ -1335,7 +1048,7 @@
         "message": "Piept, wenn die Verbindung zur Fernsteuerung abgerissen ist (bis zur Wiederherstellung der Verbindung)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "Piept SOS, wenn gearmt ist aber das Signal zur Fernsteuerung fehlt ( automatisch Landen \/ automatisch disarmen)"
+        "message": "Piept SOS, wenn gearmt ist aber das Signal zur Fernsteuerung fehlt ( automatisch Landen / automatisch disarmen)"
     },
     "beeperDISARMING": {
         "message": "Piepse beim Disarmen des FCs"
@@ -1395,7 +1108,7 @@
         "message": "Piept, wenn Copter gearmed ist und 'RC Smoothing' die Filter nicht initialisiert hat"
     },
     "configuration3d": {
-        "message": "3D Regler \/ Motor Funktionen"
+        "message": "3D Regler / Motor Funktionen"
     },
     "configuration3dDeadbandLow": {
         "message": "3D Totzone niedrig"
@@ -1406,24 +1119,15 @@
     "configuration3dNeutral": {
         "message": "3D Neutral"
     },
-    "configuration3dDeadbandThrottle": {
-        "message": "3D Gas Totzone"
-    },
     "configurationSystem": {
         "message": "Systemkonfiguration"
-    },
-    "configurationLoopTime": {
-        "message": "Flugcontroller Loop Time"
-    },
-    "configurationCalculatedCyclesSec": {
-        "message": "Zyklen\/Sec (Hz)"
     },
     "configurationSpeedGyroNoGyro": {
         "message": "Bei deaktiviertem Gyro erscheint dieser Wert anstelle der Gyro Geschwindigkeit in kHz",
         "description": "When no gyro is configured this appears in place of the speed of the gyro in kHz"
     },
     "configurationSpeedPidNoGyro": {
-        "message": "Gyroskop \/ {{value}}",
+        "message": "Gyroskop / {{value}}",
         "description": "When no gyro is configured this appears in place of the speed of the PID in kHz. Try to keep it short."
     },
     "configurationKHzUnitLabel": {
@@ -1431,13 +1135,10 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Hinweis:<\/strong> Stelle sicher, dass dein FC mit dieser Geschwindigkeit arbeiten kann. Prüfe die CPU-Auslastung und die Zykluszeit-Stabilität. Änderungen führen möglicherweise dazu, dass die PIDs neu eingestellt werden müssen. Tipp: Deaktiviere Beschleuningungsmesser und unbenutzte Sensoren für eine bessere FC-Leistung."
+        "message": "<strong>Hinweis:</strong> Stelle sicher, dass dein FC mit dieser Geschwindigkeit arbeiten kann. Prüfe die CPU-Auslastung und die Zykluszeit-Stabilität. Änderungen führen möglicherweise dazu, dass die PIDs neu eingestellt werden müssen. Tipp: Deaktiviere Beschleuningungsmesser und unbenutzte Sensoren für eine bessere FC-Leistung."
     },
     "configurationGPSProtocol": {
         "message": "Protokoll"
-    },
-    "configurationGPSBaudrate": {
-        "message": "Baudrate"
     },
     "configurationGPSubxSbas": {
         "message": "Ground Assistance Type"
@@ -1476,13 +1177,13 @@
         "message": "Filterbereich des Dynamischen Notch-Filters"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>WARNUNG: Diese Änderung wird die RPM-Filterung aktivieren\/deaktivieren, die Verzögerungen & Wirksamkeit des Filters erhöhen\/verringern.<\/b><\/span><br><br>Sollen dynamischen Filter auf empfohlene Werte zurück gesetzt werden?"
+        "message": "<span class=\"message-negative\"><b>WARNUNG: Diese Änderung wird die RPM-Filterung aktivieren/deaktivieren, die Verzögerungen & Wirksamkeit des Filters erhöhen/verringern.</b></span><br><br>Sollen dynamischen Filter auf empfohlene Werte zurück gesetzt werden?"
     },
     "portsIdentifier": {
         "message": "Identifier"
     },
     "portsConfiguration": {
-        "message": "Konfiguration \/ MSP"
+        "message": "Konfiguration / MSP"
     },
     "portsSerialRx": {
         "message": "Serieller Empfänger"
@@ -1497,19 +1198,13 @@
         "message": "Peripherie"
     },
     "portsHelp": {
-        "message": "<strong>Hinweis:<\/strong> Nicht alle Konfiguration sind möglich. Sollte der FC hier einen Fehler feststellen, wird die Konfiguration zurückgesetzt."
+        "message": "<strong>Hinweis:</strong> Nicht alle Konfiguration sind möglich. Sollte der FC hier einen Fehler feststellen, wird die Konfiguration zurückgesetzt."
     },
     "portsVtxTableNotSet": {
-        "message": "<span class=\"message-negative\">WARNUNG:<\/span> Die VTX-Tabelle wurde nicht korrekt eingerichtet und ohne diese ist die VTX-Kontrolle nicht möglich. Bitte stelle die VTX-Tabelle im Reiter $t(tabVtx.message) ein."
+        "message": "<span class=\"message-negative\">WARNUNG:</span> Die VTX-Tabelle wurde nicht korrekt eingerichtet und ohne diese ist die VTX-Kontrolle nicht möglich. Bitte stelle die VTX-Tabelle im Reiter $t(tabVtx.message) ein."
     },
     "portsMSPHelp": {
-        "message": "<strong>Hinweis:<\/strong> Auf <span class=\"message-negative\">KEINEN<\/span> Fall MSP auf dem ersten Port deaktivieren, solange du nicht weißt was du tust. Es kann passieren, dass ein neues Aufspielen der Firmware nötig ist und die Konfiguration dadurch verloren geht."
-    },
-    "portsFirmwareUpgradeRequired": {
-        "message": "Firmware Update <span class=\"message-negative\">benötigt<\/span>. Serielle Port Konfiguration bei Firmware &lt; 1.8.0 wird nicht unterstützt."
-    },
-    "portsButtonSave": {
-        "message": "Speichern und Neustarten"
+        "message": "<strong>Hinweis:</strong> Auf <span class=\"message-negative\">KEINEN</span> Fall MSP auf dem ersten Port deaktivieren, solange du nicht weißt was du tust. Es kann passieren, dass ein neues Aufspielen der Firmware nötig ist und die Konfiguration dadurch verloren geht."
     },
     "portsTelemetryDisabled": {
         "message": "Deaktiviert"
@@ -1583,9 +1278,6 @@
     "portsFunction_LIDAR_TF": {
         "message": "Benewake LIDAR"
     },
-    "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.<\/span> You have firmware with API version <span class=\"message-negative\">$1<\/span>, but this functionality requires requires <span class=\"message-positive\">$2<\/span>."
-    },
     "pidTuningSubTabPid": {
         "message": "PID-Profileinstellungen"
     },
@@ -1596,7 +1288,7 @@
         "message": "PID-Profilname"
     },
     "pidProfileNameHelp": {
-        "message": "Aussagekräftiger Name des PID-Profils bzgl. der Einflussfaktoren der Abstimmung, z.B.: leichter \/ schwerer Akku, mit \/ ohne Actioncam, große Höhe, etc."
+        "message": "Aussagekräftiger Name des PID-Profils bzgl. der Einflussfaktoren der Abstimmung, z.B.: leichter / schwerer Akku, mit / ohne Actioncam, große Höhe, etc."
     },
     "rateProfileName": {
         "message": "Ratenprofilname"
@@ -1609,9 +1301,6 @@
     },
     "pidTuningHideUnusedPids": {
         "message": "Verstecke ungenutzt PIDs"
-    },
-    "pidTuningNonProfilePidSettings": {
-        "message": "Pofilunabhänige PID Controller Einstellungen"
     },
     "pidTuningAntiGravity": {
         "message": "Antigravity"
@@ -1644,12 +1333,8 @@
         "message": "Anti Gravity verstärkt I-Term (in 4.3) während und kurz nach schnellen Gaswechseln und erhöht so die Lagestabilität während des Gasgebens.<br><br>Höhere Werte (Gains) können die Stabilität auf Coptern träge oder schwerfällig sind oder mit einem versetzten Schwerpunkt besitzen, verbessern."
     },
     "pidTuningDerivative": {
-        "message": "<b>D<\/b>erivativ",
+        "message": "<b>D</b>erivativ",
         "description": "Table header of the Derivative feature in the PIDs tab"
-    },
-    "pidTuningDMaxFeatureTitle": {
-        "message": "Dynamische Dämpfung \/ D Max Einstellungen",
-        "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxGain": {
         "message": "Verstärkung",
@@ -1679,20 +1364,11 @@
     "receiverRcSetpointTypeSelect": {
         "message": "Setpoint Grenzfrequenz Typ"
     },
-    "receiverRcSmoothingInterpolation": {
-        "message": "Interpolation"
-    },
-    "receiverRcSmoothingFilter": {
-        "message": "Filter"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Die genutzte Grenzfrequenz in Hz durch den Setpoint Filter. Nutze kleinere Werte für sanftere Eingangswerte und besser geeignt für langsamere Empfängerprotokollen. Für die meisten Anwender ist 0 (oder Auto) der korrekte Wert."
     },
     "rcSmoothingFeedforwardCutoffHelp": {
         "message": "Die Grenzfrequenz für den Feedforward Filter. Nutze kleinere Werte für sanftere Eingangssignale, besser geeignet für langsame Empfängerprotokolle. Für die meisten Anwender ist 0(Auto) der beste Wert."
-    },
-    "rcSmoothingChannelsSmoothedHelp": {
-        "message": "Die Kanalglättung gilt für"
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Wähle für die Grenzfrequenz des Setpoint Filters automatische Kalkultion (empfohlen) oder manuelle Einstellung durch den Anweder. Manuelle Konfiguration wird nicht bei Empferprotokollen wie z. B. Crsf (Crossfire) empfohlen."
@@ -1705,27 +1381,6 @@
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Grenzfrequenz"
-    },
-    "receiverRcFeedforwardType": {
-        "message": "Feedforward Filter Typ"
-    },
-    "receiverRcSmoothingFeedforwardTypeAuto": {
-        "message": "Auto"
-    },
-    "pidTuningDtermSetpointTransition": {
-        "message": "D Setpoint transition"
-    },
-    "pidTuningDtermSetpoint": {
-        "message": "D Setpoint Gewichtung"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Mit diesem Parameter kann man die D-Term Gewichtung um die Mittelstellung der Sticks reduzieren und damit ein weicheres Beenden von Flips und Rolls erreichen.<br> Der Wert bedeutet einen Punkt des Sticks von 0 - mittig bis 1 - voller Ausschlag. Ist das Sticksginal oberhalb dieses Wertes, wird der Gewichtungswert angewendet. Ist das Sticksginal kleiner der Gewichtung, wird die Gewichtung proportional reduziert und erreicht 0 in der Nullstellung des Sticks.<br> Ein Wert von 1 ergibt den maximalen Glättungseffekt, ein Wert von 0 hält D-Term Gewichtung über den gesammten Bewegungsbereich auf seinem eingestellten Wert."
-    },
-    "pidTuningDtermSetpointTransitionWarning": {
-        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
-    },
-    "pidTuningFeedforwardGroupHelp": {
-        "message": "Feedforward passt die Reaktionsfähigkeit an.<br \/><br \/> Mit diesen Optionen kannst du sie so anpassen, dass sie alles, von hoher Stick-Empfindlichkeit (z. B. für Rennen) bis zu sanfteren Reaktionen für Film\/HD liefert."
     },
     "pidTuningFeedforwardJitter": {
         "message": "Jitter(zeitliches Taktzittern)-Reduktion"
@@ -1743,13 +1398,10 @@
         "message": "Mittelwertbildung"
     },
     "pidTuningFeedforwardAveragingHelp": {
-        "message": "Um den Feedforward zu mitteln, benötigt es in der Regel den Durchschnit der letzten 2-3 Feedforward-Steps. Dies führt zu einem sanfteren FF-Signal erhöht aber die Latenz.<br><br>Am effektivsten ist es, wenn es squentielle Jitter-Signale gibt, die bei schnellen RC-Links üblich sind. <br><br>Eine 2-Punkt Mittlung sollte bei 500Hz Links verwendet werden, bei starkem Rauschen oder bei Film\/HD Flügen bei 250Hz Links. Crossfire (vor CRSFShot) benötigen ein 3-Punkte Mittlung im 150Hz Mode."
+        "message": "Um den Feedforward zu mitteln, benötigt es in der Regel den Durchschnit der letzten 2-3 Feedforward-Steps. Dies führt zu einem sanfteren FF-Signal erhöht aber die Latenz.<br><br>Am effektivsten ist es, wenn es squentielle Jitter-Signale gibt, die bei schnellen RC-Links üblich sind. <br><br>Eine 2-Punkt Mittlung sollte bei 500Hz Links verwendet werden, bei starkem Rauschen oder bei Film/HD Flügen bei 250Hz Links. Crossfire (vor CRSFShot) benötigen ein 3-Punkte Mittlung im 150Hz Mode."
     },
     "pidTuningOptionOff": {
         "message": "AUS"
-    },
-    "pidTuningOptionOn": {
-        "message": "EIN"
     },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "2-Punkt"
@@ -1770,63 +1422,54 @@
         "message": "Max Rate Limit"
     },
     "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "Schneidet den FeedForward (Ff) ab, wenn die Stickbewegung seinem Maximum nahe kommt um ein Überschießen (Overshoot) zum Beispiel bei Flips \/ Rolls zu vermiden.<br><br>Der Cut beeinflusst nicht das Ende eines Flip oder Rolls. Kleinere Werte dämpfen den Ff etwas früher als höhere Werte.<br>Normalerweise benötigt der Default-Wert keine Änderung.<br>Zur Einstellung: der höchste Wert der ein akzeptables Überschiessen am Beginn einer Roll\/Flip hat, ist der beste Wert."
+        "message": "Schneidet den FeedForward (Ff) ab, wenn die Stickbewegung seinem Maximum nahe kommt um ein Überschießen (Overshoot) zum Beispiel bei Flips / Rolls zu vermiden.<br><br>Der Cut beeinflusst nicht das Ende eines Flip oder Rolls. Kleinere Werte dämpfen den Ff etwas früher als höhere Werte.<br>Normalerweise benötigt der Default-Wert keine Änderung.<br>Zur Einstellung: der höchste Wert der ein akzeptables Überschiessen am Beginn einer Roll/Flip hat, ist der beste Wert."
     },
     "pidTuningFeedforwardTransition": {
         "message": "Übergang"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "Linearisierung reduziert den Feedforward, wenn die Sticks in der Nähe des Zentrums (CenterPoint) liegen.<br><br>Ab Bf-Fw 4.2 und früher, führte diese Transition für eine sanfteres Stick-Gefühl (Empfindlichkeit) im Bereich der Mittelbereiche.<br><br> Ab Bf 4.3 wird diese Transition nicht weiter empfohlen, da es ersetzt wurde durch eine Jitter-Reduktion Funktion (zeitlich begrenztes Taktzittern).<br><br>Ein Wert von 0 deaktiviert die Linearisierung. Ein Wert von 0.3 reduziert den Feedforward auf 0 im Bereich  von +\/- 30% rund um die Mitte."
+        "message": "Linearisierung reduziert den Feedforward, wenn die Sticks in der Nähe des Zentrums (CenterPoint) liegen.<br><br>Ab Bf-Fw 4.2 und früher, führte diese Transition für eine sanfteres Stick-Gefühl (Empfindlichkeit) im Bereich der Mittelbereiche.<br><br> Ab Bf 4.3 wird diese Transition nicht weiter empfohlen, da es ersetzt wurde durch eine Jitter-Reduktion Funktion (zeitlich begrenztes Taktzittern).<br><br>Ein Wert von 0 deaktiviert die Linearisierung. Ein Wert von 0.3 reduziert den Feedforward auf 0 im Bereich  von +/- 30% rund um die Mitte."
     },
     "pidTuningProportional": {
-        "message": "<b>P<\/b>roportional"
+        "message": "<b>P</b>roportional"
     },
     "pidTuningProportionalHelp": {
         "message": "Steuert wie stark der Copter seinen Stickbewegungen (Setpoint) folgt.<br>Ein größerer Wert(Gain) bewirkt eine stärkeres folgen, kann aber bei einem hoen P-D Verhältnis zum Überschießen(Overshoot) führen.<br>Vergleichbar mit der Feder im Stoßdämpfer eines Autos.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
-        "message": "<b>I<\/b>ntegral"
+        "message": "<b>I</b>ntegral"
     },
     "pidTuningDMax": {
-        "message": "<b>D<\/b>-Max"
+        "message": "<b>D</b>-Max"
     },
     "pidTuningDMaxHelp": {
         "message": "Stellt ein stärkere Dämpfung bei schnellen Manövern zur Verfügung, die sonst zu einem Überschiessen (Overshoot) führt.<br>Erlaubt einen geringeren Basis-D-Min Wert, das führt in der Regel zu kühleren Motoren und reagiert schneller. Hebt den D-Term an, um in Flips oder schnellen Loops ein Überschiessen zu kontrollieren.<br><br>Bestens geeignet für Racer oder Quads mit starken Vibrationen.",
         "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
-        "message": "<b>F<\/b>eedforward"
+        "message": "<b>F</b>eedforward"
     },
     "pidTuningMaxRateWarning": {
-        "message": "<span class=\"message-negative\"><b>Warnung:<\/b><\/span> sehr hohe Raten können bei heftigen Abbremsungen zu Desynchronisierungen führen."
+        "message": "<span class=\"message-negative\"><b>Warnung:</b></span> sehr hohe Raten können bei heftigen Abbremsungen zu Desynchronisierungen führen."
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
     },
     "pidTuningMaxVel": {
-        "message": "Max. Beschleunigung [Grad\/s]"
+        "message": "Max. Beschleunigung [Grad/s]"
     },
     "pidTuningRate": {
         "message": "Rate"
     },
-    "pidTuningSuperRate": {
-        "message": "Super Rate"
-    },
-    "pidTuningRatesPreview": {
-        "message": "Vorschau"
-    },
     "pidTuningRatesTuningHelp": {
-        "message": "<b>Drehraten und Expo<\/b>: Bestimme das Knüppel-Gefühl anhand dieser Parameter. Verwende den Graphen und das Live-3D-Modell, um die bevorzugte Raten-Einstellung zu finden."
+        "message": "<b>Drehraten und Expo</b>: Bestimme das Knüppel-Gefühl anhand dieser Parameter. Verwende den Graphen und das Live-3D-Modell, um die bevorzugte Raten-Einstellung zu finden."
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
     "pidTuningTPAMode": {
         "message": "TPA-Modus"
-    },
-    "pidTuningTPA": {
-        "message": "TPA"
     },
     "pidTuningTPARate": {
         "message": "TPA Rate (%)"
@@ -1859,16 +1502,10 @@
         "message": "CLIP"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Auswahl der Gas(Throttle) begrenzung.<br><b>OFF<\/b>deaktiviert die Funktion<br><b>Skalierung<\/b>linearisiert den eingestellten Prozentwert auf die kompletten Gashebelstrecke<br><b>CLIP><\/b>setzt einem maximalen Gaswert, der Gashebelweg wird in dieser Einstellung nicht ausgenutzt. Werte über dem eingestellten Wert, werden ignoriert"
+        "message": "Auswahl der Gas(Throttle) begrenzung.<br><b>OFF</b>deaktiviert die Funktion<br><b>Skalierung</b>linearisiert den eingestellten Prozentwert auf die kompletten Gashebelstrecke<br><b>CLIP></b>setzt einem maximalen Gaswert, der Gashebelweg wird in dieser Einstellung nicht ausgenutzt. Werte über dem eingestellten Wert, werden ignoriert"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Der gewünschte Gas-Limit-Wert zum ausgewählten Gas-Limit Typ."
-    },
-    "pidTuningFilter": {
-        "message": "Filter"
-    },
-    "pidTuningFilterFrequency": {
-        "message": "Frequenz"
     },
     "pidTuningRatesCurve": {
         "message": "Ratenvorschau"
@@ -1881,12 +1518,6 @@
     },
     "pidTuningButtonRefresh": {
         "message": "Neu laden"
-    },
-    "pidTuningProfileHead": {
-        "message": "Profil"
-    },
-    "pidTuningControllerHead": {
-        "message": "PID Controller"
     },
     "pidTuningCopyProfile": {
         "message": "Profil kopieren"
@@ -1919,39 +1550,23 @@
         "message": "Lade Standardwerte für das aktuelle PID Profil."
     },
     "pidTuningReceivedProfile": {
-        "message": "Geladenes Profil: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Geladenes Profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "Ratenprofil im FC: <strong class=\"message-positive\">$1<\/strong>"
-    },
-    "pidTuningLoadedProfile": {
-        "message": "geladenes Profil: <strong class=\"message-positive\">$1<\/strong>"
-    },
-    "pidTuningLoadedRateProfile": {
-        "message": "Geladenes Ratenprofil: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Ratenprofil im FC: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": "PID Daten <strong>aktualisiert<\/strong>"
-    },
-    "tuningHelp": {
-        "message": "<b>Tuning tips<\/b><br \/><span class=\"message-negative\">Hinweis:<\/span> Es ist wichtig, bei den ersten Flügen, die Motortemperatur im Auge zu behalten. Je höher die Filterwerte, desto besser könnte er fliegen, aber es wird auch mehr Rauschen in die Motoren geben.<br>Die Standarteinstellung 100Hz ist optimal, für problematische Setups könnte man jedoch richtung 50Hz Dterm Filter (und eventuell auch beim Gyro-Filter) gehen."
-    },
-    "tuningHelpSliders": {
-        "message": "Benutze die Schieberegler für die Filter. Die Schieberegler müssen deaktiviert werden um manuelle Anpassungen vorzunehmen.<br>Bewege den Regler nach rechts reduziert die Filter, verringert die Latenzzeit, führt aber zu wärmeren Motoren.<br>Die meisten sauber gebauten Quads mit aktivierten RPM-Filter vertragen einen Gyro Tiefpass Regler ganz rechts oder nur mit Gyro Tiefpass 2 in der Mittelposition. <br><strong>Warnung:<\/strong>Sei vorsichtig, beim Verändern des -D-Term Schiebereglers nach rechts! Prüfe grundsätzlich die Motortemperatur nach jeder Veränderung.<br><strong>Hinweis:<\/strong>Beim Wechsel des Profils wird nur der D-Term Filter angepasst. Gyro-Filter Einstellungen gelten für alle Profile.",
-        "description": "Filter tuning subtab note"
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Warnung:<\/b><\/span> Die Anzahl der verwendeten Filter ist sehr niedrig. Das Fluggerät kann dadurch schwer zu kontrollieren sein und dadurch wegfliegen. Es wird dringend empfohlen, <b> mindestens den dynamischen Gyro-Tiefpass oder Gyro-Tiefpass 1 sowie mindestens den dynamischen D-Term Tiefpass oder D-Term Tiefpass 1 zu aktivieren<\/b>."
+        "message": "PID Daten <strong>aktualisiert</strong>"
     },
     "pidTuningSliderPidsMode": {
         "message": "Modus:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "<strong>PID Tuning Slider Modus<\/strong><br><br>PID Tuning Slider Modus kann sein:<br><br>&bull; AUS - keine Slider, Werte manuell eingeben<br>&bull; RP - Schieberegler steuert Rollen und Neigung, Yaw Werte manuell eingeben<br>&bull; RPY - Schieberegler steuert alle PID Achsen<br><br><span class=\"message-negative\"><b>Warnung:<\/b><\/span>Wenn Du vom RP zum RPY Modus gehst, werden die Yaw Einstellungen mit Default-Firmware Werten überschrieben."
+        "message": "<strong>PID Tuning Slider Modus</strong><br><br>PID Tuning Slider Modus kann sein:<br><br>&bull; AUS - keine Slider, Werte manuell eingeben<br>&bull; RP - Schieberegler steuert Rollen und Neigung, Yaw Werte manuell eingeben<br>&bull; RPY - Schieberegler steuert alle PID Achsen<br><br><span class=\"message-negative\"><b>Warnung:</b></span>Wenn Du vom RP zum RPY Modus gehst, werden die Yaw Einstellungen mit Default-Firmware Werten überschrieben."
     },
     "receiverHelpModelId": {
-        "message": "Wenn Sie das Model Match unten auf eine andere Zahl als 255 einstellen, können Sie die Empfängernummer auf der OpenTX\/EdgeTX Model-Einrichtungsseite angeben und die Model Match Funktion im ELRS LUA-Skript für dieses Model aktivieren. Das Model Match kann zwischen 0 und 63 liegen.<br \/>Weitere Informationen finden Sie in der ELRS Dokumentation."
+        "message": "Wenn Sie das Model Match unten auf eine andere Zahl als 255 einstellen, können Sie die Empfängernummer auf der OpenTX/EdgeTX Model-Einrichtungsseite angeben und die Model Match Funktion im ELRS LUA-Skript für dieses Model aktivieren. Das Model Match kann zwischen 0 und 63 liegen.<br />Weitere Informationen finden Sie in der ELRS Dokumentation."
     },
     "receiverModelId": {
         "message": "Model Match ID"
@@ -1966,7 +1581,7 @@
         "message": "\"Niedriger Stickwert\" Schwellwert"
     },
     "receiverHelpStickMin": {
-        "message": "Der maximale Stickwert (in µs), um als 'niedrig' \/ 'links' erkannt zu werden (MIN_CHECK)."
+        "message": "Der maximale Stickwert (in µs), um als 'niedrig' / 'links' erkannt zu werden (MIN_CHECK)."
     },
     "receiverStickCenter": {
         "message": "Stick Mitte"
@@ -1978,25 +1593,25 @@
         "message": "\"Hoher Stickwert\" Schwellwert"
     },
     "receiverHelpStickMax": {
-        "message": "Der minimale Stickwert (in µs), um zu festzustellen, dass der Wert 'hoch' \/ 'rechts' ist (MAX_CHECK)."
+        "message": "Der minimale Stickwert (in µs), um zu festzustellen, dass der Wert 'hoch' / 'rechts' ist (MAX_CHECK)."
     },
     "receiverDeadband": {
         "message": "RC Totzone"
     },
     "receiverHelpDeadband": {
-        "message": "Der Streubereich der Stickwerte (in µs) um die Mittenstellung, bevor ein Signal als \"echt\" bewertet wird. Der Wert kann vergrößert werden, wenn die empfangenen \/ ausgegebenen Werte im Ruhezustand zu sehr zittern."
+        "message": "Der Streubereich der Stickwerte (in µs) um die Mittenstellung, bevor ein Signal als \"echt\" bewertet wird. Der Wert kann vergrößert werden, wenn die empfangenen / ausgegebenen Werte im Ruhezustand zu sehr zittern."
     },
     "receiverYawDeadband": {
         "message": "Yaw Totzone"
     },
     "receiverHelpYawDeadband": {
-        "message": "Der Streubereich der Stickwerte (in µs) um die Mittenstellung, bevor ein Signal als \"echt\" bewertet wird. Der Wert kann vergrößert werden, wenn die empfangenen \/ ausgegebenen Werte im Ruhezustand zu sehr zittern. <strong>Betrifft nur die YAW Achse.<\/strong>"
+        "message": "Der Streubereich der Stickwerte (in µs) um die Mittenstellung, bevor ein Signal als \"echt\" bewertet wird. Der Wert kann vergrößert werden, wenn die empfangenen / ausgegebenen Werte im Ruhezustand zu sehr zittern. <strong>Betrifft nur die YAW Achse.</strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "3D Gas Totzone"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": "Werte in µs. Um den neutralen Bereich zu erweitern, muss dieser Wert erhöht werden. <strong>Einstellung nur für 3D Gas<\/strong>"
+        "message": "Werte in µs. Um den neutralen Bereich zu erweitern, muss dieser Wert erhöht werden. <strong>Einstellung nur für 3D Gas</strong>"
     },
     "receiverChannelMap": {
         "message": "Kanalzuordnung"
@@ -2004,23 +1619,14 @@
     "receiverChannelDefaultOption": {
         "message": "Standard"
     },
-    "receiverChannelMapTitle": {
-        "message": "Es kann eine eigene Kanalzuordnung erstellt werden, klicke dafür in das Feld"
-    },
     "receiverRssiChannel": {
         "message": "RSSI Kanal"
     },
     "receiverRssiChannelDisabledOption": {
         "message": "deaktiviert"
     },
-    "receiverRefreshRateTitle": {
-        "message": "Graph Update Rate"
-    },
     "receiverResetRefreshRate": {
         "message": "Zurücksetzen"
-    },
-    "receiverResetRefreshRateTitle": {
-        "message": "Zurücksetzen der Refresh-Rate"
     },
     "receiverRowContainerRoll": {
         "message": "Roll [A]:",
@@ -2058,7 +1664,7 @@
         "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
-        "message": "RC Einstellungen <strong>neu geladen<\/strong>"
+        "message": "RC Einstellungen <strong>neu geladen</strong>"
     },
     "receiverModelPreview": {
         "message": "Vorschau"
@@ -2067,7 +1673,7 @@
         "message": "Kontrolle aktivieren"
     },
     "auxiliaryHelp": {
-        "message": "Konfiguration von Modi als Kombination aus Bereichen und\/oder Verknüpfungen zu anderen Modi (Verknüpfungen werden ab BF 4.0 oder später unterstützt). Verwendung von <strong>Bereichen<\/strong> zur Definition der Schalter an der Fernsteuerung und deren Zuordnungen. Ein Empfängerkanal mit einem Wert innerhalb des min\/max-Bereiches aktiviert den Modus. Verwendung von <strong>Verknüpfungen<\/strong> zur Aktivierung eines Modus, während ein anderer Modus aktiv ist. <strong>Ausnahmen:<\/strong> ARM kann nicht zu bzw. mit einem anderen Modus verknüpft werden, Modi können nicht mit anderen Modi verknüpft werden, wenn diese ihrerseits als Verknüpfung definiert sind (Verketten von Verknüpfungen). Es können mehrere Bereiche \/ Verknüpfungen verwendet werden, um einen Modus zu aktivieren. Falls für einen Modus mehr als ein Bereich \/ Verknüpfung definiert ist, können diese als <strong>UND<\/strong> oder <strong>ODER<\/strong> definiert werden. Ein Modus wird dann aktiviert, wenn:<br\/>- ALLE <strong>UND<\/strong> Bereiche \/ Verknüpfungen aktiv sind; ODER<br\/>- mindestens ein <strong>ODER<\/strong> Bereich \/ Verknüpfung aktiv ist.<br\/><br\/>Unbedingt die Einstellung mittels 'Save' speichern."
+        "message": "Konfiguration von Modi als Kombination aus Bereichen und/oder Verknüpfungen zu anderen Modi (Verknüpfungen werden ab BF 4.0 oder später unterstützt). Verwendung von <strong>Bereichen</strong> zur Definition der Schalter an der Fernsteuerung und deren Zuordnungen. Ein Empfängerkanal mit einem Wert innerhalb des min/max-Bereiches aktiviert den Modus. Verwendung von <strong>Verknüpfungen</strong> zur Aktivierung eines Modus, während ein anderer Modus aktiv ist. <strong>Ausnahmen:</strong> ARM kann nicht zu bzw. mit einem anderen Modus verknüpft werden, Modi können nicht mit anderen Modi verknüpft werden, wenn diese ihrerseits als Verknüpfung definiert sind (Verketten von Verknüpfungen). Es können mehrere Bereiche / Verknüpfungen verwendet werden, um einen Modus zu aktivieren. Falls für einen Modus mehr als ein Bereich / Verknüpfung definiert ist, können diese als <strong>UND</strong> oder <strong>ODER</strong> definiert werden. Ein Modus wird dann aktiviert, wenn:<br/>- ALLE <strong>UND</strong> Bereiche / Verknüpfungen aktiv sind; ODER<br/>- mindestens ein <strong>ODER</strong> Bereich / Verknüpfung aktiv ist.<br/><br/>Unbedingt die Einstellung mittels 'Save' speichern."
     },
     "auxiliaryToggleUnused": {
         "message": "Nicht verwendete Modi ausblenden"
@@ -2109,7 +1715,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Schaltet die Motoren ein und ermöglicht dem Fluggerät, abzuheben. <span class=\"message-negative\">Achtung:<\/span> Für erhöhte Sicherheit kann <b>BOXPREARM<\/b> (2-Stufen-Arming) konfiguriert werden.",
+        "message": "Schaltet die Motoren ein und ermöglicht dem Fluggerät, abzuheben. <span class=\"message-negative\">Achtung:</span> Für erhöhte Sicherheit kann <b>BOXPREARM</b> (2-Stufen-Arming) konfiguriert werden.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANTIGRAVITY": {
@@ -2121,7 +1727,7 @@
         "description": "Help text to BEEPER mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
-        "message": "Piepser deaktivieren\/aktivieren, einschließlich der Modi für Warnung, Status und BEEPER",
+        "message": "Piepser deaktivieren/aktivieren, einschließlich der Modi für Warnung, Status und BEEPER",
         "description": "Help text to BEEPERMUTE mode"
     },
     "auxiliaryHelpMode_BEEPERON": {
@@ -2205,7 +1811,7 @@
         "description": "Help text to MSP OVERRIDE mode"
     },
     "auxiliaryHelpMode_OSDDISABLE": {
-        "message": "On-Screen-Anzeige aktivieren\/deaktivieren",
+        "message": "On-Screen-Anzeige aktivieren/deaktivieren",
         "description": "Help text to OSD mode"
     },
     "auxiliaryHelpMode_PASSTHRU": {
@@ -2229,7 +1835,7 @@
         "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
-        "message": "Stick-Eingabe aktivieren\/deaktivieren",
+        "message": "Stick-Eingabe aktivieren/deaktivieren",
         "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_SERVO1": {
@@ -2272,14 +1878,8 @@
         "message": "Den Videosender (VTX) in den Boxen-Modus (pit mode) versetzen (geringe Ausgangsleistung, falls unterstützt)",
         "description": "Help text to VTX PIT MODE mode"
     },
-    "adjustmentsHelp": {
-        "message": "Konfiguriere Schalter für Anpassungen. Für Details siehe den Abschnitt 'in-flight adjustments' im Handbuch. Die Änderungen durch die Anpassungsfunktionen werden nicht automatisch gespeichert."
-    },
     "adjustmentsColumnEnable": {
         "message": "falls aktiviert"
-    },
-    "adjustmentsColumnUsingSlot": {
-        "message": "benutze Speicherplatz"
     },
     "adjustmentsColumnWhenChannel": {
         "message": "falls Kanal"
@@ -2292,24 +1892,6 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "über Kanal"
-    },
-    "adjustmentsSlot0": {
-        "message": "Speicherplatz 1"
-    },
-    "adjustmentsSlot1": {
-        "message": "Speicherplatz 2"
-    },
-    "adjustmentsSlot2": {
-        "message": "Speicherplatz 3"
-    },
-    "adjustmentsSlot3": {
-        "message": "Speicherplatz 4"
-    },
-    "adjustmentsMin": {
-        "message": "Min"
-    },
-    "adjustmentsMax": {
-        "message": "Max"
     },
     "adjustmentsFunction0": {
         "message": "Keine Änderungen"
@@ -2410,9 +1992,6 @@
     "adjustmentsSave": {
         "message": "Speichern"
     },
-    "servosFirmwareUpgradeRequired": {
-        "message": "Servos brauchen Firmware &gt;= 1.10.0 und Target Unterstützung"
-    },
     "servosChangeDirection": {
         "message": "Ändere die Richtung im Sender damit es übereinstimmt"
     },
@@ -2428,12 +2007,6 @@
     "servosMax": {
         "message": "Max"
     },
-    "servosAngleAtMin": {
-        "message": "Minimaler Winkel"
-    },
-    "servosAngleAtMax": {
-        "message": "Maximaler Winkel"
-    },
     "servosRate": {
         "message": "Rate:",
         "description": "Label for 'Rate:' direction"
@@ -2443,12 +2016,6 @@
     },
     "servosButtonSave": {
         "message": "Speichern"
-    },
-    "servosNormal": {
-        "message": "Normal"
-    },
-    "servosReverse": {
-        "message": "Umgekehrt"
     },
     "gpsMapMessage1": {
         "message": "Bitte Internetverbindung prüfen"
@@ -2481,8 +2048,8 @@
         "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
-        "message": "Ausrichtung IMU \/ GPS:",
-        "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"
+        "message": "Ausrichtung IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Geschwindigkeit"
@@ -2537,15 +2104,6 @@
     "gnssUsedUsed": {
         "message": "BENUTZT"
     },
-    "gnssHealthyUnknown": {
-        "message": "unbekannt"
-    },
-    "gnssHealthyHealthy": {
-        "message": "intakt"
-    },
-    "gnssHealthyUnhealthy": {
-        "message": "nicht intakt"
-    },
     "motorsVoltage": {
         "message": "Spannung:"
     },
@@ -2554,15 +2112,6 @@
     },
     "motorsmAhDrawn": {
         "message": "Stromverbrauch:"
-    },
-    "motorsVoltageValue": {
-        "message": "$1 V"
-    },
-    "motorsADrawingValue": {
-        "message": "$1 A"
-    },
-    "motorsmAhDrawnValue": {
-        "message": "$1 mAh"
     },
     "motorsText": {
         "message": "Motoren"
@@ -2624,41 +2173,20 @@
     "motorsResetMaximum": {
         "message": "Max. Zeitüberschreitung zurücksetzen"
     },
-    "motorsSensorAccelSelect": {
-        "message": "Beschleunigungssensor"
-    },
-    "motorsRPM": {
-        "message": "R: {{motorsRpmValue}}",
-        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
-    },
-    "motorsRPMError": {
-        "message": "E: {{motorsErrorValue}}%",
-        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
-    },
-    "motorsESCTemperature": {
-        "message": "T: {{motorsESCTempValue}}&deg;C",
-        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
-    },
     "motorsMaster": {
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motor Test Modus \/ Arming Anzeige:<\/strong><br \/><br \/><strong class=\"message-negative\">WARNUNG: schweres Verletzungsrisiko! Entferne alle Propeller!<\/strong><br \/><br \/><br \/><ul><li>&#x2022; Die Motoren drehen sich, wenn gearmed wird oder wenn die Schieber angehoben werden<\/li><li>&#x2022; Motor Testmodus bleibt aktiv, wenn Sie zu einem anderen Tab wechseln<\/li><li><li>&#x2022; Betätigen einer Taste wird die Motoren stoppen, allerdings nur im Motoren Tab<\/li><li>&#x2022; Trennung des USB-Kabels kann unter Umständen die Motoren nicht stoppen!<\/li><\/ul>"
+        "message": "<strong>Motor Test Modus / Arming Anzeige:</strong><br /><br /><strong class=\"message-negative\">WARNUNG: schweres Verletzungsrisiko! Entferne alle Propeller!</strong><br /><br /><br /><ul><li>&#x2022; Die Motoren drehen sich, wenn gearmed wird oder wenn die Schieber angehoben werden</li><li>&#x2022; Motor Testmodus bleibt aktiv, wenn Sie zu einem anderen Tab wechseln</li><li><li>&#x2022; Betätigen einer Taste wird die Motoren stoppen, allerdings nur im Motoren Tab</li><li>&#x2022; Trennung des USB-Kabels kann unter Umständen die Motoren nicht stoppen!</li></ul>"
     },
     "motorsEnableControl": {
-        "message": "<strong>Ich weiß, was ich tue<\/strong>, Propeller sind entfernt - Motorkontrolle und Arming aktivieren, Abhebeschutz deaktivieren."
-    },
-    "motorsDialogMixerReset": {
-        "message": "<strong>Problem des Mixer-Modus erkannt<\/strong><br \/><br \/>Das {{mixerName}} -Modell benötigt <strong class=\"message-positive\">{{mixerMotors}}<\/strong> Motorressourcen und die aktuelle Konfiguration der Firmware bietet <strong class=\"message-positive\">{{outputs}}<\/strong> verwendbare Möglichkeiten für den ausgewählten Modus.<br \/><br \/>Wenn Du einen benutzerdefinierten Mixer-Modus verwendest, musst Du einen benutzerdefinierten Mmix definieren, bevor Du den Mixer-Modus änderst.<br \/><br \/>Bitte überprüfeDeine Konfiguration und füge dieser die benötigten Motorressourcen hinzu."
+        "message": "<strong>Ich weiß, was ich tue</strong>, Propeller sind entfernt - Motorkontrolle und Arming aktivieren, Abhebeschutz deaktivieren."
     },
     "motorsDialogSettingsChanged": {
-        "message": "Konfigurationsänderungen wurden erkannt.<br \/><br \/><strong class=\"message-negative-italic\">Motor-Testmodus ist deaktiviert, bis die Einstellungen gespeichert wurden.<\/strong>"
+        "message": "Konfigurationsänderungen wurden erkannt.<br /><br /><strong class=\"message-negative-italic\">Motor-Testmodus ist deaktiviert, bis die Einstellungen gespeichert wurden.</strong>"
     },
     "motorsDialogSettingsChangedOk": {
         "message": "OK"
-    },
-    "motorOutputReorderDialogClose": {
-        "message": "Abbrechen"
     },
     "motorOutputReorderDialogAgree": {
         "message": "Start"
@@ -2676,10 +2204,10 @@
         "message": "Fertig! Prüfe die Motordrehrichtung durch klicken auf das Bild."
     },
     "motorsRemapDialogUnderstandRisks": {
-        "message": "<strong>Ich verstehe die Risiken<\/strong>,<br \/>die Propeller wurden entfernt."
+        "message": "<strong>Ich verstehe die Risiken</strong>,<br />die Propeller wurden entfernt."
     },
     "motorsRemapDialogRiskNotice": {
-        "message": "<strong>Sicherheitshinweis<\/strong><br \/><strong class=\"message-negative\">Entfernen alle Propeller um Verletzungen zu verhindern!<\/strong><br \/>Die Motoren werden sich <strong>drehen!<\/strong>"
+        "message": "<strong>Sicherheitshinweis</strong><br /><strong class=\"message-negative\">Entfernen alle Propeller um Verletzungen zu verhindern!</strong><br />Die Motoren werden sich <strong>drehen!</strong>"
     },
     "motorsRemapDialogSave": {
         "message": "Speichern"
@@ -2687,14 +2215,8 @@
     "motorsRemapDialogStartOver": {
         "message": "Neu starten"
     },
-    "motorsButtonReset": {
-        "message": "Zurücksetzen"
-    },
-    "motorsButtonSave": {
-        "message": "Speichern und Neustarten"
-    },
     "escDshotDirectionDialog-Title": {
-        "message": "Motorrichtung- <strong class=\"message-negative-italic\"> Warnung: Stelle sicher, dass die Propeller entfernt wurden!<\/strong>"
+        "message": "Motorrichtung- <strong class=\"message-negative-italic\"> Warnung: Stelle sicher, dass die Propeller entfernt wurden!</strong>"
     },
     "escDshotDirectionDialog-SelectMotor": {
         "message": "Wählen Sie einen oder alle Motoren aus"
@@ -2703,13 +2225,13 @@
         "message": "Ausgewählte Motoren werden sich drehen!"
     },
     "escDshotDirectionDialog-RiskNotice": {
-        "message": "<strong>Sicherheitshinweis<\/strong><br \/><strong class=\"message-negative-italic\"> Entferne <b>alle<\/b> Propeller um Verletzungen zu vermeiden!<\/strong><br \/> Die Motoren werden sich sofort nach Auswahl <strong> drehen<\/strong>!"
+        "message": "<strong>Sicherheitshinweis</strong><br /><strong class=\"message-negative-italic\"> Entferne <b>alle</b> Propeller um Verletzungen zu vermeiden!</strong><br /> Die Motoren werden sich sofort nach Auswahl <strong> drehen</strong>!"
     },
     "escDshotDirectionDialog-UnderstandRisks": {
-        "message": "<strong>Ich bin mir der Risiken bewusst<\/strong>,<br \/>alle Propeller wurden entfernt."
+        "message": "<strong>Ich bin mir der Risiken bewusst</strong>,<br />alle Propeller wurden entfernt."
     },
     "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>Hinweis<\/strong><br \/>Zum Ändern der Motorrichtung muss der Akku eingesteckt sein und das richtige ESC-Protokoll muss im $t(tabMotorTesting.message)-Tab eingerichtet werden. Beachte, dass nicht alle Dshot ESCs mit dieser Funktion geändert werden können. Überprüfe die aktuelle ESC Firmware."
+        "message": "<strong>Hinweis</strong><br />Zum Ändern der Motorrichtung muss der Akku eingesteckt sein und das richtige ESC-Protokoll muss im $t(tabMotorTesting.message)-Tab eingerichtet werden. Beachte, dass nicht alle Dshot ESCs mit dieser Funktion geändert werden können. Überprüfe die aktuelle ESC Firmware."
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Wähle die Drehrichtung durch Auswahl des jeweiligen Motores."
@@ -2725,9 +2247,6 @@
     },
     "escDshotDirectionDialog-CommandReverse": {
         "message": "Umkehren"
-    },
-    "escDshotDirectionDialog-CommandSpin": {
-        "message": "Motor testen"
     },
     "escDshotDirectionDialog-ReleaseButtonToStop": {
         "message": "Zum Beenden Taste loslassen"
@@ -2748,10 +2267,7 @@
         "message": "Die Motoren werden sich drehen sobald die Drehrichtung ausgewählt wird!"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "Diese Funktion funktioniert nur mit DSHOT ESCs.<br \/>Stelle sicher, dass der ESC (electric speed controller) das DSHOT Protokoll unterstützt, wählen dieses Protokoll im $t(tabMotorTesting.message) Fenster aus."
-    },
-    "escDshotDirectionDialog-WrongFirmwareText": {
-        "message": "Firmware aktualisieren.<br \/>Stelle sicher, dass du die neueste Firmware verwendest: Betaflight 4.3 oder neuer."
+        "message": "Diese Funktion funktioniert nur mit DSHOT ESCs.<br />Stelle sicher, dass der ESC (electric speed controller) das DSHOT Protokoll unterstützt, wählen dieses Protokoll im $t(tabMotorTesting.message) Fenster aus."
     },
     "escDshotDirectionDialog-WizardActionHint": {
         "message": "Klicken Sie auf die einzelnen Motornummern, um die Drehrichtung zu ändern"
@@ -2760,13 +2276,10 @@
         "message": "Überprüfe ob sich alle Motoren korrekt drehen"
     },
     "escDshotDirectionDialog-SpinWizard": {
-        "message": "Motoren starten \/ drehen"
+        "message": "Motoren starten / drehen"
     },
     "escDshotDirectionDialog-StopWizard": {
         "message": "Motoren stoppen"
-    },
-    "sensorsInfo": {
-        "message": "Beachte, dass ein kurze Abtastperiode und das Darstellen mehrerer Graphen gleichzeitig resourcenhungrig ist und den Akkuverbrauch deines Notebooks steigert, wenn du eines benutzt.<br\/>Wir empfehlen nur Graphen darzustellen, welche dich interessieren und mit sinnvollen Aktualisierungswerten."
     },
     "sensorsRefresh": {
         "message": "Abtasten:"
@@ -2793,7 +2306,7 @@
         "message": "Debug"
     },
     "sensorsGyroTitle": {
-        "message": "Gyro - Grad \/ Sekunde"
+        "message": "Gyro - Grad / Sekunde"
     },
     "sensorsAccelTitle": {
         "message": "Beschleunigungssensor - g"
@@ -2810,11 +2323,8 @@
     "sensorsSonarTitle": {
         "message": "Sonar - CM"
     },
-    "sensorsDebugTitle": {
-        "message": "Debug"
-    },
     "cliInfo": {
-        "message": "<strong>Hinweis:<\/strong> Beim Verlassen des CLI Tab oder beim Drücken der Taste \"trennen\" wird <strong>automatisch<\/strong>  <strong>beenden<\/strong> an die Flugsteuerung gesendet.  Mit der neuesten Firmware wird sie dadurch <strong>neu gestartet<\/strong> und nicht gespeicherte Änderungen gehen <strong>verloren<\/strong>. <p><strong><span class=\"message-negative\">Warnung:<\/span><\/strong> Einige CLI Befehle können dazu führen, dass willkürliche Signale an die Motoren geschickt werden. Dadurch können Motoren hochdrehen, wenn ein Batterie angeschlossen ist. Daher wird dringend empfohlen sicherzustellen, dass <strong> keine Batterie angeschlossen ist, bevor Sie Befehle in die CLI eingeben<\/strong>."
+        "message": "<strong>Hinweis:</strong> Beim Verlassen des CLI Tab oder beim Drücken der Taste \"trennen\" wird <strong>automatisch</strong>  <strong>beenden</strong> an die Flugsteuerung gesendet.  Mit der neuesten Firmware wird sie dadurch <strong>neu gestartet</strong> und nicht gespeicherte Änderungen gehen <strong>verloren</strong>. <p><strong><span class=\"message-negative\">Warnung:</span></strong> Einige CLI Befehle können dazu führen, dass willkürliche Signale an die Motoren geschickt werden. Dadurch können Motoren hochdrehen, wenn ein Batterie angeschlossen ist. Daher wird dringend empfohlen sicherzustellen, dass <strong> keine Batterie angeschlossen ist, bevor Sie Befehle in die CLI eingeben</strong>."
     },
     "cliInputPlaceholder": {
         "message": "Schreibe hier deinen Befehl. Drücke Tab zur Autovervollständigung."
@@ -2846,11 +2356,8 @@
     "cliSupportRequestBtn": {
         "message": "Support-Daten übermitteln"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Datei <strong>{{fileName}}<\/strong> geladen. Überprüfe die geladenen Befehle"
-    },
     "cliConfirmSnippetNote": {
-        "message": "<strong>Hinweis<\/strong>: Du kannst Befehle vor der Ausführung überprüfen und bearbeiten."
+        "message": "<strong>Hinweis</strong>: Du kannst Befehle vor der Ausführung überprüfen und bearbeiten."
     },
     "cliConfirmSnippetBtn": {
         "message": "Ausführen"
@@ -2864,9 +2371,6 @@
     "loggingSamplesSaved": {
         "message": "Gespeicherte Logs:"
     },
-    "loggingLogSize": {
-        "message": "Log Größe:"
-    },
     "loggingLogName": {
         "message": "Log-Name:"
     },
@@ -2879,11 +2383,8 @@
     "loggingStop": {
         "message": "Stoppe Aufzeichnung"
     },
-    "loggingBack": {
-        "message": "Trennen - Verlasse das Logging"
-    },
     "loggingErrorNotConnected": {
-        "message": "<strong>Verbindung<\/strong> nötig"
+        "message": "<strong>Verbindung</strong> nötig"
     },
     "loggingErrorLogFile": {
         "message": "Bitte Log Datei auswählen"
@@ -2891,14 +2392,8 @@
     "loggingErrorOneProperty": {
         "message": "Bitte mindestens eine Eigenschaft zum loggen auswählen"
     },
-    "loggingAutomaticallyRetained": {
-        "message": "Letztes Logfile automatisch geladen: <strong>$1<\/strong>"
-    },
     "blackboxNotSupported": {
         "message": "Der Flugcontroller unterstützt kein Logging."
-    },
-    "blackboxMaybeSupported": {
-        "message": "Der Flugcontroller zu alt, um diese Funktion zu unterstützen, oder die Funktion wurde im Konfigurationstab deaktiviert."
     },
     "blackboxConfiguration": {
         "message": "Flugschreiber Konfiguration"
@@ -2946,10 +2441,10 @@
         "message": "Inhalt in Datei speichern"
     },
     "dataflashSavetoFileNote": {
-        "message": "Direktes speichern von Flashdaten in eine Datei ist langsam und anfällig für Fehler\/ fehlerhafte Dateien.<br> In manchen Fällen wird dies für kleine Dateien funktionieren, dies ist allerdigs nicht vorgesehen und Support Anfragen diesbezüglich werden ohne Kommentar geschlossen. Nutze stattdessen den Massenspeichermodus."
+        "message": "Direktes speichern von Flashdaten in eine Datei ist langsam und anfällig für Fehler/ fehlerhafte Dateien.<br> In manchen Fällen wird dies für kleine Dateien funktionieren, dies ist allerdigs nicht vorgesehen und Support Anfragen diesbezüglich werden ohne Kommentar geschlossen. Nutze stattdessen den Massenspeichermodus."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Diese Methode ist langsam und anfällig für Fehler\/ Datenkorruption. Die MSP Verbindung selbst hat fundamentale Einschränkungen, die sie unbrauchbar für Datentransfer machen. Sie kann aber für kleine Log-Dateien funktionieren. Erstelle keine Supportanfragen, wenn die Datenübertragung über diese Methode beim Speichern fehlschlägt. Die empfohlene Methode ist es '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (unten) den Massenspeichermodus zu aktivieren und Ihren Flight Controller als Speichermedium zu öffnen, um die Log-Dateien herunterzuladen."
+        "message": "Diese Methode ist langsam und anfällig für Fehler/ Datenkorruption. Die MSP Verbindung selbst hat fundamentale Einschränkungen, die sie unbrauchbar für Datentransfer machen. Sie kann aber für kleine Log-Dateien funktionieren. Erstelle keine Supportanfragen, wenn die Datenübertragung über diese Methode beim Speichern fehlschlägt. Die empfohlene Methode ist es '<b>$t(onboardLoggingRebootMscText.message)</b>' (unten) den Massenspeichermodus zu aktivieren und Ihren Flight Controller als Speichermedium zu öffnen, um die Log-Dateien herunterzuladen."
     },
     "dataflashButtonErase": {
         "message": "Speicher löschen"
@@ -3005,9 +2500,6 @@
     "firmwareFlasherBranch": {
         "message": "Pull Request oder Commit auswählen"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Versions- und Build-Info"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "Herstellerkennung:"
     },
@@ -3017,27 +2509,17 @@
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Bitte Download Seite besuchen"
     },
-    "firmwareFlasherReleaseNotes": {
-        "message": "Update Änderungen:"
-    },
     "firmwareFlasherReleaseDate": {
         "message": "Datum:"
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Ziel:"
     },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Weitere Informationen über das Ziel (target) finden Sie im Betaflight-Wiki",
-        "description": "Link to Betaflight support for target"
-    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
     "firmwareFlasherCloudBuildDetails": {
         "message": "Cloud-Build Details:"
-    },
-    "firmwareFlasherCloudBuildPending": {
-        "message": "ausstehend"
     },
     "firmwareFlasherCloudBuildProcessing": {
         "message": "In Bearbeitung"
@@ -3056,24 +2538,6 @@
     },
     "firmwareFlasherCloudBuildFail": {
         "message": "fehlgeschlagen (bitte Protokoll überprüfen)"
-    },
-    "firmwareFlasherReleaseFileUrl": {
-        "message": "Manuell herunterladen."
-    },
-    "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">WICHTIG:<\/span> Verwende die passende Firmware für deinen Flight Controller. Die Verwendung einer falschen Firmware kann <span class=\"message-negative\">böse<\/span> Folgen haben."
-    },
-    "firmwareFlasherPath": {
-        "message": "Pfad:"
-    },
-    "firmwareFlasherSize": {
-        "message": "Grö"
-    },
-    "firmwareFlasherStatus": {
-        "message": "Status:"
-    },
-    "firmwareFlasherProgress": {
-        "message": "Fortschritt:"
     },
     "firmwareFlasherLoadFirmwareFile": {
         "message": "Bitte lade eine Firmware-Datei"
@@ -3100,7 +2564,7 @@
         "message": "Flashen nach Verbindung"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Versucht, das Board automatisch zu flashen (ausgelöst durch einen neu erkannten seriellen Anschluss).<br \/><br \/><span class=\"message-negative\">WARNUNG<\/span>: Diese Funktion deaktiviert die Erkennungs- und Sicherungsfunktionen."
+        "message": "Versucht, das Board automatisch zu flashen (ausgelöst durch einen neu erkannten seriellen Anschluss).<br /><br /><span class=\"message-negative\">WARNUNG</span>: Diese Funktion deaktiviert die Erkennungs- und Sicherungsfunktionen."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Chip vollständig Löschen"
@@ -3108,32 +2572,17 @@
     "firmwareFlasherFullChipEraseDescription": {
         "message": "Löscht alle im FC gespeicherten Einstellungen."
     },
-    "firmwareFlasherFlashDevelopmentFirmware": {
-        "message": "Entwicklerfirmware verwenden"
-    },
-    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": "Neueste (ungetestete) Entwicklerfirmware flashen."
-    },
-    "firmwareFlasherManualPort": {
-        "message": "Anschluss"
-    },
     "firmwareFlasherManualBaud": {
         "message": "Manuelle Baudrate"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "Manuelle Auswahl der Baudrate für FCs, die nicht mit der Standardrate funktionieren, oder fürs flashen via Bluetooth.<br \/><span class=\"message-negative\">Hinweis:<\/span> Wird beim flashen via USB-DFU NICHT verwendet"
-    },
-    "firmwareFlasherBaudRate": {
-        "message": "Baudrate"
+        "message": "Manuelle Auswahl der Baudrate für FCs, die nicht mit der Standardrate funktionieren, oder fürs flashen via Bluetooth.<br /><span class=\"message-negative\">Hinweis:</span> Wird beim flashen via USB-DFU NICHT verwendet"
     },
     "firmwareFlasherShowDevelopmentReleases": {
         "message": "Vorabversionen anzeigen (release candidates)"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Zeige Vorabversionen zusätzlich zu stabilen Versionen an"
-    },
-    "firmwareFlasherOptionLoading": {
-        "message": "Lade...."
     },
     "firmwareFlasherOptionLabelBuildTypeRelease": {
         "message": "Release (stabile Versionen)"
@@ -3144,23 +2593,8 @@
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
         "message": "Development (momentan in der Entwicklung)"
     },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
-        "message": "3.3 AKK & RDQ VTX Patch"
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
-        "message": "3.4 AKK & RDQ VTX Patch"
-    },
-    "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": "Wähle eine Firmware \/ FC"
-    },
-    "firmwareFlasherOptionLabelSelectBoard": {
-        "message": "Wähle einen FC"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Wähle eine Firmwareversion"
-    },
-    "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
-        "message": "Wähle eine Firmwareversion für"
     },
     "firmwareFlasherButtonLoadLocal": {
         "message": "Firmware laden [lokal]"
@@ -3177,32 +2611,8 @@
     "firmwareFlasherFlashFirmware": {
         "message": "Firmware flashen"
     },
-    "firmwareFlasherGithubInfoHead": {
-        "message": "Github Firmwareinfo"
-    },
-    "firmwareFlasherCommiter": {
-        "message": "Eingecheckt von:"
-    },
-    "firmwareFlasherDate": {
-        "message": "Datum:"
-    },
-    "firmwareFlasherHash": {
-        "message": "Hash:"
-    },
-    "firmwareFlasherUrl": {
-        "message": "Besuche Github, um diese Firmware zu kritisieren..."
-    },
-    "firmwareFlasherMessage": {
-        "message": "Nachricht:"
-    },
-    "firmwareFlasherButtonLeave": {
-        "message": "Firmware-Flasher verlassen"
-    },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware nicht geladen"
-    },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Lokale Firmware geladen: {{filename}} ({{bytes}} Bytes)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Online Firmware geladen: {{filename}} ({{bytes}} Bytes)"
@@ -3218,36 +2628,20 @@
         "message": "Die Konfigurationsdatei scheint beschädigt zu sein, ASCII akzeptiert (Zeichen 0-255), Zeichen außerhalb dieses Bereichs sind als Kommentare erlaubt",
         "description": "shown in the log, more wordy"
     },
-    "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": "<span class=\"message-positive\">Online-Firmware geladen, bereit zum flashen<\/span>"
-    },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Fehler beim laden der Online-Firmware"
     },
-    "firmwareFlasherFailedToLoadUnifiedConfig": {
-        "message": "Fehler beim Laden der Remote-Konfiguration für {{remote_file}}"
-    },
-    "firmwareFlasherLegacyLabel": {
-        "message": "{{target}} (Legacy)",
-        "description": "If we have a Unified target and a old style target available, we are labeling the older one"
-    },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": "<b>Keine Firmware zum flashen ausgewählt<\/b>"
+        "message": "<b>Keine Firmware zum flashen ausgewählt</b>"
     },
     "firmwareFlasherNoTargetsLoaded": {
         "message": "Keine Ziele geladen"
     },
     "firmwareFlasherNoValidPort": {
-        "message": "<span class=\"message-negative\">Bitte gültigen seriellen Port auswählen<\/span>"
-    },
-    "firmwareFlasherWritePermissions": {
-        "message": "Keine <span class=\"message-negative\">Schreibrechte<\/span> für diese Datei"
-    },
-    "firmwareFlasherFlashTrigger": {
-        "message": "<strong>$1<\/strong> gefunden - flashe beim anstecken"
+        "message": "<span class=\"message-negative\">Bitte gültigen seriellen Port auswählen</span>"
     },
     "firmwareFlasherVerifyBoard": {
-        "message": "<h3>Firmware stimmt nicht überein<\/h3><br \/>Das verbundene Board ist <strong>{{verified_board}}<\/strong> während Du aber <strong>{{selected_board}}<\/strong>ausgewählt hast.<br \/><br \/>Möchtest Du fortfahren?",
+        "message": "<h3>Firmware stimmt nicht überein</h3><br />Das verbundene Board ist <strong>{{verified_board}}</strong> während Du aber <strong>{{selected_board}}</strong>ausgewählt hast.<br /><br />Möchtest Du fortfahren?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherButtonAbort": {
@@ -3263,7 +2657,7 @@
         "message": "Geräteinformationen abfragen um korrekte Firmware automatisch auszuwählen"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "Du versuchst eine <strong>Entwicklungsversion der Firmware<\/strong>zu flashen. Diese Versionen sind nicht final und es können folgende Fehler auftreten:<strong><ul><li> die Firmware funktioniert überhaupt nicht;<\/li><li>die Firmware ist nicht fliegbar;<\/li><li>es gibt Sicherheitsprobleme mit der Firmware, zum Beispiel Kontrollverlust im Flug \/ Flyaways<\/li><li>die Firmware kann dazu führen, dass der Flight-Controller nicht reagiert, oder beschädigt wird <\/li><\/ul><\/strong>Wenn du mit dem Flashen dieser Firmware fortfährst <strong>übernimmst Du die volle Verantwortung für das Risiko, dass eines der oben genannten Probleme auftritt.<\/strong> Darüber hinaus bestätigst du, dass es unbedingt notwendig ist, <strong>gründliche Bench-Tests ohne Propeller<\/strong> durchzuführen, bevor du mit dieser Firmware fliegst."
+        "message": "Du versuchst eine <strong>Entwicklungsversion der Firmware</strong>zu flashen. Diese Versionen sind nicht final und es können folgende Fehler auftreten:<strong><ul><li> die Firmware funktioniert überhaupt nicht;</li><li>die Firmware ist nicht fliegbar;</li><li>es gibt Sicherheitsprobleme mit der Firmware, zum Beispiel Kontrollverlust im Flug / Flyaways</li><li>die Firmware kann dazu führen, dass der Flight-Controller nicht reagiert, oder beschädigt wird </li></ul></strong>Wenn du mit dem Flashen dieser Firmware fortfährst <strong>übernimmst Du die volle Verantwortung für das Risiko, dass eines der oben genannten Probleme auftritt.</strong> Darüber hinaus bestätigst du, dass es unbedingt notwendig ist, <strong>gründliche Bench-Tests ohne Propeller</strong> durchzuführen, bevor du mit dieser Firmware fliegst."
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flashen"
@@ -3291,7 +2685,7 @@
         "message": "Backup deaktiviert"
     },
     "ledStripHelp": {
-        "message": "Der FC kann Farben und Effekte von LED-Leisten steuern.<br \/>Konfiguriere die LEDs, sowie die Verkabelungreihenfolge auf dem Raster und bringe die LEDs entsprechend an.<br\/>Doppelklick auf die Farben erlaubt das Anpassen der HSV-Werte."
+        "message": "Der FC kann Farben und Effekte von LED-Leisten steuern.<br />Konfiguriere die LEDs, sowie die Verkabelungreihenfolge auf dem Raster und bringe die LEDs entsprechend an.<br/>Doppelklick auf die Farben erlaubt das Anpassen der HSV-Werte."
     },
     "ledStripButtonSave": {
         "message": "Speichern"
@@ -3490,14 +2884,6 @@
         "message": "GPS: locked",
         "description": "One of the modes in Color Mode in Led Strip"
     },
-    "ledStripModeGpsDefault": {
-        "message": "Standard",
-        "description": "One of the modes in GPS Mode in Led Strip"
-    },
-    "ledStripModeGpsBar": {
-        "message": "Leiste",
-        "description": "One of the modes in GPS Mode in Led Strip"
-    },
     "ledStripWiring": {
         "message": "LED-Steifen Verkabelung",
         "description": "One of the modes in Led Strip"
@@ -3641,25 +3027,13 @@
         "message": "AUX 16"
     },
     "pidTuningBasic": {
-        "message": "Basis\/Acro"
-    },
-    "pidTuningYawJumpPrevention": {
-        "message": "Yaw \"Sprung\" Schutz"
-    },
-    "pidTuningRcExpoPower": {
-        "message": "RC Expo Stärke"
-    },
-    "pidTuningRcExpoPowerHelp": {
-        "message": "Der Exponent zur Berechnung von RC Expo. In Betaflight-Versionen vor 3.0 ist der Wert fest auf 3 eingestellt."
-    },
-    "pidTuningLevel": {
-        "message": "Winkel\/Horizont"
+        "message": "Basis/Acro"
     },
     "pidTuningAltitude": {
-        "message": "Barometer & Sonar\/Höhe"
+        "message": "Barometer & Sonar/Höhe"
     },
     "pidTuningMag": {
-        "message": "Magnetometer\/Richtung"
+        "message": "Magnetometer/Richtung"
     },
     "pidTuningGps": {
         "message": "GPS Navigation"
@@ -3679,23 +3053,14 @@
     "pidTuningLevelAngleLimit": {
         "message": "Winkel Begrenzung"
     },
-    "pidTuningLevelSensitivity": {
-        "message": "Sensibilität"
-    },
-    "pidTuningLevelHelp": {
-        "message": "Die Werte unten verändern das Verhalten der ANGLE und HORIZON-Flugmodi. Verschiedene PID-Controller behandeln die Werte unterschiedlich, bitte lies die Dokumentation."
-    },
     "pidTuningMotorOutputLimit": {
         "message": "Motor-Ausgabelimit"
-    },
-    "pidTuningMotorLimit": {
-        "message": "Skalierungsfaktor [%]"
     },
     "pidTuningCellCount": {
         "message": "Anzahl Zellen für automatischen Profil-Wechsel"
     },
     "pidTuningCellCountHelp": {
-        "message": "Aktiviert automatisch das erste Profil, das eine dem angeschlossenen Akku entsprechende Zellenanzahl hat.<br><br><ul><li><b>Aktiv<\/b>: Aktiviert automatisch ein Profil mit passender Zellenanzahl, wenn eines vorhanden ist.<\/li><li><b>Deaktiviert<\/b>: Automatischen Profilwechsel deaktivieren<\/li><b>1S-8S<\/b>: Wähle die Zellenanzahl, die für dieses Profil verwendet werden soll.<\/li><\/ul>"
+        "message": "Aktiviert automatisch das erste Profil, das eine dem angeschlossenen Akku entsprechende Zellenanzahl hat.<br><br><ul><li><b>Aktiv</b>: Aktiviert automatisch ein Profil mit passender Zellenanzahl, wenn eines vorhanden ist.</li><li><b>Deaktiviert</b>: Automatischen Profilwechsel deaktivieren</li><b>1S-8S</b>: Wähle die Zellenanzahl, die für dieses Profil verwendet werden soll.</li></ul>"
     },
     "pidTuningCellCountChange": {
         "message": "Aktiv",
@@ -3745,43 +3110,19 @@
         "description": "Filter tuning slider high header"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Ändert den Gyro Tiefpassfilter Grenzfrequenz.<br><br>. Verschiebe den Regler nach links und die Filterung wird verstärkt (Reduzierung der Grenzfrequenz).<br><br>. Verschiebe den Regler nach rechts und die Filterung wird vermindert (Erhöhung der Grenzfrequenz).<br><br>Wird der Regler nach rechts bewegt wird das Propwash-Handling verbessert und reduziert Latenz.<b>Sei vorsichtig<\/b> und ändere den Regler nicht radikal. Du erhöhst Störungen des P ud D Signals und es kann zu Run-a-ways führen oder die Motoren überhitzen.<br><br>Wenn es heiße Motoren,  Frameresonanzen, Lagerschäden der Motren, verbogene Props  gibt solltest Du den Regler nach links verschieben. Gyro-Filter werden <br>VOR<\/b> und addieren sich auf den D-Filter.",
+        "message": "Ändert den Gyro Tiefpassfilter Grenzfrequenz.<br><br>. Verschiebe den Regler nach links und die Filterung wird verstärkt (Reduzierung der Grenzfrequenz).<br><br>. Verschiebe den Regler nach rechts und die Filterung wird vermindert (Erhöhung der Grenzfrequenz).<br><br>Wird der Regler nach rechts bewegt wird das Propwash-Handling verbessert und reduziert Latenz.<b>Sei vorsichtig</b> und ändere den Regler nicht radikal. Du erhöhst Störungen des P ud D Signals und es kann zu Run-a-ways führen oder die Motoren überhitzen.<br><br>Wenn es heiße Motoren,  Frameresonanzen, Lagerschäden der Motren, verbogene Props  gibt solltest Du den Regler nach links verschieben. Gyro-Filter werden <br>VOR</b> und addieren sich auf den D-Filter.",
         "description": "Gyro filter tuning slider helpicon message"
     },
-    "pidTuningSlidersDisabled": {
-        "message": "<strong>Hinweis:<\/strong> Die Schieberegler sind deaktiviert, da die Werte manuell geändert wurden. Klicken Sie auf die Schaltfläche '$t(pidTuningSliderEnableButton.message)' um sie wieder zu aktivieren. Dies wird die Werte zurücksetzen und alle ungespeicherten Änderungen werden verloren gehen.",
-        "description": "Tuning sliders disabled note when manual changes are detected"
-    },
-    "pidTuningGyroSliderDisabled": {
-        "message": "<strong>Hinweis:<\/strong> Die Schieberegler sind deaktiviert, da die Werte manuell geändert wurden. Klicke auf die Schaltfläche '$t(pidTuningGyroSliderEnableButton.message)' um sie wieder zu aktivieren. Dies wird die Werte zurücksetzen und alle ungespeicherten Änderungen gehen verloren.",
-        "description": "Gyro Tuning sliders disabled note when manual changes are detected"
-    },
-    "pidTuningDTermSliderDisabled": {
-        "message": "<strong>Hinweis:<\/strong> Die Schieberegler sind deaktiviert, da die Werte manuell geändert wurden. Klicke auf die Schaltfläche '$t(pidTuningDTermSliderEnableButton.message)' um sie wieder zu aktivieren. Dies wird die Werte zurücksetzen und alle ungespeicherten Änderungen gehen verloren.",
-        "description": "DTerm Tuning sliders disabled note when manual changes are detected"
-    },
-    "pidTuningPidSlidersDisabled": {
-        "message": "<strong>Hinweis:<\/strong> Slider sind deaktiviert. Durch Klicken auf '$t(pidTuningSliderEnableButton.message)' werden die PID-Werte an die zuvor gespeicherte Slider-Position angepasst.",
-        "description": "Tuning sliders disabled note"
-    },
-    "pidTuningSliderEnableButton": {
-        "message": "Schieberegler aktivieren",
-        "description": "Button label for enabling sliders"
-    },
-    "pidTuningSlidersNonExpertMode": {
-        "message": "<strong>Hinweis:<\/strong> Der Schiebereglerbereich ist eingeschränkt, da du nicht im Expertenmodus bist. Dieser Bereich sollte für die meisten Modelle und Anfänger geeignet sein.",
-        "description": "Sliders restricted message"
-    },
     "pidTuningPidSlidersNonExpertMode": {
-        "message": "<strong>Hinweis:<\/strong> Der Schiebereglerbereich ist eingeschränkt, da du nicht im Expertenmodus bist. Dieser Bereich sollte für die meisten Modelle und Anfänger geeignet sein.",
+        "message": "<strong>Hinweis:</strong> Der Schiebereglerbereich ist eingeschränkt, da du nicht im Expertenmodus bist. Dieser Bereich sollte für die meisten Modelle und Anfänger geeignet sein.",
         "description": "Firmware Pid sliders restricted message"
     },
     "pidTuningFilterSlidersNonExpertMode": {
-        "message": "<strong>Hinweis:<\/strong> Der Schiebereglerbereich ist eingeschränkt, da Du nicht im Expertenmodus bist. Dieser Bereich sollte für die meisten Modelle und Anfänger geeignet sein.",
+        "message": "<strong>Hinweis:</strong> Der Schiebereglerbereich ist eingeschränkt, da Du nicht im Expertenmodus bist. Dieser Bereich sollte für die meisten Modelle und Anfänger geeignet sein.",
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<strong>Hinweis:<\/strong> Schieberegler sind deaktiviert, da sich die aktuellen Werte außerhalb des Bereichs der Grundeinstellungen befinden. Wechsle zum Expertenmodus.",
+        "message": "<strong>Hinweis:</strong> Schieberegler sind deaktiviert, da sich die aktuellen Werte außerhalb des Bereichs der Grundeinstellungen befinden. Wechsle zum Expertenmodus.",
         "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
@@ -3801,52 +3142,49 @@
         "description": "Master tuning slider label"
     },
     "pidTuningDGainSlider": {
-        "message": "Dämpfung:<br \/><i><small>D Verstärkung(Gain)<\/small><\/i>",
+        "message": "Dämpfung:<br /><i><small>D Verstärkung(Gain)</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
-        "message": "Ein relativ hoher D-Wert dämpft das Ansprechverhalten auf Stickbewegungen und kann zu heißen Motoren führen. Er sollte jedoch helfen schnelle Oszillationen zu dämpfen, und Propwash zu reduzieren.<br \/><br \/>Ein relativ niedriger D-Wert erzeugt ein schnelleres Ansprechverhalten auf Stickbewegungen, kann aber Propwash und die Reaktion auf externe Einflüsse (Wind) verstärken.",
+        "message": "Ein relativ hoher D-Wert dämpft das Ansprechverhalten auf Stickbewegungen und kann zu heißen Motoren führen. Er sollte jedoch helfen schnelle Oszillationen zu dämpfen, und Propwash zu reduzieren.<br /><br />Ein relativ niedriger D-Wert erzeugt ein schnelleres Ansprechverhalten auf Stickbewegungen, kann aber Propwash und die Reaktion auf externe Einflüsse (Wind) verstärken.",
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
-        "message": "Nachverfolgung:<br \/><i><small>P & I Verstärkung<\/small><\/i>",
+        "message": "Nachverfolgung:<br /><i><small>P & I Verstärkung</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningResponseSlider": {
-        "message": "Stick Empfindlichkeit:<br \/><i><small>FF (Feedforward) Verstärkung<\/small><\/i>",
+        "message": "Stick Empfindlichkeit:<br /><i><small>FF (Feedforward) Verstärkung</small></i>",
         "description": "Response tuning slider label"
     },
     "pidTuningIGainSlider": {
-        "message": "Drift - Wobble:<br \/><i><small>I-Verstärkung<\/small><\/i>",
+        "message": "Drift - Wobble:<br /><i><small>I-Verstärkung</small></i>",
         "description": "I-term slider label"
     },
     "pidTuningDMaxGainSlider": {
-        "message": "Dynamische Dämpfung:<br \/><i><small>D Max<\/small><\/i>",
+        "message": "Dynamische Dämpfung:<br /><i><small>D Max</small></i>",
         "description": "D Max slider label"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Pitch-Dämpfung:<br \/><i><small>Pitch:Roll D<\/small><\/i>",
+        "message": "Pitch-Dämpfung:<br /><i><small>Pitch:Roll D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Pitch Nachverfolgung:<br><i><small>Pitch:Roll P, I & FF<\/small><\/i>",
+        "message": "Pitch Nachverfolgung:<br><i><small>Pitch:Roll P, I & FF</small></i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
-        "message": "Erhöht die Nachverfolgungs-Stärke nur auf der Pitch-Achse durch Änderung der Werte Pitch P und I relativ zur Roll.<br \/><br \/>Erhöhe den Wert um Pitch (Nase) bei scharfen Pitch-Stick Bewegungen oder scharfer Throttle-Reduzierung den Copter zu stabilisieren. Überlege auch, Anti-Gravity-Verstärkung zu erhöhen.<br \/><br \/>Verfeiner zuerst die Master 'Dämpfung' und\/oder 'Nachverfolgungs' Schieberegler, bis Du ein gutes Roll-Achsenverhalten erkennst. Dann verwende die Schieberegler (erhöhen oder verringern) um die Pitch-Achse zu optimieren, ohne die Roll-Achse zu beeinflussen.",
+        "message": "Erhöht die Nachverfolgungs-Stärke nur auf der Pitch-Achse durch Änderung der Werte Pitch P und I relativ zur Roll.<br /><br />Erhöhe den Wert um Pitch (Nase) bei scharfen Pitch-Stick Bewegungen oder scharfer Throttle-Reduzierung den Copter zu stabilisieren. Überlege auch, Anti-Gravity-Verstärkung zu erhöhen.<br /><br />Verfeiner zuerst die Master 'Dämpfung' und/oder 'Nachverfolgungs' Schieberegler, bis Du ein gutes Roll-Achsenverhalten erkennst. Dann verwende die Schieberegler (erhöhen oder verringern) um die Pitch-Achse zu optimieren, ohne die Roll-Achse zu beeinflussen.",
         "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filter"
     },
-    "pidTuningGyroLowpassType": {
-        "message": "Gyro Lowpass 1 Filter Type"
-    },
     "pidTuningGyroLowpass": {
         "message": "Gyro Tiefpass 1"
     },
     "pidTuningGyroLowpassHelp": {
-        "message": "Der erste von zwei Gyro Tiefpass Filter.<br \/><br \/>Die Verwendung von gyro Tiefpass 1 im dynamischen Modus war für den früheren dynamischen Notch-Filter-Algorithmus wichtig. Gyro Tiefpass 1 kann in der Regel komplett in Firmware 4.3 deaktiviert werden, wenn RPM Filterung verwendet wird, es sei denn, das Gyro hat keine interne Hardware-Filterung.<br \/><br \/>Im dynamischen Modus wird bei niedrigem Throttle die Filterung verstärkt, bei zunehmenden Throttel verringert sich die Filterung und somit die Filterlatenz (weniger Delay).<br>Bei einem höheren Gyro-Tiefpass Expo, wird  der Übergang von niedriger zu hoher Grenzabschaltung erfolgt früher, wenn der Throttlewert sich erhöht<br \/><br \/>Im statischen Modus ist die Abschaltfrequenz fixiert.<br \/><br \/>Filtertyp ist standardmäßig PT1. Filter höherer Ordnung sind selten erforderlich.",
+        "message": "Der erste von zwei Gyro Tiefpass Filter.<br /><br />Die Verwendung von gyro Tiefpass 1 im dynamischen Modus war für den früheren dynamischen Notch-Filter-Algorithmus wichtig. Gyro Tiefpass 1 kann in der Regel komplett in Firmware 4.3 deaktiviert werden, wenn RPM Filterung verwendet wird, es sei denn, das Gyro hat keine interne Hardware-Filterung.<br /><br />Im dynamischen Modus wird bei niedrigem Throttle die Filterung verstärkt, bei zunehmenden Throttel verringert sich die Filterung und somit die Filterlatenz (weniger Delay).<br>Bei einem höheren Gyro-Tiefpass Expo, wird  der Übergang von niedriger zu hoher Grenzabschaltung erfolgt früher, wenn der Throttlewert sich erhöht<br /><br />Im statischen Modus ist die Abschaltfrequenz fixiert.<br /><br />Filtertyp ist standardmäßig PT1. Filter höherer Ordnung sind selten erforderlich.",
         "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
@@ -3871,7 +3209,7 @@
         "message": "Gyro Tiefpass 2"
     },
     "pidTuningGyroLowpass2Help": {
-        "message": "Der zweite von zwei Gyro Tiefpass Filtern.<br \/><br \/>Dieser Filter läuft in der Gyro-Schleife. Filtert das Signal, bevor es in die PID-Schleife eintritt. Es befindet sich immer im statischen (feste Grenzfrequenz) Modus.<br \/><br \/>Wenn die PID-Schleifenfrequenz kleiner ist als die Gyro-Schleifenfrequenz, zB eine 4k PID-Schleife mit einer 8k Gyro-Schleife. Dieser Filter sollte beibehalten werden, um Aliasing-Probleme aufgrund von 8k->4k Downsampling zu vermeiden.<br \/><br \/>Eine einzelne Gyro Tiefpass 2-Konfiguration, auf irgendwo zwischen 500 und 1000Hz gesetzt, funktioniert gut für Betaflight 4. x oder höher, für saubere Builds mit RPM Filterung aktiv und zumindest Standard D Filter.",
+        "message": "Der zweite von zwei Gyro Tiefpass Filtern.<br /><br />Dieser Filter läuft in der Gyro-Schleife. Filtert das Signal, bevor es in die PID-Schleife eintritt. Es befindet sich immer im statischen (feste Grenzfrequenz) Modus.<br /><br />Wenn die PID-Schleifenfrequenz kleiner ist als die Gyro-Schleifenfrequenz, zB eine 4k PID-Schleife mit einer 8k Gyro-Schleife. Dieser Filter sollte beibehalten werden, um Aliasing-Probleme aufgrund von 8k->4k Downsampling zu vermeiden.<br /><br />Eine einzelne Gyro Tiefpass 2-Konfiguration, auf irgendwo zwischen 500 und 1000Hz gesetzt, funktioniert gut für Betaflight 4. x oder höher, für saubere Builds mit RPM Filterung aktiv und zumindest Standard D Filter.",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
@@ -3881,13 +3219,13 @@
         "message": "Gyro Kerb(Notch)-Filter 1"
     },
     "pidTuningGyroNotchFilterHelp": {
-        "message": "Verwendet einen statischen (konstante Frequenz) Notchfilter auf das anliegende Gyrosignal, bei der angegebenen mittleren Frequenz. <br \/><br \/>Kann für isolierte, konstante Frequenzresonanzen, die sowohl P als auch D betreffen, nützlich sein. <br \/><br \/>Um nützlich zu sein, muss die Resonanzfrequenz über den Throttle-Weg hinweg konstant sein. Typische Resonanzfrequenzen können durch Anbauteile verursacht werden (z. B. Antenne)<br \/><br \/>Die Bandbreite der Kerbe (Notch) wird durch die Grenzfrequenz festgelegt. In der Regel sollte der Grenze zwischen 10% und 40% unterhalb der mittleren Frequenz eingestellt werden. Verwende den engsten Filterbereich, um die Resonanfrequenz zu eliminieren.<br>Vermeide Frequenzen unter 100 Hz für den Notchfilter. Dies sollte nur bei besondern Umständen gemacht werden.<br \/><br \/>Statische Notchfilter werden in 4.3 selten benötigt."
+        "message": "Verwendet einen statischen (konstante Frequenz) Notchfilter auf das anliegende Gyrosignal, bei der angegebenen mittleren Frequenz. <br /><br />Kann für isolierte, konstante Frequenzresonanzen, die sowohl P als auch D betreffen, nützlich sein. <br /><br />Um nützlich zu sein, muss die Resonanzfrequenz über den Throttle-Weg hinweg konstant sein. Typische Resonanzfrequenzen können durch Anbauteile verursacht werden (z. B. Antenne)<br /><br />Die Bandbreite der Kerbe (Notch) wird durch die Grenzfrequenz festgelegt. In der Regel sollte der Grenze zwischen 10% und 40% unterhalb der mittleren Frequenz eingestellt werden. Verwende den engsten Filterbereich, um die Resonanfrequenz zu eliminieren.<br>Vermeide Frequenzen unter 100 Hz für den Notchfilter. Dies sollte nur bei besondern Umständen gemacht werden.<br /><br />Statische Notchfilter werden in 4.3 selten benötigt."
     },
     "pidTuningGyroNotchFilter2": {
         "message": "Gyro Kerb(Notch)-Filter 2"
     },
     "pidTuningGyroNotchFilter2Help": {
-        "message": "Wendet einen zweiten statischen (konstante Frequenz) Notchfilter auf das anliegende Gyro-Signal an.<br \/><br \/>Dies ist selten erforderlich und sollte nur als letztes Mittel zur Beseitigung einer zweiten stationären Resonanzlinie verwendet werden, die nicht mit anderen Mitteln ausgefiltert werden kann."
+        "message": "Wendet einen zweiten statischen (konstante Frequenz) Notchfilter auf das anliegende Gyro-Signal an.<br /><br />Dies ist selten erforderlich und sollte nur als letztes Mittel zur Beseitigung einer zweiten stationären Resonanzlinie verwendet werden, die nicht mit anderen Mitteln ausgefiltert werden kann."
     },
     "pidTuningCenterFrequency": {
         "message": "Mittlere Frequenz [Hz]"
@@ -3901,18 +3239,6 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Der Dynamische Kerb(Notch)-Filter verfolgt die Spitzenfrequenzen(Peak) der Motoren richtet für jede Achse entsprechende Notch Filter ein."
     },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "Der Dynamische Kerb(Notch)-Filter verfolgt die Spitzenfrequenzen(Peak) der Motoren und legt einen oder zwei Notch Filter mit ihrem Zentrum(Mittlere Frequenz) pro Achse an."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Hinweis:<\/strong> Der dynamische Kerb(Notch)-Filter ist deaktiviert. Um ihn zu konfigurieren und zu nutzen, aktiviere bitte die Funktion 'DYNAMIC_FILTER' im '$t(configurationFeatures.message)' Abschnitt des '$t(tabConfiguration.message)' Reiters."
-    },
-    "pidTuningDynamicNotchFilterNyquistWarning": {
-        "message": "Der dynamische Kerbfilter (notch filter) ist deaktiviert. Zur Aktivierung stelle die PID-Loopfrequenz auf mindestens 2kHz im '$t(tabConfiguration.message)' Tab."
-    },
-    "pidTuningDynamicNotchRange": {
-        "message": "Filterbereich des Dynamischen Notch-Filters"
-    },
     "pidTuningDynamicNotchMinHz": {
         "message": "Min. Frequenz [Hz]"
     },
@@ -3922,26 +3248,13 @@
     "pidTuningDynamicNotchCount": {
         "message": "Anzahl Kerbfilter(Notches)"
     },
-    "pidTuningDynamicNotchMinHzHelp": {
-        "message": "Setze dies auf die niedrigste eingehende Störfrequenz, die von dem dynamischen Kerb(Notch)-Filter erfasst werden muss."
-    },
-    "pidTuningDynamicNotchMaxHzHelp": {
-        "message": "Setze dies auf die höchste eingehende Störfrequenz, die von dem dynamischen Kerb(Notch)-Filter erfasst werden muss."
-    },
-    "pidTuningDynamicNotchCountHelp": {
-        "message": "Legt die Anzahl der dynamischen Kerb(Notch)-Filter pro Achse fest. Bei aktiviertem RPM-Filter wird ein Wert von 1 oder 2 empfohlen. Ohne RPM-Filter wird ein Wert von 4 oder 5 empfohlen. Niedrigere Werte reduzieren die Filterverzögerung, kann jedoch die Motortemperatur erhöhen. Ein Wert von 3 erzeugt bei vier Motoren 3*3 Achsen * 4 Motoren = 36 Filter, das ist der Grund das das Filter Delay zunimmt je höher die Zahl ist."
-    },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM Filter",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM-Filterung ist eine Reihe von Gyro Kerb(Notch)-Filter, die die RPM-Telemetrie verwenden, um Frequenzen verursacht durch Motorvibrationen zu entfernen.<br \/><br \/><b><span class=\"message-positive\">WICHTIG<\/span>: Der ESC muss das Bidirektionale DShot-Protokoll und den Wert des $t(configurationMotorPoles.message) im Reiter $t(tabMotorTesting.message) korrekt eingestellt haben, damit der Filter funktioniert.<\/b>",
+        "message": "RPM-Filterung ist eine Reihe von Gyro Kerb(Notch)-Filter, die die RPM-Telemetrie verwenden, um Frequenzen verursacht durch Motorvibrationen zu entfernen.<br /><br /><b><span class=\"message-positive\">WICHTIG</span>: Der ESC muss das Bidirektionale DShot-Protokoll und den Wert des $t(configurationMotorPoles.message) im Reiter $t(tabMotorTesting.message) korrekt eingestellt haben, damit der Filter funktioniert.</b>",
         "description": "Header text for the RPM Filter group"
-    },
-    "pidTuningRpmMinHzHelp": {
-        "message": "Minimale Frequenz, die vom RPM-Filter verwendet wird.",
-        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profilabhängige Filtereinstellungen"
@@ -3950,30 +3263,21 @@
         "message": "D Tiefpass 1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "Der erste von zwei D-Term Tiefpassfiltern.<br \/><br \/>Im dynamischen Modus wird die Filterung bei niedrigen Throttle-Wert verstärkt. Mit zunehmenden Throttle-Werten, verringert sich die Filterung und somit die Latzenzzeit. Dadurch können Motorschleifungen oder unerwartete Flyways beim arming vermieden werden, da die Latzenzzeit und Propwash verringer. Der Übergang von niedrigem zu hohem Abschneiden erfolgt früher, sobald Throttle erhöht wird., bei höheren D-Term Tiefpass-Expo-Werten.<br \/><br \/>Im statischen Modus ist die Grenzfrequenz fixiert. Dies wird nicht für die D-Filterung empfohlen.<br \/><br \/>Filtertyp ist standardmäßig PT1, obwohl einige Benutzer hier nur einen einzigen dynamischen Biquad-Filter verwenden, ohne einen zweiten PT1.<br \/><br \/>Änderungen, die zu weniger D-Filterung führen, können <b>schwere Motorüberhitzung oder Flayaways<\/b> verursachen.",
+        "message": "Der erste von zwei D-Term Tiefpassfiltern.<br /><br />Im dynamischen Modus wird die Filterung bei niedrigen Throttle-Wert verstärkt. Mit zunehmenden Throttle-Werten, verringert sich die Filterung und somit die Latzenzzeit. Dadurch können Motorschleifungen oder unerwartete Flyways beim arming vermieden werden, da die Latzenzzeit und Propwash verringer. Der Übergang von niedrigem zu hohem Abschneiden erfolgt früher, sobald Throttle erhöht wird., bei höheren D-Term Tiefpass-Expo-Werten.<br /><br />Im statischen Modus ist die Grenzfrequenz fixiert. Dies wird nicht für die D-Filterung empfohlen.<br /><br />Filtertyp ist standardmäßig PT1, obwohl einige Benutzer hier nur einen einzigen dynamischen Biquad-Filter verwenden, ohne einen zweiten PT1.<br /><br />Änderungen, die zu weniger D-Filterung führen, können <b>schwere Motorüberhitzung oder Flayaways</b> verursachen.",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
-    },
-    "pidTuningDTermLowpassMode": {
-        "message": "Modus"
     },
     "pidTuningDTermLowpass2": {
         "message": "D Term Tiefpass 2"
     },
     "pidTuningDTermLowpass2Help": {
-        "message": "Die Zweite von zwei D-Term Tiefpassfiltern. <br \/><br \/>Dieser Filter befindet sich immer im statischen (fixer Grenzfrequenz) Modus. Für die D-Filterung werden mindestens zwei PT1-Tiefpassfilter oder Filter zweiter Ordnung benötigt.<br \/><br \/>Normalerweise wird diese Grenzfrequenz auf den höheren Wert des dynamischen Tiefpasses 1. Ordnung gesetzt. Dies ermöglicht die zweite Frequenzkontrolle oberhalb dieser Frequenz. <br \/><br \/>Änderungen, die zu weniger D-Filterung führen, können schwere Motorüberhitzung oder Fly-a-way verursachen.",
+        "message": "Die Zweite von zwei D-Term Tiefpassfiltern. <br /><br />Dieser Filter befindet sich immer im statischen (fixer Grenzfrequenz) Modus. Für die D-Filterung werden mindestens zwei PT1-Tiefpassfilter oder Filter zweiter Ordnung benötigt.<br /><br />Normalerweise wird diese Grenzfrequenz auf den höheren Wert des dynamischen Tiefpasses 1. Ordnung gesetzt. Dies ermöglicht die zweite Frequenzkontrolle oberhalb dieser Frequenz. <br /><br />Änderungen, die zu weniger D-Filterung führen, können schwere Motorüberhitzung oder Fly-a-way verursachen.",
         "description": "Help icon for the DTerm Lowpass 2 Filter"
     },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Lowpass Filter"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "Filter-Typ"
-    },
     "pidTuningStaticCutoffFrequency": {
         "message": "Statische Grenzfrequenz [Hz]"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "Filter-Typ"
     },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Dynamische Expo-Kurve"
@@ -3982,7 +3286,7 @@
         "message": "D Term Kerb(Notch)-Filter"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": "Erstellt einen statischen (Konstante Frequenz) Kerb(Notch)-Filter für den D-Term, basierend auf eine Mittelfrequenz.<br><br>. Die Breite des Kerb-Filters basiert auf Grenzfrequenz und der Mittelfrequenz.<br><br>. Dieser Filter ist nützlich, wenn es isolierte, konstante Störfrequenzen gibt die durch den D-Term verstärkt werden.<br><br>Versuche die Grenzfrequenz möglichst nah an der Mittelfrequenz zu setzen. <b>Je größer(breiter) der Kerb-Filter umso höher die Latenz.<\/b> Vermeide Kerb(Notch)-Filter unter 100Hz (Ausnahme bei Coptern mit langsam drehenden Motoren)."
+        "message": "Erstellt einen statischen (Konstante Frequenz) Kerb(Notch)-Filter für den D-Term, basierend auf eine Mittelfrequenz.<br><br>. Die Breite des Kerb-Filters basiert auf Grenzfrequenz und der Mittelfrequenz.<br><br>. Dieser Filter ist nützlich, wenn es isolierte, konstante Störfrequenzen gibt die durch den D-Term verstärkt werden.<br><br>Versuche die Grenzfrequenz möglichst nah an der Mittelfrequenz zu setzen. <b>Je größer(breiter) der Kerb-Filter umso höher die Latenz.</b> Vermeide Kerb(Notch)-Filter unter 100Hz (Ausnahme bei Coptern mit langsam drehenden Motoren)."
     },
     "pidTuningYawLowpassFiltersGroup": {
         "message": "Yaw Tiefpass Filter"
@@ -3990,20 +3294,8 @@
     "pidTuningYawLowpassFiltersGroupHelp": {
         "message": "Nutzt einen PT1 Filter an der angegebenen Grenzfrequenz auf ein anliegendes Gyro-Signal der Yaw Achse."
     },
-    "pidTuningVbatPidCompensation": {
-        "message": "PID Anpassung aufgrund Akkusspannung"
-    },
-    "pidTuningVbatPidCompensationHelp": {
-        "message": "Erhört die PID Werte, sobald die Batterie schwächer wird. Das sorgt dafür, dass das Fluggefühl gleich bleibt, während der Akku leerer wird. Die Stärke der Kompensation wird durch die Einstellung der maximalen Zellenspannung errechnet. Stelle sicher, dass in den Energieeinstellungen passende Werte sind."
-    },
-    "pidTuningVbatSagValue": {
-        "message": "%"
-    },
     "pidTuningThrustLinearizationHelp": {
         "message": "Erhöht Reaktionsfähigkeit bei geringen Throttle-Werten. <br><br> Besonders nützlich für Whoops und 48k ESCs. Hat keine Wirkung bei höheren Throttle Werten.<br><br>Die Höhe der Kompensation kann zwischen 0 und 150% variieren. In der Regel sind 30-40% ausreichend."
-    },
-    "pidTuningThrustLinearValue": {
-        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I-Term Rotation"
@@ -4048,7 +3340,7 @@
         "message": "Erhöht vorübergehend das Throttle-Signal bei schnelleren Throttle-Signalen und bietet eine sofortigere Reaktion die Throttle-Eingabe."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Dynamischer Leerlaufwert [*100 U\/min]"
+        "message": "Dynamischer Leerlaufwert [*100 U/min]"
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamischer Leerlauf ist DEAKTIVIERT, weil Dshot-Telemetrie AUS ist"
@@ -4060,22 +3352,13 @@
         "message": "Integriertes Yaw"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ACHTUNG<\/span>: Wenn Sie diese Funktion aktivieren, müssen Sie die YAW PID entsprechend anpassen. Weitere Informationen <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier<\/a>"
+        "message": "<span class=\"message-negative\">ACHTUNG</span>: Wenn Sie diese Funktion aktivieren, müssen Sie die YAW PID entsprechend anpassen. Weitere Informationen <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Der 'Integrierter Yaw' Wert integriert die Werte P, I und D und erlaubt Yaw den P, I, D etwas zu verändernt ähnlich wie wenn Du Pitch und Roll tunest.<br><br>I-Werte sind sehr wenig erforderlich, weil das integrierte P wie I wirkt und integrierte D-Werte wirken wie P.<br><br>HINWEIS: Integrierter Yaw erfordert die Verwendung von Absoluter Kontrolle, da I mit dem integrierten Yaw nicht benötigt wird."
     },
-    "failsafeFeaturesHelpOld": {
-        "message": "Die Failsafe-Einstellungen haben sich geändert. Benutze Betaflight <strong>V1.12.0+<\/strong>, um auf die verbesserten Einstellungen zuzugreifen."
-    },
-    "failsafePaneTitleOld": {
-        "message": "Empfänger Failsafe"
-    },
     "failsafePulsrangeTitle": {
         "message": "Einstellungen für gültige Pulslängen des Signals"
-    },
-    "failsafePulsrangeHelp": {
-        "message": "Pulse kürzer als das Minimum oder länger als das Maximum sorgen dafür, dass der Kanal in einen Rückfallmodus geht und die Rückfalleinstellungen greifen."
     },
     "failsafeRxMinUsecItem": {
         "message": "Minimale Länge"
@@ -4085,15 +3368,6 @@
     },
     "failsafeChannelFallbackSettingsTitle": {
         "message": "Stufe 1 - Kanalrückfall-Einstellungen"
-    },
-    "failsafeChannelFallbackSettingsHelp": {
-        "message": "Im Fall eines Stage 1 Failsafe werden diese Einstellungen den AUX Kanälen zugewiesen. <strong>Hinweis:<\/strong> Werte werden im Abstand von 25us gesetzt, kleinere Einstellungen werden vernachlässigt."
-    },
-    "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto<\/strong> heißt Roll, Pitch, Yaw zentrieren sich, Gas wird niedrig gehalten. <strong>Hold<\/strong> bedeutet, dass der letzte empfangene Wert beibehalten wird"
-    },
-    "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>Hold<\/strong> heißt, dass der letzte gültige Wert gehalten wird.<strong>Set<\/strong> heißt, dass der hier gesetzte Wert verwendet wird."
     },
     "failsafeChannelFallbackSettingsValueAuto": {
         "message": "Auto",
@@ -4159,10 +3433,10 @@
         "message": "Rückflughöhe (Meter)"
     },
     "failsafeGpsRescueItemAscendRate": {
-        "message": "Steigrate (Meter\/Sekunde)"
+        "message": "Steigrate (Meter/Sekunde)"
     },
     "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Geschwindigkeit über Grund bei Rückkehr (Meter\/Sekunde)"
+        "message": "Geschwindigkeit über Grund bei Rückkehr (Meter/Sekunde)"
     },
     "failsafeGpsRescueItemAngle": {
         "message": "Maximaler Neigungswinkel"
@@ -4171,7 +3445,7 @@
         "message": "Sink-Entfernung (meter)"
     },
     "failsafeGpsRescueItemDescendRate": {
-        "message": "Sinkrate (Meter\/Sekunde)"
+        "message": "Sinkrate (Meter/Sekunde)"
     },
     "failsafeGpsRescueDescendRateHelp": {
         "message": "Die initiale Sinkrate beträgt das 3-fache dieses Wertes und verringert sich auf den 1-fachen Wert bei Erreichen der Landehöhe."
@@ -4183,7 +3457,7 @@
         "message": "Gas max"
     },
     "failsafeGpsRescueItemThrottleHover": {
-        "message": "Schwebe-Gasstellung - <span class=\"message-negative\">WICHTIG: Setze diesen Wert genau<\/span>"
+        "message": "Schwebe-Gasstellung - <span class=\"message-negative\">WICHTIG: Setze diesen Wert genau</span>"
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Minimale Distanz zur Startposition in Metern"
@@ -4195,7 +3469,7 @@
         "message": "Mindestanzahl Satelliten"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "\"Armen\" ohne GPS-Fix zulassen - <span class=\"message-negative\">WARNUNG: Kein GPS-Fix = bei Failsafe \"disarmt\" der Copter!<\/span>"
+        "message": "\"Armen\" ohne GPS-Fix zulassen - <span class=\"message-negative\">WARNUNG: Kein GPS-Fix = bei Failsafe \"disarmt\" der Copter!</span>"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Plausibilitätsprüfungen"
@@ -4208,12 +3482,6 @@
     },
     "failsafeGpsRescueItemSanityChecksFSOnly": {
         "message": "nur Failsafe"
-    },
-    "failsafeKillSwitchItem": {
-        "message": "Failsafe \"Kill Switch\" (Einstellungen im Modes Tab)"
-    },
-    "failsafeKillSwitchHelp": {
-        "message": "Aktiviere diese Option um den Failsafe Schalter (Modes Tab) als \"Kill Schalter\" zu benutzen. Der Schalter überschreibt dann alle Failsafe Einstellungen. <strong>Hinweis:<\/strong> Wenn der Schalter aktiv ist wird sich das Fluggerät nicht armen lassen"
     },
     "failsafeSwitchTitle": {
         "message": "Failsafe Schalter"
@@ -4234,7 +3502,7 @@
         "message": "Speichern"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": "Firmware-Aktualisierung <span class=\"message-negative\">benötigt<\/span>. Batterie-\/Strom-\/Spannungsmessungs-Konfiguration via API &lt; 1.33.0 (Betaflight Version &lt;= 3.17) wird nicht unterstützt."
+        "message": "Firmware-Aktualisierung <span class=\"message-negative\">benötigt</span>. Batterie-/Strom-/Spannungsmessungs-Konfiguration via API &lt; 1.33.0 (Betaflight Version &lt;= 3.17) wird nicht unterstützt."
     },
     "powerBatteryVoltageMeterSource": {
         "message": "Voltmeter Quelle"
@@ -4264,7 +3532,7 @@
         "message": "Sensoren der Regler"
     },
     "powerBatteryCurrentMeterTypeMsp": {
-        "message": "MSP Sensor\/OSD Slave"
+        "message": "MSP Sensor/OSD Slave"
     },
     "powerBatteryMinimum": {
         "message": "Minimale Zellspannung"
@@ -4291,13 +3559,13 @@
         "message": "Kalibrierungsmanager"
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>Hinweis:<\/strong> Vor dem Kalibrieren stelle sicher, dass Divisor und Multiplikator für die Spannung und Abweichung für den Stromverbrauch korrekt eingestellt sind.<br>Wenn du die Werte auf 0 lässt, wird keine Kalibrierung angewendet.<\/br><strong>Denk dran die Propeller vor Anschliessen eines Akkus zu entfernen!<\/strong>"
+        "message": "<strong>Hinweis:</strong> Vor dem Kalibrieren stelle sicher, dass Divisor und Multiplikator für die Spannung und Abweichung für den Stromverbrauch korrekt eingestellt sind.<br>Wenn du die Werte auf 0 lässt, wird keine Kalibrierung angewendet.</br><strong>Denk dran die Propeller vor Anschliessen eines Akkus zu entfernen!</strong>"
     },
     "powerCalibrationManagerWarning": {
-        "message": "<span class=\"message-negative\">Warnung:<\/span> Der Akku <span class=\"message-negative\">ist nicht angesteckt<\/span> oder die Spannungs- und Strom-Sensoren <span class=\"message-negative\">nicht richtig eingestellt.<\/span> Stelle sicher, dass die Spannung- und\/oder Stromwerte über 0 liegen. Andernfalls wirst du hiermit nicht kalibrieren können."
+        "message": "<span class=\"message-negative\">Warnung:</span> Der Akku <span class=\"message-negative\">ist nicht angesteckt</span> oder die Spannungs- und Strom-Sensoren <span class=\"message-negative\">nicht richtig eingestellt.</span> Stelle sicher, dass die Spannung- und/oder Stromwerte über 0 liegen. Andernfalls wirst du hiermit nicht kalibrieren können."
     },
     "powerCalibrationManagerSourceNote": {
-        "message": "<span class=\"message-negative\">Warnung:<\/span> Spannungs- und\/oder Strom-Messquellen <strong>wurden geändert, aber nicht gespeichert.<\/strong> Bitte stelle die richtigen Messquellen ein und speichere sie, bevor du versuchst zu Kalibrieren."
+        "message": "<span class=\"message-negative\">Warnung:</span> Spannungs- und/oder Strom-Messquellen <strong>wurden geändert, aber nicht gespeichert.</strong> Bitte stelle die richtigen Messquellen ein und speichere sie, bevor du versuchst zu Kalibrieren."
     },
     "powerCalibrationManagerConfirmationTitle": {
         "message": "Kalibrierungsmanager Bestätigung"
@@ -4312,13 +3580,13 @@
         "message": "Kalibrierung verwerfen"
     },
     "powerCalibrationConfirmHelp": {
-        "message": "Neue kalibrierte Skalen werden hier angezeigt. <br>Wenn du sie anwendest, werden die Skalen gesetzt, aber <strong>sie werden nicht gespeichert.<\/strong><\/br> <br>Stelle nach dem Speichern sicher, dass die neue Spannung- und Stromanzeige korrekt ist.<\/br>"
+        "message": "Neue kalibrierte Skalen werden hier angezeigt. <br>Wenn du sie anwendest, werden die Skalen gesetzt, aber <strong>sie werden nicht gespeichert.</strong></br> <br>Stelle nach dem Speichern sicher, dass die neue Spannung- und Stromanzeige korrekt ist.</br>"
     },
     "powerVoltageHead": {
         "message": "Voltmeter"
     },
     "powerVoltageWarning": {
-        "message": "<span class=\"message-negative\">Warnung:<\/span> Werte limitiert auf 25.5V."
+        "message": "<span class=\"message-negative\">Warnung:</span> Werte limitiert auf 25.5V."
     },
     "powerVoltageValue": {
         "message": "$1 V"
@@ -4411,7 +3679,7 @@
         "message": "Amperemeter"
     },
     "powerAmperageWarning": {
-        "message": "<span class=\"message-negative\">Warnung:<\/span> Werte limitiert auf 63.5A."
+        "message": "<span class=\"message-negative\">Warnung:</span> Werte limitiert auf 63.5A."
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -4468,7 +3736,7 @@
         "message": "$1 mAh"
     },
     "powerAmperageScale": {
-        "message": "Skalierung [1\/10tel mV\/A]"
+        "message": "Skalierung [1/10tel mV/A]"
     },
     "powerAmperageOffset": {
         "message": "Versatz [mA]"
@@ -4510,16 +3778,16 @@
         "message": "OSD"
     },
     "osdSetupNoOsdChipDetectWarning": {
-        "message": "<span class=\"message-negative\"><b>WARNUNG:<\/b><\/span> Es wurde kein OSD-Chip erkannt. Einige FCs können den OSD-Chip nicht richtig aktivieren, wenn sie nicht an einem Akku angeschlossen sind. Bitte verbinde einen Akku bevor der FC über USB angeschlossen wird (OHNE PROPELLER!)."
+        "message": "<span class=\"message-negative\"><b>WARNUNG:</b></span> Es wurde kein OSD-Chip erkannt. Einige FCs können den OSD-Chip nicht richtig aktivieren, wenn sie nicht an einem Akku angeschlossen sind. Bitte verbinde einen Akku bevor der FC über USB angeschlossen wird (OHNE PROPELLER!)."
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Hinweis:<\/strong> Die OSD-Vorschau zeigt möglicherweise nicht die aktuell auf dem Flugcontroller installierte Schriftart. Das Layout einzelner Elemente kann anders aussehen, wenn ältere Versionen der Firmware verwendet werden - bitte überprüfe das Bild vor dem Fliegen in deiner FPV-Brille."
+        "message": "<strong>Hinweis:</strong> Die OSD-Vorschau zeigt möglicherweise nicht die aktuell auf dem Flugcontroller installierte Schriftart. Das Layout einzelner Elemente kann anders aussehen, wenn ältere Versionen der Firmware verwendet werden - bitte überprüfe das Bild vor dem Fliegen in deiner FPV-Brille."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Dein FC reagiert nicht auf OSD-Kommandos. Das bedeutet wahrscheinlich, dass er kein eingebautes Betaflight-OSD hat."
     },
     "osdSetupUnsupportedNote2": {
-        "message": "Einige Flightcontroller haben ein eingebautes <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD<\/a>, das über <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a> konfiguriert und geflasht werden kann. Dieses MinimOSD kann allerdings nicht über dieses Fenster konfiguriert werden."
+        "message": "Einige Flightcontroller haben ein eingebautes <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD</a>, das über <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a> konfiguriert und geflasht werden kann. Dieses MinimOSD kann allerdings nicht über dieses Fenster konfiguriert werden."
     },
     "osdSetupProfilesTitle": {
         "message": "OSD-Profilnummer",
@@ -4532,21 +3800,9 @@
         "message": "Elemente zum Ändern der Position ziehen",
         "description": "Indicates in the preview window of the OSD that the user can drag the elements to reorder them"
     },
-    "osdSetupPreviewSelectProfileTitle": {
-        "message": "Vorschau für",
-        "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
-    },
-    "osdSetupPreviewForTitle": {
-        "message": "Das Ändern des Profils oder der Schriftart hier ändert NICHT das Profil oder die Schriftart im Flugcontroller. Es ist nur das Vorschaufenster betroffen. Wenn Du es ändern möchtest, musst Du die Option '$t(osdSetupSelectedProfileTitle.message)' oder die '$t(osdSetupFontManager.message)' verwenden.",
-        "description": "Help content for the OSD profile and font PREVIEW"
-    },
     "osdSetupSelectedProfileTitle": {
         "message": "Aktives OSD-Profil",
         "description": "Title of the box to select the current active OSD profile"
-    },
-    "osdSetupSelectedProfileLabel": {
-        "message": "Aktuell:",
-        "description": "Label for the selection of the curren active OSD profile"
     },
     "osdSetupPreviewSelectProfileElement": {
         "message": "OSD-Profil {{profileNumber}}",
@@ -4600,10 +3856,6 @@
         "message": "Eindruck-mini",
         "description": "Font Impact Mini"
     },
-    "osdSetupPreviewCheckZoom": {
-        "message": "Zoom",
-        "description": "Check to select a bigger display of the OSD preview in small screens"
-    },
     "osdSetupVideoFormatTitle": {
         "message": "Videoformat"
     },
@@ -4647,12 +3899,6 @@
     "osdSetupStatsTitle": {
         "message": "Zusammenfassung nach dem Flug"
     },
-    "osdSetupVtxTitle": {
-        "message": "VTX Einstellungen"
-    },
-    "osdSetupCraftNameTitle": {
-        "message": "Name des Fluggeräts"
-    },
     "osdSetupWarningsTitle": {
         "message": "Warnungen"
     },
@@ -4685,7 +3931,7 @@
         "message": "Darf nur grüne, schwarze und weiße Pixel enthalten"
     },
     "osdSetupCustomLogoInfoUploadHint": {
-        "message": "Klicke <b>$t(osdSetupUploadFont.message)<\/b> um ein eigenes Logo zu setzen"
+        "message": "Klicke <b>$t(osdSetupUploadFont.message)</b> um ein eigenes Logo zu setzen"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Das Bild enthält ein ungültiges Pixel: rgb({{valueR}}, {{valueG}}, {{valueB}}) an Postion {{posX}}×{{posY}}"
@@ -4701,27 +3947,6 @@
     },
     "osdSetupSave": {
         "message": "Speichern"
-    },
-    "osdSetupFontManager": {
-        "message": "Schriftartverwaltung"
-    },
-    "osdSetupUncheckAll": {
-        "message": "Markierung aufheben"
-    },
-    "osdSetupHead": {
-        "message": "Information"
-    },
-    "osdSetupVideoMode": {
-        "message": "Videomodus"
-    },
-    "osdSetupCameraConnected": {
-        "message": "Kamera verbunden"
-    },
-    "osdSetupResetText": {
-        "message": "OSD auf Standardwerte zurücksetzen"
-    },
-    "osdSetupButtonReset": {
-        "message": "Einstellungen zurücksetzen"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Batteriespannung",
@@ -5095,7 +4320,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRateProfile": {
-        "message": "Numerische Anzeige des aktiven PID-\/Ratenprofils"
+        "message": "Numerische Anzeige des aktiven PID-/Ratenprofils"
     },
     "osdTextElementBatteryWarning": {
         "message": "Akku-Warnung",
@@ -5109,7 +4334,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementAvgCellVoltage": {
-        "message": "Durchschnittliche Zellspannung (Batteriespannung \/ Zellzahl)"
+        "message": "Durchschnittliche Zellspannung (Batteriespannung / Zellzahl)"
     },
     "osdTextElementPitchAngle": {
         "message": "Winkel: Pitch",
@@ -5224,7 +4449,7 @@
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
     "osdDescElementRtcDateTime": {
-        "message": "Datum \/ Uhrzeit"
+        "message": "Datum / Uhrzeit"
     },
     "osdTextElementAdjustmentRange": {
         "message": "Anpassungsbereich",
@@ -5326,7 +4551,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPilotName": {
-        "message": "Pilotenname wie im Konfigurations-Tab festgelegt.<\/br>Kann auch über die CLI-Variable \"pilot_name\" gesetzt werden."
+        "message": "Pilotenname wie im Konfigurations-Tab festgelegt.</br>Kann auch über die CLI-Variable \"pilot_name\" gesetzt werden."
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM Frequenz",
@@ -5368,14 +4593,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
-        "message": "Fügt ein einstellbares Rahmenelement hinzu, das das Piloten Sichtfeld der HD-Kamera als Referenz darstellt.<br \/><br \/>Du kannst die Breite und Höhe im CLI mit 'osd_camera_frame_width' und 'osd_camera_frame_height' anpassen"
+        "message": "Fügt ein einstellbares Rahmenelement hinzu, das das Piloten Sichtfeld der HD-Kamera als Referenz darstellt.<br /><br />Du kannst die Breite und Höhe im CLI mit 'osd_camera_frame_width' und 'osd_camera_frame_height' anpassen"
     },
     "osdTextElementEfficiency": {
         "message": "Akkueffizienz",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEfficiency": {
-        "message": "Momentaner Akkuverbrauch in mAh\/Entfernung. (Benötigt gültigen GPS-Fix)"
+        "message": "Momentaner Akkuverbrauch in mAh/Entfernung. (Benötigt gültigen GPS-Fix)"
     },
     "osdTextTotalFlights": {
         "message": "Gesamtflüge",
@@ -5385,7 +4610,7 @@
         "message": "Ungefähre Anzahl der Gesamtflüge"
     },
     "osdTextElementUpDownReference": {
-        "message": "Höhere (Pitch 90 deg)\/Niedrigere(Pitch -90 deg) Referenz",
+        "message": "Höhere (Pitch 90 deg)/Niedrigere(Pitch -90 deg) Referenz",
         "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
     },
     "osdDescUpDownReference": {
@@ -5396,7 +4621,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescTxUplinkPower": {
-        "message": "Zeigt den Wert der Tx-Leistung (mW oder W). Nützlich, wenn <i>Dynamische Leistung<\/i> für bei unterstützten Fernsteuerungen aktiviert ist"
+        "message": "Zeigt den Wert der Tx-Leistung (mW oder W). Nützlich, wenn <i>Dynamische Leistung</i> für bei unterstützten Fernsteuerungen aktiviert ist"
     },
     "osdTextElementReadyMode": {
         "message": "Ready Modus",
@@ -5482,17 +4707,6 @@
     "osdDescStatEndBattery": {
         "message": "Akkuspannung zum Zeitpunkt des Disarmens"
     },
-    "osdTextStatFlyTime": {
-        "message": "Flugzeit gesamt",
-        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdTextStatArmedTime": {
-        "message": "Flugzeit seit letztem Scharfschalten",
-        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatArmedTime": {
-        "message": "Vergangene Zeit seit dem letzten Armen"
-    },
     "osdTextStatMaxDistance": {
         "message": "Maximale Entfernung zur Startposition",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5526,7 +4740,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatRtcDateTime": {
-        "message": "Datum \/ Uhrzeit"
+        "message": "Datum / Uhrzeit"
     },
     "osdTextStatBattery": {
         "message": "Batteriespannung",
@@ -5554,7 +4768,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEscRpm": {
-        "message": "Max Umdrehungen\/min"
+        "message": "Max Umdrehungen/min"
     },
     "osdTextStatMinLinkQuality": {
         "message": "Verbindungsqualität Minimum",
@@ -5654,15 +4868,6 @@
     "osdDescStatUnknown": {
         "message": "Unbekannte Statistik (Details werden in einer künftigen Version ergänzt)"
     },
-    "osdDescribeFontVersion1": {
-        "message": "Schriftversion: 1 (Betaflight 4.0 oder älter)"
-    },
-    "osdDescribeFontVersion2": {
-        "message": "Schriftversion: 2 (Betaflight 4.1 oder neuer)"
-    },
-    "osdDescribeFontVersionCUSTOM": {
-        "message": "Schriftversion: vom Benutzer bereitgestellt"
-    },
     "osdTimerSource": {
         "message": "Quelle:"
     },
@@ -5682,7 +4887,7 @@
         "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
-        "message": "An\/gearmte Zeit",
+        "message": "An/gearmte Zeit",
         "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
@@ -5776,7 +4981,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningEscFail": {
-        "message": "Liste der ESCs\/Motoren mit Fehlern (Drehzahl oder Temperatur außerhalb der konfigurierten Schwellwerte)"
+        "message": "Liste der ESCs/Motoren mit Fehlern (Drehzahl oder Temperatur außerhalb der konfigurierten Schwellwerte)"
     },
     "osdWarningTextCoreTemperature": {
         "message": "Kerntemperatur",
@@ -5887,22 +5092,19 @@
     "osdSettingsSaved": {
         "message": "OSD Einstellungen gespeichert"
     },
-    "osdWritePermissions": {
-        "message": "Keine <span class=\"message-negative\">Schreibrechte<\/span> für diese Datei"
-    },
     "osdButtonSaved": {
         "message": "Gespeichert"
     },
     "vtxMessageTableNotConfigured": {
-        "message": "<span class=\"message-negative\">Achtung:<\/span> Du musst die VTX-Tabelle unten ZUERST konfigurieren und speichern, bevor du die $t(vtxSelectedMode.message) Felder verwenden kannst.",
+        "message": "<span class=\"message-negative\">Achtung:</span> Du musst die VTX-Tabelle unten ZUERST konfigurieren und speichern, bevor du die $t(vtxSelectedMode.message) Felder verwenden kannst.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Achtung:<\/span> Der gewählte VTX-Typ unterstützt nicht die 'Standard' Einstellung für die Bänder, einige deiner Bänder haben aber diese Einstellung. Klicke$t(vtxButtonSave.message)', um dies zu beheben.",
+        "message": "<span class=\"message-negative\">Achtung:</span> Der gewählte VTX-Typ unterstützt nicht die 'Standard' Einstellung für die Bänder, einige deiner Bänder haben aber diese Einstellung. Klicke$t(vtxButtonSave.message)', um dies zu beheben.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Achtung:<\/span> Die Werte des VTX-Table wurden geladen, aber noch nicht auf dem Flugcontroller gespeichert. Sie müssen die Werte überprüfen und ändern, um sicherzustellen, dass sie in deinem Land gültig und legal sind und dann auf den $t(vtxButtonSave.message) Button drücken, um sie auf dem Flugcontroller zu speichern.",
+        "message": "<span class=\"message-negative\">Achtung:</span> Die Werte des VTX-Table wurden geladen, aber noch nicht auf dem Flugcontroller gespeichert. Sie müssen die Werte überprüfen und ändern, um sicherzustellen, dass sie in deinem Land gültig und legal sind und dann auf den $t(vtxButtonSave.message) Button drücken, um sie auf dem Flugcontroller zu speichern.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -6010,7 +5212,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPowerHelp": {
-        "message": "Angabe der Ausgangsleistung des vTX. Bedenke in Deutschland sind <b>nur 25mW <\/b>erlaubt. <br>Die Ausgangsleistung kann geändert werden, wenn die $t(vtxPitMode.message) oder die $t(vtxLowPowerDisarm.message) aktiviert sind",
+        "message": "Angabe der Ausgangsleistung des vTX. Bedenke in Deutschland sind <b>nur 25mW </b>erlaubt. <br>Die Ausgangsleistung kann geändert werden, wenn die $t(vtxPitMode.message) oder die $t(vtxLowPowerDisarm.message) aktiviert sind",
         "description": "Help text for the power field of the VTX tab"
     },
     "vtxPitMode": {
@@ -6058,7 +5260,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "Diese Tabelle repräsentiert die unterschiedlichen Werte der Leistung, die für die VTX verwendet werden können. Sie ist zweigeteilt: <br><b>- $t(vtxTablePowerLevelsValue.message):<\/b> Jede Leistungsstufe benötigt einen Wert, der vom Hardware-Hersteller definiert wird. Prüfe das Handbuchs des vTX welche gültigen Werte verwendet werden können oder konsultiere das Betaflight Wiki über VTX Tabellen. <br><b>- $t(vtxTablePowerLevelsLabel.message):<\/b> Du kannst hier das Label, das du für jeden Leistungswert verwenden möchten, eingeben. Es kann Zahlen (25, 200, 600, 1.2), Buchstaben (OFF, MIN, MAX) oder eine Mischung aus ihnen sein. <br><br>Du darfst <b>nur<\/b> die Leitungsebenen konfigurieren, die in deinem Land legal sind.",
+        "message": "Diese Tabelle repräsentiert die unterschiedlichen Werte der Leistung, die für die VTX verwendet werden können. Sie ist zweigeteilt: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> Jede Leistungsstufe benötigt einen Wert, der vom Hardware-Hersteller definiert wird. Prüfe das Handbuchs des vTX welche gültigen Werte verwendet werden können oder konsultiere das Betaflight Wiki über VTX Tabellen. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> Du kannst hier das Label, das du für jeden Leistungswert verwenden möchten, eingeben. Es kann Zahlen (25, 200, 600, 1.2), Buchstaben (OFF, MIN, MAX) oder eine Mischung aus ihnen sein. <br><br>Du darfst <b>nur</b> die Leitungsebenen konfigurieren, die in deinem Land legal sind.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -6098,39 +5300,31 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "Diese Tabelle repräsentiert alle Frequenzen, die für den VTX verwendet werden können. Du kannst mehrere Bänder nutzen und für jedes Band musst du folgendes konfigurieren:<br><b>- $t(vtxTableBandTitleName.message):<\/b> Name, den du diesem Band zuweisen möchtest, wie BOSCAM_A, FATSHARK oder RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):<\/b> Buchstabe, der das Band referenziert.<br><b>- $t(vtxTableBandTitleFactory.message):<\/b> Dies zeigt an, ob es sich um eine Standard-Band handelt. Wenn aktiviert, sendet Cleanflight an den VTX eine Band- und Kanalnummer. Der VTX wird dann seine eingebaute Frequenztabelle verwenden und die hier konfigurierten Frequenzen sind nur dazu da, um den Wert in dem OSD und anderen Orten anzuzeigen. Wenn die Funktion nicht aktiviert ist, sendet Cleanflight die reale Frequenz an den VTX, die hier konfiguriert ist.<br><b>- Frequenzen:<\/b> Frequenzen für dieses Band.<br><br>Denke daran, dass nicht alle Frequenzen in deinem Land legal sind. Du musst einen Wert von <b>Null<\/b> auf jeden Frequenzindex setzen, den du nicht verwenden darfst, um ihn zu deaktivieren.",
+        "message": "Diese Tabelle repräsentiert alle Frequenzen, die für den VTX verwendet werden können. Du kannst mehrere Bänder nutzen und für jedes Band musst du folgendes konfigurieren:<br><b>- $t(vtxTableBandTitleName.message):</b> Name, den du diesem Band zuweisen möchtest, wie BOSCAM_A, FATSHARK oder RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Buchstabe, der das Band referenziert.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Dies zeigt an, ob es sich um eine Standard-Band handelt. Wenn aktiviert, sendet Cleanflight an den VTX eine Band- und Kanalnummer. Der VTX wird dann seine eingebaute Frequenztabelle verwenden und die hier konfigurierten Frequenzen sind nur dazu da, um den Wert in dem OSD und anderen Orten anzuzeigen. Wenn die Funktion nicht aktiviert ist, sendet Cleanflight die reale Frequenz an den VTX, die hier konfiguriert ist.<br><b>- Frequenzen:</b> Frequenzen für dieses Band.<br><br>Denke daran, dass nicht alle Frequenzen in deinem Land legal sind. Du musst einen Wert von <b>Null</b> auf jeden Frequenzindex setzen, den du nicht verwenden darfst, um ihn zu deaktivieren.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
-    "vtxSavedFileOk": {
-        "message": "VTX Konfigurationsdatei <span class=\"message-positive\">gespeichert<\/span>",
-        "description": "Message in the GUI log when the VTX Config file is saved"
-    },
     "vtxSavedFileKo": {
-        "message": "<span class=\"message-negative\">Fehler<\/span> beim Speichern der VTX Konfigurationdatei",
+        "message": "<span class=\"message-negative\">Fehler</span> beim Speichern der VTX Konfigurationdatei",
         "description": "Message in the GUI log when the VTX Config file is saved"
-    },
-    "vtxSavedLuaFileOk": {
-        "message": "lua VTX-Konfigurationsdatei <span class=\"message-positive\">gespeichert<\/span>",
-        "description": "Message in the GUI log when the lua VTX Config file is saved"
     },
     "vtxSavedLuaFileKo": {
-        "message": "<span class=\"message-negative\">Fehler<\/span> beim Speichern der lua VTX-Konfigurationsdatei",
+        "message": "<span class=\"message-negative\">Fehler</span> beim Speichern der lua VTX-Konfigurationsdatei",
         "description": "Message in the GUI log when the lua VTX Config file saving has failed"
     },
     "vtxLoadFileOk": {
-        "message": "VTX Konfigurationsdatei <span class=\"message-positive\">geladen<\/span>",
+        "message": "VTX Konfigurationsdatei <span class=\"message-positive\">geladen</span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
     "vtxLoadFileKo": {
-        "message": "<span class=\"message-negative\">Fehler<\/span> beim Laden der VTX Konfiguration",
+        "message": "<span class=\"message-negative\">Fehler</span> beim Laden der VTX Konfiguration",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
     "vtxLoadClipboardOk": {
-        "message": "VTX Konfigurationsinfo aus Zwischenablage <span class=\"message-positive\">geladen<\/span>",
+        "message": "VTX Konfigurationsinfo aus Zwischenablage <span class=\"message-positive\">geladen</span>",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
     "vtxLoadClipboardKo": {
-        "message": "<span class=\"message-negative\">Fehler<\/span> beim Laden der VTX Config-Informationen aus der Zwischenablage. Vielleicht sind die Inhalte nicht korrekt",
+        "message": "<span class=\"message-negative\">Fehler</span> beim Laden der VTX Config-Informationen aus der Zwischenablage. Vielleicht sind die Inhalte nicht korrekt",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
     "vtxButtonSaveFile": {
@@ -6140,10 +5334,6 @@
     "vtxButtonSaveLua": {
         "message": "Lua Script speichern",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxLuaFileHelp": {
-        "message": "Der '$t(vtxButtonSaveLua.message)'-Button speichert eine <i>mcuid<\/i>.lua Datei, welche die VTX-Tabellenkonfiguration enthält. Diese kann mit den <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Skripten<\/a>verwendet werden.<br><br>Skripte ab Version 1.6.0 können die Datei direkt verwenden - für ältere Versionen der Skripte sollte sie so umbenannt werden, dass sie mit dem Modellnamen auf dem Sender übereinstimmt.",
-        "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
         "message": "Aus Datei laden",
@@ -6159,11 +5349,11 @@
     },
     "buttonSaving": {
         "message": "Speichern",
-        "description": "Show state of the Save button in the VTX\/LED tab"
+        "description": "Show state of the Save button in the VTX/LED tab"
     },
     "buttonSaved": {
         "message": "Gespeichert",
-        "description": "Saved action button in the VTX\/LED tab"
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} entsperrt",
@@ -6179,7 +5369,7 @@
         "message": "Serial Link Status"
     },
     "configurationEscProtocol": {
-        "message": "ESC\/Motor Protokoll"
+        "message": "ESC/Motor Protokoll"
     },
     "configurationEscProtocolHelp": {
         "message": "Wählen Sie Ihr Motorprotokoll. <br>Vergewissern Sie sich, dass das Protokoll von Ihrem ESC unterstützt wird; diese Informationen sollten auf der Website des Herstellers zu finden sein."
@@ -6192,23 +5382,17 @@
     },
     "configurationDshotBidir": {
         "message": "Bidirektionales DShot (benötigt unterstützte ESC Firmware)",
-        "description": "Feature for the ESC\/Motor"
+        "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
         "message": "Sendet ESC Daten an den FC via DShot Telemetrie. Wird von RPM Filterung und dynamischem Leerlauf benötigt. <br><br>Hinweis: Benötigt wird ein kompatibler ESC mit entsprechender Firmware, z.B. JESC, JazzMaverick, BLHeli-32.",
-        "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
+        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationPidProcessDenom": {
         "message": "PID Loop Frequenz"
     },
     "configurationPidProcessDenomHelp": {
-        "message": "Das Frequenzmaximum des PIDS Loops wird durch das Frequenzmaximum der Regler \/ des Mutterprotokolls limitiert."
-    },
-    "configurationGyroUse32kHz": {
-        "message": "Aktiviere Gyro 32kHz Samplingmodus"
-    },
-    "configurationGyroUse32kHzHelp": {
-        "message": "32kHz Gyro Raten sind nur möglich falls der Gyro das auch unterstützt . Bitte FC Dokumentation heranziehen"
+        "message": "Das Frequenzmaximum des PIDS Loops wird durch das Frequenzmaximum der Regler / des Mutterprotokolls limitiert."
     },
     "configurationAccHardware": {
         "message": "Beschleunigungssensor"
@@ -6216,47 +5400,11 @@
     "configurationSmallAngle": {
         "message": "Zum Armen maximal zulässiger Winkel"
     },
-    "configurationBatteryVoltage": {
-        "message": "Batterie Spannung"
-    },
-    "configurationBatteryCurrent": {
-        "message": "Batterie Strom"
-    },
-    "configurationBatteryMeterType": {
-        "message": "Typ des Spannungssensors"
-    },
-    "configurationBatteryMinimum": {
-        "message": "Minimale Zellspannung"
-    },
-    "configurationBatteryMaximum": {
-        "message": "Maximale Zellspannung"
-    },
-    "configurationBatteryWarning": {
-        "message": "Zellspannung ab der eine Warnung erzeugt wird"
-    },
-    "configurationBatteryScale": {
-        "message": "Skalierung des Spannungssensors"
-    },
-    "configurationCurrentMeterType": {
-        "message": "Stromsensor Typ"
-    },
-    "configurationCurrent": {
-        "message": "Skalierung des Stromsensors"
-    },
-    "configurationCurrentScale": {
-        "message": "Skalierung der Spannung nach Milliampere (1\/10 mV\/A)"
-    },
-    "configurationCurrentOffset": {
-        "message": "Abweichung in Millivolt Schritten"
-    },
-    "configurationBatteryMultiwiiCurrent": {
-        "message": "Aktieviere den nativen Support für die Messung des Stromflusses über Multiwii MSP"
-    },
     "pidTuningProfile": {
         "message": "Profile"
     },
     "pidTuningProfileTip": {
-        "message": "Bis zu 3 (bei manchen Fcs nur 2) verschiedene Profile für Pid Einstellungen können gespeichert. <br>Die Profile enthalten Pid Einstellungen, Setpoint sowie Angle\/Horzizon.<br> Einstellungen und können mit einfachen Stick-Kommandos (siehe Doku) oder per Osd umgestellt werden."
+        "message": "Bis zu 3 (bei manchen Fcs nur 2) verschiedene Profile für Pid Einstellungen können gespeichert. <br>Die Profile enthalten Pid Einstellungen, Setpoint sowie Angle/Horzizon.<br> Einstellungen und können mit einfachen Stick-Kommandos (siehe Doku) oder per Osd umgestellt werden."
     },
     "pidTuningRateProfile": {
         "message": "Ratenprofil"
@@ -6265,26 +5413,7 @@
         "message": "Je Profil können bis zu 3 verschiedene Ratenprofile auf dem FC gespeichert werden. <br>Diese enthalten Einstellungen zu 'RC Rate', 'Rate', 'Expo', 'Gas', sowie 'TPA'.<br> Der Wechsel zwischen den Ratenprofilen kann während des Fluges (durch Konfiguration eines 3-Positionsschalters als \"Ratenprofil-Wahlschalter\")."
     },
     "pidTuningRateSetup": {
-        "message": "Basic\/Acro Raten"
-    },
-    "pidTuningRateSetupHelp": {
-        "message": "Passe diese Werte an, um deine Drehraten festzulegen. Verwende die RC Rate, um die maximale Drehrate insgesamt zu erhöhen. Verwende die Super Rate, um am Ende des Knüppel-Ausschlags höhere Raten zu haben. Nutze RC Expo, damit sich Mitte des Knüppel-Weges sanfter anfühlt.",
-        "description": "Rate table helpicon message"
-    },
-    "pidTuningDelta": {
-        "message": "Derivative Method"
-    },
-    "pidTuningDeltaError": {
-        "message": "Fehler"
-    },
-    "pidTuningDeltaMeasurement": {
-        "message": "Messung"
-    },
-    "pidTuningPidControllerTip": {
-        "message": "<b>Legacy vs Betaflight (float):<\/b> PID Skalierung und PID Logik sind exakt gleich. Nicht notwendigerweise Neueinstellen notwendig. Legacy is das alte in Betaflight gewachsene rewrite, ein einfacher Integer-Arithmetik basierter Regler. Der Betaflight PID Regler nutzt Fleißkomma Arithmetik und hat viele neue Funktionen speziell für Multi-Rotor Anwendungen entwickelt.  <br> <b>Float vs Integer:<\/b> PID Skalierung und PID Logik sind exakt gleich. Kein Neueinstellen notwendig. F1 Boards haben keine FPU an Bord, somit belasten Fließkomma-Berechnungen die CPU Auslastung, und Integer Berechnungen verbessern die Performance. Jedoch liefert Fließkommaarithmetik die etwas höhere Genuigkeit."
-    },
-    "pidTuningFilterTip": {
-        "message": "<b>Gyro Soft Filter:<\/b> Tiefpassfilter für Gyro. Kleinerer Wert für mehr Filterung.<br><b>D-Term Filter:<\/b> Tiefpassfilter für D-Term. Beeinflusst D-Tuning. Kleiner Wert für mehr Filterung.<br><b>Yaw Filter:<\/b> Filtert Yaw-Werte. Kann bei Setups mit viel Rauschen auf der Yaw-Achse helfen."
+        "message": "Basic/Acro Raten"
     },
     "pidTuningRatesTip": {
         "message": "In der Anzeige siehst du, wie die eingestellten Rates sich auf Deine Stick-Ausschläge auswirken werden"
@@ -6299,13 +5428,13 @@
         "message": "Copter Name"
     },
     "configurationCraftNameHelp": {
-        "message": "Kann in Logs, Backup-Dateinamen und OSD angezeigt werden.<\/br>Kann über die <b>craft_name<\/b> CLI-Variable gesetzt werden."
+        "message": "Kann in Logs, Backup-Dateinamen und OSD angezeigt werden.</br>Kann über die <b>craft_name</b> CLI-Variable gesetzt werden."
     },
     "configurationPilotName": {
         "message": "Pilotenname"
     },
     "configurationPilotNameHelp": {
-        "message": "Kann im OSD angezeigt werden.<\/br>Kann über <b>pilot_name<\/b> CLI-Variable gesetzt werden."
+        "message": "Kann im OSD angezeigt werden.</br>Kann über <b>pilot_name</b> CLI-Variable gesetzt werden."
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV-Kamera Aufstellwinkel [Grad]"
@@ -6338,7 +5467,7 @@
         "message": "Massenspeicher-Modus"
     },
     "onboardLoggingMscNote": {
-        "message": "Startet neu im <strong>Massenspeicher-Geräte (MSC)<\/strong> Modus. Wenn aktiviert, wird der Onboard-Flashspeicher oder die SD-Karte auf deinem FC von dem Computer als Speichermedium erkannt und ermöglicht es, deine Log-Dateien herunterladen. Auswerfen und Neustart des FC, um den Massenspeicher-Modus zu verlassen."
+        "message": "Startet neu im <strong>Massenspeicher-Geräte (MSC)</strong> Modus. Wenn aktiviert, wird der Onboard-Flashspeicher oder die SD-Karte auf deinem FC von dem Computer als Speichermedium erkannt und ermöglicht es, deine Log-Dateien herunterladen. Auswerfen und Neustart des FC, um den Massenspeicher-Modus zu verlassen."
     },
     "onboardLoggingRebootMscText": {
         "message": "Aktiviere Massenspeicher-Modus"
@@ -6350,7 +5479,7 @@
         "message": "Bestätigen"
     },
     "dialogConfirmResetNote": {
-        "message": "WARNUNG: Dies setzt <strong>ALLE Einstellungen<\/strong> zurück! Das bedeutet <strong>nicht<\/strong> \"Zurücksetzen auf Werkseinstellungen\". Es können unerwartete Problemen auftreten. Eventuell ist ein erneutes Flashen notwendig, um sich wieder verbinden zu können."
+        "message": "WARNUNG: Dies setzt <strong>ALLE Einstellungen</strong> zurück! Das bedeutet <strong>nicht</strong> \"Zurücksetzen auf Werkseinstellungen\". Es können unerwartete Problemen auftreten. Eventuell ist ein erneutes Flashen notwendig, um sich wieder verbinden zu können."
     },
     "dialogConfirmResetConfirm": {
         "message": "Zurücksetzen"
@@ -6366,9 +5495,6 @@
     },
     "modeCameraChangeMode": {
         "message": "KAMERAMODUS UMSCHALTEN"
-    },
-    "flashTab": {
-        "message": "Firmware aktualisieren"
     },
     "cliAutoComplete": {
         "message": "Erweiterte CLI-Autovervollständigung"
@@ -6397,14 +5523,11 @@
     "pidTuningRcRateActual": {
         "message": "Mittlere Empfindlichkeit"
     },
-    "pidTuningAcroCenterSensitiviy": {
-        "message": "Maximale mittlere Empfindlichkeit"
-    },
     "dialogRatesTypeTitle": {
         "message": "Rates Typ ändern"
     },
     "dialogRatesTypeNote": {
-        "message": "<span class=\"message-negative\"><b>WARNUNG: Sie ändern den Drehraten Typ.<\/b><\/span> Wenn Du den Typ änderst, werden Deine aktuellen Werte als Default-Kurve festgelegt."
+        "message": "<span class=\"message-negative\"><b>WARNUNG: Sie ändern den Drehraten Typ.</b></span> Wenn Du den Typ änderst, werden Deine aktuellen Werte als Default-Kurve festgelegt."
     },
     "dialogRatesTypeConfirm": {
         "message": "Änderung"
@@ -6433,74 +5556,13 @@
         "message": "Nichts",
         "description": "One of the options selectable for the GPS SBAS system"
     },
-    "dialogFileNameTitle": {
-        "message": "Dateiname"
-    },
-    "dialogFileAlreadyExistsTitle": {
-        "message": "Diese Datei existiert bereits!"
-    },
-    "dialogFileAlreadyExistsDescription": {
-        "message": "Überschreiben?"
-    },
-    "cordovaCheckingWebview": {
-        "message": "Webview-Anwendungen werden überprüft..."
-    },
-    "cordovaIncompatibleWebview": {
-        "message": "Inkompatible Webansicht"
-    },
-    "cordovaWebviewTroubleshootingMsg2": {
-        "message": "Das untenstehende Tool soll helfen, eine neue Webansicht zu installieren oder eine bereits installierte Webansicht zu aktualisieren."
-    },
-    "cordovaAvailableWebviews": {
-        "message": "Verfügbare Webview-Anwendungen auf deinem Gerät"
-    },
-    "cordovaWebviewInstall": {
-        "message": "Das Aktualisieren der <b>{{app}}<\/b> App kann dieses Kompatibilitätsproblem beheben."
-    },
-    "cordovaWebviewInstallBtn": {
-        "message": "Aus dem Google Play Store installieren"
-    },
-    "cordovaWebviewUninstall": {
-        "message": "Deinstallieren der <b>{{app}}<\/b> App kann dieses Kompatibilitätsproblem beheben. Wenn Du es nicht deinstallieren kanst, deaktiviere es in der Einstellungs-App."
-    },
-    "cordovaWebviewUninstallBtn1": {
-        "message": "Aus dem Google Play Store deinstallieren"
-    },
-    "cordovaWebviewUninstallBtn2": {
-        "message": "Deinstallieren\/Deaktivieren von den Einstellungen"
-    },
-    "cordovaWebviewUpdate": {
-        "message": "Das Aktualisieren der <b>{{app}}<\/b> App kann dieses Kompatibilitätsproblem beheben."
-    },
-    "cordovaWebviewUpdateBtn": {
-        "message": "Aus dem Google Play Store aktualisieren"
-    },
-    "cordovaWebviewEnableBtn": {
-        "message": "Einstellungen öffnen"
-    },
-    "cordovaWebviewIncompatible": {
-        "message": "Dein Gerät scheint nicht kompatibel zu sein. Versuche einen anderen Weg, um dein WebView zu aktualisieren"
-    },
-    "cordovaNoWebview": {
-        "message": "Keine Webview-Anwendung installiert \/ aktiviert"
-    },
-    "cordovaWebviewUsed": {
-        "message": "verwendet"
-    },
-    "cordovaExitAppTitle": {
-        "message": "Bestätigung"
-    },
-    "dropDownSelectAll": {
-        "message": "Auswählen\/alle abwählen",
-        "description": "Select all item in the drop down\/multiple select"
-    },
     "dropDownFilterDisabled": {
         "message": "Auswahl...",
-        "description": "Text indicating nothing is selected in the drop down\/multiple select (filter disabled)"
+        "description": "Text indicating nothing is selected in the drop down/multiple select (filter disabled)"
     },
     "dropDownAll": {
         "message": "Alle",
-        "description": "Text indicating everything is selected in the drop down\/multiple select"
+        "description": "Text indicating everything is selected in the drop down/multiple select"
     },
     "tabPresets": {
         "message": "Presets",
@@ -6580,7 +5642,7 @@
     },
     "presetsFilterStatus": {
         "message": "Status",
-        "description": "UI filter name - official\/community\/experimental"
+        "description": "UI filter name - official/community/experimental"
     },
     "presetsLoadError": {
         "message": "Fehler beim Laden der Presets (Voreinstellungen) aus dem Internet",
@@ -6617,10 +5679,6 @@
     "presetsWarningDialogNoButton": {
         "message": "Abbrechen",
         "description": "Cancel button in the presets warning dialog"
-    },
-    "presetsWiki": {
-        "message": "Presets Wiki",
-        "description": "Button to open Presets Wiki link"
     },
     "presetsBackupSave": {
         "message": "Backup speichern",
@@ -6671,23 +5729,23 @@
         "description": "Presets tab, sources dialog, button to delete selected source"
     },
     "presetsWarningNotOfficialSource": {
-        "message": "<span class=\"message-negative\">WARNUNG!<\/span> Eine Preset Quelle von Dritten ist ausgewählt.",
+        "message": "<span class=\"message-negative\">WARNUNG!</span> Eine Preset Quelle von Dritten ist ausgewählt.",
         "description": "Warning message that shows up when a third party preset source is selected"
     },
     "presetsFailedToLoadRepositories": {
-        "message": "<span class=\"message-negative\">WARNUNG!<\/span> Fehler beim Laden der folgenden Repos: <b>{{repos}}<\/b>",
+        "message": "<span class=\"message-negative\">WARNUNG!</span> Fehler beim Laden der folgenden Repos: <b>{{repos}}</b>",
         "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
-        "message": "Bitte sichere Deine aktuelle Konfiguration ('$t(presetsBackupSave.message)'-Button oder über CLI, falls der Button deaktiviert ist) <strong>bevor<\/strong> du Voreinstellungen wählst und anwendest. Es gibt <b>keine Möglichkeit<\/b>, nach der Anwendung der Presets zur vorherigen Konfiguration zurückzukehren.",
+        "message": "Bitte sichere Deine aktuelle Konfiguration ('$t(presetsBackupSave.message)'-Button oder über CLI, falls der Button deaktiviert ist) <strong>bevor</strong> du Voreinstellungen wählst und anwendest. Es gibt <b>keine Möglichkeit</b>, nach der Anwendung der Presets zur vorherigen Konfiguration zurückzukehren.",
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">ACHTUNG!<\/span> Die Verwendung von Preset-Quellen von Dritten kann gefährlich sein.<br\/>Stelle sicher, dass du nur vertrauenswürdige Quellen hinzufügst und verwendest. Schädliche oder schlechte Preset-Quellen können deine Konfiguration beschädigen und\/oder negative Auswirkungen auf das Flugverhalten deines Copters haben.",
+        "message": "<span class=\"message-negative\">ACHTUNG!</span> Die Verwendung von Preset-Quellen von Dritten kann gefährlich sein.<br/>Stelle sicher, dass du nur vertrauenswürdige Quellen hinzufügst und verwendest. Schädliche oder schlechte Preset-Quellen können deine Konfiguration beschädigen und/oder negative Auswirkungen auf das Flugverhalten deines Copters haben.",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
-        "message": "Ausgewählte Voreinstellung erfordert Firmware-Version $1<br\/> Aktuelle Firmware-Version ist $2",
+        "message": "Ausgewählte Voreinstellung erfordert Firmware-Version $1<br/> Aktuelle Firmware-Version ist $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
@@ -6698,12 +5756,8 @@
         "message": "Maximale Anzahl der angezeigten Presets erreicht",
         "description": "Message that appears on presets tab if too many presets found"
     },
-    "presetsOptionsPlaceholder": {
-        "message": "ACHTUNG! Überprüfe die Liste der Optionen",
-        "description": "Placeholder for the options list dropdown"
-    },
     "presetsVersionMismatch": {
-        "message": "Falsche Preset-Souce-Version.<br\/>Benötigte Version: {{versionRequired}}<br\/>Prese-Version: {{versionSource}}<br\/>Verwendung dieser Preset-Quelle könnte gefährlich sein.<br\/>Möchtest Du fortfahren?",
+        "message": "Falsche Preset-Souce-Version.<br/>Benötigte Version: {{versionRequired}}<br/>Prese-Version: {{versionSource}}<br/>Verwendung dieser Preset-Quelle könnte gefährlich sein.<br/>Möchtest Du fortfahren?",
         "description": "Placeholder for the options list dropdown"
     },
     "presetsReviewOptionsWarning": {
@@ -6750,7 +5804,7 @@
         "message": "Wählen Sie das OSD-Protokoll aus, das Sie verwenden möchten. Beachten Sie, dass dies ein Dropdown-Menü ist, aber nur ein Element ausgewählt werden kann."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Besonders nützlich für Entwickler: wähle einen zusammengeführten PR aus, gib einen Commit SHA an, oder gib einen 'noch nicht zusammengeführten' PR durch Eingabe von # gefolgt von der PR-Nummer an, z.B. #1234 (Kurzform für den Branch 'pull\/1234\/head')."
+        "message": "Besonders nützlich für Entwickler: wähle einen zusammengeführten PR aus, gib einen Commit SHA an, oder gib einen 'noch nicht zusammengeführten' PR durch Eingabe von # gefolgt von der PR-Nummer an, z.B. #1234 (Kurzform für den Branch 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Für Entwickler: füge beliebige Definitionen hinzu, getrennt durch ein `Leerzeichen`, aber ohne das `USE_` Präfix (wird automatisch hinzugefügt)."

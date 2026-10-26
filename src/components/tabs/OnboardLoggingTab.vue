@@ -12,15 +12,14 @@
                 'blackbox-unsupported': blackboxSupport === 'no',
                 'msc-supported': mscSupported,
                 'msc-not-ready': !mscReady,
-                'sdcard-error': sdcardState === MSP.SDCARD_STATE_FATAL,
-                'sdcard-initializing':
-                    sdcardState === MSP.SDCARD_STATE_CARD_INIT || sdcardState === MSP.SDCARD_STATE_FS_INIT,
-                'sdcard-ready': sdcardState === MSP.SDCARD_STATE_READY,
+                'sdcard-error': sdcardState === SdcardState.FATAL,
+                'sdcard-initializing': sdcardState === SdcardState.CARD_INIT || sdcardState === SdcardState.FS_INIT,
+                'sdcard-ready': sdcardState === SdcardState.READY,
             }"
         >
             <div class="content_wrapper">
                 <div class="tab_title">{{ $t("tabOnboardLogging") }}</div>
-                <WikiButton docUrl="logging" />
+                <WikiButton docUrl="onboard_logging" />
 
                 <div class="require-blackbox-unsupported note">
                     <p>{{ $t("blackboxNotSupported") }}</p>
@@ -316,10 +315,6 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
-import GUI from "../../js/gui";
-import MSP from "../../js/msp";
-import MSPCodes, { MSP2TextType } from "../../js/msp/MSPCodes";
-import { mspHelper } from "../../js/msp/MSPHelper";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
 import semver from "semver";
@@ -332,7 +327,6 @@ import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../../js/ConfigStorage";
 import { getTracking } from "../../js/Analytics";
 import { sensorTypes } from "../../js/sensor_types";
-import { MspCancelledError } from "../../js/msp/mspErrors";
 import { bit_check, bit_set } from "../../js/bit";
 import { useDirtyState } from "../../composables/useDirtyState";
 import { useSaving } from "../../composables/useSaving";
@@ -341,6 +335,12 @@ import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { runTabLoad } from "../../composables/useTabLoad";
 import { useDataflashErase } from "../../composables/useDataflashErase";
+import {
+    useOnboardLoggingData,
+    isMspCancelled,
+    SdcardState,
+} from "../../composables/onboardLogging/useOnboardLoggingData";
+import { useOnboardLoggingSave } from "../../composables/onboardLogging/useOnboardLoggingSave";
 
 const BLOCK_SIZE = 4096;
 
@@ -399,6 +399,14 @@ export default defineComponent({
         const debugStore = useDebugStore();
         const { isSaving, runSave } = useSaving();
         const { saveAndReboot } = useReboot();
+        const {
+            loadOnboardLoggingData,
+            requestDataflashSummary,
+            requestSdcardSummary,
+            readDataflash,
+            rebootToMassStorage,
+        } = useOnboardLoggingData();
+        const { sendLoggingConfig } = useOnboardLoggingSave();
 
         // Refs
         const eraseOpen = ref(false);
@@ -564,15 +572,15 @@ export default defineComponent({
 
         const sdcardStatusText = computed(() => {
             switch (sdcardState.value) {
-                case MSP.SDCARD_STATE_NOT_PRESENT:
+                case SdcardState.NOT_PRESENT:
                     return i18n.getMessage("sdcardStatusNoCard");
-                case MSP.SDCARD_STATE_FATAL:
+                case SdcardState.FATAL:
                     return i18n.getMessage("sdcardStatusReboot");
-                case MSP.SDCARD_STATE_READY:
+                case SdcardState.READY:
                     return i18n.getMessage("sdcardStatusReady");
-                case MSP.SDCARD_STATE_CARD_INIT:
+                case SdcardState.CARD_INIT:
                     return i18n.getMessage("sdcardStatusStarting");
-                case MSP.SDCARD_STATE_FS_INIT:
+                case SdcardState.FS_INIT:
                     return i18n.getMessage("sdcardStatusFileSystem");
                 default:
                     return i18n.getMessage("sdcardStatusUnknown", [sdcardState.value]);
@@ -580,7 +588,7 @@ export default defineComponent({
         });
 
         const mscReady = computed(() => {
-            return dataflashPresent.value || sdcardState.value === MSP.SDCARD_STATE_READY;
+            return dataflashPresent.value || sdcardState.value === SdcardState.READY;
         });
 
         const mscSupported = computed(() => {
@@ -664,10 +672,7 @@ export default defineComponent({
                 });
                 fcStore.blackbox.blackboxDisabledMask = mask;
 
-                await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
-
-                fcStore.pidAdvancedConfig.debugMode = debugMode.value;
-                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+                await sendLoggingConfig(debugMode);
 
                 // Between the parameter group write and the persist that serialises it, so a
                 // refused port throws before anything reaches EEPROM.
@@ -695,14 +700,6 @@ export default defineComponent({
             cancelFlashErase();
         }
 
-        function flashUpdateSummary(onDone?: () => void) {
-            MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, () => {
-                if (onDone) {
-                    onDone();
-                }
-            });
-        }
-
         function showSavingDialog() {
             saveProgress.value = 0;
             saveCancelled.value = false;
@@ -721,12 +718,12 @@ export default defineComponent({
                     2,
                 )}kB / s) with block size ${blockSize.value}.`,
             );
-            if (!Number.isNaN(totalBytesCompressed)) {
+            if (totalBytesCompressed !== null) {
                 console.log(
                     "Compressed into",
                     totalBytesCompressed,
                     "bytes with mean compression factor of",
-                    totalBytes / Number(totalBytesCompressed),
+                    totalBytes / totalBytesCompressed,
                 );
             }
 
@@ -775,16 +772,17 @@ export default defineComponent({
         }
 
         async function flashSaveBegin(alsoErase = false) {
-            if (!GUI.connected_to || dataflashUsedSize.value === 0) {
+            if (!connectionStore.connectedTo || dataflashUsedSize.value === 0) {
                 return;
             }
 
             blockSize.value = BLOCK_SIZE;
 
             // Refresh the occupied size
-            flashUpdateSummary(async () => {
+            requestDataflashSummary(async () => {
                 const maxBytes = fcStore.dataflash?.usedSize || 0;
-                let openedFile: Awaited<ReturnType<typeof FileSystem.openFile>> | undefined;
+                // Assigned before the first readDataflash(), so every onChunkRead sees it.
+                let openedFile: Awaited<ReturnType<typeof FileSystem.openFile>>;
 
                 try {
                     const prefix = "BLACKBOX_LOG";
@@ -797,6 +795,10 @@ export default defineComponent({
                         `.${suffix}`,
                         "blackbox-dump-file",
                     );
+                    // Android returns null when the picker is dismissed; the other platforms throw AbortError.
+                    if (!fileWriter) {
+                        return;
+                    }
 
                     let nextAddress = 0;
                     // null once a chunk reports no compressed size
@@ -811,7 +813,7 @@ export default defineComponent({
                         error?: unknown,
                     ) {
                         if (error) {
-                            if (error instanceof MspCancelledError) {
+                            if (isMspCancelled(error)) {
                                 dismissSavingDialog();
                                 FileSystem.closeFile(openedFile);
                                 return;
@@ -829,11 +831,10 @@ export default defineComponent({
                         if (chunkDataView !== null) {
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
-                                if (Number.isNaN(bytesCompressed) || Number.isNaN(totalBytesCompressed)) {
+                                if (bytesCompressed == null || totalBytesCompressed === null) {
                                     totalBytesCompressed = null;
                                 } else {
-                                    // Number() spells out what `+=` did: null counts as 0, undefined as NaN
-                                    totalBytesCompressed = Number(totalBytesCompressed) + Number(bytesCompressed);
+                                    totalBytesCompressed += bytesCompressed;
                                 }
 
                                 // Clamp: the final chunk can push nextAddress past the
@@ -870,7 +871,7 @@ export default defineComponent({
                                         dismissSavingDialog();
                                         FileSystem.closeFile(openedFile);
                                     } else {
-                                        mspHelper.dataflashRead(nextAddress, blockSize.value, onChunkRead);
+                                        readDataflash(nextAddress, blockSize.value, onChunkRead);
                                     }
                                 });
                             } else {
@@ -880,13 +881,13 @@ export default defineComponent({
                             }
                         } else {
                             // Error - retry
-                            mspHelper.dataflashRead(nextAddress, blockSize.value, onChunkRead);
+                            readDataflash(nextAddress, blockSize.value, onChunkRead);
                         }
                     }
 
                     const startTime = Date.now();
                     openedFile = await FileSystem.openFile(fileWriter);
-                    mspHelper.dataflashRead(nextAddress, blockSize.value, onChunkRead);
+                    readDataflash(nextAddress, blockSize.value, onChunkRead);
                 } catch (error) {
                     console.error("Error saving blackbox file:", error);
                     gui_log(i18n.getMessage("dataflashFileWriteFailed"));
@@ -904,13 +905,7 @@ export default defineComponent({
                 return;
             }
 
-            const buffer = [];
-            if (GUI.operating_system === "Linux") {
-                buffer.push(mspHelper.REBOOT_TYPES.MSC_UTC);
-            } else {
-                buffer.push(mspHelper.REBOOT_TYPES.MSC);
-            }
-            MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+            rebootToMassStorage();
         }
 
         function updateHtml() {
@@ -918,30 +913,30 @@ export default defineComponent({
                 sdcardTimer = setTimeout(() => {
                     sdcardTimer = null;
                     if (connectionStore.connectionValid) {
-                        MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, updateHtml);
+                        requestSdcardSummary(updateHtml);
                     }
                 }, 2000);
             }
 
             // Track logging status
             let loggingStatus;
-            if (dataflashPresent.value && sdcardState.value === MSP.SDCARD_STATE_NOT_PRESENT) {
+            if (dataflashPresent.value && sdcardState.value === SdcardState.NOT_PRESENT) {
                 loggingStatus = "Dataflash";
             } else {
                 switch (sdcardState.value) {
-                    case MSP.SDCARD_STATE_NOT_PRESENT:
+                    case SdcardState.NOT_PRESENT:
                         loggingStatus = "SdCard: NotPresent";
                         break;
-                    case MSP.SDCARD_STATE_FATAL:
+                    case SdcardState.FATAL:
                         loggingStatus = "SdCard: Error";
                         break;
-                    case MSP.SDCARD_STATE_READY:
+                    case SdcardState.READY:
                         loggingStatus = "SdCard: Ready";
                         break;
-                    case MSP.SDCARD_STATE_CARD_INIT:
+                    case SdcardState.CARD_INIT:
                         loggingStatus = "SdCard: Init";
                         break;
-                    case MSP.SDCARD_STATE_FS_INIT:
+                    case SdcardState.FS_INIT:
                         loggingStatus = "SdCard: FsInit";
                         break;
                     default:
@@ -960,53 +955,31 @@ export default defineComponent({
         }
 
         async function loadData() {
-            try {
-                await runTabLoad(
-                    async () => {
-                        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-                        await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-                        await MSP.promise(MSPCodes.MSP_SDCARD_SUMMARY);
-                        await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
-                        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-                        await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+            await runTabLoad(
+                async () => {
+                    await loadOnboardLoggingData();
 
-                        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                            await MSP.promise(
-                                MSPCodes.MSP2_GET_TEXT,
-                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
-                            );
-                        } else {
-                            await MSP.promise(MSPCodes.MSP_NAME);
-                        }
+                    // Populate UI state
+                    await loadBlackboxPort();
 
-                        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                            await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
-                        }
+                    blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
+                    blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
+                    debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
-                        // Populate UI state
-                        await loadBlackboxPort();
+                    // Initialize debug fields checkboxes
+                    if (showDebugFields.value) {
+                        const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
+                        debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
+                            return !bit_check(disabledMask, index);
+                        });
+                    }
 
-                        blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
-                        blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
-                        debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
-
-                        // Initialize debug fields checkboxes
-                        if (showDebugFields.value) {
-                            const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
-                            debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
-                                return !bit_check(disabledMask, index);
-                            });
-                        }
-
-                        updateVirtualGyro();
-                        markClean();
-                        updateHtml();
-                    },
-                    (error) => console.error("Failed to load onboard logging data", error),
-                );
-            } finally {
-                GUI.content_ready();
-            }
+                    updateVirtualGyro();
+                    markClean();
+                    updateHtml();
+                },
+                (error) => console.error("Failed to load onboard logging data", error),
+            );
         }
 
         onMounted(() => {
@@ -1021,7 +994,7 @@ export default defineComponent({
         });
 
         return {
-            MSP,
+            SdcardState,
             eraseOpen,
             saveOpen,
             saveDone,
@@ -1249,8 +1222,8 @@ export default defineComponent({
         background-position: 21px 20px;
         background-size: 50px 50px;
         background-repeat: no-repeat;
-        background-color: #808080;
-        border: 1px solid #888888;
+        background-color: var(--surface-700);
+        border: 1px solid var(--surface-700);
         border-radius: 45px;
     }
 }
@@ -1349,8 +1322,8 @@ export default defineComponent({
         display: block;
     }
     .sdcard-icon {
-        background-color: #56ac1d;
-        border: 1px solid #5bbb1b;
+        background-color: var(--success-600);
+        border: 1px solid var(--success-500);
     }
 }
 .tab-onboard_logging.blackbox-supported {
@@ -1394,14 +1367,14 @@ export default defineComponent({
 }
 .tab-onboard_logging.sdcard-error {
     .sdcard-icon {
-        background-color: #e60000;
-        border: 1px solid #fe0000;
+        background-color: var(--error-500);
+        border: 1px solid var(--error-400);
     }
 }
 .tab-onboard_logging.sdcard-initializing {
     .sdcard-icon {
-        background-color: #64a5f6;
-        border: 1px solid #68a7ff;
+        background-color: var(--info-500);
+        border: 1px solid var(--info-500);
     }
 }
 </style>

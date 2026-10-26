@@ -311,19 +311,16 @@ import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
-import GUI from "../../js/gui";
 import { useInterval } from "../../composables/useInterval";
 import { have_sensor } from "../../js/sensor_helpers";
-import { mspHelper } from "../../js/msp/MSPHelper";
-import MSP from "../../js/msp";
+import { useSetupData } from "../../composables/setup/useSetupData";
 import Model from "../../js/model";
-import MSPCodes from "../../js/msp/MSPCodes";
-import { isMspCancelled } from "@/js/msp/mspErrors";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
-import { flightIndicator } from "../../../libraries/flightIndicators";
+import { flightIndicator } from "../../js/flightIndicators";
+import { tabSwitchCleanup } from "../../js/tab_adapters";
 
 const { t } = useTranslation();
 
@@ -484,6 +481,7 @@ if (fcStore.config.armingDisableCount > 0) {
 }
 
 const { addInterval, removeAllIntervals } = useInterval();
+const { loadSetupData, rebootToBootloader, resetSettings, requestAttitude, requestSonar } = useSetupData();
 
 const updateExpertMode = (enabled: boolean) => {
     isExpert.value = enabled;
@@ -500,11 +498,7 @@ function resetZaxis() {
 }
 
 function onRebootBootloader() {
-    const buffer = [];
-    buffer.push(
-        fcStore.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER,
-    );
-    MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+    rebootToBootloader();
 }
 
 function showConfirmReset() {
@@ -517,9 +511,9 @@ function cancelConfirmReset() {
 
 function confirmReset() {
     confirmResetOpen.value = false;
-    MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
+    resetSettings(function () {
         gui_log(t("initialSetupSettingsRestored"));
-        GUI.tab_switch_cleanup(function () {
+        tabSwitchCleanup(function () {
             // Re-initialize the Setup tab component directly (avoid legacy TABS reference)
             initialize();
         });
@@ -536,23 +530,9 @@ let boundModelResize: (() => void) | null = null;
 
 async function initialize() {
     cleanup();
-    try {
-        await MSP.promise(MSPCodes.MSP_ACC_TRIM, false);
-        await MSP.promise(MSPCodes.MSP_STATUS_EX, false);
-        await MSP.promise(MSPCodes.MSP2_MCU_INFO, false);
-        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG, false);
-        // motor_count drives resolveMixerModelFile() for Custom mmix (e.g. 4 → quad_x).
-        await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG, false);
-        await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT, false);
-        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG, false);
-    } catch (e) {
-        // Switching away mid-sequence clears the MSP queue and cancels these requests. The tab
-        // is being torn down, so there is nothing left to render and nothing to report — going
-        // on to process_html() would only warn that the canvas it wants is already gone.
-        if (isMspCancelled(e)) {
-            return;
-        }
-        console.warn("Error during Setup initialize sequence:", e);
+    // false: switching away cancelled the load, so the tab is being torn down and has nothing to render
+    if (!(await loadSetupData())) {
+        return;
     }
 
     // For SFC we don't need to load HTML, just process it
@@ -708,7 +688,7 @@ function process_html() {
     }
 
     function get_fast_data() {
-        MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
+        requestAttitude(function () {
             if (mountedFlag) {
                 const formatAttitude = (val: number) => {
                     const fixed = val.toFixed(1);
@@ -730,7 +710,7 @@ function process_html() {
         });
 
         if (have_sensor(fcStore.config.activeSensors, "sonar")) {
-            MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
+            requestSonar(function () {
                 if (mountedFlag) {
                     state.sonar = `${fcStore.sensorData.sonar.toFixed(1)} cm`;
                 }
@@ -740,9 +720,6 @@ function process_html() {
 
     addInterval("setup_data_pull_fast", get_fast_data, 33, true);
     addInterval("setup_data_pull_slow", get_slow_data, 250, true);
-
-    // notify GUI that content is ready
-    GUI.content_ready(() => {});
 }
 
 function initializeInstruments() {
@@ -829,14 +806,14 @@ function openBuildOptionsDialog() {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .tab-setup {
     #interactive_block {
         position: relative;
         background-color: var(--surface-200);
         border-radius: 1rem;
         border: 2px solid var(--surface-400);
-        :deep(.reset-zaxis) {
+        .reset-zaxis {
             position: absolute;
             top: 0.75rem;
             inset-inline-end: 0.75rem;
@@ -886,42 +863,53 @@ function openBuildOptionsDialog() {
             vertical-align: baseline;
         }
     }
-}
-#canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-.attitude_info {
-    position: absolute;
-    top: 1rem;
-    inset-inline-start: 1rem;
-    margin: 0;
-    font-weight: normal;
-    color: var(--surface-950);
-    dl {
+    #canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .attitude_info {
+        position: absolute;
+        top: 1rem;
+        inset-inline-start: 1rem;
+        margin: 0;
+        font-weight: normal;
+        color: var(--surface-950);
+        dl {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        dd {
+            white-space: pre;
+        }
+    }
+    .instruments-right {
+        position: absolute;
+        bottom: 1rem;
+        inset-inline-end: 1rem;
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        pointer-events: none;
+    }
+    .buttons {
+        bottom: 20px;
+    }
+    .disarm-flag {
+        padding-inline-end: 5px;
+        display: inline-block;
+    }
+
+    /* semantic label/value grid used to replace layout tables for accessibility */
+    .cf-info-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 0.25rem 1rem;
+        align-items: baseline;
+        width: 100%;
     }
-    dd {
-        white-space: pre;
-    }
 }
-.instruments-right {
-    position: absolute;
-    bottom: 1rem;
-    inset-inline-end: 1rem;
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    pointer-events: none;
-}
-.dialogBuildInfo {
-    transition: all 0.2s;
-    overflow-x: hidden;
-    overflow-y: auto;
-    width: min-content;
-    height: min-content;
-}
+
+/* The build info dialog is teleported out of the tab, so its rules sit outside .tab-setup. */
 .dialogBuildInfoGrid-container {
     display: grid;
     grid-template-columns: auto auto;
@@ -930,30 +918,5 @@ function openBuildOptionsDialog() {
 .dialogBuildInfoGrid-item {
     padding: 5px 5px 3px 5px;
     user-select: text;
-}
-.buttons {
-    bottom: 20px;
-}
-.disarm-flag {
-    padding-inline-end: 5px;
-    display: inline-block;
-}
-
-/* semantic label/value grid used to replace layout tables for accessibility */
-.cf-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.25rem 1rem;
-    align-items: baseline;
-    width: 100%;
-}
-.cf-info-grid dt {
-    font-weight: bold;
-    margin: 0;
-}
-.cf-info-grid dd {
-    margin: 0;
-    min-width: 0;
-    overflow-wrap: break-word;
 }
 </style>

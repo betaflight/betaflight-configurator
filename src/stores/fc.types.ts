@@ -56,7 +56,6 @@ export interface AdvancedTuning {
     levelAngleLimit: number;
     levelSensitivity: number;
     itermThrottleThreshold: number;
-    itermAcceleratorGain: number;
     antiGravityGain: number;
     itermRotation: number;
     smartFeedforward: number;
@@ -290,10 +289,6 @@ export interface FailsafeConfig {
     failsafe_procedure: number;
 }
 
-export interface FcLoopConfig {
-    loopTime: number;
-}
-
 // The mask starts as null and becomes a Features instance when a connection is established.
 export interface FeatureConfig {
     features: Features | null;
@@ -433,18 +428,6 @@ export interface McuInfo {
     id: number;
     // Reset to 0; MSP2_MCU_INFO sets the MCU name string.
     name: string | number;
-}
-
-export interface MiscConfig {
-    failsafe_throttle: number;
-    gps_baudrate: number;
-    multiwiicurrentoutput: number;
-    placeholder2: number;
-    vbatscale: number;
-    vbatmincellvoltage: number;
-    vbatmaxcellvoltage: number;
-    vbatwarningcellvoltage: number;
-    batterymetertype: number;
 }
 
 export interface MixerConfig {
@@ -604,8 +587,6 @@ export interface RxConfig {
     elrsUid: number[];
     // Only sent for API >= 1.47.
     elrsModelId?: number;
-    // Set by MSP_MISC only.
-    midrc?: number;
 }
 
 export interface SdcardSummary {
@@ -803,79 +784,77 @@ export interface WingConfig {
 }
 
 export interface FcState {
-    ADJUSTMENT_RANGES: AdjustmentRange[];
-    ADVANCED_TUNING: AdvancedTuning;
-    ADVANCED_TUNING_ACTIVE: AdvancedTuning;
-    ANALOG: AnalogData;
-    ARMING_CONFIG: ArmingConfig;
-    AUX_CONFIG: AuxConfigNames;
-    AUX_CONFIG_IDS: AuxConfigIds;
-    BATTERY_CONFIG: BatteryConfig;
-    BATTERY_STATE: BatteryState;
-    BEEPER_CONFIG: BeeperConfig;
-    BF_CONFIG: BfConfig;
-    BLACKBOX: BlackboxConfig;
-    BOARD_ALIGNMENT_CONFIG: BoardAlignmentConfig;
-    CONFIG: FcConfig;
-    COPY_PROFILE: CopyProfile;
-    CURRENT_METERS: CurrentMeter[];
-    CURRENT_METER_CONFIGS: CurrentMeterConfig[];
-    DATAFLASH: DataflashSummary;
-    DEFAULT: FilterDefaults;
-    DEFAULT_PIDS: DefaultPids;
-    DEFAULT_TUNING_SLIDERS: DefaultTuningSliders;
-    FAILSAFE_CONFIG: FailsafeConfig;
-    FC_CONFIG: FcLoopConfig;
-    FEATURE_CONFIG: FeatureConfig;
-    FILTER_CONFIG: FilterConfig;
-    GYRO_SENSOR: GyroSensor;
-    SENSOR_NAMES: SensorNames;
-    GPS_CONFIG: GpsConfig;
-    COMPASS_CONFIG: CompassConfig;
-    GPS_DATA: GpsData;
-    GPS_RESCUE: GpsRescueConfig;
-    LED_COLORS: LedColor[];
-    LED_MODE_COLORS: LedModeColor[];
-    LED_STRIP: LedStripEntry[];
-    LED_CONFIG_VALUES: LedConfigValues;
-    MCU_INFO: McuInfo;
-    MISC: MiscConfig;
-    MIXER_CONFIG: MixerConfig;
-    MODE_RANGES: ModeRange[];
-    MODE_RANGES_EXTRA: ModeRangeExtra[];
-    MOTOR_3D_CONFIG: Motor3dConfig;
-    MOTOR_CONFIG: MotorConfig;
-    MOTOR_DATA: MotorData;
-    MOTOR_OUTPUT_ORDER: MotorOutputOrder;
-    MOTOR_TELEMETRY_DATA: MotorTelemetryData;
-    MULTIPLE_MSP: MultipleMsp;
-    PID: PidController;
-    PIDS_ACTIVE: PidGains;
-    PID_ADVANCED_CONFIG: PidAdvancedConfig;
-    PID_NAMES: PidNames;
-    PIDS: PidGains;
-    RC: RcData;
-    RC_DEADBAND_CONFIG: RcDeadbandConfig;
-    RC_MAP: RcMap;
-    RC_TUNING: RcTuning;
-    RSSI_CONFIG: RssiConfig;
-    RXFAIL_CONFIG: RxFailChannel[];
-    RX_CONFIG: RxConfig;
-    SDCARD: SdcardSummary;
-    SENSOR_ALIGNMENT: SensorAlignment;
-    SENSOR_CONFIG: SensorConfig;
-    SENSOR_CONFIG_ACTIVE: SensorConfigActive;
-    SENSOR_DATA: SensorData;
-    SERIAL_CONFIG: SerialConfig;
-    SERVO_CONFIG: ServoConfig[];
-    SERVO_DATA: ServoData;
-    SERVO_RULES: ServoRules;
-    TUNING_SLIDERS: TuningSliders;
-    VOLTAGE_METERS: VoltageMeter[];
-    VOLTAGE_METER_CONFIGS: VoltageMeterConfig[];
-    VTXTABLE_BAND: VtxTableBand;
-    VTXTABLE_POWERLEVEL: VtxTablePowerLevel;
-    VTX_CONFIG: VtxConfig;
-    VTX_DEVICE_STATUS: VtxDeviceStatus | null;
-    WING_CONFIG: WingConfig;
+    adjustmentRanges: AdjustmentRange[];
+    advancedTuning: AdvancedTuning;
+    advancedTuningActive: AdvancedTuning;
+    analogData: AnalogData;
+    armingConfig: ArmingConfig;
+    auxConfig: AuxConfigNames;
+    auxConfigIds: AuxConfigIds;
+    batteryConfig: BatteryConfig;
+    batteryState: BatteryState;
+    beepers: BeeperConfig;
+    bfConfig: BfConfig;
+    blackbox: BlackboxConfig;
+    boardAlignment: BoardAlignmentConfig;
+    config: FcConfig;
+    copyProfile: CopyProfile;
+    currentMeters: CurrentMeter[];
+    currentMeterConfigs: CurrentMeterConfig[];
+    dataflash: DataflashSummary;
+    filterDefaults: FilterDefaults;
+    defaultPids: DefaultPids;
+    defaultTuningSliders: DefaultTuningSliders;
+    failsafeConfig: FailsafeConfig;
+    features: FeatureConfig;
+    filterConfig: FilterConfig;
+    gyroSensor: GyroSensor;
+    sensorNames: SensorNames;
+    gpsConfig: GpsConfig;
+    compassConfig: CompassConfig;
+    gpsData: GpsData;
+    gpsRescue: GpsRescueConfig;
+    ledColors: LedColor[];
+    ledModeColors: LedModeColor[];
+    ledStrip: LedStripEntry[];
+    ledConfigValues: LedConfigValues;
+    mcuInfo: McuInfo;
+    mixerConfig: MixerConfig;
+    modeRanges: ModeRange[];
+    modeRangesExtra: ModeRangeExtra[];
+    motor3dConfig: Motor3dConfig;
+    motorConfig: MotorConfig;
+    motorData: MotorData;
+    motorOutputOrder: MotorOutputOrder;
+    motorTelemetryData: MotorTelemetryData;
+    multipleMsp: MultipleMsp;
+    pidController: PidController;
+    pidsActive: PidGains;
+    pidAdvancedConfig: PidAdvancedConfig;
+    pidNames: PidNames;
+    pids: PidGains;
+    rc: RcData;
+    rcDeadbandConfig: RcDeadbandConfig;
+    rcMap: RcMap;
+    rcTuning: RcTuning;
+    rssiConfig: RssiConfig;
+    rxFailConfig: RxFailChannel[];
+    rxConfig: RxConfig;
+    sdcard: SdcardSummary;
+    sensorAlignment: SensorAlignment;
+    sensorConfig: SensorConfig;
+    sensorConfigActive: SensorConfigActive;
+    sensorData: SensorData;
+    serialConfig: SerialConfig;
+    servoConfig: ServoConfig[];
+    servoData: ServoData;
+    servoRules: ServoRules;
+    tuningSliders: TuningSliders;
+    voltageMeters: VoltageMeter[];
+    voltageMeterConfigs: VoltageMeterConfig[];
+    vtxTableBand: VtxTableBand;
+    vtxTablePowerLevel: VtxTablePowerLevel;
+    vtxConfig: VtxConfig;
+    vtxDeviceStatus: VtxDeviceStatus | null;
+    wingConfig: WingConfig;
 }

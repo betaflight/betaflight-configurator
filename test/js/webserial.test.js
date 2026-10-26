@@ -20,9 +20,9 @@ vi.mock("../../src/js/protocols/devices", () => ({
     vendorIdNames: { 0x10c4: "CP210", 0x2e3c: "AT32" },
 }));
 
-// gui.js is small but imported by WebSerial for GUI.operating_system; mock it.
-vi.mock("../../src/js/gui", () => ({
-    default: { operating_system: "Linux" },
+// WebSerial reads the operating system from the app-info store; pin it.
+vi.mock("../../src/stores/appInfo", () => ({
+    useAppInfoStore: () => ({ operatingSystem: "Linux" }),
 }));
 
 // A minimal fake of the W3C SerialPort. Object identity is what matters here —
@@ -70,7 +70,7 @@ afterEach(() => {
 });
 
 async function loadWebSerial() {
-    const mod = await import("../../src/js/protocols/WebSerial.js");
+    const mod = await import("../../src/js/protocols/WebSerial");
     return mod.default;
 }
 
@@ -197,6 +197,21 @@ describe("WebSerial stable device identity", () => {
         expect(ws.connectionId).toBe(pathB);
         expect(portB.open).toHaveBeenCalledTimes(1);
         expect(portA.open).not.toHaveBeenCalled();
+
+        await ws.disconnect();
+    });
+
+    it("releases the reader lock when the read loop ends", async () => {
+        const WebSerial = await loadWebSerial();
+        const ws = new WebSerial();
+
+        const port = makeFakePort();
+        const reader = { read: vi.fn().mockResolvedValue({ done: true }), cancel: vi.fn(), releaseLock: vi.fn() };
+        Object.defineProperty(port, "readable", { get: () => ({ getReader: () => reader }) });
+        ws.ports = [ws.createPort(port)];
+
+        await ws.connect(ws.ports[0].path, { baudRate: 115200 });
+        await vi.waitFor(() => expect(reader.releaseLock).toHaveBeenCalled());
 
         await ws.disconnect();
     });

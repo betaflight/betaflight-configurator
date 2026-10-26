@@ -88,6 +88,16 @@
                 title="Map"
                 @click="$emit('toggle-map')"
             />
+            <UButton
+                variant="ghost"
+                :color="flight3dActive ? 'primary' : 'neutral'"
+                icon="i-lucide-rotate-3d"
+                size="xs"
+                :aria-label="flight3dActive ? 'Hide 3D flight' : 'Show 3D flight'"
+                :aria-pressed="flight3dActive"
+                title="3D flight"
+                @click="$emit('toggle-flight3d')"
+            />
         </div>
     </div>
 </template>
@@ -101,6 +111,7 @@ defineProps({
     sticksActive: { type: Boolean, default: false },
     analyserActive: { type: Boolean, default: false },
     mapActive: { type: Boolean, default: false },
+    flight3dActive: { type: Boolean, default: false },
 });
 
 defineEmits([
@@ -112,5 +123,6 @@ defineEmits([
     "toggle-sticks",
     "toggle-analyser",
     "toggle-map",
+    "toggle-flight3d",
 ]);
 </script>

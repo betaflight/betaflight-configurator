@@ -23,8 +23,8 @@ import { reactive, nextTick, onScopeDispose } from "vue";
 import type { SelectMenuItem } from "@nuxt/ui";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
-import GUI from "../js/gui";
-import AutoDetect from "../js/utils/AutoDetect.js";
+import AutoDetect from "../js/utils/AutoDetect";
+import { useConnectionStore } from "../stores/connection";
 
 /** A board as the build API's `/api/targets` lists it. */
 export interface TargetDescriptor {
@@ -45,6 +45,7 @@ export interface FirmwareRelease {
     release: string;
     label: string;
     type: string;
+    withdrawn?: boolean;
 }
 
 /**
@@ -63,7 +64,23 @@ function ownValue<T>(table: Record<string, T>, key: string): T | undefined {
 
 export interface BoardSelectionBuildApi {
     loadTargets(): Promise<TargetDescriptor[] | null | undefined>;
-    loadTargetReleases(target: string): Promise<{ releases: FirmwareRelease[] }>;
+    loadTargetReleases(target: string): Promise<{ releases: FirmwareRelease[] } | null>;
+}
+
+/**
+ * The target's release list, or a throw when the build server has none for it (a 404). Callers
+ * load releases inside a try that logs the failure; before BuildApi was typed, the null reached
+ * them as a TypeError on `.releases` and took the same path.
+ */
+export async function requireTargetReleases(
+    buildApi: Pick<BoardSelectionBuildApi, "loadTargetReleases">,
+    target: string,
+): Promise<{ releases: FirmwareRelease[] }> {
+    const targetReleases = await buildApi.loadTargetReleases(target);
+    if (!targetReleases) {
+        throw new Error(`The build server lists no releases for ${target}`);
+    }
+    return targetReleases;
 }
 
 export interface BoardSelectionParams {
@@ -85,6 +102,7 @@ export interface BoardSelectionParams {
  * Manages board/target lists, firmware version options, and related UI interactions.
  */
 export function useBoardSelection(params: BoardSelectionParams) {
+    const connectionStore = useConnectionStore();
     const {
         buildApi,
         $t,
@@ -241,7 +259,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
         state.boardOptions = [];
         state.firmwareVersionOptions = [];
 
-        if (GUI.connect_lock) {
+        if (connectionStore.connectLock) {
             state.selectedBoard = undefined;
         } else {
             try {
@@ -259,7 +277,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
         // Re-filter firmware versions based on new build type if a board is selected
         if (selectedBoardTarget) {
             try {
-                const targetReleases = await buildApi.loadTargetReleases(selectedBoardTarget);
+                const targetReleases = await requireTargetReleases(buildApi, selectedBoardTarget);
                 await populateReleases({ target: selectedBoardTarget, releases: targetReleases.releases });
             } catch (error) {
                 console.error(`${logHead} Failed to load target releases on build type change:`, error);
@@ -289,7 +307,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
         flashProgress(0);
 
         try {
-            const targetReleases = await buildApi.loadTargetReleases(value);
+            const targetReleases = await requireTargetReleases(buildApi, value);
             await populateReleases({ target: value, releases: targetReleases.releases });
         } catch (error) {
             console.error(`${logHead} Failed to load target releases:`, error);
@@ -313,7 +331,7 @@ export function useBoardSelection(params: BoardSelectionParams) {
             detectBoardTimeout = null;
         }
 
-        if (GUI.connect_lock) {
+        if (connectionStore.connectLock) {
             detectBoardTimeout = setTimeout(() => {
                 detectBoardTimeout = null;
                 state.detectingBoard = false;

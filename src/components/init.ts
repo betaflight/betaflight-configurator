@@ -21,19 +21,16 @@
 
 // This module is imported for its side effects: setting up i18next
 // and initializing the Vue app with plugins and global model.
-import "../js/localization.js";
+import "../js/localization";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
-import FC from "../js/fc";
-import MSP from "../js/msp";
 import DeviceHandler from "../js/device_handler";
-import PortUsage from "../js/port_usage.js";
-import CONFIGURATOR from "../js/data_storage";
-import { BetaflightComponents } from "../js/vue_components.js";
-import { getNuxtUiRouter } from "../js/nuxt_ui_router.js";
-import { pinia } from "../js/pinia_instance.js";
+import PortUsage from "../js/port_usage";
+import { BetaflightComponents } from "../js/vue_components";
+import { getNuxtUiRouter } from "../js/nuxt_ui_router";
+import { pinia } from "../js/pinia_instance";
 import { get as getConfig } from "../js/ConfigStorage";
 
 // Connection tracking object
@@ -47,15 +44,12 @@ const CONNECTION = reactive({
  but these instance would eventually have more children
  which would find the use for those extra properties.
 
- Members that their own module mutates (DeviceHandler, CONFIGURATOR, ...) are made
+ Members that their own module mutates (DeviceHandler, ...) are made
  reactive in that module: the reactive() below only tracks writes made through this
- proxy, not writes through the module's own reference. FC is the flightController
- Pinia store, which is reactive already.
+ proxy, not writes through the module's own reference. FC is not on this model: the
+ flightController Pinia store owns that state, so read it with useFlightControllerStore().
 */
 const betaflightModel = reactive({
-    CONFIGURATOR,
-    FC,
-    MSP,
     PortUsage,
     DeviceHandler,
     CONNECTION,

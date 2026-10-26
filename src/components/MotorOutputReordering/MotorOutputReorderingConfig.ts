@@ -170,7 +170,8 @@ export default class MotorOutputReorderConfig {
         this.frames["Hex X"].Motors.push({ x: Math.cos(angle) * frameRadius, y: Math.sin(angle) * frameRadius });
 
         //===========================================
-        this._addOcto("Octo Flat +", -Math.PI / 2.0, screenSize);
+        // -45 deg matches mixerOctoFlatP: diagonals on M1-M4, then front/right/rear/left.
+        this._addOcto("Octo Flat +", -Math.PI / 4.0, screenSize);
         this._addOcto("Octo Flat X", -Math.PI / 2.0 + Math.PI / 8.0, screenSize);
         this._addOctoX8(screenSize);
         this._addBicopter(screenSize);

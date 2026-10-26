@@ -1,7 +1,7 @@
 //! Bridge discovery with an in-process multicast browser (`mdns-sd`).
 //!
-//! Used everywhere except Apple platforms, which cannot browse from an app-owned socket
-//! without an entitlement — see `apple.rs`. One daemon lives for the process; each snapshot
+//! Used everywhere except macOS, which browses through the system mDNSResponder — see
+//! `apple.rs`. One daemon lives for the process; each snapshot
 //! drains the events queued since the last one.
 
 use std::collections::BTreeMap;

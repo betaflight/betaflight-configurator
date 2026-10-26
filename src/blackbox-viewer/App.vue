@@ -30,6 +30,7 @@
                 :sticks-active="graphStore.hasSticks"
                 :analyser-active="graphStore.hasAnalyser"
                 :map-active="graphStore.hasMap"
+                :flight3d-active="graphStore.hasFlight3d"
                 @view-config="onViewConfig"
                 @toggle-header="onToggleHeader"
                 @toggle-table="onToggleTable"
@@ -38,6 +39,7 @@
                 @toggle-sticks="onToggleSticks"
                 @toggle-analyser="onToggleAnalyser"
                 @toggle-map="onToggleMap"
+                @toggle-flight3d="graphStore.toggleFlight3d()"
             />
         </Teleport>
         <Teleport to="#vue-playback">
@@ -85,6 +87,9 @@
         <Teleport to="#vue-analyser">
             <SpectrumAnalyser />
         </Teleport>
+        <Teleport to="#log-graph">
+            <Flight3DPanel v-if="graphStore.hasFlight3d && logStore.hasLog" />
+        </Teleport>
         <Teleport to="#vue-legend-panel">
             <LegendPanel />
         </Teleport>
@@ -111,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watchEffect, onMounted, onUnmounted, inject, unref, type Ref } from "vue";
+import { computed, watchEffect, onMounted, onUnmounted, inject, unref, defineAsyncComponent, type Ref } from "vue";
 import type { DataflashHost } from "./host_capabilities";
 import type { GraphPanelConfig } from "./stores/graph";
 import type { UserSettings } from "./stores/app";
@@ -119,7 +124,7 @@ import { useGraphStore } from "./stores/graph";
 import { useAppStore } from "./stores/app";
 import { useLogStore, FIRMWARE_CLASSES } from "./stores/log";
 import { usePlaybackStore } from "./stores/playback";
-import { useSettingsStore } from "./stores/settings.js";
+import { useSettingsStore } from "./stores/settings";
 import { useWorkspaceStore } from "./stores/workspace";
 import AppToolbar from "./components/AppToolbar.vue";
 import VideoExportDialog from "./components/VideoExportDialog.vue";
@@ -143,6 +148,9 @@ import FieldValuesPanel from "./components/FieldValuesPanel.vue";
 import ConfigurationPanel from "./components/ConfigurationPanel.vue";
 import SeekBarToolbar from "./components/SeekBarToolbar.vue";
 
+// Loaded on first use so the three.js addons stay out of the viewer's startup bundle.
+const Flight3DPanel = defineAsyncComponent(() => import("./components/Flight3DPanel.vue"));
+
 const graphStore = useGraphStore();
 const appStore = useAppStore();
 const logStore = useLogStore();
@@ -160,7 +168,7 @@ const injectedRoot = inject<Ref<HTMLElement | null> | null>("bbvRoot", null);
 // independent of whether a log is already loaded in the viewer.
 const dataflash = inject<DataflashHost | null>("bbvDataflash", null);
 
-// Centralized CSS class binding — replaces 27 imperative html.classList calls in main.js
+// Centralized CSS class binding — replaces 27 imperative html.classList calls in main.js (now main.ts)
 watchEffect(() => {
     // Only fall back to <html> when running standalone (no root injected); when embedded, wait
     // for the ref to resolve rather than toggling classes onto the host document.

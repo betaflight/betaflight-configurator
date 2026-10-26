@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { effectScope } from "vue";
 import { createPinia, setActivePinia } from "pinia";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
@@ -23,6 +23,8 @@ vi.mock("../../src/composables/useMspCliSession", async (importOriginal) => ({
 
 const ports = [{ identifier: 20 }, { identifier: 51 }, { identifier: 53 }];
 const claims = { VCP: ["msp_1"], UART3: ["rx"] };
+
+let fcStore;
 
 describe("buildPortOptions", () => {
     const options = () => buildPortOptions(ports, { claims, noneLabel: "None", freeLabel: "free" });
@@ -128,10 +130,10 @@ describe("useFeaturePort", () => {
     // A new connection resets the serial config; keepConnection stands for another feature on
     // the same tab, which sees the config the first one already filled in.
     function withFeature(options, apiVersion = API_VERSION_1_49, { keepConnection = false } = {}) {
-        FC.CONFIG.apiVersion = apiVersion;
-        FC.CONFIG.flightControllerVersion = "4.6.0";
+        fcStore.config.apiVersion = apiVersion;
+        fcStore.config.flightControllerVersion = "4.6.0";
         if (!keepConnection) {
-            FC.SERIAL_CONFIG = { ports: [...ports] };
+            fcStore.serialConfig = { ports: [...ports] };
         }
 
         scope?.stop();
@@ -143,7 +145,8 @@ describe("useFeaturePort", () => {
 
     beforeEach(() => {
         setActivePinia(createPinia());
-        FC.resetState();
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
         replies = {
             "get rx_uart": ["rx_uart = UART3"],
             peripherals: ["serial VCP: msp_1*", "serial UART3: rx*"],
@@ -193,7 +196,7 @@ describe("useFeaturePort", () => {
     });
 
     it("offers the board's soft serial ports the FC did not report", async () => {
-        FC.CONFIG.targetCapabilities = 1 << FC.TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL;
+        fcStore.config.targetCapabilities = 1 << fcStore.TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL;
         await port.load();
 
         const values = port.options.value.map((option) => option.value);
@@ -202,14 +205,14 @@ describe("useFeaturePort", () => {
     });
 
     it("leaves soft serial out for a board without it", async () => {
-        FC.CONFIG.targetCapabilities = 0;
+        fcStore.config.targetCapabilities = 0;
         await port.load();
 
         expect(port.options.value.map((option) => option.value)).not.toContain(30);
     });
 
     it("writes a soft serial assignment by name", async () => {
-        FC.CONFIG.targetCapabilities = 1 << FC.TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL;
+        fcStore.config.targetCapabilities = 1 << fcStore.TARGET_CAPABILITIES_FLAGS.HAS_SOFTSERIAL;
         await port.load();
 
         port.selectedIdentifier.value = 30;
@@ -589,9 +592,11 @@ describe("loadPortClaims", () => {
     }
 
     beforeEach(() => {
-        FC.resetState();
-        FC.CONFIG.flightControllerVersion = "4.6.0";
-        FC.SERIAL_CONFIG = { ports: [...ports] };
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+        fcStore.config.flightControllerVersion = "4.6.0";
+        fcStore.serialConfig = { ports: [...ports] };
         cliSend.mockReset();
     });
 
@@ -600,7 +605,7 @@ describe("loadPortClaims", () => {
         cliSend.mockRejectedValueOnce(new Error("Timed out")).mockResolvedValueOnce(["serial UART3: rx*"]);
 
         expect(await loadPortClaims()).toBeNull();
-        expect(FC.SERIAL_CONFIG.claims).toBeUndefined();
+        expect(fcStore.serialConfig.claims).toBeUndefined();
 
         expect(await loadPortClaims()).toEqual({ UART3: ["rx"] });
         expect(cliSend).toHaveBeenCalledTimes(2);
@@ -626,7 +631,7 @@ describe("loadPortClaims", () => {
         first.resolve(["serial UART1: vtx*"]);
         await stale;
 
-        expect(FC.SERIAL_CONFIG.claims).toEqual({ UART3: ["rx"] });
+        expect(fcStore.serialConfig.claims).toEqual({ UART3: ["rx"] });
         expect(await loadPortClaims()).toEqual({ UART3: ["rx"] });
         expect(cliSend).toHaveBeenCalledTimes(2);
     });

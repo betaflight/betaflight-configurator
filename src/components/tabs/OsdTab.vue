@@ -2,7 +2,7 @@
     <BaseTab tab-name="osd">
         <div class="content_wrapper pb-15">
             <div class="tab_title">{{ $t("osdSetupTitle") }}</div>
-            <WikiButton docUrl="OSD" />
+            <WikiButton docUrl="osd" />
 
             <!-- Warning: No OSD Chip Detected -->
             <UiBox
@@ -621,6 +621,7 @@ import { useBuildOptions } from "@/composables/useBuildOptions";
 import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { useOsdFontUpload } from "@/composables/osd/useOsdFontUpload";
 import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
@@ -689,16 +690,15 @@ import { getVisibleAlarmEntries } from "./osd/osd_alarms";
 import { OSD_CONSTANTS } from "./osd/osd_constants";
 import { positionConfigs, getPresetGridCells, type PositionConfig } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
-import GUI from "@/js/gui";
-import MSP from "@/js/msp";
-import { reinitializeConnection } from "@/js/serial_backend";
 import { gui_log } from "@/js/gui_log";
 import { getTracking } from "@/js/Analytics";
 import semver from "semver";
 import { API_VERSION_1_48 } from "@/js/data_storage";
+import { useConnectionStore } from "@/stores/connection";
 
 const osdStore = useOsdStore();
 const fcStore = useFlightControllerStore();
+const connectionStore = useConnectionStore();
 const { hasBuildOption } = useBuildOptions();
 
 /** Anything with the name / text a field list sorts and labels by. */
@@ -725,6 +725,7 @@ const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const { isSaving, runSave } = useSaving();
 const { reboot } = useReboot();
+const { rebootAfterFontUpload } = useOsdFontUpload();
 const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
@@ -1728,7 +1729,7 @@ function applyLegacyMobilePreviewZoom() {
 }
 
 function replaceLogoImage() {
-    if (GUI.connect_lock) {
+    if (connectionStore.connectLock) {
         return;
     }
 
@@ -1755,11 +1756,11 @@ function confirmFontUpload() {
 }
 
 async function flashFont() {
-    if (GUI.connect_lock) {
+    if (connectionStore.connectLock) {
         return;
     }
 
-    GUI.connect_lock = true;
+    connectionStore.connectLock = true;
 
     // Wait for any background load (avoid uploading a partially replaced font).
     // Give up if the selected preset is still not the loaded font.
@@ -1768,7 +1769,7 @@ async function flashFont() {
     if (presetFont && FONT.data?.loaded_font_file !== presetFont.file) {
         console.error(`Font preset ${presetFont.file} is not loaded, cannot upload`);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
-        GUI.connect_lock = false;
+        connectionStore.connectLock = false;
         return;
     }
 
@@ -1785,7 +1786,7 @@ async function flashFont() {
             updatePreviewBuffer();
         } catch (err) {
             console.error("User cancelled custom font selection or error occurred", err);
-            GUI.connect_lock = false;
+            connectionStore.connectLock = false;
             return; // Cancel the upload process
         }
     }
@@ -1793,7 +1794,7 @@ async function flashFont() {
     // Warn before uploading a font (built-in or user supplied) that does not match the OSD's font mode.
     if (FONT.isSmallFont() !== isFbOsdSmallFont.value) {
         if (!confirmFontUpload()) {
-            GUI.connect_lock = false;
+            connectionStore.connectLock = false;
             return;
         }
     }
@@ -1821,18 +1822,12 @@ async function flashFont() {
         // Close the dialog before rebooting so the user isn't left with
         // a stale modal over a disconnected UI.
         closeFontManager();
-        // Reset MSP parser state and flush pending callbacks to prevent
-        // CRC errors from residual serial data before the reboot command.
-        MSP.disconnect_cleanup();
-        // Reboot FC to apply the new font — reinitializeConnection sends
-        // MSP_SET_REBOOT (fire-and-forget) and sets rebootTimestamp so the
-        // serial backend auto-reconnects after the device comes back.
-        reinitializeConnection();
+        rebootAfterFontUpload();
     } catch (err) {
         console.error("Font upload failed:", err);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
     } finally {
-        GUI.connect_lock = false;
+        connectionStore.connectLock = false;
     }
 }
 
@@ -1878,7 +1873,6 @@ onMounted(async () => {
         LogoManager.init(FONT, SYM.LOGO);
     }
     applyLegacyMobilePreviewZoom();
-    GUI.content_ready();
 });
 
 onUnmounted(() => {
@@ -1959,9 +1953,9 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--surface-500, #999);
-    color: var(--text, #fff);
-    border: 1px solid var(--primary-800, #666);
+    background-color: var(--surface-500);
+    color: var(--text);
+    border: 1px solid var(--primary-800);
     transition:
         background-color 0.25s,
         transform 0.25s;
@@ -1972,7 +1966,7 @@ onUnmounted(() => {
 }
 
 .tab-osd-preset-btn:hover {
-    background-color: var(--surface-700, #666);
+    background-color: var(--surface-700);
     transform: scale(1.1);
 }
 
@@ -2018,7 +2012,7 @@ onUnmounted(() => {
 
 .tab-osd-context-menu-display:hover {
     background-color: var(--surface-700);
-    color: #fff;
+    color: white;
 }
 
 .tab-osd-context-menu-content {
@@ -2091,13 +2085,13 @@ onUnmounted(() => {
     content: "\2022\20";
 }
 .tab-osd-logo-info-list li.valid {
-    color: #00a011;
+    color: var(--success-700);
 }
 .tab-osd-logo-info-list li.valid::before {
     content: "\2714\20";
 }
 .tab-osd-logo-info-list li.invalid {
-    color: #a01100;
+    color: var(--error-600);
 }
 .tab-osd-logo-info-list li.invalid::before {
     content: "\2715\20";

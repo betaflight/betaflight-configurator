@@ -384,8 +384,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import Dialog from "../elements/Dialog.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
-import GUI from "../../js/gui";
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { i18n } from "../../js/localization";
 import { usePower } from "../../composables/usePower";
 import { useInterval } from "../../composables/useInterval";
@@ -401,6 +400,7 @@ export default defineComponent({
         SettingRow,
     },
     setup() {
+        const fcStore = useFlightControllerStore();
         const {
             supported,
             hasBatteryProfiles,
@@ -446,7 +446,7 @@ export default defineComponent({
         } = usePower();
 
         const calibrationVisibility = computed(() => getCalibrationVisibility());
-        const numberOfBatteryProfiles = computed(() => FC.CONFIG.numberOfBatteryProfiles || 0);
+        const numberOfBatteryProfiles = computed(() => fcStore.config.numberOfBatteryProfiles || 0);
 
         const batteryProfileItems = computed(() =>
             Array.from({ length: numberOfBatteryProfiles.value }, (_, i) => ({
@@ -486,7 +486,6 @@ export default defineComponent({
 
             nextTick(() => {
                 i18n.localizePage();
-                GUI.content_ready();
             });
 
             // Start polling

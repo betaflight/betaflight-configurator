@@ -30,16 +30,6 @@ function expectPresent<T>(value: T | undefined | null, what: string): T {
     return value;
 }
 
-/*
- * `src/js/utils/debugModes.js` is still JavaScript (#5542 tier 6), so its exports
- * arrive typed as bare `object` and every lookup below would be an error. Naming
- * the shape here keeps the assertions meaningful. Delete these two helpers when
- * that module is converted and the real types come through.
- */
-type DebugFieldNames = Record<string, Record<string, string>>;
-
-const fieldNames = (apiVersion: string): DebugFieldNames => getDebugFieldNames(apiVersion) as DebugFieldNames;
-
 // Enough context for the device-native units; the factors are arbitrary but
 // exact, so a double conversion is visible rather than plausible.
 const ctx = (apiVersion: string) => ({
@@ -88,9 +78,9 @@ describe("firmware debug field annotations", () => {
             // mixer.c wrote the sag compensation attenuation there
             // (betaflight/betaflight#15594), until #15727 gave sag compensation
             // a mode of its own.
-            expect(fieldNames(ANNOTATED).BATTERY["debug[3]"]).toBe("Voltage Stable Bits");
-            expect(fieldNames(ANNOTATED).SAG_COMPENSATION["debug[0]"]).toBe("Battery Goodness");
-            expect(fieldNames(ANNOTATED).SAG_COMPENSATION["debug[1]"]).toBe("Motor Range Attenuation");
+            expect(getDebugFieldNames(ANNOTATED).BATTERY["debug[3]"]).toBe("Voltage Stable Bits");
+            expect(getDebugFieldNames(ANNOTATED).SAG_COMPENSATION["debug[0]"]).toBe("Battery Goodness");
+            expect(getDebugFieldNames(ANNOTATED).SAG_COMPENSATION["debug[1]"]).toBe("Motor Range Attenuation");
             expect(FIRMWARE_DEBUG_FIELD_CONFLICTS.filter((conflict) => conflict.mode === "BATTERY")).toEqual([]);
         });
 
@@ -244,24 +234,24 @@ describe("firmware debug field annotations", () => {
         it("replace a hand-written label the firmware disagrees with", () => {
             // debug[2] was labelled "Frame Jitter" long after firmware started
             // writing isRxRateValid there.
-            expect(fieldNames(API_VERSION_1_48).RX_TIMING["debug[2]"]).toBe("Frame Jitter");
-            expect(fieldNames(ANNOTATED).RX_TIMING["debug[2]"]).toBe("Frame Interval Within Limits");
+            expect(getDebugFieldNames(API_VERSION_1_48).RX_TIMING["debug[2]"]).toBe("Frame Jitter");
+            expect(getDebugFieldNames(ANNOTATED).RX_TIMING["debug[2]"]).toBe("Frame Interval Within Limits");
         });
 
         it("expand a per-axis annotation into one label per index", () => {
-            const labels = fieldNames(ANNOTATED).GYRO_FILTERED;
+            const labels = getDebugFieldNames(ANNOTATED).GYRO_FILTERED;
             expect(labels["debug[0]"]).toBe("Gyro Filtered (roll)");
             expect(labels["debug[1]"]).toBe("Gyro Filtered (pitch)");
             expect(labels["debug[2]"]).toBe("Gyro Filtered (yaw)");
         });
 
         it("keep the hand-written mode-level name, which firmware has no equivalent of", () => {
-            expect(fieldNames(ANNOTATED).BATTERY["debug[all]"]).toBe("Debug Battery");
+            expect(getDebugFieldNames(ANNOTATED).BATTERY["debug[all]"]).toBe("Debug Battery");
         });
 
         it("leave firmware that predates the annotations alone", () => {
-            expect(fieldNames(API_VERSION_1_48).BATTERY["debug[1]"]).toBe("Battery Volt");
-            expect(fieldNames(ANNOTATED).BATTERY["debug[1]"]).toBe("Battery Voltage");
+            expect(getDebugFieldNames(API_VERSION_1_48).BATTERY["debug[1]"]).toBe("Battery Volt");
+            expect(getDebugFieldNames(ANNOTATED).BATTERY["debug[1]"]).toBe("Battery Voltage");
         });
     });
 
