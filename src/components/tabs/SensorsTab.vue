@@ -738,7 +738,7 @@
                     <UButton
                         size="xs"
                         class="w-fit"
-                        :label="$t('sensorConfigCalibrate')"
+                        :label="legacyCalButtonLabel"
                         :loading="calIsCalibrating"
                         @click="startLegacyFirmwareCal()"
                     >
@@ -746,6 +746,25 @@
                             <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                         </template>
                     </UButton>
+                    <!-- Always rendered so screen readers pick up the messages swapped in below. -->
+                    <div class="legacy-mag-cal-status" aria-live="polite">
+                        <p v-if="calIsCalibrating" class="text-xs text-[var(--surface-600)]">
+                            {{ $t(cal.statusMessage) }}
+                        </p>
+                        <p
+                            v-else-if="cal.mode === 'quick' && cal.phase === 'complete'"
+                            class="text-xs font-semibold status-ok"
+                        >
+                            {{ $t("magCalibrationUnguidedDone") }}
+                        </p>
+                        <p
+                            v-else-if="cal.mode === 'quick' && cal.phase === 'error'"
+                            class="text-xs status-bad"
+                            role="alert"
+                        >
+                            {{ $t(cal.statusMessage || "magCalibrationError") }}
+                        </p>
+                    </div>
                 </template>
             </UiBox>
 
@@ -1628,10 +1647,25 @@ const calFirmwareOffsetsText = computed(() => {
     return `${fw.x}, ${fw.y}, ${fw.z}`;
 });
 
+// Legacy (API < 1.47) Calibrate button: show the 30 s firmware countdown on the button itself,
+// since this path has no inline calibration panel (#5652).
+const legacyCalButtonLabel = computed(() => {
+    if (cal.phase === "collecting" && cal.firmwareSecondsRemaining >= 0) {
+        return i18n.getMessage("magCalibrationLegacyCountdown", { seconds: cal.firmwareSecondsRemaining });
+    }
+    if (calIsCalibrating.value) {
+        return i18n.getMessage("magCalibrationLegacyStarting");
+    }
+    return i18n.getMessage("sensorConfigCalibrate");
+});
+
 async function startLegacyFirmwareCal() {
     lastCalStarter = startLegacyFirmwareCal;
     calGeoRef.value = getGeoReference();
     await cal.startCalibration("quick");
+    if (calIsCalibrating.value) {
+        gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
+    }
 }
 
 function cancelMagCal() {
@@ -1960,6 +1994,7 @@ watch(
         if (done && cal.mode === "quick") {
             cal.completeCalibration();
             magNeedsCalibration.value = false;
+            gui_log(i18n.getMessage("initialSetupMagCalibEnded"));
             playCalCompletionBeep();
         }
     },
