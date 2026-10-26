@@ -172,6 +172,8 @@ describe("FlightLog rcCommand scale", () => {
             min: Math.min(...rc),
             max: Math.max(...rc),
         });
+        const unscaled = open().flightLog.getActivitySummary().maxRC;
+        expect(flightLog.getActivitySummary().maxRC).toEqual(unscaled.map((v) => v / 2));
     });
 
     it("reads throttle in the legacy 1000..2000 units, times the high resolution scale", () => {

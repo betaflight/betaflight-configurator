@@ -20,7 +20,7 @@
  */
 
 import semver from "semver";
-import { FlightLogIndex, type IntraframeDirectory } from "./flightlog_index";
+import { FlightLogIndex, legacyRcCommandScale, type FieldScale, type IntraframeDirectory } from "./flightlog_index";
 import {
     FlightLogParser,
     type FieldStats,
@@ -115,33 +115,18 @@ interface ComputedFieldContext {
     disabledFields: DisabledFields;
 }
 
-/** A linear map applied to one main frame field as it is loaded. */
-interface FieldRescale {
+/** The logged-to-viewer units map of one main frame field. */
+interface FieldRescale extends FieldScale {
     index: number;
-    gain: number;
-    offset: number;
 }
 
-/**
- * Logs with an `rc_command_scale` header carry rcCommand as roll/pitch/yaw -1..1 and throttle 0..1 times
- * that scale. Everything here reads rcCommand in the units logged before it: roll/pitch/yaw -500..500 and
- * throttle 1000..2000, both times the high resolution scale.
- */
 function legacyRcCommandRescale(sysConfig: SysConfig, nameToIndex: Record<string, number>): FieldRescale[] {
-    const scale = Number(sysConfig.rc_command_scale);
-    if (!(scale > 0)) {
-        return [];
-    }
-    const highResolutionScale = Number(sysConfig.blackbox_high_resolution) > 0 ? 10 : 1;
     const rescale: FieldRescale[] = [];
     for (let axis = 0; axis < 4; axis++) {
         const index = nameToIndex[`rcCommand[${axis}]`];
-        if (index !== undefined) {
-            rescale.push(
-                axis === AXIS.YAW + 1
-                    ? { index, gain: 1000 / scale, offset: 1000 * highResolutionScale }
-                    : { index, gain: 500 / scale, offset: 0 },
-            );
+        const scale = legacyRcCommandScale(sysConfig, axis);
+        if (index !== undefined && scale) {
+            rescale.push({ index, ...scale });
         }
     }
     return rescale;

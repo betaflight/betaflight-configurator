@@ -25,8 +25,9 @@ import {
     type FrameReadyArgs,
     type LogEvent,
     type ParserStats,
+    type SysConfig,
 } from "./flightlog_parser";
-import { FlightLogEvent } from "./flightlog_fielddefs";
+import { AXIS, FlightLogEvent } from "./flightlog_fielddefs";
 import { IMU } from "./imu";
 import { ArrayDataStream } from "../js/blackbox/datastream";
 
@@ -63,9 +64,33 @@ interface IndexedFields {
     magADC: number[] | false;
     motors: number[];
     rcCommands: number[];
+    rcCommandGain: number;
 }
 
-function indexedFields(mainFrameDef: FrameDef): IndexedFields {
+/** A linear map from a logged field value to the units the viewer reads it in. */
+export interface FieldScale {
+    gain: number;
+    offset: number;
+}
+
+/**
+ * Logs with an `rc_command_scale` header carry rcCommand as roll/pitch/yaw -1..1 and throttle 0..1 times
+ * that scale. The viewer reads rcCommand in the units logged before it: roll/pitch/yaw -500..500 and
+ * throttle 1000..2000, both times the high resolution scale. Null for a log without the header.
+ */
+export function legacyRcCommandScale(sysConfig: SysConfig, axis: number): FieldScale | null {
+    const scale = Number(sysConfig.rc_command_scale);
+    if (Number.isNaN(scale) || scale <= 0) {
+        return null;
+    }
+    if (axis === AXIS.YAW + 1) {
+        const highResolutionScale = Number(sysConfig.blackbox_high_resolution) > 0 ? 10 : 1;
+        return { gain: 1000 / scale, offset: 1000 * highResolutionScale };
+    }
+    return { gain: 500 / scale, offset: 0 };
+}
+
+function indexedFields(mainFrameDef: FrameDef, sysConfig: SysConfig): IndexedFields {
     const index = (name: string) => mainFrameDef.nameToIndex[name];
     const motors: number[] = [];
     const rcCommands: number[] = [];
@@ -93,6 +118,7 @@ function indexedFields(mainFrameDef: FrameDef): IndexedFields {
         magADC: magADC[0] === undefined ? false : magADC,
         motors,
         rcCommands,
+        rcCommandGain: legacyRcCommandScale(sysConfig, AXIS.ROLL)?.gain ?? 1,
     };
 }
 
@@ -114,7 +140,7 @@ function recordChunkSummary(directory: IntraframeDirectory, frame: number[], fie
     if (fields.rcCommands.length) {
         let rcTotal = 0;
         for (const rcfo of fields.rcCommands) {
-            rcTotal += Math.max(rcTotal, Math.abs(frame[rcfo]));
+            rcTotal += Math.max(rcTotal, Math.abs(frame[rcfo]) * fields.rcCommandGain);
         }
 
         directory.maxRC.push(rcTotal);
@@ -258,7 +284,7 @@ function indexLog(parser: FlightLogParser, logNumber: number, start: number, end
 
     // parseHeader() throws unless the I-frame definition is complete
     const builder = new DirectoryBuilder(
-        indexedFields(parser.frameDefs.I!),
+        indexedFields(parser.frameDefs.I!, parser.sysConfig),
         parser.sysConfig.acc_1G,
         parser.sysConfig.gyroScale,
     );
@@ -285,7 +311,14 @@ function indexLog(parser: FlightLogParser, logNumber: number, start: number, end
 }
 
 /** Fields for a log whose header did not parse: none are read. */
-const indexedFieldsNone: IndexedFields = { gyroADC: [], accSmooth: [], magADC: false, motors: [], rcCommands: [] };
+const indexedFieldsNone: IndexedFields = {
+    gyroADC: [],
+    accSmooth: [],
+    magADC: false,
+    motors: [],
+    rcCommands: [],
+    rcCommandGain: 1,
+};
 
 function finishDirectory(builder: DirectoryBuilder): IntraframeDirectory {
     const directory = builder.directory;
