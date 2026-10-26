@@ -30,6 +30,7 @@ import MSP from "./msp";
 import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import DeviceHandler from "./device_handler";
+import { isPersistentUsbBridge } from "./protocols/devices";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_ACCEPTED } from "./data_storage";
 import { bit_check } from "./bit";
 import { have_sensor } from "./sensor_helpers";
@@ -137,6 +138,17 @@ let rebootHandshakeSawTraffic = false;
  */
 function isDrivenRebootTarget(port: string): boolean {
     return typeof port === "string" && (port.startsWith("bluetooth") || port === "manual");
+}
+
+/**
+ * Whether the link to this target stays open across an FC reboot and must be dropped by the
+ * reconnect cycle itself for serial ports behind a USB-UART bridge.
+ * @param {string} port - the selected port path
+ * @returns {boolean}
+ */
+function linkSurvivesReboot(port: string): boolean {
+    const device = DeviceHandler.describeDevice(port);
+    return Boolean(device && isPersistentUsbBridge(device.vendorId, device.productId));
 }
 
 /**
@@ -1607,9 +1619,10 @@ function rebootReconnect() {
         // user off the tab they just opened, which is what leaving the CLI tab does. Leave it
         // to the transport. The exception is a BLE target about to auto-reconnect: keep its
         // GATT session (softResetForReboot), because re-establishing it produces deaf sessions
-        // on Linux/BlueZ.
-        if (driven && isConnected()) {
-            const target = DeviceHandler.devicePicker.selectedDevice;
+        // on Linux/BlueZ. A serial port behind a USB-UART bridge also survives the reboot (the
+        // bridge does not re-enumerate), so it is closed and reopened like a manual link.
+        const target = DeviceHandler.devicePicker.selectedDevice;
+        if ((driven || linkSurvivesReboot(target)) && isConnected()) {
             const keepBleLink =
                 typeof target === "string" && target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
             if (keepBleLink) {
