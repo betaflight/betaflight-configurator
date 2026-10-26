@@ -179,7 +179,7 @@ export function useMagCalibration() {
     let lastMag: Vec3 | null = null;
     let firmwareFlagSeen = false;
     let reconstructionOffsets: Vec3 | null = null; // firmware offsets to add back in full mode for raw sensor reconstruction
-    let starting = false;
+    const starting = ref(false);
     // Bumped by every teardown path. startCalibration() captures it before awaiting the
     // CLI offset read and re-checks after, so a cancel/retry/discard/unmount during that
     // await cannot resurrect the phase and start polling on a session the user abandoned.
@@ -195,11 +195,11 @@ export function useMagCalibration() {
     async function startCalibration(calMode: MagCalibrationMode = "full") {
         // Only an active session blocks a new one. A finished one ('complete' or 'error') must
         // not: the legacy Calibrate button has no Retry/Close to reset the phase to idle (#5650).
-        if (phase.value === "waiting" || phase.value === "collecting" || starting) {
+        if (phase.value === "waiting" || phase.value === "collecting" || starting.value) {
             return;
         }
 
-        starting = true;
+        starting.value = true;
         const startToken = ++startSequence;
         try {
             cleanup();
@@ -219,7 +219,7 @@ export function useMagCalibration() {
 
             firmwareOffsets.value = await readFirmwareOffsets();
         } finally {
-            starting = false;
+            starting.value = false;
         }
 
         // Abandoned while the CLI read was in flight — leave the teardown state alone.
@@ -257,7 +257,7 @@ export function useMagCalibration() {
     function cancelCalibration() {
         cleanup();
         startSequence++;
-        starting = false;
+        starting.value = false;
         phase.value = "idle";
         statusMessage.value = "";
     }
@@ -432,7 +432,7 @@ export function useMagCalibration() {
     function retry() {
         cleanup();
         startSequence++;
-        starting = false;
+        starting.value = false;
         phase.value = "idle";
         statusMessage.value = "";
         samples.value = [];
@@ -495,7 +495,7 @@ export function useMagCalibration() {
     function discardCalibration() {
         cleanup();
         startSequence++;
-        starting = false;
+        starting.value = false;
         samples.value = [];
         sphereFitResult.value = null;
         coverage.value = null;
@@ -524,6 +524,7 @@ export function useMagCalibration() {
         liveMag,
         liveFieldStrength,
         firmwareOffsets,
+        starting,
 
         // Actions
         startCalibration,

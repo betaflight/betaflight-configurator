@@ -739,7 +739,7 @@
                         size="xs"
                         class="w-fit"
                         :label="legacyCalButtonLabel"
-                        :loading="calIsCalibrating"
+                        :loading="calIsCalibrating || cal.starting"
                         @click="startLegacyFirmwareCal()"
                     >
                         <template #trailing>
@@ -1653,7 +1653,8 @@ const legacyCalButtonLabel = computed(() => {
     if (cal.phase === "collecting" && cal.firmwareSecondsRemaining >= 0) {
         return i18n.getMessage("magCalibrationLegacyCountdown", { seconds: cal.firmwareSecondsRemaining });
     }
-    if (calIsCalibrating.value) {
+    // cal.starting covers the CLI offset read before the firmware calibration is triggered.
+    if (calIsCalibrating.value || cal.starting) {
         return i18n.getMessage("magCalibrationLegacyStarting");
     }
     return i18n.getMessage("sensorConfigCalibrate");
