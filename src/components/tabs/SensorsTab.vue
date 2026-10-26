@@ -751,6 +751,10 @@
                         <p v-if="calIsCalibrating" class="text-xs text-[var(--surface-600)]">
                             {{ $t(cal.statusMessage) }}
                         </p>
+                        <!-- Restarting from 'complete' or 'error' keeps that phase until the offset read returns. -->
+                        <p v-else-if="cal.starting" class="text-xs text-[var(--surface-600)]">
+                            {{ $t("magCalibrationLegacyStarting") }}
+                        </p>
                         <p
                             v-else-if="cal.mode === 'quick' && cal.phase === 'complete'"
                             class="text-xs font-semibold status-ok"

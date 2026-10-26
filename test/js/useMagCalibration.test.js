@@ -346,6 +346,35 @@ describe("useMagCalibration", () => {
             expect(MSP.send_message).not.toHaveBeenCalled();
             expect(cal.samples.value).toEqual([]);
         });
+
+        it("keeps a newer start's starting flag when an abandoned start settles", async () => {
+            let releaseFirstRead;
+            send.mockReturnValueOnce(
+                new Promise((resolve) => {
+                    releaseFirstRead = () => resolve([]);
+                }),
+            );
+            let releaseSecondRead;
+            send.mockReturnValueOnce(
+                new Promise((resolve) => {
+                    releaseSecondRead = () => resolve([]);
+                }),
+            );
+
+            const first = cal.startCalibration("quick");
+            cal.cancelCalibration();
+            const second = cal.startCalibration("quick");
+            expect(cal.starting.value).toBe(true);
+
+            releaseFirstRead();
+            await first;
+            expect(cal.starting.value).toBe(true);
+
+            releaseSecondRead();
+            await second;
+            expect(cal.starting.value).toBe(false);
+            expect(cal.phase.value).toBe("waiting");
+        });
     });
 
     describe("retry", () => {

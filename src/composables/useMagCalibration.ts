@@ -219,7 +219,10 @@ export function useMagCalibration() {
 
             firmwareOffsets.value = await readFirmwareOffsets();
         } finally {
-            starting.value = false;
+            // A teardown already cleared the flag, and a newer start may own it now.
+            if (startToken === startSequence) {
+                starting.value = false;
+            }
         }
 
         // Abandoned while the CLI read was in flight — leave the teardown state alone.
