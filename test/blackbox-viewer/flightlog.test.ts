@@ -140,6 +140,53 @@ describe("FlightLog", () => {
     });
 });
 
+describe("FlightLog rcCommand scale", () => {
+    function decodedRc(flightLog: FlightLog): number[] {
+        return flightLog
+            .getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime())
+            .flatMap((chunk) => chunk.frames.map((frame) => frame[4] as number));
+    }
+
+    function openAsThrottle(extraHeader: string[]) {
+        const { bytes, frames } = mixedLog(6, extraHeader);
+        const from = [..."rcCommand[0]"].map((c) => c.codePointAt(0)!);
+        const at = bytes.findIndex((_, i) => from.every((b, k) => bytes[i + k] === b));
+        bytes[at + from.length - 2] = "3".codePointAt(0)!;
+        const flightLog = new FlightLog(new Uint8Array(bytes));
+        expect(flightLog.openLog(0)).toBe(true);
+        return { flightLog, frames };
+    }
+
+    it("leaves rcCommand as logged when the log has no rc_command_scale", () => {
+        const { flightLog, frames } = open();
+
+        expect(decodedRc(flightLog)).toEqual(frames.map((f) => f.rc));
+    });
+
+    it("reads roll, pitch and yaw in the legacy -500..500 units", () => {
+        const { flightLog, frames } = open(6, ["H rc_command_scale:1000", "H blackbox_high_resolution:1"]);
+
+        const rc = frames.map((f) => f.rc / 2);
+        expect(decodedRc(flightLog)).toEqual(rc);
+        expect(flightLog.getMinMaxForFieldDuringAllTime("rcCommand[0]")).toEqual({
+            min: Math.min(...rc),
+            max: Math.max(...rc),
+        });
+    });
+
+    it("reads throttle in the legacy 1000..2000 units, times the high resolution scale", () => {
+        const { flightLog, frames } = openAsThrottle(["H rc_command_scale:1000", "H blackbox_high_resolution:1"]);
+
+        const throttle = frames.map((f) => f.rc + 10000);
+        expect(flightLog.getMainFieldIndexByName("rcCommand[3]")).toBe(4);
+        expect(decodedRc(flightLog)).toEqual(throttle);
+        expect(flightLog.getMinMaxForFieldDuringAllTime("rcCommand[3]")).toEqual({
+            min: Math.min(...throttle),
+            max: Math.max(...throttle),
+        });
+    });
+});
+
 describe("FlightLog unit conversions", () => {
     it("reads throttle as a percentage of the min-max range, clamped", () => {
         const { flightLog } = open(1, ["H minthrottle:1000", "H maxthrottle:2000"]);
