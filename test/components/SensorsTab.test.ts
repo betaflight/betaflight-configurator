@@ -285,9 +285,18 @@ describe("SensorsTab legacy magnetometer calibration", () => {
         (call[3] as () => void)();
     }
 
+    /** The status region must exist before any message appears, or screen readers miss the first one. */
+    function statusRegion(wrapper: Wrapper) {
+        const region = wrapper.find(".legacy-mag-cal-status");
+        expect(region.exists()).toBe(true);
+        expect(region.attributes("aria-live")).toBe("polite");
+        return region;
+    }
+
     it("shows the firmware countdown on the button and logs start and finish", async () => {
         const wrapper = mountTab();
         await flushPromises();
+        expect(statusRegion(wrapper).text()).toBe("");
 
         calButton(wrapper).vm.$emit("click", new MouseEvent("click"));
         await flushPromises();
@@ -309,7 +318,7 @@ describe("SensorsTab legacy magnetometer calibration", () => {
         vi.advanceTimersByTime(1000);
         await flushPromises();
         expect(calButton(wrapper).props("label")).toBe('magCalibrationLegacyCountdown:{"seconds":29}');
-        expect(wrapper.text()).toContain("magCalibrationCollecting");
+        expect(statusRegion(wrapper).text()).toContain("magCalibrationCollecting");
 
         // Firmware clears the flag: calibration is done and the button is usable again.
         vi.advanceTimersByTime(1000);
@@ -317,7 +326,7 @@ describe("SensorsTab legacy magnetometer calibration", () => {
         await flushPromises();
         expect(gui_log).toHaveBeenCalledWith("initialSetupMagCalibEnded");
         expect(calButton(wrapper).props()).toMatchObject({ label: "sensorConfigCalibrate", loading: false });
-        expect(wrapper.text()).toContain("magCalibrationUnguidedDone");
+        expect(statusRegion(wrapper).text()).toContain("magCalibrationUnguidedDone");
     });
     it("does not log a start or spin when the calibration command is not sent", async () => {
         vi.mocked(MSP.send_message).mockReturnValue(false);
@@ -328,6 +337,8 @@ describe("SensorsTab legacy magnetometer calibration", () => {
         await flushPromises();
         expect(gui_log).not.toHaveBeenCalledWith("initialSetupMagCalibStarted");
         expect(calButton(wrapper).props()).toMatchObject({ label: "sensorConfigCalibrate", loading: false });
-        expect(wrapper.text()).toContain("magCalibrationNotSent");
+        const alert = statusRegion(wrapper).find('[role="alert"]');
+        expect(alert.exists()).toBe(true);
+        expect(alert.text()).toContain("magCalibrationNotSent");
     });
 });

@@ -746,18 +746,25 @@
                             <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                         </template>
                     </UButton>
-                    <p v-if="calIsCalibrating" class="text-xs text-[var(--surface-600)]">
-                        {{ $t(cal.statusMessage) }}
-                    </p>
-                    <p
-                        v-else-if="cal.mode === 'quick' && cal.phase === 'complete'"
-                        class="text-xs font-semibold status-ok"
-                    >
-                        {{ $t("magCalibrationUnguidedDone") }}
-                    </p>
-                    <p v-else-if="cal.mode === 'quick' && cal.phase === 'error'" class="text-xs status-bad">
-                        {{ $t(cal.statusMessage || "magCalibrationError") }}
-                    </p>
+                    <!-- Always rendered so screen readers pick up the messages swapped in below. -->
+                    <div class="legacy-mag-cal-status" aria-live="polite">
+                        <p v-if="calIsCalibrating" class="text-xs text-[var(--surface-600)]">
+                            {{ $t(cal.statusMessage) }}
+                        </p>
+                        <p
+                            v-else-if="cal.mode === 'quick' && cal.phase === 'complete'"
+                            class="text-xs font-semibold status-ok"
+                        >
+                            {{ $t("magCalibrationUnguidedDone") }}
+                        </p>
+                        <p
+                            v-else-if="cal.mode === 'quick' && cal.phase === 'error'"
+                            class="text-xs status-bad"
+                            role="alert"
+                        >
+                            {{ $t(cal.statusMessage || "magCalibrationError") }}
+                        </p>
+                    </div>
                 </template>
             </UiBox>
 
