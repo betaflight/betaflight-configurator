@@ -2927,6 +2927,10 @@
         "message": "გადართეთ VTX ორმოს რეჟიმში (დაბალი გამომავალი სიმძლავრე, მხარდაჭერის შემთხვევაში)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "ფრენისას მარშრუტის წერტილების დამახსოვრება: გადამრთველზე მოკლე დაჭერა ამატებს მიმდინარე პოზიციას ფრენის გეგმაში, როგორც მარშრუტის წერტილს, ხოლო გადამრთველის 1.5 წამის განმავლობაში დაჭერა და გაჩერება შლის ბოლო წერტილს",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "ტრანსპონდერის წრის ტაიმერის განულება",
         "description": "Help text to LAP TIMER RESET mode"

@@ -31,6 +31,18 @@
     "search": {
         "message": "Recherche"
     },
+    "settingsSearchTitle": {
+        "message": "Paramètres de recherche",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Paramètres de recherche...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "Aucun paramètre trouvé",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Ne plus me le montrer"
     },
@@ -369,6 +381,9 @@
     },
     "sensorConfigHardware": {
         "message": "Matériel Capteur"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "Gyros actifs"
     },
     "sensorConfigGyroLabel": {
         "message": "Gyro $1"
@@ -2920,6 +2935,10 @@
         "message": "Basculer le VTX en mode pit (faible puissance de sortie, si pris en charge)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Capturez les points de passage en vol : un appui court ajoute la position actuelle au plan de vol en tant que waypoint, en maintenant le commutateur enfoncé pendant 1.5 secondes supprime le dernier waypoint",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Réinitialiser le chronomètre du transpondeur",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3977,6 +3996,12 @@
     },
     "firmwareFlasherNoReboot": {
         "message": "Pas de redémarrage"
+    },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Type de build"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "Carte"
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Choisir le type de build pour voir les cartes disponibles."
