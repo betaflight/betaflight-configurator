@@ -739,7 +739,7 @@
                         size="xs"
                         class="w-fit"
                         :label="legacyCalButtonLabel"
-                        :loading="calIsCalibrating"
+                        :loading="calIsCalibrating || cal.starting"
                         @click="startLegacyFirmwareCal()"
                     >
                         <template #trailing>
@@ -750,6 +750,10 @@
                     <div class="legacy-mag-cal-status" aria-live="polite">
                         <p v-if="calIsCalibrating" class="text-xs text-[var(--surface-600)]">
                             {{ $t(cal.statusMessage) }}
+                        </p>
+                        <!-- Restarting from 'complete' or 'error' keeps that phase until the offset read returns. -->
+                        <p v-else-if="cal.starting" class="text-xs text-[var(--surface-600)]">
+                            {{ $t("magCalibrationLegacyStarting") }}
                         </p>
                         <p
                             v-else-if="cal.mode === 'quick' && cal.phase === 'complete'"
@@ -1653,7 +1657,8 @@ const legacyCalButtonLabel = computed(() => {
     if (cal.phase === "collecting" && cal.firmwareSecondsRemaining >= 0) {
         return i18n.getMessage("magCalibrationLegacyCountdown", { seconds: cal.firmwareSecondsRemaining });
     }
-    if (calIsCalibrating.value) {
+    // cal.starting covers the CLI offset read before the firmware calibration is triggered.
+    if (calIsCalibrating.value || cal.starting) {
         return i18n.getMessage("magCalibrationLegacyStarting");
     }
     return i18n.getMessage("sensorConfigCalibrate");
