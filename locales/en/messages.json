@@ -31,6 +31,18 @@
     "search": {
         "message": "Search"
     },
+    "settingsSearchTitle": {
+        "message": "Search settings",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Search settings...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "No settings found",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Don't show again"
     },
@@ -473,6 +485,9 @@
     },
     "sensorConfigHardware": {
         "message": "Sensor Hardware"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "Active Gyros"
     },
     "sensorConfigGyroLabel": {
         "message": "Gyro $1"
@@ -2948,6 +2963,10 @@
         "message": "Switch the VTX into pit mode (low output power, if supported)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Capture waypoints in flight: a short press adds the current position to the flight plan as a waypoint, holding the switch for 1.5 seconds deletes the last waypoint",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Reset the transponder lap timer",
         "description": "Help text to LAP TIMER RESET mode"
@@ -4005,6 +4024,12 @@
     },
     "firmwareFlasherNoReboot": {
         "message": "No reboot sequence"
+    },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Build Type"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "Board"
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Select build type to see available boards."

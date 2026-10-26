@@ -71,7 +71,7 @@ export interface PickerDevice {
     displayName?: string;
 }
 import { set as setConfig } from "../../js/ConfigStorage";
-import { EventBus } from "../eventBus";
+import { EventBus, type DevicePermissionType } from "../eventBus";
 
 export default defineComponent({
     props: {
@@ -158,7 +158,8 @@ export default defineComponent({
 
             if (value.startsWith("requestpermission")) {
                 // Extract "serial", "bluetooth", etc., and format the event name
-                const type = value.replace("requestpermission", "");
+                // The options above offer exactly the permission types the bus carries.
+                const type = value.replace("requestpermission", "") as DevicePermissionType;
                 EventBus.$emit(`ports-input:request-permission-${type}`);
                 // Reset selection to "No Selection" (watch(selectedDevice) emits update:modelValue)
                 selectedDevice.value = "noselection";

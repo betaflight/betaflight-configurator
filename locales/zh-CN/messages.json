@@ -70,6 +70,10 @@
         "message": "断开连接（手动）",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "断开连接 （$1）",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "断开连接（蓝牙）",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -80,6 +84,23 @@
     },
     "portsSelectManual": {
         "message": "手动选择"
+    },
+    "networkOnlyBrowserTitle": {
+        "message": "仅网络连接",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "此浏览器只能通过网络连接飞控，如 Wi-Fi 网桥、ELRS 模块或 SITL。对于 USB 或蓝牙，请使用 Chrome 或 Edge，或在您的桌面上安装 Betaflight 应用程序。此处缺失：",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "网页串口不可用。"
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "网页蓝牙不可用。"
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "网页 USB 不可用，因此 DFU 刷写固件已被禁用。"
     },
     "portsSelectNone": {
         "message": "连接不可用"
@@ -129,6 +150,30 @@
     "connectManualDescription": {
         "message": "输入要连接的串口或 URL。",
         "description": "Helper text in the connect dialog when choosing the manual port mode."
+    },
+    "connectBookmarks": {
+        "message": "已保存的连接",
+        "description": "Title of the saved manual connection (bookmark) list in the connect dialog."
+    },
+    "connectBookmarkName": {
+        "message": "名称：",
+        "description": "Label of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkNamePlaceholder": {
+        "message": "此连接的名称",
+        "description": "Placeholder of the input naming a saved manual connection in the connect dialog."
+    },
+    "connectBookmarkSave": {
+        "message": "保存",
+        "description": "Button that saves the entered address as a bookmark in the connect dialog."
+    },
+    "connectBookmarkUpdate": {
+        "message": "更新",
+        "description": "Button that renames the bookmark already pointing at the entered address."
+    },
+    "connectBookmarkRemove": {
+        "message": "删除已保存的连接",
+        "description": "Button that deletes a saved manual connection in the connect dialog."
     },
     "autoConnect": {
         "message": "自动连接"
@@ -230,6 +275,10 @@
     },
     "userLanguageSelect": {
         "message": "选择默认语言"
+    },
+    "language_DEFAULT": {
+        "message": "系统默认 ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
     },
     "language_ka": {
         "message": "ქართული",
@@ -389,8 +438,47 @@
     "autotuneBandwidth": {
         "message": "带宽"
     },
+    "autotuneCrossover": {
+        "message": "增益交越频率"
+    },
     "autotunePhaseMargin": {
         "message": "相位裕度"
+    },
+    "autotuneTargetCrossover": {
+        "message": "交越极限"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "最大相位裕度"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "预估峰值灵敏度"
+    },
+    "autotuneLoopDelay": {
+        "message": "循环延迟"
+    },
+    "autotuneTargetMargin": {
+        "message": "调参目标"
+    },
+    "autotuneMarginAggressive": {
+        "message": "激进"
+    },
+    "autotuneMarginNormal": {
+        "message": "普通"
+    },
+    "autotuneMarginConservative": {
+        "message": "保守"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: 此飞行器无法达到相位裕度的 $2° (它的极限是大约 $3), 故增益仍保持不变而非去猜某个数值。请选择一个较低的目标，或者增加 D 值以提高飞行器极限。"
+    },
+    "autotuneGainClamped": {
+        "message": "$1: 此轮测试得出了 $2× 的增益改变，但单轮测试的上限是 $3×。显示的交越点并未实际达到 — 请应用更改，再记录一次啁啾飞行，并重复此过程。"
+    },
+    "autotuneSensitivityBinds": {
+        "message": "$1: 此增益由峰值灵敏度而非相位裕度确定。鉴于回路轨迹在交越频率之上贴近 -1 临界点，推荐方案不能达到原定的裕度目标。"
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "$1: 一轮测试中不存在一套增益能使峰值灵敏度保持在可靠边界内。提供的值只是目前最好的而非可靠参数 — 将其视为调参起始值并再次测试。"
     },
     "autotuneResonantPeak": {
         "message": "共振峰值"
@@ -406,6 +494,12 @@
     },
     "autotuneApplied": {
         "message": "已应用和保存增益。"
+    },
+    "autotuneApplyConfirmText": {
+        "message": "应用参数将会更改调参滑块并写入飞控的 EEPROM。推荐的参数可能会使飞行器在第一次解锁时不稳定，故首次试飞时请随时准备上锁。"
+    },
+    "autotuneApplyConfirmTitle": {
+        "message": "是否应用推荐增益？"
     },
     "autotuneApplyFailed": {
         "message": "应用增益失败"
@@ -471,7 +565,7 @@
         "message": "前馈"
     },
     "autotuneSliderDTermFilter": {
-        "message": "D-Term 滤波器"
+        "message": "D 项滤波器"
     },
     "autotuneApplyFromAxis": {
         "message": "从轴应用增益"
@@ -700,6 +794,12 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>当前应用版本（$1）不支持该固件 $2</strong></span>。<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>尚未选择任何电调协议</strong>。<br>请在‘'$t(tabMotorTesting.message)'页面内的 ‘'$t(configurationEscFeatures.message)’ 中选择适合您电调的输出协议。<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>加速度计已启用但尚未校准</strong>。<br>如果您准备使用加速度计，请按照「$t(tabSensorConfig.message)」选项页中「$t(initialSetupButtonCalibrateAccel.message)」的说明进行操作。如果启用了任何需要加速度计的功能（自动水平模式、GPS救援等），在加速度计校准完成前，飞行器将无法解锁。<br>如果您不打算使用加速度计，建议您在「$t(tabConfiguration.message)」选项页的「$t(configurationSystem.message)」中禁用它。"
+    },
     "infoVersionOs": {
         "message": "操作系统：<strong>{{operatingSystem}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -800,6 +900,14 @@
         "message": "已连接时间：",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "显示状态详情",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "隐藏状态详情",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_erased_kilobytes": {
         "message": "<span class=\"message-positive\">成功</span>擦除 $1 kB 闪存"
     },
@@ -817,6 +925,9 @@
     },
     "defaultHardwareHead": {
         "message": "硬件"
+    },
+    "defaultHardwareText": {
+        "message": "Beatflight 可在许多不同生产厂家的飞控上运行，如固件刷写器栏目中所列。对您所用硬件的支持来自于其生产厂家，见<a href=\"https://betaflight.com/support\" target=\"_blank\" rel=\"noopener noreferrer\">硬件支持</a>。<br /><br />有用的硬件工具/驱动程序：<ul><li>对于使用 CP210x USB 转串口的旧硬件， 最新的 <b>CP210x 驱动器</b> 可以从 <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载</a>。</li><li>最新的 <b>Zadig</b> Windows USB 驱动安装程序可以从 <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载</a>。</li><li><b>ImpulseRC Driver Fixer</b> 可以从 <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "软件"
@@ -2929,12 +3040,6 @@
     "flightPlanLongitude": {
         "message": "经度<span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "高度<span class=\"units\">英尺 AMSL</span>"
-    },
-    "flightPlanSpeed": {
-        "message": "速度<span class=\"units\">节</span>"
-    },
     "flightPlanType": {
         "message": "航点类型"
     },
@@ -4305,11 +4410,11 @@
         "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningDTermFilterSlider": {
-        "message": "D Term 滤波器乘数",
+        "message": "D 项滤波器乘数",
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "更改 D Term 低通滤波器的截止频率。<br /><br />将滑块移到左边将会提高 D Term 低通滤波的强度 (降低截止频率)。<br /><br />将滑块移到右边将会降低 D Term 低通滤波的强度 (提高截止频率)。<br /><br />D Term 是 PID 中对噪声和共振最为敏感的元素。它会将噪声放大 10 至 100 倍。这便是 D Term 低通滤波器的截止频率低于陀螺仪低通滤波器的原因。<br /><br />D Term 在陀螺仪滤波器之后独立工作。默认 D Term 滤波的参数已为绝大多数飞机优化，并且几乎无需更改。<br /><br />向左移动此滑块可以降低嘈杂的飞机和高PID 'D' 值飞机的电机发热，但可能会带来更多的洗桨和更低频率的 D Term 共振。<br /><br />不推荐向右滑动此滑块，但或许会改善干净的飞机的洗桨情况。这样做或许会导致电机在启动时就烧毁、在飞行中突然抖动以及电机严重发热。",
+        "message": "更改 D 项低通滤波器的截止频率。<br /><br />将滑块移到左边将会提高 D Term 低通滤波的强度 (降低截止频率)。<br /><br />将滑块移到右边将会降低 D Term 低通滤波的强度 (提高截止频率)。<br /><br />D Term 是 PID 中对噪声和共振最为敏感的元素。它会将噪声放大 10 至 100 倍。这便是 D Term 低通滤波器的截止频率低于陀螺仪低通滤波器的原因。<br /><br />D Term 在陀螺仪滤波器之后独立工作。默认 D Term 滤波的参数已为绝大多数飞机优化，并且几乎无需更改。<br /><br />向左移动此滑块可以降低嘈杂的飞机和高PID 'D' 值飞机的电机发热，但可能会带来更多的洗桨和更低频率的 D Term 共振。<br /><br />不推荐向右滑动此滑块，但或许会改善干净的飞机的洗桨情况。这样做或许会导致电机在启动时就烧毁、在飞行中突然抖动以及电机严重发热。",
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
@@ -4444,11 +4549,11 @@
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "陀螺仪低通滤波器衰减更高频率的噪声，以防止其进入 PID 环路。共有两个独立配置的陀螺仪滤波器；默认设置下，两者都处于激活状态。<br /><br />当使用 RPM 滤波器时，通常可以直接将陀螺仪滤波器滑块通常滑到最右边，或者保留一个 500Hz 的静态低通陀螺仪滤波器即可。<br /><br />当陀螺仪滤波延迟最低时，飞机会有最少的洗桨。<br /><br />将滑块向右滑动时请务必检查电机温度。当陀螺仪滤波最少时，必须配备足够的 D Term 滤波！",
+        "message": "陀螺仪低通滤波器衰减更高频率的噪声，以防止其进入 PID 环路。共有两个独立配置的陀螺仪滤波器；默认设置下，两者都处于激活状态。<br /><br />当使用 RPM 滤波器时，通常可以直接将陀螺仪滤波器滑块通常滑到最右边，或者保留一个 500Hz 的静态低通陀螺仪滤波器即可。<br /><br />当陀螺仪滤波延迟最低时，飞机会有最少的洗桨。<br /><br />将滑块向右滑动时请务必检查电机温度。当陀螺仪滤波最少时，必须配备足够的 D 项滤波！",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "D Term 低通滤波器将衰减高频噪声和由于 D 增益放大引起的共振。<br /><br />共有两个 D Term 滤波器，其效果是累加的。几乎所有飞机都需要同时使用这两个滤波器，或者可以使用单个 PT2 滤波器来取代双 PT1 滤波器。<br /><br />一般情况下，当配置所带来的陀螺仪延迟最低时 (滑块滑到最右，更高的截止频率) 飞机将会飞得最好，并具有最少的洗桨。然而，尤其对于 D Term 滤波器来说，向右滑动滑块将极大增加电机过热的可能性。<br /><br />如果您没有设置足够的 D Term 滤波强度，那么极容易烧毁电机 - 务必小心！",
+        "message": "D 项低通滤波器将衰减高频噪声和由于 D 增益放大引起的共振。<br /><br />共有两个 D 项滤波器，其效果是累加的。几乎所有飞机都需要同时使用这两个滤波器，或者可以使用单个 PT2 滤波器来取代双 PT1 滤波器。<br /><br />一般情况下，当配置所带来的陀螺仪延迟最低时 (滑块滑到最右，更高的截止频率) 飞机将会飞得最好，并具有最少的洗桨。然而，尤其对于 D 项滤波器来说，向右滑动滑块将极大增加电机过热的可能性。<br /><br />如果您没有设置足够的 D 项滤波强度，那么极容易烧毁电机 - 务必小心！",
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
@@ -4529,21 +4634,21 @@
         "message": "配置文件关联的滤波器设置"
     },
     "pidTuningDTermLowpass": {
-        "message": "D Term 低通滤波器 1"
+        "message": "D 项低通滤波器 1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "两个 D Term 低通滤波器中的第一个。<br /><br />在动态模式下，低油门时滤波会更强，随着油门的提升滤波会减少，延迟会降低。这有助于控制电机研磨现象或解锁升天，同时减少起飞后的延迟和洗桨现象。当 D Term 低通滤波器 expo 值设置得较高时，截止频率由低向高的过渡随着油门得升高发生得更早。<br /><br />在静态模式下，截止频率为固定值。不推荐在 D Term 滤波器上使用这样的设置。<br /><br />滤波器默认类型为 PT1，尽管如此，部分用户更倾向于在这里仅使用一个动态 Biquad 滤波器，而不启用第二个 PT1 滤波器。<br /><br />任何导致 D Term 滤波减弱的更改可能会导致严重的电机过热或解锁升天现象。",
+        "message": "两个 D 项低通滤波器中的第一个。<br /><br />在动态模式下，低油门时滤波会更强，随着油门的提升滤波会减少，延迟会降低。这有助于控制电机研磨现象或解锁升天，同时减少起飞后的延迟和洗桨现象。当 D Term 低通滤波器 expo 值设置得较高时，截止频率由低向高的过渡随着油门得升高发生得更早。<br /><br />在静态模式下，截止频率为固定值。不推荐在 D 项滤波器上使用这样的设置。<br /><br />滤波器默认类型为 PT1，尽管如此，部分用户更倾向于在这里仅使用一个动态 Biquad 滤波器，而不启用第二个 PT1 滤波器。<br /><br />任何导致 D 项滤波减弱的更改可能会导致严重的电机过热或解锁升天现象。",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpass2": {
-        "message": "D Term 低通滤波器 2"
+        "message": "D项低通滤波器 2"
     },
     "pidTuningDTermLowpass2Help": {
-        "message": "两个 D Term 低通滤波器中的第二个。<br /><br />该滤波器永远处于静态模式 (固定截止频率)。 D Term 滤波至少需要两个 PT1 或者一个 Biquad。<br /><br />通常来说，该滤波器的截止频率通常会被设置得高于动态低通滤波器 1 的截止频率移动范围。 这将对该频率以上的噪音进行二次滤波。<br /><br />任何导致 D Term 滤波减弱的更改可能会导致严重的电机过热或解锁升天现象。",
+        "message": "两个 D 项低通滤波器中的第二个。<br /><br />该滤波器永远处于静态模式 (固定截止频率)。 D 项滤波至少需要两个 PT1 或者一个 Biquad。<br /><br />通常来说，该滤波器的截止频率通常会被设置得高于动态低通滤波器 1 的截止频率移动范围。 这将对该频率以上的噪音进行二次滤波。<br /><br />任何导致 D 项滤波减弱的更改可能会导致严重的电机过热或解锁升天现象。",
         "description": "Help icon for the DTerm Lowpass 2 Filter"
     },
     "pidTuningDTermLowpassFiltersGroup": {
-        "message": "D Term 低通滤波器"
+        "message": "D 项低通滤波器"
     },
     "pidTuningStaticCutoffFrequency": {
         "message": "静态截止频率 [Hz]"
@@ -4552,10 +4657,10 @@
         "message": "动态曲线 Expo"
     },
     "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term 陷波滤波器"
+        "message": "D项陷波滤波器"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": "在 D Term 数据中的指定中心频率上设置一个静态 (截止频率固定) 的陷波滤波器。<br /><br />陷波宽度由截止频率指定。<br /><br />对于被 D Term 放大的独立的、恒定频率的共振非常有效。<br /><br />尽可能将截止频率靠近中心。除非是低转速飞机，否则请尽量避免将陷波器设置得低于 100hz。"
+        "message": "在 D 项数据中的指定中心频率上设置一个静态 (截止频率固定) 的陷波滤波器。<br /><br />陷波宽度由截止频率指定。<br /><br />对于被 D 项放大的独立的、恒定频率的共振非常有效。<br /><br />尽可能将截止频率靠近中心。除非是低转速飞机，否则请尽量避免将陷波器设置得低于 100hz。"
     },
     "pidTuningYawLowpassFiltersGroup": {
         "message": "偏航低通滤波器"
@@ -4585,7 +4690,7 @@
         "message": "I 值释放"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "当快速移动发生时抑制 I Term 的积累，用以减少翻滚结束后和其他快速输入是的回弹。<br><br>目标值模式会响应平滑摇杆输入，并且适用于高灵敏度飞机。<br><br>陀螺仪模式则适用于极其滞后的飞机。<br><br>通常来说 Yaw 轴不适用 I Term 释放。"
+        "message": "当快速移动发生时抑制 I 项的积累，用以减少翻滚结束后和其他快速输入是的回弹。<br><br>目标值模式会响应平滑摇杆输入，并且适用于高灵敏度飞机。<br><br>陀螺仪模式则适用于极其滞后的飞机。<br><br>通常来说 Yaw 轴不适用 I 项释放。"
     },
     "pidTuningItermRelaxAxes": {
         "message": "轴",
@@ -7577,8 +7682,17 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "不选择 OSD 协议并继续进行"
     },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ 制造商支持"
+    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "遗留"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ 制造商提供支持的目标。关于此板的支持问题，请与制造商联系。"
+    },
+    "firmwareFlasherOptionLabelLegacyTarget": {
+        "message": "⚠️ 传统目标，不再维护。请自行斟酌使用。"
     },
     "coreBuild": {
         "message": "仅核心功能"
@@ -7757,6 +7871,12 @@
     },
     "userProfileUpdateFailed": {
         "message": "个人资料更新失败"
+    },
+    "userAccountDeleteSuccess": {
+        "message": "您的 Betaflight 帐户已被删除"
+    },
+    "userAccountDeleteFailed": {
+        "message": "删除账户失败"
     },
     "userBackupsLoadFailed": {
         "message": "加载备份失败"
@@ -7989,6 +8109,18 @@
     },
     "sectionUserPasskeys": {
         "message": "用户密码"
+    },
+    "sectionDeleteAccount": {
+        "message": "删除帐户"
+    },
+    "deleteAccountDescription": {
+        "message": "永久删除您的 Betaflight 帐户，包括您的个人资料、密码、登录令牌和云备份。此操作不能撤消。"
+    },
+    "actionDeleteAccount": {
+        "message": "删除帐户"
+    },
+    "confirmDeleteAccount": {
+        "message": "此操作会永久删除您的 Betaflight 帐户，包括您的个人资料、密码、登录令牌和云备份。此操作不能撤消，数据也无法恢复。您确定要继续吗？"
     },
     "osdPresetPositionAlignTitle": {
         "message": "对齐位置",
@@ -8609,5 +8741,134 @@
     },
     "preflightNotamLastFetched": {
         "message": "上次获取时间"
+    },
+    "pidTuningWingSettings": {
+        "message": "固定翼设置"
+    },
+    "pidTuningWingSterm": {
+        "message": "S 类"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "模式"
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "经典"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "双曲线"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "基本速度设置"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "高级速度设置"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "延迟"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "以毫秒为单位的空速估算延迟（全油门平飞时加速到50%极速所需的时间）"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "重力"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "以百分比计的重力对空速估算的影响"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "桨叶螺距"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "桨叶螺距对应英寸的100倍"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "飞行器质量"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "以克计的飞行器质量"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "阻力系数"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "飞行器阻力系数"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "推力"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "以克计的静态推力"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "最大电池电压"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "理论最大电压的100倍。用来在进行空速估算时进行油门线性化"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "电机KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "电机KV。在电机页面修改此值。"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "俯仰偏移"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "俯仰偏移角度的10倍，用以估算飞行器速度"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "双曲线设置"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "失速速度%"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "PID 达到最大的速度（失速速度）%"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "失速 PID"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "失速速度下的 PID 乘数"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "全速 PID"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "全速下的 PID 乘数"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "指数"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "PID 在速度增长时变化的速度"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "双曲线图"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "其他设置"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "偏航类型"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "偏航的类型（方向舵或差速）"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "方向舵"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "差速"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "俯仰偏移"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "自稳模式下以0.1度计的俯仰偏移。正值代表机翼向下倾斜"
     }
 }

@@ -19,6 +19,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// <reference types="vite-plugin-pwa/vanillajs" />
+
 // Injected by Vite's `define` (vite.config.js).
 declare const __APP_VERSION__: string;
 declare const __APP_PRODUCTNAME__: string;

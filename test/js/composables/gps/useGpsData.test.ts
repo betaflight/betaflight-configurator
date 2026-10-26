@@ -19,7 +19,7 @@ type GpsData = ReturnType<typeof useGpsData>;
 const POLL_CHAIN = [
     MSPCodes.MSP_RAW_GPS,
     MSPCodes.MSP_COMP_GPS,
-    MSPCodes.MSP_GPS_SV_INFO,
+    MSPCodes.MSP_GPSSVINFO,
     MSPCodes.MSP_ATTITUDE,
     MSPCodes.MSP_RAW_IMU,
 ];

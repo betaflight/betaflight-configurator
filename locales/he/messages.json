@@ -26,10 +26,22 @@
         "message": "אזהרה"
     },
     "noticeTitle": {
-        "message": "הודעה"
+        "message": "התראה"
     },
     "search": {
         "message": "חיפוש"
+    },
+    "settingsSearchTitle": {
+        "message": "חיפוש הגדרות",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "חפש הגדרות...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "לא נמצאו הגדרות",
+        "description": "Message shown when the global settings search has no matching results"
     },
     "dontShowAgain": {
         "message": "אל תציג שוב"
@@ -57,7 +69,7 @@
         "message": "התחבר"
     },
     "connecting": {
-        "message": "מתחבר "
+        "message": "מתחבר"
     },
     "disconnect": {
         "message": "התנתק"
@@ -137,7 +149,7 @@
         "message": "גרסת קושחה וירטואלית"
     },
     "portOverrideText": {
-        "message": "יציאת תקשורת:"
+        "message": "יציאה:"
     },
     "connectVirtualDescription": {
         "message": "סימולציה של בקר טיסה ללא חומרה.",
@@ -216,7 +228,7 @@
         "message": "חיבור אוטומטי: כבוי - על המשתמש לבחור את היציאה הטורית הנכונה וללחוץ על כפתור \"התחבר\" בעצמו"
     },
     "expertMode": {
-        "message": "אפשר מצב מתקדם"
+        "message": "הפעל מצב מומחה"
     },
     "expertModeDescription": {
         "message": "הפעל אפשרויות מצב מומחה"
@@ -329,7 +341,7 @@
         "message": "בקר הטיסה לא התחבר מחדש"
     },
     "deviceRebooting": {
-        "message": "Device - <span class=\"message-negative\">Rebooting</span>"
+        "message": "התקן - <span class=\"message-negative\">מאתחל מחדש</span>"
     },
     "deviceRebooting_flashBootloader": {
         "message": "מכשיר - <span class=\"message-negative\">מאתחל למצב FLASH BOOTLOADER</span>"
@@ -369,6 +381,9 @@
     },
     "sensorConfigHardware": {
         "message": "חומרת חיישנים"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "ג'ירוסקופ פעיל"
     },
     "sensorConfigGyroLabel": {
         "message": "ג'ירוסקופ $1"
@@ -591,7 +606,7 @@
         "message": "מנגנון חירום"
     },
     "tabOsd": {
-        "message": "OSD"
+        "message": "תצוגת מסך (OSD)"
     },
     "tabVtx": {
         "message": "משדר וידאו"
@@ -674,19 +689,19 @@
         "message": "<span class=\"message-negative\">נכשל</span> בסגירת יציאה טורית"
     },
     "usbDeviceOpenFail": {
-        "message": "<span class=\"message-negative\">Failed</span> to open USB device!"
+        "message": "<span class=\"message-negative\">נכשל</span> בפתיחת התקן USB!"
     },
     "usbDeviceClosed": {
-        "message": "USB device <span class=\"message-positive\">successfully</span> closed"
+        "message": "התקן USB נסגר <span class=\"message-positive\">בהצלחה</span>"
     },
     "usbDeviceCloseFail": {
-        "message": "<span class=\"message-negative\">Failed</span> to close USB device"
+        "message": "<span class=\"message-negative\">נכשל</span> בסגירת התקן USB"
     },
     "usbDeviceUdevNotice": {
-        "message": "Are <strong>udev rules</strong> installed correctly? See docs for instructions"
+        "message": "האם <strong>udev rules</strong> מותקנים כראוי? עיין בתיעוד לקבלת הוראות"
     },
     "stm32UsbDfuNotFound": {
-        "message": "התקן DFU USB לא נמצא"
+        "message": "USB DFU לא נמצא"
     },
     "stm32DfuPermissionRequired": {
         "message": "המכשיר אותחל מחדש למצב DFU.<br><br>הדפדפן שלך דורש הרשאת USB כדי לגשת למכשיר ה-DFU. לחץ על הכפתור למטה כדי לבחור אותו מתוך בורר המכשירים."
@@ -698,31 +713,31 @@
         "message": "אתחול המכשיר ל-Bootloader: נכשל"
     },
     "stm32TimedOut": {
-        "message": "מעבד SMT32 - לא מגיב, צריבה נכשלה"
+        "message": "מעבד SMT32 - לא מגיב, צריבה: נכשלה"
     },
     "stm32WrongResponse": {
-        "message": "STM32 Communication failed, wrong response, expected: $1 (0x$2) received: $3 (0x$4)"
+        "message": "תקשורת STM32 נכשלה, תגובה שגויה, צפוי: $1 (0x$2) התקבל: $3 (0x$4)"
     },
     "stm32ContactingBootloader": {
-        "message": "מתקשר עם המנהל האתחול (Bootloader)"
+        "message": "מתקשר עם תוכנת האתחול"
     },
     "stm32ContactingBootloaderFailed": {
-        "message": "תקשורת עם מנהל האתחול (Bootloader) נכשלה"
+        "message": "תקשורת עם תוכנת האתחול נכשלה"
     },
     "stm32ResponseBootloaderFailed": {
-        "message": "אין תגובה ממנהל האתחול (Bootloader), צריבה נכשלה"
+        "message": "אין תגובה מתוכנת האתחול, צריבה נכשלה"
     },
     "stm32GlobalEraseExtended": {
-        "message": "מבצע מחיקה כללית של הבקר"
+        "message": "מבצע מחיקת שבב כללית (דרך מחיקה מורחבת)..."
     },
     "stm32LocalEraseExtended": {
-        "message": "מבצע מחיקה מקומית של הבקר"
+        "message": "מבצע מחיקת שבב מקומית (דרך מחיקה מורחבת)..."
     },
     "stm32GlobalErase": {
-        "message": "מבצע מחיקה כללית של הבקר"
+        "message": "מבצע מחיקת שבב כללית"
     },
     "stm32LocalErase": {
-        "message": "מבצע מחיקה מקומית של הבקר"
+        "message": "מבצע מחיקת שבב מקומית"
     },
     "stm32InvalidHex": {
         "message": "קובץ hex לא חוקי"
@@ -737,37 +752,37 @@
         "message": "מאמת..."
     },
     "stm32ProgrammingSuccessful": {
-        "message": "הצריבה הסתיימה בהצלחה"
+        "message": "הצריבה: הסתיימה בהצלחה"
     },
     "stm32ProgrammingFailed": {
-        "message": "הצריבה נכשלה"
+        "message": "הצריבה: נכשלה"
     },
     "stm32AddressLoadFailed": {
-        "message": "Address load for option bytes sector failed. Very likely due to read protection."
+        "message": "טעינת כתובת עבור האפשרויות bytes secto נכשלה. סביר מאוד להניח בשל הגנת קריאה."
     },
     "stm32AddressLoadUnknown": {
-        "message": "Address load for option bytes sector failed with unknown error. Aborting."
+        "message": "טעינת כתובת עבור אפשרויות  bytes sector נכשלה עם שגיאה לא ידועה. מפסיק פעולה."
     },
     "stm32NotReadProtected": {
         "message": "הגנת כתיבה לא פעילה"
     },
     "stm32ReadProtected": {
-        "message": "הבקר מוגן כתיבה, מוריד הגנה. לא לנתק את הבקר עד גמר התהליך."
+        "message": "נראה שבקר הטיסה מוגן מפני קריאה. מבצע הסרת הגנה. אין לנתק!"
     },
     "stm32UnprotectSuccessful": {
-        "message": "הורדת הגנת כתיבה הצליחה."
+        "message": "הסרת ההגנה הצליחה."
     },
     "stm32UnprotectUnplug": {
-        "message": "נתק וחבר שוב את בקר הטיסה במצב DFU כדי לנסות לצרוב בשנית"
+        "message": "נדרשת פעולה: יש לנתק ולחבר מחדש את בקר הטיסה במצב DFU כדי לנסות לצרוב שוב!"
     },
     "stm32UnprotectFailed": {
-        "message": "הורדת הגנת כתיבה נכשלה"
+        "message": "הסרת ההגנה מבקר הטיסה נכשלה"
     },
     "stm32UnprotectInitFailed": {
-        "message": "נכשל באיתחול קוד פתיחת בקר לכתיבה"
+        "message": "אתחול תהליך הסרת ההגנה נכשל"
     },
     "noConfigurationReceived": {
-        "message": "No configuration received within <span class=\"message-negative\">10 seconds</span>, communication <span class=\"message-negative\">failed</span>"
+        "message": "לא התקבלה תצורה בתוך <span class=\"message-negative\">10 שניות</span>, התקשורת <span class=\"message-negative\">נכשלה</span>"
     },
     "firmwareTypeNotSupported": {
         "message": "קושחה שאינה Betaflight <span class=\"message-negative\">אינה נתמכת</span>, למעט מצב CLI."
@@ -826,13 +841,13 @@
         "message": "תאר את הבעיה"
     },
     "tabSwitchConnectionRequired": {
-        "message": "נדרשת <strong>התחברות</strong> לפני שתתאפשר צפייה בכרטיסיות."
+        "message": "עליך <strong>להתחבר</strong> לפני שתוכל לצפות באחת מהלשוניות."
     },
     "tabSwitchWaitForOperation": {
-        "message": "You <span class=\"message-negative\">can't</span> do this right now, please wait for current operation to finish ..."
+        "message": "אתה <span class=\"message-negative\">לא יכול</span> לבצע זאת כעת, אנא המתן לסיום הפעולה הנוכחית..."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "You need to <strong>upgrade</strong> your firmware to the latest version of Betaflight before you can use the $1 tab."
+        "message": "עליך <strong>לעדכן גרסה</strong> של הקושחה לגרסה העדכנית ביותר של Betaflight לפני שתוכל להשתמש בלשונית $1."
     },
     "firmwareVersion": {
         "message": "גרסת קושחה: <strong>$1</strong>"
@@ -847,10 +862,10 @@
         "message": "שם כלי הטיס: <strong>$1</strong>"
     },
     "armingDisabled": {
-        "message": "<strong>חימוש כובה</strong>"
+        "message": "<strong>חימוש מושבת</strong>"
     },
     "armingEnabled": {
-        "message": "<strong>חימוש מאופשר</strong>"
+        "message": "<strong>חימוש מופעל</strong>"
     },
     "runawayTakeoffPreventionDisabled": {
         "message": "<strong>הגנת בריחת כלי טיס (Runaway Takeoff Prevention) מושבתת זמנית</strong>"
@@ -859,16 +874,16 @@
         "message": "<strong>הגנת בריחת כלי טיס (Runaway Takeoff Prevention) מופעלת</strong>"
     },
     "boardInfoReceived": {
-        "message": "Board: <strong>$1</strong>, version: <strong>$2</strong>"
+        "message": "לוח: <strong>$1</strong>, גרסה: <strong>$2</strong>"
     },
     "buildInfoReceived": {
         "message": "מריץ קושחה ששוחררה בתאריך: <strong>$1</strong>"
     },
     "fcInfoReceived": {
-        "message": "Flight controller info, identifier: <strong>$1</strong>, version: <strong>$2</strong>"
+        "message": "מידע על בקר הטיסה, מזהה: <strong>$1</strong>, גרסה: <strong>$2</strong>"
     },
     "versionLabelTarget": {
-        "message": "תצורת קושחה"
+        "message": "יעד"
     },
     "versionLabelFirmware": {
         "message": "קושחה"
@@ -905,7 +920,7 @@
         "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_erased_kilobytes": {
-        "message": "Erased $1 kB of flash <span class=\"message-positive\">successfully</span>"
+        "message": "נמחקו $1 kB של צריבה <span class=\"message-positive\">בהצלחה</span>"
     },
     "dfu_device_flash_info": {
         "message": "זוהה מכשיר עם גודל פלאש כולל של $1 KiB"
@@ -1005,13 +1020,13 @@
         "message": "<a href=\"https://betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">קהילת Betaflight ב-Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
-        "message": "כיול מד תאוצה"
+        "message": "כייל מד תאוצה"
     },
     "initialSetupCalibrateMagText": {
         "message": "הזז את הרחפן לפחות <strong>360</strong> מעלות על כל צירי הסיבוב, יש לך 30 שניות לבצע משימה זו"
     },
     "initialSetupButtonCalibratingText": {
-        "message": "בתהליך כיול..."
+        "message": "מכייל..."
     },
     "initialSetupButtonReset": {
         "message": "מחק הגדרות"
@@ -1106,11 +1121,11 @@
         "description": "Message that pops up to describe the FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
-        "message": "לא זוהה אות מקלט (RX) תקין",
+        "message": "לא זוהה אות מקלט תקין",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
-        "message": "המקלט (RX) שלך בדיוק התאושש ממצב מנגנון חירום אך מתג החימוש עדיין פועל",
+        "message": "המקלט שלך בדיוק התאושש ממצב מנגנון חירום אך מתג החימוש עדיין פועל",
         "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
@@ -1202,7 +1217,7 @@
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
-        "message": "מד התאוצה (Accelerometer) לא כויל ומופעלים פיצ'רים שמסתמכים עליו. כייל את מד התאוצה.",
+        "message": "מד התאוצה לא כויל ומופעלים פיצ'רים שמסתמכים עליו. כייל את מד התאוצה.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
@@ -1311,7 +1326,7 @@
         "message": "כיול מד התאוצה <span class=\"message-positive\">הסתיים</span>"
     },
     "initialSetupSettingsRestored": {
-        "message": "הגדרות שוחזרו לערכי  <strong>ברירת מחדל</strong>"
+        "message": "ההגדרות שוחזרו ל<strong>ברירת מחדל</strong>"
     },
     "featureNone": {
         "message": "&lt;בחר אחד&gt;"
@@ -1320,13 +1335,13 @@
         "message": "PPM/CPPM (חוט בודד)"
     },
     "featureINFLIGHT_ACC_CAL": {
-        "message": "כיול מצב מאוזן, בזמן טיסה."
+        "message": "כיול אופק בטיסה"
     },
     "featureRX_SERIAL": {
         "message": "טורי (דרך UART)"
     },
     "featureMOTOR_STOP": {
-        "message": "לא לסובב מנועים כאשר מחומש"
+        "message": "אל תסובב את המנועים כשחמוש"
     },
     "featureMOTOR_STOPTip": {
         "message": "פיצ'ר זה מושבת כאשר AIRMODE מופעל"
@@ -1357,10 +1372,10 @@
         "message": "הפעל מד טווח Sonar למדידת מרחק מהקרקע בס\"מ"
     },
     "featureTELEMETRY": {
-        "message": "יציאת טלמטריה"
+        "message": "פלט טלמטריה"
     },
     "featureTELEMETRYTip": {
-        "message": "הפעל פלט טלמטריה לשליחה לשלט (TX)"
+        "message": "הפעל פלט טלמטריה לשליחה לשלט"
     },
     "feature3D": {
         "message": "מצב 3D (לשימוש עם בקרי מהירות דו-כיווניים)"
@@ -1408,7 +1423,7 @@
         "message": "הפעל Airmode באופן קבוע"
     },
     "featureRX_SPI": {
-        "message": "מקלט SPI Rx (לדוגמה מקלט מובנה)"
+        "message": "מקלט SPI (לדוגמה מקלט מובנה)"
     },
     "escSensorSerialPort": {
         "message": "יציאה טורית של טלמטריית בקר המהירות"
@@ -1465,7 +1480,7 @@
         "message": "ה-UART שאליו מחוברת מצלמה בפרוטוקול RunCam. מוגדר במכשיר עצמו החל מ-API 1.49; לשונית היציאות רק מציגה אותו."
     },
     "configurationTelemetryHelp": {
-        "message": "פלט טלמטריה מהמקלט (RX)"
+        "message": "פלט טלמטריה מהמקלט"
     },
     "configurationRSSI": {
         "message": "RSSI (עוצמת אות)"
@@ -1756,10 +1771,10 @@
         "message": "מצפצף כאשר הג'ירוסקופ מכויל"
     },
     "beeperRX_LOST": {
-        "message": "מצפצף כאשר השלט (TX) כבוי או האות אבד (חוזר עד שה-TX תקין)"
+        "message": "מצפצף כאשר השלט כבוי או האות אבד (חוזר עד שהשלט תקין)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "מצפצף SOS כאשר חמוש והשלט (TX) כבוי או האות אבד (נחיתה אוטומטית/פרוק אוטומטי)"
+        "message": "מצפצף SOS כאשר חמוש והשלט כבוי או האות אבד (נחיתה אוטומטית/פרוק אוטומטי)"
     },
     "beeperDISARMING": {
         "message": "צפצוף בעת פרוק בקר הטיסה"
@@ -1973,7 +1988,7 @@
         "message": "מקלט טורי"
     },
     "portsSerialRxHelp": {
-        "message": "הפעל או השבת מקלט טורי של שלט רחוק (RX) על UART שצוין. מותר רק אחד."
+        "message": "הפעל או השבת מקלט טורי של שלט רחוק על UART שצוין. מותר רק אחד."
     },
     "portsSensorIn": {
         "message": "קלט חיישן"
@@ -2069,7 +2084,7 @@
         "message": "זרימה אופטית"
     },
     "portsClaimOsd": {
-        "message": "OSD"
+        "message": "תצוגת מסך (OSD)"
     },
     "portsClaimOsdCustomText": {
         "message": "טקסט OSD מותאם אישית"
@@ -2346,7 +2361,7 @@
         "message": "הפחתת רעידות"
     },
     "pidTuningFeedforwardJitterHelp": {
-        "message": "הפחתת רעידות מורידה את החיזוי הקדמי כאשר הסטיקים זזים לאט, ללא קשר למיקום שלהם.<br><br>זה מאפשר טיסה חלקה וללא רעידות כשמבצעים קשתות עגולות ואיטיות, אך עדיין מספק חיזוי קדמי מלא ללא כל השהייה כאשר הסטיקים זזים מהר. Transition אינו נדרש, ויש להגדיר אותו לאפס, כאשר הפחתת הרעידות פעילה.<br><br>ברירת המחדל היא 7. ערכים גבוהים יותר, למשל 10-12, טובים למטרות פריסטייל HD או צילום סינמטי, 5 עשוי להיות טוב יותר למרוצים עם חיבורי רדיו מהירים."
+        "message": "הפחתת רעידות מורידה את החיזוי הקדמי כאשר הסטיקים זזים לאט, ללא קשר למיקום שלהם.<br><br>זה מאפשר טיסה חלקה וללא רעידות כשמבצעים קשתות עגולות ואיטיות, אך עדיין מספק חיזוי קדמי מלא ללא כל השהייה כאשר הסטיקים זזים מהר. מעבר אינו נדרש, ויש להגדיר אותו לאפס, כאשר הפחתת הרעידות פעילה.<br><br>ברירת המחדל היא 7. ערכים גבוהים יותר, למשל 10-12, טובים למטרות פריסטייל HD או צילום סינמטי, 5 עשוי להיות טוב יותר למרוצים עם חיבורי רדיו מהירים."
     },
     "pidTuningFeedforwardSmoothFactor": {
         "message": "חלקלקות"
@@ -2388,7 +2403,7 @@
         "message": "מעבר"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "מפחית באופן לינארי את החיזוי הקדמי כאשר הסטיקים קרובים למרכז.<br><br>בגרסה 4.2 ומטה, ניתן להשתמש במעבר כדי לספק תגובות סטיק חלקות יותר סביב מיקום מרכז הסטיק.<br><br>בגרסה 4.3, השימוש במעבר אינו מומלץ, מכיוון שהוא 'הוחלף' על ידי פונקציית הפחתת הרעידות (Jitter Reduction).<br><br>ערך של 0 משבית את המעבר. ערך של 0.3 חותך את החיזוי הקדמי לאפס כשהסטיקים ממורכזים לחלוטין, אך מעלה אותו למצב רגיל מלא כשהסטיקים עוברים את קו ה-30% מהמרכז."
+        "message": "מפחית באופן לינארי את החיזוי הקדמי כאשר הסטיקים קרובים למרכז.<br><br>בגרסה 4.2 ומטה, ניתן להשתמש במעבר כדי לספק תגובות סטיק חלקות יותר סביב מיקום מרכז הסטיק.<br><br>בגרסה 4.3, השימוש במעבר אינו מומלץ, מכיוון שהוא 'הוחלף' על ידי פונקציית הפחתת הרעידות.<br><br>ערך של 0 משבית את המעבר. ערך של 0.3 חותך את החיזוי הקדמי לאפס כשהסטיקים ממורכזים לחלוטין, אך מעלה אותו למצב רגיל מלא כשהסטיקים עוברים את קו ה-30% מהמרכז."
     },
     "pidTuningProportional": {
         "message": "<b>P</b>roporcional"
@@ -2544,7 +2559,7 @@
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "<strong>מצב סליידרים לכיול PID</strong><br><br>מצב הסליידרים לכיול PID יכול להיות:<br><br>&bull; כבוי - ללא סליידרים, הזן ערכים ידנית<br>&bull; RP - הסליידרים שולטים רק על Roll ו-Pitch, הזן ערכי Yaw ידנית<br>&bull; RPY - הסליידרים שולטים על כל ערכי ה-PID<br><br><span class=\"message-negative\"><b>אזהרה:</b></span>מעבר ממצב RP למצב RPY ידרוס את הגדרות ה-Yaw עם הגדרות ברירת המחדל של הקושחה."
+        "message": "<strong>מצב סליידרים לכיול PID</strong><br><br>מצב הסליידרים לכיול PID יכול להיות:<br><br>&bull; כבוי - ללא סליידרים, הזן ערכים ידנית<br>&bull; RP - הסליידרים שולטים רק על גלגול ועלרוד, הזן ערכי סבסוב ידנית<br>&bull; RPY - הסליידרים שולטים על כל ערכי ה-PID<br><br><span class=\"message-negative\"><b>אזהרה:</b></span>מעבר ממצב RP למצב RPY ידרוס את הגדרות הסבסוב עם הגדרות ברירת המחדל של הקושחה."
     },
     "receiverHelpModelId": {
         "message": "אם תגדיר את ה-Model Match למטה למספר שאינו 255, תוכל להזין את מספר המקלט בעמוד ההגדרות של המודל ב-OpenTX/EdgeTX ולהפעיל את ה-Model Match בסקריפט ה-LUA של ELRS עבור אותו מודל. Model match הוא בין 0 ל-63 (כולל).<br />למידע נוסף, ראה את תיעוד ELRS."
@@ -2553,7 +2568,7 @@
         "message": "מזהה התאמת מודל"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">בדוק תמיד שמנגנון החירום עובד כראוי!</a></strong></b> ההגדרות נמצאות בלשונית מנגנון חירום, שדורשת מצב מומחה.<br> &#8226; <b>השתמש בקושחה העדכנית ביותר לשלט (TX)!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">השבת את מסנן ה-ADC החומרתי</a></strong> בשלט אם אתה משתמש ב-OpenTx או ב-EdgeTx.<br>הגדרה בסיסית: הגדר את תצורת 'המקלט' כראוי. בחר את ה-'מפת ערוצים' הנכון לשלט שלך. ודא שהעמודות של גלגול, עלרוד ושאר הערוצים זזות כראוי. התאם את ערכי הקצה של הערוצים בשלט לכ-1000 ועד כ-2000, ושים את נקודת האמצע על 1500. למידע נוסף, קרא את ה-<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">תיעוד</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">בדוק תמיד שמנגנון החירום עובד כראוי!</a></strong></b> ההגדרות נמצאות בלשונית מנגנון חירום, שדורשת מצב מומחה.<br> &#8226; <b>השתמש בקושחה העדכנית ביותר לשלט!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">השבת את מסנן ה-ADC החומרתי</a></strong> בשלט אם אתה משתמש ב-OpenTx או ב-EdgeTx.<br>הגדרה בסיסית: הגדר את תצורת 'המקלט' כראוי. בחר את ה-'מפת ערוצים' הנכון לשלט שלך. ודא שהעמודות של גלגול, עלרוד ושאר הערוצים זזות כראוי. התאם את ערכי הקצה של הערוצים בשלט לכ-1000 ועד כ-2000, ושים את נקודת האמצע על 1500. למידע נוסף, קרא את ה-<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">תיעוד</a></strong>."
     },
     "receiverFailsafeActiveTitle": {
         "message": "מנגנון חירום פעיל"
@@ -2592,7 +2607,7 @@
         "message": "הערך המינימלי (במיקרו-שניות) שיזוהה כ'סטיק למעלה / ימינה' לטובת קלט פקודה (MAX_CHECK)."
     },
     "receiverDeadband": {
-        "message": "שטח מת RC"
+        "message": "שטח מת שלט"
     },
     "receiverHelpDeadband": {
         "message": "אלו ערכים (במיקרו-שניות) המגדירים עד כמה פקודות הרדיו צריכות להיות שונות כדי להיחשב כתקינות. עבור שלטים עם קפיצות בפלט, ניתן להגדיל את הערך הזה אם יש קפיצות בערוצים בזמן מנוחה."
@@ -2604,7 +2619,7 @@
         "message": "אלו ערכים (במיקרו-שניות) המגדירים עד כמה פקודות הרדיו צריכות להיות שונות כדי להיחשב כתקינות. עבור שלטים עם קפיצות בפלט, ניתן להגדיל את הערך הזה אם יש קפיצות בערוצים בזמן מנוחה. <strong>הגדרה זו חלה על סבסוב בלבד.</strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": "שטח מת מצערת(3D)"
+        "message": "שטח מת מצערת 3D"
     },
     "receiverHelp3dDeadbandThrottle": {
         "message": "אלו ערכים (במיקרו-שניות). כדי להרחיב את האזור הניטרלי יש להגדיל את הערך. <strong>הגדרה זו חלה על מצערת תלת-מימד (3D) בלבד.</strong>"
@@ -2656,7 +2671,7 @@
         "message": "ביטוי שיוך (Binding Phrase)"
     },
     "receiverButtonSticks": {
-        "message": "מדמה שלט (Radio Emulator)",
+        "message": "מדמה שלט",
         "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
@@ -2685,10 +2700,10 @@
         "message": "אין מצבים התואמים למסננים הנוכחיים."
     },
     "auxiliaryMin": {
-        "message": "מינימום (Min)"
+        "message": "מינימום"
     },
     "auxiliaryMax": {
-        "message": "מקסימום (Max)"
+        "message": "מקסימום"
     },
     "auxiliaryDisabled": {
         "message": "(מושבת)",
@@ -2923,6 +2938,10 @@
         "message": "העבר את משדר הוידאו למצב פיט (Pit Mode, עוצמת שידור חלשה, אם נתמך)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "דגימת נקודות ציון בטיסה: לחיצה קצרה מוסיפה את המיקום הנוכחי לתוכנית הטיסה כנקודת ציון, החזקת המפסק למשך 1.5 שניות מוחקת את נקודת הציון האחרונה",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "איפוס שעון ההקפות של המשיב",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3084,7 +3103,7 @@
         "message": "{{active}} מתוך {{total}} משבצות פעילות"
     },
     "servosChangeDirection": {
-        "message": "שנה כיוון בשלט (TX) כדי שיתאים"
+        "message": "שנה כיוון בשלט כדי שיתאים"
     },
     "servosForwardChannel": {
         "message": "העבר ערוץ {{channel}} למנוע סרוו {{servo}}"
@@ -3260,11 +3279,31 @@
     "flightPlanLongitude": {
         "message": "קו אורך <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "גובה <span class=\"units\">ft AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "גובה <span class=\"units\">{{unit}}</span> מעל פני הים",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "מהירות <span class=\"units\">קשר</span>"
+    "flightPlanAltitudeAria": {
+        "message": "גובה ב- {{unit}} מעל פני הים",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "מהירות <span class=\"units\">{{unit}}</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "מהירות ב- {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "יחידות מידה",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "אימפריאלי (רגל, קשר, מייל ימי)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "מטרי (מטר, קמ\"ש, ק\"מ)"
     },
     "flightPlanType": {
         "message": "סוג נקודת הציון"
@@ -3607,10 +3646,10 @@
         "message": "שחרר כדי לעצור"
     },
     "escDshotDirectionDialog-Start": {
-        "message": "בנפרד (Individually)"
+        "message": "בנפרד"
     },
     "escDshotDirectionDialog-StartWizard": {
-        "message": "אשף (Wizard)"
+        "message": "אשף"
     },
     "escDshotDirectionDialog-SetDirectionHint": {
         "message": "שנה כיוון של מנוע(ים) נבחרים"
@@ -3793,7 +3832,7 @@
         "message": "זיכרון פלאש מובנה"
     },
     "blackboxLoggingSdCard": {
-        "message": "כרטיס זיכרון"
+        "message": "כרטיס SD"
     },
     "blackboxLoggingSerial": {
         "message": "יציאה טורית"
@@ -3802,7 +3841,7 @@
         "message": "אל קובץ"
     },
     "serialLoggingSupportedNote": {
-        "message": "תוכל לתעד את הטיסה למכשיר חיצוני (כגון OpenLager) תוך שימוש ביציאה טורית. הגדר את היציאה (Port) בלשונית Ports."
+        "message": "תוכל לתעד את הטיסה למכשיר חיצוני (כגון OpenLager) תוך שימוש ביציאה טורית. הגדר את היציאה בלשונית יציאות."
     },
     "sdcardNote": {
         "message": "יומני הטיסה יכולים להישמר בחריץ כרטיס ה-SD המובנה של בקר הטיסה שלך."
@@ -3961,6 +4000,12 @@
     "firmwareFlasherNoReboot": {
         "message": "ללא תהליך אתחול"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "סוג בנייה"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "לוח"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "בחר סוג בנייה כדי לראות לוחות זמינים."
     },
@@ -3971,7 +4016,7 @@
         "message": "אפליקציית Betaflight תומכת בצריבה של 'לוחות מאוחדים' יחד עם ההגדרות הספציפיות לכל לוח בשלב אחד.<br><br>המשמעות של לוחות מאוחדים היא שאותו קובץ HEX של קושחה יכול לשמש לכל הלוחות בעלי אותו המעבד.<br><br>גרסת Betaflight 4.4 מציגה את אפשרות <strong>בנייה בענן</strong><br><br>בעזרת <strong>בנייה בענן</strong> אנחנו צריכים להגדיר אילו אפשרויות חומרה קיימות ברחפן שלך.<br><br>כדי שהלוחות השונים יעבדו עם אותה קושחה, קובץ הגדרות ספציפי נפרס יחד עם הקושחה כאשר צורבים לוחות מאוחדים. <br><br>בבנייה מקומית אתה יכול לטעון קובץ הגדרות מאוחד או לבחור לוח לפני טעינת קובץ הקושחה (.hex).<br><br>אם נתקלת בבעיות בשימוש בקושחה, אנא שקול להצטרף לדיסקורד או לפתוח <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> בגיטהאב."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": "בחר גרסת קושחה עבור הלוח."
+        "message": "בחר גרסת קושחה עבור הלוח שלך."
     },
     "firmwareFlasherNoRebootDescription": {
         "message": "הפעל במידה ובקר הטיסה (FC) שלך נמצא במצב Boot. לדוגמה, אם הדלקת את הלוח בזמן שגישרת את פיני ה-Bootloader או תוך כדי לחיצה על כפתור ה-BOOT בלוח."
@@ -3983,7 +4028,7 @@
         "message": "נסה לצרוב את הלוח באופן אוטומטי (מופעל על ידי זיהוי חיבור ליציאה טורית (COM) חדשה).<br /><br /><span class=\"message-negative\">אזהרה</span>: תכונה זו משביתה את פונקציות הזיהוי (Detect) והגיבוי (Backup)."
     },
     "firmwareFlasherFullChipErase": {
-        "message": "מחיקה מלאה של המעבד"
+        "message": "מחיקה שבב מלאה"
     },
     "firmwareFlasherFullChipEraseDescription": {
         "message": "מוחק את כל נתוני ההגדרות השמורים כרגע על הלוח."
@@ -4566,7 +4611,7 @@
         "message": "עוצמה"
     },
     "pidTuningTransition": {
-        "message": "מעבר (Transition)"
+        "message": "מעבר"
     },
     "pidTuningHorizon": {
         "message": "Horizon"
@@ -4590,11 +4635,11 @@
         "message": "מפעיל אוטומטית את הפרופיל הראשון שיש לו מספר תאים השווה לזה של הסוללה המחוברת.<br><br><ul><li><b>החלף</b>: תמיד עבור לפרופיל עם מספר תאים תואם אם קיים כזה.</li><li><b>השבת</b>: השבת מעבר פרופיל אוטומטי</li><b>1S-8S</b>: בחר את מספר התאים שיהיו משויכים לפרופיל זה</li></ul>"
     },
     "pidTuningCellCountChange": {
-        "message": "החלף (Switch)",
+        "message": "החלף",
         "description": "Switch profile if there are no profiles matching cell count"
     },
     "pidTuningCellCountStay": {
-        "message": "השבת (Disable)",
+        "message": "השבת",
         "description": "Disable cell count for this profile"
     },
     "pidTuningCellCount1S": {
@@ -4622,7 +4667,7 @@
         "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "הגדרות פילטרים - בלתי תלויות בפרופיל הנבחר"
+        "message": "הגדרות מסננים ללא תלות בפרופיל"
     },
     "pidTuningSliderLowFiltering": {
         "message": "פחות סינון",
@@ -4737,7 +4782,7 @@
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
-        "message": "מגדיל את השיכוך (D) בציר ה-Pitch בלבד, כלומר עבור ה-Pitch ביחס ל-Roll. עוזר לשלוט ב-Overshoot או Bounceback שספציפיים ל-Pitch.<br /><br />כלים עם מומנט התמד (Moment of Inertia) 'כבד' יותר בציר ה-Pitch דורשים לרוב יותר כוח שיכוך (מאחר של-Pitch יש יותר אינרציה והוא צובר יותר תנופה).<br /><br />כוון תחילה את סליידרי ה'שיכוך' (Damping) ו/או ה'מעקב' (Tracking) הראשיים, עד שתקבל התנהגות טובה של ציר ה-Roll. לאחר מכן, השתמש בסליידרי ה-Pitch (העלאה או הורדה) לכוונון עדין של ציר ה-Pitch מבלי להשפיע על ציר ה-Roll.",
+        "message": "מגדיל את השיכוך (D) בציר העלרוד בלבד, כלומר עבור העלרוד ביחס לגלגול. עוזר לשלוט ב-Overshoot או Bounceback שספציפיים לעלרוד.<br /><br />כלים עם מומנט התמד 'כבד' יותר בציר העלרוד דורשים לרוב יותר כוח שיכוך (מאחר שלעלרוד יש יותר אינרציה והוא צובר יותר תנופה).<br /><br />כוון תחילה את סליידרי ה'שיכוך' ו/או ה'מעקב' הראשיים, עד שתקבל התנהגות טובה של ציר הגלגול. לאחר מכן, השתמש בסליידרי העלרוד (העלאה או הורדה) לכוונון עדין של ציר העלרוד מבלי להשפיע על ציר הגלגול.",
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
@@ -4925,10 +4970,10 @@
         "message": "השהיית I Term "
     },
     "pidTuningItermRelaxHelp": {
-        "message": "מדכא הצטברות של ה-I Term כאשר מתבצעות תנועות מהירות, ומפחית Bounce-back (קפיצה חזרה) בסיום רולים, פליפים ותנועות חדות אחרות.<br><br> מצב Setpoint מגיב לפקודות סטיק מוחלקות ועובד הכי טוב לרחפנים תגובתיים.<br><br>מצב ג'ירוסקופ עשוי להיות שימושי לרחפנים איטיים ומגיבים באיחור (Laggy).<br><br>בדרך כלל אין להחיל iTerm Relax על ציר ה-Yaw."
+        "message": "מדכא הצטברות של ה-I Term כאשר מתבצעות תנועות מהירות, ומפחית קפיצה חזרה בסיום רולים, פליפים ותנועות חדות אחרות.<br><br> מצב Setpoint מגיב לפקודות סטיק מוחלקות ועובד הכי טוב לרחפנים תגובתיים.<br><br>מצב ג'ירוסקופ עשוי להיות שימושי לרחפנים איטיים ומגיבים באיחור.<br><br>בדרך כלל אין להחיל iTerm Relax על ציר הסבסוב"
     },
     "pidTuningItermRelaxAxes": {
-        "message": "צירים (Axes)",
+        "message": "צירים",
         "description": "Iterm Relax Axes selection"
     },
     "pidTuningOptionRP": {
@@ -4955,7 +5000,7 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "ערכים נמוכים משמעותם דיכוי חזק יותר של ה-Bounce-back לאחר פליפים בכלים חלשים. ערכים גבוהים מגבירים את הדיוק בפניות חדות במרוצים.<br><br>הגדר ל-30-40 במרוצים, 15 לסטאפים תגובתיים של פריסטייל, 10 לרחפני פריסטייל כבדים יותר, 3-5 ל-X-class."
+        "message": "ערכים נמוכים משמעותם דיכוי חזק יותר של הקפיצה חזרה לאחר פליפים בכלים חלשים. ערכים גבוהים מגבירים את הדיוק בפניות חדות במרוצים.<br><br>הגדר ל-30-40 במרוצים, 15 לסטאפים תגובתיים של פריסטייל, 10 לרחפני פריסטייל כבדים יותר, 3-5 ל-X-class."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "שליטה מוחלטת"
@@ -6068,7 +6113,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRoll": {
-        "message": "ערכי ה-PID בציר ה-Roll"
+        "message": "ערכי ה-PID בציר הגלגול"
     },
     "osdTextElementPIDPitch": {
         "message": "PID בציר העלרוד",
@@ -6124,7 +6169,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRollAngle": {
-        "message": "תצוגה מספרית של זווית ה-Roll במעלות"
+        "message": "תצוגה מספרית של זווית הגלגול במעלות"
     },
     "osdTextElementMainBattUsage": {
         "message": "שימוש בסוללה",
@@ -6274,11 +6319,11 @@
         "message": "מפעיל מחוון כאשר האנטי כבידה פעיל"
     },
     "osdTextGForce": {
-        "message": "כוח ג'י (G force)",
+        "message": "כוח המשיכה",
         "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
-        "message": "מראה כמה כוח ג'י מופעל על הרחפן"
+        "message": "מראה כמה כוח המשיכה מופעל על הרחפן"
     },
     "osdTextElementMotorDiag": {
         "message": "דיאגנוסטיקת מנועים",
@@ -6328,14 +6373,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayLeft": {
-        "message": "שכבת על (Overlay) המציגה את מיקום הסטיק השמאלי בשלט."
+        "message": "שכבת על המציגה את מיקום הסטיק השמאלי בשלט."
     },
     "osdTextElementStickOverlayRight": {
         "message": "תצוגת סטיק ימני",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayRight": {
-        "message": "שכבת על (Overlay) המציגה את מיקום הסטיק הימני בשלט."
+        "message": "שכבת על המציגה את מיקום הסטיק הימני בשלט."
     },
     "osdTextElementDisplayName": {
         "message": "שם תצוגה",
@@ -6380,7 +6425,7 @@
         "message": "שם פרופיל ה-OSD כפי שהוגדר במשתני ה-CLI הבאים: \"osd_profile_1_name\", \"osd_profile_2_name\" ו-\"osd_profile_3_name\""
     },
     "osdTextElementRcChannels": {
-        "message": "ערוצי רדיו (RC)",
+        "message": "ערוצי שלט",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRcChannels": {
@@ -6419,7 +6464,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescTxUplinkPower": {
-        "message": "מציג ערך של עוצמת שידור השלט (ב-mW או ב-W). שימושי כאשר <i>הספק דינמי (Dynamic Power)</i> מופעל בשלטים התומכים בכך"
+        "message": "מציג ערך של עוצמת שידור השלט (ב-mW או ב-W). שימושי כאשר <i>הספק דינמי</i> מופעל בשלטים התומכים בכך"
     },
     "osdTextElementReadyMode": {
         "message": "מצב מוכן",
@@ -6548,7 +6593,7 @@
         "message": "מתח הסוללה בזמן אמת"
     },
     "osdTextStatGForce": {
-        "message": "כוח G מקסימלי",
+        "message": "כוח משיכה מקסימלי",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatGForce": {
@@ -7516,7 +7561,7 @@
         "message": "ניתן לשמור עד 3 (2 בחלק מהבקרים) פרופילי PID שונים בבקר הטיסה. פרופילי ה-PID כוללים את ערכי ה-PID, משקל ה-D Setpoint והגדרות Angle/Horizon הנמצאות בלשונית זו. ברגע שאתה בשטח, תוכל להשתמש בפקודות סטיק פשוטות (ראה הוראות אונליין) כדי לעבור בין הפרופילים."
     },
     "pidTuningRateProfile": {
-        "message": "פרופיל תגובה (Rateprofile)"
+        "message": "פרופיל תגובה"
     },
     "pidTuningRateProfileTip": {
         "message": "ניתן לשמור עד 3 פרופילי תגובה שונים לכל פרופיל בבקר הטיסה. פרופילי התגובה כוללים את ההגדרות עבור 'RC Rate', 'Rate', 'RC Expo', 'Throttle' ו-'TPA'. המעבר בין פרופילי התגובה אפשרי גם תוך כדי טיסה, על ידי הגדרת מתג בעל 3 מצבים לפעולת 'Rate Profile Selection' בלשונית 'Adjustments'."
@@ -7600,13 +7645,13 @@
         "message": "לא ניתן להפעיל מצב Mass storage כיוון שכונן האחסון אינו מוכן."
     },
     "dialogConfirmResetTitle": {
-        "message": "אשר"
+        "message": "אישור"
     },
     "dialogConfirmResetNote": {
         "message": "אזהרה: האם אתה בטוח שברצונך לאפס את <strong>כל ההגדרות</strong> למצב לא מוגדר? זהו <strong>לא</strong> \"איפוס להגדרות יצרן\". זה עלול לגרום לבעיות לא צפויות, וייתכן שיהיה עליך לצרוב את הקושחה מחדש כדי שתוכל להתחבר שוב."
     },
     "dialogConfirmResetConfirm": {
-        "message": "איפוס"
+        "message": "אפס"
     },
     "dialogConfirmResetClose": {
         "message": "ביטול"

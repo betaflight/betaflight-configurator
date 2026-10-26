@@ -1539,7 +1539,7 @@ export function reinitializeConnection() {
     // re-points the selection when the device returns under a new id.
 
     // Send reboot command to the flight controller
-    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+    MSP.send_message(MSPCodes.MSP_REBOOT, false, false);
 
     // A BLE/manual link survives the reboot command (only the MCU restarts), so
     // connectionValid stays stale-true until the flush drops it ~1.5s later. Force it
@@ -1563,7 +1563,7 @@ export function reinitializeConnection() {
 
 /**
  * Drive a reconnect for a reboot initiated OUTSIDE this module (CLI `save`/`exit` via
- * useMspCliSession, which already rebooted the FC — so no MSP_SET_REBOOT is sent). Needed
+ * useMspCliSession, which already rebooted the FC — so no MSP_REBOOT is sent). Needed
  * for transports that never re-enumerate (BLE, manual/TCP): they emit no addedDevice for a
  * reboot, so nothing else would trigger the reconnect. Runs the same flush -> drop-stale-link
  * -> retry cycle as a BLE/manual Save & Reboot; Auto-Connect is honored inside rebootReconnect().

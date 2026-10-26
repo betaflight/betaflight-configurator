@@ -290,9 +290,9 @@ const recommendationNotes = computed(() => {
 });
 
 const AXIS_DEFS: AxisDef[] = [
-    { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },
-    { key: "pitch", labelKey: "autotuneAxisPitch", color: "#49c747", pidKey: "pitchPID" },
-    { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7", pidKey: "yawPID" },
+    { key: "roll", labelKey: "autotuneAxisRoll", color: "var(--color-axis-roll)", pidKey: "rollPID" },
+    { key: "pitch", labelKey: "autotuneAxisPitch", color: "var(--color-axis-pitch)", pidKey: "pitchPID" },
+    { key: "yaw", labelKey: "autotuneAxisYaw", color: "var(--color-axis-yaw)", pidKey: "yawPID" },
 ];
 
 const PID_ROWS: PidRowDef[] = [

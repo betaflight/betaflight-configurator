@@ -8,11 +8,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useGraphStore } from "../stores/graph";
+import { useGraphStore, type SeekBarMode } from "../stores/graph";
 
 const graphStore = useGraphStore();
 
-const seekbarOptions = [
+const seekbarOptions: { label: string; value: SeekBarMode }[] = [
     { label: "Average motor throttle", value: "avgThrottle" },
     { label: "Maximum stick input", value: "maxRC" },
     { label: "Maximum motor differential", value: "maxMotorDiff" },
@@ -20,6 +20,6 @@ const seekbarOptions = [
 
 const seekbarType = computed({
     get: () => graphStore.seekBarMode || "avgThrottle",
-    set: (val) => graphStore.setSeekBarMode?.(val),
+    set: (val: SeekBarMode) => graphStore.setSeekBarMode?.(val),
 });
 </script>

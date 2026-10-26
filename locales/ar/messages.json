@@ -70,6 +70,10 @@
         "message": "قطع الاتصال (يدوي)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
+    "disconnectBridge": {
+        "message": "قطع الاتصال)",
+        "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
+    },
     "disconnectBluetooth": {
         "message": "قطع الاتصال (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
@@ -80,6 +84,23 @@
     },
     "portsSelectManual": {
         "message": "اختيار يدوي"
+    },
+    "networkOnlyBrowserTitle": {
+        "message": "اتصالات الشبكة فقط",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "هذا المتصفح لا يمكنه الاتصال بوحدة التحكم بالطيران إلا عبر الشبكة، مثل جسر Wi-Fi أو وحدة ELRS أو محاكي SITL. للاتصال عبر USB أو Bluetooth، استخدم متصفح Chrome أو Edge، أو ثبّت تطبيق Betaflight على جهاز الكمبيوتر. الميزات غير المتاحة هنا:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "واجهة Web Serial غير متاحة."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "واجهة Web Bluetooth غير متاحة."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "واجهة WebUSB غير متاحة، لذلك تم تعطيل تحديث البرنامج الثابت عبر وضع DFU."
     },
     "portsSelectNone": {
         "message": "لا يوجد اتصال متاح"
@@ -113,7 +134,7 @@
         "message": "الوضع الافتراضي"
     },
     "virtualMSPVersion": {
-        "message": "إصدار البرنامج الظاهري"
+        "message": "إصدار البرنامج الثابت الافتراضي"
     },
     "portOverrideText": {
         "message": "منفذ:"
@@ -254,6 +275,10 @@
     },
     "userLanguageSelect": {
         "message": "حدد اللغة الافتراضية"
+    },
+    "language_DEFAULT": {
+        "message": "النظام الافتراضي ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
     },
     "sensorDataFlashNotFound": {
         "message": "لم يتم العثور على شريحة بيانات <br>",
@@ -409,8 +434,47 @@
     "autotuneBandwidth": {
         "message": "عرض النطاق الترددي"
     },
+    "autotuneCrossover": {
+        "message": "تردد تقاطع الكسب"
+    },
     "autotunePhaseMargin": {
         "message": "هامش الطور"
+    },
+    "autotuneTargetCrossover": {
+        "message": "حد تردد التقاطع"
+    },
+    "autotuneMaxPhaseMargin": {
+        "message": "أقصى هامش الطور"
+    },
+    "autotunePredictedSensitivity": {
+        "message": "الحساسية القصوى المتوقعة"
+    },
+    "autotuneLoopDelay": {
+        "message": "تأخير الحلقة"
+    },
+    "autotuneTargetMargin": {
+        "message": "ضبط الهدف"
+    },
+    "autotuneMarginAggressive": {
+        "message": "قوي"
+    },
+    "autotuneMarginNormal": {
+        "message": "عادي"
+    },
+    "autotuneMarginConservative": {
+        "message": "متحفظ"
+    },
+    "autotuneTargetUnreachable": {
+        "message": "$1: لا تستطيع هذه الطائرة الوصول إلى هامش طور قدره ‎$2°‎ (الحد الأقصى لها يقارب $3)، لذلك يتم تثبيت قيمة الكسب بدلًا من تخمينها. اختر قيمة مستهدفة أقل، أو زِد قيمة D لرفع هذا الحد."
+    },
+    "autotuneGainClamped": {
+        "message": "‏$1: تشير نتائج القياس إلى ضرورة تغيير الكسب بمقدار ‎$2×‎، لكن التغيير في كل دورة ضبط محدود بـ ‎$3×‎. لم يتم الوصول بعد إلى حد تردد التقاطع المعروض — طبّق الإعدادات، ونفّذ رحلة أخرى لاختبار Chirp، ثم كرّر العملية.\n نسخ الترجمة"
+    },
+    "autotuneSensitivityBinds": {
+        "message": "‏$1: الحساسية القصوى، وليس هامش الطور، هي التي حدّدت قيمة الكسب هنا. تمر استجابة الحلقة بالقرب من النقطة ‎−1‎ عند ترددات أعلى من تردد التقاطع، لذلك تتوقف التوصية قبل الوصول إلى هامش الطور المستهدف.\n نسخ الترجمة"
+    },
+    "autotuneSensitivityUnreachable": {
+        "message": "‏$1: لا توجد قيمة للكسب يمكن الوصول إليها خلال دورة ضبط واحدة وتحافظ في الوقت نفسه على الحساسية القصوى ضمن حدود متانة نظام التحكم. القيمة المقترحة هي أفضل قيمة متاحة، وليست بالضرورة آمنة — تعامل معها كنقطة بداية، ثم أعد القياس.\n نسخ الترجمة"
     },
     "autotuneResonantPeak": {
         "message": "ذروة الرنين"
@@ -426,6 +490,12 @@
     },
     "autotuneApplied": {
         "message": "تم تطبيق قيم الزيادة وحفظها."
+    },
+    "autotuneApplyConfirmText": {
+        "message": "عند الضغط على «تطبيق»، تُكتب إعدادات منزلقات الضبط إلى وحدة التحكم بالطيران (Flight Controller)، وتُحفظ في ذاكرة EEPROM. قد تتسبب قيم الكسب الموصى بها في فقدان استقرار الطائرة عند أول تشغيل للمحركات (ARM)، لذا كن مستعدًا لإيقاف المحركات فورًا أثناء الاختبار الأول.\n نسخ الترجمة"
+    },
+    "autotuneApplyConfirmTitle": {
+        "message": "تطبيق المكاسب الموصى بها؟"
     },
     "autotuneApplyFailed": {
         "message": "فشل تطبيق قيم الزيادة"
@@ -458,7 +528,7 @@
         "message": "الميل الجانبي (Roll)"
     },
     "autotuneAxisPitch": {
-        "message": "الميل الأمامي والخلفي (Pitch)"
+        "message": "الميل الأمامي (Pitch)"
     },
     "autotuneAxisYaw": {
         "message": "الدوران (Yaw)"
@@ -658,7 +728,7 @@
         "message": "Hex غير صالح"
     },
     "stm32Erase": {
-        "message": "جارٍ المحو..."
+        "message": "جارٍ المسح..."
     },
     "stm32Flashing": {
         "message": "جارٍ البرمجة..."
@@ -719,6 +789,12 @@
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "النسخة الحالية من التطبيق (<strong>$1</strong>) لا تدعم إصدار الـ<strong>firmware $2</strong>.<br>$t(configuratorUpdateHelp.message)\n"
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>لم يتم تحديد بروتوكول إخراج المحركات</strong>.<br>يرجى اختيار بروتوكول إخراج المحركات المناسب لوحدات ESC لديك من '$t(configurationEscFeatures.message)' في تبويب '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)\n"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>مقياس التسارع مفعّل، لكنه لم تتم معايرته</strong>.<br>إذا كنت تنوي استخدام مقياس التسارع، فيرجى اتباع تعليمات '$t(initialSetupButtonCalibrateAccel.message)' في تبويب '$t(tabSensorConfig.message)'. إذا كانت أي وظيفة تتطلب مقياس التسارع مفعّلة (مثل أوضاع التسوية التلقائية أو GPS Rescue وغيرها)، فسيُمنع تسليح الطائرة (ARM) حتى تتم معايرة مقياس التسارع.<br>إذا كنت لا تنوي استخدام مقياس التسارع، فيُنصح بتعطيله من '$t(configurationSystem.message)' في تبويب '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "نظام التشغيل: <strong>{{operatingSystem}}</strong>",
@@ -813,12 +889,20 @@
         "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "حمولة المعالج:",
+        "message": "تحميل المعالج:",
         "description": "CPU load text shown in the status bar"
     },
     "statusbar_connection_time": {
         "message": "مدة الاتصال:",
         "description": "Connection time text shown in the status bar"
+    },
+    "statusbar_expand": {
+        "message": "إظهار تفاصيل الحالة",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "إخفاء تفاصيل الحالة",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
     },
     "dfu_erased_kilobytes": {
         "message": "تم مسح $1 كيلوبايت من وحدة التخزين المؤقتة <span class=\"message-positive\"> بنجاح </span>"
@@ -837,6 +921,9 @@
     },
     "defaultHardwareHead": {
         "message": "الجهاز"
+    },
+    "defaultHardwareText": {
+        "message": "يعمل Betaflight على وحدات التحكم بالطيران من شركات مصنّعة متعددة، ويمكن الاطلاع عليها في تبويب تفليش البرنامج الثابت (Firmware Flasher). تتولى الشركة المصنّعة لجهازك تقديم الدعم الخاص به، راجع <a href=\"https://betaflight.com/support\" target=\"_blank\" rel=\"noopener noreferrer\">دعم الأجهزة</a>.<br /><br />أدوات وبرامج تشغيل مفيدة للأجهزة:<ul><li>للأجهزة القديمة التي تستخدم شريحة CP210x لتحويل USB إلى اتصال تسلسلي، يمكن تنزيل أحدث <b>برامج تشغيل CP210x</b> من <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">هنا</a></li><li>يمكن تنزيل أحدث إصدار من <b>Zadig</b> لتثبيت برامج تشغيل USB على Windows من <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">هنا</a></li><li>يمكن تنزيل أداة <b>ImpulseRC Driver Fixer</b> من <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">هنا</a></li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "البرنامج"
@@ -902,6 +989,9 @@
     "defaultSupportSubline2": {
         "message": "المطور"
     },
+    "defaultSupport": {
+        "message": "يتولى فريق Betaflight إصلاح الأخطاء البرمجية في Betaflight، لذا يُرجى الإبلاغ عنها عبر GitHub. للحصول على دعم خاص بجهازك، تواصل مع الشركة المصنّعة له. أما إذا كنت بحاجة إلى مساعدة في تجميع طائرتك وإعدادها، فيمكنك سؤال المجتمع على Discord أو البحث في الويكي.<br /><br />\n\n"
+    },
     "defaultSupport2": {
         "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">ويكي Betaflight</a>"
     },
@@ -910,6 +1000,9 @@
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">مجتمع Betaflight على Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "معايرة أجهزة قياس التسارع"
@@ -1629,6 +1722,9 @@
     "configurationThrottleMaximum": {
         "message": "الحد الأقصى لدواسة الوقود (أعلى قيمة لوحدة التحكم الإلكترونية للسرعة عند تفعيل وضع تشغيل المحركات)"
     },
+    "configurationMotorKv": {
+        "message": "قيمة KV للمحرك"
+    },
     "configurationThrottleMinimumCommand": {
         "message": "الأمر الأدنى (قيمة وحدة التحكم الإلكترونية للسرعة عند عدم تفعيل وضع تشغيل المحركات)"
     },
@@ -1786,6 +1882,19 @@
     "gpsSerialPortSaveFailed": {
         "message": "تعذر تعيين منفذ GPS التسلسلي، لذلك لم يتم حفظ أي شيء."
     },
+    "gpsProtocolUnknown": {
+        "message": "غير معروف {{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
+        "message": "ناقل CAN"
+    },
+    "dronecanCanDeviceHelp": {
+        "message": "ناقل CAN الموصول به وحدات DroneCAN. يخص هذا الإعداد نظام DroneCAN بالكامل؛ لذلك سيؤدي تغييره إلى نقل جميع أجهزة DroneCAN، وليس جهاز GPS فقط. يتطلب تغيير هذا الإعداد إعادة التشغيل.\n"
+    },
+    "dronecanSaveFailed": {
+        "message": "تعذر تعيين منفذ GPS التسلسلي، لذلك لم يتم حفظ أي شيء."
+    },
     "configurationGPSAutoBaud": {
         "message": "الباود التلقائي"
     },
@@ -1839,6 +1948,9 @@
     "configurationSaved": {
         "message": "تم حفظ الإعدادات"
     },
+    "configurationSaveFailed": {
+        "message": "فشل حفظ إعدادات المستشعرات"
+    },
     "configurationButtonSave": {
         "message": "احفظ ثم أعد التشغيل"
     },
@@ -1880,6 +1992,123 @@
     },
     "portsMSPHelp": {
         "message": "<strong>ملاحظة:</strong> <span class=\"message-negative\">لا</span> تعطل MSP على المنفذ التسلسلي الأول إلا إذا كنت تعرف ما تفعله. قد تضطر إلى إعادة برمجة ومسح التكوين الخاص بك إذا قمت بذلك."
+    },
+    "portsTilesHelp": {
+        "message": "في هذا الإصدار من البرنامج الثابت، يتم تعيين المنافذ التسلسلية من تبويب كل ميزة على حدة. تعرض كل بطاقة أدناه الأجهزة المتصلة بلوحة التحكم، والميزة التي يستخدمها كل منفذ حاليًا."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "لم يُوفّر هذا الإصدار من البرنامج الثابت بعد قائمة بالأجهزة الطرفية المتصلة بلوحة التحكم."
+    },
+    "portsSectionSerial": {
+        "message": "المنافذ التسلسلية"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "المستشعرات"
+    },
+    "portsTileUnassigned": {
+        "message": "غير معين"
+    },
+    "portsTileConfigure": {
+        "message": "تهيئة"
+    },
+    "portsTileCanNode": {
+        "message": "وصلة(عقدة ربط)"
+    },
+    "portsClaimActiveHelp": {
+        "message": "المنفذ نشط لهذه الميزة"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "تم تعيين المنفذ، لكنه غير نشط — إما بسبب تعارض مع وظيفة أخرى على المنفذ، أو لأن إعادة تشغيل وحدة التحكم بالطيران لا تزال مطلوبة.\n"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "غير نشط - تمكين ميزة SOFTSERIAL على علامة الإعدادات"
+    },
+    "portsInactiveNoPins": {
+        "message": "غير نشط - لا توجد دبابيس مخصصة لهذا المنفذ"
+    },
+    "portsInactiveReason": {
+        "message": "غير نشط - {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "غير نشط"
+    },
+    "portsPortFree": {
+        "message": "مجاني"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "نظام تحديد المواقع"
+    },
+    "portsClaimRx": {
+        "message": "مستقبل الإشارة التسلسلي\n نسخ الترجمة"
+    },
+    "portsClaimBlackbox": {
+        "message": "تسجيلات الصندوق الأسود"
+    },
+    "portsClaimEscSensor": {
+        "message": "البيانات التليمترية لوحدة ESC\n نسخ الترجمة"
+    },
+    "portsClaimRcdevice": {
+        "message": "الكاميرا (بروتوكول RunCam)"
+    },
+    "portsClaimGimbal": {
+        "message": "مثبّت الكاميرا\n"
+    },
+    "portsClaimVtx": {
+        "message": "جهاز إرسال الفيديو"
+    },
+    "portsClaimRangefinder": {
+        "message": "كاشف المدى"
+    },
+    "portsClaimOpticalflow": {
+        "message": "التدفق البصري"
+    },
+    "portsClaimOsd": {
+        "message": "عرض المعلومات على الشاشة"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "نص مخصص OSD"
+    },
+    "portsClaimTelemetry": {
+        "message": "البيانات التليمترية"
+    },
+    "portsConflictTitle": {
+        "message": "المنفذ قيد الاستخدام "
+    },
+    "portsConflictWarning": {
+        "message": "أنت بصدد تعيين منفذ تسلسلي تستخدمه ميزة أخرى بالفعل. سيؤدي حفظ الإعدادات إلى إعادة جميع المنافذ إلى حالتها الافتراضية (غير مُهيّأة):"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}</strong> يستخدم حاليا من قبل {{features}}"
+    },
+    "portsConflictQuestion": {
+        "message": "هل تريد الحفظ على أي حال؟"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "حفظ على أي حال"
+    },
+    "portsConflictCancel": {
+        "message": "إلغاء"
+    },
+    "portsSensorGyro": {
+        "message": "الجيروسكوب"
+    },
+    "portsSensorAcc": {
+        "message": "مقياس التسارع"
+    },
+    "portsSensorBaro": {
+        "message": "مقياس الضغط الجوي"
+    },
+    "portsSensorMag": {
+        "message": "المقياس المغناطيسي"
+    },
+    "portsSensorNotDetected": {
+        "message": "تمت تهيئته، لكن لم يتم اكتشافه"
     },
     "portsTelemetryDisabled": {
         "message": "معطل"
@@ -2447,6 +2676,13 @@
     },
     "auxiliaryToggleUnused": {
         "message": "إخفاء الأوضاع غير المستخدمة"
+    },
+    "auxiliarySearch": {
+        "message": "أوضاع البحث",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
+    },
+    "auxiliaryNoModesFound": {
+        "message": "لا توجد أوضاع تطابق الفلاتر الحالية."
     },
     "auxiliaryMin": {
         "message": "الحد الأدنى"
@@ -3024,11 +3260,31 @@
     "flightPlanLongitude": {
         "message": "خط الطول <span class=\"units\">°</span>"
     },
-    "flightPlanAltitude": {
-        "message": "الارتفاع <span class=\"units\">ft AMSL</span>"
+    "flightPlanAltitudeWithUnit": {
+        "message": "الارتفاع <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
     },
-    "flightPlanSpeed": {
-        "message": "السرعة <span class=\"units\">knots</span>"
+    "flightPlanAltitudeAria": {
+        "message": "الارتفاع {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "السرعة <span class=\"units\">knots</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "السرعة في {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "وحدات",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "النظام الإمبراطوري (ft, kts, nm)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "النظام المتري (م، كم/ساعة)"
     },
     "flightPlanType": {
         "message": "نوع النقطة"
@@ -3430,6 +3686,9 @@
     "sensorsSonarSelect": {
         "message": "السونار"
     },
+    "sensorsPitotSelect": {
+        "message": "مستشعر  (Pitot)\n"
+    },
     "sensorsDebugSelect": {
         "message": "تصحيح الأخطاء"
     },
@@ -3450,6 +3709,9 @@
     },
     "sensorsSonarTitle": {
         "message": "السونار - سم"
+    },
+    "sensorsPitotTitle": {
+        "message": "السرعة الجوية"
     },
     "cliInfo": {
         "message": "<strong>ملاحظة:</strong> ستؤدي مغادرة علامة تبويب CLI أو الضغط على «قطع الاتصال» إلى إرسال الأمر \"<strong>exit</strong>\" إلى اللوحة <strong>تلقائيًا</strong>. مع أحدث إصدار من البرنامج الثابت، سيؤدي ذلك إلى <strong>إعادة تشغيل</strong> وحدة التحكم، وستُفقد التغييرات غير المحفوظة.<p><strong><span class=\"message-negative\">تحذير:</span></strong> قد تتسبب بعض أوامر CLI في إرسال إشارات غير محددة عبر أطراف خرج المحركات. وقد يؤدي ذلك إلى دوران المحركات إذا كانت البطارية متصلة. لذلك يُوصى بشدة بالتأكد من <strong>عدم توصيل أي بطارية قبل إدخال الأوامر في CLI</strong>.\n"
@@ -3827,6 +4089,9 @@
     },
     "firmwareFlasherFirmwareSize": {
         "message": "{{bytes}} بايت"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "تم تحميل البرنامج الثابت المحلي: {{filename}} ({{bytes}} بايت). هذا الملف ليس من خدمة البناء السحابي لـ Betaflight، لذا فإن الجهة التي أنشأته هي المسؤولة عن تقديم الدعم له.\n\n نسخ الترجمة"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "تم تحميل البرنامج الثابت عبر الإنترنت: {{filename}} ({{bytes}} بايت)"
@@ -5220,6 +5485,9 @@
     "powerBatteryCapacity": {
         "message": "سعة (ملي أمبير)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "سعة البطارية لملف تعريف البطارية النشط. يستخدم البرنامج الثابت هذه القيمة لحساب السعة المتبقية بوحدة mAh، ولعرض تحذيرات سعة البطارية على شاشة OSD عند توفر ملفات تعريف البطارية."
+    },
     "osdSetupTitle": {
         "message": "عارض المعلومات على الشاشه"
     },
@@ -5304,6 +5572,10 @@
     "osdSetupFontTypeImpactMini": {
         "message": "تأثير مصغر",
         "description": "Font Impact Mini"
+    },
+    "osdSetupFontTypeFBSmallOne": {
+        "message": "FB Small One",
+        "description": "First small font for FB OSD"
     },
     "osdSetupVideoFormatTitle": {
         "message": "صيغة الفيديو"
@@ -5426,6 +5698,14 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "فشل الرفع"
+    },
+    "osdSetupUploadFontWarningNeedSmallFont": {
+        "message": "تم ضبط شاشة OSD على وضع الخط الصغير، لكن الخط المحدد بالحجم القياسي، لذلك لن يظهر بشكل صحيح. هل تريد رفع الخط رغم ذلك؟",
+        "description": "Confirmation shown before uploading a standard font to a framebuffer OSD running in small font mode"
+    },
+    "osdSetupUploadFontWarningNeedStandardFont": {
+        "message": "الخط المحدد هو خط صغير مخصص لشاشات OSD التي تستخدم Framebuffer، لكن شاشة OSD الحالية تستخدم خطوطًا بالحجم القياسي. لذلك لن يظهر الخط بشكل صحيح. هل تريد رفع الخط رغم ذلك؟",
+        "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
     "osdSetupSaveReboot": {
         "message": "حفظ وإعادة التشغيل"
@@ -6588,6 +6868,9 @@
         "message": "تجاوز سعة البطارية",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningOverCap": {
+        "message": "يُصدر تحذيرًا عندما تتجاوز السعة المستهلكة بوحدة mAh سعة ملف تعريف البطارية النشط، أو عند تجاوز حد إنذار سعة البطارية القديم في OSD إذا لم تُحدَّد سعة في ملف تعريف البطارية."
+    },
     "osdWarningTextRSNR": {
         "message": "نسبة الإشارة إلى الضوضاء عند المستقبِل.",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6651,6 +6934,9 @@
     },
     "osdButtonSaved": {
         "message": "تم الحفظ"
+    },
+    "osdPitotAirSpeed": {
+        "message": "السرعة الجوية"
     },
     "vtxHelp": {
         "message": "يمكنك هنا ضبط قيم جهاز إرسال الفيديو (VTX). ويمكنك عرض قيم الإرسال وتغييرها، بما في ذلك جداول VTX، إذا كانت وحدة التحكم بالطيران وجهاز VTX يدعمان ذلك.<br>لإعداد جهاز VTX، اتبع الخطوات التالية:<br>1. انتقل إلى <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">هذه</a> الصفحة؛<br>2. ابحث عن ملف إعداد VTX المناسب لبلدك وطراز جهاز VTX لديك، ثم نزّله؛<br>3. اضغط على '$t(vtxButtonLoadFile.message)' أدناه، ثم اختر ملف إعداد VTX وحمّله؛<br>4. تحقق من صحة الإعدادات؛<br>5. اضغط على '$t(vtxButtonSave.message)' لحفظ إعدادات VTX في وحدة التحكم بالطيران.<br>6. يمكنك اختياريًا الضغط على '$t(vtxButtonSaveLua.message)' لحفظ ملف إعداد Lua يمكنك استخدامه مع برامج Betaflight النصية بلغة Lua (اطّلع على المزيد من <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">هنا</a>.)\n",
@@ -6994,6 +7280,9 @@
     "configurationBaroHardware": {
         "message": "مقياس الضغط الجوي"
     },
+    "configurationPitot": {
+        "message": "مستشعر  (Pitot)\n"
+    },
     "configurationMagHardware": {
         "message": "المقياس المغناطيسي"
     },
@@ -7176,6 +7465,9 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "عدد العينات غير كافٍ — استمر في الدوران مدة أطول"
+    },
+    "magCalibrationFullRefused": {
+        "message": "رفض المعايرة: {{reason}}"
     },
     "magCalibrationFullNoGeo": {
         "message": "لا يوجد GPS أو المتصفح أو موقع IP - أدخل الإحداثيات يدوياً للاستمرار"
@@ -7774,8 +8066,20 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "المتابعة بدون بروتوكول OSD"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ دعم Betaflight "
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ الشركة المصنعة مدعومة"
+    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "قديم"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ لوحة تحكم مدعومة من الشركة المصنّعة. للحصول على الدعم الفني لهذه اللوحة، يُرجى التواصل مع الشركة المصنّعة لها."
+    },
+    "firmwareFlasherOptionLabelLegacyTarget": {
+        "message": "⚠️ Legacy target, no longer maintained. Use at your own discretion."
     },
     "coreBuild": {
         "message": "المعالج فقط"
@@ -7954,6 +8258,12 @@
     },
     "userProfileUpdateFailed": {
         "message": "فشل تحديث المِلَفّ الشخصي"
+    },
+    "userAccountDeleteSuccess": {
+        "message": "تم حذف حسابك في Betaflight"
+    },
+    "userAccountDeleteFailed": {
+        "message": "فشل في حذف الحساب"
     },
     "userBackupsLoadFailed": {
         "message": "فشل تحميل النسخ الاحتياطية"
@@ -8186,6 +8496,18 @@
     },
     "sectionUserPasskeys": {
         "message": "مفتاح مرور Passkey الخاص بالمستخدم"
+    },
+    "sectionDeleteAccount": {
+        "message": "حذف الحساب"
+    },
+    "deleteAccountDescription": {
+        "message": "حذف حسابك في Betaflight نهائيًا، بما في ذلك ملفك الشخصي ومفاتيح المرور ورموز تسجيل الدخول والنسخ الاحتياطية السحابية. لا يمكن التراجع عن هذا الإجراء."
+    },
+    "actionDeleteAccount": {
+        "message": "حذف الحساب"
+    },
+    "confirmDeleteAccount": {
+        "message": "سيؤدي هذا الإجراء إلى حذف حسابك في Betaflight نهائيًا، بما في ذلك ملفك الشخصي ومفاتيح المرور ورموز تسجيل الدخول وجميع النسخ الاحتياطية السحابية. لا يمكن التراجع عن هذا الإجراء أو استعادة البيانات بعد حذفها. هل أنت متأكد من رغبتك في المتابعة؟"
     },
     "osdPresetPositionAlignTitle": {
         "message": "محاذاة إلى الموضع",
@@ -8806,5 +9128,185 @@
     },
     "preflightNotamLastFetched": {
         "message": "آخر تحديث تم الحصول عليه "
+    },
+    "pidTuningWingSettings": {
+        "message": "إعدادات الجناح"
+    },
+    "pidTuningWingSterm": {
+        "message": "المصطلح S"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "الوضع"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "وضع الـ SPA لكل محور"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "الوسط"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "قيمة Setpoint لمحاور Roll وPitch وYaw ‏(RPY) التي عندها تُخفَّض قيم PID إلى 50% (تخفيف PID بناءً على Setpoint)."
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "العرض"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "عرض الانتقال السلس حول Spa_Center"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "إيقاف"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "تجميد معامل I"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "Ⅰ"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "تجميد معامل I في متحكم PD"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "نوع السرعة"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "نوع نموذج تقدير السرعة الجوية"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "أساسي"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "متقدم"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "نوع المنحنى"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "يُستخدم النموذج الزائدي (Hyperbolic) عادةً للطائرات ثابتة الجناح، بينما يُستخدم النموذج التقليدي (Classic) للطائرات متعددة المحركات، ويعتمد على نظام TPA القياسي."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "تقليدي"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "زائدي"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "إعداد السرعة الأساسية"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "إعداد السرعة المتقدمة"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "تأخير"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "زمن تأخر استجابة السرعة الجوية المقدّرة لتغيّرات الخانق (Throttle)، بالمللي ثانية، ويُقاس بالوقت اللازم للوصول إلى 50% من السرعة النهائية أثناء الطيران الأفقي عند استخدام الخانق بأقصى قوة."
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "الجاذبية"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "تأثير الجاذبية على تقدير السرعة الجوية، بالنسبة المئوية."
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "خطوة المروحة"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "خطوة المروحة بالبوصة × 100"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "كتلة الطائرة"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "كتلة الطائرة في الجرام"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "معامل مقاومة الهواء K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "معامل مقاومة الهواء للطائرة"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "الدفع"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "قوة الدفع الثابتة بالغرام"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "أقصى فولت للبطارية"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "أقصى جهد نظري مضروب في 100. يُستخدم لضبط قيمة الخانق (Throttle) وفقًا لجهد البطارية عند تقدير السرعة الجوية."
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "قيمة KV للمحرك"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "قيمة KV للمحرك. يمكنك تغيير هذه القيمة من تبويب المحركات."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "إزاحة زاوية Pitch"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "إزاحة زاوية Pitch بالدرجات مضروبة في 10، وتُستخدم لتقدير سرعة الطائرة."
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "إعدادات المنحنى الزائدي"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "سرعة الانهيار الهوائي (%)"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "السرعة التي تصل عندها قيم PID إلى حدّها الأقصى (سرعة الانهيار الهوائي)، بالنسبة المئوية."
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "قيم PID عند سرعة الانهيار الهوائي"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "معامل مضاعفة قيم PID عند سرعة الانهيار الهوائي"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "قيم PID عند السرعة القصوى"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "معامل مضاعفة قيم PID عند السرعة القصوى"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "إكسبو (Expo)"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "مدى سرعة انتقال قيم PID مع زيادة السرعة"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "مخطط المنحنيات الزائدية"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "اعدادات متنوعة"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "نوع التحكم بمحور Yaw"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "نوع التحكم بمحور Yaw (الـ RUDDER أو الدفع التفاضلي)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "Rudder"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "الدفع التفاضلي"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "إزاحة زاوية Pitch"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "إزاحة زاوية Pitch في أوضاع الطيران المعتمدة على الزاوية، بوحدة عُشر الدرجة. القيم الموجبة تجعل مقدمة الجناح تميل إلى الأسفل.\n"
     }
 }
