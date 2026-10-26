@@ -299,6 +299,7 @@ const PARSE_INT_FIELDS = [
     "throttle_boost_cutoff",
     "motor_poles",
     "blackbox_high_resolution",
+    "rc_command_scale",
     // Legacy firmware log headers
     "dterm_cut_hz",
     "acc_cut_hz",
@@ -777,6 +778,7 @@ export class FlightLogParser {
             anti_gravity_threshold: null, // Anti gravity threshold for step mode
             anti_gravity_cutoff_hz: null, // Anti gravity Cutoff
             blackbox_high_resolution: null, // Blackbox high resolution mode
+            rc_command_scale: null, // rcCommand units: roll/pitch/yaw -1..1 and throttle 0..1 times this
             thrMid: null, // Throttle Mid Position
             thrExpo: null, // Throttle Expo
             tpa_mode: null, // TPA Mode

@@ -20,7 +20,7 @@
  */
 
 import semver from "semver";
-import { FlightLogIndex, type IntraframeDirectory } from "./flightlog_index";
+import { FlightLogIndex, legacyRcCommandScale, type FieldScale, type IntraframeDirectory } from "./flightlog_index";
 import {
     FlightLogParser,
     type FieldStats,
@@ -113,6 +113,23 @@ interface ComputedFieldContext {
     flightModeFlagsIndex: number | undefined;
     sysConfig: SysConfig;
     disabledFields: DisabledFields;
+}
+
+/** The logged-to-viewer units map of one main frame field. */
+interface FieldRescale extends FieldScale {
+    index: number;
+}
+
+function legacyRcCommandRescale(sysConfig: SysConfig, nameToIndex: Record<string, number>): FieldRescale[] {
+    const rescale: FieldRescale[] = [];
+    for (let axis = 0; axis < 4; axis++) {
+        const index = nameToIndex[`rcCommand[${axis}]`];
+        const scale = legacyRcCommandScale(sysConfig, axis);
+        if (index !== undefined && scale) {
+            rescale.push({ index, ...scale });
+        }
+    }
+    return rescale;
 }
 
 /** frame[index], where `index` is undefined for a field the log does not have. */
@@ -517,6 +534,7 @@ export class FlightLog {
             numMotors: number | false = false;
         let fieldNames: string[] = [],
             fieldNameToIndex: Record<string, number> = {};
+        let rcCommandRescale: FieldRescale[] = [];
         const chunkCache = new FIFOCache<number, Chunk>(2);
         // Map from field indexes to smoothing window size in microseconds
         let fieldSmoothing: Record<number, number> = {},
@@ -582,6 +600,11 @@ export class FlightLog {
                         min: Math.min(intra.field[i].min, inter.field[i].min),
                         max: Math.max(intra.field[i].max, inter.field[i].max),
                     };
+                }
+                for (const { index, gain, offset } of rcCommandRescale) {
+                    const range = rawStats.field[index];
+                    range.min = range.min * gain + offset;
+                    range.max = range.max * gain + offset;
                 }
 
                 if (rawStats.frame.S) {
@@ -924,6 +947,9 @@ export class FlightLog {
             // Copy the main frame data in
             for (let i = 0; i < frame.length; i++) {
                 destFrame[i] = frame[i];
+            }
+            for (const { index, gain, offset } of rcCommandRescale) {
+                destFrame[index] = frame[index] * gain + offset;
             }
 
             let destFrame_currentIndex = frame.length; // Keeps track of where to place direct data in the destFrame.
@@ -1749,6 +1775,7 @@ export class FlightLog {
             parser.parseHeader(logIndexes.getLogBeginOffset(index), logIndexes.getLogBeginOffset(index + 1));
 
             buildFieldNames();
+            rcCommandRescale = legacyRcCommandRescale(this.getSysConfig(), fieldNameToIndex);
 
             estimateNumMotors();
             estimateNumCells();
