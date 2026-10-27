@@ -4065,19 +4065,19 @@
         "message": "Manual selection of baud rate for boards that don't support the default speed or for flashing via bluetooth.<br /><span class=\"message-negative\">Note:</span> Not used when flashing via USB DFU"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Show release candidates"
+        "message": "Show release options"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Show release candidates in addition to stable releases"
+        "message": "Choose which releases to show"
     },
     "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Release"
+        "message": "Show releases"
     },
     "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Release And Release Candidate"
+        "message": "Show all releases"
     },
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Development"
+        "message": "Show development releases"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Choose a Firmware version"
@@ -4240,7 +4240,7 @@
         "message": "You are about to flash a <strong>development build of the firmware</strong>. These builds are a work in progress, and any of the following can be the case:<strong><ul><li>the firmware does not work at all;</li><li>the firmware is not flyable;</li><li>there are safety issues with the firmware, for example flyaways</li><li>the firmware can cause the flight controller to become unresponsive, or damaged</li></ul></strong>If you proceed with flashing this firmware, <strong>you are assuming full responsibility for the risk of any of the above happening</strong>. Furthermore you acknowledge that it is necessary to perform <strong>thorough bench tests with props off</strong> before any attempts to fly this firmware."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "I have read the above and <strong>I assume full responsibility</strong> for flashing unstable firmware"
+        "message": "I have read the above and <strong>I assume full responsibility</strong> for flashing development firmware"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
