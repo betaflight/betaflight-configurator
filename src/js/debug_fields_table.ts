@@ -894,6 +894,16 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 flags: Object.freeze(["Anchor Off", "Buildup Clamped"]),
             }),
         }),
+        PSAS: Object.freeze({
+            0: Object.freeze({ label: "Main speed curve", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "Stick speed curve", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Lift coefficient", unit: null, scale: 0.01 }),
+            3: Object.freeze({ label: "Accel Z required", unit: null, scale: 0.1 }),
+            4: Object.freeze({ label: "Accel Z delta", unit: null, scale: 0.1 }),
+            5: Object.freeze({ label: "Accel Z P", unit: null, scale: 0.1 }),
+            6: Object.freeze({ label: "Lift coeff delta", unit: null, scale: 0.01 }),
+            7: Object.freeze({ label: "AoA limiter is on", unit: null, scale: 1 }),
+        }),
         RANGEFINDER: Object.freeze({
             1: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
             2: Object.freeze({ label: "Tilt Corrected Altitude", unit: "cm", scale: 1 }),

@@ -22,7 +22,7 @@
 import { ref, reactive, computed } from "vue";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
-import { API_VERSION_1_48 } from "../../js/data_storage";
+import { API_VERSION_1_48, API_VERSION_1_49 } from "../../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
 import { channelPercent } from "../../js/utils/rcChannel";
 import type { AdjustmentMode, AdjustmentSlot } from "./useAdjustmentsState";
@@ -50,7 +50,7 @@ const PIP_VALUES = [1000, 1200, 1500, 1800, 2000];
 //   31: LED_DIMMER
 //   32: SIMPLIFIED_MASTER_MULTIPLIER
 //   33: BATTERY_PROFILE
-const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33]);
+const SELECT_MODE_FUNCTIONS = new Set([12, 24, 25, 29, 30, 31, 32, 33, 34]);
 
 export function getAdjustmentMode(adjustmentFunction: number, adjustmentCenter: number): AdjustmentMode {
     if (SELECT_MODE_FUNCTIONS.has(adjustmentFunction)) {
@@ -74,7 +74,13 @@ export function useAdjustmentsData(adjustments: AdjustmentSlot[], t: (key: strin
     });
 
     const adjustmentFunctionCount = computed(() => {
-        return fcStore.isApiVersionSupported(API_VERSION_1_48) ? 34 : 33;
+        if (fcStore.isApiVersionSupported(API_VERSION_1_49)) {
+            return 35;
+        } else if (fcStore.isApiVersionSupported(API_VERSION_1_48)) {
+            return 34;
+        } else {
+            return 33;
+        }
     });
 
     const functionOptions = computed(() => {
