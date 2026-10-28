@@ -304,75 +304,158 @@
                     <UiBox
                         v-if="preflight.weather.daily"
                         :title="$t('preflightFlightWindow')"
+                        :help="$t('preflightTimelineHelp')"
                         type="neutral"
                         collapsible
                     >
                         <template #title>
                             <UIcon name="i-lucide-clock" class="size-4" />
                         </template>
-                        <div class="flight-window-grid">
-                            <div class="flight-window-item">
-                                <div class="fw-label">{{ $t("preflightSunrise") }}</div>
-                                <div class="fw-value">
-                                    {{ preflight.formatTime(preflight.weather.daily.sunrise) }}
-                                </div>
-                            </div>
-                            <div class="flight-window-item">
-                                <div class="fw-label">{{ $t("preflightSunset") }}</div>
-                                <div class="fw-value">
-                                    {{ preflight.formatTime(preflight.weather.daily.sunset) }}
-                                </div>
-                            </div>
-                            <div class="flight-window-item">
-                                <div class="fw-label">{{ $t("preflightCivilTwilight") }}</div>
-                                <div class="fw-value" :class="civilTwilightStatus">
-                                    {{ civilTwilightStart }} – {{ civilTwilightEnd }}
-                                </div>
-                            </div>
-                            <div class="flight-window-item">
-                                <div class="fw-label">{{ $t("preflightDaylight") }}</div>
-                                <div class="fw-value">
-                                    {{ formatDuration(preflight.weather.daily.daylightDuration) }}
-                                </div>
-                            </div>
-                            <div class="flight-window-item">
-                                <div class="fw-label">{{ $t("preflightUvIndex") }}</div>
-                                <div class="fw-value" :class="getUvStatusClass(preflight.weather.daily.uvIndexMax)">
-                                    {{ preflight.weather.daily.uvIndexMax }}
-                                    <span class="fw-sublabel">{{
-                                        $t(getUvStatusLabel(preflight.weather.daily.uvIndexMax))
-                                    }}</span>
-                                </div>
-                            </div>
-                            <div class="flight-window-item">
-                                <div class="fw-label">{{ $t("preflightTempRange") }}</div>
-                                <div class="fw-value">
-                                    {{ preflight.weather.daily.temperatureMin }}° /
-                                    {{ preflight.weather.daily.temperatureMax }}°C
-                                </div>
-                            </div>
-                            <div class="flight-window-item">
-                                <div class="fw-label">{{ $t("preflightCurrentlyDay") }}</div>
-                                <div
-                                    class="fw-value"
-                                    :class="
-                                        preflight.weather.current
-                                            ? preflight.weather.current.isDay
-                                                ? 'status-good'
-                                                : 'status-warning'
-                                            : ''
-                                    "
-                                >
+                        <fieldset
+                            v-if="flightWindow && activeLightWindows.length"
+                            class="flight-window-chart"
+                            :aria-label="$t('preflightTimelineDescription')"
+                        >
+                            <output class="fw-detail" aria-live="polite" aria-atomic="true">
+                                <strong>
                                     {{
-                                        preflight.weather.current
-                                            ? preflight.weather.current.isDay
-                                                ? $t("preflightDaytime")
-                                                : $t("preflightNighttime")
-                                            : "-"
+                                        selectedLightKind
+                                            ? lightWindowKindLabel(selectedLightKind)
+                                            : activeLightWindow
+                                              ? lightWindowLabel(activeLightWindow)
+                                              : ""
                                     }}
+                                </strong>
+                                <span class="fw-detail-ranges">
+                                    <span v-for="period in activeLightWindows" :key="`${period.start}-${period.end}`">
+                                        <template v-if="selectedLightKind && period.phase">
+                                            {{ $t(period.phase) }} ·
+                                        </template>
+                                        {{ formatLightTime(period.start) }} – {{ formatLightTime(period.end) }}
+                                        <small>· {{ formatDuration((period.end - period.start) / 1000) }}</small>
+                                    </span>
+                                </span>
+                            </output>
+                            <div class="fw-sunrise-sunset" :class="{ 'fw-sun-staggered': sunLabelsOverlap }">
+                                <div
+                                    v-for="(event, index) in flightWindow.sunEvents"
+                                    :key="`${event.label}-${event.time}`"
+                                    class="fw-sun-label"
+                                    :class="{
+                                        'fw-sun-label-start':
+                                            event.time - flightWindow.start <
+                                            (flightWindow.end - flightWindow.start) * 0.06,
+                                        'fw-sun-label-end':
+                                            flightWindow.end - event.time <
+                                            (flightWindow.end - flightWindow.start) * 0.06,
+                                        'fw-sun-label-raised': sunLabelsOverlap && index % 2 === 1,
+                                    }"
+                                    :style="{ left: lightPosition(event.time) }"
+                                >
+                                    <span>{{ $t(event.label) }}</span>
+                                    <strong>{{ formatLightTime(event.time) }}</strong>
                                 </div>
                             </div>
-                        </div>
+                            <div class="fw-light-track">
+                                <div
+                                    v-for="period in daylightHighlights"
+                                    :key="`${period.start}-${period.end}`"
+                                    class="fw-daylight-selection"
+                                    :style="{
+                                        left: lightPosition(period.start),
+                                        width: lightWidth(period),
+                                    }"
+                                    aria-hidden="true"
+                                ></div>
+                                <time
+                                    class="fw-now-marker"
+                                    :style="{ left: lightPosition(now) }"
+                                    :class="{
+                                        'fw-now-near-start': now - flightWindow.start < 60 * 60_000,
+                                        'fw-now-near-end': flightWindow.end - now < 60 * 60_000,
+                                    }"
+                                    :datetime="new Date(now).toISOString()"
+                                >
+                                    <span class="fw-now-label">{{ $t("preflightNow") }}</span>
+                                    <span class="sr-only">{{ formatLightTime(now) }}</span>
+                                </time>
+                                <div class="fw-light-bar">
+                                    <button
+                                        v-for="period in flightWindow.periods"
+                                        :key="period.start"
+                                        type="button"
+                                        class="fw-light-segment"
+                                        :class="[
+                                            `fw-period-${period.kind}`,
+                                            {
+                                                'fw-active':
+                                                    period.kind !== 'day' &&
+                                                    (selectedLightKind === period.kind ||
+                                                        (!selectedLightKind &&
+                                                            activeLightWindow?.start === period.start)),
+                                            },
+                                        ]"
+                                        :style="{ width: lightWidth(period) }"
+                                        :aria-label="lightWindowDescription(displayLightWindow(period))"
+                                        @pointerenter="activeLightWindow = displayLightWindow(period)"
+                                        @focus="activeLightWindow = displayLightWindow(period)"
+                                        @click="activeLightWindow = displayLightWindow(period)"
+                                    >
+                                        <span v-if="period.kind === 'day'">{{ $t("preflightDaylight") }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="fw-time-axis" aria-hidden="true">
+                                <span
+                                    v-for="tick in flightWindow.ticks"
+                                    :key="tick.time"
+                                    :class="{
+                                        'fw-time-start': tick.time === flightWindow.start,
+                                        'fw-time-end': tick.time === flightWindow.end,
+                                        'fw-time-tick-minor': !tick.major,
+                                    }"
+                                    :style="{ left: lightPosition(tick.time) }"
+                                    >{{ tick.major ? tick.label : "" }}</span
+                                >
+                            </div>
+                            <div class="fw-chart-legend">
+                                <button
+                                    v-for="item in lightLegend"
+                                    :key="item.kind"
+                                    type="button"
+                                    :disabled="
+                                        item.kind === 'day'
+                                            ? !flightWindow.daylight.length
+                                            : !flightWindow.periods.some((period) => period.kind === item.kind)
+                                    "
+                                    :aria-pressed="selectedLightKind === item.kind"
+                                    @click="selectKind(item.kind)"
+                                >
+                                    <i :class="`fw-period-${item.kind}`" aria-hidden="true"></i>{{ $t(item.label) }}
+                                </button>
+                                <span class="fw-chart-hint">
+                                    <UIcon name="i-lucide-mouse-pointer-click" class="size-3.5" aria-hidden="true" />
+                                    {{ $t("preflightTimelineHint") }}
+                                </span>
+                            </div>
+                            <div class="fw-footer-stats">
+                                <div class="fw-summary">
+                                    <span>{{ $t("preflightCivilTwilight") }}</span>
+                                    <strong>{{ civilTwilightRange }}</strong>
+                                </div>
+                                <div class="fw-uv-index">
+                                    <span class="fw-uv-label">
+                                        <UIcon name="i-lucide-sun" class="size-4" />
+                                        {{ $t("preflightUvIndex") }}
+                                    </span>
+                                    <strong :class="getUvStatusClass(preflight.weather.daily.uvIndexMax)">
+                                        {{ preflight.weather.daily.uvIndexMax ?? "-" }}
+                                        <span>{{ $t(getUvStatusLabel(preflight.weather.daily.uvIndexMax)) }}</span>
+                                    </strong>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
                     </UiBox>
 
                     <!-- Wind at Altitude (Hourly) -->
@@ -846,12 +929,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, nextTick, watch, type Ref } from "vue";
+import {
+    defineComponent,
+    reactive,
+    ref,
+    computed,
+    toRef,
+    onMounted,
+    onUnmounted,
+    nextTick,
+    watch,
+    type Ref,
+} from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import { i18n } from "@/js/localization";
 import { usePreflight, type ForecastDay, type Reading } from "@/composables/usePreflight";
+import { useFlightWindow } from "@/composables/useFlightWindow";
+import type { LightWindow } from "@/js/utils/flightWindow";
 import { useMapViewport } from "@/composables/useMapViewport";
 import { getNotamStatus, type NotamItem, type NotamStatus } from "@/js/notam/index";
 import { initMap, type MapLayer } from "../../js/utils/map";
@@ -929,11 +1025,12 @@ function formatVisibility(vis: number): string {
 }
 
 function formatDuration(seconds: number | null): string {
-    if (!seconds) {
+    if (seconds === null || !Number.isFinite(seconds)) {
         return "-";
     }
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
+    const minutes = Math.round(seconds / 60);
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
     return `${h}h ${m}m`;
 }
 
@@ -989,6 +1086,68 @@ export default defineComponent({
     },
     setup() {
         const preflight = reactive(usePreflight());
+        const {
+            flightWindow,
+            selectKind,
+            now,
+            selectedLightKind,
+            activeLightWindow,
+            activeLightWindows,
+            daylightHighlights,
+            displayLightWindow,
+            lightPosition,
+            lightWidth,
+            formatLightTime,
+        } = useFlightWindow(preflight.location, toRef(preflight.weather, "timezone"));
+        watch(
+            () => flightWindow.value?.date,
+            (date, previous) => {
+                if (
+                    date &&
+                    previous &&
+                    date !== previous &&
+                    preflight.location.latitude !== null &&
+                    preflight.location.longitude !== null
+                ) {
+                    void preflight.fetchWeather(preflight.location.latitude, preflight.location.longitude);
+                }
+            },
+        );
+        const lightLegend: { kind: LightWindow["kind"]; label: string }[] = [
+            { kind: "night", label: "preflightTimelineNight" },
+            { kind: "blue", label: "preflightBlueHour" },
+            { kind: "golden", label: "preflightGoldenHour" },
+            { kind: "day", label: "preflightDaylight" },
+        ];
+        const lightWindowLabels: Record<LightWindow["kind"], string> = {
+            night: "preflightTimelineNight",
+            blue: "preflightBlueHour",
+            golden: "preflightGoldenHour",
+            day: "preflightDaylight",
+        };
+        const lightWindowKindLabel = (kind: LightWindow["kind"]) => i18n.getMessage(lightWindowLabels[kind]);
+        const lightWindowLabel = (period: LightWindow) =>
+            [period.phase ? i18n.getMessage(period.phase) : "", lightWindowKindLabel(period.kind)]
+                .filter(Boolean)
+                .join(" · ");
+        const lightWindowDescription = (period: LightWindow) =>
+            `${lightWindowLabel(period)}, ${formatLightTime(period.start)} – ${formatLightTime(period.end)}`;
+        const civilTwilightRange = computed(
+            () =>
+                flightWindow.value?.civilTwilight
+                    .map((window) => `${formatLightTime(window.start)} – ${formatLightTime(window.end)}`)
+                    .join(", ") || "-",
+        );
+        const sunLabelsOverlap = computed(() => {
+            const window = flightWindow.value;
+            return (
+                window?.sunEvents.some(
+                    (event, index, events) =>
+                        index > 0 && event.time - events[index - 1].time < (window.end - window.start) * 0.2,
+                ) ?? false
+            );
+        });
+
         const mapRef = ref<HTMLElement | null>(null);
         const mapContainerRef = ref<HTMLElement | null>(null);
         // Typed as the OpenLayers objects themselves: ref() wraps them in a reactive proxy, whose
@@ -1072,6 +1231,15 @@ export default defineComponent({
                 { key: "cloudCover", label: i18n.getMessage("preflightCloudCover"), value: `${c.cloudCover}%` },
                 { key: "humidity", label: i18n.getMessage("preflightHumidity"), value: `${c.humidity}%` },
                 { key: "feelsLike", label: i18n.getMessage("preflightFeelsLike") },
+                ...(preflight.weather.daily
+                    ? [
+                          {
+                              key: "tempRange",
+                              label: i18n.getMessage("preflightTempRange"),
+                              value: `${preflight.weather.daily.temperatureMin ?? "-"}° / ${preflight.weather.daily.temperatureMax ?? "-"}°C`,
+                          },
+                      ]
+                    : []),
                 { key: "pressure", label: i18n.getMessage("preflightPressure"), value: `${c.pressure} hPa` },
                 {
                     key: "batteryRisk",
@@ -1174,30 +1342,6 @@ export default defineComponent({
             const lat = Number.parseFloat(manualLat.value);
             const lon = Number.parseFloat(manualLon.value);
             return !Number.isNaN(lat) && !Number.isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
-        });
-
-        const civilTwilightStart = computed(() => {
-            if (!preflight.civilTwilight) {
-                return "-";
-            }
-            return preflight.civilTwilight.dawn.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        });
-
-        const civilTwilightEnd = computed(() => {
-            if (!preflight.civilTwilight) {
-                return "-";
-            }
-            return preflight.civilTwilight.dusk.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        });
-
-        const civilTwilightStatus = computed(() => {
-            if (!preflight.civilTwilight) {
-                return "";
-            }
-            const now = new Date();
-            return now >= preflight.civilTwilight.dawn && now <= preflight.civilTwilight.dusk
-                ? "status-good"
-                : "status-danger";
         });
 
         const densityAltitude = computed(() => {
@@ -1642,6 +1786,23 @@ export default defineComponent({
         );
 
         return {
+            lightLegend,
+            flightWindow,
+            selectKind,
+            now,
+            selectedLightKind,
+            civilTwilightRange,
+            sunLabelsOverlap,
+            displayLightWindow,
+            activeLightWindow,
+            activeLightWindows,
+            daylightHighlights,
+            lightPosition,
+            lightWidth,
+            formatLightTime,
+            lightWindowLabel,
+            lightWindowKindLabel,
+            lightWindowDescription,
             preflight,
             mapRef,
             mapContainerRef,
@@ -1652,9 +1813,6 @@ export default defineComponent({
             manualLat,
             manualLon,
             isManualLocationValid,
-            civilTwilightStart,
-            civilTwilightEnd,
-            civilTwilightStatus,
             densityAltitude,
             getDensityAltStatusClass,
             airspaceExplorerLink,
@@ -1987,41 +2145,303 @@ export default defineComponent({
     }
 
     /* Flight Window */
-    .flight-window-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+    .flight-window-chart {
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        border: 0;
+        padding: 8px 0 0;
+        font-variant-numeric: tabular-nums;
+    }
 
-        @media (min-width: 768px) {
-            grid-template-columns: repeat(3, 1fr);
+    .fw-detail {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 4px 12px;
+        min-height: 42px;
+        font-size: 13px;
+
+        small {
+            color: var(--surface-600);
+            font-size: 11px;
+        }
+    }
+
+    .fw-detail-ranges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+    }
+
+    .fw-sunrise-sunset {
+        position: relative;
+        height: 42px;
+    }
+
+    .fw-sun-staggered {
+        height: 76px;
+    }
+
+    .fw-light-track {
+        position: relative;
+        padding-bottom: 28px;
+    }
+
+    .fw-daylight-selection {
+        position: absolute;
+        top: 0;
+        height: 42px;
+        z-index: 1;
+        border: 2px solid var(--text);
+        pointer-events: none;
+    }
+
+    .fw-now-marker {
+        position: absolute;
+        top: 0;
+        bottom: 22px;
+        z-index: 2;
+        pointer-events: none;
+
+        &::after {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            content: "";
+            border-inline-start: 2px solid var(--text);
+            filter: drop-shadow(0 0 1px var(--surface-50));
+        }
+    }
+
+    .fw-now-label {
+        position: absolute;
+        top: 100%;
+        left: 1px;
+        transform: translateX(-50%);
+        padding-top: 2px;
+        color: var(--text);
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .fw-now-near-start .fw-now-label {
+        transform: none;
+    }
+
+    .fw-now-near-end .fw-now-label {
+        transform: translateX(-100%);
+    }
+
+    .fw-sun-label {
+        position: absolute;
+        bottom: 0;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        font-size: 12px;
+        color: var(--text);
+
+        strong {
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        .flight-window-item {
-            text-align: center;
-            padding: 8px;
-            background: var(--surface-200);
-            border-radius: 4px;
+        &::after {
+            content: "";
+            height: 10px;
+            border-inline-start: 1px solid var(--text);
+        }
+    }
 
-            .fw-label {
-                font-size: 11px;
-                color: var(--surface-600);
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                margin-bottom: 4px;
+    .fw-sun-label-start {
+        transform: none;
+        align-items: flex-start;
+    }
+
+    .fw-sun-label-end {
+        transform: translateX(-100%);
+        align-items: flex-end;
+    }
+
+    .fw-sun-label-raised::after {
+        height: 44px;
+    }
+
+    .fw-footer-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 28px;
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px solid var(--surface-400);
+        font-size: 13px;
+    }
+
+    .fw-uv-index,
+    .fw-summary {
+        display: flex;
+        flex: 1 1 180px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+
+        .fw-uv-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--surface-600);
+        }
+
+        > span {
+            color: var(--surface-600);
+        }
+
+        strong span {
+            margin-inline-start: 5px;
+            font-size: 11px;
+            font-weight: 400;
+        }
+    }
+
+    .fw-light-bar {
+        display: flex;
+        height: 42px;
+        width: 100%;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .fw-period-night {
+        background: var(--surface-700);
+    }
+
+    .fw-period-blue {
+        background: var(--color-blue-500);
+    }
+
+    .fw-period-golden {
+        background: var(--primary-500);
+    }
+
+    .fw-period-day {
+        background: var(--primary-200);
+    }
+
+    .fw-light-segment {
+        flex: 0 0 auto;
+        min-width: 0;
+        padding: 0;
+        border: 0;
+        cursor: pointer;
+        color: var(--surface-950);
+        font-size: 12px;
+        transition: box-shadow 120ms ease;
+
+        .dark & {
+            color: var(--surface-50);
+        }
+
+        &.fw-active,
+        &:not(.fw-period-day):hover,
+        &:not(.fw-period-day):focus-visible {
+            box-shadow: inset 0 0 0 2px var(--text);
+            outline: none;
+        }
+    }
+
+    .fw-time-axis {
+        position: relative;
+        height: 32px;
+        color: var(--surface-600);
+        font-size: 10px;
+
+        span {
+            position: absolute;
+            top: 6px;
+            transform: translateX(-50%);
+
+            &::before {
+                position: absolute;
+                top: -7px;
+                left: 50%;
+                height: 5px;
+                content: "";
+                border-inline-start: 1px solid var(--surface-500);
             }
 
-            .fw-value {
-                font-size: 16px;
-                font-weight: bold;
+            &.fw-time-start {
+                transform: none;
+            }
 
-                .fw-sublabel {
-                    display: block;
-                    font-size: 11px;
-                    font-weight: normal;
-                    margin-top: 2px;
-                }
+            &.fw-time-end {
+                transform: translateX(-100%);
+            }
+
+            &.fw-time-start::before {
+                left: 0;
+            }
+
+            &.fw-time-end::before {
+                left: 100%;
             }
         }
+
+        .fw-time-tick-minor::before {
+            top: -5px;
+            height: 3px;
+        }
+    }
+
+    .fw-chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        font-size: 11px;
+        color: var(--surface-600);
+
+        span,
+        button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        button {
+            min-height: 24px;
+            padding: 4px 0;
+            background: none;
+            border: 0;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: default;
+            }
+
+            &:focus-visible {
+                outline: 1px solid var(--text);
+                outline-offset: 3px;
+            }
+        }
+
+        i {
+            width: 9px;
+            height: 9px;
+            border-radius: 2px;
+        }
+    }
+
+    .fw-chart-hint {
+        margin-inline-start: auto;
+        color: var(--surface-500);
+        min-width: 0;
     }
 
     /* Status badge (inline) */
