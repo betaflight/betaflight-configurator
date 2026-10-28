@@ -465,6 +465,9 @@ function flightModeNamesFor(firmwareType: number, firmwareVersion: string): stri
     if (semver.gte(firmwareVersion, "2026.6.0")) {
         modeNames.splice(modeNames.indexOf("GPSRESCUE") + 1, 0, "AUTOPILOT");
     }
+    if (semver.gte(firmwareVersion, "2026.6.12")) {
+        modeNames.splice(modeNames.indexOf("AUTOPILOT") + 1, 0, "PSAS");
+    }
     return modeNames;
 }
 

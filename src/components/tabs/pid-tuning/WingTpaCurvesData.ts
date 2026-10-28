@@ -40,7 +40,7 @@ export function getTpaHyperbolicCurve(wingConfig: WingConfig, motorKv: number): 
     const chartCurves: TpaChartCurve[] = [
         {
             data: generateHyperbolicCurve(wingConfig, motorKv),
-            color: getCssVar("--chart-curve-color", "#e24761"),
+            color: getCssVar("--chart-curve-color-1", "#d55e00"),
             active: true,
         },
     ];
