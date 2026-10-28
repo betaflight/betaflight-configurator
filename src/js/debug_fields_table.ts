@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  399e958dee 2026-11-12  (580 annotated fields)
+ *   API 1.49.0  db25fac900 2026-10-23  (585 annotated fields)
  */
 
 /**
@@ -883,6 +883,16 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
                 scale: 1,
                 flags: Object.freeze(["Anchor Off", "Buildup Clamped"]),
             }),
+        }),
+        PSAS: Object.freeze({
+            0: Object.freeze({ label: "Main speed curve", unit: "%", scale: 1 }),
+            1: Object.freeze({ label: "Stick speed curve", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Lift coefficient", unit: null, scale: 0.01 }),
+            3: Object.freeze({ label: "Accel Z required", unit: null, scale: 0.1 }),
+            4: Object.freeze({ label: "Accel Z delta", unit: null, scale: 0.1 }),
+            5: Object.freeze({ label: "Accel Z P", unit: null, scale: 0.1 }),
+            6: Object.freeze({ label: "Lift coeff delta", unit: null, scale: 0.01 }),
+            7: Object.freeze({ label: "AoA limiter is on", unit: null, scale: 1 }),
         }),
         RANGEFINDER: Object.freeze({
             1: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
