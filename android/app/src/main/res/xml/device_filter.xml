@@ -41,4 +41,8 @@
     <!-- X32 devices -->
     <usb-device vendor-id="14743" product-id="22336" /> <!-- X32 VCP -->
     <usb-device vendor-id="14743" product-id="57105" /> <!-- X32 DFU Bootloader -->
+
+    <!-- UM32 devices -->
+    <usb-device vendor-id="14698" product-id="4096" /> <!-- UM32 VCP -->
+    <usb-device vendor-id="14698" product-id="57088" /> <!-- UM32 DFU Bootloader -->
 </resources>

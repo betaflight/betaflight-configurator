@@ -31,6 +31,18 @@
     "search": {
         "message": "Søg"
     },
+    "settingsSearchTitle": {
+        "message": "Indstillinger for søgning",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Indstillinger for søgning...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "Ingen indstillinger fundet",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Vis ikke igen"
     },

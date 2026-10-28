@@ -2939,6 +2939,10 @@
         "message": "Cambia la VTX in modalità pit (bassa potenza in uscita, se supportata)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Acquisizione dei waypoint in volo: una breve pressione aggiunge la posizione corrente al piano di volo come waypoint, tenendo premuto l'interruttore per 1,5 secondi, elimina l'ultimo waypoint",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Resetta il cronometro del transponder",
         "description": "Help text to LAP TIMER RESET mode"

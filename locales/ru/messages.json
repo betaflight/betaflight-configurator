@@ -31,6 +31,18 @@
     "search": {
         "message": "Поиск"
     },
+    "settingsSearchTitle": {
+        "message": "Поиск по настройкам",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Поиск по настройкам...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "Настройки не найдены",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Не показывать снова"
     },
@@ -1957,6 +1969,12 @@
     },
     "portsSensorGyro": {
         "message": "Гироскоп"
+    },
+    "portsSensorBaro": {
+        "message": "Барометр"
+    },
+    "portsSensorMag": {
+        "message": "Магнитометр"
     },
     "portsTelemetryDisabled": {
         "message": "Отключено"
@@ -7062,6 +7080,9 @@
     "configurationBaroHardware": {
         "message": "Барометр"
     },
+    "configurationPitot": {
+        "message": "Питот"
+    },
     "configurationMagHardware": {
         "message": "Магнитометр"
     },
@@ -8878,5 +8899,23 @@
     },
     "preflightNotamLastFetched": {
         "message": "Последнее обновление"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "Тип скорости"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "Задержка"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "Тяга"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "Мотор KV"
     }
 }
