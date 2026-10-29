@@ -10,7 +10,7 @@ Standards for AI-assisted contributions to Betaflight Configurator. Adapted from
 ## Project context
 - **Stack**: Vue 3 + Composition API + `<script setup lang="ts">`, Pinia 4, Vite 8, Tauri 2 (desktop), Capacitor 8 (Android).
 - **UI**: `@nuxt/ui` v4 components + Tailwind CSS v4. Not a Nuxt app — no SSR, no `useAsyncData`, no Nuxt auto-imports outside the UI library.
-- **TypeScript**: `strict: true` everywhere, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). Every `.vue` file is checked. The remaining `.js` is still importable (`allowJs`) but not checked; the migration and what is left are tracked in #5542.
+- **TypeScript**: `strict: true` everywhere, type-checked by `vue-tsc` (`npm run typecheck`, part of `npm run lint`). Every `.ts` and `.vue` file is checked, and `allowJs` is off, so nothing reaches the checker untyped (#5542). The only JavaScript left in `src/` is the dev-only MSP debug tools and the vendored three.js renderer, each typed by a `.d.ts` next to its entry point.
 - **State**: Pinia stores own all state. The `FC`, `GUI` and `CONFIGURATOR` singletons are gone (#4800); flight-controller state lives in `useFlightControllerStore()` (`src/stores/fc.ts`).
 - **Naming**: `PascalCase` for both component names and `.vue` file names.
 
@@ -35,7 +35,7 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 
 | Rule | Status | Enforced by |
 |---|---|---|
-| New files are `.ts` or `<script setup lang="ts">` | 🔧 | ESLint rejects any `.js` in `src/components/**`, `src/composables/**`, `src/stores/**` and `src/js/msp/**` (except the dev-only `src/js/msp/debug/**`); other folders follow as they reach zero `.js` (#5542 phase 7) |
+| New files are `.ts` or `<script setup lang="ts">` | ✅ | ESLint rejects any `.js` under `src/` (except the dev-only `src/js/msp/debug/**` and the vendored `src/js/utils/three/**`), and `allowJs: false` in `tsconfig.json` makes importing untyped JavaScript a type error |
 | `strict` typing; no `any` to silence the checker | 🔧 | `strict: true` + `vue-tsc`; `@typescript-eslint/no-explicit-any` |
 | A file you touch for other reasons converts to TypeScript in the same PR; a touched test converts to `.test.ts` | 📐 | Review call |
 
@@ -45,8 +45,8 @@ Formatting (indentation, semicolons, trailing commas, quotes) is owned by Pretti
 |---|---|---|
 | Reach for `@nuxt/ui` v4 first: `UButton`, `UInput`, `UInputNumber`, `USelect`, `USwitch`, `UModal`, … | 📐 | Taste call |
 | Use shared wrappers in `src/components/elements/`: `UiBox`, `SettingRow`, `SettingColumn`, `HelpIcon`, `WikiButton` | 📐 | Taste call |
-| No new `<style scoped>` blocks; promote shared rules to `src/css/theme.css` or `nuxt-ui.css` | 🔧 | CodeRabbit flags a new block (`.coderabbit.yaml`). A lint rule follows once the legacy blocks are gone (#5542) |
-| No hard-coded colors — theme via CSS custom properties | 🚧 | Lint rule as an error once existing violations are gone (#5542 phase 7) |
+| No `<style scoped>`: promote shared rules to `src/css/theme.css` or `nuxt-ui.css`, and nest a component's own rules under its root class | ✅ | ESLint `vue/enforce-style-attribute` |
+| No hard-coded colors — theme via CSS custom properties | ✅ | ESLint `betaflight/no-hex-colours` (`scripts/eslint/no-hex-colours.mjs`): no hex colour in a `.vue` file's `<style>` blocks or `style` attributes. Canvas drawing in `.ts` takes its colours from the theme too (`ThemeColors` in the blackbox viewer), as a review call |
 | Respect light/dark (`.dark`) and color themes (`data-theme`) | 📐 | Visual review |
 
 ### Always-on
@@ -101,8 +101,8 @@ The sections below are taste-call patterns that can't be reasonably linted.
 
 ## Styling
 - Prefer Tailwind v4 utilities + `@nuxt/ui` v4 components over custom CSS.
-- `<style scoped>` is acceptable in legacy SFCs; new components should avoid it (see #4995).
-- Theme via CSS custom properties in `src/css/theme.css`. No hex literals in new code.
+- No `<style scoped>` (#4995). A component's own rules go in `<style lang="less">`, nested under its root class (a tab's is `.tab-<name>`); teleported content (modals, popovers) gets its own class.
+- Theme via CSS custom properties in `src/css/theme.css`. No hex literals in new code; lint rejects one in a component's styles.
 - Mobile-first responsive layouts. Respect `.dark` and `data-theme` switching.
 
 ## Performance

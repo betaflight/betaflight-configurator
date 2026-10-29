@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * characterizeTumble oracle:
  *  (a) recovers a planted alignment from a synthetic tilt-diverse tumble
@@ -13,13 +34,9 @@ import {
     mat3mulVec,
     mat3transpose,
     ALIGNMENT_MATRICES,
-} from "../../src/js/utils/magAlignment.js";
+    type Mat3,
+} from "../../src/js/utils/magAlignment";
 import { characterizeTumble, type TumbleSample } from "../../src/js/utils/magCharacterizationCompute";
-
-type Mat3 = number[][];
-
-// ALIGNMENT_MATRICES comes from the untyped JS module keyed by the 1..8 preset ids.
-const alignmentMatrices = ALIGNMENT_MATRICES as Record<number, Mat3>;
 
 function mulberry32(seed: number): () => number {
     let s = seed >>> 0;
@@ -145,7 +162,7 @@ describe("characterizeTumble — synthetic oracle", () => {
         const recovered =
             result.preset === 9
                 ? eulerToMatrix(result.euler_zyx_deg.roll, result.euler_zyx_deg.pitch, result.euler_zyx_deg.yaw)
-                : alignmentMatrices[result.preset];
+                : ALIGNMENT_MATRICES[result.preset];
 
         // det = +1 (proper rotation)
         expect(Math.abs(det3(recovered) - 1)).toBeLessThan(0.01);

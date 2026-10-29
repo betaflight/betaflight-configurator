@@ -19,8 +19,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FLIGHT_LOG_FLIGHT_STATE_NAME } from "../flightlog_fielddefs.js";
-import { GPS_transform } from "../gps_transform.js";
+import { FLIGHT_LOG_FLIGHT_STATE_NAME } from "../flightlog_fielddefs";
+import { GpsTransform } from "../gps_transform";
+import type { FlightLog } from "../flightlog";
 
 /** Frame time index in a decoded main frame (FlightLogParser.FLIGHT_LOG_FIELD_INDEX_TIME). */
 export const FRAME_TIME_INDEX = 1;
@@ -48,13 +49,11 @@ const GROUND_RADIUS_M = 2;
 const GROUND_SPREAD_M = 2; // idle throttle while dropping more than this is not sitting on the ground
 const SAME_SPOT_RADIUS_M = 15;
 
-/** The subset of FlightLog (flightlog.js) this module reads. */
-export interface FlightLogSource {
-    getMainFieldIndexByName(name: string): number | undefined;
-    getChunksInTimeRange(startTime: number, endTime: number): { frames: ArrayLike<number>[] }[];
-    getMinTime(): number;
-    getMaxTime(): number;
-}
+/** The subset of FlightLog this module reads. */
+export type FlightLogSource = Pick<
+    FlightLog,
+    "getMainFieldIndexByName" | "getChunksInTimeRange" | "getMinTime" | "getMaxTime"
+>;
 
 export interface GpsFix {
     tUs: number;
@@ -103,14 +102,6 @@ export interface FlightTrack {
     positionAt(tUs: number): TrackPoint | null;
 }
 
-type Transform = { WGS_BS(lat: number, lon: number, h: number): { x: number; y: number; z: number } };
-const LocalTransform = GPS_transform as unknown as new (
-    lat0: number,
-    lon0: number,
-    h0: number,
-    heading: number,
-) => Transform;
-
 /**
  * Read GPS fixes, baro altitude and idle-throttle spans from the main frames. The firmware logs GPS
  * only when the position or satellite count changes (GPS_time with them, so it cannot mark a fresh
@@ -149,13 +140,19 @@ export function extractSamples(flightLog: FlightLogSource): {
     };
 }
 
-type Frame = ArrayLike<number>;
+/** A frame as FlightLog serves it: the slow and GPS slots are null until their first frame. */
+type Frame = ArrayLike<number | null>;
+
+/** Number.isFinite(), which is already false for null, as a type guard. */
+function isFiniteNumber(value: number | null): value is number {
+    return Number.isFinite(value);
+}
 
 /** Valid fixes, one per new position; a position repeated under a valid fix is held (see holdPositions). */
 class GpsReader {
     private readonly found: GpsFix[] = [];
     private readonly heldUntil: number[] = [];
-    private current: { lat: number; lon: number; alt: number } | null = null;
+    private current: { lat: number; lon: number; alt: number | null } | null = null;
 
     constructor(
         private readonly iSat: number,
@@ -168,7 +165,7 @@ class GpsReader {
     add(tUs: number, frame: Frame): void {
         const lat = frame[this.iLat];
         const lon = frame[this.iLon];
-        if (!this.hasFix(frame) || !Number.isFinite(lat) || !Number.isFinite(lon)) {
+        if (!this.hasFix(frame) || !isFiniteNumber(lat) || !isFiniteNumber(lon)) {
             this.current = null; // a hold never spans lost GPS, even if the same position comes back
             return;
         }
@@ -179,7 +176,8 @@ class GpsReader {
             return;
         }
         this.current = { lat, lon, alt };
-        this.found.push({ tUs, lat: lat / 1e7, lon: lon / 1e7, altM: alt / 10 });
+        // A null altitude counts as 0, as `/` made it.
+        this.found.push({ tUs, lat: lat / 1e7, lon: lon / 1e7, altM: Number(alt) / 10 });
         this.heldUntil.push(tUs);
     }
 
@@ -190,7 +188,7 @@ class GpsReader {
     /** Enough satellites and the GPS_FIX flag; stateFlags is null until the first slow frame. */
     private hasFix(frame: Frame): boolean {
         const state = this.iState === undefined ? null : frame[this.iState];
-        return frame[this.iSat] >= MIN_SATELLITES && (state == null || (state & GPS_FIX_FLAG) !== 0);
+        return Number(frame[this.iSat]) >= MIN_SATELLITES && (state == null || (state & GPS_FIX_FLAG) !== 0);
     }
 }
 
@@ -200,7 +198,7 @@ class BaroReader {
     constructor(private readonly index: number) {}
 
     add(tUs: number, frame: Frame): void {
-        const altM = frame[this.index] / 100;
+        const altM = Number(frame[this.index]) / 100;
         const lastUs = this.samples.at(-1)?.tUs ?? -Infinity;
         if (Number.isFinite(altM) && tUs - lastUs >= BARO_MIN_SPACING_US) {
             this.samples.push({ tUs, altM });
@@ -219,7 +217,7 @@ class ThrottleReader {
     add(tUs: number, frame: Frame): void {
         this.firstUs ??= tUs;
         this.lastUs = tUs;
-        if (frame[this.index] > IDLE_THROTTLE) {
+        if (Number(frame[this.index]) > IDLE_THROTTLE) {
             this.takeoffUs ??= tUs;
             this.lastUpUs = tUs;
         }
@@ -304,7 +302,7 @@ export function buildTrack(
         return null;
     }
     const origin = { lat: allFixes[0].lat, lon: allFixes[0].lon, altM: allFixes[0].altM };
-    const transform = new LocalTransform(origin.lat, origin.lon, origin.altM, 0);
+    const transform = new GpsTransform(origin.lat, origin.lon, origin.altM, 0);
     const toLocal = (lat: number, lon: number, altM: number): TrackPoint => {
         const p = transform.WGS_BS(lat, lon, altM);
         return { n: p.x, u: p.y, e: p.z };

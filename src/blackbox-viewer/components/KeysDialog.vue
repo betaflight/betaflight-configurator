@@ -1,5 +1,5 @@
 <template>
-    <UModal v-model:open="open" :ui="{ content: 'sm:max-w-[95vw] lg:max-w-[1800px]' }">
+    <UModal v-model:open="open" class="keys-dialog" :ui="{ content: 'sm:max-w-[95vw] lg:max-w-[1800px]' }">
         <template #header>
             <div class="flex items-center gap-2">
                 <UIcon name="i-lucide-keyboard" class="size-5 text-primary" />
@@ -137,65 +137,67 @@ const layout = [
 ];
 </script>
 
-<style scoped>
-.keys-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    padding: 0.75rem;
-}
-
-@media (max-width: 900px) {
+<style lang="less">
+.keys-dialog {
     .keys-grid {
-        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        padding: 0.75rem;
     }
-}
 
-.keys-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
+    @media (max-width: 900px) {
+        .keys-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 
-.keys-card {
-    border: 1px solid var(--ui-border);
-    border-radius: 0.5rem;
-    padding: 0.6rem 0.75rem;
-    background: var(--ui-bg-elevated);
-}
+    .keys-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
 
-.keys-card-header {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-highlighted);
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.35rem;
-    border-bottom: 1px solid var(--ui-border);
-}
+    .keys-card {
+        border: 1px solid var(--ui-border);
+        border-radius: 0.5rem;
+        padding: 0.6rem 0.75rem;
+        background: var(--ui-bg-elevated);
+    }
 
-.keys-kbd {
-    display: inline-block;
-    padding: 0.05rem 0.35rem;
-    margin-inline-end: 0.15rem;
-    font-family: ui-monospace, SFMono-Regular, monospace;
-    font-size: 0.65rem;
-    line-height: 1.5;
-    color: var(--text-primary);
-    background: var(--ui-bg);
-    border: 1px solid var(--ui-border);
-    border-bottom-width: 2px;
-    border-radius: 0.25rem;
-}
+    .keys-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-highlighted);
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.35rem;
+        border-bottom: 1px solid var(--ui-border);
+    }
 
-.keys-hint {
-    margin: 0.35rem 0 0;
-    font-size: 0.62rem;
-    color: var(--text-dimmed);
-    font-style: italic;
+    .keys-kbd {
+        display: inline-block;
+        padding: 0.05rem 0.35rem;
+        margin-inline-end: 0.15rem;
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 0.65rem;
+        line-height: 1.5;
+        color: var(--text-primary);
+        background: var(--ui-bg);
+        border: 1px solid var(--ui-border);
+        border-bottom-width: 2px;
+        border-radius: 0.25rem;
+    }
+
+    .keys-hint {
+        margin: 0.35rem 0 0;
+        font-size: 0.62rem;
+        color: var(--text-dimmed);
+        font-style: italic;
+    }
 }
 </style>

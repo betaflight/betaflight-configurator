@@ -31,6 +31,18 @@
     "search": {
         "message": "חיפוש"
     },
+    "settingsSearchTitle": {
+        "message": "חיפוש הגדרות",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "חפש הגדרות...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "לא נמצאו הגדרות",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "אל תציג שוב"
     },
@@ -370,6 +382,9 @@
     "sensorConfigHardware": {
         "message": "חומרת חיישנים"
     },
+    "sensorConfigActiveGyros": {
+        "message": "ג'ירוסקופ פעיל"
+    },
     "sensorConfigGyroLabel": {
         "message": "ג'ירוסקופ $1"
     },
@@ -582,7 +597,7 @@
         "message": "ניתוח תדרי ג'ירוסקופ "
     },
     "tabReceiver": {
-        "message": "מקלט (RX)"
+        "message": "מקלט"
     },
     "tabServos": {
         "message": "מנועי סרוו"
@@ -591,7 +606,7 @@
         "message": "מנגנון חירום"
     },
     "tabOsd": {
-        "message": "OSD"
+        "message": "תצוגת מסך (OSD)"
     },
     "tabVtx": {
         "message": "משדר וידאו"
@@ -1106,11 +1121,11 @@
         "description": "Message that pops up to describe the FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
-        "message": "לא זוהה אות מקלט (RX) תקין",
+        "message": "לא זוהה אות מקלט תקין",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
-        "message": "המקלט (RX) שלך בדיוק התאושש ממצב מנגנון חירום אך מתג החימוש עדיין פועל",
+        "message": "המקלט שלך בדיוק התאושש ממצב מנגנון חירום אך מתג החימוש עדיין פועל",
         "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
@@ -1360,7 +1375,7 @@
         "message": "פלט טלמטריה"
     },
     "featureTELEMETRYTip": {
-        "message": "הפעל פלט טלמטריה לשליחה לשלט (TX)"
+        "message": "הפעל פלט טלמטריה לשליחה לשלט"
     },
     "feature3D": {
         "message": "מצב 3D (לשימוש עם בקרי מהירות דו-כיווניים)"
@@ -1408,7 +1423,7 @@
         "message": "הפעל Airmode באופן קבוע"
     },
     "featureRX_SPI": {
-        "message": "מקלט SPI Rx (לדוגמה מקלט מובנה)"
+        "message": "מקלט SPI (לדוגמה מקלט מובנה)"
     },
     "escSensorSerialPort": {
         "message": "יציאה טורית של טלמטריית בקר המהירות"
@@ -1465,7 +1480,7 @@
         "message": "ה-UART שאליו מחוברת מצלמה בפרוטוקול RunCam. מוגדר במכשיר עצמו החל מ-API 1.49; לשונית היציאות רק מציגה אותו."
     },
     "configurationTelemetryHelp": {
-        "message": "פלט טלמטריה מהמקלט (RX)"
+        "message": "פלט טלמטריה מהמקלט"
     },
     "configurationRSSI": {
         "message": "RSSI (עוצמת אות)"
@@ -1756,10 +1771,10 @@
         "message": "מצפצף כאשר הג'ירוסקופ מכויל"
     },
     "beeperRX_LOST": {
-        "message": "מצפצף כאשר השלט (TX) כבוי או האות אבד (חוזר עד שה-TX תקין)"
+        "message": "מצפצף כאשר השלט כבוי או האות אבד (חוזר עד שהשלט תקין)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "מצפצף SOS כאשר חמוש והשלט (TX) כבוי או האות אבד (נחיתה אוטומטית/פרוק אוטומטי)"
+        "message": "מצפצף SOS כאשר חמוש והשלט כבוי או האות אבד (נחיתה אוטומטית/פרוק אוטומטי)"
     },
     "beeperDISARMING": {
         "message": "צפצוף בעת פרוק בקר הטיסה"
@@ -1973,7 +1988,7 @@
         "message": "מקלט טורי"
     },
     "portsSerialRxHelp": {
-        "message": "הפעל או השבת מקלט טורי של שלט רחוק (RX) על UART שצוין. מותר רק אחד."
+        "message": "הפעל או השבת מקלט טורי של שלט רחוק על UART שצוין. מותר רק אחד."
     },
     "portsSensorIn": {
         "message": "קלט חיישן"
@@ -2069,7 +2084,7 @@
         "message": "זרימה אופטית"
     },
     "portsClaimOsd": {
-        "message": "OSD"
+        "message": "תצוגת מסך (OSD)"
     },
     "portsClaimOsdCustomText": {
         "message": "טקסט OSD מותאם אישית"
@@ -2553,7 +2568,7 @@
         "message": "מזהה התאמת מודל"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">בדוק תמיד שמנגנון החירום עובד כראוי!</a></strong></b> ההגדרות נמצאות בלשונית מנגנון חירום, שדורשת מצב מומחה.<br> &#8226; <b>השתמש בקושחה העדכנית ביותר לשלט (TX)!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">השבת את מסנן ה-ADC החומרתי</a></strong> בשלט אם אתה משתמש ב-OpenTx או ב-EdgeTx.<br>הגדרה בסיסית: הגדר את תצורת 'המקלט' כראוי. בחר את ה-'מפת ערוצים' הנכון לשלט שלך. ודא שהעמודות של גלגול, עלרוד ושאר הערוצים זזות כראוי. התאם את ערכי הקצה של הערוצים בשלט לכ-1000 ועד כ-2000, ושים את נקודת האמצע על 1500. למידע נוסף, קרא את ה-<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">תיעוד</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">בדוק תמיד שמנגנון החירום עובד כראוי!</a></strong></b> ההגדרות נמצאות בלשונית מנגנון חירום, שדורשת מצב מומחה.<br> &#8226; <b>השתמש בקושחה העדכנית ביותר לשלט!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">השבת את מסנן ה-ADC החומרתי</a></strong> בשלט אם אתה משתמש ב-OpenTx או ב-EdgeTx.<br>הגדרה בסיסית: הגדר את תצורת 'המקלט' כראוי. בחר את ה-'מפת ערוצים' הנכון לשלט שלך. ודא שהעמודות של גלגול, עלרוד ושאר הערוצים זזות כראוי. התאם את ערכי הקצה של הערוצים בשלט לכ-1000 ועד כ-2000, ושים את נקודת האמצע על 1500. למידע נוסף, קרא את ה-<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">תיעוד</a></strong>."
     },
     "receiverFailsafeActiveTitle": {
         "message": "מנגנון חירום פעיל"
@@ -2592,7 +2607,7 @@
         "message": "הערך המינימלי (במיקרו-שניות) שיזוהה כ'סטיק למעלה / ימינה' לטובת קלט פקודה (MAX_CHECK)."
     },
     "receiverDeadband": {
-        "message": "שטח מת RC"
+        "message": "שטח מת שלט"
     },
     "receiverHelpDeadband": {
         "message": "אלו ערכים (במיקרו-שניות) המגדירים עד כמה פקודות הרדיו צריכות להיות שונות כדי להיחשב כתקינות. עבור שלטים עם קפיצות בפלט, ניתן להגדיל את הערך הזה אם יש קפיצות בערוצים בזמן מנוחה."
@@ -2604,7 +2619,7 @@
         "message": "אלו ערכים (במיקרו-שניות) המגדירים עד כמה פקודות הרדיו צריכות להיות שונות כדי להיחשב כתקינות. עבור שלטים עם קפיצות בפלט, ניתן להגדיל את הערך הזה אם יש קפיצות בערוצים בזמן מנוחה. <strong>הגדרה זו חלה על סבסוב בלבד.</strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": "שטח מת מצערת(3D)"
+        "message": "שטח מת מצערת 3D"
     },
     "receiverHelp3dDeadbandThrottle": {
         "message": "אלו ערכים (במיקרו-שניות). כדי להרחיב את האזור הניטרלי יש להגדיל את הערך. <strong>הגדרה זו חלה על מצערת תלת-מימד (3D) בלבד.</strong>"
@@ -2656,7 +2671,7 @@
         "message": "ביטוי שיוך (Binding Phrase)"
     },
     "receiverButtonSticks": {
-        "message": "מדמה שלט (Radio Emulator)",
+        "message": "מדמה שלט",
         "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
@@ -2685,10 +2700,10 @@
         "message": "אין מצבים התואמים למסננים הנוכחיים."
     },
     "auxiliaryMin": {
-        "message": "מינימום (Min)"
+        "message": "מינימום"
     },
     "auxiliaryMax": {
-        "message": "מקסימום (Max)"
+        "message": "מקסימום"
     },
     "auxiliaryDisabled": {
         "message": "(מושבת)",
@@ -2923,6 +2938,10 @@
         "message": "העבר את משדר הוידאו למצב פיט (Pit Mode, עוצמת שידור חלשה, אם נתמך)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "דגימת נקודות ציון בטיסה: לחיצה קצרה מוסיפה את המיקום הנוכחי לתוכנית הטיסה כנקודת ציון, החזקת המפסק למשך 1.5 שניות מוחקת את נקודת הציון האחרונה",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "איפוס שעון ההקפות של המשיב",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3084,7 +3103,7 @@
         "message": "{{active}} מתוך {{total}} משבצות פעילות"
     },
     "servosChangeDirection": {
-        "message": "שנה כיוון בשלט (TX) כדי שיתאים"
+        "message": "שנה כיוון בשלט כדי שיתאים"
     },
     "servosForwardChannel": {
         "message": "העבר ערוץ {{channel}} למנוע סרוו {{servo}}"
@@ -3627,10 +3646,10 @@
         "message": "שחרר כדי לעצור"
     },
     "escDshotDirectionDialog-Start": {
-        "message": "בנפרד (Individually)"
+        "message": "בנפרד"
     },
     "escDshotDirectionDialog-StartWizard": {
-        "message": "אשף (Wizard)"
+        "message": "אשף"
     },
     "escDshotDirectionDialog-SetDirectionHint": {
         "message": "שנה כיוון של מנוע(ים) נבחרים"
@@ -3980,6 +3999,12 @@
     },
     "firmwareFlasherNoReboot": {
         "message": "ללא תהליך אתחול"
+    },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "סוג בנייה"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "לוח"
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "בחר סוג בנייה כדי לראות לוחות זמינים."
@@ -6348,14 +6373,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayLeft": {
-        "message": "שכבת על (Overlay) המציגה את מיקום הסטיק השמאלי בשלט."
+        "message": "שכבת על המציגה את מיקום הסטיק השמאלי בשלט."
     },
     "osdTextElementStickOverlayRight": {
         "message": "תצוגת סטיק ימני",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayRight": {
-        "message": "שכבת על (Overlay) המציגה את מיקום הסטיק הימני בשלט."
+        "message": "שכבת על המציגה את מיקום הסטיק הימני בשלט."
     },
     "osdTextElementDisplayName": {
         "message": "שם תצוגה",
@@ -6439,7 +6464,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescTxUplinkPower": {
-        "message": "מציג ערך של עוצמת שידור השלט (ב-mW או ב-W). שימושי כאשר <i>הספק דינמי (Dynamic Power)</i> מופעל בשלטים התומכים בכך"
+        "message": "מציג ערך של עוצמת שידור השלט (ב-mW או ב-W). שימושי כאשר <i>הספק דינמי</i> מופעל בשלטים התומכים בכך"
     },
     "osdTextElementReadyMode": {
         "message": "מצב מוכן",

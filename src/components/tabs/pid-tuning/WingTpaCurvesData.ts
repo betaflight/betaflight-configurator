@@ -20,6 +20,7 @@
  */
 
 import type { WingConfig } from "../../../stores/fc.types";
+import { getCssVar } from "@/js/utils/cssVar";
 
 export interface TpaCurvePoint {
     /** Airspeed in m/s. */
@@ -45,11 +46,6 @@ export function getTpaHyperbolicCurve(wingConfig: WingConfig, motorKv: number): 
     ];
 
     return chartCurves;
-}
-
-export function getCssVar(varName: string, fallback = "#000000"): string {
-    const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-    return value || fallback;
 }
 
 // Compute Wings maximal speed to follow BF firmware formulas (pid_init.c)

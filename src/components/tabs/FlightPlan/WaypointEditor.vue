@@ -334,7 +334,7 @@ const handleCancel = () => {
 };
 </script>
 
-<style scoped>
+<style lang="less">
 .editor-form {
     min-width: 400px;
 }

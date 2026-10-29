@@ -78,15 +78,21 @@
             </UFieldGroup>
         </div>
 
-        <UModal v-model:open="unstableFirmwareOpen" :title="$t('warningTitle')" :close="false" :dismissible="false">
+        <UModal
+            v-model:open="unstableFirmwareOpen"
+            class="dialog-unstable-firmware"
+            :title="$t('warningTitle')"
+            :close="false"
+            :dismissible="false"
+        >
             <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
                 <div class="flex items-center gap-2 mt-3">
                     <USwitch
                         v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
-                        :aria-label="$t('unstableFirmwareAcknowledgement')"
+                        :aria-label="$t('developmentFirmwareAcknowledgement')"
                     />
-                    <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
+                    <span v-html="$t('developmentFirmwareAcknowledgement')"></span>
                 </div>
             </template>
             <template #footer>
@@ -696,13 +702,13 @@ export default defineComponent({
         // Build types configuration
         const buildTypes: { tag: string }[] = [
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeRelease",
+                tag: "firmwareFlasherOptionLabelShowReleases",
             },
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeReleaseCandidate",
+                tag: "firmwareFlasherOptionLabelShowAllReleases",
             },
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeDevelopment",
+                tag: "firmwareFlasherOptionLabelShowDevelopmentReleases",
             },
         ];
 
@@ -1843,7 +1849,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 .tab-firmware_flasher {
     min-height: 100%;
 
@@ -1865,19 +1871,8 @@ export default defineComponent({
         border-radius: 0.25rem;
         font-size: 0.85rem;
     }
-    .flash-status-error {
-        background-color: var(--error-500);
-        color: #fff;
-    }
     .grid-box-spacer {
         height: 1rem;
-    }
-    ul {
-        li {
-            list-style: initial;
-            list-style-type: circle;
-            margin-inline-start: 30px;
-        }
     }
     .options {
         position: relative;
@@ -1943,25 +1938,6 @@ export default defineComponent({
         justify-content: flex-end;
         align-self: center;
     }
-    .select-wrapper-simple {
-        &.no-board-selected {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-    }
-    .select-wrapper {
-        width: calc(100% - 2rem) !important;
-        max-width: 30rem !important;
-        display: grid;
-        grid-template-columns: 1fr auto auto;
-        align-items: center;
-        gap: 0.5rem;
-        box-sizing: border-box;
-        &.no-board-selected {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-    }
     .detect-board {
         position: relative;
         top: auto;
@@ -1999,15 +1975,11 @@ export default defineComponent({
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
-        .select-wrapper {
-            width: 100% !important;
-            max-width: none !important;
-        }
         strong {
             font-size: 12px;
         }
     }
-    /* Keep help icons inline with multiselects inside Build Configuration */
+    /* Keep help icons inline with the selects inside Build Configuration */
     .build_configuration .select-group {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -2016,12 +1988,6 @@ export default defineComponent({
     }
     .build_configuration .select-group > strong {
         grid-column: 1 / -1;
-    }
-    .build_configuration .select-group .select-wrapper {
-        grid-column: 1;
-        /* allow help icon to sit alongside; avoid forcing full-width */
-        max-width: none !important;
-        width: 100% !important;
     }
     .build_configuration .select-group .helpicon {
         grid-column: 2;
@@ -2037,36 +2003,6 @@ export default defineComponent({
         .spacer_box_title {
             white-space: nowrap;
         }
-        #customDefinesInfo {
-            width: 100%;
-        }
-    }
-
-    /* Style multiselect tags for "Other options" selector */
-    #optionsInfo :deep(.multiselect__tags) {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
-        gap: 4px !important;
-    }
-
-    #optionsInfo :deep(.multiselect__tag) {
-        background: var(--surface-500) !important;
-        color: var(--text) !important;
-        font-size: 11px;
-        padding: 3px 20px 3px 6px;
-        border-radius: 3px;
-        display: inline-flex !important;
-        align-items: center !important;
-    }
-
-    #optionsInfo :deep(.multiselect__tag-icon) {
-        &:after {
-            color: var(--text) !important;
-        }
-        &:hover {
-            background: var(--surface-600) !important;
-        }
     }
 
     .default_btn {
@@ -2076,69 +2012,6 @@ export default defineComponent({
         a {
             padding: 0.15rem 0.5rem;
         }
-    }
-
-    /* Three-column grid layout for release info */
-    .release_info_grid {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 1rem 2rem;
-        align-items: center;
-    }
-
-    .release_info_grid .info_row {
-        display: contents;
-    }
-
-    .release_info_grid strong {
-        text-align: end;
-        white-space: nowrap;
-        padding-inline-end: 1rem;
-    }
-
-    .release_info_grid span,
-    .release_info_grid a {
-        text-align: start;
-    }
-
-    .release_info_grid .board_support {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-        justify-self: start;
-    }
-
-    .release_info_grid .board_support a#targetSupportInfoUrl {
-        padding: 0 0.5rem;
-        background-color: var(--primary-500);
-        cursor: pointer;
-        color: var(--surface-50);
-        font-size: 10px;
-        border-radius: 999px;
-        transition: all 200ms;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        height: auto;
-        line-height: 1.4;
-        text-decoration: none;
-
-        &:hover {
-            background-color: var(--primary-400);
-            transition: all ease 0.2s;
-        }
-
-        &:active {
-            background-color: var(--primary-500);
-            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-        }
-    }
-
-    .release_info_grid .board_support .helpicon {
-        margin-top: 0;
-        float: none;
-        display: inline-block;
-        align-self: center;
     }
 
     /* Waiting overlay shown during flashing */
@@ -2179,70 +2052,10 @@ export default defineComponent({
         gap: 0.5rem;
     }
 
-    #cloudTargetStatus {
-        padding-inline-start: 0.5rem;
-    }
-
-    .release_info_grid .btn {
-        justify-self: start;
-    }
-
-    .release_info_grid .btn a.cloud_build_cancel {
-        padding: 0 0.5rem;
-        background-color: var(--primary-500);
-        cursor: pointer;
-        color: var(--surface-50);
-        font-size: 10px;
-        border-radius: 999px;
-        transition: all 200ms;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        height: auto;
-        line-height: 1.4;
-        text-decoration: none;
-
-        &:hover:not(.disabled) {
-            background-color: var(--primary-400);
-            transition: all ease 0.2s;
-        }
-
-        &:active:not(.disabled) {
-            background-color: var(--primary-500);
-            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-        }
-
-        &.disabled {
-            pointer-events: none;
-            cursor: default;
-            background-color: var(--surface-500);
-            color: var(--text);
-        }
-    }
-
-    @media all and (max-width: 1455px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-    }
-    @media all and (max-width: 991px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr;
-            }
-        }
-    }
     & + .content_toolbar {
         width: fit-content;
     }
     @media all and (max-width: 575px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr;
-            }
-        }
         .detect-board {
             span {
                 height: 18px;
@@ -2253,32 +2066,73 @@ export default defineComponent({
             }
         }
     }
-}
 
-:deep(.toolbar_fixed_bottom.content_toolbar) {
-    width: fit-content;
-}
-
-:deep(.content_toolbar) {
-    width: fit-content;
-    background-color: var(--surface-300);
-    box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem 0.75rem 1rem;
-    border-start-start-radius: 1.5rem;
-    &::before {
-        width: 1.5rem;
-        aspect-ratio: 1;
-        content: "";
-        mask: url(../../images/corner.svg);
-        background-color: var(--surface-300);
-        position: absolute;
-        inset-inline-start: -1.5rem;
-        bottom: 0;
+    .toolbar_fixed_bottom.content_toolbar {
+        width: fit-content;
     }
+
+    .content_toolbar {
+        width: fit-content;
+        background-color: var(--surface-300);
+        box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem 0.75rem 1rem;
+        border-start-start-radius: 1.5rem;
+        &::before {
+            width: 1.5rem;
+            aspect-ratio: 1;
+            content: "";
+            mask: url(../../images/corner.svg);
+            background-color: var(--surface-300);
+            position: absolute;
+            inset-inline-start: -1.5rem;
+            bottom: 0;
+        }
+        .btn {
+            a {
+                margin-top: 0;
+                margin-bottom: 0;
+                background-color: var(--primary-500);
+                border-radius: 3px;
+                border: 1px solid var(--primary-600);
+                color: black;
+                float: inline-end;
+                font-weight: bold;
+                font-size: 12px;
+                display: block;
+                cursor: pointer;
+                transition: all ease 0.2s;
+                padding: 0 0.5rem;
+                line-height: 28px;
+                user-select: none;
+                white-space: nowrap;
+                &:hover {
+                    background-color: var(--primary-400);
+                    transition: all ease 0.2s;
+                }
+                &:active {
+                    background-color: var(--primary-500);
+                    transition: all ease 0s;
+                    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
+                }
+                .helpicon {
+                    margin-inline-start: 5px;
+                }
+            }
+            a.disabled {
+                cursor: default;
+                color: var(--surface-900);
+                background-color: var(--surface-500);
+                border: 1px solid var(--surface-500);
+                pointer-events: none;
+                opacity: 1;
+            }
+        }
+    }
+
     .btn {
         a {
             margin-top: 0;
@@ -2286,7 +2140,7 @@ export default defineComponent({
             background-color: var(--primary-500);
             border-radius: 3px;
             border: 1px solid var(--primary-600);
-            color: #000;
+            color: black;
             float: inline-end;
             font-weight: bold;
             font-size: 12px;
@@ -2306,301 +2160,68 @@ export default defineComponent({
                 transition: all ease 0s;
                 box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
             }
-            .helpicon {
-                margin-inline-start: 5px;
+            &.disabled {
+                background-color: var(--surface-500);
+                border: 1px solid var(--surface-400);
+                color: var(--surface-900);
+                cursor: default;
             }
         }
-        a.disabled {
-            cursor: default;
-            color: var(--surface-900);
-            background-color: var(--surface-500);
-            border: 1px solid var(--surface-500);
-            pointer-events: none;
-            opacity: 1;
-        }
     }
-}
 
-.btn {
-    a {
-        margin-top: 0;
-        margin-bottom: 0;
-        background-color: var(--primary-500);
-        border-radius: 3px;
-        border: 1px solid var(--primary-600);
-        color: #000;
-        float: inline-end;
-        font-weight: bold;
-        font-size: 12px;
-        display: block;
-        cursor: pointer;
-        transition: all ease 0.2s;
-        padding: 0 0.5rem;
-        line-height: 28px;
-        user-select: none;
-        white-space: nowrap;
-        &:hover {
-            background-color: var(--primary-400);
-            transition: all ease 0.2s;
-        }
-        &:active {
-            background-color: var(--primary-500);
-            transition: all ease 0s;
-            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-        }
-        &.disabled {
-            background-color: var(--surface-500);
-            border: 1px solid var(--surface-400);
-            color: var(--surface-900);
-            cursor: default;
-        }
+    /* Container management */
+
+    /* Multi Selects */
+
+    /* FIX: Hide search text when selection is present */
+
+    /* Dropdown list styling */
+
+    /* 1. Reset the internal input to remove borders/outlines */
+
+    /* 2. Target the placeholder text specifically */
+
+    /* 3. Target the native placeholder inside the search input */
+
+    /* 4. Ensure the selected single value matches page font size */
+
+    /* Firmware version dropdown should appear above expert options but below board select when both open */
+
+    /* List styling for recovery and warning text in FlasherFlashTab */
+
+    .note-text-format ul {
+        list-style: none !important;
+        margin-inline-start: 0.5rem !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        padding-inline-start: 0 !important;
     }
-}
 
-.osd-needs-attention {
-    :deep(.multiselect__single),
-    :deep(.multiselect__placeholder) {
-        color: red !important;
-    }
-}
-
-/* Container management */
-.select-wrapper.fixed-width {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    min-width: 240px;
-    max-width: 440px;
-    position: relative;
-    z-index: 1002; /* Lower than board select, but active state will be above expert options */
-}
-
-:deep(.standard-select) {
-    min-height: 28px;
-    font-size: 12px;
-    flex: 1;
-    z-index: 1001 !important;
-    font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
-    position: relative;
-}
-
-/* Multi Selects */
-:deep(.standard-select .multiselect__tags) {
-    min-height: 28px;
-    padding: 0 30px 0 8px;
-    border: 1px solid var(--surface-500);
-    border-radius: 3px;
-    background: var(--surface-200);
-    display: flex;
-    align-items: center;
-}
-
-:deep(.standard-select .multiselect__single),
-:deep(.standard-select .multiselect__input),
-:deep(.standard-select .multiselect__placeholder) {
-    color: var(--text) !important;
-    background: transparent !important;
-    line-height: 26px;
-    margin-bottom: 0;
-}
-
-/* FIX: Hide search text when selection is present */
-:deep(.standard-select:not(.multiselect--active) .multiselect__input) {
-    opacity: 0 !important;
-    position: absolute !important;
-}
-
-/* Dropdown list styling */
-:deep(.standard-select .multiselect__content-wrapper) {
-    position: absolute;
-    display: block;
-    background: var(--surface-400);
-    border: 1px solid var(--surface-600);
-    border-top: none;
-    z-index: 99999 !important;
-    max-height: 250px;
-    overflow-y: auto;
-    width: 100%;
-    inset-inline-start: 0;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-}
-
-:deep(.standard-select .multiselect__option) {
-    font-size: 12px !important;
-    color: var(--text) !important;
-    padding: 8px 12px;
-    min-height: 30px;
-}
-
-:deep(.standard-select .multiselect__option--highlight) {
-    background: var(--surface-300) !important; /* Darker blue for better contrast */
-    color: var(--text) !important;
-}
-
-/* 1. Reset the internal input to remove borders/outlines */
-:deep(.standard-select .multiselect__input) {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    color: var(--text) !important;
-    font-size: 12px !important;
-}
-
-/* 2. Target the placeholder text specifically */
-:deep(.standard-select .multiselect__placeholder) {
-    color: var(--text) !important;
-    font-size: 12px !important;
-    margin-bottom: 0;
-    padding-top: 0;
-    line-height: 26px; /* Vertical centering */
-    border: none !important;
-}
-
-/* 3. Target the native placeholder inside the search input */
-:deep(.standard-select .multiselect__input::placeholder) {
-    color: var(--text) !important;
-    font-size: 12px !important;
-    border: none !important;
-}
-
-/* 4. Ensure the selected single value matches page font size */
-:deep(.standard-select .multiselect__single) {
-    font-size: 12px !important;
-    line-height: 26px;
-    padding: 0 0 0 2px;
-    margin-bottom: 0;
-}
-
-/* Firmware version dropdown should appear above expert options but below board select when both open */
-.select-wrapper.fixed-width :deep(.standard-select.multiselect--active) {
-    z-index: 1005 !important; /* Below board select active (100000) but above everything else */
-}
-
-.select-wrapper.fixed-width :deep(.standard-select .multiselect__content-wrapper) {
-    z-index: 1001 !important;
-}
-
-.select-wrapper {
-    /* When multiselect is open, enable positioning and high z-index */
-    :deep(.standard-select.multiselect--active) {
+    .note-text-format li {
+        margin-bottom: 0.25rem !important;
+        margin-inline-start: 0 !important;
+        padding-inline-start: 1.5em !important; /* space for dash */
+        text-indent: -1.5em !important; /* hanging indent so wrapped lines align after dash */
         position: relative;
-        z-index: 10000 !important;
     }
 
-    :deep(.standard-select.multiselect--active .multiselect__content-wrapper) {
-        z-index: 10001 !important;
-    }
-
-    :deep(.standard-select.multiselect--active .multiselect__content) {
-        z-index: 10001 !important;
+    .note-text-format li::before {
+        content: "– " !important;
+        margin-inline-end: 0.5rem !important;
+        color: var(--text) !important;
     }
 }
 
-.select-wrapper-simple {
-    /* When multiselect is open, enable positioning and high z-index */
-    :deep(.standard-select.multiselect--active) {
-        position: relative;
-        z-index: 10000 !important;
-    }
-
-    :deep(.standard-select.multiselect--active .multiselect__content-wrapper) {
-        z-index: 10001 !important;
-    }
-
-    :deep(.standard-select.multiselect--active .multiselect__content) {
-        z-index: 10001 !important;
-    }
-}
-
-/* When multiselect is open, increase z-index to be above everything */
-:deep(.standard-select.multiselect--active) {
-    position: relative;
-    z-index: 10000 !important;
-}
-
-:deep(.standard-select.multiselect--active .multiselect__content-wrapper) {
-    z-index: 10001 !important;
-}
-
-:deep(.standard-select.multiselect--active .multiselect__content) {
-    z-index: 10001 !important;
-}
-
-:deep(.standard-select .multiselect__option--selected) {
-    background: var(--surface-300) !important;
-    color: var(--text) !important;
-    font-weight: normal;
-}
-
-:deep(.standard-select .multiselect__option--selected.multiselect__option--highlight) {
-    background: var(--surface-500) !important;
-    color: var(--surface-50) !important;
-}
-
-/* Group headers (Legacy, Supported, etc.) */
-:deep(.standard-select .multiselect__option--group) {
-    background: var(--surface-600) !important;
-    color: var(--text) !important;
-    font-size: 10px !important;
-    font-weight: bold;
-}
-
-/* List styling for recovery and warning text - using :deep to pierce scoped styles */
-:deep(.note-text-format ul) {
-    list-style: none !important;
-    margin-inline-start: 0.5rem !important;
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
-    padding-inline-start: 0 !important;
-}
-
-:deep(.note-text-format li) {
-    margin-bottom: 0.25rem !important;
-    margin-inline-start: 0 !important;
-    padding-inline-start: 1.5em !important; /* space for dash */
-    text-indent: -1.5em !important; /* hanging indent so wrapped lines align after dash */
-    position: relative;
-}
-
-:deep(.note-text-format li::before) {
-    content: "– " !important;
-    margin-inline-end: 0.5rem !important;
-    color: var(--text) !important;
-}
-
-/* Unstable firmware dialog content styling */
-#dialogUnstableFirmwareAcknowledgement {
-    .content {
-        margin-bottom: 1rem;
-
-        ul {
-            margin: 0.5rem 0;
-            padding-inline-start: 1.5rem;
-            list-style-type: disc;
-        }
-
-        li {
-            margin: 0.25rem 0;
-            line-height: 1.5;
-        }
-
-        strong {
-            font-weight: bold;
-            color: var(--warning);
-        }
-    }
-
-    /* list styling */
-    :deep(ul) {
+/* The unstable-firmware dialog is teleported out of the tab, so it is styled by its own class.
+   Its message is a list, which Tailwind's base styles would otherwise strip of bullets. */
+.dialog-unstable-firmware {
+    ul {
         margin-inline-start: 1.5rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
     }
 
-    :deep(li) {
+    li {
         list-style: disc;
         margin-bottom: 0.25rem;
         margin-inline-start: 0.5rem;

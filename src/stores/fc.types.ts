@@ -56,7 +56,6 @@ export interface AdvancedTuning {
     levelAngleLimit: number;
     levelSensitivity: number;
     itermThrottleThreshold: number;
-    itermAcceleratorGain: number;
     antiGravityGain: number;
     itermRotation: number;
     smartFeedforward: number;

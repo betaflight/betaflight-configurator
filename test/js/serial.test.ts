@@ -29,7 +29,7 @@ const platform = vi.hoisted(() => ({
     isTauriMacOS: false,
 }));
 
-vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
+vi.mock("../../src/js/utils/checkCompatibility", () => ({
     isAndroid: () => false,
     isTauri: () => platform.isTauri,
     isTauriMacOS: () => platform.isTauriMacOS,
