@@ -200,6 +200,35 @@ jobs:
             npm run tauri:build
           fi
 
+      # An AppImage that bundles the build host's libwayland-* fails to start
+      # on newer Mesa ("Could not create default EGL display:
+      # EGL_BAD_PARAMETER", #5375). The host must provide the display stack,
+      # so reject an AppImage that ships it.
+      - name: Check AppImage does not bundle libwayland
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          shopt -s nullglob
+          images=(src-tauri/target/release/bundle/appimage/*.AppImage)
+          if [ ${#images[@]} -eq 0 ]; then
+            echo "::error::No AppImage was built."
+            exit 1
+          fi
+          status=0
+          for image in "${images[@]}"; do
+            image="$(realpath "$image")"
+            workdir="$(mktemp -d)"
+            (cd "$workdir" && "$image" --appimage-extract > /dev/null)
+            bundled="$(find "$workdir/squashfs-root" -name 'libwayland-*.so*' -printf '%P\n')"
+            if [ -n "$bundled" ]; then
+              echo "::error::$(basename "$image") bundles libwayland, which breaks EGL on newer Mesa:"
+              echo "$bundled"
+              status=1
+            fi
+            rm -rf "$workdir"
+          done
+          exit $status
+
       - name: Stage desktop bundles
         shell: bash
         run: |
