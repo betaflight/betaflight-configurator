@@ -252,14 +252,13 @@
                                     @update:model-value="(checked: boolean) => toggleTelemetry(checked)"
                                 />
                             </SettingRow>
-                            <!-- Instances are revealed one at a time, so they share the row and wrap whole. -->
-                            <div class="flex flex-wrap gap-3">
+                            <!-- Instances are revealed one at a time: auto-fit lets one or two fill the row, and a wrapped one keeps the column width. -->
+                            <div class="grid grid-cols-[repeat(auto-fit,minmax(min(22rem,100%),1fr))] gap-3">
                                 <UiBox
                                     v-for="{ port, instance } in visibleTelemetryPorts"
                                     :key="instance"
                                     :title="$t('telemetryInstanceTitle', { 1: instance })"
                                     type="neutral"
-                                    class="flex-1 basis-72"
                                 >
                                     <SettingRow :label="$t('telemetryInstanceProtocol')">
                                         <!-- USelect's model has no null; null and undefined both leave it unselected. -->
