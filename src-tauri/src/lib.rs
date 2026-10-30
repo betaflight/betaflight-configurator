@@ -7,6 +7,48 @@ mod tcp;
 #[cfg(target_os = "macos")]
 mod ble;
 
+use std::sync::atomic::{AtomicU32, Ordering};
+use tauri::webview::NewWindowResponse;
+use tauri::{App, WebviewUrl, WebviewWindowBuilder};
+
+const POPUP_LABEL_PREFIX: &str = "popup-";
+
+// Without an on_new_window handler wry rejects every window.open, so popups (log, radio emulator)
+// would silently never open. The main window is therefore built here rather than from config.
+fn build_main_window(app: &App) -> tauri::Result<()> {
+    let handle = app.handle().clone();
+    let popup_count = AtomicU32::new(0);
+    let config = &app.config().app.windows[0];
+    WebviewWindowBuilder::from_config(app, config)?
+        .on_new_window(move |_url, features| {
+            let label = format!(
+                "{POPUP_LABEL_PREFIX}{}",
+                popup_count.fetch_add(1, Ordering::Relaxed)
+            );
+            // The opener's webview loads the URL into the window returned here, which is what keeps
+            // window.opener and the same origin intact.
+            let popup = WebviewWindowBuilder::new(
+                &handle,
+                label,
+                WebviewUrl::External("about:blank".parse().unwrap()),
+            )
+            .window_features(features)
+            .on_document_title_changed(|window, title| {
+                let _ = window.set_title(&title);
+            })
+            .build();
+            match popup {
+                Ok(window) => NewWindowResponse::Create { window },
+                Err(error) => {
+                    eprintln!("failed to open popup window: {error}");
+                    NewWindowResponse::Deny
+                }
+            }
+        })
+        .build()?;
+    Ok(())
+}
+
 pub fn run() {
     // WebKitGTK's DMA-BUF renderer leaves some composited layers unpainted on several Linux
     // GPU/driver setups: the fixed bottom toolbar stays clickable but is never drawn (#5655).
@@ -25,11 +67,16 @@ pub fn run() {
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_serialplugin::init())
-        .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(
+            tauri_plugin_window_state::Builder::default()
+                .with_filter(|label| !label.starts_with(POPUP_LABEL_PREFIX))
+                .build(),
+        )
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .manage(tcp::TcpState::default())
-        .manage(mdns::MdnsState::default());
+        .manage(mdns::MdnsState::default())
+        .setup(|app| Ok(build_main_window(app)?));
 
     // Registering blec is what populates the handler its Rust API resolves; the ble_* commands
     // are dead without it.
