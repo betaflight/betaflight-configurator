@@ -678,6 +678,10 @@ export function createInitialState(): FcState {
             tpa_speed_pitch_offset: 0,
             yaw_type: 0,
             angle_pitch_offset: 0,
+            speed_curve_vref: 20,
+            speed_curve_power: 20,
+            speed_curve_min: 25,
+            speed_curve_max: 200,
         },
         ledConfigValues: {},
     };
