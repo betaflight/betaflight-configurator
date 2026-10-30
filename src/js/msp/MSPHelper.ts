@@ -2535,6 +2535,10 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.wingConfig.tpa_speed_pitch_offset = data.read16();
         fcStore.wingConfig.yaw_type = data.readU8();
         fcStore.wingConfig.angle_pitch_offset = data.read16();
+        fcStore.wingConfig.speed_curve_vref = data.readU8();
+        fcStore.wingConfig.speed_curve_power = data.readU8();
+        fcStore.wingConfig.speed_curve_min = data.readU16();
+        fcStore.wingConfig.speed_curve_max = data.readU16();
     },
 
     [MSPCodes.MSP_SET_WING]: NOTHING_TO_DO,
@@ -3252,7 +3256,11 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push16(fcStore.wingConfig.tpa_speed_max_voltage)
             .push16(fcStore.wingConfig.tpa_speed_pitch_offset)
             .push8(fcStore.wingConfig.yaw_type)
-            .push16(fcStore.wingConfig.angle_pitch_offset);
+            .push16(fcStore.wingConfig.angle_pitch_offset)
+            .push8(fcStore.wingConfig.speed_curve_vref)
+            .push8(fcStore.wingConfig.speed_curve_power)
+            .push16(fcStore.wingConfig.speed_curve_min)
+            .push16(fcStore.wingConfig.speed_curve_max);
     },
 };
 
