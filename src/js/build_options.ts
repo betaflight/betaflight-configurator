@@ -24,7 +24,7 @@
  *
  * Generator    : `scripts/generate-build-options.mjs`
  * Source       : https://build.betaflight.com/api/options/2026.12
- * Input hash   : 305e9e75314878377cbadd2550bf4802
+ * Input hash   : ec29b3428a61184bf200bff590fc476f
  */
 
 export const FIRMWARE_BUILD_OPTIONS = {
@@ -73,6 +73,7 @@ export const FIRMWARE_BUILD_OPTIONS = {
     USE_OSD_HD: 16417,
     USE_FRSKYOSD: 16411,
     USE_PINIO: 16418,
+    USE_PITOT: 16431,
     USE_POSITION_HOLD: 16425,
     USE_RACE_PRO: 16419,
     USE_RANGEFINDER: 16429,

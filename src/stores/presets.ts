@@ -30,6 +30,10 @@ import { favoritePresets } from "../components/tabs/presets/FavoritePresets";
 import PickedPreset from "../components/tabs/presets/PickedPreset";
 import PresetsGithubRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsGithubRepo";
 import PresetsWebsiteRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsWebsiteRepo";
+import {
+    hasLoadedIndex,
+    type LoadedPresetsRepo,
+} from "../components/tabs/presets/PresetsRepoIndexed/PresetsRepoIndexed";
 import PresetSource from "../components/tabs/presets/SourcesDialog/PresetSource";
 import {
     PRESETS_MAX_RESULTS,
@@ -53,6 +57,7 @@ import type { Preset, PresetSearchParams, PresetSourceEntry } from "./presets_he
 export type { Preset, PresetOption, PresetSourceEntry } from "./presets_helpers";
 
 type PresetRepository = PresetsGithubRepo | PresetsWebsiteRepo;
+type LoadedPresetRepository = LoadedPresetsRepo<PresetRepository>;
 
 export type PresetEntry = {
     key: string;
@@ -84,7 +89,7 @@ function getSourceIndexById(sourceId: string, availableSources: readonly PresetS
 
 export const usePresetsStore = defineStore("presets", () => {
     const majorVersion = 1;
-    const repositories = ref<PresetRepository[]>([]);
+    const repositories = ref<LoadedPresetRepository[]>([]);
     const failedRepositoryNames = ref<string[]>([]);
     const sources = ref<PresetSourceEntry[]>([]);
     const activeSourceIds = ref<string[]>([]);
@@ -281,23 +286,23 @@ export const usePresetsStore = defineStore("presets", () => {
     function buildFilterOptions() {
         filterOptions.categories = collectUniqueValues(
             repositories.value,
-            (repo: PresetRepository) => repo.index.uniqueValues.category,
+            (repo: LoadedPresetRepository) => repo.index.uniqueValues.category,
         );
         filterOptions.keywords = collectUniqueValues(
             repositories.value,
-            (repo: PresetRepository) => repo.index.uniqueValues.keywords,
+            (repo: LoadedPresetRepository) => repo.index.uniqueValues.keywords,
         );
         filterOptions.authors = collectUniqueValues(
             repositories.value,
-            (repo: PresetRepository) => repo.index.uniqueValues.author,
+            (repo: LoadedPresetRepository) => repo.index.uniqueValues.author,
         );
         filterOptions.firmwareVersions = collectUniqueValues(
             repositories.value,
-            (repo: PresetRepository) => repo.index.uniqueValues.firmware_version,
+            (repo: LoadedPresetRepository) => repo.index.uniqueValues.firmware_version,
         );
         filterOptions.status = collectUniqueValues(
             repositories.value,
-            (repo: PresetRepository) => repo.index.settings.PresetStatusEnum,
+            (repo: LoadedPresetRepository) => repo.index.settings.PresetStatusEnum,
         );
     }
 
@@ -494,7 +499,7 @@ export const usePresetsStore = defineStore("presets", () => {
                 ),
             );
 
-            repositories.value = nextRepositories.filter((repository) => repository.index !== null);
+            repositories.value = nextRepositories.filter(hasLoadedIndex);
             failedRepositoryNames.value = [...failedNames];
 
             await confirmSourceVersions();

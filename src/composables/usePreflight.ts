@@ -21,7 +21,6 @@
 
 import { reactive, computed, ref } from "vue";
 import geomagnetism from "geomagnetism";
-import { getTimes } from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { ispConnected } from "../js/utils/connection";
 import { IP_GEOLOCATION_CONSENT_KEY, hasIpGeolocationConsent } from "../js/utils/ipGeolocation";
@@ -425,6 +424,7 @@ const location = reactive({
 const weather = reactive({
     loading: false,
     error: null as string | null,
+    timezone: null as string | null,
     current: null as CurrentWeather | null,
     hourly: null as HourlyWeather[] | null,
     daily: null as DailyWeather | null,
@@ -603,6 +603,7 @@ async function fetchWeather(lat: number, lon: number): Promise<void> {
     const requestId = ++weatherRequestId;
     weather.loading = true;
     weather.error = null;
+    weather.timezone = null;
     weather.current = null;
     weather.hourly = null;
     weather.daily = null;
@@ -683,14 +684,15 @@ async function fetchWeather(lat: number, lon: number): Promise<void> {
             pressure: data.current.pressure_msl,
             isDay: data.current.is_day,
         };
+        weather.timezone = typeof data.timezone === "string" ? data.timezone : null;
 
         weather.daily = {
             sunrise: data.daily.sunrise?.[0] || null,
             sunset: data.daily.sunset?.[0] || null,
-            daylightDuration: data.daily.daylight_duration?.[0] || null,
-            uvIndexMax: data.daily.uv_index_max?.[0] || null,
-            temperatureMax: data.daily.temperature_2m_max?.[0] || null,
-            temperatureMin: data.daily.temperature_2m_min?.[0] || null,
+            daylightDuration: data.daily.daylight_duration?.[0] ?? null,
+            uvIndexMax: data.daily.uv_index_max?.[0] ?? null,
+            temperatureMax: data.daily.temperature_2m_max?.[0] ?? null,
+            temperatureMin: data.daily.temperature_2m_min?.[0] ?? null,
         };
 
         weather.hourly = [];
@@ -1013,28 +1015,12 @@ async function refreshAll() {
     const lat = location.latitude;
     const lon = location.longitude;
     updateMagneticDeclination();
-    updateCivilTwilight();
     await Promise.allSettled([
         fetchWeather(lat, lon),
         fetchSolarActivity(),
         fetchElevation(lat, lon),
         fetchNotams(lat, lon),
     ]);
-}
-
-const civilTwilight = ref<{ dawn: Date; dusk: Date } | null>(null);
-
-function updateCivilTwilight() {
-    if (location.latitude === null || location.longitude === null) {
-        civilTwilight.value = null;
-        return;
-    }
-    const times = getTimes(new Date(), location.latitude, location.longitude);
-    if (!times.dawn || !times.dusk || Number.isNaN(times.dawn.getTime()) || Number.isNaN(times.dusk.getTime())) {
-        civilTwilight.value = null;
-        return;
-    }
-    civilTwilight.value = { dawn: times.dawn, dusk: times.dusk };
 }
 
 // Load saved locations and NOTAM settings once at module init
@@ -1049,7 +1035,6 @@ export function usePreflight() {
         weather,
         solar,
         mag,
-        civilTwilight,
         savedLocations,
         notams,
         notamSettings,

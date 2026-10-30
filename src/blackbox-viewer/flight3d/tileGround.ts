@@ -54,7 +54,7 @@ export const TILE_SOURCES: Record<Exclude<GroundSourceId, "none">, TileSource> =
         maxZoom: 19,
         attribution: "© OpenStreetMap contributors",
     },
-    // Same imagery the GPS tab uses (src/js/utils/map.js).
+    // Same imagery the GPS tab uses (src/js/utils/map.ts).
     satellite: {
         url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
         maxZoom: 20,

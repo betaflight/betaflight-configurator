@@ -738,13 +738,37 @@
                     <UButton
                         size="xs"
                         class="w-fit"
-                        :label="$t('sensorConfigCalibrate')"
+                        :label="legacyCalButtonLabel"
+                        :loading="calIsCalibrating || cal.starting"
                         @click="startLegacyFirmwareCal()"
                     >
                         <template #trailing>
                             <HelpIcon :text="$t('initialSetupCalibrateMagText')" />
                         </template>
                     </UButton>
+                    <!-- Always rendered so screen readers pick up the messages swapped in below. -->
+                    <div class="legacy-mag-cal-status" aria-live="polite">
+                        <p v-if="calIsCalibrating" class="text-xs text-[var(--surface-600)]">
+                            {{ $t(cal.statusMessage) }}
+                        </p>
+                        <!-- Restarting from 'complete' or 'error' keeps that phase until the offset read returns. -->
+                        <p v-else-if="cal.starting" class="text-xs text-[var(--surface-600)]">
+                            {{ $t("magCalibrationLegacyStarting") }}
+                        </p>
+                        <p
+                            v-else-if="cal.mode === 'quick' && cal.phase === 'complete'"
+                            class="text-xs font-semibold status-ok"
+                        >
+                            {{ $t("magCalibrationUnguidedDone") }}
+                        </p>
+                        <p
+                            v-else-if="cal.mode === 'quick' && cal.phase === 'error'"
+                            class="text-xs status-bad"
+                            role="alert"
+                        >
+                            {{ $t(cal.statusMessage || "magCalibrationError") }}
+                        </p>
+                    </div>
                 </template>
             </UiBox>
 
@@ -872,7 +896,7 @@ import { buildCharacterizationModel } from "../../js/utils/magModelExport";
 import { useTimeout } from "../../composables/useTimeout";
 import { useInterval } from "../../composables/useInterval";
 import Model from "../../js/model";
-import { flightIndicator } from "../../../libraries/flightIndicators";
+import { flightIndicator } from "../../js/flightIndicators";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -1627,10 +1651,26 @@ const calFirmwareOffsetsText = computed(() => {
     return `${fw.x}, ${fw.y}, ${fw.z}`;
 });
 
+// Legacy (API < 1.47) Calibrate button: show the 30 s firmware countdown on the button itself,
+// since this path has no inline calibration panel (#5652).
+const legacyCalButtonLabel = computed(() => {
+    if (cal.phase === "collecting" && cal.firmwareSecondsRemaining >= 0) {
+        return i18n.getMessage("magCalibrationLegacyCountdown", { seconds: cal.firmwareSecondsRemaining });
+    }
+    // cal.starting covers the CLI offset read before the firmware calibration is triggered.
+    if (calIsCalibrating.value || cal.starting) {
+        return i18n.getMessage("magCalibrationLegacyStarting");
+    }
+    return i18n.getMessage("sensorConfigCalibrate");
+});
+
 async function startLegacyFirmwareCal() {
     lastCalStarter = startLegacyFirmwareCal;
     calGeoRef.value = getGeoReference();
     await cal.startCalibration("quick");
+    if (calIsCalibrating.value) {
+        gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
+    }
 }
 
 function cancelMagCal() {
@@ -1959,6 +1999,7 @@ watch(
         if (done && cal.mode === "quick") {
             cal.completeCalibration();
             magNeedsCalibration.value = false;
+            gui_log(i18n.getMessage("initialSetupMagCalibEnded"));
             playCalCompletionBeep();
         }
     },

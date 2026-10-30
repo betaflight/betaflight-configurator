@@ -95,19 +95,17 @@
 import { computed, onActivated, onDeactivated, onBeforeUnmount, onMounted, ref, shallowRef, toRaw, watch } from "vue";
 import { useGraphStore } from "../stores/graph";
 import { useLogStore } from "../stores/log";
-import { useSettingsStore } from "../stores/settings.js";
-import { setCurrentBlackboxTime } from "../playback_controls.js";
-import { FlightLogFieldPresenter } from "../flightlog_fields_presenter.js";
+import { useSettingsStore } from "../stores/settings";
+import { setCurrentBlackboxTime } from "../playback_controls";
+import { FlightLogFieldPresenter, type PresentedFlightLog } from "../flightlog_fields_presenter";
+import type { FlightLog } from "../flightlog";
 import { buildFlightTrack, type FlightLogSource, type FlightTrack } from "../flight3d/flightTrack";
 import { buildAttitudeTrack, type AttitudeTrack } from "../flight3d/fcAttitude";
 import { FlightScene } from "../flight3d/flightScene";
 import { TILE_SOURCES, type GroundSourceId } from "../flight3d/tileGround";
 
 /** FlightLog members used here beyond what the track builder needs. */
-interface ViewerFlightLog extends FlightLogSource {
-    getLogIndex(): number;
-    getCurrentFrameAtTime(tUs: number): { current: number[] | null } | false;
-}
+type ViewerFlightLog = FlightLogSource & PresentedFlightLog & Pick<FlightLog, "getLogIndex" | "getCurrentFrameAtTime">;
 
 interface Box {
     left: number;
@@ -247,18 +245,21 @@ function setCurrentTime(tUs: number) {
     if (!scene || !flightLog || !track.value) {
         return;
     }
-    const frameAtTime = flightLog.getCurrentFrameAtTime(tUs);
+    const log = flightLog;
+    const frameAtTime = log.getCurrentFrameAtTime(tUs);
     const frame = frameAtTime ? frameAtTime.current : null;
     const position = scene.setTime(tUs, attitudeTrack?.at(tUs) ?? null);
 
-    const parts: string[] = [];
+    // join() writes an undefined part as "", as it always did.
+    const parts: (string | number | undefined)[] = [];
     if (position) {
         parts.push(
             `Alt ${FlightLogFieldPresenter.decodeCorrectAltitude(position.u - track.value.groundU, userSettings.altitudeUnits)}`,
         );
     }
-    const present = (field: string, value: number) =>
-        FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, field, value, undefined);
+    // A GPS slot is null until the log's first GPS frame.
+    const present = (field: string, value: number | null) =>
+        FlightLogFieldPresenter.decodeFieldToFriendly(log, field, value, undefined);
     if (frame && fieldIndex.speed !== undefined) {
         parts.push(present("GPS_speed", frame[fieldIndex.speed]));
     }
@@ -316,7 +317,7 @@ onMounted(() => {
     if (canvas) {
         resize(canvas.clientWidth, canvas.clientHeight);
     }
-    setFlightLog(logStore.hasLog ? (toRaw(logStore.flightLog) as ViewerFlightLog | null) : null);
+    setFlightLog(logStore.hasLog ? toRaw(logStore.flightLog) : null);
 });
 
 // Dispose while the canvas is still in the page: OrbitControls removes its document keydown
