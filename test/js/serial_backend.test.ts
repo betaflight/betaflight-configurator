@@ -856,6 +856,19 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         }
     });
 
+    it("drops the tab a save was reopening when the reconnect lands in a CLI-only session", () => {
+        const navigationStore = useNavigationStore();
+        navigationStore.tabAfterReconnect = { tab: "backups", mode: "loggedin" };
+
+        connectDisconnect();
+        serialHandlers.connect({ detail: true });
+        useFlightControllerStore().config.apiVersion = "1.0.0"; // too old -> version mismatch -> CLI
+        (vi.mocked(MSP.send_message).mock.calls.at(-1)?.[3] as (() => void) | undefined)?.(); // MSP_API_VERSION callback
+
+        expect(getConnectionState().state).toBe("CLI");
+        expect(navigationStore.tabAfterReconnect).toBeNull();
+    });
+
     it("keeps the tab a save was reopening when the reconnect is abandoned on a live link", () => {
         const navigationStore = useNavigationStore();
         const connectionStore = useConnectionStore();

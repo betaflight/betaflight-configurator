@@ -1243,6 +1243,10 @@ function connectCli() {
     // Readiness edge #2: CLI-only / version-mismatch session -> CLI (CLI_ONLY).
     getConnectionState().setPhase(ConnPhase.CLI);
 
+    // A CLI-only session never runs selectDefaultTabWhenConnected, so the tab a save-and-reboot
+    // was heading for will not open here. Drop it, so a later full connect does not jump to it.
+    dropTabAfterReconnect();
+
     switchTab("cli", { mode: "cli" });
 }
 
