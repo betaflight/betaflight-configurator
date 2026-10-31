@@ -35,6 +35,20 @@ export interface BuildStatusResponse {
     status: string;
     timeOut?: number;
     configuration?: string[];
+    commitHash?: string;
+    commitDate?: string;
+}
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Formats an ISO timestamp in local time as "dd-MMM-yyyy HH:mm", the style of release dates. */
+export function formatCommitDate(iso: string | undefined): string {
+    const date = iso ? new Date(iso) : null;
+    if (!date || Number.isNaN(date.getTime())) {
+        return "";
+    }
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${pad(date.getDate())}-${MONTHS[date.getMonth()]}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 export interface CloudBuildRequest {
@@ -107,6 +121,8 @@ export function useCloudBuild(params: CloudBuildParams) {
         cancelBuild: false,
         cancelBuildButtonDisabled: true,
         cloudBuildProgress: 0,
+        cloudBuildCommitHash: "",
+        cloudBuildCommitDate: "",
     });
 
     // Polling timer reference
@@ -198,6 +214,8 @@ export function useCloudBuild(params: CloudBuildParams) {
         state.cloudTargetLogUrl = logUrl;
         state.cloudTargetStatusText = $t(`firmwareFlasherCloudBuildSuccess${suffix}`);
         state.cloudBuildProgress = 100;
+        state.cloudBuildCommitHash = statusResponse.commitHash ?? "";
+        state.cloudBuildCommitDate = formatCommitDate(statusResponse.commitDate);
 
         if (statusResponse.configuration !== undefined && !isConfigLocal) {
             setBoardConfig(statusResponse.configuration);
@@ -420,6 +438,8 @@ export function useCloudBuild(params: CloudBuildParams) {
         state.cancelBuild = false;
         state.cancelBuildButtonDisabled = true;
         state.cloudBuildProgress = 0;
+        state.cloudBuildCommitHash = "";
+        state.cloudBuildCommitDate = "";
         stopPolling();
     };
 

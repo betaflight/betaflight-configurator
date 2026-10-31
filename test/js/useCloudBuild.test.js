@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { effectScope } from "vue";
 
-import { useCloudBuild } from "../../src/composables/useCloudBuild";
+import { formatCommitDate, useCloudBuild } from "../../src/composables/useCloudBuild";
 
 function makeParams(buildApiOverrides = {}) {
     return {
@@ -75,5 +75,47 @@ describe("useCloudBuild", () => {
             cloudBuild.cleanup();
             scope.stop();
         }).not.toThrow();
+    });
+
+    it("records the built commit from a successful status and clears it on reset", async () => {
+        params.buildApi.requestBuildStatus.mockResolvedValue({
+            status: "success",
+            commitHash: "79d8b4aba",
+            commitDate: "2026-10-10T19:29:22Z",
+        });
+
+        await cloudBuild.requestCloudBuild(targetDetail, additionalParams);
+
+        expect(cloudBuild.state.cloudBuildCommitHash).toBe("79d8b4aba");
+        expect(cloudBuild.state.cloudBuildCommitDate).toBe(formatCommitDate("2026-10-10T19:29:22Z"));
+
+        cloudBuild.resetCloudBuildState();
+
+        expect(cloudBuild.state.cloudBuildCommitHash).toBe("");
+        expect(cloudBuild.state.cloudBuildCommitDate).toBe("");
+    });
+
+    it("leaves the commit empty when the build server does not report one", async () => {
+        params.buildApi.requestBuildStatus.mockResolvedValue({ status: "success" });
+
+        await cloudBuild.requestCloudBuild(targetDetail, additionalParams);
+
+        expect(cloudBuild.state.cloudBuildCommitHash).toBe("");
+        expect(cloudBuild.state.cloudBuildCommitDate).toBe("");
+    });
+});
+
+describe("formatCommitDate", () => {
+    it("formats in the release date style", () => {
+        const date = new Date("2026-10-10T19:29:22Z");
+        const pad = (n) => String(n).padStart(2, "0");
+        expect(formatCommitDate("2026-10-10T19:29:22Z")).toBe(
+            `${pad(date.getDate())}-Oct-2026 ${pad(date.getHours())}:${pad(date.getMinutes())}`,
+        );
+    });
+
+    it("returns empty for a missing or invalid date", () => {
+        expect(formatCommitDate(undefined)).toBe("");
+        expect(formatCommitDate("not-a-date")).toBe("");
     });
 });

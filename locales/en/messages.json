@@ -3974,6 +3974,9 @@
     "firmwareFlasherReleaseDate": {
         "message": "Date:"
     },
+    "firmwareFlasherReleaseCommit": {
+        "message": "Commit:"
+    },
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
