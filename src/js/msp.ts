@@ -54,6 +54,12 @@ export interface MspRequest {
     attempts?: number;
     start?: number;
     timer?: ReturnType<typeof setTimeout> | null;
+    /**
+     * Put on the wire, by the first send or a retry. False for an entry that attached to an
+     * identical copy already in flight: an errorAware one still arms its own timer, so the
+     * timer alone does not tell a transmitted copy from a rider.
+     */
+    sent?: boolean;
 }
 
 export type CliCallback = (lines: string[], error?: Error | null) => void;
@@ -66,6 +72,8 @@ interface CliQueueEntry {
 
 /** The decoder state MSPHelper.process_data reads when a frame completes. */
 export interface MspFrame {
+    /** Identical payload-less requests allowed on the wire at once (see MSP.MAX_SAME_IN_FLIGHT); 1 when absent. */
+    MAX_SAME_IN_FLIGHT?: number;
     code: number;
     dataView: MspDataView;
     crcError: boolean;
@@ -154,6 +162,15 @@ const MSP = {
 
     TIMEOUT: 1000,
     MAX_RETRIES: 3,
+    /**
+     * How many identical payload-less requests may be on the wire at once. 1 (the default)
+     * dedups a repeat of a pending request onto the pending one, so a tab polling faster than
+     * the link answers never floods it. A high-latency link such as a BLE-UART bridge answers
+     * each request only after a full round trip, so a poller then gets one reply per round
+     * trip (~7/s on a 20-byte-per-interval bridge); letting a second copy ride behind the
+     * first keeps the bridge busy and roughly doubles the rate. Set by serial_backend per link.
+     */
+    MAX_SAME_IN_FLIGHT: 1,
 
     last_received_timestamp: null as number | null,
     listeners: [] as MspListener[],
@@ -504,7 +521,16 @@ const MSP = {
             }
         }
 
-        const requestExists = this.callbacks.some((i) => i.code === code && this._buffer_matches(i, view));
+        // Only transmitted copies still waiting on their timer count. A legacy entry whose
+        // retries ran out stays queued for a late reply but must not block fresh sends, or a
+        // single lost reply would freeze that poll for the rest of the session; a rider that
+        // attached to a copy was never sent, even when it arms a timer of its own.
+        const sameInFlight = this.callbacks.filter(
+            (i) => i.code === code && i.sent && i.timer && this._buffer_matches(i, view),
+        ).length;
+        // Payloads always go out; a payload-less repeat is sent while fewer than
+        // MAX_SAME_IN_FLIGHT copies are pending, else it attaches to a pending one.
+        const sendNow = !!data || sameInFlight < this.MAX_SAME_IN_FLIGHT;
 
         const obj: MspRequest = {
             code,
@@ -515,18 +541,18 @@ const MSP = {
             notifyTimeout,
             attempts: 1,
             start: performance.now(),
+            sent: sendNow,
         };
 
         // errorAware entries always arm their own timer (even when deduped) so an awaiter
         // that attached onto a stalled request still settles.
-        if (errorAware || !requestExists) {
+        if (errorAware || sendNow) {
             this._arm_timer(obj);
         }
 
         this.callbacks.push(obj);
 
-        // always send messages with data payload (even when there is a message already in the queue)
-        if (data || !requestExists) {
+        if (sendNow) {
             void serial.send(bufferOut, (sendInfo: { bytesSent: number }) => {
                 if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
                     callback_sent();
@@ -562,6 +588,7 @@ const MSP = {
                 `MSP: data request timed-out: ${obj.code} ID: ${serial.connectionId} TAB: ${useNavigationStore().activeTab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
             );
             void serial.send(obj.requestBuffer);
+            obj.sent = true;
             this._arm_timer(obj);
             return;
         }
@@ -616,6 +643,7 @@ const MSP = {
 
         entry.attempts = 1;
         entry.start = performance.now();
+        entry.sent = true;
         this._arm_timer(entry);
         this.callbacks.push(entry);
 

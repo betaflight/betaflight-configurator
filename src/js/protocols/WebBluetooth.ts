@@ -76,6 +76,9 @@ export interface WebBluetoothPort {
 
 type SendCallback = (result: { error: unknown; bytesSent: number }) => void;
 
+/** Largest single write to a BLE-UART characteristic: ATT_MTU 23 minus the 3-byte header. */
+const BLE_WRITE_CHUNK_BYTES = 20;
+
 export interface WebBluetoothSendResult {
     bytesSent: number;
 }
@@ -615,7 +618,14 @@ class WebBluetooth extends EventTarget {
                 try {
                     // Checked above; a teardown during an earlier queued write nulls it, and the
                     // TypeError that follows lands in the catch below, as before.
-                    await this.writeCharacteristic!.writeValue(dataBuffer);
+                    // BLE-UART bridges take at most one ATT payload (20 bytes at the default MTU)
+                    // per write and silently truncate anything longer, so frames bigger than
+                    // that go out in pieces; the bridge's UART just concatenates them.
+                    for (let offset = 0; offset < dataBuffer.byteLength; offset += BLE_WRITE_CHUNK_BYTES) {
+                        await this.writeCharacteristic!.writeValue(
+                            dataBuffer.slice(offset, offset + BLE_WRITE_CHUNK_BYTES),
+                        );
+                    }
                     this.bytesSent += data.byteLength;
                     bytesSent = data.byteLength;
 
