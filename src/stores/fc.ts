@@ -367,6 +367,7 @@ export function createInitialState(): FcState {
             use_dshot_telemetry: false,
             use_esc_sensor: false,
             motor_kv: 0,
+            dshot_bidir_rotate: 0,
         },
         gpsConfig: {
             provider: 0,

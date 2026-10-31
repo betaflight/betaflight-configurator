@@ -130,6 +130,12 @@ export function useMotorConfiguration(
             (newVal, oldVal) => handleChange("dshotbidir", newVal, oldVal),
         );
 
+        // DShot bidirectional telemetry rotation
+        watch(
+            () => fcStore.motorConfig.dshot_bidir_rotate,
+            (newVal, oldVal) => handleChange("dshotBidirRotate", newVal, oldVal),
+        );
+
         // Motor KV
         watch(
             () => fcStore.motorConfig.motor_kv,

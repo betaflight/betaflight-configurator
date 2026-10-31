@@ -35,6 +35,7 @@ import {
     API_VERSION_1_47,
     API_VERSION_1_48,
     API_VERSION_1_49,
+    API_VERSION_1_50,
 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
@@ -1214,6 +1215,11 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         // Introduced in 1.49
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             fcStore.motorConfig.motor_kv = data.readU16();
+        }
+
+        // Introduced in 1.50
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_50)) {
+            fcStore.motorConfig.dshot_bidir_rotate = data.readU8();
         }
     },
 
@@ -2674,6 +2680,11 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
         // Introduced in 1.49
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             buffer.push16(fcStore.motorConfig.motor_kv);
+        }
+
+        // Introduced in 1.50
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_50)) {
+            buffer.push8(fcStore.motorConfig.dshot_bidir_rotate);
         }
     },
 

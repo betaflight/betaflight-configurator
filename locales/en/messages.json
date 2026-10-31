@@ -7319,6 +7319,26 @@
         "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
+    "configurationDshotBidirRotate": {
+        "message": "Bidirectional DShot telemetry rotation",
+        "description": "Setting for the ESC/Motor: decode the telemetry of one motor per update instead of all motors"
+    },
+    "configurationDshotBidirRotateHelp": {
+        "message": "Decodes the bidirectional DShot telemetry of one motor per PID loop instead of all motors at once, so each loop spends less time on the decoding. Each motor's RPM is then refreshed every N loops (N = motor count), which the RPM filter tolerates. <br> <br><strong>Off</strong>: all motors every loop (default). <strong>On</strong>: always rotate. <strong>Auto</strong>: rotate only when the PID loop runs faster than 4 kHz; at 4 kHz and below, decoding every motor each loop fits in the loop time. <br> <br>Note: On an F4 at 8 kHz the time saved may be needed by the serial and USB links; test on the bench before flying.",
+        "description": "Description of the bidirectional DShot telemetry rotation setting"
+    },
+    "configurationDshotBidirRotateOff": {
+        "message": "Off",
+        "description": "Option of the bidirectional DShot telemetry rotation setting"
+    },
+    "configurationDshotBidirRotateOn": {
+        "message": "On",
+        "description": "Option of the bidirectional DShot telemetry rotation setting"
+    },
+    "configurationDshotBidirRotateAuto": {
+        "message": "Auto",
+        "description": "Option of the bidirectional DShot telemetry rotation setting"
+    },
     "configurationGyroFrequency": {
         "message": "Gyro update frequency"
     },
