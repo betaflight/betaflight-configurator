@@ -1194,9 +1194,26 @@ function onDragOverCell(event: DragEvent) {
 
 function onPreviewDragLeave(event: DragEvent) {
     // dragleave also fires moving between cells; only hide the ghost once the pointer leaves the grid.
-    const next = event.relatedTarget;
-    if (next instanceof Node && previewContainer.value?.contains(next)) {
+    const container = previewContainer.value;
+    if (!container) {
         return;
+    }
+    const next = event.relatedTarget;
+    if (next instanceof Node) {
+        if (container.contains(next)) {
+            return;
+        }
+    } else {
+        // Some engines leave relatedTarget null on dragleave, so fall back to the pointer position.
+        const rect = container.getBoundingClientRect();
+        const inside =
+            event.clientX >= rect.left &&
+            event.clientX < rect.right &&
+            event.clientY >= rect.top &&
+            event.clientY < rect.bottom;
+        if (inside) {
+            return;
+        }
     }
     dragGhostPosition.value = null;
 }
