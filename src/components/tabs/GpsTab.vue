@@ -346,6 +346,7 @@ import { addArrayElement } from "../../js/utils/array";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
 
@@ -483,6 +484,7 @@ export default defineComponent({
             conflict: gpsPortConflict,
             load: loadGpsPort,
             write: writeGpsPort,
+            markSaved: markGpsPortSaved,
         } = useFeaturePort({
             setting: "gps_uart",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
@@ -928,6 +930,7 @@ export default defineComponent({
                     }
 
                     await saveAndReboot();
+                    markGpsPortSaved();
                 } finally {
                     resumePolling();
                 }
@@ -935,6 +938,7 @@ export default defineComponent({
                 markClean(savedSnapshot);
             });
         };
+        registerTabSave(() => saveConfig());
 
         const initializeMap = () => {
             if (mapInstance.value || !mapRef.value) return;

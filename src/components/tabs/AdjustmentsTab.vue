@@ -171,6 +171,7 @@ import { useAdjustmentsState } from "@/composables/adjustments/useAdjustmentsSta
 import { useAdjustmentsData } from "@/composables/adjustments/useAdjustmentsData";
 import { useAdjustmentsSave } from "@/composables/adjustments/useAdjustmentsSave";
 import { useAdjustmentsPolling } from "@/composables/adjustments/useAdjustmentsPolling";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const { t } = useTranslation();
 const { adjustments, hasChanges, storeOriginals, showAllSlots, activeCount, visibleAdjustments } =
@@ -188,6 +189,7 @@ const {
     initializeAdjustments,
 } = useAdjustmentsData(adjustments, t);
 const { saveAdjustments, isSaving } = useAdjustmentsSave(adjustments, storeOriginals);
+registerTabSave(() => saveAdjustments());
 const { rcChannelData, startRcDataPolling } = useAdjustmentsPolling();
 
 onMounted(async () => {

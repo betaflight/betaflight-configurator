@@ -227,6 +227,7 @@ vi.mock("../../src/components/eventBus", () => ({
 }));
 
 import {
+    cancelRebootReconnect,
     connectDisconnect,
     disconnect,
     initializeSerialBackend,
@@ -772,6 +773,98 @@ describe("serial_backend BLE Save-and-Reboot reconnect", () => {
         } finally {
             vi.useRealTimers();
         }
+    });
+
+    it("drops the tab a save was reopening when the reboot window times out without a reconnect", () => {
+        const navigationStore = useNavigationStore();
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
+            DeviceHandler.devicePicker.autoConnect = true;
+            establishConnection();
+            navigationStore.tabAfterReconnect = { tab: "ports", mode: "connected" };
+
+            reinitializeConnection();
+
+            // Still waiting for the FC: the target is kept for the reconnect.
+            vi.advanceTimersByTime(5000);
+            expect(navigationStore.tabAfterReconnect).toEqual({ tab: "ports", mode: "connected" });
+
+            // The FC never answers, so the window runs out and a later connect opens the default.
+            vi.advanceTimersByTime(30000);
+            expect(navigationStore.tabAfterReconnect).toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("drops the tab a save was reopening when Auto-Connect is off and nothing will reconnect", () => {
+        const navigationStore = useNavigationStore();
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
+            DeviceHandler.devicePicker.autoConnect = false;
+            establishConnection();
+            navigationStore.tabAfterReconnect = { tab: "ports", mode: "connected" };
+
+            reinitializeConnection();
+            vi.advanceTimersByTime(1500);
+
+            expect(navigationStore.tabAfterReconnect).toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it("drops the tab a save was reopening when the user disconnects during the reboot window", () => {
+        const navigationStore = useNavigationStore();
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
+            DeviceHandler.devicePicker.autoConnect = true;
+            establishConnection();
+            navigationStore.tabAfterReconnect = { tab: "ports", mode: "connected" };
+
+            reinitializeConnection();
+            disconnect();
+            mspHelperInstance.enableArming.mock.calls.at(-1)?.[0]?.();
+
+            expect(navigationStore.tabAfterReconnect).toBeNull();
+        } finally {
+            vi.advanceTimersByTime(30000);
+            vi.useRealTimers();
+        }
+    });
+
+    it("drops the tab a save was reopening when the reboot reconnect is abandoned unconnected", () => {
+        const navigationStore = useNavigationStore();
+        vi.useFakeTimers();
+        try {
+            DeviceHandler.devicePicker.selectedDevice = "bluetooth_1";
+            DeviceHandler.devicePicker.autoConnect = true;
+            establishConnection();
+            navigationStore.tabAfterReconnect = { tab: "ports", mode: "connected" };
+
+            reinitializeConnection();
+            cancelRebootReconnect();
+
+            expect(getConnectionState().isRebootWindowOpen).toBe(false);
+            expect(navigationStore.tabAfterReconnect).toBeNull();
+        } finally {
+            vi.advanceTimersByTime(30000);
+            vi.useRealTimers();
+        }
+    });
+
+    it("keeps the tab a save was reopening when the reconnect is abandoned on a live link", () => {
+        const navigationStore = useNavigationStore();
+        const connectionStore = useConnectionStore();
+        navigationStore.tabAfterReconnect = { tab: "ports", mode: "connected" };
+        connectionStore.connectionValid = true;
+
+        cancelRebootReconnect();
+
+        expect(navigationStore.tabAfterReconnect).toEqual({ tab: "ports", mode: "connected" });
     });
 
     it("an intentional disconnect during the reboot window cancels the reconnect retry", () => {

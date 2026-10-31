@@ -39,6 +39,8 @@ export interface MotorsSaveOptions {
     confirmPortConflicts: () => Promise<boolean>;
     /** Writes the ESC sensor port after the parameter groups, before the persist. */
     writeEscSensorPort: () => Promise<void>;
+    /** Marks the written ESC sensor port as persisted, once the EEPROM write has gone through. */
+    markEscSensorPortSaved: () => void;
     motorsTestingEnabled: Ref<boolean>;
     stopAllMotors: (stopValue?: number) => void;
     /** The stop value under the configuration the FC is running now, not the pending edit. */
@@ -56,6 +58,7 @@ export function useMotorsSave({
     escSensorPortChanged,
     confirmPortConflicts,
     writeEscSensorPort,
+    markEscSensorPortSaved,
     motorsTestingEnabled,
     stopAllMotors,
     zeroThrottleValue,
@@ -113,8 +116,9 @@ export function useMotorsSave({
                 await saveToEeprom();
             }
 
-            // Only after a successful persist: refresh the applied-state snapshot, record analytics,
-            // and refresh the dirty baseline.
+            // Only after a successful persist: mark the port saved, refresh the applied-state
+            // snapshot, record analytics, and refresh the dirty baseline.
+            markEscSensorPortSaved();
             syncAppliedMotorStopState();
             if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
                 const tracking = getTracking();

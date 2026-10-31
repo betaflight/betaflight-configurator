@@ -907,6 +907,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const fcStore = useFlightControllerStore();
 const { saveAndReboot } = useReboot();
@@ -923,6 +924,7 @@ const {
     selection: rangefinderPortSelection,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
+    markSaved: markRangefinderPortSaved,
 } = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
@@ -934,6 +936,7 @@ const {
     selection: opticalFlowPortSelection,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
+    markSaved: markOpticalFlowPortSaved,
 } = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { confirmPortConflicts } = usePortConflicts(
@@ -2501,9 +2504,12 @@ const saveConfig = () =>
 
         // Save to EEPROM and reboot
         await saveAndReboot();
+        markRangefinderPortSaved();
+        markOpticalFlowPortSaved();
 
         markClean(savedSnapshot);
     });
+registerTabSave(() => saveConfig());
 
 // --- Lifecycle ---
 

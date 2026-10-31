@@ -22,9 +22,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
-const { config, mountVueTab } = vi.hoisted(() => ({
+const { config, mountVueTab, vueTabState, confirmLeaveTab } = vi.hoisted(() => ({
     config: { rememberLastTab: true as boolean, lastTab: undefined as string | undefined },
     mountVueTab: vi.fn((_tabKey: string, _contentReady?: () => void) => true),
+    vueTabState: { activeTabName: null as string | null },
+    confirmLeaveTab: vi.fn(async (_tab: string, _mode?: string) => true),
 }));
 
 vi.mock("../../src/js/ConfigStorage", () => ({
@@ -33,12 +35,13 @@ vi.mock("../../src/js/ConfigStorage", () => ({
 }));
 vi.mock("../../src/js/Analytics", () => ({ checkSetupAnalytics: vi.fn() }));
 vi.mock("../../src/js/tab_adapters", () => ({ tabSwitchCleanup: (callback: () => void) => callback() }));
-vi.mock("../../src/js/vue_tab_mounter", () => ({ mountVueTab, vueTabState: { activeTabName: null } }));
+vi.mock("../../src/js/vue_tab_mounter", () => ({ mountVueTab, vueTabState }));
+vi.mock("../../src/js/unsaved_changes", () => ({ confirmLeaveTab }));
 vi.mock("../../src/components/sidebar/sidebar_items", () => ({ sidebarItems: [] }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 
-import { selectDefaultTabWhenConnected } from "../../src/js/tab_switch";
+import { navigateToTab, selectDefaultTabWhenConnected } from "../../src/js/tab_switch";
 import { DEFAULT_ALLOWED_TABS, useNavigationStore } from "../../src/stores/navigation";
 import { useConnectionStore } from "../../src/stores/connection";
 
@@ -54,6 +57,7 @@ describe("selectDefaultTabWhenConnected", () => {
         connectionStore.connectionValid = true;
         config.rememberLastTab = true;
         config.lastTab = undefined;
+        vueTabState.activeTabName = null;
         mountVueTab.mockClear();
     });
 
@@ -86,5 +90,39 @@ describe("selectDefaultTabWhenConnected", () => {
         selectDefaultTabWhenConnected();
 
         expect(openedTab()).toBe("setup");
+    });
+});
+
+describe("navigateToTab", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        useNavigationStore().allowedTabs = [...DEFAULT_ALLOWED_TABS];
+        useConnectionStore().connectionValid = true;
+        vueTabState.activeTabName = "pid_tuning";
+        mountVueTab.mockClear();
+        confirmLeaveTab.mockClear();
+        confirmLeaveTab.mockResolvedValue(true);
+    });
+
+    it("does nothing for the tab that is already open", async () => {
+        await expect(navigateToTab("pid_tuning", { mode: "connected" })).resolves.toBe(true);
+
+        expect(confirmLeaveTab).not.toHaveBeenCalled();
+        expect(mountVueTab).not.toHaveBeenCalled();
+    });
+
+    it("asks with the target tab and its mode, then opens it", async () => {
+        await expect(navigateToTab("receiver", { mode: "connected" })).resolves.toBe(true);
+
+        expect(confirmLeaveTab).toHaveBeenCalledWith("receiver", "connected");
+        expect(openedTab()).toBe("receiver");
+    });
+
+    it("stays on the current tab when the prompt says not to leave", async () => {
+        confirmLeaveTab.mockResolvedValue(false);
+
+        await expect(navigateToTab("receiver", { mode: "connected" })).resolves.toBe(false);
+
+        expect(mountVueTab).not.toHaveBeenCalled();
     });
 });

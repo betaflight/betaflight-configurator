@@ -38,6 +38,7 @@ const port = vi.hoisted(() => ({
     changed: { value: false },
     load: vi.fn(),
     write: vi.fn(),
+    markSaved: vi.fn(),
     confirmPortConflicts: vi.fn(),
 }));
 
@@ -53,6 +54,7 @@ vi.mock("@/composables/ports/useFeaturePort", async () => {
             conflict: ref(null),
             load: port.load,
             write: port.write,
+            markSaved: port.markSaved,
         }),
     };
 });
@@ -239,6 +241,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         port.changed.value = false;
         port.load.mockReset().mockResolvedValue(undefined);
         port.write.mockReset().mockResolvedValue(undefined);
+        port.markSaved.mockReset();
         port.confirmPortConflicts.mockReset().mockResolvedValue(true);
         vi.mocked(MSP.promise).mockClear();
         vi.mocked(MSP.send_message).mockClear();
@@ -423,6 +426,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(port.confirmPortConflicts).toHaveBeenCalledOnce();
         expect(port.write).toHaveBeenCalledOnce();
         expect(saveAndReboot).toHaveBeenCalledOnce();
+        expect(port.markSaved).toHaveBeenCalledOnce();
     });
 
     it("adopts the saved configuration as the applied one, so the next save stops under it", async () => {

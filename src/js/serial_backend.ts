@@ -372,8 +372,10 @@ function beginDisconnect() {
     closeRebootDialog();
 
     // A user disconnect aborts any in-flight reboot in the connection state read-model.
-    // (disconnectForReboot is mid-reboot and deliberately does NOT conclude.)
+    // (disconnectForReboot is mid-reboot and deliberately does NOT conclude.) The tab a save was
+    // reopening goes with it, so a later, unrelated connect does not jump to it.
     getConnectionState().concludeReboot(false);
+    dropTabAfterReconnect();
 
     mspHelper?.enableArming(function () {
         finishClose();
@@ -1466,6 +1468,7 @@ function handleConnectionTimeout() {
     connectionTimeoutPending = true;
     prepareDisconnect();
     getConnectionState().concludeReboot(false);
+    dropTabAfterReconnect();
     finishClose();
 }
 
@@ -1598,6 +1601,17 @@ export function cancelRebootReconnect() {
     if (getConnectionState().isRebootWindowOpen) {
         getConnectionState().concludeReboot(connectionStore.connectionValid);
     }
+    // Abandoned without a connection, nothing will reopen the tab a save was heading for.
+    if (!connectionStore.connectionValid) {
+        dropTabAfterReconnect();
+    }
+}
+
+// A reboot window that ends without a reconnect (timed out, Auto-Connect off, board unplugged)
+// drops the tab a save-and-reboot was heading for, so a later, unrelated connect opens the
+// remembered tab or Setup instead of jumping to it.
+function dropTabAfterReconnect() {
+    useNavigationStore().tabAfterReconnect = null;
 }
 
 // Drive the disconnect/reconnect cycle for a BLE/manual reboot. The link bounces (or survives)
@@ -1640,6 +1654,7 @@ function rebootReconnect() {
         if (driven && !rebootReconnectAllowed()) {
             rebootReconnectTimerId = false;
             getConnectionState().concludeReboot(false);
+            dropTabAfterReconnect();
             return;
         }
 
@@ -1683,6 +1698,9 @@ function rebootReconnect() {
                 // for): concludeReboot settles to IDLE so normal selection resumes. A kept BLE
                 // link that never made it back to connected is dropped for real here.
                 getConnectionState().concludeReboot(connectionStore.connectionValid);
+                if (!connectionStore.connectionValid) {
+                    dropTabAfterReconnect();
+                }
                 releaseKeptRebootLink();
                 return;
             }

@@ -650,6 +650,7 @@ import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 import { useNavigationStore } from "@/stores/navigation";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
@@ -750,6 +751,7 @@ const {
     selection: rxPortSelection,
     load: loadRxPort,
     write: writeRxPort,
+    markSaved: markRxPortSaved,
 } = useFeaturePort({ setting: "rx_uart" });
 
 // MAX_TELEMETRY_PROVIDERS is a compile-time constant that never reaches the app, so each instance
@@ -790,6 +792,7 @@ const {
     selection: rcdevicePortSelection,
     load: loadRcdevicePort,
     write: writeRcdevicePort,
+    markSaved: markRcdevicePortSaved,
 } = useFeaturePort({ setting: "rcdevice_uart" });
 
 // Every port this tab can assign, so a save can warn before taking one from another feature, or
@@ -1365,10 +1368,18 @@ const saveConfig = (withReboot = false) =>
             gui_log(t("receiverConfigSaved") || "Configuration saved");
         }
 
+        // Only now are the port writes persisted; a failed persist above keeps them changed.
+        markRxPortSaved();
+        markRcdevicePortSaved();
+        for (const port of telemetryPorts) {
+            port.markSaved();
+        }
+
         markClean(savedSnapshot);
 
         needReboot.value = false;
     });
+registerTabSave(() => saveConfig(needReboot.value));
 
 // Model preview
 function initModelPreview() {
