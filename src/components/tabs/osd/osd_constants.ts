@@ -298,6 +298,16 @@ export const OSD_CONSTANTS = {
             text: "osdWarningTextAutopilotAbort",
             desc: "osdWarningAutopilotAbort",
         },
+        MOTOR_TEMP: {
+            name: "MOTOR_TEMP",
+            text: "osdWarningTextMotorTemp",
+            desc: "osdWarningMotorTemp",
+        },
+        FILTER_TUNE: {
+            name: "FILTER_TUNE",
+            text: "osdWarningTextFilterTune",
+            desc: "osdWarningFilterTune",
+        },
     },
     FONT_TYPES: [
         { file: "default", name: "osdSetupFontTypeDefault" },

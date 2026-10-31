@@ -67,6 +67,8 @@ export function useVisibleTabs(): ComputedRef<SidebarItem[]> {
             expertMode: Boolean(model?.expertMode),
             config: fcStore.config,
             features: fcStore.features?.features,
+            mixer: fcStore.mixerConfig.mixer,
+            motorCount: fcStore.motorConfig?.motor_count,
         };
     });
 

@@ -49,6 +49,7 @@ export const DEFAULT_ALLOWED_TABS: readonly string[] = [
     "onboard_logging",
     "modes",
     "motors",
+    "frame",
     "pid_tuning",
     "autotune",
     "ports",

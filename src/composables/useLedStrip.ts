@@ -152,7 +152,7 @@ export function useLedStrip() {
     const baseFuncs = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"];
 
     // Filter overlays based on API version
-    let overlays = ["t", "y", "o", "b", "v", "i", "w"];
+    let overlays = ["t", "y", "o", "b", "v", "i", "w", "z"];
     if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
         overlays = overlays.filter((x) => x !== "y");
     }

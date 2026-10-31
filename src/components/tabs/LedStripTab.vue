@@ -160,6 +160,24 @@
                             :label="$t('ledStripVtxOverlay')"
                         />
                     </div>
+                    <div class="modifier-row filterTuneOverlay" v-show="filterTune.supported === true">
+                        <USwitch
+                            id="filterTune"
+                            v-model="overlayStates.filterTune"
+                            @update:model-value="onOverlayChange('z')"
+                            :label="$t('ledStripFilterTuneOverlay')"
+                        />
+                        <!-- what its colours mean, once it is on -->
+                        <span
+                            v-if="overlayStates.filterTune"
+                            class="ms-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted"
+                        >
+                            <span v-for="led in FILTER_TUNE_LEDS" :key="led.key" class="flex items-center gap-1">
+                                <span class="size-2 shrink-0 rounded-full" :class="led.dot"></span>
+                                {{ $t(led.key) }}
+                            </span>
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Mode Colors -->
@@ -339,6 +357,7 @@ import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
 import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useFilterTuneStore } from "@/stores/filterTune";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 import UiBox from "../elements/UiBox.vue";
 
@@ -354,6 +373,14 @@ function decodeHtmlEntities(text: string) {
 }
 const t = (key: string) => decodeHtmlEntities(i18n.getMessage(key));
 const fcStore = useFlightControllerStore();
+const filterTune = useFilterTuneStore();
+// the Filter tune overlay's colours (flight/filter_autotune.c)
+const FILTER_TUNE_LEDS = [
+    { key: "filterTuneLedReady", dot: "bg-violet-500" },
+    { key: "filterTuneLedCollecting", dot: "bg-info" },
+    { key: "filterTuneLedLand", dot: "bg-success" },
+    { key: "filterTuneLedDiscarded", dot: "bg-error" },
+];
 
 const {
     wireMode,
@@ -406,6 +433,7 @@ const overlayStates = reactive({
     warnings: false,
     indicator: false,
     vtx: false,
+    filterTune: false,
 });
 
 // Other state
@@ -568,6 +596,7 @@ const onTabMounted = async () => {
     await runTabLoad(
         async () => {
             await loadData();
+            await filterTune.probe();
             initializeGrid();
             loadConfigValues();
             markClean();
@@ -1070,7 +1099,12 @@ function getModifierState(modifier: string) {
 }
 
 function getOverlayStateKey(overlay: string) {
-    const map: Record<string, keyof typeof overlayStates | undefined> = { w: "warnings", i: "indicator", v: "vtx" };
+    const map: Record<string, keyof typeof overlayStates | undefined> = {
+        w: "warnings",
+        i: "indicator",
+        v: "vtx",
+        z: "filterTune",
+    };
     return map[overlay];
 }
 
