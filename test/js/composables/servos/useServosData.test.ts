@@ -12,6 +12,8 @@ vi.mock("../../../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterv
 type ServosData = ReturnType<typeof useServosData>;
 
 const LOAD_ORDER = [
+    MSPCodes.MSP_MIXER_CONFIG,
+    MSPCodes.MSP_FEATURE_CONFIG,
     MSPCodes.MSP_SERVO_CONFIGURATIONS,
     MSPCodes.MSP_SERVO_MIX_RULES,
     MSPCodes.MSP_RC,
@@ -37,7 +39,7 @@ describe("useServosData", () => {
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
     });
 
-    it("loads servo configs, mix rules, RC and box names in that order", async () => {
+    it("loads mixer and features, servo configs, mix rules, RC and box names in that order", async () => {
         await mountData().data.loadServoConfigs();
 
         expect(vi.mocked(MSP.promise).mock.calls.map(([code]) => code)).toEqual(LOAD_ORDER);
