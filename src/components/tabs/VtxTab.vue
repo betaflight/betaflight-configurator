@@ -425,6 +425,7 @@ import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import { useTranslation } from "i18next-vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 export default defineComponent({
     name: "VtxTab",
@@ -596,6 +597,7 @@ export default defineComponent({
                 await loadVtxPort();
                 await loadOsdPort();
             });
+        registerTabSave(() => handleSave());
 
         // --- VTX Table count setters (with change tracking) ---
 

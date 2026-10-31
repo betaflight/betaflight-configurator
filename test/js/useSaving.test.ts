@@ -52,6 +52,22 @@ describe("useSaving", () => {
         expect(isSaving.value).toBe(false);
     });
 
+    it("resolves true when the save completes and false when it fails or is cancelled", async () => {
+        const { runSave } = useSaving();
+
+        await expect(runSave(async () => {})).resolves.toBe(true);
+        await expect(
+            runSave(async () => {
+                throw new Error("boom");
+            }),
+        ).resolves.toBe(false);
+        await expect(
+            runSave(async () => {
+                throw new MspCancelledError("cancelled");
+            }),
+        ).resolves.toBe(false);
+    });
+
     it("blocks re-entry while a save is in progress", async () => {
         const { isSaving, runSave } = useSaving();
 
