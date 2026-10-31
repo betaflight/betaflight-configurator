@@ -40,6 +40,11 @@ const hasWing = () => {
     return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_WING");
 };
 
+const hasPSAS = () => {
+    const fcStore = useFlightControllerStore();
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
+};
+
 /**
  * MSP traffic for the PID Tuning tab: loading and writing the PID / rates / filter config, and the
  * profile commands (select, copy, reset). Every reply lands in FC; the tab keeps the UI state, the
@@ -83,6 +88,11 @@ export function usePidTuningMsp() {
         if (hasWing()) {
             await MSP.promise(MSPCodes.MSP_WING);
         }
+
+        // Plane SAS
+        if (hasPSAS()) {
+            await MSP.promise(MSPCodes.MSP_PSAS_CONFIG);
+        }
     };
 
     /**
@@ -124,6 +134,11 @@ export function usePidTuningMsp() {
         // Save Wing config (API 1.49+, WING build)
         if (hasWing()) {
             await MSP.promise(MSPCodes.MSP_SET_WING, mspHelper.crunch(MSPCodes.MSP_SET_WING));
+        }
+
+        // Plane SAS
+        if (hasPSAS()) {
+            await MSP.promise(MSPCodes.MSP_SET_PSAS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_PSAS_CONFIG));
         }
     };
 
