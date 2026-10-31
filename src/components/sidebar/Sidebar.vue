@@ -60,8 +60,6 @@ import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { applyExpertMode } from "@/js/utils/applyExpertMode";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
-import { openLogWindow } from "@/js/log_window";
-import { isAndroid } from "@/js/utils/checkCompatibility";
 import OptionsDialog from "@/components/dialogs/OptionsDialog.vue";
 import SettingsSearch from "@/components/settings-search/SettingsSearch.vue";
 import type { SettingsSearchEntry } from "virtual:settings-search-index";
@@ -121,9 +119,6 @@ const settingsMenuItems = computed<DropdownMenuItem[][]>(() => [
             icon: "i-lucide-file-text",
             onSelect: () => (navigationStore.logPanelOpen = !navigationStore.logPanelOpen),
         },
-        ...(isAndroid()
-            ? []
-            : [{ label: t("logActionOpenWindow"), icon: "i-lucide-external-link", onSelect: openLogWindow }]),
     ],
     [
         {
