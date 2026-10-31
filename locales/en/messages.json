@@ -4273,6 +4273,9 @@
     "ledStripHelp": {
         "message": "The flight controller can control colors and effects of individual LEDs on a strip.<br />Configure LEDs on the grid, configure wiring order then attach LEDs on your aircraft according to grid positions. LEDs without wire ordering number will not be saved.<br />Double-click on a color to edit the HSV values."
     },
+    "ledStripDshotBitbangWarning": {
+        "message": "<strong>DShot bitbang cannot start, so arming is disabled.</strong> The flight controller does not report why: a motor pin conflict, no free timer, or too many ports. Another feature, such as the LED strip, can take a timer or pin the motors need: check the resource and timer assignments, or set <code>dshot_bitbang = OFF</code> in the CLI (DShot then runs on timer DMA)."
+    },
     "ledStripButtonSave": {
         "message": "Save"
     },
