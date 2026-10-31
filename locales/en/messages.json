@@ -6956,6 +6956,14 @@
         "message": "Autopilot mission aborted",
         "description": "Warns when a waypoint mission aborts (GPS lost, stalled or flyaway)"
     },
+    "osdWarningTextGpsSpoofing": {
+        "message": "GPS spoofing",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningGpsSpoofing": {
+        "message": "GPS spoofing",
+        "description": "Warns when the GPS receiver itself reports that its signal is being spoofed (u-blox receivers). The position may be wrong even though the satellite count and fix look normal."
+    },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
     },
