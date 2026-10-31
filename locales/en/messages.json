@@ -8207,6 +8207,12 @@
     "osdDescElementBatteryProfileName": {
         "message": "Shows the active battery profile name or index"
     },
+    "osdTextElementUserModes": {
+        "message": "User modes"
+    },
+    "osdDescElementUserModes": {
+        "message": "Shows the names of the active USER1 to USER4 modes (e.g. PINIO outputs). Uses the custom names from the box_user_N_name CLI settings when set"
+    },
     "osdTextElementWpNumber": {
         "message": "Waypoint number",
         "description": "One of the elements of the OSD"
