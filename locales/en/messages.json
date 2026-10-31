@@ -1333,6 +1333,12 @@
     "initialSetupAccelCalibEnded": {
         "message": "Accelerometer calibration <span class=\"message-positive\">finished</span>"
     },
+    "initialSetupMagCalibStarted": {
+        "message": "Magnetometer calibration started"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Magnetometer calibration <span class=\"message-positive\">finished</span>"
+    },
     "initialSetupSettingsRestored": {
         "message": "Settings restored to <strong>default</strong>"
     },
@@ -4058,20 +4064,20 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Manual selection of baud rate for boards that don't support the default speed or for flashing via bluetooth.<br /><span class=\"message-negative\">Note:</span> Not used when flashing via USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Show release candidates"
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "Show release options"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Show release candidates in addition to stable releases"
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "Choose which releases to show"
     },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Release"
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "Show releases"
     },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Release And Release Candidate"
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "Show all releases"
     },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Development"
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "Show development releases"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Choose a Firmware version"
@@ -4233,8 +4239,8 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "You are about to flash a <strong>development build of the firmware</strong>. These builds are a work in progress, and any of the following can be the case:<strong><ul><li>the firmware does not work at all;</li><li>the firmware is not flyable;</li><li>there are safety issues with the firmware, for example flyaways</li><li>the firmware can cause the flight controller to become unresponsive, or damaged</li></ul></strong>If you proceed with flashing this firmware, <strong>you are assuming full responsibility for the risk of any of the above happening</strong>. Furthermore you acknowledge that it is necessary to perform <strong>thorough bench tests with props off</strong> before any attempts to fly this firmware."
     },
-    "unstableFirmwareAcknowledgement": {
-        "message": "I have read the above and <strong>I assume full responsibility</strong> for flashing unstable firmware"
+    "developmentFirmwareAcknowledgement": {
+        "message": "I have read the above and <strong>I assume full responsibility</strong> for flashing development firmware"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
@@ -7418,6 +7424,15 @@
     "magCalibrationUnguidedDone": {
         "message": "Firmware calibration complete!"
     },
+    "magCalibrationNotSent": {
+        "message": "Calibration could not start: the flight controller did not receive the command."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "Starting..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "Calibrating... {{seconds}}s"
+    },
     "magCalibrationCheck": {
         "message": "Check"
     },
@@ -8884,6 +8899,30 @@
     "preflightFlightWindow": {
         "message": "Flight Window"
     },
+    "preflightTimelineDescription": {
+        "message": "Timeline showing night, blue hour, golden hour, and daylight, with sunrise and sunset markers"
+    },
+    "preflightTimelineHelp": {
+        "message": "Hover, tap, or focus a segment to see its times. Use the legend to highlight all periods of a type."
+    },
+    "preflightTimelineHint": {
+        "message": "Hover or tap a segment for exact times."
+    },
+    "preflightTimelineNight": {
+        "message": "Night & other twilight"
+    },
+    "preflightBlueHour": {
+        "message": "Blue hour"
+    },
+    "preflightGoldenHour": {
+        "message": "Golden hour"
+    },
+    "preflightMorning": {
+        "message": "Morning"
+    },
+    "preflightEvening": {
+        "message": "Evening"
+    },
     "preflightSunrise": {
         "message": "Sunrise"
     },
@@ -8898,6 +8937,9 @@
     },
     "preflightTempRange": {
         "message": "Temp Range"
+    },
+    "preflightNow": {
+        "message": "Now"
     },
     "preflightCurrentlyDay": {
         "message": "Currently"
@@ -9250,6 +9292,9 @@
     "pidTuningWingTpaCurveHyperbolic": {
         "message": "Hyperbolic"
     },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "Hyperbolic by ref. speed"
+    },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "Basic speed setup"
     },
@@ -9360,5 +9405,29 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "Pitch offset for angle modes in decidegrees. Positive values tilting the wing down"
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "Reference speed"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "Reference speed, m/s - the curves have 1.0 value in this point"
+    },
+    "speedCurvesPower": {
+        "message": "The curves power"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "The hyperbolic curves power, *0.1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "The curves min value"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "The hyperbolic curves min value limit, *0.01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "The curves max value"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "The hyperbolic curves max value limit, *0.01"
     }
 }
