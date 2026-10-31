@@ -1120,7 +1120,7 @@
                         v-model="wingConfig.tpa_curve_type"
                         :items="wingTpaCurveTypeItems"
                         size="xs"
-                        class="w-24"
+                        class="w-44"
                     />
                 </SettingRow>
                 <SettingRow
@@ -1261,62 +1261,113 @@
                     :title="$t('pidTuningWingTpaAdvSpeedCurveSettings')"
                     type="neutral"
                 >
-                    <SettingRow
-                        :label="$t('pidTuningWingTpaAdvSpeedCurveStallSpeed')"
-                        :help="$t('pidTuningWingTpaAdvSpeedCurveStallSpeedHelp')"
-                    >
-                        <UInputNumber
-                            v-model="wingConfig.tpa_curve_stall_throttle"
-                            :step="1"
-                            :min="0"
-                            :max="100"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-20"
-                        />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('pidTuningWingTpaAdvSpeedCurvePidThr0')"
-                        :help="$t('pidTuningWingTpaAdvSpeedCurvePidThr0Help')"
-                    >
-                        <UInputNumber
-                            v-model="wingConfig.tpa_curve_pid_thr0"
-                            :step="1"
-                            :min="0"
-                            :max="1000"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-20"
-                        />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('pidTuningWingTpaAdvSpeedCurvePidThr100')"
-                        :help="$t('pidTuningWingTpaAdvSpeedCurvePidThr100Help')"
-                    >
-                        <UInputNumber
-                            v-model="wingConfig.tpa_curve_pid_thr100"
-                            :step="1"
-                            :min="0"
-                            :max="1000"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-20"
-                        />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('pidTuningWingTpaAdvSpeedCurveExpo')"
-                        :help="$t('pidTuningWingTpaAdvSpeedCurveExpoHelp')"
-                    >
-                        <UInputNumber
-                            v-model="wingConfig.tpa_curve_expo"
-                            :step="1"
-                            :min="-100"
-                            :max="100"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-20"
-                        />
-                    </SettingRow>
+                    <div v-if="isWingTpaHyperbolicByRefSpeedCurveMode">
+                        <SettingRow
+                            :label="$t('speedCurvesReferenceSpeed')"
+                            :help="$t('speedCurvesReferenceSpeedHelp')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.speed_curve_vref"
+                                :step="1"
+                                :min="1"
+                                :max="85"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('speedCurvesPower')" :help="$t('speedCurvesPowerHelp')">
+                            <UInputNumber
+                                v-model="wingConfig.speed_curve_power"
+                                :step="1"
+                                :min="5"
+                                :max="30"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('speedCurvesCurveMin')" :help="$t('speedCurvesCurveMinHelp')">
+                            <UInputNumber
+                                v-model="wingConfig.speed_curve_min"
+                                :step="1"
+                                :min="5"
+                                :max="99"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                        <SettingRow :label="$t('speedCurvesCurveMax')" :help="$t('speedCurvesCurveMaxHelp')">
+                            <UInputNumber
+                                v-model="wingConfig.speed_curve_max"
+                                :step="1"
+                                :min="100"
+                                :max="1000"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                    </div>
+                    <div v-else>
+                        <SettingRow
+                            :label="$t('pidTuningWingTpaAdvSpeedCurveStallSpeed')"
+                            :help="$t('pidTuningWingTpaAdvSpeedCurveStallSpeedHelp')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.tpa_curve_stall_throttle"
+                                :step="1"
+                                :min="0"
+                                :max="100"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('pidTuningWingTpaAdvSpeedCurvePidThr0')"
+                            :help="$t('pidTuningWingTpaAdvSpeedCurvePidThr0Help')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.tpa_curve_pid_thr0"
+                                :step="1"
+                                :min="0"
+                                :max="1000"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('pidTuningWingTpaAdvSpeedCurvePidThr100')"
+                            :help="$t('pidTuningWingTpaAdvSpeedCurvePidThr100Help')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.tpa_curve_pid_thr100"
+                                :step="1"
+                                :min="0"
+                                :max="1000"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('pidTuningWingTpaAdvSpeedCurveExpo')"
+                            :help="$t('pidTuningWingTpaAdvSpeedCurveExpoHelp')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.tpa_curve_expo"
+                                :step="1"
+                                :min="-100"
+                                :max="100"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                    </div>
                     <details>
                         <summary class="text-xs cursor-pointer text-dimmed hover:text-default select-none">
                             {{ $t("pidTuningWingTpaAdvSpeedCurveDetails") }}
@@ -2073,7 +2124,9 @@ const isWingBuildGte49 = computed(
     () => fcStore.config.buildOptions.includes("USE_WING") && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49),
 );
 
-const isWingTpaHyperbolicCurveMode = computed(() => wingConfig.value.tpa_curve_type == 1);
+const isWingTpaHyperbolicCurveMode = computed(() => wingConfig.value.tpa_curve_type > 0);
+
+const isWingTpaHyperbolicByRefSpeedCurveMode = computed(() => wingConfig.value.tpa_curve_type == 2);
 
 const isWingTpaBasicSpeedMode = computed(() => wingConfig.value.tpa_speed_type == 0);
 
@@ -2099,6 +2152,7 @@ const wingTpaSpeedTypeItems = computed(() => [
 const wingTpaCurveTypeItems = computed(() => [
     { value: 0, label: t("pidTuningWingTpaCurveClassic") },
     { value: 1, label: t("pidTuningWingTpaCurveHyperbolic") },
+    { value: 2, label: t("pidTuningWingTpaCurveHyperbolicRefSpeed") },
 ]);
 
 const wingYawTypeItems = computed(() => [

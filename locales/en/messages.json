@@ -9598,6 +9598,9 @@
     "pidTuningWingTpaCurveHyperbolic": {
         "message": "Hyperbolic"
     },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "Hyperbolic by ref. speed"
+    },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "Basic speed setup"
     },
@@ -9708,5 +9711,29 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "Pitch offset for angle modes in decidegrees. Positive values tilting the wing down"
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "Reference speed"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "Reference speed, m/s - the curves have 1.0 value in this point"
+    },
+    "speedCurvesPower": {
+        "message": "The curves power"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "The hyperbolic curves power, *0.1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "The curves min value"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "The hyperbolic curves min value limit, *0.01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "The curves max value"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "The hyperbolic curves max value limit, *0.01"
     }
 }

@@ -50,6 +50,10 @@ function wing(overrides: Partial<WingConfig> = {}): WingConfig {
         tpa_speed_pitch_offset: 0,
         yaw_type: 0,
         angle_pitch_offset: 0,
+        speed_curve_vref: 20,
+        speed_curve_power: 20,
+        speed_curve_min: 25,
+        speed_curve_max: 200,
         ...overrides,
     };
 }
@@ -57,44 +61,44 @@ function wing(overrides: Partial<WingConfig> = {}): WingConfig {
 const curve = (config: WingConfig, motorKv = 1000) => getTpaHyperbolicCurve(config, motorKv)[0].data;
 
 describe("getTpaHyperbolicCurve", () => {
-    it("returns one active curve of 101 points from zero to the maximal speed", () => {
+    it("returns one active curve of 17 points from zero to the maximal speed", () => {
         const [chart] = getTpaHyperbolicCurve(wing(), 1000);
 
         expect(chart.active).toBe(true);
-        expect(chart.data).toHaveLength(101);
+        expect(chart.data).toHaveLength(17);
         expect(chart.data[0].speed).toBe(0);
-        expect(chart.data[50].speed).toBeCloseTo(BASIC_MAX_SPEED / 2, 10);
-        expect(chart.data[100].speed).toBeCloseTo(BASIC_MAX_SPEED, 10);
+        expect(chart.data[8].speed).toBeCloseTo(BASIC_MAX_SPEED / 2, 10);
+        expect(chart.data[16].speed).toBeCloseTo(BASIC_MAX_SPEED, 10);
     });
 
     it("computes the maximal speed with the advanced model", () => {
-        expect(curve(wing({ tpa_speed_type: 1 }))[100].speed).toBeCloseTo(ADVANCED_MAX_SPEED, 10);
+        expect(curve(wing({ tpa_speed_type: 1 }))[16].speed).toBeCloseTo(ADVANCED_MAX_SPEED, 10);
     });
 
     it("scales the advanced maximal speed with motor KV", () => {
-        expect(curve(wing({ tpa_speed_type: 1 }), 2000)[100].speed).not.toBeCloseTo(ADVANCED_MAX_SPEED, 3);
+        expect(curve(wing({ tpa_speed_type: 1 }), 2000)[16].speed).not.toBeCloseTo(ADVANCED_MAX_SPEED, 3);
     });
 
     it("holds the throttle-0 multiplier up to the stall throttle", () => {
         const data = curve(wing());
 
         expect(data[0].multiplier).toBe(2);
-        expect(data[29].multiplier).toBe(2);
-        expect(data[30].multiplier).toBe(2);
+        expect(data[2].multiplier).toBe(2);
+        expect(data[4].multiplier).toBe(2);
     });
 
     it("bends from the throttle-0 to the throttle-100 multiplier", () => {
         const data = curve(wing());
 
-        expect(data[50].multiplier).toBeCloseTo(14 / 13, 12);
-        expect(data[100].multiplier).toBeCloseTo(0.5, 12);
+        expect(data[8].multiplier).toBeCloseTo(14 / 13, 12);
+        expect(data[16].multiplier).toBeCloseTo(0.5, 12);
     });
 
     it("is flat at the throttle-0 multiplier when the stall throttle is 100%", () => {
         const data = curve(wing({ tpa_curve_stall_throttle: 100 }));
 
         expect(data.every((point) => point.multiplier === 2)).toBe(true);
-        expect(data[100].speed).toBeCloseTo(BASIC_MAX_SPEED, 10);
+        expect(data[16].speed).toBeCloseTo(BASIC_MAX_SPEED, 10);
     });
 
     it("is flat when the throttle-0 and throttle-100 multipliers are equal", () => {
@@ -104,7 +108,7 @@ describe("getTpaHyperbolicCurve", () => {
     });
 
     it("treats a throttle-100 multiplier of 0 as 1%", () => {
-        expect(curve(wing({ tpa_curve_pid_thr100: 0 }))[100].multiplier).toBeCloseTo(0.01, 12);
+        expect(curve(wing({ tpa_curve_pid_thr100: 0 }))[16].multiplier).toBeCloseTo(0.01, 12);
     });
 
     it.each([
@@ -112,7 +116,7 @@ describe("getTpaHyperbolicCurve", () => {
         ["advanced, zero mass", { tpa_speed_type: 1, tpa_speed_adv_mass: 0 }],
         ["advanced, zero drag", { tpa_speed_type: 1, tpa_speed_adv_drag_k: 0 }],
     ])("falls back to a maximal speed of 1 for %s", (_, overrides) => {
-        expect(curve(wing(overrides))[100].speed).toBe(1);
+        expect(curve(wing(overrides))[16].speed).toBe(1);
     });
 
     it("never reports a maximal speed below 1", () => {
@@ -124,7 +128,7 @@ describe("getTpaHyperbolicCurve", () => {
             tpa_speed_adv_thrust: 0,
         });
 
-        expect(curve(light, 0)[100].speed).toBe(1);
+        expect(curve(light, 0)[16].speed).toBe(1);
     });
 });
 
