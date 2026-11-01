@@ -22,7 +22,7 @@
 import { createApp } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
 import ReceiverMspWindow from "./ReceiverMspWindow.vue";
-import { mirrorTheme } from "./themeMirror";
+import { mirrorTheme } from "../../../js/utils/themeMirror";
 import { getNuxtUiRouter } from "../../../js/nuxt_ui_router";
 
 // Import styles for the popup window
