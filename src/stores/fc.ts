@@ -47,6 +47,15 @@ export function isFailsafeActive(flags: number = 0): boolean {
     return bit_check(flags, FAILSAFE_BIT) || bit_check(flags, RX_FAILSAFE_BIT) || bit_check(flags, BOXFAILSAFE_BIT);
 }
 
+// ARMING_DISABLED_DSHOT_BITBANG (1 << 22): DShot bitbang is on but could not get its timer or DMA, so the motors get
+// no signal. A resource of the LED strip pin is the usual cause on F4 boards (the pacer is TIM1, shared with PA8).
+// Bit position, same as the SetupTab ordering; stable across API versions.
+export const DSHOT_BITBANG_BIT = 22;
+
+export function isDshotBitbangBlocked(flags: number = 0): boolean {
+    return bit_check(flags, DSHOT_BITBANG_BIT);
+}
+
 const MAX_BATTERY_PROFILES = 3;
 
 export const CONFIGURATION_STATES = {
@@ -746,6 +755,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     });
 
     const failsafeActive = computed(() => isFailsafeActive(state.config.armingDisableFlags));
+    const dshotBitbangBlocked = computed(() => isDshotBitbangBlocked(state.config.armingDisableFlags));
 
     // ledConfigValues survives a reset, as it did in the legacy resetState().
     function resetState() {
@@ -918,6 +928,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         isReadyToArm,
         activeFlagNames,
         failsafeActive,
+        dshotBitbangBlocked,
 
         resetState,
         isApiVersionSupported,
