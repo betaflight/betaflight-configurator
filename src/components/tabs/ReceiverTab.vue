@@ -1200,7 +1200,7 @@ function sendBind() {
 }
 
 function openSticksWindow() {
-    const windowWidth = 420;
+    const windowWidth = 480;
     // Minimum that fits the initial state: gimbals + aux sliders + the expanded arming
     // warning. Collapsing the warning or dismissing it leaves slack; resizing from there
     // is left to the user rather than driven from the app.

@@ -2711,6 +2711,59 @@
     "receiverMspEnableButton": {
         "message": "Enable controls"
     },
+    "receiverMspSourceLabel": {
+        "message": "Input",
+        "description": "Label of the selector that chooses what drives the radio emulator sticks"
+    },
+    "receiverMspSourceMouse": {
+        "message": "Mouse"
+    },
+    "receiverMspSourceGamepad": {
+        "message": "Gamepad / USB radio",
+        "description": "Option: drive the sticks from a controller exposed through the browser Gamepad API"
+    },
+    "receiverMspGamepadTitle": {
+        "message": "Gamepad"
+    },
+    "receiverMspGamepadNone": {
+        "message": "No gamepad detected. Plug the controller in by USB, press any button on it, then click this window."
+    },
+    "receiverMspGamepadDevice": {
+        "message": "Device"
+    },
+    "receiverMspGamepadSetCenter": {
+        "message": "Set centre",
+        "description": "Button: take the sticks' current positions as their centre (1500)"
+    },
+    "receiverMspGamepadSetCenterHint": {
+        "message": "Hold all sticks in the middle, then",
+        "description": "Short text in front of the 'Set centre' button"
+    },
+    "receiverMspGamepadUnfocusedTitle": {
+        "message": "Gamepad: click this window to resume input",
+        "description": "Title of the gamepad block while the popup is not focused and the browser may freeze gamepad readings"
+    },
+    "receiverMspGamepadLost": {
+        "message": "The gamepad was disconnected, transmission has been stopped."
+    },
+    "receiverMspGamepadNotAssigned": {
+        "message": "Not assigned",
+        "description": "Select option for an RC channel that no gamepad axis or button drives"
+    },
+    "receiverMspGamepadAxis": {
+        "message": "Axis {{index}}"
+    },
+    "receiverMspGamepadButton": {
+        "message": "Button {{index}}"
+    },
+    "receiverMspGamepadSwitchOn": {
+        "message": "Switch on {{controls}}, {{count}} positions",
+        "description": "Description of an AUX channel driven by a multi-position switch; controls is e.g. 'axis 5' or 'buttons 6, 7'"
+    },
+    "receiverMspGamepadInverted": {
+        "message": "inverted",
+        "description": "Suffix shown after a channel's control name when the channel is inverted"
+    },
     "auxiliaryHelp": {
         "message": "Configure modes here using a combination of ranges and/or links to other modes (links supported on BF 4.0 and later). Use <strong>ranges</strong> to define the switches on your transmitter and corresponding mode assignments. A receiver channel that gives a reading between a range min/max will activate the mode. Use a <strong>link</strong> to activate a mode when another mode is activated. <strong>Exceptions:</strong> ARM cannot be linked to or from another mode, modes cannot be linked to other modes that are configured with a link (chained links). Multiple ranges/links can be used to activate any mode. If there is more than one range/link defined for a mode, each of them can be set to <strong>AND</strong> or <strong>OR</strong>. A mode will be activated when:<br />- ALL <strong>AND</strong> ranges/links are active; OR<br />- at least one <strong>OR</strong> range/link is active.<br /><br />Remember to save your settings using the Save button."
     },
