@@ -43,7 +43,20 @@
             <!-- Date Row -->
             <div class="info_row">
                 <strong>{{ $t("firmwareFlasherReleaseDate") }}</strong>
-                <span class="date">{{ state.releaseDateText }}</span>
+                <span class="date">{{ cloudBuild.state.cloudBuildCommitDate || state.releaseDateText }}</span>
+                <div></div>
+            </div>
+
+            <!-- Commit Row -->
+            <div v-if="cloudBuild.state.cloudBuildCommitHash" class="info_row">
+                <strong>{{ $t("firmwareFlasherReleaseCommit") }}</strong>
+                <a
+                    class="commit"
+                    :href="`https://github.com/betaflight/betaflight/commit/${cloudBuild.state.cloudBuildCommitHash}`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ cloudBuild.state.cloudBuildCommitHash }}</a
+                >
                 <div></div>
             </div>
 

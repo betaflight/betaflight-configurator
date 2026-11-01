@@ -35,6 +35,20 @@ export interface BuildStatusResponse {
     status: string;
     timeOut?: number;
     configuration?: string[];
+    commitHash?: string;
+    commitDate?: string;
+}
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Formats an ISO timestamp in local time as "dd-MMM-yyyy HH:mm", the style of release dates. */
+export function formatCommitDate(iso: string | undefined): string {
+    const date = iso ? new Date(iso) : null;
+    if (!date || Number.isNaN(date.getTime())) {
+        return "";
+    }
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${pad(date.getDate())}-${MONTHS[date.getMonth()]}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 export interface CloudBuildRequest {
@@ -107,6 +121,8 @@ export function useCloudBuild(params: CloudBuildParams) {
         cancelBuild: false,
         cancelBuildButtonDisabled: true,
         cloudBuildProgress: 0,
+        cloudBuildCommitHash: "",
+        cloudBuildCommitDate: "",
     });
 
     // Polling timer reference
@@ -207,6 +223,8 @@ export function useCloudBuild(params: CloudBuildParams) {
             const firmware = await loadFirmwareWithRetry(response.url, response.file);
             if (firmware) {
                 processFile(firmware, response.file);
+                state.cloudBuildCommitHash = statusResponse.commitHash ?? "";
+                state.cloudBuildCommitDate = formatCommitDate(statusResponse.commitDate);
             }
         } catch (error) {
             console.error("[CLOUD_BUILD] Failed to load firmware:", error);
@@ -374,6 +392,7 @@ export function useCloudBuild(params: CloudBuildParams) {
      */
     const requestCloudBuild = async (targetDetail: TargetDetail, additionalParams: CloudBuildSelection) => {
         const { isConfigLocal } = additionalParams;
+        clearCommitInfo();
         const request = buildRequestConfig(targetDetail, additionalParams);
 
         console.info("[CLOUD_BUILD] Build request:", request);
@@ -409,6 +428,11 @@ export function useCloudBuild(params: CloudBuildParams) {
         return response;
     };
 
+    const clearCommitInfo = () => {
+        state.cloudBuildCommitHash = "";
+        state.cloudBuildCommitDate = "";
+    };
+
     /**
      * Reset cloud build state
      */
@@ -420,6 +444,7 @@ export function useCloudBuild(params: CloudBuildParams) {
         state.cancelBuild = false;
         state.cancelBuildButtonDisabled = true;
         state.cloudBuildProgress = 0;
+        clearCommitInfo();
         stopPolling();
     };
 
@@ -443,6 +468,7 @@ export function useCloudBuild(params: CloudBuildParams) {
         enableCancelBuildButton,
         handleCancelBuild,
         resetCloudBuildState,
+        clearCommitInfo,
         cleanup,
     };
 }
