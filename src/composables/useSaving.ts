@@ -61,7 +61,8 @@ export interface RunSaveOptions {
 
 export interface Saving {
     isSaving: Ref<boolean>;
-    runSave: (fn: () => Promise<void>, options?: RunSaveOptions) => Promise<void>;
+    /** Resolves true when the save ran to the end, false when it failed or was cancelled. */
+    runSave: (fn: () => Promise<void>, options?: RunSaveOptions) => Promise<boolean>;
 }
 
 /**
@@ -81,21 +82,24 @@ export function useSaving(): Saving {
      * rollback, re-enabling controls) — it does not need to log or notify again.
      * @param fn the async save work (marshal + MSP writes + persist)
      * @param options optional tab-specific follow-up
+     * @returns true when the save ran to the end; false when it failed, was cancelled, or was
+     * refused because another save was already running
      */
-    async function runSave(fn: () => Promise<void>, { onError }: RunSaveOptions = {}): Promise<void> {
+    async function runSave(fn: () => Promise<void>, { onError }: RunSaveOptions = {}): Promise<boolean> {
         if (isSaving.value) {
-            return;
+            return false;
         }
         isSaving.value = true;
         try {
             await fn();
+            return true;
         } catch (e) {
             // A tab switch, or the reboot/disconnect that a Save-and-Reboot triggers, clears the
             // MSP queue and cancels the in-flight request. The save itself already went through (or
             // the user navigated away), so this is not a real failure — don't log it or surface a
             // "save failed" notification to the caller.
             if (isMspCancelled(e)) {
-                return;
+                return false;
             }
             // One user-visible failure path for every save flow (#5276): the console keeps the
             // details, the log toast tells the user the configuration did not stick — in the
@@ -103,6 +107,7 @@ export function useSaving(): Saving {
             console.error("Save failed:", e);
             gui_log(saveFailureMessageOf(e) ?? i18n.getMessage("configurationSaveFailed"));
             onError?.(e);
+            return false;
         } finally {
             isSaving.value = false;
         }
