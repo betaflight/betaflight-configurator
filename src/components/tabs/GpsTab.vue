@@ -483,6 +483,7 @@ export default defineComponent({
             conflict: gpsPortConflict,
             load: loadGpsPort,
             write: writeGpsPort,
+            markSaved: markGpsPortSaved,
         } = useFeaturePort({
             setting: "gps_uart",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
@@ -928,6 +929,7 @@ export default defineComponent({
                     }
 
                     await saveAndReboot();
+                    markGpsPortSaved();
                 } finally {
                     resumePolling();
                 }

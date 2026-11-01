@@ -648,6 +648,7 @@ const {
     selection: osdPortSelection,
     load: loadOsdPort,
     write: writeOsdPort,
+    markSaved: markOsdPortSaved,
     selectedProtocol: osdProtocol,
     protocolOptions: osdProtocolOptions,
 } = useFeaturePort({
@@ -667,6 +668,7 @@ const {
     selection: customTextPortSelection,
     load: loadCustomTextPort,
     write: writeCustomTextPort,
+    markSaved: markCustomTextPortSaved,
 } = useFeaturePort({
     setting: "osd_custom_text_uart",
     baud: { setting: "osd_custom_text_baud" },
@@ -1507,6 +1509,9 @@ const saveConfig = () =>
             await writeOsdPort();
             await writeCustomTextPort();
         });
+        // saveAllConfig resolves only once EEPROM is written; a throw above keeps the ports changed.
+        markOsdPortSaved();
+        markCustomTextPortSaved();
 
         // Track analytics
         const changes = analyticsChanges.value;
