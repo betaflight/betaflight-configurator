@@ -35,7 +35,7 @@ import type { SerialProtocol } from "../../src/js/serial";
 // Protocols are handed no callback and are the single source of the byte count.
 // ---------------------------------------------------------------------------
 
-vi.mock("../../src/js/utils/checkCompatibility.js", () => ({
+vi.mock("../../src/js/utils/checkCompatibility", () => ({
     isAndroid: () => false,
     isTauri: () => false,
     isTauriMacOS: () => false,

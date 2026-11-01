@@ -319,7 +319,7 @@ import type { FeatureDefinition } from "../../js/Features";
 import type { GpsData } from "../../stores/fc.types";
 import BaseTab from "./BaseTab.vue";
 import { updateTabList } from "../../js/utils/updateTabList";
-import { initMap } from "../../js/utils/map";
+import { initMap, type MapLayer } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 import { ispConnected } from "../../js/utils/connection";
 import { gpsProtocols as getGpsProtocols } from "../../js/sensor_types";
@@ -390,7 +390,7 @@ export default defineComponent({
             observeContainer,
             teardown: teardownMapViewport,
         } = useMapViewport(mapContainerRef, () => mapInstance.value?.map);
-        const activeLayer = ref("satellite");
+        const activeLayer = ref<MapLayer>("satellite");
         const isOnline = ref(false);
         const isWaiting = ref(true);
         const showMap = ref(false);
@@ -626,7 +626,7 @@ export default defineComponent({
             updateTabList(featuresHelper);
         };
 
-        const setLayer = (layerKey: string) => {
+        const setLayer = (layerKey: MapLayer) => {
             if (!mapInstance.value?.layers) return;
             Object.entries(mapInstance.value.layers).forEach(([key, layer]) => {
                 layer.setVisible(key === layerKey);

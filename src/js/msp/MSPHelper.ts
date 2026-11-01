@@ -1973,11 +1973,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.advancedTuning.levelAngleLimit = data.readU8();
         fcStore.advancedTuning.levelSensitivity = data.readU8();
         fcStore.advancedTuning.itermThrottleThreshold = data.readU16();
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-            fcStore.advancedTuning.antiGravityGain = data.readU16();
-        } else {
-            fcStore.advancedTuning.itermAcceleratorGain = data.readU16();
-        }
+        fcStore.advancedTuning.antiGravityGain = data.readU16();
 
         fcStore.advancedTuning.dtermSetpointWeight = data.readU16();
         fcStore.advancedTuning.itermRotation = data.readU8();
@@ -2539,6 +2535,12 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.wingConfig.tpa_speed_pitch_offset = data.read16();
         fcStore.wingConfig.yaw_type = data.readU8();
         fcStore.wingConfig.angle_pitch_offset = data.read16();
+        if (data.byteLength >= 51) {
+            fcStore.wingConfig.speed_curve_vref = data.readU8();
+            fcStore.wingConfig.speed_curve_power = data.readU8();
+            fcStore.wingConfig.speed_curve_min = data.readU16();
+            fcStore.wingConfig.speed_curve_max = data.readU16();
+        }
     },
 
     [MSPCodes.MSP_SET_WING]: NOTHING_TO_DO,
@@ -2970,13 +2972,8 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push8(fcStore.advancedTuning.levelSensitivity)
             .push16(fcStore.advancedTuning.itermThrottleThreshold);
 
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-            buffer.push16(fcStore.advancedTuning.antiGravityGain);
-        } else {
-            buffer.push16(fcStore.advancedTuning.itermAcceleratorGain);
-        }
-
         buffer
+            .push16(fcStore.advancedTuning.antiGravityGain)
             .push16(fcStore.advancedTuning.dtermSetpointWeight)
             .push8(fcStore.advancedTuning.itermRotation)
             .push8(fcStore.advancedTuning.smartFeedforward)
@@ -3261,7 +3258,11 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push16(fcStore.wingConfig.tpa_speed_max_voltage)
             .push16(fcStore.wingConfig.tpa_speed_pitch_offset)
             .push8(fcStore.wingConfig.yaw_type)
-            .push16(fcStore.wingConfig.angle_pitch_offset);
+            .push16(fcStore.wingConfig.angle_pitch_offset)
+            .push8(fcStore.wingConfig.speed_curve_vref)
+            .push8(fcStore.wingConfig.speed_curve_power)
+            .push16(fcStore.wingConfig.speed_curve_min)
+            .push16(fcStore.wingConfig.speed_curve_max);
     },
 };
 

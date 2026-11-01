@@ -186,6 +186,7 @@
                                     @mousedown="onPreviewMouseDown"
                                     @mouseup="onPreviewMouseUp"
                                     @mouseleave="onPreviewMouseUp"
+                                    @dragleave="onPreviewDragLeave"
                                 >
                                     <!-- Preview elements rendered as rows/cells -->
                                     <div class="flex tab-osd-row" v-for="(row, rIdx) in previewRows" :key="rIdx">
@@ -200,7 +201,6 @@
                                             :draggable="cell.field?.positionable"
                                             @dragstart="onDragStart($event, cell)"
                                             @dragover.prevent="onDragOverCell($event)"
-                                            @dragleave="onDragLeaveCell($event)"
                                             @drop.prevent="onDropCell($event)"
                                             @dragend="onPreviewMouseUp"
                                             @mouseenter="onCellMouseEnter(cell)"
@@ -211,6 +211,14 @@
                                                     cell.img ||
                                                     'data:image/svg+xml;utf8,<svg width=\'12\' height=\'18\' xmlns=\'http://www.w3.org/2000/svg\'></svg>'
                                                 "
+                                                draggable="false"
+                                                alt=""
+                                                aria-hidden="true"
+                                            />
+                                            <img
+                                                v-if="dragGhostImages.has(rIdx * osdStore.displaySize.x + cIdx)"
+                                                class="tab-osd-drag-ghost"
+                                                :src="dragGhostImages.get(rIdx * osdStore.displaySize.x + cIdx)"
                                                 draggable="false"
                                                 alt=""
                                                 aria-hidden="true"
@@ -684,7 +692,6 @@ import UiBox from "@/components/elements/UiBox.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { i18n } from "@/js/localization";
-import { clamp } from "@/js/utils/common";
 
 import { FONT, SYM } from "@/js/utils/osdFont";
 import { getVisibleAlarmEntries } from "./osd/osd_alarms";
@@ -762,9 +769,9 @@ const hasLoadedConfig = ref(false);
 const presetMenuField = ref<OsdDisplayItem | null>(null);
 const showPresetSubmenu = ref(false); // Track click state for submenu
 const presetGridCells = getPresetGridCells();
-const OSD_CHAR_WIDTH_FALLBACK = 12;
-const OSD_CHAR_HEIGHT_FALLBACK = 18;
-let dragPreviewElement: HTMLElement | null = null;
+// setDragImage needs an already-loaded image, so this is created up front.
+const transparentDragImage = new Image(1, 1);
+transparentDragImage.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 // Preview composable
 const { previewRows, previewBuffer, updatePreviewBuffer, searchLimitsElement } = useOsdPreview();
@@ -793,13 +800,42 @@ const onPreviewMouseDown = () => {
 
 const onPreviewMouseUp = () => {
     isDraggingGrid.value = false;
-    cleanupDragPreviewElement();
+    dragGhostPosition.value = null;
+    dragState.value = { field: null, startIdx: -1, grabX: Number.NaN, grabY: Number.NaN };
 };
 
-// Current drag state
-const dragState = ref<{ field: OsdDisplayItem | null; startIdx: number }>({
+// Current drag state. grabX/grabY is the cell the drag started on, kept here because
+// dataTransfer.getData() is unreadable during dragover.
+const dragState = ref<{ field: OsdDisplayItem | null; startIdx: number; grabX: number; grabY: number }>({
     field: null,
     startIdx: -1,
+    grabX: Number.NaN,
+    grabY: Number.NaN,
+});
+
+// Where the dragged field would land if dropped now; null hides the ghost.
+const dragGhostPosition = ref<number | null>(null);
+
+// Grid index -> glyph image for the snapped drop preview, laid out like useOsdPreview draws it.
+const dragGhostImages = computed(() => {
+    const images = new Map<number, string>();
+    const field = dragState.value.field;
+    if (!field || dragGhostPosition.value === null) {
+        return images;
+    }
+
+    const displaySize = osdStore.displaySize;
+    const origin = ((dragGhostPosition.value % displaySize.total) + displaySize.total) % displaySize.total;
+    for (const glyph of getPreviewCells(field.preview)) {
+        if (!Number.isFinite(glyph.charCode)) {
+            continue;
+        }
+        const index = origin + glyph.x + glyph.y * displaySize.x;
+        if (index >= 0 && index < displaySize.total) {
+            images.set(index, FONT.draw(glyph.charCode as number));
+        }
+    }
+    return images;
 });
 
 // Highlighted field for hover effects
@@ -1038,6 +1074,7 @@ function getPreviewCellClass(cell: PreviewCell) {
         "preview-element": !!cell.field,
         draggable: cell.field?.positionable,
         highlighted: cell.field != null && cell.field === highlightedField.value,
+        "drag-source": cell.field != null && cell.field === dragState.value.field && dragGhostPosition.value !== null,
     };
 
     if (cell.field) {
@@ -1047,21 +1084,11 @@ function getPreviewCellClass(cell: PreviewCell) {
     return classes;
 }
 
-function cleanupDragPreviewElement() {
-    if (!dragPreviewElement) {
-        return;
-    }
-    dragPreviewElement.remove();
-    dragPreviewElement = null;
-}
-
 interface PreviewGlyph {
     x: number;
     y: number;
     charCode: number | undefined;
 }
-
-type DragPreviewMeta = NonNullable<ReturnType<typeof createFieldDragPreviewElement>>;
 
 function getPreviewCells(preview: OsdPreview | null | undefined): PreviewGlyph[] {
     if (typeof preview === "string") {
@@ -1091,106 +1118,6 @@ function getPreviewCells(preview: OsdPreview | null | undefined): PreviewGlyph[]
         .map((entry) => ({ x: entry.x, y: entry.y, charCode: entry.sym }));
 }
 
-function getRenderedCharSize(dragCellElement: HTMLElement | null) {
-    const imageRect = dragCellElement?.querySelector("img")?.getBoundingClientRect?.();
-    if (imageRect && imageRect.width > 0 && imageRect.height > 0) {
-        return {
-            width: Math.max(1, Math.round(imageRect.width)),
-            height: Math.max(1, Math.round(imageRect.height)),
-        };
-    }
-
-    const cellRect = dragCellElement?.getBoundingClientRect?.();
-    if (cellRect && cellRect.width > 0 && cellRect.height > 0) {
-        return {
-            width: Math.max(1, Math.round(cellRect.width)),
-            height: Math.max(1, Math.round(cellRect.height)),
-        };
-    }
-
-    return { width: OSD_CHAR_WIDTH_FALLBACK, height: OSD_CHAR_HEIGHT_FALLBACK };
-}
-
-function createFieldDragPreviewElement(displayItem: OsdDisplayItem, charWidth: number, charHeight: number) {
-    const cells = getPreviewCells(displayItem.preview).filter((cell): cell is PreviewGlyph & { charCode: number } =>
-        Number.isFinite(cell.charCode),
-    );
-    if (cells.length === 0) {
-        return null;
-    }
-
-    let minX = cells[0].x;
-    let maxX = cells[0].x;
-    let minY = cells[0].y;
-    let maxY = cells[0].y;
-
-    for (const cell of cells) {
-        minX = Math.min(minX, cell.x);
-        maxX = Math.max(maxX, cell.x);
-        minY = Math.min(minY, cell.y);
-        maxY = Math.max(maxY, cell.y);
-    }
-
-    const widthCells = maxX - minX + 1;
-    const heightCells = maxY - minY + 1;
-    const container = document.createElement("div");
-    container.style.position = "fixed";
-    container.style.left = "-9999px";
-    container.style.top = "-9999px";
-    container.style.pointerEvents = "none";
-    container.style.width = `${widthCells * charWidth}px`;
-    container.style.height = `${heightCells * charHeight}px`;
-    container.style.zIndex = "2147483647";
-    container.style.imageRendering = "pixelated";
-
-    for (const cell of cells) {
-        const img = document.createElement("img");
-        img.src = FONT.draw(cell.charCode);
-        img.alt = "";
-        img.draggable = false;
-        img.style.position = "absolute";
-        img.style.left = `${(cell.x - minX) * charWidth}px`;
-        img.style.top = `${(cell.y - minY) * charHeight}px`;
-        img.style.width = `${charWidth}px`;
-        img.style.height = `${charHeight}px`;
-        img.style.imageRendering = "pixelated";
-        img.style.opacity = "1";
-        container.appendChild(img);
-    }
-
-    return {
-        element: container,
-        minX,
-        minY,
-        widthPx: widthCells * charWidth,
-        heightPx: heightCells * charHeight,
-    };
-}
-
-function getDragPreviewAnchor(
-    displayItem: OsdDisplayItem,
-    dragX: number,
-    dragY: number,
-    displaySize: OsdDisplaySize,
-    dragPreviewMeta: DragPreviewMeta,
-    charWidth: number,
-    charHeight: number,
-) {
-    const normalizedPosition = ((displayItem.position % displaySize.total) + displaySize.total) % displaySize.total;
-    const originX = normalizedPosition % displaySize.x;
-    const originY = Math.trunc(normalizedPosition / displaySize.x);
-    const localX = dragX - originX;
-    const localY = dragY - originY;
-
-    const anchorX = (localX - dragPreviewMeta.minX) * charWidth + charWidth / 2;
-    const anchorY = (localY - dragPreviewMeta.minY) * charHeight + charHeight / 2;
-
-    return {
-        x: clamp(anchorX, 0, dragPreviewMeta.widthPx),
-        y: clamp(anchorY, 0, dragPreviewMeta.heightPx),
-    };
-}
-
 // Drag and drop handlers
 function onDragStart(event: DragEvent, cell: PreviewCell) {
     const field = cell.field;
@@ -1210,72 +1137,87 @@ function onDragStart(event: DragEvent, cell: PreviewCell) {
         return;
     }
 
-    const xPos = Number.parseInt(cellElement.dataset.x ?? "");
-    const yPos = Number.parseInt(cellElement.dataset.y ?? "");
-    const charSize = getRenderedCharSize(cellElement);
-
     dataTransfer.effectAllowed = "move";
     dataTransfer.setData("text/plain", String(field.index));
-    dataTransfer.setData("x", String(cellElement.dataset.x));
-    dataTransfer.setData("y", String(cellElement.dataset.y));
 
-    // Set drag image if available and not on Linux
+    // The snapped ghost on the grid stands in for the browser's drag image. Linux keeps the
+    // native image: WebKitGTK does not honour a custom one reliably.
     if (!navigator.platform.includes("Linux")) {
-        cleanupDragPreviewElement();
-        const dragPreviewMeta = createFieldDragPreviewElement(displayItem, charSize.width, charSize.height);
-        if (dragPreviewMeta) {
-            dragPreviewElement = dragPreviewMeta.element;
-            document.body.appendChild(dragPreviewElement);
-
-            const anchor = getDragPreviewAnchor(
-                displayItem,
-                xPos,
-                yPos,
-                osdStore.displaySize,
-                dragPreviewMeta,
-                charSize.width,
-                charSize.height,
-            );
-            dataTransfer.setDragImage(dragPreviewElement, anchor.x, anchor.y);
-        }
+        dataTransfer.setDragImage(transparentDragImage, 0, 0);
     }
 
-    dragState.value.field = field;
-    dragState.value.startIdx = field.position;
+    dragState.value = {
+        field,
+        startIdx: field.position,
+        grabX: Number.parseInt(cellElement.dataset.x ?? "", 10),
+        grabY: Number.parseInt(cellElement.dataset.y ?? "", 10),
+    };
     isDraggingGrid.value = true;
+}
+
+/**
+ * Where the dragged field lands when dropped on the cell at cellPosition: moved by the offset
+ * from the grabbed cell, then clamped to the screen. Null when no valid position exists.
+ */
+function resolveDropPosition(displayItem: OsdDisplayItem, cellPosition: number, startIdx: number): number | null {
+    const displaySize = osdStore.displaySize;
+    const cursorX = cellPosition % displaySize.x;
+    const cursorY = Math.trunc(cellPosition / displaySize.x);
+    const { grabX, grabY } = dragState.value;
+
+    // Without a grab cell (a drag from outside the preview) the field's origin goes under the cursor.
+    let position = cellPosition;
+    if (!Number.isNaN(grabX) && !Number.isNaN(grabY)) {
+        position = startIdx + cellPosition - (grabX + grabY * displaySize.x);
+    }
+
+    if (displayItem.ignoreSize) {
+        return position;
+    }
+    if (Array.isArray(displayItem.preview)) {
+        return clampArrayPreviewPosition(displayItem, position, displaySize, cursorX);
+    }
+    return clampStringPreviewPosition(displayItem, position, displaySize, cursorY);
 }
 
 function onDragOverCell(event: DragEvent) {
     if (event.dataTransfer) {
         event.dataTransfer.dropEffect = "move";
     }
-    if (event.currentTarget instanceof HTMLElement) {
-        event.currentTarget.style.background = "rgba(0,0,0,.5)";
+
+    const field = dragState.value.field;
+    const cellElement = event.currentTarget;
+    if (!field || !(cellElement instanceof HTMLElement)) {
+        return;
     }
+    const cellPosition = Number.parseInt(cellElement.dataset.position ?? "", 10);
+    dragGhostPosition.value = resolveDropPosition(field, cellPosition, dragState.value.startIdx);
 }
 
-function onDragLeaveCell(event: DragEvent) {
-    if (event.currentTarget instanceof HTMLElement) {
-        event.currentTarget.removeAttribute("style");
+function onPreviewDragLeave(event: DragEvent) {
+    // dragleave also fires moving between cells; only hide the ghost once the pointer leaves the grid.
+    const container = previewContainer.value;
+    if (!container) {
+        return;
     }
-}
-
-function applyDragOffsetFromStartCell(
-    position: number,
-    event: DragEvent,
-    displaySize: OsdDisplaySize,
-    startIdx: number,
-): number {
-    // A missing dataTransfer reads as NaN below, like a drag from outside the preview.
-    const x = Number.parseInt(event.dataTransfer?.getData("x") ?? "", 10);
-    const y = Number.parseInt(event.dataTransfer?.getData("y") ?? "", 10);
-    if (Number.isNaN(x) || Number.isNaN(y)) {
-        return position;
+    const next = event.relatedTarget;
+    if (next instanceof Node) {
+        if (container.contains(next)) {
+            return;
+        }
+    } else {
+        // Some engines leave relatedTarget null on dragleave, so fall back to the pointer position.
+        const rect = container.getBoundingClientRect();
+        const inside =
+            event.clientX >= rect.left &&
+            event.clientX < rect.right &&
+            event.clientY >= rect.top &&
+            event.clientY < rect.bottom;
+        if (inside) {
+            return;
+        }
     }
-
-    const draggedCellIdx = x + y * displaySize.x;
-    const offsetIdx = position - draggedCellIdx;
-    return startIdx + offsetIdx;
+    dragGhostPosition.value = null;
 }
 
 function onDropCell(event: DragEvent) {
@@ -1284,7 +1226,6 @@ function onDropCell(event: DragEvent) {
     if (!(cellElement instanceof HTMLElement) || !event.dataTransfer) {
         return;
     }
-    cellElement.removeAttribute("style");
 
     const fieldId = Number.parseInt(event.dataTransfer.getData("text/plain"));
     const displayItem = osdStore.displayItems[fieldId];
@@ -1292,36 +1233,25 @@ function onDropCell(event: DragEvent) {
         return;
     }
 
-    const displaySize = osdStore.displaySize;
-    let position = Number.parseInt(cellElement.dataset.position ?? "");
-    const cursorX = position % displaySize.x;
-    const cursorY = Math.trunc(position / displaySize.x);
-
     const startIdx =
         dragState.value.field?.index === fieldId && dragState.value.startIdx >= 0
             ? dragState.value.startIdx
             : displayItem.position;
-    position = applyDragOffsetFromStartCell(position, event, displaySize, startIdx);
+    const position = resolveDropPosition(
+        displayItem,
+        Number.parseInt(cellElement.dataset.position ?? "", 10),
+        startIdx,
+    );
 
-    if (!displayItem.ignoreSize) {
-        if (Array.isArray(displayItem.preview)) {
-            const clamped = clampArrayPreviewPosition(displayItem, position, displaySize, cursorX);
-            if (clamped === null) {
-                return;
-            }
-            position = clamped;
-        } else {
-            position = clampStringPreviewPosition(displayItem, position, displaySize, cursorY);
-        }
+    dragState.value = { field: null, startIdx: -1, grabX: Number.NaN, grabY: Number.NaN };
+    dragGhostPosition.value = null;
+    if (position === null) {
+        return;
     }
 
-    // Update display item position
     displayItem.position = position;
     trackChange("position", displayItem.name);
     updatePreview();
-
-    dragState.value.field = null;
-    dragState.value.startIdx = -1;
 }
 
 // Mouse hover cross-highlighting
@@ -1888,7 +1818,6 @@ onMounted(async () => {
 onUnmounted(() => {
     document.removeEventListener("click", handleClickOutside);
     analyticsChanges.value = {};
-    cleanupDragPreviewElement();
 });
 </script>
 
@@ -1903,6 +1832,7 @@ onUnmounted(() => {
 }
 
 .tab-osd-char {
+    position: relative;
     display: flex;
     padding: 0;
     margin: 0;
@@ -1926,6 +1856,22 @@ onUnmounted(() => {
 .tab-osd-char.highlighted,
 .tab-osd-char.dragging {
     background: rgba(255, 255, 255, 0.4);
+}
+
+/* The field being dragged fades in place while its ghost shows where it will land */
+.tab-osd-char.drag-source img:not(.tab-osd-drag-ghost) {
+    opacity: 0.3;
+}
+
+.tab-osd-char img.tab-osd-drag-ghost {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 /* Crosshair and grid lines on mouse-down */

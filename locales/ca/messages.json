@@ -31,6 +31,18 @@
     "search": {
         "message": "Cerca"
     },
+    "settingsSearchTitle": {
+        "message": "Configuració de la cerca",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Cerca configuracions...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "No s'ha trobat cap configuració",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "No ho mostris més"
     },
@@ -381,6 +393,9 @@
     },
     "sensorConfigHardware": {
         "message": "Hardware del sensor"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "Gyros actius"
     },
     "sensorConfigGyroLabel": {
         "message": "Giro $1"
@@ -2943,6 +2958,10 @@
         "message": "Canvia el VTX al mode PIT (potència de sortida baixa, si és compatible)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Captura punts de ruta durant el vol: una pressió breu afegeix la posició actual al pla de vol com a punt de ruta; mantenir premut l'interruptor durant 1,5 segons esborra l'últim punt de ruta",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Restableix el cronòmetre de volta del transponedor",
         "description": "Help text to LAP TIMER RESET mode"
@@ -4000,6 +4019,12 @@
     },
     "firmwareFlasherNoReboot": {
         "message": "Sense seqüència de reinici"
+    },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Tipus de compilació"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "Placa"
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Seleccioneu tipus de versió per veure les controladores disponibles."

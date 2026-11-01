@@ -56,7 +56,6 @@ export interface AdvancedTuning {
     levelAngleLimit: number;
     levelSensitivity: number;
     itermThrottleThreshold: number;
-    itermAcceleratorGain: number;
     antiGravityGain: number;
     itermRotation: number;
     smartFeedforward: number;
@@ -782,6 +781,10 @@ export interface WingConfig {
     tpa_speed_pitch_offset: number;
     yaw_type: number;
     angle_pitch_offset: number;
+    speed_curve_vref: number;
+    speed_curve_power: number;
+    speed_curve_min: number;
+    speed_curve_max: number;
 }
 
 export interface FcState {

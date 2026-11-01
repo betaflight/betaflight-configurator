@@ -252,7 +252,8 @@
                                     @update:model-value="(checked: boolean) => toggleTelemetry(checked)"
                                 />
                             </SettingRow>
-                            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            <!-- Instances are revealed one at a time: auto-fit lets one or two fill the row, and a wrapped one keeps the column width. -->
+                            <div class="grid grid-cols-[repeat(auto-fit,minmax(min(22rem,100%),1fr))] gap-3">
                                 <UiBox
                                     v-for="{ port, instance } in visibleTelemetryPorts"
                                     :key="instance"

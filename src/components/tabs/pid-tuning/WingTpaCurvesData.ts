@@ -37,9 +37,27 @@ export interface TpaChartCurve {
 
 export function getTpaHyperbolicCurve(wingConfig: WingConfig, motorKv: number): TpaChartCurve[] {
     // The list of charts curves
+    let curvesData: TpaCurvePoint[];
+    switch (wingConfig.tpa_curve_type) {
+        case 1:
+            curvesData = generateHyperbolicCurve(wingConfig, motorKv);
+            break;
+        case 2:
+            curvesData = generateHyperbolicByRefSpeedCurve(
+                wingConfig.speed_curve_vref,
+                wingConfig.speed_curve_power * 0.1,
+                wingConfig.speed_curve_min * 0.01,
+                wingConfig.speed_curve_max * 0.01,
+                computeMaximalSpeed(wingConfig, motorKv),
+            );
+            break;
+        default:
+            curvesData = [];
+    }
+
     const chartCurves: TpaChartCurve[] = [
         {
-            data: generateHyperbolicCurve(wingConfig, motorKv),
+            data: curvesData,
             color: getCssVar("--chart-curve-color", "#e24761"),
             active: true,
         },
@@ -99,7 +117,7 @@ function scaleRange(value: number, fromMin: number, fromMax: number, toMin: numb
 
 // Hyperbolic curve definition
 function generateHyperbolicCurve(wingConfig: WingConfig, motorKv: number): TpaCurvePoint[] {
-    const steps = 100;
+    const steps = 16; // The points count is set like TPA_CURVE_PWL_SIZE firmwares const
     const data: TpaCurvePoint[] = [];
     const stallThrottle = wingConfig.tpa_curve_stall_throttle / 100;
     const pidStallThrottle = wingConfig.tpa_curve_pid_thr0 / 100;
@@ -138,6 +156,44 @@ function generateHyperbolicCurve(wingConfig: WingConfig, motorKv: number): TpaCu
             multiplier: curveValue,
         });
     }
+    return data;
+}
+
+// Hyperbolic curve definition
+function generateHyperbolicByRefSpeedCurve(
+    refSpeed: number,
+    power: number,
+    minLimit: number,
+    maxLimit: number,
+    estimatedMaxSpeed: number,
+) {
+    if (!(refSpeed > 0 && power > 0 && minLimit > 0 && maxLimit > 0)) {
+        return [];
+    }
+    const steps = 16; // The points count is set like TPA_CURVE_PWL_SIZE firmwares const
+    const minSpeed = refSpeed * Math.pow(maxLimit, -1 / power);
+    const speedLimit = Math.min(Math.max(estimatedMaxSpeed, refSpeed), 85);
+    const maxSpeed = Math.min(refSpeed * Math.pow(minLimit, -1 / power), speedLimit);
+    const speedStep = (maxSpeed - minSpeed) / steps;
+
+    const data = [];
+    data.push({
+        speed: 0,
+        multiplier: maxLimit,
+    });
+    for (let i = 0; i <= steps; i++) {
+        const v = minSpeed + i * speedStep;
+        const ratio = refSpeed / v;
+        const multiplier = Math.pow(ratio, power);
+        data.push({
+            speed: v,
+            multiplier: multiplier,
+        });
+    }
+    data.push({
+        speed: maxSpeed,
+        multiplier: Math.pow(refSpeed / maxSpeed, power),
+    });
     return data;
 }
 
