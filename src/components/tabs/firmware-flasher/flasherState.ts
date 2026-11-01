@@ -154,6 +154,7 @@ export function createFlasherState() {
         releaseDateText: "",
         targetMCUText: "",
         configFilenameText: "",
+        configFilenameVisible: true,
         manufacturerSpanText: "",
         targetSupportUrl: "https://betaflight.com/docs/wiki/boards/archive/Missing",
         progressLabelText: "",

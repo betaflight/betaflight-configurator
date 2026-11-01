@@ -48,7 +48,7 @@
             </div>
 
             <!-- Configuration File Row -->
-            <div class="info_row">
+            <div v-if="state.configFilenameVisible" class="info_row">
                 <strong>{{ $t("firmwareFlasherConfigurationFile") }}</strong>
                 <span class="configFilename">{{ state.configFilenameText }}</span>
                 <div></div>
