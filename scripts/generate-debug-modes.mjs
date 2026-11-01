@@ -125,6 +125,10 @@ const DEBUG_HEADER = "src/main/build/debug.h";
 const DEBUG_SOURCE = "src/main/build/debug.c";
 const MSP_PROTOCOL_HEADER = "src/main/msp/msp_protocol.h";
 const FIRMWARE_SOURCE_DIR = "src/main";
+// Where DEBUG_SET() call sites live. The platform drivers write debug fields
+// too - the bitbang DShot telemetry counts are written only there - so both
+// trees are scanned. Includes still resolve against FIRMWARE_SOURCE_DIR.
+const FIRMWARE_SCAN_DIRS = [FIRMWARE_SOURCE_DIR, "src/platform"];
 
 // What opens a firmware field annotation, used both by the scanner below and
 // by the provenance query, which needs it before the scanner is defined.
@@ -324,7 +328,7 @@ function debugTablesCommit(repo, ref) {
 
 /*
  * The newest commit at `ref` whose diff touches something this generator reads
- * out of src/main: a `//!<` annotation, or a DEBUG_SET() call site.
+ * out of src/main or src/platform: a `//!<` annotation, or a DEBUG_SET() call site.
  *
  * Both live wherever the debug data is written rather than in debug.h/debug.c,
  * so a label or a mode's set of written fields can change with those two files
@@ -337,7 +341,7 @@ const DEBUG_DATA_PATTERN = String.raw`${ANNOTATION_MARKER}|DEBUG_SET\(`;
 function debugDataCommit(repo, ref) {
     const base = worktreeBase(repo, ref);
     const args = ["log", "-1", "--format=%H", "--extended-regexp", `-G${DEBUG_DATA_PATTERN}`];
-    return git(repo, [...args, base, "--", FIRMWARE_SOURCE_DIR]).trim();
+    return git(repo, [...args, base, "--", ...FIRMWARE_SCAN_DIRS]).trim();
 }
 
 // The later of two commits, by ancestry.
@@ -787,8 +791,8 @@ function debugSetFiles(repo, ref, pattern = "DEBUG_SET(") {
     // Without a ref git grep searches the working tree; --untracked also finds a
     // file the developer has added but not yet told git about.
     const args = worktree
-        ? ["grep", "-l", "--untracked", pattern, "--", FIRMWARE_SOURCE_DIR]
-        : ["grep", "-l", pattern, ref, "--", FIRMWARE_SOURCE_DIR];
+        ? ["grep", "-l", "--untracked", pattern, "--", ...FIRMWARE_SCAN_DIRS]
+        : ["grep", "-l", pattern, ref, "--", ...FIRMWARE_SCAN_DIRS];
 
     let output;
     try {
