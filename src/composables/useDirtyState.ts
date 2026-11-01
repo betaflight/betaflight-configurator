@@ -44,9 +44,15 @@ export interface DirtyState {
  * composable such as useVtx, usePower, useAdjustmentsState or usePortsState: each such dirty
  * flag takes part in the prompt for as long as the component is mounted.
  *
+ * A Pinia store must pass `{ promptOnLeave: false }` and let the tab that shows it register the
+ * flag instead. A store is created lazily, often during a tab's setup, so the component check in
+ * registerUnsavedChangesForComponent would pass and tie the flag to the store's own scope, which
+ * is never disposed. The flag would then keep the prompt showing on every tab after the tab is
+ * gone, for example once a reconnect leaves the store's baseline stale.
+ *
  * @param serialize side-effect free, since `dirty` calls it during render
  */
-export function useDirtyState(serialize: () => string): DirtyState {
+export function useDirtyState(serialize: () => string, { promptOnLeave = true } = {}): DirtyState {
     const baseline = ref<string | null>(null);
 
     const dirty = computed(() => baseline.value !== null && baseline.value !== serialize());
@@ -57,7 +63,9 @@ export function useDirtyState(serialize: () => string): DirtyState {
 
     const takeSnapshot = () => serialize();
 
-    registerUnsavedChangesForComponent(() => dirty.value);
+    if (promptOnLeave) {
+        registerUnsavedChangesForComponent(() => dirty.value);
+    }
 
     return { dirty, markClean, takeSnapshot };
 }

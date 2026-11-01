@@ -284,7 +284,11 @@ export const useOsdStore = defineStore("osd", () => {
         });
     }
 
-    const { dirty, markClean: captureSnapshot, takeSnapshot } = useDirtyState(serializeOsdState);
+    const {
+        dirty,
+        markClean: captureSnapshot,
+        takeSnapshot,
+    } = useDirtyState(serializeOsdState, { promptOnLeave: false });
 
     // Getters
     const numberOfProfiles = computed(() => osdProfiles.value.number || 1);

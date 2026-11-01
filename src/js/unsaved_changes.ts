@@ -51,9 +51,10 @@ export function registerUnsavedChanges(source: UnsavedChangesSource): () => void
 }
 
 /**
- * Registers a source for the lifetime of the calling component. Outside a component (e.g.
- * inside a Pinia store, which outlives every tab) this is a no-op: a store's dirty flag must
- * be registered by the tab that shows it, or it would keep warning after the tab is gone.
+ * Registers a source for the lifetime of the calling component, and is a no-op outside one.
+ * A Pinia store created during a tab's setup still sees that component here, so a store must
+ * not call this (useDirtyState takes `promptOnLeave: false`): its dirty flag is registered by
+ * the tab that shows it, or it would keep warning after the tab is gone.
  */
 export function registerUnsavedChangesForComponent(source: UnsavedChangesSource): void {
     if (!getCurrentInstance()) {

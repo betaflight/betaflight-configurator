@@ -22,7 +22,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, reactive } from "vue";
 import { mount } from "@vue/test-utils";
-import { setActivePinia } from "pinia";
+import { defineStore, setActivePinia } from "pinia";
 import { pinia } from "../../src/js/pinia_instance";
 import { useDialogStore } from "../../src/stores/dialog";
 import { useDirtyState } from "../../src/composables/useDirtyState";
@@ -100,6 +100,27 @@ describe("unsaved changes", () => {
         markClean();
         state.value = 2;
 
+        expect(hasUnsavedChanges()).toBe(false);
+    });
+
+    it("does not leave a store's dirty state behind after the tab that created the store unmounts", () => {
+        const state = reactive({ value: 1 });
+        const useTestStore = defineStore("unsavedChangesTestStore", () =>
+            useDirtyState(() => JSON.stringify(state), { promptOnLeave: false }),
+        );
+        const wrapper = mount(
+            defineComponent({
+                setup() {
+                    useTestStore().markClean();
+                    return () => h("div");
+                },
+            }),
+            { global: { plugins: [pinia] } },
+        );
+        wrapper.unmount();
+
+        // e.g. a reconnect reloads the FC data the store's stale baseline was taken from
+        state.value = 2;
         expect(hasUnsavedChanges()).toBe(false);
     });
 
