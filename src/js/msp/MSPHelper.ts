@@ -78,7 +78,7 @@ export type DataflashReadCallback = (
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
-let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w", "z"]; // in LSB bit
 
 let lastI2cErrorCount: number | null = null;
 
@@ -2421,6 +2421,24 @@ const DECODERS: Partial<Record<number, Decoder>> = {
     },
 
     [MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES]: NOTHING_TO_DO,
+
+    // Frame test wizard, filter autotune and the frame map: their stores read the replies off the raw response.
+    [MSPCodes.MSP2_SET_FRAME_WIZARD]: NOTHING_TO_DO,
+
+    [MSPCodes.MSP2_FRAME_WIZARD_STATUS]: NOTHING_TO_DO,
+
+    [MSPCodes.MSP2_FRAME_WIZARD_RESULT]: NOTHING_TO_DO,
+
+    [MSPCodes.MSP2_FRAME_WIZARD_RESPONSE]: NOTHING_TO_DO,
+
+    [MSPCodes.MSP2_FRAME_WIZARD_TAPS]: NOTHING_TO_DO,
+
+    [MSPCodes.MSP2_FILTER_TUNE_STATUS]: NOTHING_TO_DO,
+
+    [MSPCodes.MSP2_FRAME_MAP]: NOTHING_TO_DO,
+
+    // Listening to taps outside a run: the frameListen store reads the replies off the raw response.
+    [MSPCodes.MSP2_FRAME_WIZARD_LISTEN]: NOTHING_TO_DO,
 
     [MSPCodes.MSP_SET_FILTER_CONFIG]: NOTHING_TO_DO,
 

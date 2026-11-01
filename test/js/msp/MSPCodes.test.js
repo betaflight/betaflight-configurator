@@ -213,6 +213,15 @@ describe("MSPCodes", () => {
             MSP2_GYRO_SENSOR_ACTIVE: 0x300d,
             MSP2_CLI_SETTING: 0x3010,
             MSP2_CLI_SETTING_INFO: 0x3011,
+            // frame test wizard and filter autotune (firmware USE_FRAME_WIZARD / USE_FILTER_AUTOTUNE, draft PR)
+            MSP2_SET_FRAME_WIZARD: 0x3017,
+            MSP2_FRAME_WIZARD_STATUS: 0x3018,
+            MSP2_FRAME_WIZARD_RESULT: 0x3019,
+            MSP2_FRAME_WIZARD_RESPONSE: 0x301a,
+            MSP2_FRAME_WIZARD_TAPS: 0x301b,
+            MSP2_FILTER_TUNE_STATUS: 0x301c,
+            MSP2_FRAME_MAP: 0x301d,
+            MSP2_FRAME_WIZARD_LISTEN: 0x301e,
         });
     });
 

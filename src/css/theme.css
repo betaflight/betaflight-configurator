@@ -381,3 +381,65 @@ body[data-theme="contrast"] {
         color: var(--surface-100) !important;
     }
 }
+
+/* Frame tab: a tap's level in a chart bar falls and fades like a meter */
+/* a tap's level: up at once, held a moment, then it falls and fades away like a meter */
+.lit-decay {
+    animation-name: lit-decay;
+    animation-fill-mode: forwards;
+}
+
+@keyframes lit-decay {
+    0% {
+        transform: scaleY(0);
+        animation-timing-function: ease-out;
+    }
+    5% {
+        transform: scaleY(1);
+    }
+    20% {
+        transform: scaleY(1);
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+    }
+    100% {
+        transform: scaleY(0);
+        opacity: 0.3;
+    }
+}
+
+/* a peak no mode is near: held a moment, then it fades */
+.lit-fade {
+    animation-name: lit-fade;
+    animation-fill-mode: forwards;
+}
+
+@keyframes lit-fade {
+    20% {
+        opacity: 1;
+        animation-timing-function: ease-in;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* a tap landed on this point: its ring flashes in a translucent colour */
+.tap-flash {
+    border-radius: 9999px;
+    animation: tap-flash 0.7s ease-out;
+    --tap-flash: color-mix(in srgb, var(--ui-primary) 45%, transparent);
+}
+
+.tap-flash-error {
+    --tap-flash: color-mix(in srgb, var(--ui-error) 45%, transparent);
+}
+
+@keyframes tap-flash {
+    from {
+        background-color: var(--tap-flash);
+    }
+    to {
+        background-color: transparent;
+    }
+}
