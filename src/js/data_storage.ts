@@ -27,9 +27,10 @@ export const API_VERSION_1_46 = "1.46.0";
 export const API_VERSION_1_47 = "1.47.0";
 export const API_VERSION_1_48 = "1.48.0";
 export const API_VERSION_1_49 = "1.49.0";
+export const API_VERSION_1_50 = "1.50.0";
 
 // All versions are specified and compared using semantic versioning http://semver.org/
 /** The oldest firmware API version the app accepts. */
 export const API_VERSION_ACCEPTED = API_VERSION_1_44;
 /** The newest firmware API version the app supports. */
-export const API_VERSION_MAX_SUPPORTED = API_VERSION_1_49;
+export const API_VERSION_MAX_SUPPORTED = API_VERSION_1_50;
