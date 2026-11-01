@@ -377,6 +377,7 @@ export default defineComponent({
             state.firmwareLoadedName = "";
             state.firmwareLoadedSize = "";
             state.firmwareLoadedIsLocal = false;
+            cloudBuild.clearCommitInfo();
         };
 
         const clearBufferedFirmware = () => {
@@ -1509,6 +1510,7 @@ export default defineComponent({
 
         const processFirmwareFile = async (file: PickedFile, extension: string, data: FirmwareData) => {
             state.localFirmwareLoaded = true;
+            cloudBuild.clearCommitInfo();
             const result = await firmwareFlashing.processFirmware(data, extension, {
                 enableFlashButton,
                 enableLoadRemoteFileButton: () => {}, // Don't enable remote button for local files
