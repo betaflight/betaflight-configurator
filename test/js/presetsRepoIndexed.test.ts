@@ -21,6 +21,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import PresetsRepoIndexed, {
+    hasLoadedIndex,
     type PresetsIndex,
 } from "../../src/components/tabs/presets/PresetsRepoIndexed/PresetsRepoIndexed";
 import type { ParsedPreset } from "../../src/components/tabs/presets/PresetsRepoIndexed/PresetParser";
@@ -81,6 +82,15 @@ describe("PresetsRepoIndexed", () => {
 
         expect(fetchMock).toHaveBeenCalledWith(`${RAW}index.json`, { cache: "no-cache" });
         expect(repo.index).toEqual(index);
+    });
+
+    it("counts a repository as loaded only once loadIndex() resolves", async () => {
+        const repo = new PresetsRepoIndexed(RAW, VIEW, true, "Betaflight");
+
+        expect(hasLoadedIndex(repo)).toBe(false);
+        await repo.loadIndex();
+
+        expect(hasLoadedIndex(repo)).toBe(true);
     });
 
     it("refuses to strip options before the index has loaded", () => {

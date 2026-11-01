@@ -107,3 +107,36 @@ describe("IP geolocation consent", () => {
         expect(preflight.location.source).toBe("ip");
     });
 });
+
+describe("usePreflight flight-window weather", () => {
+    it("keeps zero values and the selected location's timezone", async () => {
+        const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+            ok: true,
+            json: async () => ({
+                timezone: "Pacific/Kiritimati",
+                current: {},
+                daily: {
+                    time: [],
+                    daylight_duration: [0],
+                    uv_index_max: [0],
+                    temperature_2m_max: [0],
+                    temperature_2m_min: [0],
+                },
+                hourly: { time: [] },
+            }),
+        } as Response);
+        try {
+            await preflight.fetchWeather(1.87, -157.4);
+            expect(preflight.weather.timezone).toBe("Pacific/Kiritimati");
+            expect(preflight.weather.daily).toMatchObject({
+                daylightDuration: 0,
+                uvIndexMax: 0,
+                temperatureMax: 0,
+                temperatureMin: 0,
+            });
+            expect(String(fetch.mock.calls[0][0])).toContain("timezone=auto");
+        } finally {
+            fetch.mockRestore();
+        }
+    });
+});

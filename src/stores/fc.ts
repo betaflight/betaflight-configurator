@@ -194,8 +194,7 @@ export function createInitialState(): FcState {
         levelAngleLimit: 0,
         levelSensitivity: 0,
         itermThrottleThreshold: 0,
-        itermAcceleratorGain: 0, // depecrated in API 1.45
-        antiGravityGain: 0, // was itermAccelatorGain till API 1.45
+        antiGravityGain: 0, // scaled x1000 before API 1.45, x10 since
         itermRotation: 0,
         smartFeedforward: 0,
         itermRelax: 0,
@@ -679,6 +678,10 @@ export function createInitialState(): FcState {
             tpa_speed_pitch_offset: 0,
             yaw_type: 0,
             angle_pitch_offset: 0,
+            speed_curve_vref: 20,
+            speed_curve_power: 20,
+            speed_curve_min: 25,
+            speed_curve_max: 200,
         },
         ledConfigValues: {},
     };

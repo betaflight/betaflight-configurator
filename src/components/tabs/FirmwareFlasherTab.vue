@@ -90,9 +90,9 @@
                 <div class="flex items-center gap-2 mt-3">
                     <USwitch
                         v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
-                        :aria-label="$t('unstableFirmwareAcknowledgement')"
+                        :aria-label="$t('developmentFirmwareAcknowledgement')"
                     />
-                    <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
+                    <span v-html="$t('developmentFirmwareAcknowledgement')"></span>
                 </div>
             </template>
             <template #footer>
@@ -702,13 +702,13 @@ export default defineComponent({
         // Build types configuration
         const buildTypes: { tag: string }[] = [
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeRelease",
+                tag: "firmwareFlasherOptionLabelShowReleases",
             },
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeReleaseCandidate",
+                tag: "firmwareFlasherOptionLabelShowAllReleases",
             },
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeDevelopment",
+                tag: "firmwareFlasherOptionLabelShowDevelopmentReleases",
             },
         ];
 

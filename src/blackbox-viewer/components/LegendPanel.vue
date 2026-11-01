@@ -179,7 +179,7 @@ import { ref, computed, watch } from "vue";
 import { useGraphStore } from "../stores/graph";
 import { useAppStore } from "../stores/app";
 import { useLogStore } from "../stores/log";
-import { useSettingsStore } from "../stores/settings.js";
+import { useSettingsStore } from "../stores/settings";
 import type { LegendField } from "../stores/graph";
 
 const graphStore = useGraphStore();

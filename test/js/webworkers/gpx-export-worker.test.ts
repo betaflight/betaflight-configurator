@@ -64,6 +64,23 @@ describe("gpx-export-worker", () => {
         ]);
     });
 
+    it("skips frames before the first GPS frame, and writes a missing altitude as 0", async () => {
+        const gpx = await runWorker({
+            sysConfig: { "Log start datetime": "2024-01-02T03:04:05.000Z" },
+            fieldNames,
+            frames: [
+                [
+                    [1000000, null, null, null],
+                    [2000000, 525000000, 47500000, null],
+                ],
+            ],
+        });
+
+        expect(gpx.match(/<trkpt.*<\/trkpt>/g)).toEqual([
+            '<trkpt lat="52.5" lon="4.75"><ele>0</ele><time>2024-01-02T03:04:07.000Z</time></trkpt>',
+        ]);
+    });
+
     it("skips a frame without a longitude", async () => {
         const gpx = await runWorker({
             sysConfig: { "Log start datetime": "2024-01-02T03:04:05.000Z" },

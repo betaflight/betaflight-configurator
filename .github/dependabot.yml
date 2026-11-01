@@ -1,0 +1,26 @@
+# Security updates only: open-pull-requests-limit 0 turns version updates off,
+# and each ecosystem's security fixes arrive as one grouped PR per run instead
+# of one PR per package.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  - package-ecosystem: cargo
+    directory: /src-tauri
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      cargo-security:
+        applies-to: security-updates
+        patterns:
+          - "*"

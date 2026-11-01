@@ -111,7 +111,7 @@ import type { DataflashHost } from "../host_capabilities";
 import { useLogStore } from "../stores/log";
 import { useAppStore } from "../stores/app";
 import { useGraphStore } from "../stores/graph";
-import { probeVideoExport } from "../video_export.js";
+import { probeVideoExport } from "../video_export";
 import LogFileInput from "./LogFileInput.vue";
 
 defineEmits([

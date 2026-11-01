@@ -30,7 +30,11 @@ type ExportFormat = "csv" | "gpx";
 /** What the spectrum export needs from the spectrum graph (graph_spectrum.js is still JavaScript). */
 interface SpectrumAnalyser {
     getExportedFileName(): string | null | undefined;
-    exportSpectrumToCSV(onSuccess: (csv: string) => void, options: Partial<SpectrumExportOptions>): void;
+    exportSpectrumToCSV(
+        onSuccess: (csv: string) => void,
+        options: Partial<SpectrumExportOptions>,
+        onFailure: (error: unknown) => void,
+    ): void;
 }
 
 /** Starts an export; calls `onSuccess` with the file contents, or `onFailure` where supported. */
@@ -134,5 +138,7 @@ export function exportSpectrumToCsv(
         return;
     }
 
-    return saveExport("csv", `${fileName}.csv`, (onSuccess) => analyser.exportSpectrumToCSV(onSuccess, options));
+    return saveExport("csv", `${fileName}.csv`, (onSuccess, onFailure) =>
+        analyser.exportSpectrumToCSV(onSuccess, options, onFailure),
+    );
 }
