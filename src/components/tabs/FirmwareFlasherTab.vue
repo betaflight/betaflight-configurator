@@ -495,6 +495,10 @@ export default defineComponent({
             state.targetMCUText = summary.mcu || "";
             // A null filename rendered as empty text before; `?? ""` keeps that.
             state.configFilenameText = state.isConfigLocal ? (state.configFilename ?? "") : "[default]";
+            const release = boardSelection.state.firmwareVersionOptions.find(
+                (option) => option.release === summary.release,
+            );
+            state.configFilenameVisible = state.isConfigLocal || release?.unifiedConfig !== false;
 
             state.cloudTargetInfoVisible = !!summary.cloudBuild;
         };
