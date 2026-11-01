@@ -2545,6 +2545,54 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
     [MSPCodes.MSP_SET_WING]: NOTHING_TO_DO,
 
+    [MSPCodes.MSP_PSAS_CONFIG](data) {
+        const fcStore = useFlightControllerStore();
+        fcStore.psasConfig.stick_gain[0] = data.readU8();
+        fcStore.psasConfig.stick_gain[1] = data.readU8();
+        fcStore.psasConfig.stick_gain[2] = data.readU8();
+        fcStore.psasConfig.damping_gain[0] = data.readU16();
+        fcStore.psasConfig.damping_gain[1] = data.readU16();
+        fcStore.psasConfig.damping_gain[2] = data.readU16();
+        fcStore.psasConfig.pitch_damping_filter_freq = data.readU16();
+        fcStore.psasConfig.accel_z_filter_freq = data.readU8();
+        fcStore.psasConfig.pitch_stability_gain = data.readU16();
+        fcStore.psasConfig.pitch_accel_p_gain = data.readU16();
+        fcStore.psasConfig.pitch_accel_i_gain = data.readU8();
+        fcStore.psasConfig.pitch_accel_max = data.readU8();
+        fcStore.psasConfig.pitch_accel_min = data.readU8();
+        fcStore.psasConfig.yaw_damping_filter_freq = data.readU16();
+        fcStore.psasConfig.accel_y_filter_freq = data.readU8();
+        fcStore.psasConfig.yaw_stability_gain = data.readU16();
+        fcStore.psasConfig.wing_load = data.readU16();
+        fcStore.psasConfig.air_density = data.readU16();
+        fcStore.psasConfig.lift_c_limit = data.readU8();
+        fcStore.psasConfig.aoa_limiter_gain = data.readU8();
+        fcStore.psasConfig.lift_coef_filter_freq = data.readU8();
+        fcStore.psasConfig.aoa_limiter_forecast_time = data.readU8();
+        fcStore.psasConfig.aoa_limiter_tau_return = data.readU8();
+        fcStore.psasConfig.servo_time = data.readU16();
+        fcStore.psasConfig.roll_yaw_clift_start = data.readU8();
+        fcStore.psasConfig.roll_yaw_clift_stop = data.readU8();
+        fcStore.psasConfig.roll_to_yaw_link = data.readU8();
+        fcStore.psasConfig.speed_curve_enabled_mask = data.readU8();
+        fcStore.psasConfig.speed_optimum_vref = data.readU8();
+        fcStore.psasConfig.speed_main_curve_power = data.readU8();
+        fcStore.psasConfig.speed_roll_stick_curve_power = data.readU8();
+        fcStore.psasConfig.speed_main_curve_min = data.readU16();
+        fcStore.psasConfig.speed_main_curve_max = data.readU16();
+        fcStore.psasConfig.speed_stick_curve_min = data.readU16();
+        fcStore.psasConfig.speed_stick_curve_max = data.readU16();
+        fcStore.psasConfig.speed_curve_mode = data.readU8();
+        fcStore.psasConfig.psas_trim_enabled_mask = data.readU8();
+        fcStore.psasConfig.psas_trim_deadband = data.readU8();
+        fcStore.psasConfig.psas_trim_lowpass_time = data.readU16();
+        fcStore.psasConfig.psas_trim_rate = data.readU8();
+        fcStore.psasConfig.psas_trim_limit = data.readU8();
+        fcStore.psasConfig.psas_trim_tau_reset = data.readU16();
+    },
+
+    [MSPCodes.MSP_SET_PSAS_CONFIG]: NOTHING_TO_DO,
+
     // Named settings, read straight off the raw response by useMspSetting rather than
     // decoded into FC state here. Listed so the dispatcher stops reporting them as
     // unknown codes on every probe.
@@ -3263,6 +3311,53 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push8(fcStore.wingConfig.speed_curve_power)
             .push16(fcStore.wingConfig.speed_curve_min)
             .push16(fcStore.wingConfig.speed_curve_max);
+    },
+
+    [MSPCodes.MSP_SET_PSAS_CONFIG](buffer) {
+        const fcStore = useFlightControllerStore();
+        buffer
+            .push8(fcStore.psasConfig.stick_gain[0])
+            .push8(fcStore.psasConfig.stick_gain[1])
+            .push8(fcStore.psasConfig.stick_gain[2])
+            .push16(fcStore.psasConfig.damping_gain[0])
+            .push16(fcStore.psasConfig.damping_gain[1])
+            .push16(fcStore.psasConfig.damping_gain[2])
+            .push16(fcStore.psasConfig.pitch_damping_filter_freq)
+            .push8(fcStore.psasConfig.accel_z_filter_freq)
+            .push16(fcStore.psasConfig.pitch_stability_gain)
+            .push16(fcStore.psasConfig.pitch_accel_p_gain)
+            .push8(fcStore.psasConfig.pitch_accel_i_gain)
+            .push8(fcStore.psasConfig.pitch_accel_max)
+            .push8(fcStore.psasConfig.pitch_accel_min)
+            .push16(fcStore.psasConfig.yaw_damping_filter_freq)
+            .push8(fcStore.psasConfig.accel_y_filter_freq)
+            .push16(fcStore.psasConfig.yaw_stability_gain)
+            .push16(fcStore.psasConfig.wing_load)
+            .push16(fcStore.psasConfig.air_density)
+            .push8(fcStore.psasConfig.lift_c_limit)
+            .push8(fcStore.psasConfig.aoa_limiter_gain)
+            .push8(fcStore.psasConfig.lift_coef_filter_freq)
+            .push8(fcStore.psasConfig.aoa_limiter_forecast_time)
+            .push8(fcStore.psasConfig.aoa_limiter_tau_return)
+            .push16(fcStore.psasConfig.servo_time)
+            .push8(fcStore.psasConfig.roll_yaw_clift_start)
+            .push8(fcStore.psasConfig.roll_yaw_clift_stop)
+            .push8(fcStore.psasConfig.roll_to_yaw_link)
+            .push8(fcStore.psasConfig.speed_curve_enabled_mask)
+            .push8(fcStore.psasConfig.speed_optimum_vref)
+            .push8(fcStore.psasConfig.speed_main_curve_power)
+            .push8(fcStore.psasConfig.speed_roll_stick_curve_power)
+            .push16(fcStore.psasConfig.speed_main_curve_min)
+            .push16(fcStore.psasConfig.speed_main_curve_max)
+            .push16(fcStore.psasConfig.speed_stick_curve_min)
+            .push16(fcStore.psasConfig.speed_stick_curve_max)
+            .push8(fcStore.psasConfig.speed_curve_mode)
+            .push8(fcStore.psasConfig.psas_trim_enabled_mask)
+            .push8(fcStore.psasConfig.psas_trim_deadband)
+            .push16(fcStore.psasConfig.psas_trim_lowpass_time)
+            .push8(fcStore.psasConfig.psas_trim_rate)
+            .push8(fcStore.psasConfig.psas_trim_limit)
+            .push16(fcStore.psasConfig.psas_trim_tau_reset);
     },
 };
 
