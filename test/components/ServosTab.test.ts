@@ -7,6 +7,7 @@ import * as timers from "../../src/js/timers";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
+import { MIXER_IDS } from "../../src/js/utils/servoMixerModel";
 
 vi.mock("../../src/js/timers", () => ({
     addInterval: vi.fn(),
@@ -19,6 +20,7 @@ vi.mock("../../src/js/msp/MSPHelper", () => ({ mspHelper: { sendServoConfigurati
 vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom: vi.fn() }) }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 vi.mock("i18next-vue", () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 
 const SERVO = { min: 1000, middle: 1500, max: 2000, rate: 100, indexOfChannelToForward: 255, reversedInputSources: 0 };
 
@@ -28,6 +30,7 @@ interface ServosVm {
     servoConfigs: { min: number; middle: number; max: number; rate: number; indexOfChannelToForward: number }[];
     configHasChanged: boolean;
     liveMode: boolean;
+    servoMixBoxItems: { value: number; label: string }[];
     saveServoConfig: () => Promise<void>;
     onServoChange: () => void;
 }
@@ -100,5 +103,41 @@ describe("Servos MSP wiring", () => {
         expect(mspHelper.sendServoConfigurations).toHaveBeenCalledOnce();
         expect(fcStore.servoConfig[1].max).toBe(1800);
         expect(vm().configHasChanged).toBe(true);
+    });
+
+    it("labels box 0 through a locale key and keeps the BOXSERVO names", () => {
+        expect(vm().servoMixBoxItems).toEqual([
+            { value: 0, label: "servosMixerBoxAlways" },
+            { value: 1, label: "BOXSERVO1" },
+            { value: 2, label: "BOXSERVO2" },
+            { value: 3, label: "BOXSERVO3" },
+        ]);
+    });
+
+    describe("when the servo mixer rules couldn't be read", () => {
+        async function remountWithMixer(mixer: number) {
+            wrapper.unmount();
+            fcStore.mixerConfig.mixer = mixer;
+            fcStore.servoRulesParseOk = false;
+            wrapper = mountTab();
+            await flushPromises();
+            vm().servoConfigs[0].min = 1100;
+        }
+
+        it("still saves servo edits on a preset mixer, which doesn't use the rules", async () => {
+            await remountWithMixer(MIXER_IDS.FLYING_WING);
+
+            await vm().saveServoConfig();
+
+            expect(mspHelper.sendServoConfigurations).toHaveBeenCalledOnce();
+        });
+
+        it("blocks Save on a custom mixer, so the unknown rules aren't overwritten", async () => {
+            await remountWithMixer(MIXER_IDS.CUSTOM_AIRPLANE);
+
+            await vm().saveServoConfig();
+
+            expect(mspHelper.sendServoConfigurations).not.toHaveBeenCalled();
+        });
     });
 });
