@@ -99,24 +99,25 @@ export function followLog(name: string): () => void {
     };
 }
 
-export function openLogWindow(): void {
+export function openLogWindow(): boolean {
     if (logWindow && !logWindow.closed) {
         logWindow.focus();
-        return;
+        return true;
     }
     if (!channelName) {
-        return;
+        return false;
     }
 
     // Relative to the document base: the app may be served from a sub-path or a custom scheme.
     const url = new URL("components/log/log_window.html", document.baseURI).href;
     const created: (Window & LogWindowHost) | null = globalThis.open(url, "betaflight_log", WINDOW_FEATURES);
     if (!created) {
-        return;
+        return false;
     }
     created.logChannel = channelName;
     created.i18next = i18next;
     logWindow = created;
+    return true;
 }
 
 globalThis.addEventListener("pagehide", () => logWindow?.close());

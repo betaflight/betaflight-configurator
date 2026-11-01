@@ -60,7 +60,7 @@ If not, see <http://www.gnu.org/licenses/>.
 
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
-import { useEventListener, useResizeObserver } from "@vueuse/core";
+import { useResizeObserver } from "@vueuse/core";
 import LogView from "./LogView.vue";
 import { useNavigationStore } from "@/stores/navigation";
 import { openLogWindow } from "@/js/log_window";
@@ -141,8 +141,9 @@ function keepInView() {
 }
 
 function popOut() {
-    navigationStore.logPanelOpen = false;
-    openLogWindow();
+    if (openLogWindow()) {
+        navigationStore.logPanelOpen = false;
+    }
 }
 
 watch(
@@ -161,8 +162,7 @@ watch(
     },
 );
 
-useEventListener(globalThis, "resize", keepInView);
-useResizeObserver(panel, keepInView);
+useResizeObserver([panel, document.getElementById("main-wrapper")], keepInView);
 </script>
 
 <style lang="less">

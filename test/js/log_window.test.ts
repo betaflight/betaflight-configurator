@@ -350,9 +350,9 @@ describe("openLogWindow", () => {
         const main = await newWindow();
         const { open } = stubOpen();
 
-        main.mod.openLogWindow();
+        expect(main.mod.openLogWindow()).toBe(false);
         publish(main, uniqueName())();
-        main.mod.openLogWindow();
+        expect(main.mod.openLogWindow()).toBe(false);
 
         expect(open).not.toHaveBeenCalled();
     });
@@ -364,7 +364,7 @@ describe("openLogWindow", () => {
         publish(main, name);
         const i18next = (await import("i18next")).default;
 
-        main.mod.openLogWindow();
+        expect(main.mod.openLogWindow()).toBe(true);
 
         expect(open).toHaveBeenCalledOnce();
         expect(open).toHaveBeenCalledWith(
@@ -382,7 +382,7 @@ describe("openLogWindow", () => {
         publish(main, uniqueName());
 
         main.mod.openLogWindow();
-        main.mod.openLogWindow();
+        expect(main.mod.openLogWindow()).toBe(true);
         expect(open).toHaveBeenCalledOnce();
         expect(popups[0].focus).toHaveBeenCalledOnce();
 
@@ -397,8 +397,8 @@ describe("openLogWindow", () => {
         const { open } = stubOpen({ blocked: true });
         publish(main, uniqueName());
 
-        expect(() => main.mod.openLogWindow()).not.toThrow();
-        expect(() => main.mod.openLogWindow()).not.toThrow();
+        expect(main.mod.openLogWindow()).toBe(false);
+        expect(main.mod.openLogWindow()).toBe(false);
         expect(open).toHaveBeenCalledTimes(2);
     });
 
