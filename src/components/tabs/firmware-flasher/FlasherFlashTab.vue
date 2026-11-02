@@ -245,7 +245,7 @@ import { getLastBackupData } from "@/js/utils/AutoBackup";
 import type { useCloudBuild } from "@/composables/useCloudBuild";
 import { injectBoardSelection, injectFlasherState } from "./flasherState";
 
-defineProps({
+const props = defineProps({
     cloudBuild: { type: Object as PropType<ReturnType<typeof useCloudBuild>>, required: true },
     onSaveFirmware: { type: Function as PropType<() => void>, required: true },
     flashRingColor: { type: String, required: true },
@@ -254,6 +254,7 @@ defineProps({
     onFlashManualBaudChange: { type: Function as PropType<() => void>, required: true },
     onFlashManualBaudRateChange: { type: Function as PropType<() => void>, required: true },
     onRestoreBackup: { type: Function as PropType<() => void>, required: true },
+    firmwareAcceptsConfig: { type: Boolean, required: true },
 });
 
 const state = injectFlasherState();
@@ -264,7 +265,7 @@ const configFilenameVisible = computed(() => {
         return true;
     }
     if (state.localFirmwareLoaded) {
-        return false;
+        return props.firmwareAcceptsConfig && typeof state.config === "string" && state.config !== "";
     }
     const { firmwareVersionOptions, selectedFirmwareVersion } = boardSelection.state;
     return firmwareVersionOptions.find((option) => option.release === selectedFirmwareVersion)?.unifiedConfig === true;

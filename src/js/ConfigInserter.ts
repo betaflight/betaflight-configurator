@@ -84,6 +84,12 @@ function getCustomDefaultsArea(firmware: ParsedHex): CustomDefaultsArea | undefi
     return { startAddress, endAddress };
 }
 
+/** True when the image reserves a custom defaults area that a board config can be written into. */
+export function hasCustomDefaultsArea(firmware: ParsedHex): boolean {
+    const area = getCustomDefaultsArea(firmware);
+    return !!area && area.endAddress - area.startAddress !== 0;
+}
+
 function generateData(firmware: ParsedHex, input: string, startAddress: number): void {
     let address = startAddress;
 
