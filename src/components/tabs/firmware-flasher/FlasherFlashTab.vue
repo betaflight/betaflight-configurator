@@ -48,9 +48,9 @@
             </div>
 
             <!-- Configuration File Row -->
-            <div v-if="state.configFilenameVisible" class="info_row">
+            <div v-if="state.isConfigLocal || state.releaseUnifiedConfig" class="info_row">
                 <strong>{{ $t("firmwareFlasherConfigurationFile") }}</strong>
-                <span class="configFilename">{{ state.configFilenameText }}</span>
+                <span class="configFilename">{{ state.isConfigLocal ? state.configFilename : "[default]" }}</span>
                 <div></div>
             </div>
 

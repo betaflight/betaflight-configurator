@@ -493,12 +493,10 @@ export default defineComponent({
             state.releaseNameLink = summary.releaseUrl || "#";
             state.releaseDateText = summary.date || "";
             state.targetMCUText = summary.mcu || "";
-            // A null filename rendered as empty text before; `?? ""` keeps that.
-            state.configFilenameText = state.isConfigLocal ? (state.configFilename ?? "") : "[default]";
             const release = boardSelection.state.firmwareVersionOptions.find(
                 (option) => option.release === summary.release,
             );
-            state.configFilenameVisible = state.isConfigLocal || release?.unifiedConfig !== false;
+            state.releaseUnifiedConfig = release?.unifiedConfig === true;
 
             state.cloudTargetInfoVisible = !!summary.cloudBuild;
         };
@@ -1513,6 +1511,7 @@ export default defineComponent({
 
         const processFirmwareFile = async (file: PickedFile, extension: string, data: FirmwareData) => {
             state.localFirmwareLoaded = true;
+            state.releaseUnifiedConfig = false;
             const result = await firmwareFlashing.processFirmware(data, extension, {
                 enableFlashButton,
                 enableLoadRemoteFileButton: () => {}, // Don't enable remote button for local files
