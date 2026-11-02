@@ -48,7 +48,7 @@
             </div>
 
             <!-- Configuration File Row -->
-            <div v-if="state.isConfigLocal || state.releaseUnifiedConfig" class="info_row">
+            <div v-if="configFilenameVisible" class="info_row">
                 <strong>{{ $t("firmwareFlasherConfigurationFile") }}</strong>
                 <span class="configFilename">{{ state.isConfigLocal ? state.configFilename : "[default]" }}</span>
                 <div></div>
@@ -243,7 +243,7 @@ import ProgressRing from "@/components/ProgressRing.vue";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { getLastBackupData } from "@/js/utils/AutoBackup";
 import type { useCloudBuild } from "@/composables/useCloudBuild";
-import { injectFlasherState } from "./flasherState";
+import { injectBoardSelection, injectFlasherState } from "./flasherState";
 
 defineProps({
     cloudBuild: { type: Object as PropType<ReturnType<typeof useCloudBuild>>, required: true },
@@ -257,6 +257,18 @@ defineProps({
 });
 
 const state = injectFlasherState();
+const boardSelection = injectBoardSelection();
+
+const configFilenameVisible = computed(() => {
+    if (state.isConfigLocal) {
+        return true;
+    }
+    if (state.localFirmwareLoaded) {
+        return false;
+    }
+    const { firmwareVersionOptions, selectedFirmwareVersion } = boardSelection.state;
+    return firmwareVersionOptions.find((option) => option.release === selectedFirmwareVersion)?.unifiedConfig === true;
+});
 
 // True while flash is actively running (progress updates flowing)
 const flashStatusLive = computed(() => state.flashingInProgress || state.flashProgressValue > 0);
