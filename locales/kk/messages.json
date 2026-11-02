@@ -3850,21 +3850,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Ұшу контроллері стандартты прошивка жасау жылдамдығын қолдамаса немесе bluethooth арқылы жыпылықтап жатсаңыз, жіберу жылдамдығын қолмен таңдаңыз.<br /><span class=\"message-negative\">Ескертпе:</span> DFU режимінде прошивка жасау кезінде пайдаланылмайды."
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Шығарылым үміткерлерін көрсету"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Тұрақты шығарылымдарға қоса алдын ала қарау шығарылымдарын көрсетіңіз"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Шығару"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Шығарылым және алдын ала шығарылым"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Даму"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Микробағдарлама нұсқасын таңдаңыз"
     },
@@ -4024,9 +4009,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Сіз <strong> әзірлеуші микробағдарламасының </strong> құрастыруын жүктеп алғалы жатырсыз. Мұндай жинақтар әзірлену сатысында және келесі мүмкіндіктердің кез келгеніне ие болуы мүмкін: <strong><ul><li>прошивка (Firmware) мүлдем жұмыс істемейді;</li><li>прошивка (Firmware) ұшуға жарамайды;</li><li>Мысалы, прошивка (Firmware) қауіпсіздігіне қатысты мәселелер бар. flyaways</li><li> микробағдарламасы контроллердің қатып қалуына немесе оның толық бұзылуына әкелуі мүмкін</li></ul></strong>Егер сіз осы прошивканы (firmware) пайдалануды шешсеңіз, <strong>жоғарыда көрсетілген тәуекелдердің кез келгені үшін толық жауапкершілікті өз мойныңызға алатыныңызбен келісесіз5_PLH_. Сіз осы микробағдарламалық құралмен ұшуға әрекет жасамас бұрын, орнатылған </strong> пропеллерлерімен <strong>жақсы стендтік сынақтардан өтуіңіз керек екенін түсінесіз."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Мен жоғарыдағыларды оқыдым және <strong>тұрақсыз прошивка (Firmware) нұсқасын орнату үшін толық жауапкершілікті аламын</strong>"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Жарқыл"

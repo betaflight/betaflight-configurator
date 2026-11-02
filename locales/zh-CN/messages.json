@@ -3762,21 +3762,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "如果飞控不支持默认的波特率，或者要通过蓝牙模块来烧录，可以手动设置波特率。<br /><span class=\"message-negative\">注意：</span> USB DFU 烧录时该选项无效。"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "显示候选版本"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "除了稳定的版本外, 还显示候选版本"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "正式版"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "正式版和候选正式版"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "开发版"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "选择固件版本"
     },
@@ -3933,9 +3918,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "您将要刷入一个<strong>基于开发版本构建的固件</strong>。 此固件仍在开发中，可能会出现以下问题：<strong><ul><li>固件完全不工作； </li><li>固件无法飞行； </li><li>固件存在安全性问题，比如飞行器失控</li><li>固件可能会造成飞控变砖，甚至损坏； </li></ul></strong>如果继续刷入此固件，<strong>您将对上述所有风险承担全部责任</strong>。 此外，您需要明白，尝试起飞之前，必须进行<strong>彻底的测试并在测试时卸下螺旋桨</strong>。"
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "我已阅读上述声明并且<strong>我自愿承担刷入不稳定版本固件的一切后果</strong>"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "闪存"

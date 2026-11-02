@@ -31,6 +31,18 @@
     "search": {
         "message": "Cerca"
     },
+    "settingsSearchTitle": {
+        "message": "Cerca impostazioni",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Cerca impostazioni...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "Nessuna impostazione trovata",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Non mostrare più"
     },
@@ -377,6 +389,9 @@
     },
     "sensorConfigHardware": {
         "message": "Hardware Sensore"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "Gyros Attivi"
     },
     "sensorConfigGyroLabel": {
         "message": "Gyro $1"
@@ -1317,6 +1332,12 @@
     },
     "initialSetupAccelCalibEnded": {
         "message": "Calibrazione Accelerometro <span class=\"message-positive\">completata</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "Calibrazione Magnetometro avviata"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Calibrazione Magnetometro <span class=\"message-positive\">completata</span>"
     },
     "initialSetupSettingsRestored": {
         "message": "Impostazioni <strong>predefinite</strong> ripristinate"
@@ -4001,6 +4022,12 @@
     "firmwareFlasherNoReboot": {
         "message": "Nessuna sequenza di riavvio"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Tipo di build"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "Board"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Seleziona il tipo di build per vedere le schede disponibili."
     },
@@ -4034,20 +4061,20 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Seleziona manualmente la velocità di trasmissione per schede che non supportano la velocità predefinita o per il flash via bluetooth.<br /><span class=\"message-negative\">Nota:</span> Non usato per il flash tramite USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostra versioni candidate"
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "Mostra le opzioni di rilascio"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Mostra i candidati al rilascio oltre alle versioni stabili"
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "Scegli quali versioni mostrare"
     },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Versione"
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "Mostra versioni"
     },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Versioni pubblicate e candidate"
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "Mostra tutte le versioni"
     },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Sviluppo"
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "Mostra le versioni di sviluppo"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Seleziona la versione del Firmware"
@@ -4209,8 +4236,8 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Stai per flashare una <strong>build di sviluppo del firmware</strong>. Queste build sono un progresso del lavoro e potrebbero verificarsi i seguenti casi:<strong><ul><li>il firmware non funziona proprio;</li><li>il firmware non consente il volo del modello;</li><li>ci sono problemi di sicurezza con il firmware, ad esempio flyaway</li><li>il firmware può rendere il controllore di volo non rispondente o danneggiarlo</li></ul></strong>Se prosegui con il flash di questo firmware, <strong>ti assumi la piena responsabilità dei rischi di cui sopra</strong>. Inoltre riconosci che è necessario eseguire <strong>test accurati sul banco di lavoro senza eliche</strong> prima di qualsiasi tentativo di volo con questo firmware."
     },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Ho letto quanto sopra e <strong>mi assumo tutta la responsabilità</strong> di flashare un firmware instabile"
+    "developmentFirmwareAcknowledgement": {
+        "message": "Ho letto quanto sopra e <strong>mi assumo tutta la responsabilità</strong> di flashare un firmware di sviluppo"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
@@ -7394,6 +7421,15 @@
     "magCalibrationUnguidedDone": {
         "message": "Calibrazione firmware completata!"
     },
+    "magCalibrationNotSent": {
+        "message": "La calibrazione non può essere avviata: il controllore di volo non ha ricevuto il comando."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "Avvio..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "Calibrazione... {{seconds}}s"
+    },
     "magCalibrationCheck": {
         "message": "Controlla"
     },
@@ -8860,6 +8896,30 @@
     "preflightFlightWindow": {
         "message": "Finestra Di Volo"
     },
+    "preflightTimelineDescription": {
+        "message": "Linea temporale che mostra la notte, l’ora blu, l’ora dorata e le ore di luce diurna, con indicatori dell’alba e del tramonto"
+    },
+    "preflightTimelineHelp": {
+        "message": "Passa il cursore, tocca o seleziona un segmento per vedere gli orari. Usa la legenda per evidenziare i periodi di una categoria."
+    },
+    "preflightTimelineHint": {
+        "message": "Passa o tocca un segmento per gli orari esatti."
+    },
+    "preflightTimelineNight": {
+        "message": "Notte & altro crepuscolo"
+    },
+    "preflightBlueHour": {
+        "message": "Ora blu"
+    },
+    "preflightGoldenHour": {
+        "message": "Ora dorata"
+    },
+    "preflightMorning": {
+        "message": "Mattino"
+    },
+    "preflightEvening": {
+        "message": "Pomeriggio"
+    },
     "preflightSunrise": {
         "message": "Alba"
     },
@@ -8874,6 +8934,9 @@
     },
     "preflightTempRange": {
         "message": "Escursione termica"
+    },
+    "preflightNow": {
+        "message": "Adesso"
     },
     "preflightCurrentlyDay": {
         "message": "Attuale"
@@ -9226,6 +9289,9 @@
     "pidTuningWingTpaCurveHyperbolic": {
         "message": "Iperbolico"
     },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "Iperbolico dalla velocità di rif"
+    },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "Configurazione velocità di base"
     },
@@ -9336,5 +9402,29 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "Correzione del pitch per le modalità Angle, in decigradi. I valori positivi inclinano l’ala verso il basso."
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "Velocità di riferimento"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "Velocità di riferimento, m/s - le curve hanno un valore 1.0 in questo punto"
+    },
+    "speedCurvesPower": {
+        "message": "La potenza delle curve"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "La potenza delle curve iperboliche, *0.1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "Il valore minimo delle curve"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "Il limite di valore minimo delle curve iperboliche, *0.01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "Il valore minimo delle curve"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "Il limite di valore massimo delle curve iperboliche, *0.01"
     }
 }

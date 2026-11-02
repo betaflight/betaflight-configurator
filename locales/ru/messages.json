@@ -3841,21 +3841,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Выберите скорость передачи вручную, если ваш полётный контроллер не поддерживает стандартную скорость прошивки либо, если Вы прошиваете через bluethooth.<br /><span class=\"message-negative\">Примечание:</span> Не используется при прошивке в режиме DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Показать кандидаты в релизы"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Показать предварительные релизы в дополнение к стабильным релизам"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Релиз"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Релиз и предварительный релиз"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Разработка"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Выберите версию прошивки"
     },
@@ -4012,9 +3997,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Вы собираетесь загрузить <strong> сборку прошивки для разработчиков</strong>. Такие сборки находятся в процессе разработки, и могут иметь любые из следующих особенностей: <strong><ul><li>прошивка не работает вообще;</li><li>прошивка не пригодна для полётов;</li><li>Есть проблемы с безопасностью прошивки, например flyaways</li><li> прошивка может привести к \"зависанию\" контроллера, либо вовсе его испортить</li></ul></strong>Если вы всё таки решили использовать данную прошивку, вы согласны с тем, что <strong>вы берете на себя полную ответственность за любй из вышеперечисленных рисков</strong>. Кроме того, Вы понимаете, что перед любыми попытками взлететь с этой прошивкой необходимо выполнить <strong>тщательные стендовые проверки с установленными пропеллерами</strong>."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Я прочитал вышеуказанное и <strong>я беру на себя полную ответственность</strong> за установку нестабильной версии прошивки"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Прошить"

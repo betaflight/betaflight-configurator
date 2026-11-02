@@ -1337,6 +1337,12 @@
     "initialSetupAccelCalibEnded": {
         "message": "Calibració de l'acceleròmetre <span class=\"message-positive\">finalitzada</span>"
     },
+    "initialSetupMagCalibStarted": {
+        "message": "Calibració del magnetòmetre iniciada"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Calibració del magnetòmetre <span class=\"message-positive\">finalitzada</span>"
+    },
     "initialSetupSettingsRestored": {
         "message": "Configuració restaurada per <strong>defecte</strong>"
     },
@@ -4059,20 +4065,20 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Selecció manual de la velocitat de bauds per a controladores que no suporten la velocitat per defecte o per flashejar per bluetooth.<br /><span class=\"message-negative\">Nota:</span> No es fa servir quan es flasheja per USB per DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostra les versions candidates"
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "Mostra les opcions de llançament"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Mostra versions candidates afegides a versions estables"
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "Tria quines versions mostrar"
     },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Llançament"
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "Mostra els llançaments"
     },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Llançament i Candidat a Llançament (RC)"
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "Mostra tots els llançaments"
     },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Desenvolupament"
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "Mostra les versions en desenvolupament"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Escull una versió de Firmware"
@@ -4234,8 +4240,8 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Esteu a punt de mostrar una <strong>build de desenvolupament del microprogramari</strong>. Aquestes compilacions són un treball en curs, i qualsevol dels següents casos pot ser:<strong><ul><li>el microprogramari no funciona en absolut;</li><li>el microprogramari no es pot volar;</li><li>hi ha problemes de seguretat amb el microprogramari, per exemple, les fugues volants</li><li>el microprogramari pot fer que el controlador de vol no respongui o es faci malbé</li></ul></strong>Si continueu amb el parpelleig d'aquest microprogramari, <strong>assumeu tota la responsabilitat del risc que passi qualsevol dels anteriors</strong>. A més, reconeixeu que cal dur a terme <strong>proves de banc exhaustives amb els accessoris apagats</strong> abans d'intentar fer volar aquest programari."
     },
-    "unstableFirmwareAcknowledgement": {
-        "message": "He llegit l'anterior i <strong>assumeixo tota la responsabilitat</strong> per instal·lar un maquinari inestable"
+    "developmentFirmwareAcknowledgement": {
+        "message": "He llegit l'anterior i <strong>assumeixo tota la responsabilitat</strong> per instal·lar un maquinari de desenvolupament"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
@@ -7419,6 +7425,15 @@
     "magCalibrationUnguidedDone": {
         "message": "Calibratge del programari completat!"
     },
+    "magCalibrationNotSent": {
+        "message": "No s'ha pogut iniciar el calibratge: el controlador de vol no ha rebut l'ordre."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "Iniciant..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "Calibrant... {{seconds}}s"
+    },
     "magCalibrationCheck": {
         "message": "Comprova"
     },
@@ -8885,6 +8900,30 @@
     "preflightFlightWindow": {
         "message": "Finestra de vol"
     },
+    "preflightTimelineDescription": {
+        "message": "Cronologia que mostra la nit, l'hora blava, l'hora daurada i la llum diürna, amb indicadors de la sortida i la posta del sol"
+    },
+    "preflightTimelineHelp": {
+        "message": "Passa el cursor, toca o selecciona un segment per veure'n els temps. Utilitza la llegenda per ressaltar tots els períodes d'un mateix tipus."
+    },
+    "preflightTimelineHint": {
+        "message": "Passa el cursor o toca un segment per veure els temps exactes."
+    },
+    "preflightTimelineNight": {
+        "message": "Nit i altres crepuscles"
+    },
+    "preflightBlueHour": {
+        "message": "Hora blava"
+    },
+    "preflightGoldenHour": {
+        "message": "Hora daurada"
+    },
+    "preflightMorning": {
+        "message": "Matí"
+    },
+    "preflightEvening": {
+        "message": "Vespre"
+    },
     "preflightSunrise": {
         "message": "Sortida del sol"
     },
@@ -8899,6 +8938,9 @@
     },
     "preflightTempRange": {
         "message": "Rang de temperatura"
+    },
+    "preflightNow": {
+        "message": "Ara"
     },
     "preflightCurrentlyDay": {
         "message": "Actual"
@@ -9251,6 +9293,9 @@
     "pidTuningWingTpaCurveHyperbolic": {
         "message": "Hiperbòlic"
     },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "Hiperbòlic en funció de la velocitat de referència"
+    },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "Configuració bàsica de velocitat"
     },
@@ -9361,5 +9406,29 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "Desplaçament del pas (pitch offset) per als modes d'angle, en dècimes de grau. Els valors positius inclinen l'ala cap avall."
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "Velocitat de referència"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "Velocitat de referència, m/s — les corbes tenen un valor d'1,0 en aquest punt"
+    },
+    "speedCurvesPower": {
+        "message": "La potència de les corbes"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "La potència de les corbes hiperbòliques, *0,1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "El valor mínim de les corbes"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "Límit del valor mínim de les corbes hiperbòliques, *0,01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "El valor màxim de les corbes"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "Límit del valor màxim de les corbes hiperbòliques, *0,01"
     }
 }

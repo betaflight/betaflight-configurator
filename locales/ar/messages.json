@@ -4014,21 +4014,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "الاختيار اليدوي لمعدل الباود للوحات التي لا تدعم السرعة الافتراضية أو للتثبيت عبر البلوتوث.<br /><span class=\"message-negative\">ملاحظة:</span> لا يتم استخدامه عند التثبيت عبر USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "عرض الإصدارات المرشحة\n"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "إظهار الإصدارات المرشحة بالإضافة إلى الإصدارات المستقرة"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "الإصدار"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "الإصدار والإصدار المرشح"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "المطوّر"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "أختر أصدار البرنامج الثابت"
     },
@@ -4188,9 +4173,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "أنت على وشك تثبيت <strong>إصدار تطويري من البرنامج الثابت</strong>. هذه الإصدارات لا تزال قيد التطوير، وقد تنطبق عليها أي من الحالات التالية:<strong><ul><li>قد لا يعمل البرنامج الثابت إطلاقًا؛</li><li>قد يكون البرنامج الثابت غير صالح للطيران؛</li><li>قد توجد مشكلات متعلقة بالسلامة في البرنامج الثابت، مثل الطيران غير المنضبط</li><li>قد يتسبب البرنامج الثابت في توقف وحدة التحكم بالطيران عن الاستجابة أو تلفها</li></ul></strong>إذا تابعت تثبيت هذا البرنامج الثابت، <strong>فأنت تتحمل كامل المسؤولية عن مخاطر وقوع أي مما سبق</strong>. كما أنك تقر بضرورة إجراء <strong>اختبارات شاملة على المنضدة مع إزالة المراوح</strong> قبل أي محاولة للطيران باستخدام هذا البرنامج الثابت.\n"
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "لقد قرأت ما سبق و<strong>أتحمل المسؤولية الكاملة</strong> عن تثبيت Firmware غير مستقر"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "تثبيت"

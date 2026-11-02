@@ -2431,21 +2431,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Selección manual da velocidade de transmisión en baudios para controladoras que non soportan a velocidade por defecto ou que se están a actualizar a través de bluetooth.<br /><span class=\"message-negative\">Nota:</span> Non empregado cando se está a utilizar USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostrar versións candidatas"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Mostrar versións candidatas ademais de versións estables"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Versións"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Versións e versións candidatas"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Desenvolvemento"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Elixe unha versión de Firmware"
     },
