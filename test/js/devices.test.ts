@@ -123,8 +123,19 @@ describe("devices", () => {
     });
 
     describe("loadDeviceFilters", () => {
-        it("applies the build server's lists in place and caches them", async () => {
+        /** The built-in lists, as a fresh module has them before any load. */
+        function defaultsOf(devices: Devices) {
+            return {
+                bluetoothDevices: [...devices.bluetoothDevices],
+                serialDevices: [...devices.serialDevices],
+                usbFilters: [...devices.usbDevices.filters],
+                vendorIdNames: { ...devices.vendorIdNames },
+            };
+        }
+
+        it("merges the build server's lists into the defaults in place, server entries first, and caches what it sent", async () => {
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
             const { bluetoothDevices, serialDevices, usbDevices, vendorIdNames, webSerialDevices } = devices;
             const remote = {
                 bluetoothDevices: [BLE],
@@ -138,28 +149,71 @@ describe("devices", () => {
             // Same objects as before: the transports imported these references at startup.
             expect(devices.bluetoothDevices).toBe(bluetoothDevices);
             expect(devices.vendorIdNames).toBe(vendorIdNames);
-            expect(bluetoothDevices).toEqual([BLE]);
-            expect(serialDevices).toEqual([SERIAL]);
-            expect(webSerialDevices).toEqual([{ usbVendorId: 0x1234, usbProductId: 0x5678 }]);
-            expect(usbDevices.filters).toEqual([{ vendorId: 1, productId: 2 }]);
-            expect(vendorIdNames).toEqual({ 4660: "Test Vendor" });
+            expect(bluetoothDevices).toEqual([BLE, ...defaults.bluetoothDevices]);
+            expect(serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
+            expect(webSerialDevices).toEqual(
+                [SERIAL, ...defaults.serialDevices].map(({ vendorId, productId }) => ({
+                    usbVendorId: vendorId,
+                    usbProductId: productId,
+                })),
+            );
+            expect(usbDevices.filters).toEqual([{ vendorId: 1, productId: 2 }, ...defaults.usbFilters]);
+            expect(vendorIdNames).toEqual({ ...defaults.vendorIdNames, 4660: "Test Vendor" });
             expect(cached()).toEqual({ [STORAGE_KEY]: remote });
         });
 
-        it("replaces only the lists the payload carries", async () => {
+        it("keeps a built-in device that a stale server list leaves out", async () => {
             const devices = await freshDevices();
-            const defaultBle = [...devices.bluetoothDevices];
-            const defaultNames = { ...devices.vendorIdNames };
+            const UM32_DFU = { vendorId: 0x396a, productId: 0xdf00 };
+            const STM32_DFU = { vendorId: 0x0483, productId: 0xdf11 };
+            expect(devices.usbDevices.filters).toContainEqual(UM32_DFU);
+
+            await devices.loadDeviceFilters(buildApiReturning({ usbDevices: { filters: [STM32_DFU] } }));
+
+            expect(devices.usbDevices.filters).toContainEqual(UM32_DFU);
+            expect(
+                devices.usbDevices.filters.filter((f) => f.vendorId === 0x0483 && f.productId === 0xdf11),
+            ).toHaveLength(1);
+        });
+
+        it("lets a server entry replace the default with the same key, at the server's position", async () => {
+            const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
+            const hm10 = { ...defaults.bluetoothDevices.find((d) => d.name === "HM-10")!, serviceUuid: "changed" };
+
+            await devices.loadDeviceFilters(
+                buildApiReturning({ bluetoothDevices: [hm10], vendorIdNames: { 1155: "STMicroelectronics" } }),
+            );
+
+            expect(devices.bluetoothDevices[0]).toEqual(hm10);
+            expect(devices.bluetoothDevices.filter((d) => d.name === "HM-10")).toEqual([hm10]);
+            expect(devices.bluetoothDevices).toHaveLength(defaults.bluetoothDevices.length);
+            expect(devices.vendorIdNames[1155]).toBe("STMicroelectronics");
+        });
+
+        it("keeps the first of duplicate server entries", async () => {
+            const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
+
+            await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [SERIAL, { ...SERIAL }] }));
+
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
+        });
+
+        it("changes only the lists the payload carries", async () => {
+            const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [SERIAL] }));
 
-            expect(devices.serialDevices).toEqual([SERIAL]);
-            expect(devices.bluetoothDevices).toEqual(defaultBle);
-            expect(devices.vendorIdNames).toEqual(defaultNames);
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
+            expect(devices.bluetoothDevices).toEqual(defaults.bluetoothDevices);
+            expect(devices.vendorIdNames).toEqual(defaults.vendorIdNames);
         });
 
         it("drops malformed entries", async () => {
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(
                 buildApiReturning({
@@ -169,16 +223,18 @@ describe("devices", () => {
                 }),
             );
 
-            expect(devices.bluetoothDevices).toEqual([BLE]);
-            expect(devices.serialDevices).toEqual([SERIAL]);
-            expect(devices.webSerialDevices).toEqual([{ usbVendorId: 0x1234, usbProductId: 0x5678 }]);
-            expect(devices.usbDevices.filters).toEqual([{ vendorId: 1, productId: 2 }]);
+            expect(devices.bluetoothDevices).toEqual([BLE, ...defaults.bluetoothDevices]);
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
+            expect(devices.webSerialDevices[0]).toEqual({ usbVendorId: 0x1234, usbProductId: 0x5678 });
+            expect(devices.webSerialDevices).toHaveLength(devices.serialDevices.length);
+            expect(devices.usbDevices.filters).toEqual([{ vendorId: 1, productId: 2 }, ...defaults.usbFilters]);
         });
 
         it("drops Bluetooth profiles without a name or both characteristics, or with a non-boolean CRC flag", async () => {
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
             const { writeCharacteristic: _write, ...noWrite } = BLE;
-            const flagged = { ...BLE, serviceUuid: "flagged", susceptibleToCrcCorruption: true };
+            const flagged = { ...BLE, name: "Flagged BLE", susceptibleToCrcCorruption: true };
 
             await devices.loadDeviceFilters(
                 buildApiReturning({
@@ -193,16 +249,12 @@ describe("devices", () => {
                 }),
             );
 
-            expect(devices.bluetoothDevices).toEqual([BLE, flagged]);
+            expect(devices.bluetoothDevices).toEqual([BLE, flagged, ...defaults.bluetoothDevices]);
         });
 
-        it("ignores a non-empty list with nothing valid in it, keeping the current list out of the cache", async () => {
+        it("ignores a non-empty list with nothing valid in it, keeping it out of the cache", async () => {
             const devices = await freshDevices();
-            const defaults = {
-                bluetoothDevices: [...devices.bluetoothDevices],
-                usbFilters: [...devices.usbDevices.filters],
-                vendorIdNames: { ...devices.vendorIdNames },
-            };
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(
                 buildApiReturning({
@@ -213,7 +265,7 @@ describe("devices", () => {
                 }),
             );
 
-            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
             expect(devices.bluetoothDevices).toEqual(defaults.bluetoothDevices);
             expect(devices.usbDevices.filters).toEqual(defaults.usbFilters);
             expect(devices.vendorIdNames).toEqual(defaults.vendorIdNames);
@@ -223,20 +275,22 @@ describe("devices", () => {
         it("falls back to the cache when the payload's only list is unusable", async () => {
             cache({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [{ vendorId: "1234" }] }));
 
-            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
             expect(cached()).toEqual({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
         });
 
-        it("clears a list the server sends empty, and caches the empty list", async () => {
+        it("keeps the defaults for a list the server sends empty, and caches the empty list", async () => {
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(buildApiReturning({ usbDevices: { filters: [] }, vendorIdNames: {} }));
 
-            expect(devices.usbDevices.filters).toEqual([]);
-            expect(devices.vendorIdNames).toEqual({});
+            expect(devices.usbDevices.filters).toEqual(defaults.usbFilters);
+            expect(devices.vendorIdNames).toEqual(defaults.vendorIdNames);
             expect(cached()).toEqual({ [STORAGE_KEY]: { usbDevices: { filters: [] }, vendorIdNames: {} } });
         });
 
@@ -244,15 +298,16 @@ describe("devices", () => {
             const OLD_SERIAL = { vendorId: 1, productId: 1 };
             cache({ [STORAGE_KEY]: { bluetoothDevices: [BLE], serialDevices: [OLD_SERIAL] } });
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [SERIAL] }));
 
-            expect(devices.bluetoothDevices).toEqual([BLE]);
-            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(devices.bluetoothDevices).toEqual([BLE, ...defaults.bluetoothDevices]);
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
             expect(cached()).toEqual({ [STORAGE_KEY]: { bluetoothDevices: [BLE], serialDevices: [SERIAL] } });
         });
 
-        it("does not cache the built-in defaults of lists the server never sent", async () => {
+        it("does not cache the built-in defaults", async () => {
             const devices = await freshDevices();
 
             await devices.loadDeviceFilters(buildApiReturning({ serialDevices: [SERIAL] }));
@@ -265,22 +320,23 @@ describe("devices", () => {
                 [STORAGE_KEY]: { serialDevices: [SERIAL, { vendorId: 1 }], bluetoothDevices: [{ serviceUuid: "x" }] },
             });
             const devices = await freshDevices();
-            const defaultBle = [...devices.bluetoothDevices];
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(buildApiReturning(null));
 
-            expect(devices.serialDevices).toEqual([SERIAL]);
-            expect(devices.bluetoothDevices).toEqual(defaultBle);
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
+            expect(devices.bluetoothDevices).toEqual(defaults.bluetoothDevices);
         });
 
         it("keeps prototype keys and non-string names out of the vendor names", async () => {
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
             // JSON.parse makes "__proto__" an own key, as it would arrive from the server.
             const vendorIdNames = JSON.parse('{"__proto__": "x", "constructor": "y", "1": "One", "2": 2}');
 
             await devices.loadDeviceFilters(buildApiReturning({ vendorIdNames }));
 
-            expect(devices.vendorIdNames).toEqual({ 1: "One" });
+            expect(devices.vendorIdNames).toEqual({ ...defaults.vendorIdNames, 1: "One" });
             expect(Object.getPrototypeOf(devices.vendorIdNames)).toBe(Object.prototype);
         });
 
@@ -291,10 +347,11 @@ describe("devices", () => {
         ])("falls back to the cached lists when the server's answer is unusable (%s)", async (_case, remote) => {
             cache({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
             const devices = await freshDevices();
+            const defaults = defaultsOf(devices);
 
             await devices.loadDeviceFilters(buildApiReturning(remote));
 
-            expect(devices.serialDevices).toEqual([SERIAL]);
+            expect(devices.serialDevices).toEqual([SERIAL, ...defaults.serialDevices]);
             expect(cached()).toEqual({ [STORAGE_KEY]: { serialDevices: [SERIAL] } });
         });
 

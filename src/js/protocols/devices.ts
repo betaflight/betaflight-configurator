@@ -217,8 +217,8 @@ interface DeviceFilters {
     vendorIdNames?: Record<string, string>;
 }
 
-// An empty list is an instruction to clear it. A non-empty one with nothing valid in it is a
-// format this version does not understand, so it is ignored rather than allowed to wipe the list.
+// An empty list adds nothing. A non-empty one with nothing valid in it is a format this
+// version does not understand, so it is ignored rather than cached over a usable list.
 function validList<T>(value: unknown, isValid: (entry: unknown) => entry is T): T[] | undefined {
     if (!Array.isArray(value)) {
         return undefined;
@@ -264,30 +264,51 @@ function parseDeviceFilters(data: unknown): DeviceFilters {
     return filters;
 }
 
-/** Replace each list the filters carry; the others keep their contents. */
+/**
+ * The server's entries first, in its order, then each default it did not send. An entry the
+ * server sends under the same key replaces the default, so a stale server list can add devices
+ * but never drop one this version knows.
+ */
+function mergeWithDefaults<T>(server: T[], defaults: readonly T[], key: (entry: T) => string): T[] {
+    const merged = new Map<string, T>();
+    for (const entry of [...server, ...defaults]) {
+        if (!merged.has(key(entry))) {
+            merged.set(key(entry), entry);
+        }
+    }
+    return [...merged.values()];
+}
+
+const usbKey = ({ vendorId, productId }: UsbDeviceId) => `${vendorId}:${productId}`;
+const bluetoothKey = ({ name }: BluetoothDeviceProfile) => name;
+
+/** Merge each list the filters carry into its built-in defaults; the others keep their contents. */
 function applyFilters(filters: DeviceFilters) {
     if (filters.bluetoothDevices) {
-        bluetoothDevices.splice(0, bluetoothDevices.length, ...filters.bluetoothDevices);
+        const merged = mergeWithDefaults(filters.bluetoothDevices, defaultBluetoothDevices, bluetoothKey);
+        bluetoothDevices.splice(0, bluetoothDevices.length, ...merged);
     }
     if (filters.serialDevices) {
-        serialDevices.splice(0, serialDevices.length, ...filters.serialDevices);
-        webSerialDevices.splice(0, webSerialDevices.length, ...filters.serialDevices.map(toWebSerialFilter));
+        const merged = mergeWithDefaults(filters.serialDevices, defaultSerialDevices, usbKey);
+        serialDevices.splice(0, serialDevices.length, ...merged);
+        webSerialDevices.splice(0, webSerialDevices.length, ...merged.map(toWebSerialFilter));
     }
     if (filters.usbDevices) {
-        usbDevices.filters.splice(0, usbDevices.filters.length, ...filters.usbDevices.filters);
+        const merged = mergeWithDefaults(filters.usbDevices.filters, defaultUsbFilters, usbKey);
+        usbDevices.filters.splice(0, usbDevices.filters.length, ...merged);
     }
     if (filters.vendorIdNames) {
         for (const key of Object.keys(vendorIdNames)) {
             delete vendorIdNames[key];
         }
-        Object.assign(vendorIdNames, filters.vendorIdNames);
+        Object.assign(vendorIdNames, defaultVendorIdNames, filters.vendorIdNames);
     }
 }
 
 /**
- * Take the device lists from the build server, on top of those cached from earlier loads, and
- * cache the result. A list neither has sent keeps the built-in default, which is not cached, so
- * a newer app version's defaults still apply to it.
+ * Take the device lists from the build server, on top of those cached from earlier loads, merge
+ * them into the built-in defaults and cache what the server sent. The defaults are not cached, so
+ * a newer app version's defaults still apply.
  */
 export async function loadDeviceFilters(buildApi: Pick<BuildApi, "loadDeviceFilters"> = new BuildApi()): Promise<void> {
     const cached = parseDeviceFilters(getConfig(STORAGE_KEY)?.[STORAGE_KEY]);
