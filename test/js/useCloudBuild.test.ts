@@ -23,7 +23,7 @@ function makeParams() {
         buildApi,
         $t: (key: string) => key,
         setBoardConfig: vi.fn(),
-        processFile: vi.fn(),
+        processFile: vi.fn<(data: Uint8Array, key: string) => Promise<boolean>>().mockResolvedValue(true),
         flashingMessage: vi.fn(),
         enableLoadRemoteFileButton: vi.fn(),
         FLASH_MESSAGE_TYPES: {
@@ -133,6 +133,32 @@ describe("useCloudBuild", () => {
         expect(params.processFile).not.toHaveBeenCalled();
         expect(cloudBuild.state.cloudBuildCommitHash).toBe("");
         expect(cloudBuild.state.cloudBuildCommitDate).toBe("");
+    });
+
+    it("does not record the commit when the firmware cannot be processed", async () => {
+        params.buildApi.requestBuildStatus.mockResolvedValue(successWithCommit);
+        params.processFile.mockResolvedValue(false);
+
+        await cloudBuild.requestCloudBuild(targetDetail, additionalParams);
+
+        expect(params.processFile).toHaveBeenCalledOnce();
+        expect(cloudBuild.state.cloudBuildCommitHash).toBe("");
+        expect(cloudBuild.state.cloudBuildCommitDate).toBe("");
+    });
+
+    it("records the commit only after the firmware has been processed", async () => {
+        params.buildApi.requestBuildStatus.mockResolvedValue(successWithCommit);
+        let finishProcessing: (loaded: boolean) => void = () => {};
+        params.processFile.mockReturnValue(new Promise<boolean>((resolve) => (finishProcessing = resolve)));
+
+        const request = cloudBuild.requestCloudBuild(targetDetail, additionalParams);
+        await vi.waitFor(() => expect(params.processFile).toHaveBeenCalledOnce());
+        expect(cloudBuild.state.cloudBuildCommitHash).toBe("");
+
+        finishProcessing(true);
+        await request;
+
+        expect(cloudBuild.state.cloudBuildCommitHash).toBe("79d8b4aba");
     });
 
     it("clears the previous commit when another build is requested", async () => {

@@ -1224,6 +1224,7 @@ export default defineComponent({
             }
 
             enableLoadRemoteFileButton(true);
+            return !!result;
         };
 
         // Initialize firmware flashing composable
