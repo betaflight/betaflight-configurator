@@ -433,7 +433,7 @@ export class UsbDfuProtocol extends EventTarget {
                 await this.transport.claimInterface(interfaceNumber);
                 console.log(`${this.logHead} Claimed interface: ${interfaceNumber}`);
                 if (this.options!.exitDfu) {
-                    this.leave();
+                    this.leave(true);
                 } else {
                     this.upload_procedure(0);
                 }
@@ -448,7 +448,7 @@ export class UsbDfuProtocol extends EventTarget {
                     await new Promise((resolve) => setTimeout(resolve, delay));
                 } else {
                     console.log(`${this.logHead} Failed to claim USB device`, error);
-                    this.reportOpenFailure();
+                    this.reportOpenFailure(error);
                     this.cleanup();
                     return;
                 }
@@ -1468,7 +1468,7 @@ export class UsbDfuProtocol extends EventTarget {
             this.showProgrammingNotification("programmingSuccessfulNotification");
 
             // proceed to next step
-            this.leave();
+            this.leave(true);
         } else {
             console.log(`${this.logHead} Programming: FAILED`);
             // update progress bar
@@ -1489,7 +1489,7 @@ export class UsbDfuProtocol extends EventTarget {
         }
     }
 
-    leave(): void {
+    leave(succeeded = false): void {
         // leave DFU
         const address = this.hex ? this.hex.data[0].address : 0x08000000;
 
@@ -1498,7 +1498,7 @@ export class UsbDfuProtocol extends EventTarget {
                 // 'downloading' 0 bytes to the program start address followed by a GETSTATUS is used to trigger DFU exit on STM32
                 this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, 0, () => {
                     this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, () => {
-                        this.cleanup(true);
+                        this.cleanup(succeeded);
                     });
                 });
             });
