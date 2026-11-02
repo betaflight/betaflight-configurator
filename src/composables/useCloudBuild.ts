@@ -307,7 +307,7 @@ export function useCloudBuild(params: CloudBuildParams) {
         try {
             const firmware = await loadFirmwareWithRetry(response.url, response.file);
             if (firmware) {
-                processFile(firmware, response.file);
+                await processFile(firmware, response.file);
             }
         } catch (error) {
             console.error("[CLOUD_BUILD] Failed to load firmware:", error);

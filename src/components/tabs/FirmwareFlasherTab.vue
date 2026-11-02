@@ -1511,7 +1511,6 @@ export default defineComponent({
 
         const processFirmwareFile = async (file: PickedFile, extension: string, data: FirmwareData) => {
             state.localFirmwareLoaded = true;
-            cloudBuild.clearCommitInfo();
             const result = await firmwareFlashing.processFirmware(data, extension, {
                 enableFlashButton,
                 enableLoadRemoteFileButton: () => {}, // Don't enable remote button for local files
@@ -1521,6 +1520,7 @@ export default defineComponent({
             });
             if (result) {
                 state.firmware_type = result.firmwareType;
+                cloudBuild.clearCommitInfo();
             }
             enableLoadFileButton(true);
         };
