@@ -17,6 +17,7 @@
         "windows": [
             {
                 "title": "Betaflight",
+                "create": false,
                 "width": 1024,
                 "height": 550,
                 "minWidth": 1024,

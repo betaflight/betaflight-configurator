@@ -465,17 +465,17 @@
     "tabOptions": {
         "message": "Options"
     },
-    "sidebarOpenOptions": {
-        "message": "Options",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+    "sidebarSettingsMenu": {
+        "message": "Settings",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "Toggle dark / light mode",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Toggle expert mode",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Setup"
@@ -649,8 +649,9 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-    "logActionShow": {
-        "message": "Show Log"
+    "logActionOpenWindow": {
+        "message": "Open in new window",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "Log"
