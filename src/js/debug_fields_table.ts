@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  9d7064b8af 2026-10-26  (580 annotated fields)
+ *   API 1.49.0  ef56971949 2026-11-02  (580 annotated fields)
  */
 
 /**
@@ -240,7 +240,22 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             4: Object.freeze({ label: "D Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             5: Object.freeze({ label: "A Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             6: Object.freeze({ label: "Feedforward Term (dbg-axis)", unit: "deg", scale: 0.1 }),
-            7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+            7: Object.freeze({
+                label: "Status Flags",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze([
+                    "Nav Active",
+                    "Anchor Off",
+                    "Abort Nav",
+                    "Position Held",
+                    "Sticks Active",
+                    "Braking",
+                    "Control Failure",
+                    "Force Pitch Fwd",
+                    "Sensors Not Ok",
+                ]),
+            }),
         }),
         AUTOPILOT_STOP: Object.freeze({
             0: Object.freeze({ label: "Velocity Error East", unit: "cm/s", scale: 1 }),
@@ -249,8 +264,23 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             3: Object.freeze({ label: "PID Sum North", unit: "deg", scale: 0.1 }),
             4: Object.freeze({ label: "Roll Angle Command", unit: "deg", scale: 0.1 }),
             5: Object.freeze({ label: "Pitch Angle Command", unit: "deg", scale: 0.1 }),
-            6: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
-            7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+            6: Object.freeze({
+                label: "Status Flags",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze([
+                    "Nav Active",
+                    "Anchor Off",
+                    "Abort Nav",
+                    "Position Held",
+                    "Sticks Active",
+                    "Braking",
+                    "Control Failure",
+                    "Force Pitch Fwd",
+                    "Sensors Not Ok",
+                ]),
+            }),
+            7: Object.freeze({ label: "Braking Time", unit: "s", scale: 0.01 }),
         }),
         BARO: Object.freeze({
             0: Object.freeze({
@@ -378,7 +408,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
         DSHOT_TELEMETRY_COUNTS: Object.freeze({
             0: Object.freeze({ label: "Telemetry Packets Read", unit: null, scale: 1 }),
             1: Object.freeze({ label: "Missing Edge Count", unit: null, scale: 1 }),
-            2: Object.freeze({ label: "Failed Frame Count", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Reception Timeout Count", unit: null, scale: 1 }),
             3: Object.freeze({ label: "Preamble Skip", unit: null, scale: 1 }),
         }),
         DYN_IDLE: Object.freeze({
@@ -847,7 +877,12 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             4: Object.freeze({ label: "I Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             5: Object.freeze({ label: "D Term (dbg-axis)", unit: "deg", scale: 0.1 }),
             6: Object.freeze({ label: "A Term (dbg-axis)", unit: "deg", scale: 0.1 }),
-            7: Object.freeze({ label: "Status Flags", unit: null, scale: 1 }),
+            7: Object.freeze({
+                label: "Status Flags",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze(["Anchor Off", "Buildup Clamped"]),
+            }),
         }),
         RANGEFINDER: Object.freeze({
             1: Object.freeze({ label: "Raw Altitude", unit: "cm", scale: 1 }),
