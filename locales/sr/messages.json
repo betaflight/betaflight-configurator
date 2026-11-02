@@ -3907,21 +3907,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Ručni izbor baud rate-a za pločice koje ne podržavaju fabričku brzinu ili za flešovanje putem Bluetooth-a.<br /><span class=\"message-negative\">Napomena:</span> Ne koristi se prilikom flešovanja putem USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Prikaži kandidate za izdanje"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Prikaži kandidate za izdanje pored stabilnih izdanja"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Zvanično izdanje"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Zvanično izdanje i kandidat za izdanje"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Razvojna verzija"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Izaberite verziju firmvera"
     },
@@ -4078,9 +4063,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Spremate se da flešujete <strong>razvojnu verziju firmvera</strong>. Ove verzije su u procesu izrade i bilo šta od sledećeg može biti slučaj:<strong><ul><li>firmver uopšte ne radi;</li><li>sa firmverom se ne može leteti;</li><li>postoje bezbednosni problemi sa firmverom, na primer odletanje letelice;</li><li>firmver može uzrokovati da flight kontroler postane neodzivan ili da se ošteti</li></ul></strong>Ako nastavite sa flešovanjem ovog firmvera, <strong>preuzimate punu odgovornost za rizik od bilo kog od gore navedenih događaja</strong>. Takođe potvrđujete da je neophodno izvršiti <strong>temeljna testiranja na stolu bez propeler</strong> pre bilo kakvog pokušaja letenja sa ovim firmverom."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Pročitao sam gore navedeno i <strong>preuzimam punu odgovornost<strong> za upis nestabilnog firmvera"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flešuj"

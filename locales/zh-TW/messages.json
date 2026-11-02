@@ -1634,18 +1634,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "如果飛控不支援默認的鮑率，或者要通過藍芽模塊来烧录，可以手動設置鮑率。<br /><span class=\"message-negative\">注意：</span> USB DFU 燒錄時該選項無效。"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "除了穩定的版本外，還顯示候選版本"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "正式版"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "正式版和候選正式版"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "開發版"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "選擇固件版本"
     },

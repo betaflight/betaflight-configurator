@@ -4018,21 +4018,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Ручний вибір швидкості передачі даних для контролерів, які не підтримують стандартну швидкість або для прошивки за допомогою bluetooth.<br /><span class=\"message-negative\">Примітка.</span> Не використовується при прошивці через USB DFU (Device Firmware Upgrade Mode)"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Показувати кандидатів на реліз"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Показувати кандидатів на реліз на додачу до стабільних релізів"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Релізи"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Релізи та кандидати на реліз"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "В розробці"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Оберіть версію прошивки"
     },
@@ -4192,9 +4177,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Ви збираєтесь прошити <strong>розробницьку версію прошивки</strong>. Ця версія знаходяться в процесі розробки, і може мати будь-яку з наступних проблем:<strong><ul><li>прошивка взагалі не працює;</li><li>прошивка не придатна для польоту;</li><li>є проблеми з безпекою пов'язані з прошивкою, наприклад, самовільні польоти;</li><li>прошивка може призвести до того, що польотний контролер стане несправним або буде пошкоджений</li></ul></strong>Якщо продовжите процес прошивки цієї версії прошивки, <strong>ви несете повну відповідальність за ризик, пов'язаний з будь-якою з цих проблем</strong>. Крім того, ви погоджуєтесь на те, що необхідно провести <strong>ретельні тестування на столі без пропелерів</strong> перед будь-якою спробою польоту з цією прошивкою."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Я прочитав вищезазначене і <strong>беру на себе повну відповідальність</strong> за встановлення нестабільної прошивки"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Прошити"

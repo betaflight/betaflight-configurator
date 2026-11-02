@@ -31,6 +31,18 @@
     "search": {
         "message": "ძებნა"
     },
+    "settingsSearchTitle": {
+        "message": "ძიების პარამეტრები",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "ძიების პარამეტრები...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "პარამეტრები არ მოიძებნა",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "მეორედ არ მაჩვენო"
     },
@@ -373,6 +385,9 @@
     },
     "sensorConfigHardware": {
         "message": "სენსორის აპარატურა"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "აქტიური გირო"
     },
     "sensorConfigGyroLabel": {
         "message": "გირო $1"
@@ -1313,6 +1328,12 @@
     },
     "initialSetupAccelCalibEnded": {
         "message": "აქსელელომეტრის კალიბრაცია<span class=\"message-positive\">დასრულდა</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "დაიწყო მაგნეტომეტრის კალიბრაცია"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "მაგნეტომეტრისკალიბრაცია<span class=\"message-positive\">დასრულდა</span>"
     },
     "initialSetupSettingsRestored": {
         "message": "პარამეტრები აღდგენილია <strong> ნაგულისხმევზე </strong>"
@@ -3989,6 +4010,12 @@
     "firmwareFlasherNoReboot": {
         "message": "არაა გადატვირთვის თანმიმდევრობა"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "აწყობის ტიპი"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "დაფა"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "აირჩიეთ შენების ტიპი რომ ნახოთ ხელმისაწვდომი დაფები."
     },
@@ -4022,20 +4049,20 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "ბაუდის სიჩქარის ხელით შერჩევა დაფებისთვის, რომლებსაც არ გააჩნიათ ნაგულისხმევი სიჩქარე, ან ბლუთუზით ციმციმებისთვის.<br /><span class=\"message-negative\">შენიშვნა:</span> არ გამოიყენება USB DFU-ით ციმციმისას"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "მაჩვენე გამოშვების კანდიდატები"
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "რელიზის პარამეტრების ჩვენება"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "მაჩვენე გამოშბის კანდიდატები სტაბილურ ვერსიებთან ერთად"
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "აირჩიეთ, რომელი რელიზები გამოჩნდეს"
     },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "გამოშვება"
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "რელიზების ჩვენება"
     },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "გამოსვება და გამოსვების კანდიდატი"
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "ყველა რელიზის ჩვენება"
     },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "დამუშავების პროცესში მყოფი პროგრამა"
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "სადეველოპერო (Development) რელიზების ჩვენება"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "აირჩიე პროგრამის ვერსია"
@@ -4197,8 +4224,8 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "თქვენ აპირებთ ჩართოთ firmware</strong><strong>განვითარების კონსტრუქცია. ეს კონსტრუქციები დამუშავების პროცესშია და შეიძლება იყოს რომელიმე შემდეგი:<strong><ul><li>firmware საერთოდ არ მუშაობს;</li><li>firmware არ არის შესაძლებელი; fluaways</li><li> firmware-მ შეიძლება გამოიწვიოს ფრენის კონტროლერი უპასუხოდ ან დაზიანდეს</li></ul></strong>თუ თქვენ გააგრძელებთ ამ პროგრამული უზრუნველყოფის ციმციმებს, <strong>თქვენ იღებთ რისკს__0 სრულ პასუხისმგებლობაზე__0 გარდა ამისა, თქვენ აცნობიერებთ, რომ აუცილებელია ჩაატაროთ <strong>საფუძვლიანი ტესტები სკამზე გამორთული საყრდენებით</strong> ამ პროგრამული უზრუნველყოფის ფრენის მცდელობამდე."
     },
-    "unstableFirmwareAcknowledgement": {
-        "message": "მე წავიკითხე ზემოთ და <strong>ვიღებ სრულ პასუხისმგებლობას</strong> არასტაბილური პროგრამული უზრუნველყოფის ციმციმისთვის"
+    "developmentFirmwareAcknowledgement": {
+        "message": "მე წავიკითხე ზემოთ და <strong>ვიღებ სრულ პასუხისმგებლობას</strong> არასტაბილური პროგრამული უზრუნველყოფის ჩაწერისთვის"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "ფლეში"
@@ -7378,6 +7405,15 @@
     "magCalibrationUnguidedDone": {
         "message": "პროგრამული უზრუნველყოფის კალიბრაცია დასრულდა!"
     },
+    "magCalibrationNotSent": {
+        "message": "კალიბრაცია ვერ დაიწყო: ფრენის კონტროლერმა ბრძანება ვერ მიიღო."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "იწყება..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "მიმდინარეობს კალიბრაცია... {{seconds}}წმ"
+    },
     "magCalibrationCheck": {
         "message": "შემოწმება"
     },
@@ -8840,6 +8876,30 @@
     "preflightFlightWindow": {
         "message": "ფრენის ფანჯარა"
     },
+    "preflightTimelineDescription": {
+        "message": "დროის ზოლი, რომელიც აჩვენებს ღამეს, ლურჯ საათს, ოქროს საათს და დღის სინათლეს, მზის ამოსვლისა და ჩასვლის მარკერებით"
+    },
+    "preflightTimelineHelp": {
+        "message": "მიიტანეთ კურსორი, შეეხეთ ან მონიშნეთ სეგმენტი მისი დროის სანახავად. გამოიყენეთ ლეგენდა შესაბამისი ტიპის ყველა პერიოდის გამოსაკვეთად."
+    },
+    "preflightTimelineHint": {
+        "message": "ზუსტი დროის სანახავად მიიტანეთ კურსორი ან შეეხეთ სეგმენტს."
+    },
+    "preflightTimelineNight": {
+        "message": "ღამე და სხვა ბინდი"
+    },
+    "preflightBlueHour": {
+        "message": "ლურჯი საათი"
+    },
+    "preflightGoldenHour": {
+        "message": "ოქროს საათი"
+    },
+    "preflightMorning": {
+        "message": "დილა"
+    },
+    "preflightEvening": {
+        "message": "საღამო"
+    },
     "preflightSunrise": {
         "message": "მზის ამოსვლა"
     },
@@ -8854,6 +8914,9 @@
     },
     "preflightTempRange": {
         "message": "ტემპერატურის დიაპაზონი"
+    },
+    "preflightNow": {
+        "message": "ახლა"
     },
     "preflightCurrentlyDay": {
         "message": "ამჟამად"

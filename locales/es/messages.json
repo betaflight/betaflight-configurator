@@ -3509,21 +3509,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Selección manual de la velocidad de transmisión para placas que no soportan la velocidad por defecto o para instalar por bluetooth.<br /><span class=\"message-negative\">Nota:</span> No se usa cuando la instalación es por USB DFU."
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostrar versiones candidatas"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Mostrar versiones candidatas además de versiones estables"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Versiones Finales"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Versiones Finales y Versiones Candidatas"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Desarrollo"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Elige una versión de Firmware"
     },
@@ -3680,9 +3665,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Estás a punto de instalar una <strong>versión en desarrollo del firmware</strong>. Estas versiones son un trabajo en curso, y puede que suceda cualquiera de estas situaciones:<strong><ul><li>el firmware no funcione en absoluto;</li><li>el firmware no sea volable;</li><li>haya problemas de seguridad con el firmware, por ejemplo que se vaya volando;</li><li>el firmware puede causar que la controladora no responda, o quede dañada;</li></ul></strong>Si decides instalar este firmware, <strong>estás asumiendo toda la responsabilidad por el riesgo de que cualquiera de las situaciones anteriores suceda</strong>. Además reconoces que es necesario realizar <strong>pruebas completas de banco sin hélices</strong> antes de cualquier intento de volar este firmware."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "He leído lo anterior y <strong>asumo toda la responsabilidad</strong> de instalar firmware inestable"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Instalar"

@@ -2578,21 +2578,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Manuelle Auswahl der Baudrate für FCs, die nicht mit der Standardrate funktionieren, oder fürs flashen via Bluetooth.<br /><span class=\"message-negative\">Hinweis:</span> Wird beim flashen via USB-DFU NICHT verwendet"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Vorabversionen anzeigen (release candidates)"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Zeige Vorabversionen zusätzlich zu stabilen Versionen an"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Release (stabile Versionen)"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Release And Release Candidate (stabile und Vorabversionen)"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Development (momentan in der Entwicklung)"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Wähle eine Firmwareversion"
     },

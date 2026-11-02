@@ -3893,21 +3893,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Standart tezlikni qo‘llab-quvvatlamaydigan platalar uchun yoki bluetooth orqali yozish uchun boud tezligini qo‘lda tanlash.<br /><span class=\"message-negative\">Eslatma:</span> USB DFU orqali yozishda ishlatilmaydi"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Reliz nomzodlarini ko‘rsatish"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Barqaror chiqarilishlarga qo‘shimcha ravishda chiqarilish nomzodlarini ko‘rsatish"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Reliz"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Chiqarilish va Chiqarilish nomzodi"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Ishlab chiqish"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Proshivka versiyasini tanlang"
     },
@@ -4064,9 +4049,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Siz proshivkaning <strong>ishlab chiqish versiyasini</strong> yozmoqchisiz. Bu versiyalar hali tugallanmagan va quyidagilarning har biri ro‘y berishi mumkin:<strong><ul><li>proshivka umuman ishlamasligi mumkin;</li><li>proshivka uchishga yaroqsiz bo‘lishi mumkin;</li><li>proshivkada xavfsizlik muammolari, masalan uchib ketishlar bo‘lishi mumkin</li><li>proshivka parvoz kontrollerini javob bermaydigan holga keltirishi yoki unga zarar yetkazishi mumkin</li></ul></strong>Agar ushbu proshivkani yozishda davom etsangiz, <strong>yuqoridagilarning har birining ro‘y berish xavfini to‘liq o‘z zimmangizga olasiz</strong>. Bundan tashqari, siz ushbu proshivka bilan uchishga har qanday urinishdan oldin <strong>vintlarsiz holda batafsil stend sinovlarini</strong> o‘tkazish zarurligini tan olasiz."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Men yuqoridagilarni o‘qidim va beqaror proshivkani yozish uchun <strong>to‘liq javobgarlikni o‘z zimmamga olaman</strong>"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Yozish"

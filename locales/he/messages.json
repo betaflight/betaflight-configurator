@@ -950,7 +950,7 @@
         "message": "תרומה"
     },
     "defaultContributingText": {
-        "message": "אם תרצה לעזור להפוך את Betaflight לטובה עוד יותר תוכל לעזור בדרכים רבות, כולל:<br /><ul><li>שימוש בידע שלך ב-Betaflight כדי ליצור או לעדכן תוכן ב<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">wiki שלנו</a>, או לענות על שאלות של משתמשים אחרים בפורומים מקוונים.</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">תרומת קוד</a> לקושחה ולאפליקציה - תכונות חדשות, תיקונים, שיפורים.</li><li>בדיקת <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">תכונות ותיקונים חדשים</a> ומתן משוב.</li><li>עזרה למשתמשים אחרים לפתור את הבעיות שהם מדווחים עליהן ב<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">מעקב הבעיות (Issue tracker) שלנו</a>, והשתתפות בדיונים על בקשות לתכונות.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">תרגום</a> אפליקציית Betaflight לשפה חדשה, או עזרה בתחזוקת התרגומים הקיימים.</li></ul>"
+        "message": "אם תרצה לעזור להפוך את Betaflight לטובה עוד יותר תוכל לעזור בדרכים רבות, כולל:<br /><ul><li>שימוש בידע שלך ב-Betaflight כדי ליצור או לעדכן תוכן ב<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">wiki שלנו</a>, או לענות על שאלות של משתמשים אחרים בפורומים מקוונים.</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">תרומת קוד</a> לקושחה ולאפליקציה - תכונות חדשות, תיקונים, שיפורים.</li><li>בדיקת <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">תכונות ותיקונים חדשים</a> ומתן משוב.</li><li>עזרה למשתמשים אחרים לפתור את הבעיות שהם מדווחים עליהן ב<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">מעקב הבעיות שלנו</a>, והשתתפות בדיונים על בקשות לתכונות.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">תרגום</a> אפליקציית Betaflight לשפה חדשה, או עזרה בתחזוקת התרגומים הקיימים.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "יש לנו גם <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">קבוצת פייסבוק</a>.<br />הצטרף אלינו כדי לקבל מקום לדבר על Betaflight, לשאול שאלות תצורה, או פשוט לבלות עם טייסים אחרים."
@@ -1324,6 +1324,12 @@
     },
     "initialSetupAccelCalibEnded": {
         "message": "כיול מד התאוצה <span class=\"message-positive\">הסתיים</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "כיול מגנטומטר התחיל"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "כיול מגנטומטר<span class=\"message-positive\">הסתיים</span>"
     },
     "initialSetupSettingsRestored": {
         "message": "ההגדרות שוחזרו ל<strong>ברירת מחדל</strong>"
@@ -2855,7 +2861,7 @@
         "description": "Help text to LEDLOW mode"
     },
     "auxiliaryHelpMode_MAG": {
-        "message": "נעילת כיוון לפי המגנומטר (שליטת מצפן)",
+        "message": "נעילת כיוון לפי המגנטומטר (שליטת מצפן)",
         "description": "Help text to MAG mode"
     },
     "auxiliaryHelpMode_MSPOVERRIDE": {
@@ -3137,7 +3143,7 @@
         "message": "GPS"
     },
     "gpsHeadHelp": {
-        "message": "מציג מידע שונה הקשור ל-GPS. כיוון מוצג רק כאשר משתמשים במגנומטר",
+        "message": "מציג מידע שונה הקשור ל-GPS. כיוון מוצג רק כאשר משתמשים במגנטומטר",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3697,7 +3703,7 @@
         "message": "מד תאוצה"
     },
     "sensorsMagSelect": {
-        "message": "מגנומטר"
+        "message": "מגנטומטר"
     },
     "sensorsAltitudeSelect": {
         "message": "גובה"
@@ -3718,7 +3724,7 @@
         "message": "מד תאוצה - g"
     },
     "sensorsMagTitle": {
-        "message": "מגנומטר"
+        "message": "מגנטומטר"
     },
     "sensorsAltitudeTitle": {
         "message": "גובה - מטרים"
@@ -4039,21 +4045,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "בחירה ידנית של קצב השידור עבור לוחות שלא תומכים במהירות ברירת המחדל, או לצריבה דרך בלוטוס.<br /><span class=\"message-negative\">הערה:</span> לא בשימוש בזמן צריבה דרך USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "הצג מועמדים לשחרור"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "הצג גרסאות 'מועמדות לשחרור' (RC) בנוסף לגרסאות יציבות"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "שחרור רשמי"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "שחרור ומועמד לשחרור"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "פיתוח"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "בחר גרסת קושחה"
     },
@@ -4213,9 +4204,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "אתה עומד לצרוב <strong>גרסת מפתחים של הקושחה</strong>. אלו גרסאות שנמצאות בתהליכי עבודה, וכל אחד מהמקרים הבאים עלול לקרות:<strong><ul><li>הקושחה לא תעבוד בכלל;</li><li>לא יהיה ניתן להטיס את הרחפן עם הקושחה הזו;</li><li>ישנן בעיות בטיחות בקושחה, למשל בריחת כלי הטיס (Flyaways)</li><li>הקושחה עלולה לגרום לבקר הטיסה להפסיק להגיב, או להיהרס לחלוטין</li></ul></strong>אם תמשיך עם צריבת הקושחה הזו, <strong>אתה לוקח על עצמך אחריות מלאה לסיכון שכל אחד מהמקרים הנ\"ל יקרה</strong>. בנוסף אתה מאשר שחובה לבצע <strong>בדיקות שולחן (Bench tests) יסודיות ללא פרופלורים</strong> לפני כל ניסיון להטיס עם קושחה זו."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "קראתי את האמור לעיל ואני <strong>לוקח אחריות מלאה<strong> לצריבת קושחה לא יציבה זו"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "צרוב (Flash)"
@@ -4602,7 +4590,7 @@
         "message": "ברומטר ו - Sonar /גובה"
     },
     "pidTuningMag": {
-        "message": "מגנומטר/כיוון (Heading)"
+        "message": "מגנטומטר/כיוון (Heading)"
     },
     "pidTuningGps": {
         "message": "ניווט GPS"
@@ -7309,7 +7297,7 @@
         "message": "Pitot"
     },
     "configurationMagHardware": {
-        "message": "מגנומטר (אם נתמך)"
+        "message": "מגנטומטר (אם נתמך)"
     },
     "configurationMagDeclinationSet": {
         "message": "הנטייה המגנטית הוגדרה ל - {{declination}}° מהמיקום שזוהה."
@@ -7394,6 +7382,15 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "כיול הקושחה הושלם!"
+    },
+    "magCalibrationNotSent": {
+        "message": "הכיול לא יכול היה להתחיל: בקר הטיסה לא קיבל את הפקודה."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "מתחיל..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "מכייל... {{seconds}} שניות"
     },
     "magCalibrationCheck": {
         "message": "בדיקה"
