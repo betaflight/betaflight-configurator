@@ -167,4 +167,18 @@ describe("hasCustomDefaultsArea", () => {
     it("is false for an image whose area is empty", () => {
         expect(hasCustomDefaultsArea(image(pointers(AREA_START, AREA_START)))).toBe(false);
     });
+
+    it("is false when the image ends inside the pointer", () => {
+        const truncated = block(POINTER_ADDRESS, le32(AREA_START).concat(0x00, 0x40));
+
+        expect(hasCustomDefaultsArea(image(truncated))).toBe(false);
+        expect(new ConfigInserter().insertConfig(image(truncated), "x")).toBe(false);
+    });
+
+    it("is false when the pointer runs into a gap in the image", () => {
+        const bytes = [...le32(AREA_START), ...le32(AREA_START + 0x4000)];
+        const gapped = image(block(POINTER_ADDRESS, bytes.slice(0, 3)), block(POINTER_ADDRESS + 4, bytes.slice(3)));
+
+        expect(hasCustomDefaultsArea(gapped)).toBe(false);
+    });
 });
