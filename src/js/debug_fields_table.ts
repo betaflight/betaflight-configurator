@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  ef56971949 2026-11-02  (580 annotated fields)
+ *   API 1.49.0  9d7064b8af 2026-10-26  (580 annotated fields)
  */
 
 /**
@@ -408,7 +408,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
         DSHOT_TELEMETRY_COUNTS: Object.freeze({
             0: Object.freeze({ label: "Telemetry Packets Read", unit: null, scale: 1 }),
             1: Object.freeze({ label: "Missing Edge Count", unit: null, scale: 1 }),
-            2: Object.freeze({ label: "Reception Timeout Count", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "Failed Frame Count", unit: null, scale: 1 }),
             3: Object.freeze({ label: "Preamble Skip", unit: null, scale: 1 }),
         }),
         DYN_IDLE: Object.freeze({
