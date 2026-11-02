@@ -60,10 +60,13 @@ const accessDenied = () => {
     return error;
 };
 
+const flashMessageTypes = { INVALID: "INVALID" };
+
 /** Drive openDevice() and let its promise chain (including cleanup) settle. */
-async function runOpen(transport) {
+async function runOpen(transport, options = {}) {
     const dfu = new UsbDfuProtocol(transport);
     dfu.connectedDevice = { path: "usb_test", port: {} };
+    dfu.options = { flashMessageTypes, ...options };
     dfu.openDevice();
     for (let i = 0; i < 10; i++) {
         await Promise.resolve();
@@ -118,6 +121,40 @@ describe("DFU open failure diagnostics", () => {
 
         expect(transport.released).toEqual([0]);
         expect(transport.closeCount).toBe(1);
+    });
+
+    it.each([
+        ["Linux", accessDenied, "dfuDeviceAccessDeniedLinux"],
+        ["Windows", accessDenied, "dfuDeviceAccessDeniedWindows"],
+        ["MacOS", accessDenied, "dfuDeviceOpenFailed"],
+        [
+            "Windows",
+            () => Object.assign(new Error("The device was disconnected."), { name: "NetworkError" }),
+            "dfuDeviceOpenFailed",
+        ],
+    ])("reports the failure in the flash status on %s and releases the flasher", async (os, makeError, key) => {
+        getOS.mockReturnValue(os);
+        const calls = [];
+        const flashingMessage = vi.fn((message, type) => calls.push(["message", message, type]));
+        const resetFlashingState = vi.fn(() => calls.push(["reset"]));
+
+        await runOpen(new FailingOpenTransport(makeError()), { flashingMessage, resetFlashingState });
+
+        expect(calls).toEqual([["message", key, "INVALID"], ["reset"]]);
+    });
+
+    it("reports a device that has gone before it could be opened", async () => {
+        const flashingMessage = vi.fn();
+        const resetFlashingState = vi.fn();
+        const transport = new FailingOpenTransport(accessDenied());
+        const dfu = new UsbDfuProtocol(transport);
+        vi.spyOn(dfu, "getDevices").mockResolvedValue([]);
+
+        await dfu.connect("usb_gone", null, { flashingMessage, resetFlashingState, flashMessageTypes });
+
+        expect(flashingMessage).toHaveBeenLastCalledWith("dfuDeviceOpenFailed", "INVALID");
+        expect(resetFlashingState).toHaveBeenCalledOnce();
+        expect(dfu._connecting).toBe(false);
     });
 
     it("treats releaseInterface as a no-op when no device was ever opened", async () => {

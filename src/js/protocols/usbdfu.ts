@@ -161,10 +161,14 @@ export interface DfuConnectOptions {
     flashingMessage?(message: string | null, type?: string): unknown;
     flashProgress?(progress: number): unknown;
     flashMessageTypes?: Partial<Record<FlashMessageType, string>>;
+    resetFlashingState?(): void;
 }
 
 /** connect()'s options, normalised. */
-interface DfuFlashOptions extends Pick<DfuConnectOptions, "flashingMessage" | "flashProgress" | "flashMessageTypes"> {
+interface DfuFlashOptions extends Pick<
+    DfuConnectOptions,
+    "flashingMessage" | "flashProgress" | "flashMessageTypes" | "resetFlashingState"
+> {
     erase_chip: boolean;
     exitDfu: boolean;
 }
@@ -321,6 +325,7 @@ export class UsbDfuProtocol extends EventTarget {
             flashingMessage: options?.flashingMessage,
             flashProgress: options?.flashProgress,
             flashMessageTypes: options?.flashMessageTypes,
+            resetFlashingState: options?.resetFlashingState,
         };
 
         if (options?.exitDfu) {
@@ -350,18 +355,14 @@ export class UsbDfuProtocol extends EventTarget {
             deviceFound = devices.find((device) => device.path === devicePath);
         } catch (error) {
             console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
-            gui_log(i18n.getMessage("usbDeviceOpenFail"));
-            this._connecting = false;
-            connectionStore.connectLock = false;
-            this.callback?.();
-            return;
         }
 
         if (!deviceFound) {
             console.error(`${this.logHead} Device not found: ${devicePath}`);
-            gui_log(i18n.getMessage("usbDeviceOpenFail"));
+            this.reportOpenFailure();
             this._connecting = false;
             connectionStore.connectLock = false;
+            this.options?.resetFlashingState?.();
             this.callback?.();
             return;
         }
@@ -386,15 +387,31 @@ export class UsbDfuProtocol extends EventTarget {
             })
             .catch((error: unknown) => {
                 console.log(`${this.logHead} Failed to open USB device:`, error);
-                gui_log(i18n.getMessage("usbDeviceOpenFail"));
-                // A SecurityError from open() means the OS refused access to the device node.
-                // On Linux that is a missing udev rule for the bootloader's vendor ID, which the
-                // bare "failed to open" message gives no clue about.
-                if ((error as Error | undefined)?.name === "SecurityError" && getOS() === "Linux") {
-                    gui_log(i18n.getMessage("usbDeviceUdevNotice"));
-                }
+                this.reportOpenFailure(error);
                 this.cleanup();
             });
+    }
+
+    /**
+     * A SecurityError from open() means the OS refused access to the device node: a missing
+     * udev rule for the bootloader's vendor ID on Linux, a non-WinUSB driver bound to it on Windows.
+     */
+    private reportOpenFailure(error?: unknown): void {
+        const accessDenied = (error as Error | undefined)?.name === "SecurityError";
+        const os = getOS();
+
+        gui_log(i18n.getMessage("usbDeviceOpenFail"));
+        if (accessDenied && os === "Linux") {
+            gui_log(i18n.getMessage("usbDeviceUdevNotice"));
+        }
+
+        let statusKey = "dfuDeviceOpenFailed";
+        if (accessDenied && os === "Linux") {
+            statusKey = "dfuDeviceAccessDeniedLinux";
+        } else if (accessDenied && os === "Windows") {
+            statusKey = "dfuDeviceAccessDeniedWindows";
+        }
+        this.flashingMessage(i18n.getMessage(statusKey), this.options?.flashMessageTypes?.INVALID);
     }
 
     closeDevice(): void {
@@ -431,6 +448,7 @@ export class UsbDfuProtocol extends EventTarget {
                     await new Promise((resolve) => setTimeout(resolve, delay));
                 } else {
                     console.log(`${this.logHead} Failed to claim USB device`, error);
+                    this.reportOpenFailure();
                     this.cleanup();
                     return;
                 }
@@ -1480,19 +1498,23 @@ export class UsbDfuProtocol extends EventTarget {
                 // 'downloading' 0 bytes to the program start address followed by a GETSTATUS is used to trigger DFU exit on STM32
                 this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, 0, () => {
                     this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, () => {
-                        this.cleanup();
+                        this.cleanup(true);
                     });
                 });
             });
         });
     }
 
-    cleanup(): void {
+    cleanup(succeeded = false): void {
         const connectionStore = useConnectionStore();
         this._connecting = false;
         this.releaseInterface(0);
 
         connectionStore.connectLock = false;
+
+        if (!succeeded) {
+            this.options?.resetFlashingState?.();
+        }
 
         const timeSpent = Date.now() - this.upload_time_start!;
 
