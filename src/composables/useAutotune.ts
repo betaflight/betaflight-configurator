@@ -319,6 +319,7 @@ function computeAxisResult(
 
 async function applyGains(proposed: ProposedSliders) {
     const fcStore = useFlightControllerStore();
+    await MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
     // Object.keys widens to string[]; the keys are the proposal's own.
     for (const key of Object.keys(proposed) as (keyof ProposedSliders)[]) {
         if (key in fcStore.tuningSliders) {
