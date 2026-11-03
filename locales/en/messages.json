@@ -9293,6 +9293,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "Advanced"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "Pitot sensor"
+    },
     "pidTuningWingTpaCurveType": {
         "message": "Curve type"
     },
@@ -9313,6 +9316,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "Advanced speed setup"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Pitot speed setup"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "Delay"
@@ -9367,6 +9373,12 @@
     },
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "Pitch offset in degrees*10 for craft speed estimation"
+    },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "Maximal pitot airspeed"
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "Planes maximal airspeed by Pitot sensor"
     },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "Hyperbolic curve settings"
