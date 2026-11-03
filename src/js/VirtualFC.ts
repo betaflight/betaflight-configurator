@@ -264,6 +264,10 @@ const VirtualFC = {
         }
 
         fcStore.ledStrip = Array.from({ length: 256 });
+        fcStore.ledStripAdvanced = true;
+        fcStore.ledStripProfile = 2;
+        fcStore.ledConfigValues = { brightness: 100, rainbow_delta: 0, rainbow_freq: 120 };
+        fcStore.ledConfigValuesLoaded = true;
 
         for (let i = 0; i < fcStore.ledStrip.length; i++) {
             fcStore.ledStrip[i] = {
