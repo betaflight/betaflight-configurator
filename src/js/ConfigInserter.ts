@@ -56,32 +56,43 @@ function seek(firmware: ParsedHex, address: number): ImageIndex {
     return result;
 }
 
-// Only called once seek() has found the address inside a block, so byteIndex is set.
-function readUint32(firmware: ParsedHex, index: Required<ImageIndex>): number {
+/** The `count` bytes stored from `address` on, or undefined when the image does not hold every one of them. */
+function readBytes(firmware: ParsedHex, address: number, count: number): number[] | undefined {
+    const bytes: number[] = [];
+    for (let offset = 0; offset < count; offset++) {
+        const index = seek(firmware, address + offset);
+        if (index.byteIndex === undefined) {
+            return undefined;
+        }
+        bytes.push(firmware.data[index.lineIndex].data[index.byteIndex]);
+    }
+
+    return bytes;
+}
+
+function uint32At(bytes: number[], offset: number): number {
     let result = 0;
     for (let position = 0; position < 4; position++) {
-        result += firmware.data[index.lineIndex].data[index.byteIndex++] << (8 * position);
-        if (index.byteIndex >= firmware.data[index.lineIndex].bytes) {
-            index.lineIndex++;
-            index.byteIndex = 0;
-        }
+        result += bytes[offset + position] << (8 * position);
     }
 
     return result;
 }
 
 function getCustomDefaultsArea(firmware: ParsedHex): CustomDefaultsArea | undefined {
-    const index = seek(firmware, CUSTOM_DEFAULTS_POINTER_ADDRESS);
+    const pointers = readBytes(firmware, CUSTOM_DEFAULTS_POINTER_ADDRESS, 8);
 
-    if (index.byteIndex === undefined) {
+    if (!pointers) {
         return;
     }
 
-    const position = { lineIndex: index.lineIndex, byteIndex: index.byteIndex };
-    const startAddress = readUint32(firmware, position);
-    const endAddress = readUint32(firmware, position);
+    return { startAddress: uint32At(pointers, 0), endAddress: uint32At(pointers, 4) };
+}
 
-    return { startAddress, endAddress };
+/** True when the image reserves a custom defaults area that a board config can be written into. */
+export function hasCustomDefaultsArea(firmware: ParsedHex): boolean {
+    const area = getCustomDefaultsArea(firmware);
+    return !!area && area.endAddress - area.startAddress !== 0;
 }
 
 function generateData(firmware: ParsedHex, input: string, startAddress: number): void {

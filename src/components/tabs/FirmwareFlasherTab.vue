@@ -37,6 +37,7 @@
                     :on-flash-manual-baud-change="handleFlashManualBaudChange"
                     :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
                     :on-restore-backup="handleRestoreBackup"
+                    :firmware-accepts-config="firmwareAcceptsConfig"
                 />
             </div>
         </div>
@@ -137,6 +138,7 @@ import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/u
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { get as getStorage, set as setStorage } from "../../js/SessionStorage";
 import BuildApi from "../../js/BuildApi";
+import { hasCustomDefaultsArea } from "../../js/ConfigInserter";
 import { getTracking } from "../../js/Analytics";
 import DeviceHandler from "../../js/device_handler";
 import { gui_log } from "../../js/gui_log";
@@ -494,8 +496,6 @@ export default defineComponent({
             state.releaseNameLink = summary.releaseUrl || "#";
             state.releaseDateText = summary.date || "";
             state.targetMCUText = summary.mcu || "";
-            // A null filename rendered as empty text before; `?? ""` keeps that.
-            state.configFilenameText = state.isConfigLocal ? (state.configFilename ?? "") : "[default]";
 
             state.cloudTargetInfoVisible = !!summary.cloudBuild;
         };
@@ -1236,6 +1236,11 @@ export default defineComponent({
             logHead,
         });
 
+        const firmwareAcceptsConfig = computed(() => {
+            const parsedHex = firmwareFlashing.getParsedHex();
+            return !!parsedHex && hasCustomDefaultsArea(parsedHex);
+        });
+
         // Initialize cloud build composable
         const cloudBuild = useCloudBuild({
             buildApi,
@@ -1793,6 +1798,7 @@ export default defineComponent({
         return {
             state,
             flashRingColor,
+            firmwareAcceptsConfig,
             activeFlasherStep,
             subtabItems,
             selectSubtab,
