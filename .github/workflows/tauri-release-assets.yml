@@ -193,6 +193,8 @@ jobs:
 
       - name: Build Tauri bundle
         shell: bash
+        env:
+          LINUXDEPLOY_EXCLUDED_LIBRARIES: "libwayland-*"
         run: |
           if [ -n "${{ matrix.target }}" ]; then
             npm run tauri:build -- --target ${{ matrix.target }}
