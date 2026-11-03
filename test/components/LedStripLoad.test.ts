@@ -20,14 +20,11 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount, flushPromises } from "@vue/test-utils";
-import { createPinia, setActivePinia } from "pinia";
 import LedStripTab from "../../src/components/tabs/LedStripTab.vue";
 import BaseTab from "../../src/components/tabs/BaseTab.vue";
-import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
-import { mspHelper } from "../../src/js/msp/MSPHelper";
-import { MspDataView } from "../../src/js/msp/mspBytes";
+import { decodeMsp, resetLedTestState, setupLedStore } from "../ledTestUtils";
 
 const { saveToEeprom } = vi.hoisted(() => ({ saveToEeprom: vi.fn() }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
@@ -36,46 +33,19 @@ vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) 
 vi.mock("i18next-vue", () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 
-function setup() {
-    const fc = useFlightControllerStore();
-    fc.config.apiVersion = "1.46.0";
-    fc.ledStripAdvanced = true;
-    fc.ledStripProfile = 2;
-    fc.ledStrip = Array.from({ length: 32 }, () => ({ x: 0, y: 0, color: 0, functions: "c", directions: "" }));
-    fc.ledColors = Array.from({ length: 16 }, (_, index) => ({ h: index * 20, s: 0, v: index ? 255 : 0 }));
-    fc.ledModeColors = Array.from({ length: 8 }, (_, direction) => ({ mode: 6, direction, color: direction }));
-    fc.ledConfigValues = { brightness: 40, rainbow_delta: 33, rainbow_freq: 72 };
-    fc.ledConfigValuesLoaded = true;
-    return fc;
-}
 beforeEach(() => {
-    setActivePinia(createPinia());
-    vi.clearAllMocks();
+    resetLedTestState();
     vi.mocked(MSP.promise).mockImplementation(async (code) => {
-        if (code === MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES)
-            mspHelper.process_data({
-                code,
-                dataView: new MspDataView(new Uint8Array([40, 33, 0, 72, 0]).buffer),
-                crcError: false,
-                unsupported: 0,
-                callbacks: [],
-            });
+        if (code === MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES) decodeMsp(code, [40, 33, 0, 72, 0]);
     });
     saveToEeprom.mockResolvedValue(undefined);
 });
 
 describe("LED tab load failure", () => {
     it("locks Advanced editing and Save when the decoded main response is incomplete", async () => {
-        const fc = setup();
+        const fc = setupLedStore();
         vi.mocked(MSP.promise).mockImplementation(async (code) => {
-            if (code === MSPCodes.MSP_LED_STRIP_CONFIG)
-                mspHelper.process_data({
-                    code,
-                    dataView: new MspDataView(new Uint8Array([0, 0, 0, 1, 2]).buffer),
-                    crcError: false,
-                    unsupported: 0,
-                    callbacks: [],
-                });
+            if (code === MSPCodes.MSP_LED_STRIP_CONFIG) decodeMsp(code, [0, 0, 0, 1, 2]);
         });
         const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
         const wrapper = shallowMount(LedStripTab, {
