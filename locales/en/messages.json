@@ -1,7 +1,135 @@
 {
+    "ledWizardRecognizedStrip": {
+        "message": "Recognized as a single strip of {{count}} LEDs. Betaflight does not store how LEDs are wired. If your arms are wired in parallel, choose Parallel and your number of arms – the Betaflight configuration stays identical."
+    },
+    "ledWizardNoChanges": {
+        "message": "No changes – the Betaflight configuration is already identical."
+    },
+    "ledWizardCountSplit": {
+        "message": "{{count}} LEDs cannot be split evenly across {{arms}} arms. Enter LEDs per arm."
+    },
+    "ledWizardCountCapacity": {
+        "message": "Serial wiring needs {{count}} LED slots; the controller supports {{capacity}}."
+    },
+    "ledWizardPreviewParallelNote": {
+        "message": "Schematic only. Small numbers are Betaflight LED data indices. All parallel arms receive the same data; arm order does not matter. Arrows show increasing data indices and the native thrust direction when wiring matches. Colors, timing and warning behavior are not simulated."
+    },
+    "ledWizardReplaceParallelSummary": {
+        "message": "Replace the entire LED layout ({{previous}} configured LEDs) with {{count}} Betaflight LED slots, mirrored across {{physical}} physical LEDs. Remaining controller slots will be cleared."
+    },
+    "ledWizardErrorThrustChase": {
+        "message": "Too few LEDs for a chase animation: the firmware needs at least 3 LEDs per ring segment."
+    },
+    "ledWizardArm": { "message": "Arm {{index}}" },
+    "ledWizardErrorConfigValues": {
+        "message": "LED brightness settings have not been loaded for this connection. Reload the LED tab before applying changes."
+    },
+    "ledWizardErrorTopology": { "message": "Select Serial or Parallel LED topology." },
+    "ledWizardErrorRingSegment": {
+        "message": "This layout has {{perArm}} LEDs per arm, but the firmware ring segment is {{segment}} LEDs. Choose a count where LEDs per arm is a multiple of the segment length so all arms stay synchronized."
+    },
+    "ledWizardWarningOverlay": { "message": "Betaflight warning overlay" },
+    "ledWizardTopologyReopen": {
+        "message": "Betaflight does not store the wiring topology. A parallel setup reopens as an equivalent single strip; the configured LED data stays the same."
+    },
+    "ledWizardParallelNote": {
+        "message": "Parallel arms receive the same Betaflight LED data and cannot be addressed independently."
+    },
+    "ledWizardPhysicalCount": { "message": "Physical LEDs: {{count}}" },
+    "ledWizardCountPerArm": { "message": "LEDs per arm" },
+    "ledWizardParallel": { "message": "Parallel / mirrored arms" },
+    "ledWizardSerial": { "message": "Serial / daisy-chain" },
+    "ledWizardTopology": { "message": "LED topology" },
+    "ledWizardTitle": { "message": "LED Setup Wizard" },
+    "ledWizardAdvanced": { "message": "Advanced LED configuration" },
+    "ledWizardView": { "message": "LED configuration view" },
+    "ledWizardBasic": { "message": "Basic setup" },
+    "ledWizardCount": { "message": "Number of LEDs" },
+    "ledWizardCapacity": { "message": "Controller limit: {{count}}" },
+    "ledWizardLayout": { "message": "Layout" },
+    "ledWizardStrip": { "message": "Single strip" },
+    "ledWizardTwo": { "message": "2 arms" },
+    "ledWizardFour": { "message": "4 arms" },
+    "ledWizardCustomLayout": { "message": "Custom / Advanced" },
+    "ledWizardPerArm": { "message": "LEDs per arm / strip: {{count}}" },
+    "ledWizardDirection": { "message": "LED direction (physical wiring)" },
+    "ledWizardOutward": { "message": "Center → Outside" },
+    "ledWizardInward": { "message": "Outside → Center" },
+    "ledWizardWiringNote": {
+        "message": "Match the actual data-wire direction on every arm. In a serial chain, wire all LEDs of arm 1, then arm 2, and so on. In parallel, each arm starts at index 0. Changing the layout mapping cannot reverse a chase against the physical wiring."
+    },
+    "ledWizardStates": { "message": "Flight states" },
+    "ledWizardArmed": { "message": "Armed state" },
+    "ledWizardDisarmed": { "message": "Disarmed state" },
+    "ledWizardStatic": { "message": "Static color" },
+    "ledWizardThrust": { "message": "Native thrust-ring chase (limited)" },
+    "ledWizardFirmwarePattern": { "message": "Firmware alternating pattern (thrust only)" },
+    "ledWizardArmedColor": { "message": "Armed color" },
+    "ledWizardDisarmedColor": { "message": "Disarmed color" },
+    "ledWizardThrustNote": {
+        "message": "The native thrust ring follows wire order and alternates LEDs while disarmed. Disarmed Off or a custom disarmed color is unavailable. Warnings are drawn after the ring and take priority during their blink phases."
+    },
+    "ledWizardWarnings": { "message": "Warning behavior" },
+    "ledWizardWarningsNote": {
+        "message": "One overlay includes low battery (red), failsafe (yellow/blue), arming disabled while disarmed (green), and crash-flip (magenta). With no active warning it shows the visual beeper using ledstrip_visual_beeper_color. Warnings can light LEDs even when the disarmed base color is Off. Low battery may also appear on USB without a battery when a voltage sensor is configured."
+    },
+    "ledWizardBrightnessUnavailable": {
+        "message": "This firmware API does not expose brightness. Its current setting is preserved."
+    },
+    "ledWizardMasterSwitch": { "message": "LED master switch" },
+    "ledWizardMasterSwitchNote": {
+        "message": "AUX assignment is managed in the Modes tab. Assign LEDLOW there to turn the strip off. This Wizard leaves all existing mode assignments unchanged; adding or disabling a switch here is planned for a later phase."
+    },
+    "ledWizardPreview": { "message": "Armed base color and wiring preview" },
+    "ledWizardCenter": { "message": "FC" },
+    "ledWizardPreviewNote": {
+        "message": "Schematic only. Small numbers are Betaflight LED data indices; arm numbers follow the wiring order. Arrows show increasing data indices and the native thrust direction when wiring matches. Colors, timing and warning behavior are not simulated."
+    },
+    "ledWizardPalette": { "message": "Controller color palette" },
+    "ledWizardPaletteNote": {
+        "message": "These are the controller's existing palette slots. A crossed circle means Black / Off. The wizard does not change the palette."
+    },
+    "ledWizardColorSlot": { "message": "Color {{index}} · Hue {{hue}}°" },
+    "ledWizardDraftNote": {
+        "message": "Settings remain a local draft until you review and apply them. Opening this Wizard does not change your configuration."
+    },
+    "ledWizardCustom": { "message": "Custom configuration detected" },
+    "ledWizardCustomNote": {
+        "message": "Your current LEDs cannot be represented losslessly by this Wizard. They remain unchanged. Continue in Advanced, or review a replacement setup below."
+    },
+    "ledWizardReview": { "message": "Review changes" },
+    "ledWizardReviewTitle": { "message": "Review replacement configuration" },
+    "ledWizardReplaceSummary": {
+        "message": "Replace the entire LED layout ({{previous}} configured LEDs) with {{count}} LEDs. Remaining controller slots will be cleared."
+    },
+    "ledWizardApplyNote": {
+        "message": "Apply replaces the local LED layout and updates the required global armed/disarmed or background colors. The palette, other special colors and AUX modes are preserved. Inspect the result in Advanced, then use Save to write it to the flight controller. Any edit invalidates this review."
+    },
+    "ledWizardApply": { "message": "Apply replacement" },
+    "ledWizardApplied": {
+        "message": "Wizard configuration applied locally. Review it below, then Save to write it to the flight controller."
+    },
     "ledStripLoadFailed": {
         "message": "LED configuration could not be loaded. Reconnect and reload this tab before saving."
     },
+    "ledWizardErrorProfile": {
+        "message": "The Wizard requires firmware with advanced LED support and an active STATUS LED profile. If available, select STATUS in your firmware settings and reopen this tab. The Wizard does not switch profiles."
+    },
+    "ledWizardErrorCount": { "message": "Enter a whole LED count from 1 to the controller limit shown above." },
+    "ledWizardErrorArms": { "message": "The number of LEDs must divide evenly between the selected arms." },
+    "ledWizardErrorDirection": { "message": "Select a valid wiring direction." },
+    "ledWizardErrorColor": { "message": "Select a color from the controller's palette." },
+    "ledWizardErrorOffColor": {
+        "message": "The palette has no Off color. Set an unused palette slot to zero brightness in Advanced before using Off or thrust. The Wizard will not overwrite a palette color."
+    },
+    "ledWizardErrorThrust": {
+        "message": "Thrust requires the firmware alternating disarmed pattern; Off and a custom disarmed color are unavailable."
+    },
+    "ledWizardErrorState": { "message": "Static armed color requires Off or Static color for the disarmed state." },
+    "ledWizardErrorModeColors": {
+        "message": "Required special colors are missing. Reload LED configuration before applying."
+    },
+    "ledWizardErrorBrightness": { "message": "Brightness must be a whole percentage from 5 to 100." },
     "yes": {
         "message": "Yes",
         "description": "General Yes message to be used across the application"

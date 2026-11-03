@@ -266,6 +266,20 @@ const VirtualFC = {
         fcStore.ledStrip = Array.from({ length: 256 });
         fcStore.ledStripAdvanced = true;
         fcStore.ledStripProfile = 2;
+        fcStore.ledColors = [0, 0, 0, 15, 50, 100, 115, 125, 180, 210, 240, 270, 300, 330, 0, 0].map((h, index) => ({
+            h,
+            s: index === 1 ? 255 : 0,
+            v: index === 0 || index >= 14 ? 0 : 255,
+        }));
+        fcStore.ledModeColors = [
+            ...Array.from({ length: 36 }, (_, index) => ({
+                mode: Math.floor(index / 6),
+                direction: index % 6,
+                color: 1,
+            })),
+            ...[6, 10, 1, 0, 0, 2, 3, 6].map((color, direction) => ({ mode: 6, direction, color })),
+            { mode: 7, direction: 0, color: 3 },
+        ];
         fcStore.ledConfigValues = { brightness: 100, rainbow_delta: 0, rainbow_freq: 120 };
         fcStore.ledConfigValuesLoaded = true;
 
