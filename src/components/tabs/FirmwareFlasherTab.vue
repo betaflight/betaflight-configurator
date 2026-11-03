@@ -377,6 +377,7 @@ export default defineComponent({
             state.firmwareLoadedName = "";
             state.firmwareLoadedSize = "";
             state.firmwareLoadedIsLocal = false;
+            cloudBuild.clearCommitInfo();
         };
 
         const clearBufferedFirmware = () => {
@@ -1223,6 +1224,7 @@ export default defineComponent({
             }
 
             enableLoadRemoteFileButton(true);
+            return !!result;
         };
 
         // Initialize firmware flashing composable
@@ -1518,6 +1520,7 @@ export default defineComponent({
             });
             if (result) {
                 state.firmware_type = result.firmwareType;
+                cloudBuild.clearCommitInfo();
             }
             enableLoadFileButton(true);
         };
