@@ -115,6 +115,19 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      # Tauri CLI before 2.12 downloads a 2024 linuxdeploy that ignores
+      # LINUXDEPLOY_EXCLUDED_LIBRARIES. Seed its cache with the build newer CLIs
+      # pin, so an old tag still produces an AppImage without libwayland.
+      - name: Seed linuxdeploy for older Tauri CLIs
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          tools_dir="${XDG_CACHE_HOME:-$HOME/.cache}/tauri"
+          mkdir -p "$tools_dir"
+          curl -fsSL --retry 3 -o "$tools_dir/linuxdeploy-x86_64.AppImage" \
+            https://github.com/tauri-apps/binary-releases/releases/download/linuxdeploy-07333c6/linuxdeploy-x86_64.AppImage
+          chmod +x "$tools_dir/linuxdeploy-x86_64.AppImage"
+
       # The Tauri config version drives desktop bundle names and the app's
       # self-reported version, but the release bump only touches package.json.
       # Sync it here so bundles carry the release version, not a stale one.
