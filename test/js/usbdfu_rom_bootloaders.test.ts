@@ -191,7 +191,7 @@ describe("STM32C5 DFU flashing", () => {
         expect(last.type).toBe(FLASH_MESSAGE_TYPES.VALID);
         expect(last.msg).toBe("stm32ProgrammingSuccessful");
         // The captured firmware must round-trip through verify exactly.
-        expect(transport.written.length).toBe(4096);
+        expect(transport.written).toHaveLength(4096);
     });
 
     it("does not hang when extra unparseable / truncated memory regions are reported", async () => {
