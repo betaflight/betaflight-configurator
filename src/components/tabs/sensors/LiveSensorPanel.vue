@@ -72,11 +72,12 @@
             :sensor-type="sensor.type"
             :svg-id="sensor.type"
             :visible="checkboxes[sensor.checkboxIndex]"
-            :title="$t(sensor.titleKey)"
+            :title="sensorTitle(sensor)"
             :hint="sensor.hintKey ? $t(sensor.hintKey) : null"
             :rate="rates[sensor.type]"
             :scale="sensor.hasScale ? scales[sensor.type] : null"
             :scale-options="sensor.scaleOptions"
+            :scale-factor="sensorFactor(sensor.type)"
             :display-values="sensor.getDisplayValues()"
             @update:rate="updateRate(sensor.type, $event)"
             @update:scale="sensor.hasScale ? updateScale(sensor.type, $event) : null"
@@ -110,6 +111,8 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
 import { decodeDebugFieldToFriendly } from "@/js/utils/debugModes";
 import { useSensorsStore, type RatedSensor, type ScaledSensor } from "@/stores/sensors";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
+import { i18n } from "@/js/localization";
 import { useSensorGraph } from "@/composables/useSensorGraph";
 import { useLiveSensorData } from "@/composables/sensors/useLiveSensorData";
 import { have_sensor } from "../../../js/sensor_helpers";
@@ -127,6 +130,25 @@ import semver from "semver";
 import { API_VERSION_1_46 } from "../../../js/data_storage";
 
 const fcStore = useFlightControllerStore();
+const { isMetric, usesMetricLength } = useDisplayUnits();
+const sensorFactor = (type: string) => {
+    if (type === "altitude") return usesMetricLength.value ? 1 : 1 / 0.3048;
+    if (type === "sonar") return usesMetricLength.value ? 0.01 : 1 / 30.48;
+    if (type === "pitot") return isMetric.value ? 0.036 : 0.022369362921;
+    return 1;
+};
+function sensorTitle(sensor: SensorConfig): string {
+    const unit = sensor.type === "pitot" ? (isMetric.value ? "km/h" : "mph") : usesMetricLength.value ? "m" : "ft";
+    const key =
+        sensor.type === "altitude"
+            ? "sensorsAltitudeDisplayTitle"
+            : sensor.type === "sonar"
+              ? "sensorsSonarDisplayTitle"
+              : sensor.type === "pitot"
+                ? "sensorsPitotDisplayTitle"
+                : sensor.titleKey;
+    return i18n.getMessage(key, { unit, interpolation: { escapeValue: false } });
+}
 const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
 const { loadMotorConfig, loadAdvancedConfig, startPolling, stopPolling } = useLiveSensorData();
@@ -207,14 +229,16 @@ const sensorConfigs: SensorConfig[] = [
         titleKey: "sensorsAltitudeTitle",
         hintKey: "sensorsAltitudeHint",
         hasScale: false,
-        getDisplayValues: () => [altitudeDisplay.value],
+        getDisplayValues: () => [
+            Number((Number(altitudeDisplay.value) * sensorFactor("altitude")).toFixed(2)).toString(),
+        ],
     },
     {
         type: "sonar",
         checkboxIndex: 4,
         titleKey: "sensorsSonarTitle",
         hasScale: false,
-        getDisplayValues: () => [sonarDisplay.value],
+        getDisplayValues: () => [Number((Number(sonarDisplay.value) * sensorFactor("sonar")).toFixed(2)).toString()],
     },
     {
         type: "pitot",
@@ -222,7 +246,7 @@ const sensorConfigs: SensorConfig[] = [
         titleKey: "sensorsPitotTitle",
         hasScale: true,
         scaleOptions: PITOT_SCALE_OPTIONS,
-        getDisplayValues: () => [pitotDisplay.value],
+        getDisplayValues: () => [Number((Number(pitotDisplay.value) * sensorFactor("pitot")).toFixed(2)).toString()],
     },
 ];
 

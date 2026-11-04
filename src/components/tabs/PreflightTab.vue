@@ -241,7 +241,9 @@
                                         $t(preflight.weather.current.weatherDescription)
                                     }}</span>
                                 </div>
-                                <div class="weather-temp">{{ preflight.weather.current.temperature }}°C</div>
+                                <div class="weather-temp">
+                                    {{ formatTemperature(preflight.weather.current.temperature) }}
+                                </div>
                             </div>
                             <UTable
                                 :data="weatherDetailsData"
@@ -258,15 +260,13 @@
                                                 )
                                             "
                                         >
-                                            {{ preflight.weather.current.windSpeed.toFixed(1) }} m/s
+                                            {{ formatWind(preflight.weather.current.windSpeed) }} {{ windUnit }}
                                         </span>
                                         {{ preflight.getWindDirectionLabel(preflight.weather.current.windDirection) }}
                                         ({{ preflight.weather.current.windDirection }}°)
                                     </template>
                                     <template v-else-if="row.original.key === 'dewPoint'">
-                                        {{ preflight.weather.current.dewPoint }}°C ({{
-                                            toFahrenheit(preflight.weather.current.dewPoint)
-                                        }}°F)
+                                        {{ formatTemperature(preflight.weather.current.dewPoint) }}
                                         <span
                                             :class="
                                                 getDewPointRiskClass(
@@ -287,9 +287,7 @@
                                         </span>
                                     </template>
                                     <template v-else-if="row.original.key === 'feelsLike'">
-                                        {{ preflight.weather.current.apparentTemperature }}°C ({{
-                                            toFahrenheit(preflight.weather.current.apparentTemperature)
-                                        }}°F)
+                                        {{ formatTemperature(preflight.weather.current.apparentTemperature) }}
                                     </template>
                                     <span v-else :class="row.original.valueClass">
                                         {{ row.original.value }}
@@ -479,22 +477,22 @@
                             </template>
                             <template #windSpeed10m-cell="{ row }">
                                 <span :class="getWindStatusClass(row.original.windSpeed10m, row.original.windGusts)">
-                                    {{ row.original.windSpeed10m?.toFixed(1) ?? "-" }}
+                                    {{ formatWind(row.original.windSpeed10m) }}
                                 </span>
                             </template>
                             <template #windSpeed80m-cell="{ row }">
                                 <span :class="getWindStatusClass(row.original.windSpeed80m, row.original.windGusts)">
-                                    {{ row.original.windSpeed80m?.toFixed(1) ?? "-" }}
+                                    {{ formatWind(row.original.windSpeed80m) }}
                                 </span>
                             </template>
                             <template #windSpeed120m-cell="{ row }">
                                 <span :class="getWindStatusClass(row.original.windSpeed120m, row.original.windGusts)">
-                                    {{ row.original.windSpeed120m?.toFixed(1) ?? "-" }}
+                                    {{ formatWind(row.original.windSpeed120m) }}
                                 </span>
                             </template>
                             <template #windGusts-cell="{ row }">
                                 <span :class="getWindStatusClass(row.original.windGusts, row.original.windGusts)">
-                                    {{ row.original.windGusts?.toFixed(1) ?? "-" }}
+                                    {{ formatWind(row.original.windGusts) }}
                                 </span>
                             </template>
                             <template #precipitationProbability-cell="{ row }">
@@ -512,7 +510,12 @@
                             </template>
                         </UTable>
                         <div v-if="preflight.weather.hourly?.length" class="table-note">
-                            {{ $t("preflightWindUnit") }}
+                            {{
+                                $t("preflightWindUnitDynamic", {
+                                    unit: windUnit,
+                                    interpolation: { escapeValue: false },
+                                })
+                            }}
                         </div>
                     </UiBox>
 
@@ -541,17 +544,17 @@
                                 {{ $t(row.original.weatherDescription) }}
                             </template>
                             <template #tempMin-cell="{ row }">
-                                {{ row.original.tempMin !== null ? row.original.tempMin + "°" : "-" }} /
-                                {{ row.original.tempMax !== null ? row.original.tempMax + "°C" : "-" }}
+                                {{ formatTemperature(row.original.tempMin) }} /
+                                {{ formatTemperature(row.original.tempMax) }}
                             </template>
                             <template #windMax-cell="{ row }">
                                 <span :class="getWindStatusClass(row.original.windMax, row.original.gustsMax)">
-                                    {{ row.original.windMax !== null ? row.original.windMax.toFixed(1) : "-" }}
+                                    {{ formatWind(row.original.windMax) }}
                                 </span>
                             </template>
                             <template #gustsMax-cell="{ row }">
                                 <span :class="getWindStatusClass(row.original.gustsMax, row.original.gustsMax)">
-                                    {{ row.original.gustsMax !== null ? row.original.gustsMax.toFixed(1) : "-" }}
+                                    {{ formatWind(row.original.gustsMax) }}
                                 </span>
                             </template>
                             <template #precipProbability-cell="{ row }">
@@ -572,7 +575,14 @@
                                 </span>
                             </template>
                         </UTable>
-                        <div class="table-note">{{ $t("preflightWindUnit") }}</div>
+                        <div class="table-note">
+                            {{
+                                $t("preflightWindUnitDynamic", {
+                                    unit: windUnit,
+                                    interpolation: { escapeValue: false },
+                                })
+                            }}
+                        </div>
                     </UiBox>
                 </div>
 
@@ -757,20 +767,16 @@
                                         <label class="notam-setting-label">{{ $t("preflightNotamRadius") }}</label>
                                         <div class="notam-radius-group">
                                             <input
-                                                v-model.number="preflight.notamSettings.radius"
+                                                v-model.number="displayNotamRadius"
                                                 type="number"
-                                                min="1"
-                                                max="500"
+                                                :min="notamRadiusInDisplayUnits(1)"
+                                                :max="notamRadiusInDisplayUnits(500)"
+                                                step="any"
                                                 class="notam-radius-input"
                                                 :aria-label="$t('preflightNotamRadius')"
                                                 @change="onNotamSettingChange"
                                             />
-                                            <USelect
-                                                v-model="preflight.notamSettings.radiusUnit"
-                                                :items="notamRadiusUnitOptions"
-                                                class="notam-radius-unit"
-                                                @update:model-value="onNotamSettingChange"
-                                            />
+                                            <span>{{ usesMetricLength ? "km" : "NM" }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -946,6 +952,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import { i18n } from "@/js/localization";
 import { usePreflight, type ForecastDay, type Reading } from "@/composables/usePreflight";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
 import { useFlightWindow } from "@/composables/useFlightWindow";
 import type { LightWindow } from "@/js/utils/flightWindow";
 import { useMapViewport } from "@/composables/useMapViewport";
@@ -1017,13 +1024,6 @@ function getGnssKpLabel(kp: number): string {
     return i18n.getMessage("preflightKpSevere");
 }
 
-function formatVisibility(vis: number): string {
-    if (vis >= 1000) {
-        return `${(vis / 1000).toFixed(1)} km`;
-    }
-    return `${vis} m`;
-}
-
 function formatDuration(seconds: number | null): string {
     if (seconds === null || !Number.isFinite(seconds)) {
         return "-";
@@ -1032,13 +1032,6 @@ function formatDuration(seconds: number | null): string {
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
     return `${h}h ${m}m`;
-}
-
-function toFahrenheit(celsius: number | null | undefined): string {
-    if (celsius === null || celsius === undefined) {
-        return "-";
-    }
-    return ((celsius * 9) / 5 + 32).toFixed(1);
 }
 
 function formatForecastDay(dateStr: string | null): string {
@@ -1086,6 +1079,16 @@ export default defineComponent({
     },
     setup() {
         const preflight = reactive(usePreflight());
+        const {
+            usesMetricLength,
+            windUnit,
+            formatTemperature,
+            formatWind,
+            formatVisibility,
+            formatElevation,
+            formatPrecipitation,
+            formatPressure,
+        } = useDisplayUnits();
         const {
             flightWindow,
             selectKind,
@@ -1212,7 +1215,7 @@ export default defineComponent({
                 {
                     key: "gusts",
                     label: i18n.getMessage("preflightGusts"),
-                    value: `${c.windGusts.toFixed(1)} m/s`,
+                    value: `${formatWind(c.windGusts)} ${windUnit.value}`,
                     valueClass: getWindStatusClass(c.windGusts, c.windGusts),
                 },
                 {
@@ -1224,7 +1227,7 @@ export default defineComponent({
                 {
                     key: "precipitation",
                     label: i18n.getMessage("preflightPrecipitation"),
-                    value: `${c.precipitation} mm`,
+                    value: formatPrecipitation(c.precipitation),
                     valueClass: getPrecipStatusClass(c.precipitation),
                 },
                 { key: "dewPoint", label: i18n.getMessage("preflightDewPoint") },
@@ -1236,11 +1239,15 @@ export default defineComponent({
                           {
                               key: "tempRange",
                               label: i18n.getMessage("preflightTempRange"),
-                              value: `${preflight.weather.daily.temperatureMin ?? "-"}° / ${preflight.weather.daily.temperatureMax ?? "-"}°C`,
+                              value: `${formatTemperature(preflight.weather.daily.temperatureMin)} / ${formatTemperature(preflight.weather.daily.temperatureMax)}`,
                           },
                       ]
                     : []),
-                { key: "pressure", label: i18n.getMessage("preflightPressure"), value: `${c.pressure} hPa` },
+                {
+                    key: "pressure",
+                    label: i18n.getMessage("preflightPressure"),
+                    value: formatPressure(c.pressure),
+                },
                 {
                     key: "batteryRisk",
                     label: i18n.getMessage("preflightBatteryRisk"),
@@ -1305,13 +1312,13 @@ export default defineComponent({
                 },
                 {
                     label: i18n.getMessage("preflightElevation"),
-                    value: loc.elevation !== null ? `${loc.elevation} m AMSL` : "-",
+                    value: loc.elevation !== null ? `${formatElevation(loc.elevation)} AMSL` : "-",
                 },
             ];
             if (densityAltitude.value !== null) {
                 rows.push({
                     label: i18n.getMessage("preflightDensityAlt"),
-                    value: `${densityAltitude.value} ft (${Math.round(densityAltitude.value * 0.3048)} m)`,
+                    value: formatElevation(densityAltitude.value * 0.3048),
                     valueClass: getDensityAltStatusClass(),
                 });
             }
@@ -1657,10 +1664,21 @@ export default defineComponent({
             { label: i18n.getMessage("preflightNotamProviderOpenaip"), value: "openaip" },
         ]);
 
-        const notamRadiusUnitOptions = computed(() => [
-            { label: i18n.getMessage("preflightNotamRadiusUnitNm"), value: "NM" },
-            { label: i18n.getMessage("preflightNotamRadiusUnitKm"), value: "km" },
-        ]);
+        const notamRadiusInDisplayUnits = (value: number) => {
+            const storedInKm = preflight.notamSettings.radiusUnit === "km";
+            const factor = storedInKm === usesMetricLength.value ? 1 : usesMetricLength.value ? 1.852 : 1 / 1.852;
+            return Number((value * factor).toFixed(4));
+        };
+        const displayNotamRadius = computed({
+            get: () => notamRadiusInDisplayUnits(preflight.notamSettings.radius),
+            set: (value: number) => {
+                if (!Number.isFinite(value) || value === notamRadiusInDisplayUnits(preflight.notamSettings.radius))
+                    return;
+                const storedInKm = preflight.notamSettings.radiusUnit === "km";
+                const factor = storedInKm === usesMetricLength.value ? 1 : usesMetricLength.value ? 1 / 1.852 : 1.852;
+                preflight.notamSettings.radius = value * factor;
+            },
+        });
 
         const notamNeedsApiKey = computed(() => {
             const p = preflight.notamSettings.provider;
@@ -1861,14 +1879,18 @@ export default defineComponent({
             formatDuration,
             getDewPointRiskClass,
             getDewPointRiskLabel,
-            toFahrenheit,
+            formatTemperature,
+            formatWind,
+            windUnit,
             getUvStatusClass,
             getUvStatusLabel,
             formatForecastDay,
             forecastTableMeta,
             notamProvider,
             notamProviderOptions,
-            notamRadiusUnitOptions,
+            usesMetricLength,
+            displayNotamRadius,
+            notamRadiusInDisplayUnits,
             notamNeedsApiKey,
             expandedNotams,
             onNotamSettingChange,

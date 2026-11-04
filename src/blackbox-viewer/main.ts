@@ -539,6 +539,18 @@ export function bootstrapViewer(): () => void {
         );
         cleanupFns.push(stopOverrideWatch);
 
+        const stopUnitsWatch = watch(
+            () => [userSettings.speedUnits, userSettings.altitudeUnits],
+            () => {
+                if (graph) {
+                    graph.refreshOptions(userSettings);
+                    graph.refreshGraphConfig();
+                    invalidateGraph();
+                }
+            },
+        );
+        cleanupFns.push(stopUnitsWatch);
+
         // Watch drawSticks and update graph renderer
         const stopSticksWatch = watch(
             () => userSettings.drawSticks,

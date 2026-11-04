@@ -21,6 +21,7 @@
 
 import { ref, type Ref } from "vue";
 import * as d3 from "d3";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
 import type { SensorScales } from "@/stores/sensors";
 
 /** A sample: [sample number, value]. */
@@ -45,6 +46,16 @@ interface GraphHelpers {
 }
 
 export function useSensorGraph() {
+    const { isMetric, usesMetricLength } = useDisplayUnits();
+    const axisFactor = (selector: string) => {
+        if (selector === "#altitude") return usesMetricLength.value ? 1 : 1 / 0.3048;
+        if (selector === "#sonar") return usesMetricLength.value ? 0.01 : 1 / 30.48;
+        if (selector === "#pitot") return isMetric.value ? 0.036 : 0.022369362921;
+        return 1;
+    };
+    const formatAxis = (selector: string) => (value: d3.NumberValue) =>
+        String(Number((Number(value) * axisFactor(selector)).toFixed(2)));
+
     // `bottom` is the gutter that holds the x-axis tick labels, `top` the gap above
     // the plot.  The axis groups are positioned from these values at draw time
     // (see applyGraphTransforms) — never hardcode them in the SVG template, or the
@@ -208,7 +219,7 @@ export function useSensorGraph() {
         const element = selectGraph(helpers);
         element.selectAll("defs").data([0]).join("defs");
         const xAxis = d3.axisBottom(helpers.scaleX).tickFormat(String);
-        const yAxis = d3.axisLeft(helpers.scaleY).tickFormat(String);
+        const yAxis = d3.axisLeft(helpers.scaleY).tickFormat(formatAxis(helpers.selector));
         const xGrid = d3
             .axisBottom(helpers.scaleX)
             .tickFormat(() => "")
@@ -269,7 +280,7 @@ export function useSensorGraph() {
 
         const xAxis = d3.axisBottom(helpers.scaleX).ticks(5).tickFormat(String);
 
-        const yAxis = d3.axisLeft(helpers.scaleY).ticks(5).tickFormat(String);
+        const yAxis = d3.axisLeft(helpers.scaleY).ticks(5).tickFormat(formatAxis(helpers.selector));
 
         const xGrid = d3
             .axisBottom(helpers.scaleX)

@@ -73,9 +73,13 @@
 
                     <!-- Preferences -->
                     <UiBox title="Preferences">
+                        <SettingRow label="Use app units">
+                            <USwitch v-model="local.followAppUnits" size="sm" />
+                        </SettingRow>
                         <SettingRow label="Speed units">
                             <USelect
                                 v-model="local.speedUnits"
+                                :disabled="local.followAppUnits"
                                 :items="speedOptions"
                                 :ui="{ content: 'z-[3002]' }"
                                 size="sm"
@@ -85,6 +89,7 @@
                         <SettingRow label="Altitude units">
                             <USelect
                                 v-model="local.altitudeUnits"
+                                :disabled="local.followAppUnits"
                                 :items="altitudeOptions"
                                 :ui="{ content: 'z-[3002]' }"
                                 size="sm"

@@ -127,6 +127,7 @@ const props = defineProps({
     rate: { type: Number, default: 50 },
     scale: { type: Number as PropType<number | null>, default: null },
     scaleOptions: { type: Array as PropType<number[]>, default: null },
+    scaleFactor: { type: Number, default: 1 },
     displayValues: { type: Array, required: true },
     isDebug: { type: Boolean, default: false },
 });
@@ -137,7 +138,10 @@ const scaleItems = computed(
     () =>
         props.scaleOptions?.map((v) => ({
             value: v,
-            label: v === DEBUG_SCALE_AUTO ? i18n.getMessage("sensorsScaleAuto") : String(v),
+            label:
+                v === DEBUG_SCALE_AUTO
+                    ? i18n.getMessage("sensorsScaleAuto")
+                    : String(Number((v * props.scaleFactor).toFixed(2))),
         })) ?? [],
 );
 
