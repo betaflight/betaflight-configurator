@@ -1062,6 +1062,9 @@ export class UsbDfuProtocol extends EventTarget {
                 continue;
             }
             // Only its writable sectors: the hex must not reach read-only pages of a second flash.
+            // The primary flash is deliberately not filtered: bootloaders mark pages of it read-only
+            // that firmware is written to, e.g. AT32 F437 "@Internal Flash /0x08000000/08*04Ka,...",
+            // where every hex starts. A wrong attribute here can only refuse a second flash.
             const writableOnly: DfuMemory = { ...memory, sectors: memory.sectors.filter((sector) => sector.writable) };
             if (outside.some((block) => this.isBlockUsable(block.address, block.bytes, writableOnly))) {
                 console.log(`${this.logHead} Hex also writes to ${memory.type} (alternate setting ${memory.alt})`);
