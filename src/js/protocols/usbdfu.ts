@@ -134,6 +134,38 @@ interface DfuSector {
     start_address: number;
     page_size: number;
     total_size: number;
+    /** The run's DfuSe attribute letter has the write bit ('d'..'g'). */
+    writable?: boolean;
+}
+
+/**
+ * Parses one sector run of a DfuSe memory descriptor, such as "04*016Kg": the page count, the
+ * page size with its unit, and the attribute letter, 'a' + (bit0 readable | bit1 erasable |
+ * bit2 writable) - 1. Returns null when the run is malformed.
+ */
+function parseSectorRun(run: string): { num_pages: number; page_size: number; writable: boolean } | null {
+    const parts = run.split("*");
+    if (parts.length !== 2) {
+        return null;
+    }
+
+    const num_pages = Number.parseInt(parts[0]);
+    let page_size = Number.parseInt(parts[1]);
+    if (!page_size) {
+        return null;
+    }
+
+    const unit = parts[1].slice(-2, -1);
+    if (unit === "K" || unit === "M") {
+        // "M" is treated as "K", as before
+        page_size *= 1024;
+    }
+
+    const attributeText = parts[1].trim();
+    const attribute = (attributeText.codePointAt(attributeText.length - 1) ?? 0) - 0x60;
+    const writable = attribute >= 1 && attribute <= 7 && (attribute & 4) !== 0;
+
+    return { num_pages, page_size, writable };
 }
 
 /** The layout being flashed; `type` is absent only on the placeholder before chip detection. */
@@ -619,7 +651,6 @@ export class UsbDfuProtocol extends EventTarget {
                 // split sectors into array
                 const sectors: DfuSector[] = [];
                 let total_size = 0;
-                let writable = false;
                 const tmp2 = tmp1[2].split(",");
 
                 if (tmp2.length < 1) {
@@ -627,39 +658,20 @@ export class UsbDfuProtocol extends EventTarget {
                 }
 
                 for (const tmp2Index of tmp2) {
-                    // split into [num_pages, page_size]
-                    const tmp3 = tmp2Index.split("*");
-                    if (tmp3.length !== 2) {
+                    const run = parseSectorRun(tmp2Index);
+                    if (!run) {
                         return null;
-                    }
-
-                    const num_pages = Number.parseInt(tmp3[0]);
-                    let page_size = Number.parseInt(tmp3[1]);
-
-                    if (!page_size) {
-                        return null;
-                    }
-                    const unit = tmp3[1].slice(-2, -1);
-                    // DfuSe attribute: 'a' + (bit0 readable | bit1 erasable | bit2 writable) - 1
-                    const attribute = tmp3[1].trim().charCodeAt(tmp3[1].trim().length - 1) - 0x60;
-                    writable = attribute >= 1 && attribute <= 7 && (attribute & 4) !== 0;
-
-                    switch (unit) {
-                        case "M":
-                        //  fall through to K as well
-                        case "K":
-                            page_size *= 1024;
-                            break;
                     }
 
                     sectors.push({
-                        num_pages,
+                        num_pages: run.num_pages,
                         start_address: start_address + total_size,
-                        page_size,
-                        total_size: num_pages * page_size,
+                        page_size: run.page_size,
+                        total_size: run.num_pages * run.page_size,
+                        writable: run.writable,
                     });
 
-                    total_size += num_pages * page_size;
+                    total_size += run.num_pages * run.page_size;
                 }
 
                 const memory: DfuMemory = {
@@ -667,7 +679,7 @@ export class UsbDfuProtocol extends EventTarget {
                     start_address,
                     sectors,
                     total_size,
-                    writable,
+                    writable: sectors.some((sector) => sector.writable),
                 };
                 return memory;
             };
@@ -941,8 +953,8 @@ export class UsbDfuProtocol extends EventTarget {
                     }
 
                     // some of the block is in this sector, search for the another sector that contains the next part of the block
+                    remainingLength -= sectorEnd + 1 - searchAddress;
                     searchAddress = sectorEnd + 1;
-                    remainingLength -= sectorLength;
                     restart = true;
                     break;
                 }
@@ -1049,9 +1061,11 @@ export class UsbDfuProtocol extends EventTarget {
             if (!memory || memory === primary || !memory.writable || !/flash/i.test(memory.type)) {
                 continue;
             }
-            if (outside.some((block) => this.isBlockUsable(block.address, block.bytes, memory))) {
+            // Only its writable sectors: the hex must not reach read-only pages of a second flash.
+            const writableOnly: DfuMemory = { ...memory, sectors: memory.sectors.filter((sector) => sector.writable) };
+            if (outside.some((block) => this.isBlockUsable(block.address, block.bytes, writableOnly))) {
                 console.log(`${this.logHead} Hex also writes to ${memory.type} (alternate setting ${memory.alt})`);
-                targets.push(memory);
+                targets.push(writableOnly);
             }
         }
         return targets;
@@ -1087,6 +1101,18 @@ export class UsbDfuProtocol extends EventTarget {
         });
     }
 
+    /**
+     * True when the hex spans memories on different alternate settings but the transport cannot
+     * switch between them (the Android transport). Checked before erasing anything.
+     */
+    private needsUnsupportedAltSwitch(): boolean {
+        if (this.transport.selectAlternateInterface) {
+            return false;
+        }
+        const primaryAlt = this.flashTargets[0]?.alt ?? 0;
+        return this.flashTargets.some((memory) => (memory.alt ?? 0) !== primaryAlt);
+    }
+
     /** Refuses a hex with addresses outside the flash, else reads the transfer size and goes on. */
     private checkHexAndContinue(nextStep: 1 | 2): void {
         gui_log(i18n.getMessage("dfu_device_flash_info", (this.flash_layout.total_size / 1024).toString()));
@@ -1106,6 +1132,16 @@ export class UsbDfuProtocol extends EventTarget {
         const unusableBlocks = this.hex!.data.filter(
             (block) => !this.flashTargets.some((memory) => this.isBlockUsable(block.address, block.bytes, memory)),
         );
+
+        if (this.needsUnsupportedAltSwitch()) {
+            gui_log(i18n.getMessage("dfu_hex_alt_switch_unsupported"));
+            this.flashingMessage(
+                i18n.getMessage("dfu_hex_alt_switch_unsupported"),
+                this.options?.flashMessageTypes?.INVALID,
+            );
+            this.leave();
+            return;
+        }
 
         if (unusableBlocks.length > 0) {
             gui_log(i18n.getMessage("dfu_hex_address_errors"));
@@ -1592,14 +1628,16 @@ export class UsbDfuProtocol extends EventTarget {
         this.clearStatus(() => {
             // the program start address lies in the first target memory, maybe not the one
             // the verify step ended in
-            this.selectAltFor(address, () => {
-                this.loadAddress(address, () => {
-                    // 'downloading' 0 bytes to the program start address followed by a GETSTATUS is used to trigger DFU exit on STM32
-                    this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, 0, () => {
-                        this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, () => {
-                            this.cleanup(succeeded);
-                        });
-                    });
+            this.selectAltFor(address, () => this.exitFrom(address, succeeded));
+        });
+    }
+
+    /** Leaves DFU from address: 'downloading' 0 bytes to it followed by a GETSTATUS triggers DFU exit on STM32. */
+    private exitFrom(address: number, succeeded: boolean): void {
+        this.loadAddress(address, () => {
+            this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, 0, () => {
+                this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, () => {
+                    this.cleanup(succeeded);
                 });
             });
         });

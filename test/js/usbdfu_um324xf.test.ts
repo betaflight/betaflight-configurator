@@ -125,6 +125,12 @@ class FakeUm324xfBootloader extends FakeDfuDevice {
         return Promise.resolve();
     }
 
+    /** Whether the selected alternate setting reaches every byte of [address, address + length). */
+    private reaches(address: number, length: number): boolean {
+        const memory = this.memoryInAlt(address);
+        return memory !== undefined && memory === this.memoryInAlt(address + length - 1);
+    }
+
     /** Index into MEMORIES of the memory holding address, if the selected alternate setting reaches it. */
     private memoryInAlt(address: number): number | undefined {
         return this.layout.altMemories[this.alt].find((i) => {
@@ -155,6 +161,9 @@ class FakeUm324xfBootloader extends FakeDfuDevice {
         if (value >= 2) {
             const address = this.pointer + (value - 2) * TRANSFER_SIZE;
             this.pending = () => {
+                if (!this.reaches(address, bytes.length)) {
+                    return ERR_ADDRESS;
+                }
                 bytes.forEach((b, i) => this.memory.set(address + i, b));
                 return 0;
             };
@@ -190,8 +199,11 @@ class FakeUm324xfBootloader extends FakeDfuDevice {
             return Promise.resolve({ status: "ok", data: new Uint8Array([this.statusCode, 0, 0, 0, this.state, 0]) });
         }
         if (setup.request === REQ.UPLOAD) {
-            this.state = STATE.dfuUPLOAD_IDLE;
             const address = this.pointer + (setup.value - 2) * TRANSFER_SIZE;
+            if (!this.reaches(address, length)) {
+                return Promise.reject(new Error("stall: read outside the selected alternate setting"));
+            }
+            this.state = STATE.dfuUPLOAD_IDLE;
             const chunk = Array.from({ length }, (_, i) => this.memory.get(address + i) ?? 0xff);
             return Promise.resolve({ status: "ok", data: new Uint8Array(chunk) });
         }
@@ -301,5 +313,105 @@ describe.each(LAYOUTS)("DFU flashing on the UM324xF boot loader: $name", (layout
 
         expect(messages.map((m) => m.msg)).toContain("dfu_hex_address_errors");
         expect(bootloader.erased).toEqual([]);
+    });
+});
+
+describe("DFU flashing on the UM324xF boot loader: edge cases", () => {
+    const [separateAlts, combinedAlt0] = LAYOUTS;
+    let messages: { msg: string | null; type?: string }[];
+    let bootloader: FakeUm324xfBootloader;
+
+    async function flashWith(layout: Layout, hex: ParsedHex, { canSwitchAlt = true } = {}) {
+        setActivePinia(createPinia());
+        messages = [];
+        bootloader = new FakeUm324xfBootloader(layout);
+        if (!canSwitchAlt) {
+            // Like the Android transport, which has no SET_INTERFACE
+            Object.defineProperty(bootloader, "selectAlternateInterface", { value: undefined });
+        }
+        const dfu = new UsbDfuProtocol(bootloader as unknown as DfuTransport);
+        void dfu.connect(
+            "usb_fake",
+            hex,
+            {
+                flashingMessage: (msg: string | null, type?: string) => messages.push({ msg, type }),
+                flashProgress: vi.fn(),
+                flashMessageTypes: { VALID: "VALID", INVALID: "INVALID" },
+            },
+            vi.fn(),
+        );
+        await vi.advanceTimersByTimeAsync(10000);
+    }
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it("refuses a hex that needs another alternate setting when the transport cannot switch", async () => {
+        await flashWith(separateAlts, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE, 1024, 2)]), {
+            canSwitchAlt: false,
+        });
+
+        expect(messages.map((m) => m.msg)).toContain("dfu_hex_alt_switch_unsupported");
+        expect(bootloader.erased).toEqual([]);
+    });
+
+    it("flashes both flashes without switching when they share alternate setting 0", async () => {
+        await flashWith(combinedAlt0, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE, 1024, 2)]), {
+            canSwitchAlt: false,
+        });
+
+        expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
+    });
+
+    it("only writes to the writable sectors of a second flash", async () => {
+        const layout: Layout = {
+            ...separateAlts,
+            descriptors: ["@Internal Flash   /0x08000000/64*008Kg", "@QSPI Flash       /0x38000000/64*004Kg,64*004Ka"],
+        };
+
+        await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE + 0x40000, 1024, 2)]));
+        expect(messages.map((m) => m.msg)).toContain("dfu_hex_address_errors");
+        expect(bootloader.erased).toEqual([]);
+
+        await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE, 1024, 2)]));
+        expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
+    });
+
+    it("ignores a second flash whose descriptor has no attribute letter", async () => {
+        const layout: Layout = {
+            ...separateAlts,
+            descriptors: ["@Internal Flash   /0x08000000/64*008Kg", "@External Flash /0x38000000/128*4K"],
+        };
+
+        await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE, 1024, 2)]));
+        expect(messages.map((m) => m.msg)).toContain("dfu_hex_address_errors");
+
+        await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1)]));
+        expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
+    });
+});
+
+describe("isBlockUsable", () => {
+    const layout = {
+        start_address: 0,
+        total_size: 0x2000,
+        sectors: [
+            { num_pages: 1, start_address: 0, page_size: 0x1000, total_size: 0x1000 },
+            { num_pages: 1, start_address: 0x1000, page_size: 0x1000, total_size: 0x1000 },
+        ],
+    };
+    const dfu = new UsbDfuProtocol(new FakeUm324xfBootloader(LAYOUTS[0]) as unknown as DfuTransport);
+
+    it("accepts a block that starts mid-run and ends at the end of memory", () => {
+        expect(dfu.isBlockUsable(0xf00, 0x1100, layout)).toBe(true);
+    });
+
+    it("refuses a block that starts mid-run and overruns the end of memory", () => {
+        expect(dfu.isBlockUsable(0xf00, 0x1200, layout)).toBe(false);
     });
 });
