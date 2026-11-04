@@ -1023,15 +1023,6 @@ export class UsbDfuProtocol extends EventTarget {
         if (chipInfo.internal_flash !== undefined) {
             this.chipInfo = chipInfo;
             this.flash_layout = chipInfo.internal_flash;
-
-            if (this.hex!.bytes_total > chipInfo.internal_flash.total_size) {
-                const firmwareSize = this.hex!.bytes_total;
-                const boardSize = chipInfo.internal_flash.total_size;
-                const bareBoard = this.bareBoard;
-                console.log(
-                    `${this.logHead} Firmware size ${firmwareSize} exceeds board memory size ${boardSize} (${bareBoard})`,
-                );
-            }
             return 1;
         }
 
@@ -1101,6 +1092,15 @@ export class UsbDfuProtocol extends EventTarget {
         gui_log(i18n.getMessage("dfu_device_flash_info", (this.flash_layout.total_size / 1024).toString()));
 
         this.flashTargets = this.collectFlashTargets(this.chipInfo!);
+
+        // Compare against every memory the hex writes to, not just the first: a UM324xF XIP
+        // hex is larger than the internal flash but fits it and the QSPI flash together.
+        const boardSize = this.flashTargets.reduce((total, memory) => total + memory.total_size, 0);
+        if (this.hex!.bytes_total > boardSize) {
+            console.log(
+                `${this.logHead} Firmware size ${this.hex!.bytes_total} exceeds board memory size ${boardSize} (${this.bareBoard})`,
+            );
+        }
 
         // verify all addresses in the hex are writable.
         const unusableBlocks = this.hex!.data.filter(
