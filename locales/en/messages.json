@@ -712,6 +712,15 @@
     "stm32UsbDfuNotFound": {
         "message": "USB DFU not found"
     },
+    "dfuDeviceOpenFailed": {
+        "message": "Failed to open the DFU device. Reconnect the flight controller and try again"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "Access to the DFU device was denied. Check the udev rules are installed, see the docs for instructions"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "Access to the DFU device was denied. Install the WinUSB driver (ImpulseRC Driver Fixer or Zadig) and close any other program using the flight controller"
+    },
     "stm32DfuPermissionRequired": {
         "message": "The device has rebooted to DFU mode.<br><br>Your browser requires USB permission to access the DFU device. Click the button below to select it from the device picker."
     },
