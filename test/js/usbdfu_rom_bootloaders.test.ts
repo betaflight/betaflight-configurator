@@ -38,6 +38,7 @@ import {
     type DfuTransport,
 } from "../../src/js/protocols/usbdfu";
 import type { ParsedHex } from "../../src/js/workers/hex_parser";
+import { DFU_REQUEST, DFU_STATE, FakeDfuDevice } from "./fakeDfuDevice";
 
 type WebUsbDfuTransportModule = typeof import("../../src/js/protocols/WebUsbDfuTransport");
 const RealWebUsbDfuTransport = (
@@ -63,67 +64,33 @@ const FLASH_MESSAGE_TYPES = {
     VERIFYING: "VERIFYING",
 };
 
-// DFU states / requests (subset used by the state machine).
-const STATE = { dfuIDLE: 2, dfuDNBUSY: 4, dfuDNLOAD_IDLE: 5, dfuUPLOAD_IDLE: 9 };
-const REQ = { DNLOAD: 1, UPLOAD: 2, GETSTATUS: 3, CLRSTATUS: 4, ABORT: 6 };
+const STATE = DFU_STATE;
+const REQ = DFU_REQUEST;
 
 /**
  * Mock transport emulating an STM32C5 ROM bootloader well enough to run a full
  * DFU program+verify cycle. Captures the bytes written via DNLOAD and replays
  * them on UPLOAD so verification passes.
  */
-class MockC5Transport extends EventTarget {
+class MockC5Transport extends FakeDfuDevice {
     currentState = STATE.dfuIDLE;
     busy = false;
     postBusyState = STATE.dfuDNLOAD_IDLE;
     written: number[] = [];
     readCursor = 0;
-    getFunctionalDescriptorCalls = 0;
 
     /** @param descriptorStrings - Memory-layout descriptor strings to report. */
-    constructor(private readonly descriptorStrings: string[]) {
-        super();
-    }
-
-    getDevices() {
-        return Promise.resolve([{ path: "usb_c5", displayName: "c5", port: {} }]);
-    }
-    getConnectedDevice() {
-        return "usb_c5";
-    }
-    open() {
-        return Promise.resolve();
-    }
-    claimInterface() {
-        return Promise.resolve();
-    }
-    releaseInterface() {
-        return Promise.resolve();
-    }
-    close() {
-        return Promise.resolve();
-    }
-    reset() {
-        return Promise.resolve();
-    }
-
-    getInterfaceDescriptors() {
-        return Promise.resolve(this.descriptorStrings);
-    }
-
-    getFunctionalDescriptor() {
-        // Emulates reading it from the config blob: returns the real transfer size
-        // without hanging (the C5 standalone request would never resolve). Real C562
-        // hardware reports 1024, so exercise the non-default transfer-size path.
-        this.getFunctionalDescriptorCalls++;
-        return Promise.resolve({ wTransferSize: 1024, bcdDFUVersion: 0x011a });
+    constructor(descriptorStrings: string[]) {
+        // The functional descriptor comes from the config blob, as the C5 standalone request
+        // never resolves. Real C562 hardware reports 1024, the non-default transfer-size path.
+        super("usb_c5", descriptorStrings, 1024);
     }
 
     controlTransferOut(setup: DfuControlSetup, data?: number[] | Uint8Array | 0) {
         if (setup.request === REQ.CLRSTATUS) {
             // Faithful to the STM32C5 ROM: DFU_CLRSTATUS is only legal in dfuERROR;
             // issued in any other state the ROM STALLs the request (the reported bug).
-            if (this.currentState !== 10 /* dfuERROR */) {
+            if (this.currentState !== STATE.dfuERROR) {
                 return Promise.reject(new Error("USB controlTransferOut failed: stall"));
             }
             this.currentState = STATE.dfuIDLE;
@@ -145,24 +112,31 @@ class MockC5Transport extends EventTarget {
     }
 
     controlTransferIn(setup: DfuControlSetup, length: number) {
+        let bytes: number[] = Array.from({ length }, () => 0);
         if (setup.request === REQ.GETSTATUS) {
-            let bytes: number[];
-            if (this.busy) {
-                this.busy = false;
-                this.currentState = this.postBusyState;
-                bytes = [0, 1, 0, 0, STATE.dfuDNBUSY, 0]; // status OK, 1ms poll, DNBUSY
-            } else {
-                bytes = [0, 0, 0, 0, this.currentState, 0];
-            }
-            return Promise.resolve({ status: "ok", data: new Uint8Array(bytes) });
+            bytes = this.status();
+        } else if (setup.request === REQ.UPLOAD) {
+            bytes = this.readBack(length);
         }
-        if (setup.request === REQ.UPLOAD) {
-            const chunk = this.written.slice(this.readCursor, this.readCursor + length);
-            this.readCursor += length;
-            this.currentState = STATE.dfuUPLOAD_IDLE;
-            return Promise.resolve({ status: "ok", data: new Uint8Array(chunk) });
+        return Promise.resolve({ status: "ok", data: new Uint8Array(bytes) });
+    }
+
+    /** One GETSTATUS: a pending download reports DNBUSY (1 ms poll) once, then settles. */
+    private status(): number[] {
+        if (!this.busy) {
+            return [0, 0, 0, 0, this.currentState, 0];
         }
-        return Promise.resolve({ status: "ok", data: new Uint8Array(length) });
+        this.busy = false;
+        this.currentState = this.postBusyState;
+        return [0, 1, 0, 0, STATE.dfuDNBUSY, 0];
+    }
+
+    /** One UPLOAD: replays the next `length` written bytes so verification passes. */
+    private readBack(length: number): number[] {
+        const chunk = this.written.slice(this.readCursor, this.readCursor + length);
+        this.readCursor += length;
+        this.currentState = STATE.dfuUPLOAD_IDLE;
+        return chunk;
     }
 }
 
