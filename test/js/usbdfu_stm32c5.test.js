@@ -219,6 +219,22 @@ describe("STM32C5 DFU flashing", () => {
 
         expect(messages.at(-1).msg).toBe("stm32ProgrammingSuccessful");
     });
+
+    it("splits a UM32 descriptor that packs internal and external flash into one string", async () => {
+        const transport = new MockC5Transport([
+            "@Internal Flash   /0x08000000/64*8Kg  @External Flash   /0x38000000/128*4Kg",
+            "@Option Bytes /0x5200201C/01*128 e",
+        ]);
+        const dfu = new UsbDfuProtocol(transport);
+
+        const chipInfo = await new Promise((resolve) => dfu.getChipInfo(0, (info) => resolve(info)));
+
+        expect(chipInfo.internal_flash.start_address).toBe(0x08000000);
+        expect(chipInfo.internal_flash.total_size).toBe(512 * 1024);
+        expect(chipInfo.external_flash.start_address).toBe(0x38000000);
+        expect(chipInfo.external_flash.total_size).toBe(512 * 1024);
+        expect(chipInfo.option_bytes.start_address).toBe(0x5200201c);
+    });
 });
 
 describe("WebUsbDfuTransport.getFunctionalDescriptor", () => {
