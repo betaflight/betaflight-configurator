@@ -22,7 +22,7 @@
 /// <reference types="vite-plugin-pwa/vanillajs" />
 
 interface ImportMetaEnv {
-    /** "true" in PR/master preview deploys (deploy.yml); "false" in other CI builds, unset locally. */
+    /** "true" in PR/master preview deploys and the local android:run/android:open builds; otherwise "false" or unset. */
     readonly VITE_PREVIEW_BUILD?: string;
 }
 
