@@ -216,6 +216,11 @@ function block(address: number, byteCount: number, seed: number) {
     return { address, bytes: byteCount, data };
 }
 
+/** The erase records for count consecutive pages of a memory, in address order. */
+function pages(memory: number, start: number, count: number, size: number) {
+    return Array.from({ length: count }, (_, i) => ({ memory, address: start + i * size }));
+}
+
 function makeHex(blocks: ReturnType<typeof block>[]): ParsedHex {
     return {
         bytes_total: blocks.reduce((n, b) => n + b.bytes, 0),
@@ -295,8 +300,7 @@ describe.each(LAYOUTS)("DFU flashing on the UM324xF boot loader: $name", (layout
         await vi.advanceTimersByTimeAsync(20000);
 
         expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
-        expect(bootloader.erased.filter((e) => e.memory === 0)).toHaveLength(64);
-        expect(bootloader.erased.filter((e) => e.memory === 1)).toHaveLength(128);
+        expect(bootloader.erased).toEqual([...pages(0, FLASH_BASE, 64, 0x2000), ...pages(1, QSPI_BASE, 128, 0x1000)]);
     });
 
     it("does not switch alternate setting for a hex with internal flash blocks only", async () => {
@@ -392,10 +396,7 @@ describe("DFU flashing on the UM324xF boot loader: edge cases", () => {
         await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE, 1024, 2)]), { erase_chip: true });
 
         expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
-        expect(bootloader.erased.filter((e) => e.memory === 0)).toHaveLength(64);
-        const qspiErased = bootloader.erased.filter((e) => e.memory === 1);
-        expect(qspiErased).toHaveLength(64);
-        expect(qspiErased.every((e) => e.address < QSPI_BASE + 64 * 0x1000)).toBe(true);
+        expect(bootloader.erased).toEqual([...pages(0, FLASH_BASE, 64, 0x2000), ...pages(1, QSPI_BASE, 64, 0x1000)]);
     });
 
     // The primary flash's attributes are not trusted: the AT32 F437 boot loader reports its
@@ -413,7 +414,7 @@ describe("DFU flashing on the UM324xF boot loader: edge cases", () => {
 
         await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1)]), { erase_chip: true });
         expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
-        expect(bootloader.erased.filter((e) => e.memory === 0)).toHaveLength(64);
+        expect(bootloader.erased).toEqual(pages(0, FLASH_BASE, 64, 0x2000));
     });
 
     it("ignores a second flash whose descriptor has no attribute letter", async () => {
