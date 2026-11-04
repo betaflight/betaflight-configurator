@@ -124,7 +124,8 @@ jobs:
         run: |
           tools_dir="${XDG_CACHE_HOME:-$HOME/.cache}/tauri"
           mkdir -p "$tools_dir"
-          curl -fsSL --retry 3 -o "$tools_dir/linuxdeploy-x86_64.AppImage" \
+          curl -fsSL --proto '=https' --proto-redir '=https' --retry 3 \
+            -o "$tools_dir/linuxdeploy-x86_64.AppImage" \
             https://github.com/tauri-apps/binary-releases/releases/download/linuxdeploy-07333c6/linuxdeploy-x86_64.AppImage
           chmod +x "$tools_dir/linuxdeploy-x86_64.AppImage"
 
