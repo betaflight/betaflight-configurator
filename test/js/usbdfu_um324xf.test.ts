@@ -321,7 +321,7 @@ describe("DFU flashing on the UM324xF boot loader: edge cases", () => {
     let messages: { msg: string | null; type?: string }[];
     let bootloader: FakeUm324xfBootloader;
 
-    async function flashWith(layout: Layout, hex: ParsedHex, { canSwitchAlt = true } = {}) {
+    async function flashWith(layout: Layout, hex: ParsedHex, { canSwitchAlt = true, erase_chip = false } = {}) {
         setActivePinia(createPinia());
         messages = [];
         bootloader = new FakeUm324xfBootloader(layout);
@@ -334,13 +334,14 @@ describe("DFU flashing on the UM324xF boot loader: edge cases", () => {
             "usb_fake",
             hex,
             {
+                erase_chip,
                 flashingMessage: (msg: string | null, type?: string) => messages.push({ msg, type }),
                 flashProgress: vi.fn(),
                 flashMessageTypes: { VALID: "VALID", INVALID: "INVALID" },
             },
             vi.fn(),
         );
-        await vi.advanceTimersByTimeAsync(10000);
+        await vi.advanceTimersByTimeAsync(20000);
     }
 
     beforeEach(() => {
@@ -380,6 +381,39 @@ describe("DFU flashing on the UM324xF boot loader: edge cases", () => {
 
         await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE, 1024, 2)]));
         expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
+    });
+
+    it("skips the read-only sectors of a second flash in a full chip erase", async () => {
+        const layout: Layout = {
+            ...separateAlts,
+            descriptors: ["@Internal Flash   /0x08000000/64*008Kg", "@QSPI Flash       /0x38000000/64*004Kg,64*004Ka"],
+        };
+
+        await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1), block(QSPI_BASE, 1024, 2)]), { erase_chip: true });
+
+        expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
+        expect(bootloader.erased.filter((e) => e.memory === 0)).toHaveLength(64);
+        const qspiErased = bootloader.erased.filter((e) => e.memory === 1);
+        expect(qspiErased).toHaveLength(64);
+        expect(qspiErased.every((e) => e.address < QSPI_BASE + 64 * 0x1000)).toBe(true);
+    });
+
+    // The primary flash's attributes are not trusted: the AT32 F437 boot loader reports its
+    // first pages read-only ("@Internal Flash /0x08000000/08*04Ka,..."), yet every betaflight
+    // hex starts there and flashes. Pin that a hex in a read-only primary run still flashes.
+    it("writes and erases read-only sectors of the primary flash", async () => {
+        const layout: Layout = {
+            ...separateAlts,
+            descriptors: ["@Internal Flash   /0x08000000/02*008Ka,62*008Kg", "@QSPI Flash       /0x38000000/128*004Kg"],
+        };
+
+        await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1)]));
+        expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
+        expect(bootloader.erased).toEqual([{ memory: 0, address: FLASH_BASE }]);
+
+        await flashWith(layout, makeHex([block(FLASH_BASE, 1024, 1)]), { erase_chip: true });
+        expect(messages.at(-1)?.msg).toBe("stm32ProgrammingSuccessful");
+        expect(bootloader.erased.filter((e) => e.memory === 0)).toHaveLength(64);
     });
 
     it("ignores a second flash whose descriptor has no attribute letter", async () => {
