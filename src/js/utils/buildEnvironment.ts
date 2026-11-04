@@ -23,11 +23,15 @@
  * Whether this is a development build or a PR/master preview deployment, where development
  * options default on.
  *
- * Development is taken from the build, not the hostname: release Tauri (`tauri://localhost`,
- * `http://tauri.localhost`) and Capacitor (`https://localhost`) builds are served from localhost.
+ * Development and preview are taken from the build, not the hostname: release Tauri
+ * (`tauri://localhost`, `http://tauri.localhost`) and Capacitor (`https://localhost`) builds are
+ * served from localhost, and so is the preview APK. VITE_PREVIEW_BUILD is set by the preview deploy.
  */
-export function isPreviewOrDevBuild(href: string = window.location.href, dev: boolean = import.meta.env.DEV): boolean {
-    if (dev) {
+export function isPreviewOrDevBuild(
+    href: string = window.location.href,
+    devOrPreviewBuild: boolean = import.meta.env.DEV || import.meta.env.VITE_PREVIEW_BUILD === "true",
+): boolean {
+    if (devOrPreviewBuild) {
         return true;
     }
 

@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { isPreviewOrDevBuild } from "../../../src/js/utils/buildEnvironment";
 
 describe("isPreviewOrDevBuild", () => {
@@ -57,4 +57,32 @@ describe("isPreviewOrDevBuild", () => {
             expect(isPreviewOrDevBuild(href, true)).toBe(true);
         },
     );
+
+    describe("build markers", () => {
+        afterEach(() => {
+            vi.unstubAllEnvs();
+        });
+
+        it("treats a preview APK on https://localhost as preview when VITE_PREVIEW_BUILD is set", () => {
+            vi.stubEnv("DEV", false);
+            vi.stubEnv("VITE_PREVIEW_BUILD", "true");
+            expect(isPreviewOrDevBuild("https://localhost/")).toBe(true);
+        });
+
+        it.each([undefined, "false", ""])(
+            "treats a release build as release when VITE_PREVIEW_BUILD is %s",
+            (value) => {
+                vi.stubEnv("DEV", false);
+                vi.stubEnv("VITE_PREVIEW_BUILD", value);
+                expect(isPreviewOrDevBuild("https://localhost/")).toBe(false);
+                expect(isPreviewOrDevBuild("tauri://localhost/")).toBe(false);
+            },
+        );
+
+        it("treats the dev server as development without the preview marker", () => {
+            vi.stubEnv("DEV", true);
+            vi.stubEnv("VITE_PREVIEW_BUILD", undefined);
+            expect(isPreviewOrDevBuild("http://localhost:8080/")).toBe(true);
+        });
+    });
 });

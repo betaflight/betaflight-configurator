@@ -40,6 +40,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       debug_build: true
+      preview_build: true
       commit_ref: ${{ needs.commit_reference.outputs.COMMIT_REF }}
 
   # Prepare branch name for deployment
