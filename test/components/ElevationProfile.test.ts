@@ -48,13 +48,18 @@ import ElevationProfile from "../../src/components/tabs/FlightPlan/ElevationProf
 
 const NOT_AVAILABLE = "flightPlanTerrainNotAvailable";
 
+// Every mounted profile watches the shared waypoints ref, so they all get unmounted after each test
+const mountedWrappers: VueWrapper[] = [];
+
 function mountProfile() {
-    return shallowMount(ElevationProfile, {
+    const wrapper = shallowMount(ElevationProfile, {
         global: {
             renderStubDefaultSlot: true,
             mocks: { $t: (key: string) => key },
         },
     });
+    mountedWrappers.push(wrapper);
+    return wrapper;
 }
 
 // Returns the value text of one stat, e.g. "N/A" or "3937ft", looked up by its label key
@@ -87,6 +92,8 @@ describe("ElevationProfile terrain lookup", () => {
     });
 
     afterEach(() => {
+        // Unmount first so no watcher can call the real fetch once the stub is gone
+        mountedWrappers.splice(0).forEach((wrapper) => wrapper.unmount());
         vi.unstubAllGlobals();
         vi.restoreAllMocks();
     });
