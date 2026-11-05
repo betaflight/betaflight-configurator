@@ -20,8 +20,7 @@
  */
 
 import { defineStore } from "pinia";
-import { reactive, toRaw, watch } from "vue";
-import { useDisplayUnits } from "@/composables/useDisplayUnits";
+import { reactive, toRaw } from "vue";
 import { defaultUserSettings, type UserSettings } from "../user_settings_data";
 import { PrefStorage } from "../pref_storage";
 
@@ -42,13 +41,6 @@ function deepMerge(target: Record<string, unknown>, source: Record<string, unkno
 
 export const useSettingsStore = defineStore("settings", () => {
     const userSettings = reactive<UserSettings>(structuredClone(defaultUserSettings));
-    const { unitSystem, isMetric, usesMetricLength } = useDisplayUnits();
-
-    function applyAppUnits(): void {
-        if (!userSettings.followAppUnits) return;
-        userSettings.speedUnits = isMetric.value ? 2 : 3;
-        userSettings.altitudeUnits = usesMetricLength.value ? 1 : 2;
-    }
 
     function load(): void {
         prefs.get("userSettings", (item) => {
@@ -56,7 +48,6 @@ export const useSettingsStore = defineStore("settings", () => {
                 const merged = structuredClone(defaultUserSettings);
                 // Whatever was stored, possibly by an older version, goes over the defaults as is.
                 deepMerge(merged as unknown as Record<string, unknown>, item as Record<string, unknown>);
-                if (!("followAppUnits" in (item as Record<string, unknown>))) merged.followAppUnits = false;
                 Object.assign(userSettings, merged);
             }
         });
@@ -64,7 +55,6 @@ export const useSettingsStore = defineStore("settings", () => {
 
     function saveAll(newSettings: Partial<UserSettings>): void {
         Object.assign(userSettings, newSettings);
-        applyAppUnits();
         prefs.set("userSettings", toRaw(userSettings));
     }
 
@@ -73,9 +63,8 @@ export const useSettingsStore = defineStore("settings", () => {
         prefs.set("userSettings", { ...toRaw(userSettings) });
     }
 
-    // Preserve existing viewer choices; new installations follow the app preference.
+    // Load persisted settings on creation
     load();
-    watch([unitSystem, () => userSettings.followAppUnits], applyAppUnits, { immediate: true, flush: "sync" });
 
     return {
         userSettings,

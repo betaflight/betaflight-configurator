@@ -523,15 +523,14 @@ const FIELD_DECODERS = fieldTable<FieldDecoder>([
     ],
     [
         ["GPS_velned[0]", "GPS_velned[1]", "GPS_velned[2]"],
-        (value, { userSettings }) => {
-            const suffix = speedSuffix(userSettings.speedUnits);
-            return `${((value / 100) * speedFactor(userSettings.speedUnits)).toFixed(1)} ${suffix}`;
+        (value) => {
+            return `${(value / 100).toFixed(1)} m/s`;
         },
     ],
     [
         ["gpsCartesianCoords[0]", "gpsCartesianCoords[1]", "gpsCartesianCoords[2]", "gpsDistance"],
-        (value, { userSettings }) => {
-            return FlightLogFieldPresenter.decodeCorrectAltitude(value, userSettings.altitudeUnits);
+        (value) => {
+            return `${value.toFixed(0)} m`;
         },
     ],
     [
@@ -548,9 +547,8 @@ const FIELD_DECODERS = fieldTable<FieldDecoder>([
     ],
     [
         ["pitot[0]"],
-        (value, { userSettings }) => {
-            const suffix = speedSuffix(userSettings.speedUnits);
-            return `${((value / 100) * speedFactor(userSettings.speedUnits)).toFixed(1)} ${suffix}`;
+        (value) => {
+            return `${(value / 100).toFixed(1)} m/s`;
         },
     ],
     [
@@ -599,12 +597,6 @@ function amperageDivisor(flightLog: PresentedFlightLog): number {
         isFirmwareFrom(flightLog, FIRMWARE_TYPE_BETAFLIGHT, "3.1.0") ||
         isFirmwareFrom(flightLog, FIRMWARE_TYPE_CLEANFLIGHT, "2.0.0");
     return centiamps ? 100 : 1000;
-}
-
-function speedSuffix(speedUnits: number): string {
-    if (speedUnits === 2) return "kph";
-    if (speedUnits === 3) return "mph";
-    return "m/s";
 }
 
 /** The logged cm/s in m/s, times this: 3.6 for kph, 2.2369 for mph, 1 for m/s and any other setting. */
@@ -775,17 +767,8 @@ const FIELD_CONVERTERS = fieldTable<FieldConverter>([
     [
         ["GPS_velned[0]", "GPS_velned[1]", "GPS_velned[2]"],
         {
-            toFriendly: (value, { userSettings }) => (value / 100) * speedFactor(userSettings.speedUnits),
-            fromFriendly: (value, { userSettings }) => (value * 100) / speedFactor(userSettings.speedUnits),
-        },
-    ],
-    [
-        ["gpsCartesianCoords[0]", "gpsCartesianCoords[1]", "gpsCartesianCoords[2]", "gpsDistance"],
-        {
-            toFriendly: (value, { userSettings }) =>
-                Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(value, userSettings.altitudeUnits)),
-            fromFriendly: (value, { userSettings }) =>
-                value / Number(FlightLogFieldPresenter.decodeAltitudeLogToChart(1, userSettings.altitudeUnits)),
+            toFriendly: (value) => value / 100,
+            fromFriendly: (value) => value * 100,
         },
     ],
     [
@@ -798,8 +781,8 @@ const FIELD_CONVERTERS = fieldTable<FieldConverter>([
     [
         ["pitot[0]"],
         {
-            toFriendly: (value, { userSettings }) => (value / 100) * speedFactor(userSettings.speedUnits),
-            fromFriendly: (value, { userSettings }) => (value * 100) / speedFactor(userSettings.speedUnits),
+            toFriendly: (value) => value / 100,
+            fromFriendly: (value) => value * 100,
         },
     ],
     [

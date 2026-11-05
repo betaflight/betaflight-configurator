@@ -142,8 +142,6 @@ export interface UserSettings {
     speedUnits: number;
     /** 1 metres, 2 feet. */
     altitudeUnits: number;
-    /** Follow the app-wide display preference for speed and altitude. */
-    followAppUnits: boolean;
     darkMode: number;
     gapless: boolean;
     /** "3D" by default; the toolbar toggle stores a boolean. Read for truthiness. */
@@ -192,7 +190,6 @@ export const defaultUserSettings: UserSettings = {
     legendUnits: true,
     speedUnits: 1,
     altitudeUnits: 1,
-    followAppUnits: true,
     darkMode: 2,
     gapless: false,
     drawCraft: "3D",

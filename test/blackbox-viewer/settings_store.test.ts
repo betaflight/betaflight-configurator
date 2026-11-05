@@ -22,7 +22,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { useSettingsStore } from "../../src/blackbox-viewer/stores/settings";
-import { useDisplayUnits } from "../../src/composables/useDisplayUnits";
 import { defaultUserSettings } from "../../src/blackbox-viewer/user_settings_data";
 
 const stored = () => JSON.parse(localStorage.getItem("userSettings") ?? "null");
@@ -30,12 +29,11 @@ const stored = () => JSON.parse(localStorage.getItem("userSettings") ?? "null");
 describe("blackbox settings store", () => {
     beforeEach(() => {
         localStorage.clear();
-        useDisplayUnits().setUnitSystem("metric");
         setActivePinia(createPinia());
     });
 
     it("starts from the defaults when nothing is stored", () => {
-        expect(useSettingsStore().userSettings).toEqual({ ...defaultUserSettings, speedUnits: 2 });
+        expect(useSettingsStore().userSettings).toEqual(defaultUserSettings);
     });
 
     it("merges stored settings over the defaults, one level deep", () => {
@@ -47,7 +45,6 @@ describe("blackbox settings store", () => {
         const { userSettings } = useSettingsStore();
 
         expect(userSettings.speedUnits).toBe(3);
-        expect(userSettings.followAppUnits).toBe(false);
         expect(userSettings.craft).toEqual({ ...defaultUserSettings.craft, left: "1%" });
         expect(userSettings.altitudeUnits).toBe(defaultUserSettings.altitudeUnits);
         // Unknown keys from an older version are kept as they are.
@@ -69,17 +66,7 @@ describe("blackbox settings store", () => {
         expect(settings.userSettings.drawSticks).toBe(false);
         expect(stored().drawSticks).toBe(false);
 
-        settings.saveAll({ followAppUnits: false, speedUnits: 2, gapless: true });
+        settings.saveAll({ speedUnits: 2, gapless: true });
         expect(stored()).toMatchObject({ drawSticks: false, speedUnits: 2, gapless: true });
-    });
-    it("follows app unit changes unless the viewer has its own selection", () => {
-        const settings = useSettingsStore();
-        useDisplayUnits().setUnitSystem("imperial");
-        expect(settings.userSettings).toMatchObject({ followAppUnits: true, speedUnits: 3, altitudeUnits: 2 });
-        useDisplayUnits().setUnitSystem("british");
-        expect(settings.userSettings).toMatchObject({ followAppUnits: true, speedUnits: 3, altitudeUnits: 1 });
-        settings.saveAll({ followAppUnits: false, speedUnits: 1, altitudeUnits: 1 });
-        useDisplayUnits().setUnitSystem("metric");
-        expect(settings.userSettings).toMatchObject({ followAppUnits: false, speedUnits: 1, altitudeUnits: 1 });
     });
 });

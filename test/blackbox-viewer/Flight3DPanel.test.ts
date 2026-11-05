@@ -71,7 +71,6 @@ vi.mock("../../src/blackbox-viewer/playback_controls", () => ({ setCurrentBlackb
 describe("Flight3DPanel", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        Object.assign(useSettingsStore().userSettings, { followAppUnits: false, speedUnits: 1, altitudeUnits: 1 });
         scenes.length = 0;
         vi.stubGlobal(
             "ResizeObserver",

@@ -109,7 +109,6 @@ function openLog(...extraHeader: string[]): FlightLog {
 describe("decodeFieldToFriendly", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        Object.assign(useSettingsStore().userSettings, { followAppUnits: false, speedUnits: 1, altitudeUnits: 1 });
     });
 
     const log = () => openLog("H minthrottle:1000", "H maxthrottle:2000", "H motor_pwm_protocol:0", "H acc_1G:2048");
@@ -154,9 +153,6 @@ describe("decodeFieldToFriendly", () => {
 
         expect(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "baroAlt", 1000)).toBe("32.80 ft");
         expect(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "GPS_speed", 1000)).toBe("36.00 kph");
-        expect(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "GPS_velned[0]", 1000)).toBe("36.0 kph");
-        expect(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "pitot[0]", 1000)).toBe("36.0 kph");
-        expect(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "gpsDistance", 10)).toBe("32.80 ft");
     });
 
     it("converts to chart units and back", () => {
