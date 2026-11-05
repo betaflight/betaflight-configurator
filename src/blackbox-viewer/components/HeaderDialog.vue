@@ -864,18 +864,11 @@ const wingTpaParams = computed(() => {
     const s = filteredSc.value;
     const result: HeaderParam[] = [];
 
-    if (mode.tpa_curve_type == null || mode.tpa_speed_type == null) {
+    if (mode.tpa_speed_type == null) {
         return result;
     }
 
-    // Show TPA speed parameters for hyperbolic curves type only
-    if (mode.tpa_curve_type === 0) {
-        return [param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value))].filter(
-            (p) => !p.missing,
-        );
-    }
-
-    result.push(param(t("pidTuningWingTpaSpeedType"), selectVal(mode.tpa_speed_type, wingTpaSpeedTypeNames.value)));
+    result.push(param(t("pidTuningWingTpaSpeedType"), selectVal(s.tpa_speed_type, wingTpaSpeedTypeNames.value)));
     if (mode.tpa_speed_type == 0) {
         // Basic mode
         result.push(
@@ -889,12 +882,14 @@ const wingTpaParams = computed(() => {
             param(t("pidTuningWingTpaAdvSpeedMass"), fmtVal(s.tpa_speed_adv_mass, 0)),
             param(t("pidTuningWingTpaAdvSpeedDragK"), fmtVal(s.tpa_speed_adv_drag_k, 0)),
             param(t("pidTuningWingTpaAdvSpeedThrust"), fmtVal(s.tpa_speed_adv_thrust, 0)),
-            param(t("pidTuningWingTpaAdvSpeedMaxVoltage"), fmtVal(s.tpa_speed_max_voltage, 0)),
-            param(t("pidTuningWingTpaAdvSpeedPitchOffset"), fmtVal(s.tpa_speed_pitch_offset, 0)),
         );
     }
 
-    result.push(param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value)));
+    result.push(
+        param(t("pidTuningWingTpaAdvSpeedMaxVoltage"), fmtVal(s.tpa_speed_max_voltage, 0)),
+        param(t("pidTuningWingTpaAdvSpeedPitchOffset"), fmtVal(s.tpa_speed_pitch_offset, 0)),
+        param(t("pidTuningWingMiscYawType"), selectVal(s.yaw_type, wingYawTypeNames.value)),
+    );
 
     return result.filter((p) => !p.missing);
 });
