@@ -3511,6 +3511,13 @@
     "flightPlanMaxGroundElev": {
         "message": "Max Ground Elev"
     },
+    "flightPlanTerrainNotAvailable": {
+        "message": "N/A",
+        "description": "Shown instead of a ground elevation value when terrain data could not be retrieved"
+    },
+    "flightPlanTerrainUnavailable": {
+        "message": "Terrain elevation is unavailable right now (elevation service could not be reached). Ground elevation values are not shown and terrain clearance can't be checked."
+    },
     "flightPlanAvgGround": {
         "message": "Avg Ground"
     },
