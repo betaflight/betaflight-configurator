@@ -524,7 +524,7 @@ const FIELD_DECODERS = fieldTable<FieldDecoder>([
     [
         ["GPS_velned[0]", "GPS_velned[1]", "GPS_velned[2]"],
         (value, { userSettings }) => {
-            const suffix = userSettings.speedUnits === 2 ? "kph" : userSettings.speedUnits === 3 ? "mph" : "m/s";
+            const suffix = speedSuffix(userSettings.speedUnits);
             return `${((value / 100) * speedFactor(userSettings.speedUnits)).toFixed(1)} ${suffix}`;
         },
     ],
@@ -549,7 +549,7 @@ const FIELD_DECODERS = fieldTable<FieldDecoder>([
     [
         ["pitot[0]"],
         (value, { userSettings }) => {
-            const suffix = userSettings.speedUnits === 2 ? "kph" : userSettings.speedUnits === 3 ? "mph" : "m/s";
+            const suffix = speedSuffix(userSettings.speedUnits);
             return `${((value / 100) * speedFactor(userSettings.speedUnits)).toFixed(1)} ${suffix}`;
         },
     ],
@@ -599,6 +599,12 @@ function amperageDivisor(flightLog: PresentedFlightLog): number {
         isFirmwareFrom(flightLog, FIRMWARE_TYPE_BETAFLIGHT, "3.1.0") ||
         isFirmwareFrom(flightLog, FIRMWARE_TYPE_CLEANFLIGHT, "2.0.0");
     return centiamps ? 100 : 1000;
+}
+
+function speedSuffix(speedUnits: number): string {
+    if (speedUnits === 2) return "kph";
+    if (speedUnits === 3) return "mph";
+    return "m/s";
 }
 
 /** The logged cm/s in m/s, times this: 3.6 for kph, 2.2369 for mph, 1 for m/s and any other setting. */

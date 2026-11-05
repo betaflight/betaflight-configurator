@@ -1666,8 +1666,9 @@ export default defineComponent({
 
         const notamRadiusInDisplayUnits = (value: number) => {
             const storedInKm = preflight.notamSettings.radiusUnit === "km";
-            const factor = storedInKm === usesMetricLength.value ? 1 : usesMetricLength.value ? 1.852 : 1 / 1.852;
-            return Number((value * factor).toFixed(4));
+            if (storedInKm === usesMetricLength.value) return Number(value.toFixed(4));
+            const converted = usesMetricLength.value ? value * 1.852 : value / 1.852;
+            return Number(converted.toFixed(4));
         };
         const displayNotamRadius = computed({
             get: () => notamRadiusInDisplayUnits(preflight.notamSettings.radius),
@@ -1675,8 +1676,11 @@ export default defineComponent({
                 if (!Number.isFinite(value) || value === notamRadiusInDisplayUnits(preflight.notamSettings.radius))
                     return;
                 const storedInKm = preflight.notamSettings.radiusUnit === "km";
-                const factor = storedInKm === usesMetricLength.value ? 1 : usesMetricLength.value ? 1 / 1.852 : 1.852;
-                preflight.notamSettings.radius = value * factor;
+                if (storedInKm === usesMetricLength.value) {
+                    preflight.notamSettings.radius = value;
+                } else {
+                    preflight.notamSettings.radius = usesMetricLength.value ? value / 1.852 : value * 1.852;
+                }
             },
         });
 

@@ -124,6 +124,11 @@ describe("useFlightPlanUnits", () => {
         expect(units.windUnit.value).toBe("mph");
         expect(units.formatVisibility(1609.344)).toBe("1.0 mi");
         expect(units.formatPrecipitation(25.4)).toBe("1.00 in");
+        expect(units.formatPrecipitation(0.1)).toBe("<0.01 in");
+        expect(units.formatPrecipitation(0)).toBe("0.00 in");
+        expect(units.formatPrecipitation(null)).toBe("-");
+        expect(units.formatVisibility(null)).toBe("-");
+        expect(units.formatPressure(undefined)).toBe("-");
         expect(units.formatPressure(1013.25)).toBe("29.92 inHg");
         expect(units.formatElevation(304.8)).toBe("1000 ft");
         units.setUnitSystem("metric");

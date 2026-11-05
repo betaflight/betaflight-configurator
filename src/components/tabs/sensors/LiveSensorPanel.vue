@@ -138,16 +138,18 @@ const sensorFactor = (type: string) => {
     return 1;
 };
 function sensorTitle(sensor: SensorConfig): string {
-    const unit = sensor.type === "pitot" ? (isMetric.value ? "km/h" : "mph") : usesMetricLength.value ? "m" : "ft";
-    const key =
-        sensor.type === "altitude"
-            ? "sensorsAltitudeDisplayTitle"
-            : sensor.type === "sonar"
-              ? "sensorsSonarDisplayTitle"
-              : sensor.type === "pitot"
-                ? "sensorsPitotDisplayTitle"
-                : sensor.titleKey;
-    return i18n.getMessage(key, { unit, interpolation: { escapeValue: false } });
+    if (sensor.type === "pitot") {
+        return i18n.getMessage("sensorsPitotDisplayTitle", {
+            unit: isMetric.value ? "km/h" : "mph",
+            interpolation: { escapeValue: false },
+        });
+    }
+    const key = sensor.type === "altitude" ? "sensorsAltitudeDisplayTitle" : "sensorsSonarDisplayTitle";
+    if (sensor.type !== "altitude" && sensor.type !== "sonar") return i18n.getMessage(sensor.titleKey);
+    return i18n.getMessage(key, {
+        unit: usesMetricLength.value ? "m" : "ft",
+        interpolation: { escapeValue: false },
+    });
 }
 const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();

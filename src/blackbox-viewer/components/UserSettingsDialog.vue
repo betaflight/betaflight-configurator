@@ -74,7 +74,7 @@
                     <!-- Preferences -->
                     <UiBox title="Preferences">
                         <SettingRow label="Use app units">
-                            <USwitch v-model="local.followAppUnits" size="sm" />
+                            <USwitch v-model="local.followAppUnits" aria-label="Use app units" size="sm" />
                         </SettingRow>
                         <SettingRow label="Speed units">
                             <USelect

@@ -59,16 +59,20 @@ function setUnitSystem(value: unknown) {
 const windUnit = computed(() => (isMetric.value ? "m/s" : "mph"));
 
 function formatTemperature(value: number | null | undefined): string {
-    return value == null
-        ? "-"
-        : `${Number((usesMetricLength.value ? value : (value * 9) / 5 + 32).toFixed(1))}°${usesMetricLength.value ? "C" : "F"}`;
+    if (value == null) return "-";
+    const temperature = usesMetricLength.value ? value : (value * 9) / 5 + 32;
+    const unit = usesMetricLength.value ? "C" : "F";
+    return `${Number(temperature.toFixed(1))}°${unit}`;
 }
 
 function formatWind(value: number | null | undefined): string {
-    return value == null ? "-" : (value * (isMetric.value ? 1 : 2.2369362921)).toFixed(1);
+    if (value == null) return "-";
+    const speed = isMetric.value ? value : value * 2.2369362921;
+    return speed.toFixed(1);
 }
 
-function formatVisibility(meters: number): string {
+function formatVisibility(meters: number | null | undefined): string {
+    if (meters == null) return "-";
     if (!usesMetricLength.value) return `${(meters / 1609.344).toFixed(1)} mi`;
     return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${meters} m`;
 }
@@ -87,11 +91,15 @@ function formatShortDistance(meters: number): string {
     return `${Number(converted.toFixed(2))} ${usesMetricLength.value ? "m" : "ft"}`;
 }
 
-function formatPrecipitation(mm: number): string {
-    return usesMetricLength.value ? `${mm} mm` : `${(mm / 25.4).toFixed(2)} in`;
+function formatPrecipitation(mm: number | null | undefined): string {
+    if (mm == null) return "-";
+    if (usesMetricLength.value) return `${mm} mm`;
+    const inches = (mm / 25.4).toFixed(2);
+    return mm > 0 && inches === "0.00" ? "<0.01 in" : `${inches} in`;
 }
 
-function formatPressure(hpa: number): string {
+function formatPressure(hpa: number | null | undefined): string {
+    if (hpa == null) return "-";
     return usesMetricLength.value ? `${hpa} hPa` : `${(hpa * 0.0295299831).toFixed(2)} inHg`;
 }
 
