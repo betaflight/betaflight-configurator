@@ -899,7 +899,11 @@ const wingTpaParams = computed(() => {
     return result.filter((p) => !p.missing);
 });
 
-const wingTpaCurveTypeNames = computed(() => [t("pidTuningWingTpaCurveClassic"), t("pidTuningWingTpaCurveHyperbolic")]);
+const wingTpaCurveTypeNames = computed(() => [
+    t("pidTuningWingTpaCurveClassic"),
+    t("pidTuningWingTpaCurveHyperbolic"),
+    t("pidTuningWingTpaCurveHyperbolicRefSpeed"),
+]);
 
 const wingCurvesParams = computed(() => {
     const mode = sc.value;
@@ -911,13 +915,20 @@ const wingCurvesParams = computed(() => {
     }
 
     result.push(param(t("pidTuningWingTpaCurveType"), selectVal(mode.tpa_curve_type, wingTpaCurveTypeNames.value)));
-    // Show curve parameters for hyperbolic curves type only
+    // Show curve parameters for hyperbolic and vref curves type only
     if (mode.tpa_curve_type === 1) {
         result.push(
             param(t("pidTuningWingTpaAdvSpeedCurveStallSpeed"), fmtVal(s.tpa_curve_stall_throttle, 0)),
             param(t("pidTuningWingTpaAdvSpeedCurvePidThr0"), fmtVal(s.tpa_curve_pid_thr0, 0)),
             param(t("pidTuningWingTpaAdvSpeedCurvePidThr100"), fmtVal(s.tpa_curve_pid_thr100, 0)),
             param(t("pidTuningWingTpaAdvSpeedCurveExpo"), fmtVal(s.tpa_curve_expo, 0)),
+        );
+    } else if (mode.tpa_curve_type === 2) {
+        result.push(
+            param(t("speedCurvesReferenceSpeed"), fmtVal(s.speed_curve_vref, 0)),
+            param(t("speedCurvesPower"), fmtVal(s.speed_curve_power, 0)),
+            param(t("speedCurvesCurveMin"), fmtVal(s.speed_curve_min, 0)),
+            param(t("speedCurvesCurveMax"), fmtVal(s.speed_curve_max, 0)),
         );
     }
 
