@@ -16,17 +16,17 @@
                 </span>
                 <span class="stat">
                     <strong>{{ $t("flightPlanGroundElev") }}:</strong>
-                    {{ terrainUnavailable ? $t("flightPlanTerrainNotAvailable") : formatAltitude(groundElevation) }}
+                    {{ hasTerrain ? formatAltitude(groundElevation) : $t("flightPlanTerrainNotAvailable") }}
                 </span>
                 <span class="stat">
                     <strong>{{ $t("flightPlanMaxGroundElev") }}:</strong>
-                    {{ terrainUnavailable ? $t("flightPlanTerrainNotAvailable") : formatAltitude(maxGroundElevation) }}
+                    {{ hasTerrain ? formatAltitude(maxGroundElevation) : $t("flightPlanTerrainNotAvailable") }}
                 </span>
             </div>
 
-            <div v-if="terrainUnavailable" class="terrain-unavailable" role="status">
+            <output v-if="terrainFetchFailed" class="terrain-unavailable">
                 {{ $t("flightPlanTerrainUnavailable") }}
-            </div>
+            </output>
 
             <div class="profile-chart-container">
                 <svg
@@ -90,7 +90,7 @@
 
                     <!-- Average ground elevation reference line -->
                     <line
-                        v-if="groundElevation > 0"
+                        v-if="hasTerrain && groundElevation > 0"
                         :x1="padding.left"
                         :y1="scaleY(groundElevation)"
                         :x2="chartWidth - padding.right"
@@ -98,7 +98,7 @@
                         class="ground-line"
                     />
                     <text
-                        v-if="groundElevation > 0"
+                        v-if="hasTerrain && groundElevation > 0"
                         :x="chartWidth - padding.right - 5"
                         :y="scaleY(groundElevation) - 3"
                         class="ground-label"
@@ -109,7 +109,7 @@
 
                     <!-- Maximum ground elevation reference line -->
                     <line
-                        v-if="maxGroundElevation > 0"
+                        v-if="hasTerrain && maxGroundElevation > 0"
                         :x1="padding.left"
                         :y1="scaleY(maxGroundElevation)"
                         :x2="chartWidth - padding.right"
@@ -117,7 +117,7 @@
                         class="max-ground-line"
                     />
                     <text
-                        v-if="maxGroundElevation > 0"
+                        v-if="hasTerrain && maxGroundElevation > 0"
                         :x="chartWidth - padding.right - 5"
                         :y="scaleY(maxGroundElevation) - 3"
                         class="max-ground-label"
@@ -286,7 +286,8 @@ const padding = {
 const groundElevation = ref(0); // Average ground elevation for display
 const terrainSamples = ref<TerrainSample[]>([]); // Terrain samples with {distance, elevation, lat, lon}
 const isFetchingElevation = ref(false);
-const terrainUnavailable = ref(false); // True when the elevation service could not provide terrain data
+const terrainFetchFailed = ref(false); // True when the last terrain lookup failed or returned incomplete data
+const hasTerrain = computed(() => terrainSamples.value.length > 0);
 const elevationFetchSeq = ref(0); // Monotonic sequence to prevent race conditions
 
 // Segment-level caching for terrain data
@@ -796,7 +797,7 @@ const fetchGroundElevation = async () => {
     if (waypoints.value.length === 0) {
         groundElevation.value = 0;
         terrainSamples.value = [];
-        terrainUnavailable.value = false;
+        terrainFetchFailed.value = false;
         isFetchingElevation.value = false;
         return;
     }
@@ -816,11 +817,13 @@ const fetchGroundElevation = async () => {
         if (currentSeq === elevationFetchSeq.value) {
             allSegmentSamples.sort((a, b) => a.distance - b.distance);
             terrainSamples.value = allSegmentSamples;
-            terrainUnavailable.value = allSegmentSamples.length === 0;
+            terrainFetchFailed.value = false;
 
             if (allSegmentSamples.length > 0) {
                 const sum = allSegmentSamples.reduce((acc, sample) => acc + sample.elevation, 0);
                 groundElevation.value = Math.round(sum / allSegmentSamples.length);
+            } else {
+                groundElevation.value = 0;
             }
         }
     } catch (error) {
@@ -828,7 +831,7 @@ const fetchGroundElevation = async () => {
         if (currentSeq === elevationFetchSeq.value) {
             groundElevation.value = 0;
             terrainSamples.value = [];
-            terrainUnavailable.value = true;
+            terrainFetchFailed.value = true;
         }
     } finally {
         if (currentSeq === elevationFetchSeq.value) {
@@ -988,6 +991,7 @@ watch(
     }
 
     .terrain-unavailable {
+        display: block;
         margin-bottom: 0.5rem;
         padding: 0.375rem 0.625rem;
         border-left: 3px solid var(--warning-500);
