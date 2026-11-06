@@ -657,7 +657,16 @@ export class UsbDfuProtocol extends EventTarget {
             // string (common on brand-new silicon such as the STM32C5 ROM bootloader)
             // must not throw and abort the whole flash. Skip the ones we can't parse
             // and keep the regions we understand.
-            const chipInfo = descriptors.reduce<ChipInfo>((o, str) => {
+            // Some bootloaders pack several regions into one string. The UM32 ROM reports
+            // "@Internal Flash   /0x08000000/64*8Kg  @External Flash   /0x38000000/128*4Kg",
+            // so split at each "@" and parse every region on its own.
+            const regions = descriptors.flatMap((str) =>
+                str
+                    .split(/(?=@)/)
+                    .map((region) => region.trim())
+                    .filter((region) => region.length > 0),
+            );
+            const chipInfo = regions.reduce<ChipInfo>((o, str) => {
                 let memory: DfuMemory | null = null;
                 try {
                     memory = parseDescriptor(str);
