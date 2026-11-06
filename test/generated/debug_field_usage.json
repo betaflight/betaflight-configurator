@@ -1054,7 +1054,7 @@
                     "dynamic": true
                 },
                 "DSHOT_TELEMETRY_COUNTS": {
-                    "fields": [3],
+                    "fields": [0, 1, 2, 3],
                     "dynamic": false
                 },
                 "DYN_IDLE": {
@@ -1440,7 +1440,7 @@
                     "dynamic": true
                 },
                 "DSHOT_TELEMETRY_COUNTS": {
-                    "fields": [3],
+                    "fields": [0, 1, 2, 3],
                     "dynamic": false
                 },
                 "DYN_IDLE": {
@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "f583a0c46d666701f300cb4e023715f20853a7d5",
-            "date": "2026-09-25",
+            "commit": "9d7064b8af6ba70a6add279884c5a0d2fc97e94d",
+            "date": "2026-10-26",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1769,8 +1769,20 @@
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
+                "AUTOPILOT_CLIMB": {
+                    "fields": [0, 1, 2, 3, 4, 5],
+                    "dynamic": false
+                },
+                "AUTOPILOT_GUIDANCE": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
+                    "dynamic": false
+                },
                 "AUTOPILOT_HEADING": {
                     "fields": [0, 1, 2, 3, 4, 6, 7],
+                    "dynamic": false
+                },
+                "AUTOPILOT_LANDING": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "AUTOPILOT_PID": {
@@ -1838,7 +1850,7 @@
                     "dynamic": false
                 },
                 "DSHOT_TELEMETRY_COUNTS": {
-                    "fields": [3],
+                    "fields": [0, 1, 2, 3],
                     "dynamic": false
                 },
                 "DYN_IDLE": {
@@ -1894,7 +1906,7 @@
                     "dynamic": false
                 },
                 "FLIGHT_PLAN": {
-                    "fields": [0, 1, 2],
+                    "fields": [0, 1, 2, 3, 4, 5],
                     "dynamic": false
                 },
                 "FPORT": {
@@ -1954,7 +1966,7 @@
                     "dynamic": false
                 },
                 "LAUNCH": {
-                    "fields": [0, 1, 2, 3, 4, 5, 6],
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "LIDAR_TF": {
