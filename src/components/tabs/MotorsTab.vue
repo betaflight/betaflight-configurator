@@ -123,7 +123,7 @@
                                 <USwitch v-model="useDshotTelemetry" size="xs" />
                             </SettingRow>
                             <SettingRow
-                                v-if="protocolConfigured && rpmFeaturesVisible"
+                                v-if="!isMotorKvSupported && protocolConfigured && rpmFeaturesVisible"
                                 :label="$t('configurationMotorPolesLong')"
                                 :help="$t('configurationMotorPolesHelp')"
                                 fullWidth
@@ -217,7 +217,45 @@
                                     class="w-16"
                                 />
                             </SettingRow>
-                            <SettingRow v-if="isMotorKvSupported" :label="$t('configurationMotorKv')" fullWidth>
+                        </UiBox>
+                        <!-- Advanced motor settings: motor data (KV, stator size, magnets) for the RPM limiter and the motor thermal estimator; the magnets stay in the main box on firmware without this box -->
+                        <UiBox
+                            v-if="isMotorKvSupported"
+                            :title="$t('configurationMotorAdvanced')"
+                            type="neutral"
+                            collapsible
+                        >
+                            <SettingRow
+                                :label="$t('configurationMotorBrand')"
+                                :help="$t('configurationMotorBrandHelp')"
+                                fullWidth
+                            >
+                                <USelectMenu
+                                    v-model="selectedMotorBrand"
+                                    :items="motorBrandItems"
+                                    :search-input="{ placeholder: $t('search'), icon: 'i-lucide-search' }"
+                                    size="xs"
+                                    class="min-w-36"
+                                    @update:model-value="selectedMotorKey = ''"
+                                />
+                                <USelectMenu
+                                    v-if="selectedMotorBrand !== MOTOR_GENERIC"
+                                    v-model="selectedMotorKey"
+                                    value-key="value"
+                                    :items="motorModelItems"
+                                    :placeholder="$t('configurationMotorModel')"
+                                    :search-input="{ placeholder: $t('search'), icon: 'i-lucide-search' }"
+                                    size="xs"
+                                    class="ml-2 min-w-44"
+                                    @update:model-value="applyMotorModel"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="isMotorKvSupported"
+                                :label="$t('configurationMotorKv')"
+                                :help="$t('configurationMotorKvHelp')"
+                                fullWidth
+                            >
                                 <UInputNumber
                                     v-model="fcStore.motorConfig.motor_kv"
                                     :min="1"
@@ -226,6 +264,43 @@
                                     size="xs"
                                     orientation="vertical"
                                     :format-options="{ useGrouping: false }"
+                                    class="w-16"
+                                />
+                            </SettingRow>
+                            <SettingRow
+                                v-if="isMotorStatorSupported"
+                                :label="$t('configurationMotorStator')"
+                                :help="$t('configurationMotorStatorHelp')"
+                                fullWidth
+                            >
+                                <UInput
+                                    v-model="motorStatorInput"
+                                    list="motor-stator-sizes"
+                                    size="xs"
+                                    placeholder="2207"
+                                    class="w-20"
+                                    @input="normalizeStatorInput"
+                                    @blur="applyStatorSize"
+                                    @keydown.enter="applyStatorSize"
+                                />
+                                <datalist id="motor-stator-sizes">
+                                    <option v-for="size in motorStatorSizes" :key="size" :value="size" />
+                                </datalist>
+                                <span class="ml-2 text-xs text-muted">{{ motorStatorPreview }}</span>
+                            </SettingRow>
+                            <SettingRow
+                                v-if="protocolConfigured && rpmFeaturesVisible"
+                                :label="$t('configurationMotorMagnets')"
+                                :help="$t('configurationMotorPolesHelp')"
+                                fullWidth
+                            >
+                                <UInputNumber
+                                    v-model="fcStore.motorConfig.motor_poles"
+                                    :min="4"
+                                    :max="255"
+                                    :step="1"
+                                    size="xs"
+                                    orientation="vertical"
                                     class="w-16"
                                 />
                             </SettingRow>
@@ -589,6 +664,7 @@ import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
+import { MOTOR_GENERIC, findMotor, motorBrands, motorLabel, motorsOfBrand, type MotorSpec } from "@/js/motor_database";
 
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
@@ -1734,9 +1810,148 @@ const getTelemetryHtml = (index: number) => {
     return html;
 };
 
-const isMotorKvSupported = computed(
-    () => hasBuildOption("USE_WING") && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49),
+const isMotorKvSupported = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_49));
+
+// Stator size as printed on the motor ("2207", "2203.5", "1404"): firmware stores diameter [mm] and height [0.1 mm]
+const isMotorStatorSupported = computed(
+    () => isMotorKvSupported.value && fcStore.motorConfig.motor_stator_diameter > 0,
 );
+const motorStatorSizes = [
+    "0802",
+    "1103",
+    "1303.5",
+    "1404",
+    "1504",
+    "1606",
+    "1804",
+    "2004",
+    "2203",
+    "2203.5",
+    "2204",
+    "2205",
+    "2206",
+    "2207",
+    "2306",
+    "2306.5",
+    "2307",
+    "2506",
+    "2806.5",
+    "2810",
+    "3110",
+];
+const formatStatorSize = (d: number, h: number): string => {
+    if (!d || !h) {
+        return "";
+    }
+    const height = h % 10 ? (h / 10).toFixed(1) : String(h / 10);
+    return `${String(d).padStart(2, "0")}${height.padStart(h % 10 ? 4 : 2, "0")}`;
+};
+const motorStatorInput = ref("");
+watch(
+    () => [fcStore.motorConfig.motor_stator_diameter, fcStore.motorConfig.motor_stator_height],
+    ([d, h]) => {
+        motorStatorInput.value = formatStatorSize(d, h);
+    },
+    { immediate: true },
+);
+const parseStatorSize = (text: string | number): { d: number; h: number } | null => {
+    // accepts "2207", "2203.5", "2203,5" and "22035" (five digits = diameter + height in tenths)
+    const t = String(text).trim().replace(",", ".");
+    const decimal = /^(\d{2})(\d{1,2}(?:\.\d)?)$/.exec(t);
+    const tenths = decimal ? null : /^(\d{2})(\d{3})$/.exec(t);
+    let d = 0;
+    let h = 0;
+    if (decimal) {
+        d = Number.parseInt(decimal[1], 10);
+        h = Math.round(Number.parseFloat(decimal[2]) * 10);
+    } else if (tenths) {
+        d = Number.parseInt(tenths[1], 10);
+        h = Number.parseInt(tenths[2], 10);
+    }
+    return d >= 5 && d <= 60 && h >= 10 && h <= 250 ? { d, h } : null;
+};
+const motorStatorPreview = computed(() => {
+    const parsed = parseStatorSize(motorStatorInput.value);
+    if (!parsed) {
+        return motorStatorInput.value.trim() ? "?" : "";
+    }
+    return `${parsed.d} × ${parsed.h / 10} mm`;
+});
+const normalizeStatorInput = () => {
+    motorStatorInput.value = String(motorStatorInput.value).replace(",", ".");
+};
+// Motor database: brand and model fill in KV, stator size and magnets. The flight controller keeps only the values, so
+// the selection is found again from them (no unique match: Generic with the same values).
+const motorKey = (m: MotorSpec) => `${m.brand}|${m.model}|${m.kv}`;
+const motorBrandItems = motorBrands();
+const selectedMotorBrand = ref(MOTOR_GENERIC);
+const selectedMotorKey = ref("");
+const motorModelItems = computed(() =>
+    selectedMotorBrand.value !== MOTOR_GENERIC
+        ? motorsOfBrand(selectedMotorBrand.value).map((m) => ({ label: motorLabel(m), value: motorKey(m) }))
+        : [],
+);
+const pickedMotor = () =>
+    selectedMotorBrand.value === MOTOR_GENERIC
+        ? undefined
+        : motorsOfBrand(selectedMotorBrand.value).find((x) => motorKey(x) === selectedMotorKey.value);
+const stillPicked = (m: MotorSpec, kv: number, d: number, h: number, poles: number) =>
+    m.kv === kv &&
+    (!isMotorStatorSupported.value || (m.statorDiameterMm === d && m.statorHeightDmm === h)) &&
+    (!m.magnets || m.magnets === poles);
+watch(
+    () => [
+        fcStore.motorConfig.motor_kv,
+        fcStore.motorConfig.motor_stator_diameter,
+        fcStore.motorConfig.motor_stator_height,
+        fcStore.motorConfig.motor_poles,
+    ],
+    ([kv, d, h, poles]) => {
+        // the picked motor stays picked while the values are the ones it wrote: motors of several brands share KV,
+        // stator and magnets, so findMotor() below finds them only when the combination is unique
+        const picked = pickedMotor();
+        if (picked && stillPicked(picked, kv, d, h, poles)) {
+            return;
+        }
+        const m = isMotorStatorSupported.value ? findMotor(kv, d, h, poles) : null;
+        if (m) {
+            selectedMotorBrand.value = m.brand;
+            selectedMotorKey.value = motorKey(m);
+        } else if (selectedMotorKey.value) {
+            // the values were edited away from the picked motor: hand entry
+            selectedMotorBrand.value = MOTOR_GENERIC;
+            selectedMotorKey.value = "";
+        }
+    },
+    { immediate: true },
+);
+const applyMotorModel = (key: string) => {
+    const m = motorsOfBrand(selectedMotorBrand.value).find((x) => motorKey(x) === key);
+    if (!m) {
+        return;
+    }
+    fcStore.motorConfig.motor_kv = m.kv;
+    if (isMotorStatorSupported.value) {
+        fcStore.motorConfig.motor_stator_diameter = m.statorDiameterMm;
+        fcStore.motorConfig.motor_stator_height = m.statorHeightDmm;
+    }
+    if (m.magnets) {
+        fcStore.motorConfig.motor_poles = m.magnets;
+    }
+};
+
+const applyStatorSize = () => {
+    const parsed = parseStatorSize(motorStatorInput.value);
+    if (parsed) {
+        fcStore.motorConfig.motor_stator_diameter = parsed.d;
+        fcStore.motorConfig.motor_stator_height = parsed.h;
+    }
+    // invalid input (or unchanged): show what the firmware holds
+    motorStatorInput.value = formatStatorSize(
+        fcStore.motorConfig.motor_stator_diameter,
+        fcStore.motorConfig.motor_stator_height,
+    );
+};
 
 onMounted(() => {
     // Polling is handled by useMotorDataPolling()

@@ -367,6 +367,9 @@ export function createInitialState(): FcState {
             use_dshot_telemetry: false,
             use_esc_sensor: false,
             motor_kv: 0,
+            motor_stator_diameter: 0, // mm, 0 = firmware without the thermal estimator
+            motor_stator_height: 0, // 0.1 mm
+            motor_prop_diameter: 0, // 0.1 inch, 0 = auto
         },
         gpsConfig: {
             provider: 0,

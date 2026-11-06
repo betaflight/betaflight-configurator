@@ -1717,6 +1717,20 @@ OSD.loadDisplayFields = function () {
                 return `${FONT.symbol(SYM.SPEED)}a30${unit}`;
             },
         },
+        MOTOR_TEMP_EST: {
+            name: "MOTOR_TEMP_EST",
+            text: "osdTextElementMotorTempEst",
+            desc: "osdDescElementMotorTempEst",
+            defaultPosition: -1,
+            draw_order: 905,
+            positionable: true,
+            preview(osdData) {
+                // per-motor estimated winding temperatures, unit symbol once at the end (unit_mode 0 = imperial)
+                const imperial = osdData.unit_mode === 0;
+                const t = (c: number) => String(imperial ? Math.floor((c * 9) / 5 + 32) : c).padStart(3);
+                return `M${FONT.symbol(SYM.TEMPERATURE)}${t(48)}${t(51)}${t(47)}${t(52)}${FONT.symbol(imperial ? SYM.TEMP_F : SYM.TEMP_C)}`;
+            },
+        },
     };
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
@@ -1993,10 +2007,21 @@ function chooseDisplayFields(fcStore: FcStore) {
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
         }
+        // Motor thermal estimator: appended after AIRSPEED, as in the firmware enum. Shown only when the
+        // firmware reports stator geometry in MSP_MOTOR_CONFIG (built with the estimator).
+        if (hasMotorThermalEstimator(fcStore)) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.MOTOR_TEMP_EST]);
+        }
     }
 }
 
 /** API 1.48+ display fields whose firmware enum entries exist only with their build options. */
+// The motor thermal estimator (OSD element, warning and statistic) exists only in firmware built with
+// USE_MOTOR_THERMAL; such firmware reports the stator geometry after motor_kv in MSP_MOTOR_CONFIG.
+function hasMotorThermalEstimator(fcStore: FcStore): boolean {
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && (fcStore.motorConfig?.motor_stator_diameter ?? 0) > 0;
+}
+
 function buildGatedDisplayFields(fcStore: FcStore, F: typeof OSD.ALL_DISPLAY_FIELDS): OsdDisplayField[] {
     let fields: OsdDisplayField[] = [];
     // Waypoint/nav-map/pos-hold-ready enum entries only exist in firmware
@@ -2090,6 +2115,9 @@ function chooseStatisticFields(fcStore: FcStore) {
             S.STAT_AVG_THROTTLE,
         ]);
     }
+    if (hasMotorThermalEstimator(fcStore)) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([S.STAT_MOTOR_TEMP_EST]);
+    }
 }
 
 function chooseWarnings(fcStore: FcStore) {
@@ -2131,6 +2159,9 @@ function chooseWarnings(fcStore: FcStore) {
     }
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.AUTOPILOT_ABORT]);
+    }
+    if (hasMotorThermalEstimator(fcStore)) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([W.MOTOR_TEMP]);
     }
 }
 
