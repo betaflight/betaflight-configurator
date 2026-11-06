@@ -1608,6 +1608,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "BAT1",
         },
+        USER_MODES: {
+            name: "USER_MODES",
+            text: "osdTextElementUserModes",
+            desc: "osdDescElementUserModes",
+            defaultPosition: -1,
+            draw_order: 625,
+            positionable: true,
+            preview: "LED CAM",
+        },
         WP_NUMBER: {
             name: "WP_NUMBER",
             text: "osdTextElementWpNumber",
@@ -1987,6 +1996,11 @@ function chooseDisplayFields(fcStore: FcStore) {
             F.OSD_CUSTOM_SERIAL_TEXT,
             F.BATTERY_PROFILE_NAME,
         ]);
+
+        // Unconditional firmware elements must be listed before the build-gated ones below
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.USER_MODES]);
+        }
 
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat(buildGatedDisplayFields(fcStore, F));
 
