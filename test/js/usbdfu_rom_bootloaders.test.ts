@@ -2,8 +2,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
-// Regression test for STM32C5xx (STM32C562) USB-DFU flashing.
+// Regression tests for ROM bootloader quirks in USB-DFU flashing.
 //
+// UM32 (UM3241F): the ROM packs internal and external flash into a single
+// memory-layout descriptor string, which must be split into separate regions.
+//
+// STM32C5xx (STM32C562):
 // The STM32C5 on-chip ROM bootloader (VID 0x0483 / PID 0xDF11):
 //   1. reports ONLY an "@Internal Flash" memory region (no "@Option Bytes"
 //      DFU alternate setting), and
@@ -20,15 +24,35 @@ import { createPinia, setActivePinia } from "pinia";
 // reports a successful programming result.
 // ---------------------------------------------------------------------------
 
-vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key) => key } }));
+vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/utils/notifications", () => ({ default: { showNotification: vi.fn() } }));
 vi.mock("../../src/js/ConfigStorage", () => ({ get: () => ({}) }));
 // Prevent the module-bottom `new WebUsbDfuTransport()` from touching navigator.usb.
 vi.mock("../../src/js/protocols/WebUsbDfuTransport", () => ({ default: class extends EventTarget {} }));
 
-const { UsbDfuProtocol } = await import("../../src/js/protocols/usbdfu");
-const RealWebUsbDfuTransport = (await vi.importActual("../../src/js/protocols/WebUsbDfuTransport")).default;
+import {
+    UsbDfuProtocol,
+    type DfuConnectOptions,
+    type DfuControlSetup,
+    type DfuTransport,
+} from "../../src/js/protocols/usbdfu";
+import type { ParsedHex } from "../../src/js/workers/hex_parser";
+import { DFU_REQUEST, DFU_STATE, FakeDfuDevice } from "./fakeDfuDevice";
+
+type WebUsbDfuTransportModule = typeof import("../../src/js/protocols/WebUsbDfuTransport");
+const RealWebUsbDfuTransport = (
+    await vi.importActual<WebUsbDfuTransportModule>("../../src/js/protocols/WebUsbDfuTransport")
+).default;
+type WebUsbDevice = NonNullable<InstanceType<typeof RealWebUsbDfuTransport>["usbDevice"]>;
+
+/** Installs a fake WebUSB device that only answers control transfers IN. */
+function fakeUsbDevice(
+    transport: InstanceType<typeof RealWebUsbDfuTransport>,
+    controlTransferIn: (setup: DfuControlSetup, length: number) => Promise<{ status: string; data?: DataView }>,
+): void {
+    transport.usbDevice = { controlTransferIn: vi.fn(controlTransferIn) } as unknown as WebUsbDevice;
+}
 
 const FLASH_MESSAGE_TYPES = {
     NEUTRAL: "NEUTRAL",
@@ -40,67 +64,33 @@ const FLASH_MESSAGE_TYPES = {
     VERIFYING: "VERIFYING",
 };
 
-// DFU states / requests (subset used by the state machine).
-const STATE = { dfuIDLE: 2, dfuDNBUSY: 4, dfuDNLOAD_IDLE: 5, dfuUPLOAD_IDLE: 9 };
-const REQ = { DNLOAD: 1, UPLOAD: 2, GETSTATUS: 3, CLRSTATUS: 4, ABORT: 6 };
+const STATE = DFU_STATE;
+const REQ = DFU_REQUEST;
 
 /**
  * Mock transport emulating an STM32C5 ROM bootloader well enough to run a full
  * DFU program+verify cycle. Captures the bytes written via DNLOAD and replays
  * them on UPLOAD so verification passes.
  */
-class MockC5Transport extends EventTarget {
-    /** @param {string[]} descriptorStrings - Memory-layout descriptor strings to report. */
-    constructor(descriptorStrings) {
-        super();
-        this.descriptorStrings = descriptorStrings;
-        this.currentState = STATE.dfuIDLE;
-        this.busy = false;
-        this.postBusyState = STATE.dfuDNLOAD_IDLE;
-        this.written = [];
-        this.readCursor = 0;
-        this.getFunctionalDescriptorCalls = 0;
+class MockC5Transport extends FakeDfuDevice {
+    currentState = STATE.dfuIDLE;
+    busy = false;
+    postBusyState = STATE.dfuDNLOAD_IDLE;
+    written: number[] = [];
+    readCursor = 0;
+
+    /** @param descriptorStrings - Memory-layout descriptor strings to report. */
+    constructor(descriptorStrings: string[]) {
+        // The functional descriptor comes from the config blob, as the C5 standalone request
+        // never resolves. Real C562 hardware reports 1024, the non-default transfer-size path.
+        super("usb_c5", descriptorStrings, 1024);
     }
 
-    getDevices() {
-        return Promise.resolve([{ path: "usb_c5", port: {} }]);
-    }
-    getConnectedDevice() {
-        return "usb_c5";
-    }
-    open() {
-        return Promise.resolve();
-    }
-    claimInterface() {
-        return Promise.resolve();
-    }
-    releaseInterface() {
-        return Promise.resolve();
-    }
-    close() {
-        return Promise.resolve();
-    }
-    reset() {
-        return Promise.resolve();
-    }
-
-    getInterfaceDescriptors() {
-        return Promise.resolve(this.descriptorStrings);
-    }
-
-    getFunctionalDescriptor() {
-        // Emulates reading it from the config blob: returns the real transfer size
-        // without hanging (the C5 standalone request would never resolve). Real C562
-        // hardware reports 1024, so exercise the non-default transfer-size path.
-        this.getFunctionalDescriptorCalls++;
-        return Promise.resolve({ wTransferSize: 1024, bcdDFUVersion: 0x011a });
-    }
-
-    controlTransferOut(setup, data) {
+    controlTransferOut(setup: DfuControlSetup, data?: number[] | Uint8Array | 0) {
         if (setup.request === REQ.CLRSTATUS) {
             // Faithful to the STM32C5 ROM: DFU_CLRSTATUS is only legal in dfuERROR;
             // issued in any other state the ROM STALLs the request (the reported bug).
-            if (this.currentState !== 10 /* dfuERROR */) {
+            if (this.currentState !== STATE.dfuERROR) {
                 return Promise.reject(new Error("USB controlTransferOut failed: stall"));
             }
             this.currentState = STATE.dfuIDLE;
@@ -121,57 +111,54 @@ class MockC5Transport extends EventTarget {
         return Promise.resolve({ status: "ok" });
     }
 
-    controlTransferIn(setup, length) {
+    controlTransferIn(setup: DfuControlSetup, length: number) {
+        let bytes: number[] = Array.from({ length }, () => 0);
         if (setup.request === REQ.GETSTATUS) {
-            let bytes;
-            if (this.busy) {
-                this.busy = false;
-                this.currentState = this.postBusyState;
-                bytes = [0, 1, 0, 0, STATE.dfuDNBUSY, 0]; // status OK, 1ms poll, DNBUSY
-            } else {
-                bytes = [0, 0, 0, 0, this.currentState, 0];
-            }
-            return Promise.resolve({ status: "ok", data: new Uint8Array(bytes) });
+            bytes = this.status();
+        } else if (setup.request === REQ.UPLOAD) {
+            bytes = this.readBack(length);
         }
-        if (setup.request === REQ.UPLOAD) {
-            const chunk = this.written.slice(this.readCursor, this.readCursor + length);
-            this.readCursor += length;
-            this.currentState = STATE.dfuUPLOAD_IDLE;
-            return Promise.resolve({ status: "ok", data: new Uint8Array(chunk) });
+        return Promise.resolve({ status: "ok", data: new Uint8Array(bytes) });
+    }
+
+    /** One GETSTATUS: a pending download reports DNBUSY (1 ms poll) once, then settles. */
+    private status(): number[] {
+        if (!this.busy) {
+            return [0, 0, 0, 0, this.currentState, 0];
         }
-        return Promise.resolve({ status: "ok", data: new Uint8Array(length) });
+        this.busy = false;
+        this.currentState = this.postBusyState;
+        return [0, 1, 0, 0, STATE.dfuDNBUSY, 0];
+    }
+
+    /** One UPLOAD: replays the next `length` written bytes so verification passes. */
+    private readBack(length: number): number[] {
+        const chunk = this.written.slice(this.readCursor, this.readCursor + length);
+        this.readCursor += length;
+        this.currentState = STATE.dfuUPLOAD_IDLE;
+        return chunk;
     }
 }
 
-/**
- * Build a minimal parsed-hex object for the flasher (one block at the flash base).
- * @param {number} byteCount - Size of the firmware image in bytes.
- * @returns {{bytes_total:number, data:{address:number,bytes:number,data:Uint8Array}[]}}
- */
-function makeHex(byteCount) {
-    const data = new Uint8Array(byteCount);
-    for (let i = 0; i < byteCount; i++) {
-        data[i] = i & 0xff;
-    }
+/** Builds a minimal parsed hex for the flasher: one block at the flash base. */
+function makeHex(byteCount: number): ParsedHex {
+    const data = Array.from({ length: byteCount }, (_, i) => i & 0xff);
     return {
         bytes_total: byteCount,
         data: [{ address: 0x08000000, bytes: byteCount, data }],
+        end_of_file: true,
+        start_linear_address: 0x08000000,
     };
 }
 
 /**
  * Run a DFU flash and resolve when connect() invokes its completion callback, or
  * reject if it never fires within `ms` (i.e. the flow hung).
- * @param {import("../../src/js/protocols/usbdfu").UsbDfuProtocol} dfu
- * @param {ReturnType<typeof makeHex>} hex
- * @param {object} options - Flashing options (flashingMessage, flashProgress, flashMessageTypes).
- * @param {number} [ms=8000] - Hang timeout in milliseconds.
- * @returns {Promise<void>}
  */
-function flashWithTimeout(dfu, hex, options, ms = 8000) {
+function flashWithTimeout(dfu: UsbDfuProtocol, hex: ParsedHex, options: DfuConnectOptions, ms = 8000): Promise<void> {
     return new Promise((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error("DFU flash hung: connect() callback never fired")), ms);
-        dfu.connect("usb_c5", hex, options, () => {
+        void dfu.connect("usb_c5", hex, options, () => {
             clearTimeout(timer);
             resolve();
         });
@@ -179,15 +166,15 @@ function flashWithTimeout(dfu, hex, options, ms = 8000) {
 }
 
 describe("STM32C5 DFU flashing", () => {
-    let messages;
-    let options;
+    let messages: { msg: string | null; type?: string }[];
+    let options: DfuConnectOptions;
 
     beforeEach(() => {
         // usbdfu releases the connect lock through the connection store.
         setActivePinia(createPinia());
         messages = [];
         options = {
-            flashingMessage: (msg, type) => messages.push({ msg, type }),
+            flashingMessage: (msg: string | null, type?: string) => messages.push({ msg, type }),
             flashProgress: vi.fn(),
             flashMessageTypes: FLASH_MESSAGE_TYPES,
         };
@@ -195,16 +182,16 @@ describe("STM32C5 DFU flashing", () => {
 
     it("completes a full program+verify cycle for a C562 that reports no option-bytes region", async () => {
         const transport = new MockC5Transport(["@Internal Flash /0x08000000/64*08Kg"]);
-        const dfu = new UsbDfuProtocol(transport);
+        const dfu = new UsbDfuProtocol(transport as unknown as DfuTransport);
 
         await flashWithTimeout(dfu, makeHex(4096), options);
 
         // The final user-visible message must be a successful programming result.
-        const last = messages.at(-1);
+        const last = messages.at(-1)!;
         expect(last.type).toBe(FLASH_MESSAGE_TYPES.VALID);
         expect(last.msg).toBe("stm32ProgrammingSuccessful");
         // The captured firmware must round-trip through verify exactly.
-        expect(transport.written.length).toBe(4096);
+        expect(transport.written).toHaveLength(4096);
     });
 
     it("does not hang when extra unparseable / truncated memory regions are reported", async () => {
@@ -213,11 +200,29 @@ describe("STM32C5 DFU flashing", () => {
             "@Weird Region /0x1FFF0000/garbage", // sector token has no "*" -> parseDescriptor returns null
             "@Truncated /0x1FFF0000", // only two "/"-parts -> would dereference tmp1[2] and throw
         ]);
-        const dfu = new UsbDfuProtocol(transport);
+        const dfu = new UsbDfuProtocol(transport as unknown as DfuTransport);
 
         await flashWithTimeout(dfu, makeHex(2048), options);
 
-        expect(messages.at(-1).msg).toBe("stm32ProgrammingSuccessful");
+        expect(messages.at(-1)!.msg).toBe("stm32ProgrammingSuccessful");
+    });
+
+    it("splits a UM32 descriptor that packs internal and external flash into one string", async () => {
+        const transport = new MockC5Transport([
+            "@Internal Flash   /0x08000000/64*8Kg  @External Flash   /0x38000000/128*4Kg",
+            "@Option Bytes /0x5200201C/01*128 e",
+        ]);
+        const dfu = new UsbDfuProtocol(transport as unknown as DfuTransport);
+
+        const chipInfo = await new Promise<Parameters<Parameters<UsbDfuProtocol["getChipInfo"]>[1]>[0]>((resolve) =>
+            dfu.getChipInfo(0, (info) => resolve(info)),
+        );
+
+        expect(chipInfo.internal_flash?.start_address).toBe(0x08000000);
+        expect(chipInfo.internal_flash?.total_size).toBe(512 * 1024);
+        expect(chipInfo.external_flash?.start_address).toBe(0x38000000);
+        expect(chipInfo.external_flash?.total_size).toBe(512 * 1024);
+        expect(chipInfo.option_bytes?.start_address).toBe(0x5200201c);
     });
 });
 
@@ -233,23 +238,21 @@ describe("WebUsbDfuTransport.getFunctionalDescriptor", () => {
             9, 0x21, 0x0b, 0xff, 0x00, 0x00, 0x08, 0x1a, 0x01,
         ]);
 
-        const view = (start, len) => new DataView(blob.buffer, start, len);
+        const view = (start: number, len: number) => new DataView(blob.buffer, start, len);
         const transport = new RealWebUsbDfuTransport();
         let standaloneRequested = false;
-        transport.usbDevice = {
-            controlTransferIn: vi.fn((setup, length) => {
-                if (setup.value === 0x2100) {
-                    // The standalone functional-descriptor request — the C5 ROM never answers this.
-                    standaloneRequested = true;
-                    return new Promise(() => {}); // never resolves
-                }
-                if (setup.value === 0x200) {
-                    // config descriptor: header read, then full read
-                    return Promise.resolve({ status: "ok", data: view(0, length) });
-                }
+        fakeUsbDevice(transport, (setup, length) => {
+            if (setup.value === 0x2100) {
+                // The standalone functional-descriptor request — the C5 ROM never answers this.
+                standaloneRequested = true;
+                return new Promise(() => {}); // never resolves
+            }
+            if (setup.value === 0x200) {
+                // config descriptor: header read, then full read
                 return Promise.resolve({ status: "ok", data: view(0, length) });
-            }),
-        };
+            }
+            return Promise.resolve({ status: "ok", data: view(0, length) });
+        });
 
         const descriptor = await transport.getFunctionalDescriptor();
 
@@ -274,11 +277,9 @@ describe("WebUsbDfuTransport.getFunctionalDescriptor", () => {
             // DFU functional descriptor (wTransferSize=1024=0x0400 LE)
             9, 0x21, 0x0b, 0xff, 0x00, 0x00, 0x04, 0x1a, 0x01,
         ]);
-        const view = (start, len) => new DataView(blob.buffer, start, len);
+        const view = (start: number, len: number) => new DataView(blob.buffer, start, len);
         const transport = new RealWebUsbDfuTransport();
-        transport.usbDevice = {
-            controlTransferIn: vi.fn((setup, length) => Promise.resolve({ status: "ok", data: view(0, length) })),
-        };
+        fakeUsbDevice(transport, (_setup, length) => Promise.resolve({ status: "ok", data: view(0, length) }));
 
         const descriptor = await transport.getFunctionalDescriptor();
 
@@ -316,16 +317,14 @@ describe("WebUsbDfuTransport.getFunctionalDescriptor", () => {
             4, // DFU interface, no functional descriptor follows
         ]);
         const truncated = new Uint8Array([4, 0x21, 0x0b, 0xff]);
-        const view = (buf, len) => new DataView(buf.buffer, 0, Math.min(len, buf.length));
+        const view = (buf: Uint8Array, len: number) => new DataView(buf.buffer, 0, Math.min(len, buf.length));
         const transport = new RealWebUsbDfuTransport();
-        transport.usbDevice = {
-            controlTransferIn: vi.fn((setup, length) => {
-                if (setup.value === 0x2100) {
-                    return Promise.resolve({ status: "ok", data: view(truncated, length) });
-                }
-                return Promise.resolve({ status: "ok", data: view(configBlob, length) });
-            }),
-        };
+        fakeUsbDevice(transport, (setup, length) => {
+            if (setup.value === 0x2100) {
+                return Promise.resolve({ status: "ok", data: view(truncated, length) });
+            }
+            return Promise.resolve({ status: "ok", data: view(configBlob, length) });
+        });
 
         await expect(transport.getFunctionalDescriptor()).rejects.toThrow(/functional descriptor/i);
     });
