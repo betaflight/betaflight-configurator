@@ -27,7 +27,7 @@
 
 /** The slice of the app's i18n instance the popup uses. */
 export interface StickWindowI18n {
-    getMessage(messageID: string): string;
+    getMessage(messageID: string, parameters?: Record<string, unknown>): string;
     updatePageDirection(targetDocument?: Document): void;
 }
 
