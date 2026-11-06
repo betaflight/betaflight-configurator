@@ -32,6 +32,10 @@ export function useServosData() {
 
     /** Fetch everything the tab renders from; the replies land in FC. */
     const loadServoConfigs = async () => {
+        // Mixer mode and SERVO_TILT decide which firmware servo each physical
+        // output carries; don't rely on another tab having loaded them.
+        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
         await MSP.promise(MSPCodes.MSP_SERVO_CONFIGURATIONS);
         await MSP.promise(MSPCodes.MSP_SERVO_MIX_RULES);
         await MSP.promise(MSPCodes.MSP_RC);

@@ -690,8 +690,21 @@ export interface ServoConfig {
     reversedInputSources: number;
 }
 
-// Never populated: MSP_SERVO_MIX_RULES is not decoded.
-export type ServoRules = unknown[];
+/** One servo mixer rule (MSP_SERVO_MIX_RULES / MSP_SET_SERVO_MIX_RULE layout). */
+export interface ServoRule {
+    target: number;
+    input: number;
+    /** -125..125; 0 ends the rule list in firmware */
+    rate: number;
+    speed: number;
+    /** 0..100 percent of servo travel */
+    min: number;
+    /** 0..100 percent of servo travel; must exceed min */
+    max: number;
+    box: number;
+}
+
+export type ServoRules = ServoRule[];
 
 export interface TuningSliders {
     slider_pd_ratio: number;
@@ -853,6 +866,8 @@ export interface FcState {
     servoConfig: ServoConfig[];
     servoData: ServoData;
     servoRules: ServoRules;
+    /** False when the last MSP_SERVO_MIX_RULES payload was malformed; Save must not overwrite the FC rules. */
+    servoRulesParseOk: boolean;
     tuningSliders: TuningSliders;
     voltageMeters: VoltageMeter[];
     voltageMeterConfigs: VoltageMeterConfig[];
