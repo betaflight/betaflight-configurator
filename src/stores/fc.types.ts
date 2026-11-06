@@ -821,7 +821,10 @@ export interface FcState {
     ledColors: LedColor[];
     ledModeColors: LedModeColor[];
     ledStrip: LedStripEntry[];
+    ledStripAdvanced: boolean | null;
+    ledStripProfile: number | null;
     ledConfigValues: LedConfigValues;
+    ledConfigValuesLoaded: boolean;
     mcuInfo: McuInfo;
     mixerConfig: MixerConfig;
     modeRanges: ModeRange[];

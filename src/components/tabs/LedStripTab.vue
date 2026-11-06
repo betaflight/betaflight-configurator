@@ -3,13 +3,14 @@
         <div class="content_wrapper" @keydown.esc="handleEscapeKey">
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
             <WikiButton docUrl="led_strip" />
+            <p v-if="loadFailed" role="alert">{{ $t("ledStripLoadFailed") }}</p>
 
             <UiBox highlight class="mb-3">
                 <p v-html="$t('ledStripHelp')"></p>
             </UiBox>
 
             <!-- LED Grid Container -->
-            <div class="grid-container">
+            <div class="grid-container" :inert="!dataLoaded">
                 <!-- LED Grid with custom selection -->
                 <LedGrid
                     :grid-leds="gridLeds"
@@ -28,7 +29,7 @@
             </div>
 
             <!-- Controls Panel -->
-            <div class="controls">
+            <div class="controls" :inert="!dataLoaded">
                 <div class="top-controls">
                     <!-- Wires Remaining -->
                     <div class="wires-remaining">
@@ -320,7 +321,13 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton size="xs" :label="saveButtonText" :disabled="!dirty" :loading="isSaving" @click="save" />
+            <UButton
+                size="xs"
+                :label="saveButtonText"
+                :disabled="!dirty || !dataLoaded"
+                :loading="isSaving"
+                @click="save"
+            />
         </div>
     </BaseTab>
 </template>
@@ -330,6 +337,7 @@ import { ref, reactive, computed, watch, onBeforeUnmount } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
+import { isEmptyLed } from "@/composables/ledStripUtils";
 import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip, type LedGridCell, type LedModeColorSelection } from "@/composables/useLedStrip";
 import { useSaving } from "@/composables/useSaving";
@@ -354,6 +362,8 @@ function decodeHtmlEntities(text: string) {
 }
 const t = (key: string) => decodeHtmlEntities(i18n.getMessage(key));
 const fcStore = useFlightControllerStore();
+const dataLoaded = ref(false);
+const loadFailed = ref(false);
 
 const {
     wireMode,
@@ -571,8 +581,12 @@ const onTabMounted = async () => {
             initializeGrid();
             loadConfigValues();
             markClean();
+            dataLoaded.value = true;
         },
-        (error) => console.error("Failed to load LED strip data:", error),
+        (error) => {
+            loadFailed.value = true;
+            console.error("Failed to load LED strip data:", error);
+        },
     );
 };
 
@@ -614,15 +628,7 @@ function initializeGrid() {
 
     // Populate from LED strip
     fcStore.ledStrip.forEach((led, ledIndex) => {
-        if (
-            !led ||
-            (led.functions[0] === "c" &&
-                led.functions.length === 1 &&
-                led.directions.length === 0 &&
-                led.color === 0 &&
-                led.x === 0 &&
-                led.y === 0)
-        ) {
+        if (!led || isEmptyLed(led)) {
             return;
         }
 
@@ -639,9 +645,9 @@ function initializeGrid() {
 
 // Load config values
 function loadConfigValues() {
-    brightness.value = ledConfigValues.value?.brightness || 50;
-    rainbowDelta.value = ledConfigValues.value?.rainbow_delta || 0;
-    rainbowFreq.value = ledConfigValues.value?.rainbow_freq || 1;
+    brightness.value = ledConfigValues.value?.brightness ?? 50;
+    rainbowDelta.value = ledConfigValues.value?.rainbow_delta ?? 0;
+    rainbowFreq.value = ledConfigValues.value?.rainbow_freq ?? 1;
 }
 
 // Selection handlers for custom grid
@@ -989,15 +995,15 @@ function clearWiresAll() {
 
 // Watch slider changes and update LED config values
 watch(brightness, (newValue) => {
-    updateLedConfigValue("brightness", newValue);
+    if (newValue !== ledConfigValues.value.brightness) updateLedConfigValue("brightness", newValue);
 });
 
 watch(rainbowDelta, (newValue) => {
-    updateLedConfigValue("rainbow_delta", newValue);
+    if (newValue !== ledConfigValues.value.rainbow_delta) updateLedConfigValue("rainbow_delta", newValue);
 });
 
 watch(rainbowFreq, (newValue) => {
-    updateLedConfigValue("rainbow_freq", newValue);
+    if (newValue !== ledConfigValues.value.rainbow_freq) updateLedConfigValue("rainbow_freq", newValue);
 });
 
 // Watch color setup popup state and set up click-outside handler
