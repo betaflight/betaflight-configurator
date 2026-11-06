@@ -907,6 +907,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const fcStore = useFlightControllerStore();
 const { saveAndReboot } = useReboot();
@@ -2504,6 +2505,7 @@ const saveConfig = () =>
 
         markClean(savedSnapshot);
     });
+registerTabSave(() => saveConfig());
 
 // --- Lifecycle ---
 

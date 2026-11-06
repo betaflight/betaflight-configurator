@@ -207,6 +207,7 @@ import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
 import ChannelRangePips from "../elements/ChannelRangePips.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 /** A mode entry as the tab edits it: `uid` keys it in v-for and removeEntry(). */
 type TabModeEntry = ModeEntry & { uid: number };
@@ -488,6 +489,7 @@ export default defineComponent({
         };
 
         const { saveModes, isSaving } = useAuxiliarySave(modes, requiredModeRangeCount, { takeSnapshot, markClean });
+        registerTabSave(() => saveModes());
         const { loadAuxiliaryData, startPolling } = useAuxiliaryData();
 
         const loadData = async () => {

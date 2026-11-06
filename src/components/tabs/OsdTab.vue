@@ -634,6 +634,7 @@ import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import { runTabLoad } from "@/composables/useTabLoad";
+import { registerTabSave, registerUnsavedChangesForComponent } from "@/js/unsaved_changes";
 
 // From API 1.49 both live on the OSD parameter group. The bit osd_uart sets in the synthesised
 // mask follows the display port device, and on MSP DisplayPort it is the shared MSP bit, so the
@@ -704,6 +705,7 @@ import { API_VERSION_1_48 } from "@/js/data_storage";
 import { useConnectionStore } from "@/stores/connection";
 
 const osdStore = useOsdStore();
+registerUnsavedChangesForComponent(() => portsOrConfigDirty.value);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
 const { hasBuildOption } = useBuildOptions();
@@ -1490,15 +1492,16 @@ async function refreshConfig() {
     analyticsChanges.value = {};
 }
 
-// Save OSD configuration to FC
-const saveConfig = () =>
-    runSave(async () => {
-        // Warn before a pick that would take a port from another feature; a cancel here leaves the
-        // save untouched, before anything has been written to the FC.
-        if (!(await confirmPortConflicts())) {
-            return;
-        }
+// Save OSD configuration to FC. Resolves true once the save went through.
+const saveConfig = async () => {
+    // Warn before a pick that would take a port from another feature; a cancel here leaves the
+    // save untouched, before anything has been written to the FC, and counts as not saved. The
+    // prompt is modal, so no second save can start while it is open.
+    if (!(await confirmPortConflicts())) {
+        return false;
+    }
 
+    return runSave(async () => {
         // Sync store state to the shared OSD.data bridge used by legacy helpers.
         osdStore.syncToLegacy();
 
@@ -1520,15 +1523,22 @@ const saveConfig = () =>
         gui_log(i18n.getMessage("osdSettingsSaved"));
         flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
     });
+};
 
 // A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
+// A cancelled or failed save does not reboot, so the tab stays open with the edits intact.
+// Resolves false then, so the unsaved-changes prompt keeps the user on the tab.
 const saveAndRebootConfig = async () => {
-    await saveConfig();
+    if (!(await saveConfig())) {
+        return false;
+    }
     await reboot();
+    return true;
 };
 
 // The primary button does what its label says: with a port change pending it saves and reboots.
 const savePrimaryAction = () => (portSettingsChanged.value ? saveAndRebootConfig() : saveConfig());
+registerTabSave(() => savePrimaryAction());
 
 // Font Manager
 const fontCharacterUrls = computed(() => {

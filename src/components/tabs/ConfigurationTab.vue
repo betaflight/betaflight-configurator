@@ -261,6 +261,7 @@ import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import type { Beeper } from "../../js/Beepers";
 import { configurationDynamicSearchId } from "../settings-search/settingsSearch";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 export default defineComponent({
     name: "ConfigurationTab",
@@ -545,6 +546,7 @@ export default defineComponent({
 
                 markClean(savedSnapshot);
             });
+        registerTabSave(() => saveConfig());
 
         onMounted(() => {
             loadConfig();
