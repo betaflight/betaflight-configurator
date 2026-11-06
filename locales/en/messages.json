@@ -3324,11 +3324,11 @@
     },
     "flightPlanSpeedWithUnit": {
         "message": "Speed <span class=\"units\">{{unit}}</span>",
-        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: mph or km/h"
     },
     "flightPlanSpeedAria": {
         "message": "Speed in {{unit}}",
-        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is mph or km/h"
     },
     "flightPlanUnits": {
         "message": "Units",
@@ -3755,6 +3755,9 @@
     "sensorsMagTitle": {
         "message": "Magnetometer"
     },
+    "sensorsAltitudeDisplayTitle": { "message": "Altitude - {{unit}}" },
+    "sensorsSonarDisplayTitle": { "message": "Sonar - {{unit}}" },
+    "sensorsPitotDisplayTitle": { "message": "Airspeed - {{unit}}" },
     "sensorsAltitudeTitle": {
         "message": "Altitude - meters"
     },
@@ -8986,6 +8989,24 @@
     },
     "preflightRainProb": {
         "message": "Rain %"
+    },
+    "displayUnitsHelp": {
+        "message": "Controls app displays and Flight Plan. Flight-controller settings and OSD units are configured separately."
+    },
+    "displayUnits": {
+        "message": "Display units"
+    },
+    "displayUnitsMetric": {
+        "message": "Metric"
+    },
+    "displayUnitsBritish": {
+        "message": "British"
+    },
+    "displayUnitsImperial": {
+        "message": "Imperial"
+    },
+    "preflightWindUnitDynamic": {
+        "message": "Wind speeds in {{unit}}. Altitudes above ground level (AGL)."
     },
     "preflightWindUnit": {
         "message": "Wind speeds in m/s. Altitudes above ground level (AGL)."

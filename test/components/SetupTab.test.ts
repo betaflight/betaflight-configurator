@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
+import { useDisplayUnits } from "../../src/composables/useDisplayUnits";
 import SetupTab from "../../src/components/tabs/SetupTab.vue";
 import * as timers from "../../src/js/timers";
 import { tabSwitchCleanup } from "../../src/js/tab_adapters";
@@ -103,10 +104,14 @@ describe("Setup MSP wiring", () => {
         const sonarCall = vi
             .mocked(MSP.send_message)
             .mock.calls.find(([code]) => code === MSPCodes.MSP_SONAR_ALTITUDE)!;
+        useDisplayUnits().setUnitSystem("metric");
         fcStore.sensorData.sonar = 42;
         (sonarCall[3] as Tick)();
 
-        expect((wrapper.vm as unknown as { state: { sonar: string } }).state.sonar).toBe("42.0 cm");
+        expect((wrapper.vm as unknown as { state: { sonar: string } }).state.sonar).toBe("0.42 m");
+        useDisplayUnits().setUnitSystem("imperial");
+        (sonarCall[3] as Tick)();
+        expect((wrapper.vm as unknown as { state: { sonar: string } }).state.sonar).toBe("1.38 ft");
     });
 
     it("reboots to the bootloader from the button handler", async () => {

@@ -114,7 +114,13 @@ import { useTranslation } from "i18next-vue";
 import Dialog from "@/components/elements/Dialog.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { useFlightPlan, type Waypoint } from "@/composables/useFlightPlan";
-import { useFlightPlanUnits } from "@/composables/useFlightPlanUnits";
+import {
+    useFlightPlanUnits,
+    altitudeToUnit,
+    altitudeFromUnit,
+    speedToUnit,
+    speedFromUnit,
+} from "@/composables/useFlightPlanUnits";
 
 const { t } = useTranslation();
 const {
@@ -126,8 +132,15 @@ const {
     cancelEdit,
     isModifierWaypointType,
 } = useFlightPlan();
-const { altitudeUnit, speedUnit, altitudeToDisplay, altitudeFromDisplay, speedToDisplay, speedFromDisplay } =
-    useFlightPlanUnits();
+const {
+    unitSystem,
+    altitudeUnit,
+    speedUnit,
+    altitudeToDisplay,
+    altitudeFromDisplay,
+    speedToDisplay,
+    speedFromDisplay,
+} = useFlightPlanUnits();
 
 // Defaults and limits are defined in feet / knots (the stored units) and shown in the selected unit.
 const DEFAULT_ALTITUDE_FT = 400;
@@ -159,6 +172,29 @@ const form = reactive({
 // The waypoint being edited, as loaded. If the user leaves altitude/speed untouched we save the
 // stored value as-is instead of the rounded display value, so opening and saving never drifts it.
 let loadedWaypoint: Waypoint | null = null;
+let convertedAltitude: { shown: number; stored: number } | null = null;
+let convertedSpeed: { shown: number; stored: number } | null = null;
+watch(
+    () => form.altitude,
+    () => {
+        convertedAltitude = null;
+    },
+    { flush: "sync" },
+);
+watch(
+    () => form.speed,
+    () => {
+        convertedSpeed = null;
+    },
+    { flush: "sync" },
+);
+watch(
+    () => form.type,
+    () => {
+        convertedSpeed = null;
+    },
+    { flush: "sync" },
+);
 
 // Unit strings are fixed literals ("ft", "km/h"…); skip escaping so "km/h" isn't rendered as "km&#x2F;h".
 const withUnit = (key: string, unit: string) => t(key, { unit, interpolation: { escapeValue: false } });
@@ -209,6 +245,8 @@ watch(editingWaypoint, (waypoint) => {
         form.latitude = Number(waypoint.latitude.toFixed(6));
         form.longitude = Number(waypoint.longitude.toFixed(6));
         loadedWaypoint = { ...waypoint };
+        convertedAltitude = null;
+        convertedSpeed = null;
         form.altitude = roundAltitude(waypoint.altitude);
         form.speed = waypoint.type === "yaw_rate" ? waypoint.speed : roundSpeed(waypoint.speed);
         form.type = waypoint.type;
@@ -216,6 +254,39 @@ watch(editingWaypoint, (waypoint) => {
         form.pattern = waypoint.pattern;
     }
 });
+
+// A unit change can come from the global options while the editor is open.
+watch(
+    unitSystem,
+    (next, previous) => {
+        if (!showEditorDialog.value || next === previous) return;
+        const oldAltitude = (feet: number) => Math.round(altitudeToUnit(feet, previous));
+        const oldSpeed = (knots: number) => Number(speedToUnit(knots, previous).toFixed(1));
+        let altitude = altitudeFromUnit(form.altitude, previous);
+        if (convertedAltitude && form.altitude === convertedAltitude.shown) {
+            altitude = convertedAltitude.stored;
+        } else if (loadedWaypoint && form.altitude === oldAltitude(loadedWaypoint.altitude)) {
+            altitude = loadedWaypoint.altitude;
+        }
+        form.altitude = roundAltitude(altitude);
+        convertedAltitude = { shown: form.altitude, stored: altitude };
+        if (form.type !== "yaw_rate") {
+            let speed = speedFromUnit(form.speed, previous);
+            if (convertedSpeed && form.speed === convertedSpeed.shown) {
+                speed = convertedSpeed.stored;
+            } else if (
+                loadedWaypoint &&
+                loadedWaypoint.type !== "yaw_rate" &&
+                form.speed === oldSpeed(loadedWaypoint.speed)
+            ) {
+                speed = loadedWaypoint.speed;
+            }
+            form.speed = roundSpeed(speed);
+            convertedSpeed = { shown: form.speed, stored: speed };
+        }
+    },
+    { flush: "sync" },
+);
 
 // Watch for dialog state changes
 watch(
@@ -250,17 +321,19 @@ watch(
 
 // Display-unit form values → stored feet / knots.
 const altitudeForSave = () => {
+    if (convertedAltitude && form.altitude === convertedAltitude.shown) return convertedAltitude.stored;
     if (loadedWaypoint && form.altitude === roundAltitude(loadedWaypoint.altitude)) {
         return loadedWaypoint.altitude;
     }
-    return altitudeFromDisplay(form.altitude);
+    return Math.min(MAX_ALTITUDE_FT, altitudeFromDisplay(form.altitude));
 };
 
 const speedForSave = () => {
+    if (convertedSpeed && form.speed === convertedSpeed.shown) return convertedSpeed.stored;
     if (loadedWaypoint && loadedWaypoint.type !== "yaw_rate" && form.speed === roundSpeed(loadedWaypoint.speed)) {
         return loadedWaypoint.speed;
     }
-    return speedFromDisplay(form.speed);
+    return Math.min(MAX_SPEED_KTS, speedFromDisplay(form.speed));
 };
 
 // Build a save payload, zeroing slots that aren't meaningful for the type so
@@ -300,6 +373,8 @@ const resetForm = () => {
     form.latitude = 0;
     form.longitude = 0;
     loadedWaypoint = null;
+    convertedAltitude = null;
+    convertedSpeed = null;
     form.altitude = roundAltitude(DEFAULT_ALTITUDE_FT);
     form.speed = roundSpeed(DEFAULT_SPEED_KTS);
     form.type = "flyover";

@@ -54,10 +54,11 @@ describe("usePreflight launchStatus", () => {
     });
 
     it("lists an unknown check without letting it lower a go", () => {
-        preflight.weather.current = calmWeather({ visibility: null as unknown as number });
+        preflight.weather.current = calmWeather({ visibility: null, precipitation: null, pressure: null });
 
         const status = preflight.launchStatus.value;
         expect(status.checks.find((c) => c.nameKey === "preflightCheckVisibility")?.level).toBe("unknown");
+        expect(status.checks.find((c) => c.nameKey === "preflightCheckPrecipitation")?.level).toBe("unknown");
         expect(status.level).toBe("good");
         expect(status.cssClass).toBe("status-good");
     });

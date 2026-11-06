@@ -59,16 +59,16 @@ export interface CurrentWeather {
     humidity: number;
     dewPoint: number;
     apparentTemperature: number;
-    precipitation: number;
+    precipitation: number | null;
     rain: number;
     windSpeed: number;
     windDirection: number;
     windGusts: number;
     cloudCover: number;
-    visibility: number;
+    visibility: number | null;
     weatherCode: number;
     weatherDescription: string;
-    pressure: number;
+    pressure: number | null;
     isDay: number;
 }
 
@@ -239,7 +239,10 @@ function getVisibilityStatus(vis: Reading): StatusResult {
 }
 
 function getPrecipitationStatus(precip: Reading): StatusResult {
-    if (precip === null || precip === undefined || precip === 0) {
+    if (precip === null || precip === undefined) {
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
+    }
+    if (precip === 0) {
         return { level: "good", label: "preflightPrecipNone", cssClass: "status-good" };
     }
     if (precip < 1) {
@@ -672,16 +675,16 @@ async function fetchWeather(lat: number, lon: number): Promise<void> {
             humidity: data.current.relative_humidity_2m,
             dewPoint: data.current.dew_point_2m,
             apparentTemperature: data.current.apparent_temperature,
-            precipitation: data.current.precipitation,
+            precipitation: data.current.precipitation ?? null,
             rain: data.current.rain,
             windSpeed: data.current.wind_speed_10m,
             windDirection: data.current.wind_direction_10m,
             windGusts: data.current.wind_gusts_10m,
             cloudCover: data.current.cloud_cover,
-            visibility: data.current.visibility,
+            visibility: data.current.visibility ?? null,
             weatherCode: data.current.weather_code,
             weatherDescription: WMO_CODES[data.current.weather_code] || "preflightLevelUnknown",
-            pressure: data.current.pressure_msl,
+            pressure: data.current.pressure_msl ?? null,
             isDay: data.current.is_day,
         };
         weather.timezone = typeof data.timezone === "string" ? data.timezone : null;
