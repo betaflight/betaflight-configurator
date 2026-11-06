@@ -20,7 +20,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { mirrorTheme } from "../../src/components/tabs/receiver-msp/themeMirror";
+import { mirrorTheme } from "../../src/js/utils/themeMirror";
 
 /** MutationObserver callbacks run as a microtask. */
 const flushMutations = () => Promise.resolve();

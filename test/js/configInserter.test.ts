@@ -20,7 +20,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import ConfigInserter from "../../src/js/ConfigInserter";
+import ConfigInserter, { hasCustomDefaultsArea } from "../../src/js/ConfigInserter";
 import type { HexBlock, ParsedHex } from "../../src/js/workers/hex_parser";
 
 const POINTER_ADDRESS = 0x08002800;
@@ -152,5 +152,33 @@ describe("ConfigInserter.insertConfig", () => {
         expect(() => new ConfigInserter().insertConfig(firmware, "x")).toThrow(
             "Aborting data generation, free area too small.",
         );
+    });
+});
+
+describe("hasCustomDefaultsArea", () => {
+    it("is true for an image that reserves an area", () => {
+        expect(hasCustomDefaultsArea(image(pointers(AREA_START, AREA_START + 0x4000)))).toBe(true);
+    });
+
+    it("is false for an image with no pointer block", () => {
+        expect(hasCustomDefaultsArea(image(block(0x08000000, [0, 0])))).toBe(false);
+    });
+
+    it("is false for an image whose area is empty", () => {
+        expect(hasCustomDefaultsArea(image(pointers(AREA_START, AREA_START)))).toBe(false);
+    });
+
+    it("is false when the image ends inside the pointer", () => {
+        const truncated = block(POINTER_ADDRESS, le32(AREA_START).concat(0x00, 0x40));
+
+        expect(hasCustomDefaultsArea(image(truncated))).toBe(false);
+        expect(new ConfigInserter().insertConfig(image(truncated), "x")).toBe(false);
+    });
+
+    it("is false when the pointer runs into a gap in the image", () => {
+        const bytes = [...le32(AREA_START), ...le32(AREA_START + 0x4000)];
+        const gapped = image(block(POINTER_ADDRESS, bytes.slice(0, 3)), block(POINTER_ADDRESS + 4, bytes.slice(3)));
+
+        expect(hasCustomDefaultsArea(gapped)).toBe(false);
     });
 });
