@@ -48,6 +48,7 @@ function wing(overrides: Partial<WingConfig> = {}): WingConfig {
         tpa_speed_adv_thrust: 2000,
         tpa_speed_max_voltage: 1680,
         tpa_speed_pitch_offset: 0,
+        tpa_max_pitot_speed: 40,
         yaw_type: 0,
         angle_pitch_offset: 0,
         speed_curve_vref: 20,

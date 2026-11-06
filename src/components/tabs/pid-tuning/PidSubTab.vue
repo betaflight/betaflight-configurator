@@ -1132,7 +1132,7 @@
                         v-model="wingConfig.tpa_speed_type"
                         :items="wingTpaSpeedTypeItems"
                         size="xs"
-                        class="w-24"
+                        class="w-26"
                     />
                 </SettingRow>
                 <UiBox
@@ -1253,6 +1253,27 @@
                             size="xs"
                             orientation="vertical"
                             class="w-20"
+                        />
+                    </SettingRow>
+                </UiBox>
+                <UiBox
+                    v-if="isWingTpaPitotSpeedMode && isWingTpaHyperbolicCurveMode"
+                    :title="$t('pidTuningWingTpaPitotSpeedSettings')"
+                    type="neutral"
+                >
+                    <SettingRow
+                        :label="$t('pidTuningWingTpaMaxPitotSpeed')"
+                        :help="$t('pidTuningWingTpaMaxPitotSpeedHelp')"
+                    >
+                        <UInputNumber
+                            v-model="wingConfig.tpa_max_pitot_speed"
+                            :step="1"
+                            :min="1"
+                            :max="85"
+                            size="xs"
+                            orientation="vertical"
+                            class="w-20"
+                            :aria-label="$t('pidTuningWingTpaMaxPitotSpeed')"
                         />
                     </SettingRow>
                 </UiBox>
@@ -1676,7 +1697,7 @@ const pidLevelTransition = computed({
 
 // Helper to check if a PID name exists in firmware PID_NAMES
 function hasPidName(name: string) {
-    return fcStore.pidNames && fcStore.pidNames.includes(name);
+    return fcStore.pidNames?.includes(name);
 }
 
 // Helper to create a computed property for an optional PID value by name and component index
@@ -2081,7 +2102,7 @@ async function onSliderChange(activeSliderKey?: "sliderDGain" | "sliderPIGain" |
 }
 
 function onSliderModeChange() {
-    onSliderChange();
+    void onSliderChange();
 }
 
 // Watch for changes in fcStore.tuningSliders to reinitialize sliders after data loads
@@ -2090,7 +2111,7 @@ watch(
     () => {
         // Don't reinitialize while user is actively changing sliders
         if (!isUserInteracting.value) {
-            initializeSliders();
+            void initializeSliders();
         }
     },
     { deep: true },
@@ -2099,7 +2120,7 @@ watch(
 // Expose method to parent component to force slider update after save
 function forceUpdateSliders() {
     isUserInteracting.value = false; // Allow watcher to work
-    initializeSliders();
+    void initializeSliders();
 }
 
 defineExpose({
@@ -2108,7 +2129,7 @@ defineExpose({
 
 // Initialize sliders when component mounts
 onMounted(() => {
-    initializeSliders();
+    void initializeSliders();
 });
 
 // Clean up timeout on component unmount
@@ -2124,13 +2145,17 @@ const isWingBuildGte49 = computed(
     () => fcStore.config.buildOptions.includes("USE_WING") && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49),
 );
 
+const isHasPitot = computed(() => fcStore.config.buildOptions.includes("USE_PITOT"));
+
 const isWingTpaHyperbolicCurveMode = computed(() => wingConfig.value.tpa_curve_type > 0);
 
-const isWingTpaHyperbolicByRefSpeedCurveMode = computed(() => wingConfig.value.tpa_curve_type == 2);
+const isWingTpaHyperbolicByRefSpeedCurveMode = computed(() => wingConfig.value.tpa_curve_type === 2);
 
-const isWingTpaBasicSpeedMode = computed(() => wingConfig.value.tpa_speed_type == 0);
+const isWingTpaBasicSpeedMode = computed(() => wingConfig.value.tpa_speed_type === 0);
 
-const isWingTpaAdvancedSpeedMode = computed(() => wingConfig.value.tpa_speed_type == 1);
+const isWingTpaAdvancedSpeedMode = computed(() => wingConfig.value.tpa_speed_type === 1);
+
+const isWingTpaPitotSpeedMode = computed(() => wingConfig.value.tpa_speed_type === 2);
 
 // Wing config - reactive reference
 const wingConfig = computed(() => fcStore.wingConfig);
@@ -2144,10 +2169,16 @@ const wingSpaModesItems = computed(() => [
     { value: 4, label: t("pidTuningWingSpaModePDIFreeze") },
 ]);
 
-const wingTpaSpeedTypeItems = computed(() => [
-    { value: 0, label: t("pidTuningWingTpaSpeedBasic") },
-    { value: 1, label: t("pidTuningWingTpaSpeedAdvanced") },
-]);
+const wingTpaSpeedTypeItems = computed(() => {
+    const speedTypeItems = [
+        { value: 0, label: t("pidTuningWingTpaSpeedBasic") },
+        { value: 1, label: t("pidTuningWingTpaSpeedAdvanced") },
+    ];
+    if (isHasPitot.value) {
+        speedTypeItems.push({ value: 2, label: t("pidTuningWingTpaSpeedPitot") });
+    }
+    return speedTypeItems;
+});
 
 const wingTpaCurveTypeItems = computed(() => [
     { value: 0, label: t("pidTuningWingTpaCurveClassic") },
