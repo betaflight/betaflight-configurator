@@ -108,7 +108,7 @@ function openFirstRunOptions() {
         return;
     }
 
-    if (isPreviewOrDevBuild() && getConfig("automaticDevOptions", true).automaticDevOptions) {
+    if (isPreviewOrDevBuild()) {
         return;
     }
 
