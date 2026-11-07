@@ -108,6 +108,10 @@ function openFirstRunOptions() {
         return;
     }
 
+    if (isPreviewOrDevBuild() && getConfig("automaticDevOptions", true).automaticDevOptions) {
+        return;
+    }
+
     setConfig({ firstRun: true });
     setTimeout(() => {
         useNavigationStore(pinia).optionsDialogOpen = true;
