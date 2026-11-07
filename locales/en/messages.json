@@ -9704,6 +9704,9 @@
     "pidTuningWingTpaAdvSpeedCurveDetails": {
         "message": "Hyperbolic curves chart"
     },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "The Classic curve is not recommended for wings. It applies the multirotor TPA rate and breakpoint to the estimated airspeed instead of throttle."
+    },
     "pidTuningWingMiscSettings": {
         "message": "Miscellaneous settings"
     },
