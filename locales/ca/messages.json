@@ -373,17 +373,17 @@
     "tabOptions": {
         "message": "Opcions"
     },
-    "sidebarOpenOptions": {
-        "message": "Opcions",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+    "sidebarSettingsMenu": {
+        "message": "Configuració",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "Canvi mode fosc / clar",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Canvi Mode Expert",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Configuració"
@@ -653,8 +653,9 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-    "logActionShow": {
-        "message": "Mostrar Log"
+    "logActionOpenWindow": {
+        "message": "Obrir en una nova finestra",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "Registre"
@@ -714,6 +715,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU no trobat"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "No s'ha pogut obrir el dispositiu DFU. Torneu a connectar el controlador de vol i torneu-ho a provar"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "S'ha denegat l'accés al dispositiu DFU. Comproveu que les regles udev estiguin instal·lades; consulteu la documentació per obtenir instruccions"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "S'ha denegat l'accés al dispositiu DFU. Instal·leu el controlador WinUSB (ImpulseRC Driver Fixer o Zadig) i tanqueu qualsevol altre programa que utilitzi el controlador de vol"
     },
     "stm32DfuPermissionRequired": {
         "message": "El dispositiu s'ha reiniciat en mode DFU.<br><br>El navegador requereix permís USB per accedir al dispositiu DFU. Feu clic al botó següent per seleccionar-lo al selector de dispositius."
@@ -3974,6 +3984,9 @@
     },
     "firmwareFlasherReleaseDate": {
         "message": "Data:"
+    },
+    "firmwareFlasherReleaseCommit": {
+        "message": "Confirmar:"
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Model:"
@@ -9385,6 +9398,9 @@
     },
     "pidTuningWingTpaAdvSpeedCurveDetails": {
         "message": "Gràfic de corbes hiperbòliques"
+    },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "La corba «Clàssic» no es recomana per a ales. Aplica la taxa TPA i el punt de tall (breakpoint) —propis dels multirotors— a la velocitat de l'aire estimada, en lloc de fer-ho a la posició de l'accelerador."
     },
     "pidTuningWingMiscSettings": {
         "message": "Configuració diversa"
