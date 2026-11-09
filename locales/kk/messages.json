@@ -339,17 +339,13 @@
     "tabOptions": {
         "message": "Баптаулар (Options)"
     },
-    "sidebarOpenOptions": {
-        "message": "Параметрлер",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "Қараңғы/жарық режимін ауыстырып-тумблер / қосқыш",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Сарапшы режимі",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Баптау"
@@ -600,9 +596,6 @@
     },
     "tabAuxiliary": {
         "message": "AUX арналары"
-    },
-    "logActionShow": {
-        "message": "Соңғы әрекеттерді көрсету"
     },
     "tabLog": {
         "message": "Журнал"

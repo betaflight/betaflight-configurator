@@ -365,17 +365,17 @@
     "tabOptions": {
         "message": "ოფციები"
     },
-    "sidebarOpenOptions": {
-        "message": "სარჩევი",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+    "sidebarSettingsMenu": {
+        "message": "პარამეტრები",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "მუქი/ღია რეჟიმის გადართვა",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "ექსპერტის რეჟიმზე გადართვა",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "დაყენება"
@@ -645,8 +645,9 @@
     "tabAuxiliary": {
         "message": "რეჟიმები"
     },
-    "logActionShow": {
-        "message": "ლოგის ჩვენება"
+    "logActionOpenWindow": {
+        "message": "ახალ ფანჯარაში გახსნა",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "ჩანაწერი"
@@ -706,6 +707,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU ვერ მოიძებნა"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "DFU მოწყობილობის გახსნა ვერ მოხერხდა. ხელახლა შეაერთეთ ფრენის კონტროლერი და სცადეთ თავიდან"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "DFU მოწყობილობასთან წვდომა უარყოფილია. შეამოწმეთ, რომ udev წესები დაყენებულია, ინსტრუქციისთვის იხილეთ დოკუმენტაცია"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "DFU მოწყობილობასთან წვდომა უარყოფილია. დააინსტალირეთ WinUSB დრაივერი (ImpulseRC Driver Fixer ან Zadig) და დახურეთ ნებისმიერი სხვა პროგრამა, რომელიც ფრენის კონტროლერს იყენებს"
     },
     "stm32DfuPermissionRequired": {
         "message": "მოწყობილობა გადაიტვირთა DFU რეჟიმში.\n<br><br>თქვენს ბრაუზერს ესაჭიროება USB ნებართვა DFU მოწყობილობასთან დასაკავშირებლად. დააჭირეთ ქვემოთ მოცემულ ღილაკს, რათა აირჩიოთ ის მოწყობილობების სიიდან."
@@ -3958,6 +3968,9 @@
     },
     "firmwareFlasherReleaseDate": {
         "message": "თარიღი:"
+    },
+    "firmwareFlasherReleaseCommit": {
+        "message": "კომიტი:"
     },
     "firmwareFlasherReleaseTarget": {
         "message": "სამიზნე:"
@@ -9269,6 +9282,9 @@
     "pidTuningWingTpaCurveHyperbolic": {
         "message": "ჰიპერბოლური"
     },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "ჰიპერბოლური, საბაზისო სიჩქარით"
+    },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "სიჩქარის ძირითადი პარამეტრები"
     },
@@ -9379,5 +9395,29 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "Pitch წანაცვლება angle რეჟიმებისთვის, დეციგრადუსებში. დადებითი მნიშვნელობები ფრთას ქვემოთ ხრის"
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "საბაზისო სიჩქარე"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "საბაზისო სიჩქარე, მ/წმ - ამ წერტილში მრუდების მნიშვნელობა 1.0-ია"
+    },
+    "speedCurvesPower": {
+        "message": "მრუდების ხარისხი"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "ჰიპერბოლური მრუდების ხარისხი, *0.1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "მრუდების მინიმალური მნიშვნელობა"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "ჰიპერბოლური მრუდების მინიმალური მნიშვნელობის ზღვარი, *0.01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "მრუდების მაქსიმალური მნიშვნელობა"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "ჰიპერბოლური მრუდების მაქსიმალური მნიშვნელობის ზღვარი, *0.01"
     }
 }

@@ -216,9 +216,6 @@
     "tabAuxiliary": {
         "message": "Modos"
     },
-    "logActionShow": {
-        "message": "Amosar rexistro de conexións"
-    },
     "serialPortOpened": {
         "message": "Porto serie <span class=\"message-positive\">satisfactoriamente</span> aberto coa ID: $1"
     },
