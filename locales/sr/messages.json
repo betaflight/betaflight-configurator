@@ -328,17 +328,13 @@
     "tabOptions": {
         "message": "Opcije"
     },
-    "sidebarOpenOptions": {
-        "message": "Opcije",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "Prebaci na tamni / svetli mod",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Prebaci na ekspertski mod",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Početno podešavanje"
@@ -598,9 +594,6 @@
     },
     "tabAuxiliary": {
         "message": "Modovi"
-    },
-    "logActionShow": {
-        "message": "Prikaži dnevnik"
     },
     "tabLog": {
         "message": "Dnevnik"

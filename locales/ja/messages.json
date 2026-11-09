@@ -324,17 +324,13 @@
     "tabOptions": {
         "message": "オプション"
     },
-    "sidebarOpenOptions": {
-        "message": "オプション",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "ダーク / ライトモード切替",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "エキスパートモード切替",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "セットアップ"
@@ -555,9 +551,6 @@
     },
     "tabAuxiliary": {
         "message": "モード"
-    },
-    "logActionShow": {
-        "message": "ログ表示"
     },
     "tabLog": {
         "message": "ログ"
