@@ -328,17 +328,13 @@
     "tabOptions": {
         "message": "Sozlamalar"
     },
-    "sidebarOpenOptions": {
-        "message": "Sozlamalar",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "Tungi/kunduzgi rejimni almashtirish",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Ekspert rejimini almashtirish",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Sozlash"
@@ -598,9 +594,6 @@
     },
     "tabAuxiliary": {
         "message": "Rejimlar"
-    },
-    "logActionShow": {
-        "message": "Jurnalni ko‘rsatish"
     },
     "tabLog": {
         "message": "Jurnal"

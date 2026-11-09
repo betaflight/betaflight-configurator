@@ -340,17 +340,13 @@
     "tabOptions": {
         "message": "Настройки"
     },
-    "sidebarOpenOptions": {
-        "message": "Настройки",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": " Переключить тёмный / светлый режим",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Режим эксперта",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Система"
@@ -616,9 +612,6 @@
     },
     "tabAuxiliary": {
         "message": "Режимы"
-    },
-    "logActionShow": {
-        "message": "Показать недавние действия"
     },
     "tabLog": {
         "message": "Лог"

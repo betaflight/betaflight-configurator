@@ -349,17 +349,13 @@
     "tabOptions": {
         "message": "خيارات"
     },
-    "sidebarOpenOptions": {
-        "message": "الخيارات",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "التبديل بين الوضع الداكن والفاتح",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "تفعيل/تعطيل وضع الخبير",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "إعداد"
@@ -625,9 +621,6 @@
     },
     "tabAuxiliary": {
         "message": "أنماط"
-    },
-    "logActionShow": {
-        "message": "إظهار السجل"
     },
     "tabLog": {
         "message": "السجل"
