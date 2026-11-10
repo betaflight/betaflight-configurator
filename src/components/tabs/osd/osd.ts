@@ -1989,10 +1989,6 @@ function chooseDisplayFields(fcStore: FcStore) {
         ]);
 
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat(buildGatedDisplayFields(fcStore, F));
-
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
-        }
     }
 }
 
@@ -2012,6 +2008,7 @@ function buildGatedDisplayFields(fcStore: FcStore, F: typeof OSD.ALL_DISPLAY_FIE
     const hasNavMap =
         hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
     const hasPositionHold = reports("USE_POSITION_HOLD");
+    const hasPitot = reports("USE_PITOT");
 
     if (hasFlightPlanWaypoints) {
         fields = fields.concat([
@@ -2033,6 +2030,13 @@ function buildGatedDisplayFields(fcStore: FcStore, F: typeof OSD.ALL_DISPLAY_FIE
     if (hasPositionHold) {
         fields = fields.concat([F.POS_HOLD_READY]);
     }
+
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+        if (hasPitot) {
+            fields = fields.concat([F.PITOT_AIRSPEED]);
+        }
+    }
+
     return fields;
 }
 
