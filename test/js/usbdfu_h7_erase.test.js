@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 
 // ---------------------------------------------------------------------------
 // Regression test for STM32H7 USB-DFU flashing (e.g. KAKUTEH7).
@@ -12,7 +13,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // "clearStatus: device did not reach dfuIDLE after 100 attempts (state: 4)".
 // ---------------------------------------------------------------------------
 
-vi.mock("../../src/js/gui", () => ({ default: { connect_lock: false } }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key) => key } }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/utils/notifications", () => ({ default: { showNotification: vi.fn() } }));
@@ -195,6 +195,8 @@ describe("STM32H7 DFU flashing", () => {
     let messages;
 
     beforeEach(() => {
+        // usbdfu releases the connect lock through the connection store.
+        setActivePinia(createPinia());
         messages = [];
         options = {
             erase_chip: true,

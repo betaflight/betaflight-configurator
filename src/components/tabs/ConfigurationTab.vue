@@ -111,6 +111,10 @@
                                 v-for="feature in featuresList"
                                 :key="feature.bit"
                                 fullWidth
+                                :data-setting-search-key-runtime="'feature' + feature.name"
+                                :data-setting-search-id="
+                                    configurationDynamicSearchId('configurationFeatures', 'feature' + feature.name)
+                                "
                                 :help="feature.haveTip ? $t('feature' + feature.name + 'Tip') : undefined"
                             >
                                 <USwitch
@@ -159,7 +163,15 @@
                                     size="xs"
                                 />
                             </div>
-                            <SettingRow v-for="cond in dshotBeaconConditionsList" :key="cond.bit" fullWidth>
+                            <SettingRow
+                                v-for="cond in dshotBeaconConditionsList"
+                                :key="cond.bit"
+                                fullWidth
+                                :data-setting-search-key-runtime="'beeper' + cond.name"
+                                :data-setting-search-id="
+                                    configurationDynamicSearchId('configurationDshotBeeper', 'beeper' + cond.name)
+                                "
+                            >
                                 <USwitch
                                     :model-value="isDshotConditionEnabled(cond)"
                                     @update:model-value="(checked: boolean) => toggleDshotCondition(cond, checked)"
@@ -195,6 +207,10 @@
                                 :key="beeper.bit"
                                 v-show="beeper.visible !== false"
                                 fullWidth
+                                :data-setting-search-key-runtime="'beeper' + beeper.name"
+                                :data-setting-search-id="
+                                    configurationDynamicSearchId('configurationBeeper', 'beeper' + beeper.name)
+                                "
                             >
                                 <USwitch
                                     :model-value="isBeeperEnabled(beeper)"
@@ -233,10 +249,7 @@ import { useIsMounted } from "@/composables/useIsMounted";
 import { useDirtyState } from "@/composables/useDirtyState";
 import { useSaving } from "@/composables/useSaving";
 import { runTabLoad } from "@/composables/useTabLoad";
-import GUI from "../../js/gui";
-import MSP from "../../js/msp";
-import MSPCodes, { MSP2TextType } from "../../js/msp/MSPCodes";
-import { mspHelper } from "../../js/msp/MSPHelper.js";
+import { useConfigurationData } from "@/composables/configuration/useConfigurationData";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import semver from "semver";
@@ -247,6 +260,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import type { Beeper } from "../../js/Beepers";
+import { configurationDynamicSearchId } from "../settings-search/settingsSearch";
 
 export default defineComponent({
     name: "ConfigurationTab",
@@ -408,52 +422,19 @@ export default defineComponent({
             });
 
         const { dirty, markClean, takeSnapshot } = useDirtyState(serializeConfigForDirtyCheck);
+        const { loadConfigurationData, sendConfigurationData } = useConfigurationData();
 
         // Loading Logic
         const loadConfig = async () => {
             await runTabLoad(
                 async () => {
-                    if (!isMounted.value) return;
-                    await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-                    await MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
-                    await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
-                    await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
-
-                    if (!isMounted.value) return;
-
-                    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                        await MSP.promise(MSPCodes.MSP_NAME);
-                    }
-
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                        await MSP.promise(
-                            MSPCodes.MSP2_GET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
-                        );
-                    }
-
-                    await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-
-                    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                        await MSP.promise(
-                            MSPCodes.MSP2_GET_TEXT,
-                            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PILOT_NAME),
-                        );
-                    }
-
-                    if (!isMounted.value) return;
-
-                    await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-
-                    if (!isMounted.value) return;
+                    if (!(await loadConfigurationData(isMounted))) return;
 
                     await initializeUI();
                     await nextTick();
-                    GUI.content_ready();
                 },
                 (e) => {
                     console.error("Failed to load configuration", e);
-                    GUI.content_ready();
                 },
             );
         };
@@ -555,30 +536,7 @@ export default defineComponent({
                     fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
                 }
 
-                // Send MSP commands
-                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-
-                if (fcStore.beepers) {
-                    await MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG));
-                }
-
-                await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-
-                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
-                } else {
-                    await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.CRAFT_NAME),
-                    );
-                    await MSP.promise(
-                        MSPCodes.MSP2_SET_TEXT,
-                        mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.PILOT_NAME),
-                    );
-                }
-
-                await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
-                await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+                await sendConfigurationData();
 
                 gui_log(i18n.getMessage("configurationSaved"));
 
@@ -615,6 +573,7 @@ export default defineComponent({
             disableAllBeepers,
             isDshotConditionEnabled,
             toggleDshotCondition,
+            configurationDynamicSearchId,
             armingConfig,
             showGyroCalOnFirstArm,
             showAutoDisarmDelay,

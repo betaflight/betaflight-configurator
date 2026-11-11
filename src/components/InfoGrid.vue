@@ -1,5 +1,5 @@
 <template>
-    <dl class="cf-info-grid" :class="gridClass">
+    <dl class="info-grid cf-info-grid" :class="gridClass">
         <template v-for="item in items" :key="item.id || item.i18n || item.label">
             <dt v-if="item.i18n || item.label" :id="item.id">
                 <span v-if="item.i18n">{{ i18n.getMessage(item.i18n) }}</span>
@@ -40,19 +40,22 @@ defineProps({
 });
 </script>
 
-<style scoped lang="less">
-.cf-info-grid {
+<style lang="less">
+/* SetupTab has .cf-info-grid elements of its own; .info-grid keeps these rules on this component. */
+.info-grid.cf-info-grid {
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 0.25rem 1rem;
     align-items: center;
     width: 100%;
-}
-.cf-info-grid dt {
-    font-weight: bold;
-    margin: 0;
-}
-.cf-info-grid dd {
-    margin: 0;
+
+    dt {
+        font-weight: bold;
+        margin: 0;
+    }
+
+    dd {
+        margin: 0;
+    }
 }
 </style>

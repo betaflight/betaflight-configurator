@@ -1,5 +1,5 @@
 <template>
-    <UModal :open="open" :title="$t('warningTitle')" :close="false" :dismissible="false">
+    <UModal :open="open" :title="$t('warningTitle')" :close="false" :dismissible="false" class="report-problems-dialog">
         <template #body>
             <div class="dialogReportProblems-header" v-html="$t('reportProblemsDialogHeader')"></div>
             <ul class="dialogReportProblems-list">
@@ -59,24 +59,26 @@ defineExpose({
 });
 </script>
 
-<style scoped>
-.dialogReportProblems-header {
-    margin-bottom: 5px;
-}
+<style lang="less">
+.report-problems-dialog {
+    .dialogReportProblems-header {
+        margin-bottom: 5px;
+    }
 
-.dialogReportProblems-list {
-    margin: 10px 0;
-    padding-inline-start: 0;
-    list-style: none;
-}
+    .dialogReportProblems-list {
+        margin: 10px 0;
+        padding-inline-start: 0;
+        list-style: none;
+    }
 
-.dialogReportProblems-listItem {
-    list-style: circle;
-    margin-inline-start: 20px;
-    margin-bottom: 5px;
-}
+    .dialogReportProblems-listItem {
+        list-style: circle;
+        margin-inline-start: 20px;
+        margin-bottom: 5px;
+    }
 
-.dialogReportProblems-footer {
-    margin-top: 10px;
+    .dialogReportProblems-footer {
+        margin-top: 10px;
+    }
 }
 </style>

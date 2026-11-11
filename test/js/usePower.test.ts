@@ -1,18 +1,44 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { usePower } from "../../src/composables/usePower";
-import CONFIGURATOR, { API_VERSION_1_48 } from "../../src/js/data_storage";
-import FC from "../../src/js/fc";
+import { API_VERSION_1_48 } from "../../src/js/data_storage";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import VirtualFC from "../../src/js/VirtualFC";
 import MSP from "../../src/js/msp";
 import MSPCodes, { MSP2TextType } from "../../src/js/msp/MSPCodes";
+import { useConnectionStore } from "../../src/stores/connection";
+
+let fcStore: ReturnType<typeof useFlightControllerStore>;
 
 describe("usePower", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        FC.resetState();
-        CONFIGURATOR.virtualMode = false;
-        CONFIGURATOR.virtualApiVersion = "0.0.1";
+        const connectionStore = useConnectionStore();
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+        connectionStore.virtualMode = false;
+        connectionStore.virtualApiVersion = "0.0.1";
     });
 
     afterEach(() => {
@@ -20,8 +46,9 @@ describe("usePower", () => {
     });
 
     it("switches battery profiles in virtual mode", async () => {
-        CONFIGURATOR.virtualMode = true;
-        CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+        const connectionStore = useConnectionStore();
+        connectionStore.virtualMode = true;
+        connectionStore.virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         const power = usePower();
@@ -31,13 +58,14 @@ describe("usePower", () => {
 
         await power.changeBatteryProfile(2);
 
-        expect(FC.CONFIG.batteryProfile).toBe(2);
+        expect(fcStore.config.batteryProfile).toBe(2);
         expect(power.activeBatteryProfile.value).toBe(2);
     });
 
     it("requests the battery profile name with the MSP2TEXT battery-profile type byte", async () => {
-        CONFIGURATOR.virtualMode = true;
-        CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+        const connectionStore = useConnectionStore();
+        connectionStore.virtualMode = true;
+        connectionStore.virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         // A wrong MSP2TextType member reaches the wire as the wrong type byte and the FC
@@ -53,8 +81,9 @@ describe("usePower", () => {
     });
 
     it("restores virtual battery profile state without MSP resync when profile switching fails", async () => {
-        CONFIGURATOR.virtualMode = true;
-        CONFIGURATOR.virtualApiVersion = API_VERSION_1_48;
+        const connectionStore = useConnectionStore();
+        connectionStore.virtualMode = true;
+        connectionStore.virtualApiVersion = API_VERSION_1_48;
         VirtualFC.setVirtualConfig();
 
         const profileNameError = new Error("profile name failed");
@@ -72,7 +101,7 @@ describe("usePower", () => {
 
         await expect(power.changeBatteryProfile(2)).rejects.toThrow(profileNameError);
 
-        expect(FC.CONFIG.batteryProfile).toBe(0);
+        expect(fcStore.config.batteryProfile).toBe(0);
         expect(power.activeBatteryProfile.value).toBe(0);
         expect(power.batteryProfileName.value).toBe(previousProfileName);
         expect(mspPromise).not.toHaveBeenCalledWith(MSPCodes.MSP_STATUS_EX);

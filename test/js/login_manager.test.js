@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 
 // --- Mocks (must be declared before the module under test is imported) ---
 
@@ -10,10 +11,6 @@ vi.mock("../../src/js/gui_log", () => ({
     gui_log: vi.fn(),
 }));
 
-vi.mock("../../src/js/gui", () => ({
-    default: { allowedTabs: ["landing", "firmware_flasher"] },
-}));
-
 vi.mock("../../src/js/localization", () => ({
     i18n: {
         getMessage: vi.fn((key) => key),
@@ -23,6 +20,7 @@ vi.mock("../../src/js/localization", () => ({
 import loginManager from "../../src/js/LoginManager";
 import { switchTab } from "../../src/js/tab_switch";
 import { gui_log } from "../../src/js/gui_log";
+import { useNavigationStore } from "../../src/stores/navigation";
 
 function seedSession() {
     localStorage.setItem("userToken", JSON.stringify({ userToken: "user-token" }));
@@ -38,6 +36,8 @@ describe("LoginManager.deleteAccount", () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        setActivePinia(createPinia());
+        useNavigationStore().allowedTabs = ["landing", "firmware_flasher"];
         localStorage.clear();
         seedSession();
         loginManager._profile = { email: "pilot@example.com" };

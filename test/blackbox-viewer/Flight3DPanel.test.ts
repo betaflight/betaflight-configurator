@@ -26,7 +26,7 @@ import { defineComponent } from "vue";
 import { Quaternion, Vector3 } from "three";
 import Flight3DPanel from "../../src/blackbox-viewer/components/Flight3DPanel.vue";
 import { useGraphStore } from "../../src/blackbox-viewer/stores/graph";
-import { useSettingsStore } from "../../src/blackbox-viewer/stores/settings.js";
+import { useSettingsStore } from "../../src/blackbox-viewer/stores/settings";
 import type { FlightTrack } from "../../src/blackbox-viewer/flight3d/flightTrack";
 
 // WebGL is not available here; the fake records what the panel hands the scene.
@@ -66,7 +66,7 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         }
     },
 }));
-vi.mock("../../src/blackbox-viewer/playback_controls.js", () => ({ setCurrentBlackboxTime: vi.fn() }));
+vi.mock("../../src/blackbox-viewer/playback_controls", () => ({ setCurrentBlackboxTime: vi.fn() }));
 
 describe("Flight3DPanel", () => {
     beforeEach(() => {

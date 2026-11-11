@@ -1,8 +1,34 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { effectScope, type EffectScope } from "vue";
-import GUI from "../../src/js/gui";
+import { createPinia, setActivePinia } from "pinia";
+import { useConnectionStore } from "../../src/stores/connection";
 
-import { useBoardSelection, type BoardSelectionParams } from "../../src/composables/useBoardSelection";
+import {
+    requireTargetReleases,
+    useBoardSelection,
+    type BoardSelectionParams,
+} from "../../src/composables/useBoardSelection";
 
 vi.mock("../../src/js/utils/connection", () => ({ ispConnected: () => true }));
 
@@ -31,7 +57,9 @@ describe("useBoardSelection", () => {
 
     beforeEach(() => {
         vi.useFakeTimers();
-        GUI.connect_lock = false;
+        setActivePinia(createPinia());
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = false;
 
         scope = effectScope();
         scope.run(() => {
@@ -40,17 +68,19 @@ describe("useBoardSelection", () => {
     });
 
     afterEach(() => {
+        const connectionStore = useConnectionStore();
         scope.stop();
         vi.runAllTimers();
-        GUI.connect_lock = false;
+        connectionStore.connectLock = false;
         vi.useRealTimers();
         vi.restoreAllMocks();
     });
 
     it("clears the detect-board timeout on scope dispose, so detectingBoard stays stuck", async () => {
-        // The GUI.connect_lock branch is the smallest surface that schedules the
+        const connectionStore = useConnectionStore();
+        // The connectLock branch is the smallest surface that schedules the
         // 2000ms timeout without needing to entangle AutoDetect.verifyBoard.
-        GUI.connect_lock = true;
+        connectionStore.connectLock = true;
 
         await boardSelection.handleDetectBoard();
         expect(boardSelection.state.detectingBoard).toBe(true);
@@ -63,7 +93,8 @@ describe("useBoardSelection", () => {
     });
 
     it("without dispose, the timeout still fires and resets detectingBoard (proves the test is not vacuous)", async () => {
-        GUI.connect_lock = true;
+        const connectionStore = useConnectionStore();
+        connectionStore.connectLock = true;
 
         await boardSelection.handleDetectBoard();
         expect(boardSelection.state.detectingBoard).toBe(true);
@@ -110,5 +141,21 @@ describe("useBoardSelection", () => {
             .getSelectMenuItems()
             .flatMap((item) => (typeof item === "object" && item?.type === "label" ? [item.label] : []));
         expect(labels).toEqual(["firmwareFlasherOptionLabelVerifiedPartner", "constructor", "__proto__"]);
+    });
+});
+
+describe("requireTargetReleases", () => {
+    it("throws when the build server lists no releases, so the caller's catch logs it", async () => {
+        const buildApi = { loadTargetReleases: vi.fn().mockResolvedValue(null) };
+
+        await expect(requireTargetReleases(buildApi, "NOPE")).rejects.toThrow("NOPE");
+    });
+
+    it("passes a release list through", async () => {
+        const list = { releases: [{ release: "4.5.0", label: "4.5.0", type: "Stable" }] };
+
+        await expect(requireTargetReleases({ loadTargetReleases: vi.fn().mockResolvedValue(list) }, "X")).resolves.toBe(
+            list,
+        );
     });
 });

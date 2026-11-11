@@ -22,7 +22,6 @@
 import { reactive } from "vue";
 import { get as getConfig } from "../js/ConfigStorage";
 import { useDialog } from "./useDialog";
-import GUI from "../js/gui";
 import ConfigInserter from "../js/ConfigInserter";
 import { getTracking } from "../js/Analytics";
 import read_hex_file from "../js/workers/hex_parser";
@@ -32,6 +31,7 @@ import DeviceHandler from "../js/device_handler";
 import { getConnectionState } from "../js/connection_state";
 import type { ParsedHex } from "../js/workers/hex_parser";
 import type { STM32FlashOptions } from "../js/protocols/webstm32";
+import { useConnectionStore } from "../stores/connection";
 
 type Translate = (key: string, params?: Record<string, unknown>) => string;
 type FlashingMessage = (message: string | null, type: string) => unknown;
@@ -74,6 +74,7 @@ interface HexFlashSettings {
     flashManualBaudRate?: number;
     filename?: string | null;
     resetFlashingState?: () => void;
+    requestDfuPermission?: () => void;
     selectedBoard?: string;
     localFirmwareLoaded?: boolean;
     showDialogVerifyBoard?: ShowDialogVerifyBoard;
@@ -101,7 +102,7 @@ export interface FlashWorkflowOptions {
     enableLoadRemoteFileButton?: (enabled: boolean) => void;
     enableLoadFileButton?: (enabled: boolean) => void;
     saveFirmware?: () => Promise<boolean>;
-    startFlashing?: () => Promise<void>;
+    startFlashing?: () => void;
     startBackup?: (callback: () => Promise<void>) => void;
     initiateFlashing: () => Promise<void>;
     progressCallback?: (progress: { stage: string; [key: string]: unknown }) => void;
@@ -125,6 +126,7 @@ function errorMessageOf(error: unknown) {
  * Handles firmware state, parsing, and flashing workflows.
  */
 export function useFirmwareFlashing(params: FirmwareFlashingParams) {
+    const connectionStore = useConnectionStore();
     const { flashingMessage, flashProgress, FLASH_MESSAGE_TYPES, $t, logHead = "[FIRMWARE_FLASHER]" } = params;
     const dialog = useDialog();
 
@@ -380,6 +382,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashManualBaudRate,
             filename,
             resetFlashingState,
+            requestDfuPermission,
             selectedBoard,
             localFirmwareLoaded,
             showDialogVerifyBoard,
@@ -389,6 +392,8 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashingMessage,
             flashProgress,
             flashMessageTypes: FLASH_MESSAGE_TYPES,
+            resetFlashingState,
+            requestDfuPermission,
             selectedBoard,
             localFirmwareLoaded,
             showDialogVerifyBoard,
@@ -434,6 +439,11 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             DeviceHandler.dfuProtocol
                 .requestPermission()
                 .then((device) => {
+                    // requestPermission() resolves null when the user cancels the chooser;
+                    // fail into the catch below, as dereferencing null always did.
+                    if (!device) {
+                        throw new Error("No DFU device selected");
+                    }
                     DeviceHandler.dfuProtocol.connect(device.path, firmware, flashing_options);
                 })
                 .catch((error) => {
@@ -478,7 +488,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
     /**
      * Executes the flashing sequence for HEX firmware, including optional config insertion
      */
-    const startFlashing = async (options: StartFlashingOptions = {}) => {
+    const startFlashing = (options: StartFlashingOptions = {}) => {
         const {
             config,
             clearBoardConfig,
@@ -488,13 +498,14 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             flashManualBaudRate,
             filename,
             resetFlashingState,
+            requestDfuPermission,
             setFlashOnConnect,
             selectedBoard,
             localFirmwareLoaded,
             showDialogVerifyBoard,
         } = options;
 
-        if (GUI.connect_lock) {
+        if (connectionStore.connectLock) {
             return;
         }
 
@@ -505,7 +516,8 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         }
 
         try {
-            if (config && !parsedHexData.configInserted) {
+            // No board config is `{}`, which is truthy: only a loaded config text is written.
+            if (typeof config === "string" && config && !parsedHexData.configInserted) {
                 const configInserter = new ConfigInserter();
 
                 if (configInserter.insertConfig(parsedHexData, config)) {
@@ -524,6 +536,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 flashManualBaudRate,
                 filename,
                 resetFlashingState,
+                requestDfuPermission,
                 selectedBoard,
                 localFirmwareLoaded,
                 showDialogVerifyBoard,
@@ -614,7 +627,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             // nothing else grabs the port, and always finalise the UI in finally.
             // Also stand the MSP reconnect down and enter FLASHING so the connection state
             // reflects that the flasher owns the port (hard-blocks connect/reboot).
-            GUI.connect_lock = true;
+            connectionStore.connectLock = true;
             getConnectionState().beginDeviceReplacement();
             try {
                 const flashed = await flashEspFirmware({ filename });
@@ -623,7 +636,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
                 }
                 report("bin-complete", { flashed });
             } finally {
-                GUI.connect_lock = false;
+                connectionStore.connectLock = false;
                 getConnectionState().endFlashing();
                 resumeSponsorInterval?.();
                 enableFlashButton?.(true);
@@ -639,7 +652,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         // Either flash-on-connect or no available port falls back to immediate flashing
         if (flashOnConnectEnabled || !portAvailable) {
             report("flash-now", { flashOnConnect: flashOnConnectEnabled, portAvailable });
-            await startFlashingCallback?.();
+            startFlashingCallback?.();
             return;
         }
 
@@ -715,23 +728,23 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
             console.log(
                 `${logHead} Detected USB device:`,
                 device,
-                `rebootMode=${STM32.rebootMode}`,
-                `connectLock=${GUI.connect_lock}`,
+                `bootloaderRebootMode=${connectionStore.bootloaderRebootMode}`,
+                `connectLock=${connectionStore.connectLock}`,
                 `flashOnConnect=${isFlashOnConnect}`,
             );
 
             updateDfuExitButtonState?.();
 
-            if (GUI.connect_lock && !STM32.rebootMode) {
+            if (connectionStore.connectLock && !connectionStore.bootloaderRebootMode) {
                 console.log(`${logHead} Port event ignored: connect_lock active, no reboot pending`);
                 return;
             }
 
-            if (STM32.rebootMode || isFlashOnConnect) {
-                const wasReboot = !!STM32.rebootMode;
-                STM32.rebootMode = 0;
+            if (connectionStore.bootloaderRebootMode || isFlashOnConnect) {
+                const wasReboot = !!connectionStore.bootloaderRebootMode;
+                connectionStore.bootloaderRebootMode = 0;
                 if (wasReboot) {
-                    GUI.connect_lock = false;
+                    connectionStore.connectLock = false;
                 }
                 // After DFU reboot: call startFlashing directly — the unstable firmware
                 // dialog was already shown on the initial flash trigger.
@@ -751,7 +764,7 @@ export function useFirmwareFlashing(params: FirmwareFlashingParams) {
         const onDeviceRemoved = async (devicePath: unknown) => {
             console.log(`${logHead} Device removed:`, devicePath);
 
-            if (GUI.connect_lock || STM32.rebootMode) {
+            if (connectionStore.connectLock || connectionStore.bootloaderRebootMode) {
                 return;
             }
 

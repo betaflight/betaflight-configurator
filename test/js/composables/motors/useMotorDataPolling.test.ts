@@ -4,13 +4,14 @@ import { defineComponent, ref } from "vue";
 import { mount } from "@vue/test-utils";
 import MSP from "../../../../src/js/msp";
 import MSPCodes from "../../../../src/js/msp/MSPCodes";
-import GUI from "../../../../src/js/gui";
+import * as timers from "../../../../src/js/timers";
 import { useFlightControllerStore } from "../../../../src/stores/fc";
 import { useMotorDataPolling } from "../../../../src/composables/motors/useMotorDataPolling";
 
 vi.mock("../../../../src/js/msp", () => ({ default: { send_message: vi.fn() } }));
-vi.mock("../../../../src/js/gui", () => ({
-    default: { interval_add: vi.fn(() => ({ name: "motor_and_status_pull" })), interval_remove: vi.fn() },
+vi.mock("../../../../src/js/timers", () => ({
+    addInterval: vi.fn(() => ({ name: "motor_and_status_pull" })),
+    removeInterval: vi.fn(),
 }));
 
 type Polling = ReturnType<typeof useMotorDataPolling>;
@@ -28,9 +29,9 @@ function mountPolling() {
     return { wrapper, polling };
 }
 
-// Runs the tick registered with GUI.interval_add, then each MSP callback in turn.
+// Runs the tick registered with timers.addInterval, then each MSP callback in turn.
 function runOnePoll() {
-    const tick = vi.mocked(GUI.interval_add).mock.calls.at(-1)![1] as () => void;
+    const tick = vi.mocked(timers.addInterval).mock.calls.at(-1)![1] as () => void;
     tick();
     for (let i = 0; i < vi.mocked(MSP.send_message).mock.calls.length; i++) {
         const callback = vi.mocked(MSP.send_message).mock.calls[i][3];
@@ -52,7 +53,7 @@ describe("useMotorDataPolling", () => {
     it("starts the 50 ms poll on mount and removes it on unmount", () => {
         const { wrapper } = mountPolling();
 
-        expect(GUI.interval_add).toHaveBeenCalledExactlyOnceWith(
+        expect(timers.addInterval).toHaveBeenCalledExactlyOnceWith(
             "motor_and_status_pull",
             expect.any(Function),
             50,
@@ -60,7 +61,7 @@ describe("useMotorDataPolling", () => {
         );
 
         wrapper.unmount();
-        expect(GUI.interval_remove).toHaveBeenCalledExactlyOnceWith("motor_and_status_pull");
+        expect(timers.removeInterval).toHaveBeenCalledExactlyOnceWith("motor_and_status_pull");
     });
 
     it("restarting replaces the running interval rather than stacking a second one", () => {
@@ -68,18 +69,18 @@ describe("useMotorDataPolling", () => {
 
         polling.startPolling();
 
-        expect(GUI.interval_remove).toHaveBeenCalledOnce();
-        expect(GUI.interval_add).toHaveBeenCalledTimes(2);
+        expect(timers.removeInterval).toHaveBeenCalledOnce();
+        expect(timers.addInterval).toHaveBeenCalledTimes(2);
     });
 
     it("stopPolling is a no-op when nothing is running", () => {
         const { polling } = mountPolling();
         polling.stopPolling();
-        vi.mocked(GUI.interval_remove).mockClear();
+        vi.mocked(timers.removeInterval).mockClear();
 
         polling.stopPolling();
 
-        expect(GUI.interval_remove).not.toHaveBeenCalled();
+        expect(timers.removeInterval).not.toHaveBeenCalled();
     });
 
     it("polls MSP_MOTOR only when neither DShot telemetry nor the ESC sensor is in use", () => {

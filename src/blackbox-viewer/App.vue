@@ -124,7 +124,7 @@ import { useGraphStore } from "./stores/graph";
 import { useAppStore } from "./stores/app";
 import { useLogStore, FIRMWARE_CLASSES } from "./stores/log";
 import { usePlaybackStore } from "./stores/playback";
-import { useSettingsStore } from "./stores/settings.js";
+import { useSettingsStore } from "./stores/settings";
 import { useWorkspaceStore } from "./stores/workspace";
 import AppToolbar from "./components/AppToolbar.vue";
 import VideoExportDialog from "./components/VideoExportDialog.vue";
@@ -168,7 +168,7 @@ const injectedRoot = inject<Ref<HTMLElement | null> | null>("bbvRoot", null);
 // independent of whether a log is already loaded in the viewer.
 const dataflash = inject<DataflashHost | null>("bbvDataflash", null);
 
-// Centralized CSS class binding — replaces 27 imperative html.classList calls in main.js
+// Centralized CSS class binding — replaces 27 imperative html.classList calls in main.js (now main.ts)
 watchEffect(() => {
     // Only fall back to <html> when running standalone (no root injected); when embedded, wait
     // for the ref to resolve rather than toggling classes onto the host document.

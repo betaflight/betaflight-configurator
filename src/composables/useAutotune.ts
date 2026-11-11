@@ -22,7 +22,7 @@
 import { useAutotuneStore } from "@/stores/autotune";
 import FileSystem from "@/js/FileSystem";
 import { i18n } from "@/js/localization";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -231,10 +231,13 @@ function analyzeLog(data: Uint8Array, log: LogBoundary, targetPhaseMarginDeg: nu
     };
 }
 
-function computeSampleRate(sysConfig: SysConfig) {
+export function computeSampleRate(sysConfig: SysConfig) {
     const looptimeUs = sysConfig.looptime || 125;
     const pidDenom = sysConfig.pid_process_denom || 1;
-    const bbRate = sysConfig.frameIntervalPDenom || 1;
+    // "P interval:0" is the firmware's I-frame-only state: blackbox.c disables P
+    // frames when the requested rate is below the 32ms I-frame cadence, so the I
+    // interval is the divider between the frames that were actually logged.
+    const bbRate = sysConfig.frameIntervalPDenom || sysConfig.frameIntervalI || 1;
     return 1e6 / (looptimeUs * pidDenom * bbRate);
 }
 
@@ -315,16 +318,18 @@ function computeAxisResult(
 }
 
 async function applyGains(proposed: ProposedSliders) {
+    const fcStore = useFlightControllerStore();
+    await MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
     // Object.keys widens to string[]; the keys are the proposal's own.
     for (const key of Object.keys(proposed) as (keyof ProposedSliders)[]) {
-        if (key in FC.TUNING_SLIDERS) {
-            FC.TUNING_SLIDERS[key] = proposed[key];
+        if (key in fcStore.tuningSliders) {
+            fcStore.tuningSliders[key] = proposed[key];
         }
     }
 
     await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
     await validateTuningSliders();
-    if (!FC.TUNING_SLIDERS.slider_pids_valid || !FC.TUNING_SLIDERS.slider_dterm_valid) {
+    if (!fcStore.tuningSliders.slider_pids_valid || !fcStore.tuningSliders.slider_dterm_valid) {
         throw new Error("Recommended autotune sliders did not pass firmware validation.");
     }
     await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);

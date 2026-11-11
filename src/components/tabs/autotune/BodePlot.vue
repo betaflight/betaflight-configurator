@@ -67,7 +67,12 @@ const phaseSvg = ref<SVGSVGElement | null>(null);
 const sensitivitySvg = ref<SVGSVGElement | null>(null);
 const stepSvg = ref<SVGSVGElement | null>(null);
 
-const AXIS_COLORS: Record<AxisName, string> = { roll: "#e24761", pitch: "#49c747", yaw: "#477ac7" };
+// d3 sets these as SVG attributes, which resolve `var()` like the surface colours below.
+const AXIS_COLORS: Record<AxisName, string> = {
+    roll: "var(--color-axis-roll)",
+    pitch: "var(--color-axis-pitch)",
+    yaw: "var(--color-axis-yaw)",
+};
 const AXES: { key: AxisName; labelKey: string; colorClass: string }[] = [
     { key: "roll", labelKey: "autotuneAxisRoll", colorClass: "toggle-roll" },
     { key: "pitch", labelKey: "autotuneAxisPitch", colorClass: "toggle-pitch" },
@@ -259,7 +264,7 @@ function drawMagnitude(
             .attr("x2", width)
             .attr("y1", yScale(0))
             .attr("y2", yScale(0))
-            .attr("stroke", "#999")
+            .attr("stroke", "var(--chart-reference-color)")
             .attr("stroke-dasharray", "4,3")
             .attr("stroke-width", 0.5);
         g.append("text")
@@ -267,7 +272,7 @@ function drawMagnitude(
             .attr("y", yScale(0))
             .attr("dy", "0.35em")
             .attr("font-size", "10px")
-            .attr("fill", "#999")
+            .attr("fill", "var(--chart-reference-color)")
             .text("0 dB");
     }
 
@@ -343,7 +348,7 @@ function drawPhase(
             .attr("x2", width)
             .attr("y1", yScale(-180))
             .attr("y2", yScale(-180))
-            .attr("stroke", "#c0392b")
+            .attr("stroke", "var(--chart-danger-color)")
             .attr("stroke-dasharray", "4,3")
             .attr("stroke-width", 0.5);
         g.append("text")
@@ -351,7 +356,7 @@ function drawPhase(
             .attr("y", yScale(-180))
             .attr("dy", "0.35em")
             .attr("font-size", "10px")
-            .attr("fill", "#c0392b")
+            .attr("fill", "var(--chart-danger-color)")
             .text("-180\u00B0");
     }
 
@@ -415,7 +420,7 @@ function drawSensitivity(
             .attr("x2", width)
             .attr("y1", yScale(6))
             .attr("y2", yScale(6))
-            .attr("stroke", "#c0392b")
+            .attr("stroke", "var(--chart-danger-color)")
             .attr("stroke-dasharray", "4,3")
             .attr("stroke-width", 0.5);
         g.append("text")
@@ -423,7 +428,7 @@ function drawSensitivity(
             .attr("y", yScale(6))
             .attr("dy", "0.35em")
             .attr("font-size", "10px")
-            .attr("fill", "#c0392b")
+            .attr("fill", "var(--chart-danger-color)")
             .text("6 dB");
     }
 
@@ -434,7 +439,7 @@ function drawSensitivity(
             .attr("x2", width)
             .attr("y1", yScale(0))
             .attr("y2", yScale(0))
-            .attr("stroke", "#999")
+            .attr("stroke", "var(--chart-reference-color)")
             .attr("stroke-dasharray", "4,3")
             .attr("stroke-width", 0.5);
     }
@@ -502,7 +507,7 @@ function drawStepResponse(width: number, height: number, svgHeight: number, cont
         .attr("x2", width)
         .attr("y1", yScale(1))
         .attr("y2", yScale(1))
-        .attr("stroke", "#999")
+        .attr("stroke", "var(--chart-reference-color)")
         .attr("stroke-dasharray", "4,3")
         .attr("stroke-width", 0.5);
     g.append("text")
@@ -510,7 +515,7 @@ function drawStepResponse(width: number, height: number, svgHeight: number, cont
         .attr("y", yScale(1))
         .attr("dy", "0.35em")
         .attr("font-size", "10px")
-        .attr("fill", "#999")
+        .attr("fill", "var(--chart-reference-color)")
         .text("1.0");
 
     const line = d3

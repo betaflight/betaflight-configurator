@@ -11,6 +11,7 @@ import {
     createFlasherState,
     injectFlasherState,
     type BoardSelection,
+    type FlasherState,
 } from "../../src/components/tabs/firmware-flasher/flasherState";
 
 vi.mock("../../src/js/utils/AutoBackup", () => ({ getLastBackupData: () => null }));
@@ -39,6 +40,37 @@ function fakeBoardSelection(): BoardSelection {
     } as unknown as BoardSelection;
 }
 
+function mountFlashTab(state: FlasherState, boardSelection: BoardSelection, firmwareAcceptsConfig = false) {
+    return shallowMount(FlasherFlashTab, {
+        props: {
+            cloudBuild: { state: {} } as never,
+            onSaveFirmware: noop,
+            flashRingColor: "primary",
+            onNoRebootChange: noop,
+            onEraseChipChange: noop,
+            onFlashManualBaudChange: noop,
+            onFlashManualBaudRateChange: noop,
+            onRestoreBackup: noop,
+            firmwareAcceptsConfig,
+        },
+        global: {
+            ...global,
+            provide: { [FLASHER_STATE as symbol]: state, [BOARD_SELECTION as symbol]: boardSelection },
+        },
+    });
+}
+
+/** The configuration row's value, or null when the row is hidden. */
+function configRowText(wrapper: ReturnType<typeof mountFlashTab>): string | null {
+    const span = wrapper.find(".configFilename");
+    return span.exists() ? span.text() : null;
+}
+
+function selectRelease(boardSelection: BoardSelection, unifiedConfig?: boolean): void {
+    boardSelection.state.firmwareVersionOptions = [{ release: "4.5.0", label: "4.5.0", unifiedConfig }];
+    boardSelection.state.selectedFirmwareVersion = "4.5.0";
+}
+
 describe("firmware flasher sub-tabs", () => {
     it("refuses to run outside FirmwareFlasherTab", () => {
         const Orphan = defineComponent({
@@ -54,19 +86,7 @@ describe("firmware flasher sub-tabs", () => {
     it("FlasherFlashTab writes its switches into the provided state", async () => {
         const state = createFlasherState();
         state.expertOptionsVisible = true;
-        const wrapper = shallowMount(FlasherFlashTab, {
-            props: {
-                cloudBuild: { state: {} } as never,
-                onSaveFirmware: noop,
-                flashRingColor: "primary",
-                onNoRebootChange: noop,
-                onEraseChipChange: noop,
-                onFlashManualBaudChange: noop,
-                onFlashManualBaudRateChange: noop,
-                onRestoreBackup: noop,
-            },
-            global: { ...global, provide: { [FLASHER_STATE as symbol]: state } },
-        });
+        const wrapper = mountFlashTab(state, fakeBoardSelection());
 
         const [noReboot, eraseChip] = wrapper.findAllComponents<ComponentPublicInstance>(USwitch);
         await noReboot.vm.$emit("update:modelValue", true);
@@ -75,6 +95,44 @@ describe("firmware flasher sub-tabs", () => {
         expect(state.noRebootSequence).toBe(true);
         expect(state.eraseChip).toBe(true);
     });
+
+    it.each([
+        [true, "[default]"],
+        [false, null],
+        [undefined, null],
+    ])("shows the configuration row for a release with unifiedConfig %s as %s", (unifiedConfig, expected) => {
+        const boardSelection = fakeBoardSelection();
+        selectRelease(boardSelection, unifiedConfig);
+
+        expect(configRowText(mountFlashTab(createFlasherState(), boardSelection))).toBe(expected);
+    });
+
+    it("shows a loaded local config by name, whatever the release", () => {
+        const state = createFlasherState();
+        state.isConfigLocal = true;
+        state.configFilename = "MYBOARD.config";
+        const boardSelection = fakeBoardSelection();
+        selectRelease(boardSelection, false);
+
+        expect(configRowText(mountFlashTab(state, boardSelection))).toBe("MYBOARD.config");
+    });
+
+    it.each([
+        [true, "set x = 1", "[default]"],
+        [false, "set x = 1", null],
+        [true, {}, null],
+    ])(
+        "for local firmware that accepts a config (%s) with board config %j, shows %s",
+        (firmwareAcceptsConfig, config, expected) => {
+            const state = createFlasherState();
+            state.localFirmwareLoaded = true;
+            state.config = config as typeof state.config;
+            const boardSelection = fakeBoardSelection();
+            selectRelease(boardSelection, true);
+
+            expect(configRowText(mountFlashTab(state, boardSelection, firmwareAcceptsConfig))).toBe(expected);
+        },
+    );
 
     it("FlasherBoardBuildTab writes into both the flasher state and the board selection", async () => {
         const state = createFlasherState();

@@ -29,11 +29,12 @@ import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../components/tabs/osd/osd_constants";
 import semver from "semver";
 import { useFlightControllerStore } from "./fc";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
 import { bit_set } from "../js/bit";
 import { useDirtyState } from "../composables/useDirtyState";
 import { MspBuffer } from "../js/msp/mspBytes";
 import type { MspResponse } from "../js/msp";
+import { useConnectionStore } from "../stores/connection";
 
 /** An alarm threshold as `OSD.msp.decode` builds it; only `value` is written back. */
 export interface OsdAlarm {
@@ -160,7 +161,8 @@ function encodeStatisticsPayload(
 }
 
 async function fetchOsdInfo(fcStore: FlightControllerStore) {
-    if (CONFIGURATOR.virtualMode) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.virtualMode) {
         return undefined;
     }
 
@@ -173,14 +175,15 @@ async function fetchOsdInfo(fcStore: FlightControllerStore) {
 }
 
 async function decodeOsdData(info: MspResponse | undefined) {
-    if (!CONFIGURATOR.virtualMode) {
+    const connectionStore = useConnectionStore();
+    if (!connectionStore.virtualMode) {
         await MSP.promise(MSPCodes.MSP_RX_CONFIG);
     }
 
     OSD.loadDisplayFields();
     OSD.chooseFields();
 
-    if (CONFIGURATOR.virtualMode) {
+    if (connectionStore.virtualMode) {
         VirtualFC.setupVirtualOSD();
 
         if (legacyOsd.msp.decodeVirtual) {
@@ -207,6 +210,7 @@ async function ensureDefaultFontLoaded() {
 }
 
 export const useOsdStore = defineStore("osd", () => {
+    const connectionStore = useConnectionStore();
     // Core OSD data state
     const videoSystem = ref<number | null>(null);
     const unitMode = ref<number | null>(null);
@@ -456,7 +460,7 @@ export const useOsdStore = defineStore("osd", () => {
                 }
             }
 
-            if (CONFIGURATOR.virtualMode && legacyOsd.virtualMode) {
+            if (connectionStore.virtualMode && legacyOsd.virtualMode) {
                 legacyOsd.virtualMode.warningFlags = warningFlags;
             }
 
@@ -482,7 +486,7 @@ export const useOsdStore = defineStore("osd", () => {
     }
 
     function encodeLayout(displayItem: OsdDisplayItem) {
-        if (CONFIGURATOR.virtualMode && legacyOsd.virtualMode) {
+        if (connectionStore.virtualMode && legacyOsd.virtualMode) {
             legacyOsd.virtualMode.itemPositions[displayItem.index] = helpers.pack.position(displayItem);
         }
 
@@ -494,7 +498,7 @@ export const useOsdStore = defineStore("osd", () => {
 
     function encodeTimer(timer: OsdTimer) {
         const virtualMode = legacyOsd.virtualMode;
-        if (CONFIGURATOR.virtualMode && virtualMode) {
+        if (connectionStore.virtualMode && virtualMode) {
             if (!virtualMode.timerData[timer.index]) {
                 virtualMode.timerData[timer.index] = {};
             }
@@ -517,19 +521,19 @@ export const useOsdStore = defineStore("osd", () => {
 
         await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
 
+        // The writes go one at a time, in order: each is a separate MSP_SET_OSD_CONFIG the FC applies
+        // as it arrives, and the EEPROM write below must come after all of them.
         for (const item of displayItems.value) {
-            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item));
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item)); // NOSONAR: sequential by design
         }
 
         for (const timer of timers.value) {
-            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer));
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer)); // NOSONAR: sequential by design
         }
 
         for (const stat of statItems.value) {
-            await MSP.promise(
-                MSPCodes.MSP_SET_OSD_CONFIG,
-                encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, legacyOsd.virtualMode),
-            );
+            const payload = encodeStatisticsPayload(stat, connectionStore.virtualMode, legacyOsd.virtualMode);
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, payload); // NOSONAR: sequential by design
         }
 
         await beforePersist?.();

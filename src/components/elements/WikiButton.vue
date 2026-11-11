@@ -17,41 +17,36 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { documentationLinks } from "@/config/documentationLinks";
+import { documentationUrl } from "@/config/documentationLinks";
 
 export default defineComponent({
     name: "WikiButton",
     props: {
+        /** The tab key (e.g. "pid_tuning") whose wiki page to open, or a full https URL. */
         docUrl: {
             type: String,
             required: true,
         },
     },
     setup(props) {
-        const url = computed(() => {
-            if (props.docUrl.startsWith("https")) {
-                return props.docUrl;
-            }
-            const links: Record<string, string | undefined> = documentationLinks;
-            return links[props.docUrl] || "#";
-        });
+        const url = computed(() => (props.docUrl.startsWith("https") ? props.docUrl : documentationUrl(props.docUrl)));
 
         return { url };
     },
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .wiki-btn-wrapper {
     float: inline-end;
     margin-top: -45px;
-}
 
-.wiki-btn {
-    padding: 1px 9px;
-    font-size: 10px;
-    line-height: 17px;
-    letter-spacing: 0.03em;
-    transition: all ease 0.2s;
+    .wiki-btn {
+        padding: 1px 9px;
+        font-size: 10px;
+        line-height: 17px;
+        letter-spacing: 0.03em;
+        transition: all ease 0.2s;
+    }
 }
 </style>

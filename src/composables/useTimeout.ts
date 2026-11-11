@@ -20,7 +20,7 @@
  */
 
 import { onScopeDispose } from "vue";
-import GUI from "../js/gui";
+import * as timers from "../js/timers";
 
 export interface TimeoutRegistry {
     addTimeout: (name: string, code: () => void, timeout: number) => void;
@@ -29,7 +29,7 @@ export interface TimeoutRegistry {
 }
 
 /**
- * A composable for managing named timeouts via GUI's timeout registry.
+ * A composable for managing named timeouts via the app's timeout registry (js/timers).
  * All timeouts added through this composable are automatically removed
  * when the owning effect scope is disposed (component unmount or scope stop).
  *
@@ -41,14 +41,14 @@ export function useTimeout(): TimeoutRegistry {
     const localTimeouts: string[] = [];
 
     function addTimeout(name: string, code: () => void, timeout: number) {
-        GUI.timeout_add(name, code, timeout);
+        timers.addTimeout(name, code, timeout);
         if (!localTimeouts.includes(name)) {
             localTimeouts.push(name);
         }
     }
 
     function removeTimeout(name: string) {
-        GUI.timeout_remove(name);
+        timers.removeTimeout(name);
         const idx = localTimeouts.indexOf(name);
         if (idx !== -1) {
             localTimeouts.splice(idx, 1);
@@ -56,7 +56,7 @@ export function useTimeout(): TimeoutRegistry {
     }
 
     function removeAllTimeouts() {
-        localTimeouts.forEach((name) => GUI.timeout_remove(name));
+        localTimeouts.forEach((name) => timers.removeTimeout(name));
         localTimeouts.length = 0;
     }
 

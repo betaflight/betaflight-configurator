@@ -22,9 +22,9 @@
 import { defineStore } from "pinia";
 import { ref, shallowRef } from "vue";
 import type { GraphPanelConfig } from "./graph";
-import type { defaultUserSettings } from "../user_settings_data.js";
+import type { UserSettings } from "../user_settings_data";
 
-export type UserSettings = typeof defaultUserSettings;
+export type { UserSettings };
 
 export const useAppStore = defineStore("app", () => {
     const legendHidden = ref(false);
@@ -36,10 +36,10 @@ export const useAppStore = defineStore("app", () => {
     // dormant behind other tabs. Defaults true so the standalone viewer is unaffected.
     const viewerActive = ref(true);
 
-    // Filename of loaded log (pushed from legacy code)
+    // Filename of loaded log (pushed from main.ts)
     const logFilename = ref("");
 
-    // Status bar display strings (pushed from legacy code)
+    // Status bar display strings (pushed from main.ts)
     const statusVersion = ref("-");
     const statusCells = ref("");
     const statusLooptime = ref("-");
@@ -58,7 +58,7 @@ export const useAppStore = defineStore("app", () => {
     const keysDialogOpen = ref(false);
     const videoExportDialogOpen = ref(false);
 
-    // Callbacks registered by main.js (closure-dependent operations)
+    // Callbacks registered by main.ts (closure-dependent operations)
     const loadFiles = shallowRef<((files: FileList | File[]) => void) | null>(null);
     const loadLogBuffer = shallowRef<((data: ArrayBuffer | Uint8Array, name?: string) => void) | null>(null);
     const newGraphConfig = shallowRef<((newConfig: GraphPanelConfig[], redrawChart: boolean) => void) | null>(null);

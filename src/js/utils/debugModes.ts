@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import semver from "semver";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../data_storage";
 import { DEBUG_MODE_ALIASES, FIRMWARE_DEBUG_MODES } from "../debug_modes_table";
@@ -99,7 +120,7 @@ export interface DebugScaleContext extends DebugScope {
     /** Inverse of above (convert only). */
     throttleToRcCommandRaw?: (v: number) => number;
     /** FFT calc-step enum names (optional). */
-    fftCalcSteps?: string[];
+    fftCalcSteps?: readonly string[];
 }
 
 const GENERATED_API_VERSIONS = Object.freeze(

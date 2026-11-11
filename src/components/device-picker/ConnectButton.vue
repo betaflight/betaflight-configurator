@@ -57,7 +57,7 @@
 import { defineComponent, computed, ref } from "vue";
 import type { DropdownMenuItem } from "@nuxt/ui";
 import { useConnectionStore } from "../../stores/connection";
-import { useConnectionBookmarksStore } from "../../stores/connectionBookmarks";
+import { useConnectionBookmarksStore, type ConnectionBookmark } from "../../stores/connectionBookmarks";
 import DeviceHandler, { type PortDevice } from "../../js/device_handler";
 import { serial } from "../../js/serial";
 import { connectDisconnect, disconnect } from "../../js/serial_backend";
@@ -99,7 +99,7 @@ function portItems(devices: PortDevice[], icon: string) {
 }
 
 /** Dropdown items connecting to each saved target's address. */
-function bookmarkItems(bookmarks: { name: string; url: string }[]) {
+function bookmarkItems(bookmarks: ConnectionBookmark[]) {
     return bookmarks.map((bookmark) => ({
         label: bookmark.name,
         icon: "i-lucide-bookmark",
@@ -318,77 +318,76 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .sidebar-connect {
     padding: 0.5rem 0;
-}
 
-.sidebar-connect__group {
-    display: flex !important;
-    width: 100% !important;
-}
+    .sidebar-connect__group {
+        display: flex !important;
+        width: 100% !important;
+    }
 
-.sidebar-connect__main {
-    flex: 1 1 0 !important;
-    min-width: 0;
-}
+    .sidebar-connect__main {
+        flex: 1 1 0 !important;
+        min-width: 0;
+    }
 
-.sidebar-connect__label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    .sidebar-connect__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
-@media (max-width: 1055px) {
-    .sidebar-connect {
+    @media (max-width: 1055px) {
         display: flex;
         justify-content: center;
+
+        .sidebar-connect__label {
+            display: none;
+        }
+        .sidebar-connect__group {
+            width: auto !important;
+        }
     }
-    .sidebar-connect__label {
-        display: none;
+
+    /* Default Nuxt UI `success` soft tint is too pale in light mode — lift the contrast. */
+    html:not(.dark) & button.color-success {
+        background-color: var(--success-400);
+        border: 1px solid var(--success-600);
+        color: var(--surface-900);
     }
-    .sidebar-connect__group {
-        width: auto !important;
+    html:not(.dark) & button.color-success:hover {
+        background-color: var(--success-500);
     }
-}
 
-/* Default Nuxt UI `success` soft tint is too pale in light mode — lift the contrast. */
-html:not(.dark) .sidebar-connect :deep(button.color-success) {
-    background-color: var(--success-400);
-    border: 1px solid var(--success-600);
-    color: var(--surface-900);
-}
-html:not(.dark) .sidebar-connect :deep(button.color-success:hover) {
-    background-color: var(--success-500);
-}
+    /* Disconnect button (error) styling for light mode - ensure it's red */
+    html:not(.dark) & button.color-error {
+        background-color: var(--error-500);
+        border: 1px solid var(--error-600);
+        color: var(--surface-50);
+    }
+    html:not(.dark) & button.color-error:hover {
+        background-color: var(--error-600);
+    }
 
-/* Disconnect button (error) styling for light mode - ensure it's red */
-html:not(.dark) .sidebar-connect :deep(button.color-error) {
-    background-color: var(--error-500);
-    border: 1px solid var(--error-600);
-    color: var(--surface-50);
-}
-html:not(.dark) .sidebar-connect :deep(button.color-error:hover) {
-    background-color: var(--error-600);
-}
+    /* Disconnect button (error) styling for dark mode - ensure proper contrast */
+    html.dark & button.color-error {
+        background-color: var(--error-500);
+        border: 1px solid var(--error-600);
+        color: var(--surface-50);
+    }
+    html.dark & button.color-error:hover {
+        background-color: var(--error-600);
+    }
 
-/* Disconnect button (error) styling for dark mode - ensure proper contrast */
-html.dark .sidebar-connect :deep(button.color-error) {
-    background-color: var(--error-500);
-    border: 1px solid var(--error-600);
-    color: var(--surface-50);
-}
-html.dark .sidebar-connect :deep(button.color-error:hover) {
-    background-color: var(--error-600);
-}
-
-.tab_container.reveal .sidebar-connect {
-    display: block;
-}
-.tab_container.reveal .sidebar-connect__label {
-    display: inline;
-}
-.tab_container.reveal .sidebar-connect__group {
-    width: 100% !important;
+    .tab_container.reveal & {
+        display: block;
+    }
+    .tab_container.reveal & .sidebar-connect__label {
+        display: inline;
+    }
+    .tab_container.reveal & .sidebar-connect__group {
+        width: 100% !important;
+    }
 }
 </style>

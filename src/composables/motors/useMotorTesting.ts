@@ -31,7 +31,7 @@ import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import DshotCommand from "@/js/utils/DshotCommand";
 import { i18n } from "@/js/localization";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import { bit_check } from "@/js/bit";
 import { MspBuffer } from "@/js/msp/mspBytes";
 
@@ -42,6 +42,7 @@ export function useMotorTesting(
     zeroThrottleValue?: MaybeRef<number>,
 ) {
     const getZeroThrottleValue = (): number => unref(zeroThrottleValue) ?? 1000;
+    const fcStore = useFlightControllerStore();
 
     const motorsTestingEnabled = ref(false);
     const motorValues = ref<number[]>(new Array(8).fill(getZeroThrottleValue()));
@@ -179,8 +180,8 @@ export function useMotorTesting(
         masterValue.value = stopValue;
     };
 
-    // Arm state detection: FC.CONFIG.mode bit 0 indicates armed (matches original update_arm_status)
-    const isArmed = computed(() => bit_check(FC.CONFIG.mode, 0));
+    // Arm state detection: fcStore.config.mode bit 0 indicates armed (matches original update_arm_status)
+    const isArmed = computed(() => bit_check(fcStore.config.mode, 0));
 
     // Sliders disabled when not testing or when armed via RC (matches original setSlidersEnabled)
     const slidersDisabled = computed(() => !motorsTestingEnabled.value || isArmed.value);

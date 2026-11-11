@@ -19,6 +19,13 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// <reference types="vite-plugin-pwa/vanillajs" />
+
+interface ImportMetaEnv {
+    /** "true" in PR/master preview deploys and the local android:run/android:open builds; otherwise "false" or unset. */
+    readonly VITE_PREVIEW_BUILD?: string;
+}
+
 // Injected by Vite's `define` (vite.config.js).
 declare const __APP_VERSION__: string;
 declare const __APP_PRODUCTNAME__: string;

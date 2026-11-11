@@ -89,6 +89,7 @@ import { computed, ref, watch } from "vue";
 import { useAutotuneStore } from "@/stores/autotune";
 import { useConnectionStore } from "@/stores/connection";
 import { useAutotune, type AnalysisResult, type AxisName, type AxisResult } from "@/composables/useAutotune";
+import { useDialog } from "@/composables/useDialog";
 import { PHASE_MARGIN_PRESETS } from "@/js/blackbox/spectral_analysis";
 import type { SysConfig } from "@/js/blackbox/chirp_bbl_parser";
 import { i18n } from "@/js/localization";
@@ -144,6 +145,7 @@ interface TableRow {
 const store = useAutotuneStore();
 const connectionStore = useConnectionStore();
 const { applyGains, recomputeGains } = useAutotune();
+const dialog = useDialog();
 
 const applied = ref(false);
 const applying = ref(false);
@@ -288,9 +290,9 @@ const recommendationNotes = computed(() => {
 });
 
 const AXIS_DEFS: AxisDef[] = [
-    { key: "roll", labelKey: "autotuneAxisRoll", color: "#e24761", pidKey: "rollPID" },
-    { key: "pitch", labelKey: "autotuneAxisPitch", color: "#49c747", pidKey: "pitchPID" },
-    { key: "yaw", labelKey: "autotuneAxisYaw", color: "#477ac7", pidKey: "yawPID" },
+    { key: "roll", labelKey: "autotuneAxisRoll", color: "var(--color-axis-roll)", pidKey: "rollPID" },
+    { key: "pitch", labelKey: "autotuneAxisPitch", color: "var(--color-axis-pitch)", pidKey: "pitchPID" },
+    { key: "yaw", labelKey: "autotuneAxisYaw", color: "var(--color-axis-yaw)", pidKey: "yawPID" },
 ];
 
 const PID_ROWS: PidRowDef[] = [
@@ -486,6 +488,19 @@ async function onApply() {
     }
     const proposed = store.analysisResult?.axes?.[selectedAxisKey.value]?.gains?.proposed;
     if (!proposed) {
+        return;
+    }
+
+    const confirmed = await dialog.showYesNo(
+        i18n.getMessage("autotuneApplyConfirmTitle"),
+        i18n.getMessage("autotuneApplyConfirmText"),
+        {
+            destructive: true,
+            yesText: i18n.getMessage("autotuneApplyGains"),
+            noText: i18n.getMessage("cancel"),
+        },
+    );
+    if (!confirmed) {
         return;
     }
 

@@ -330,7 +330,9 @@ watch(
 watch(
     () => settings.userLanguage,
     (value) => {
-        i18n.changeLanguage(value);
+        // The seed can be undefined (before i18n.init()), but the watcher only fires on a
+        // change, and the only writer is the language picker, which always emits a code.
+        i18n.changeLanguage(value!);
         i18n.localizePage();
     },
 );
@@ -402,7 +404,7 @@ watch(
                     setConfig({ showNotifications: enabled });
                     break;
                 case "denied":
-                    dialog.openInfo(informationDialog.title, informationDialog.text, {
+                    dialog.openInfo(informationDialog.title, informationDialog.text, null, {
                         confirmText: informationDialog.buttonConfirmText,
                     });
                     settings.showNotifications = false;
@@ -418,7 +420,7 @@ watch(
                             setConfig({ showNotifications: true });
                             settings.showNotifications = true;
                         } else {
-                            dialog.openInfo(informationDialog.title, informationDialog.text, {
+                            dialog.openInfo(informationDialog.title, informationDialog.text, null, {
                                 confirmText: informationDialog.buttonConfirmText,
                             });
                         }

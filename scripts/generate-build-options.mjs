@@ -1,5 +1,5 @@
 /*
- * Generate src/js/build_options.js from the Betaflight cloud build API.
+ * Generate src/js/build_options.ts from the Betaflight cloud build API.
  *
  * This mirrors the firmware's `src/utils/make-build-info.py`, which generates
  * `src/main/msp/msp_build_info.{c,h}` from the same endpoint. The two tables
@@ -12,14 +12,14 @@
  *   <version>      Release version served by the options API (default: 2026.12).
  *                  Expanded to https://build.betaflight.com/api/options/<version>.
  *   <url>          A full http(s) URL, used verbatim instead of the default endpoint.
- *   --out <path>   Output file (default: src/js/build_options.js).
+ *   --out <path>   Output file (default: src/js/build_options.ts).
  *
  * The "Input hash" recorded in the generated header is the md5 of python's
  * `json.dumps(data, sort_keys=True)`, reimplemented here so the configurator
  * and the firmware record the exact same hash for the same payload.
  */
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,7 +27,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
 
 const DEFAULT_VERSION = "2026.12";
-const DEFAULT_OUT = "src/js/build_options.js";
+const DEFAULT_OUT = "src/js/build_options.ts";
 const ENDPOINT_BASE = "https://build.betaflight.com/api/options";
 const FETCH_TIMEOUT_MS = 10000;
 
@@ -279,8 +279,11 @@ function collectOptions(data, url) {
     return groups;
 }
 
-function renderModule(url, hash, groups) {
+// `license` is DEFAULT_LICENSE.md, which every TypeScript source file starts with.
+function renderModule(url, hash, groups, license) {
     const lines = [
+        license.trimEnd(),
+        "",
         "/*",
         " * WARNING: This is an auto-generated file, please do not edit directly!",
         " *",
@@ -315,7 +318,8 @@ async function main() {
     const data = await fetchBuildOptions(url);
     const hash = inputHash(data);
     const groups = collectOptions(data, url);
-    const contents = renderModule(url, hash, groups);
+    const license = await readFile(resolve(projectRoot, "DEFAULT_LICENSE.md"), "utf8");
+    const contents = renderModule(url, hash, groups, license);
 
     await mkdir(dirname(outPath), { recursive: true });
     await writeFile(outPath, contents, "utf8");

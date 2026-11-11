@@ -21,8 +21,7 @@
 
 import ShortUniqueId from "short-unique-id";
 import { set as setConfig, get as getConfig } from "./ConfigStorage";
-import GUI from "./gui";
-import CONFIGURATOR from "./data_storage";
+import { useAppInfoStore } from "../stores/appInfo";
 
 export interface AnalyticsSettings {
     sessionId: string;
@@ -41,7 +40,7 @@ declare global {
     }
 }
 
-// null until checkSetupAnalytics() has run, which main.js does at startup.
+// null until checkSetupAnalytics() has run, which main.ts does at startup.
 let tracking: Analytics | null = null;
 
 /** The tracker, or null before checkSetupAnalytics() has run. Read it at the call site, not at import. */
@@ -68,13 +67,14 @@ function setupAnalytics(result: Record<string, unknown>) {
     const optOut = !!result.analyticsOptOut;
     const checkForDebugVersions = !!result.checkForConfiguratorUnstableVersions;
 
+    const appInfo = useAppInfoStore();
     const settings = {
         sessionId: uid.randomUUID(16),
         userId: userId,
-        appName: CONFIGURATOR.productName,
-        appVersion: CONFIGURATOR.version,
-        gitRevision: CONFIGURATOR.gitRevision,
-        os: GUI.operating_system,
+        appName: appInfo.productName,
+        appVersion: appInfo.version,
+        gitRevision: appInfo.gitRevision,
+        os: appInfo.operatingSystem,
         checkForDebugVersions: checkForDebugVersions,
         optOut: optOut,
     };

@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { effectScope } from "vue";
-import FC from "../../src/js/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 
@@ -31,6 +30,8 @@ import { send, isMspCliSupported } from "../../src/composables/useMspCliSession"
 import { fitSphere, computeDirectionalCoverage } from "../../src/js/utils/sphereFit";
 import { useFlightControllerStore } from "../../src/stores/fc";
 
+let fcStore;
+
 describe("useMagCalibration", () => {
     let scope;
     let cal;
@@ -38,11 +39,11 @@ describe("useMagCalibration", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         setActivePinia(createPinia());
-        FC.resetState();
-        useFlightControllerStore();
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
 
         // Set up mag data on the store
-        FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+        fcStore.sensorData.magnetometer = [100, 200, 300];
 
         // Mock MSP.send_message to immediately invoke callback
         vi.spyOn(MSP, "send_message").mockImplementation((code, data, retries, cb) => {
@@ -83,12 +84,50 @@ describe("useMagCalibration", () => {
             expect(cal.phase.value).toBe(phaseBefore);
         });
 
+        it("starts a new quick calibration after the previous one completed", async () => {
+            await cal.startCalibration("quick");
+            await cal.completeCalibration();
+            expect(cal.phase.value).toBe("complete");
+            MSP.send_message.mockClear();
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("waiting");
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
+        it("starts a new calibration after the previous one ended in error", async () => {
+            await cal.startCalibration("quick");
+            // Mag readings never change, so the no-movement timeout fires.
+            vi.advanceTimersByTime(31000);
+            expect(cal.phase.value).toBe("error");
+            MSP.send_message.mockClear();
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("waiting");
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
         it("starts quick mode and triggers MSP_MAG_CALIBRATION", async () => {
             await cal.startCalibration("quick");
 
             expect(cal.mode.value).toBe("quick");
             expect(cal.phase.value).toBe("waiting");
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
+        it("ends in error when the quick calibration command cannot be sent", async () => {
+            MSP.send_message.mockReturnValue(false);
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("error");
+            expect(cal.statusMessage.value).toBe("magCalibrationNotSent");
+            MSP.send_message.mockClear();
+            vi.advanceTimersByTime(5000);
+            // no data polling or completion monitor was left running
+            expect(MSP.send_message).not.toHaveBeenCalled();
         });
 
         it("starts full mode without sending MSP_MAG_CALIBRATION", async () => {
@@ -123,7 +162,7 @@ describe("useMagCalibration", () => {
             send.mockResolvedValueOnce(["mag_calibration = 50,60,70"]);
             await cal.startCalibration("check");
 
-            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            fcStore.sensorData.magnetometer = [100, 200, 300];
             await vi.advanceTimersByTimeAsync(100);
 
             expect(cal.samples.value.length).toBeGreaterThanOrEqual(1);
@@ -136,7 +175,7 @@ describe("useMagCalibration", () => {
         it("check mode does not run sphere fit analysis", async () => {
             await cal.startCalibration("check");
 
-            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            fcStore.sensorData.magnetometer = [100, 200, 300];
             // Advance enough to trigger sphere fit (SPHERE_FIT_EVERY_N = 10 samples)
             for (let i = 0; i < 15; i++) {
                 await vi.advanceTimersByTimeAsync(100);
@@ -151,7 +190,7 @@ describe("useMagCalibration", () => {
             send.mockResolvedValueOnce(["mag_calibration = 50,60,70"]);
             await cal.startCalibration("full");
 
-            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            fcStore.sensorData.magnetometer = [100, 200, 300];
             await vi.advanceTimersByTimeAsync(100);
 
             // Sample should have offsets added back: 100+50=150, 200+60=260, 300+70=370
@@ -165,7 +204,7 @@ describe("useMagCalibration", () => {
         it("does not add offsets in quick mode", async () => {
             await cal.startCalibration("quick");
 
-            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            fcStore.sensorData.magnetometer = [100, 200, 300];
             await vi.advanceTimersByTimeAsync(100);
 
             expect(cal.samples.value.length).toBeGreaterThanOrEqual(1);
@@ -178,7 +217,7 @@ describe("useMagCalibration", () => {
         it("skips zero mag readings", async () => {
             await cal.startCalibration("full");
 
-            FC.SENSOR_DATA.magnetometer = [0, 0, 0];
+            fcStore.sensorData.magnetometer = [0, 0, 0];
             await vi.advanceTimersByTimeAsync(100);
 
             expect(cal.samples.value.length).toBe(0);
@@ -203,8 +242,8 @@ describe("useMagCalibration", () => {
 
             for (let i = 0; i < attitudes.length; i++) {
                 const { pitch, heading } = attitudes[i];
-                FC.SENSOR_DATA.kinematics = [0, pitch, heading];
-                FC.SENSOR_DATA.magnetometer = [100 + i * 10, 200, 300];
+                fcStore.sensorData.kinematics = [0, pitch, heading];
+                fcStore.sensorData.magnetometer = [100 + i * 10, 200, 300];
                 await vi.advanceTimersByTimeAsync(100);
             }
 
@@ -224,7 +263,7 @@ describe("useMagCalibration", () => {
             await cal.startCalibration("quick");
 
             for (let i = 0; i < 10; i++) {
-                FC.SENSOR_DATA.magnetometer = [100 + i * 10, 200, 300];
+                fcStore.sensorData.magnetometer = [100 + i * 10, 200, 300];
                 await vi.advanceTimersByTimeAsync(100);
             }
 
@@ -246,7 +285,7 @@ describe("useMagCalibration", () => {
     describe("discardCalibration", () => {
         it("resets all state to idle", async () => {
             await cal.startCalibration("full");
-            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            fcStore.sensorData.magnetometer = [100, 200, 300];
             await vi.advanceTimersByTimeAsync(100);
             expect(cal.samples.value.length).toBeGreaterThan(0);
 
@@ -265,7 +304,7 @@ describe("useMagCalibration", () => {
             await cal.startCalibration("full");
             cal.discardCalibration();
 
-            FC.SENSOR_DATA.magnetometer = [999, 999, 999];
+            fcStore.sensorData.magnetometer = [999, 999, 999];
             await vi.advanceTimersByTimeAsync(500);
 
             expect(cal.samples.value).toEqual([]);
@@ -301,18 +340,47 @@ describe("useMagCalibration", () => {
             expect(cal.phase.value).toBe("idle");
 
             MSP.send_message.mockClear();
-            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            fcStore.sensorData.magnetometer = [100, 200, 300];
             await vi.advanceTimersByTimeAsync(500);
 
             expect(MSP.send_message).not.toHaveBeenCalled();
             expect(cal.samples.value).toEqual([]);
+        });
+
+        it("keeps a newer start's starting flag when an abandoned start settles", async () => {
+            let releaseFirstRead;
+            send.mockReturnValueOnce(
+                new Promise((resolve) => {
+                    releaseFirstRead = () => resolve([]);
+                }),
+            );
+            let releaseSecondRead;
+            send.mockReturnValueOnce(
+                new Promise((resolve) => {
+                    releaseSecondRead = () => resolve([]);
+                }),
+            );
+
+            const first = cal.startCalibration("quick");
+            cal.cancelCalibration();
+            const second = cal.startCalibration("quick");
+            expect(cal.starting.value).toBe(true);
+
+            releaseFirstRead();
+            await first;
+            expect(cal.starting.value).toBe(true);
+
+            releaseSecondRead();
+            await second;
+            expect(cal.starting.value).toBe(false);
+            expect(cal.phase.value).toBe("waiting");
         });
     });
 
     describe("retry", () => {
         it("resets state to idle for a fresh start", async () => {
             await cal.startCalibration("quick");
-            FC.SENSOR_DATA.magnetometer = [100, 200, 300];
+            fcStore.sensorData.magnetometer = [100, 200, 300];
             await vi.advanceTimersByTimeAsync(100);
 
             cal.retry();
@@ -385,8 +453,8 @@ describe("useMagCalibration", () => {
 
     describe("fc.js resetState", () => {
         it("initializes quaternion to null in SENSOR_DATA", () => {
-            FC.resetState();
-            expect(FC.SENSOR_DATA.quaternion).toBeNull();
+            fcStore.resetState();
+            expect(fcStore.sensorData.quaternion).toBeNull();
         });
     });
 

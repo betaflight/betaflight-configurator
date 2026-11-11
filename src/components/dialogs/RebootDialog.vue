@@ -10,14 +10,15 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { getConnectionState } from "@/js/connection_state";
 import { useDialogStore } from "@/stores/dialog";
-import CONFIGURATOR from "@/js/data_storage";
 import { i18n } from "@/js/localization";
+import { useConnectionStore } from "@/stores/connection";
 
 // How long the outcome stays on screen before the dialog closes itself.
 const RESULT_LINGER_MS = 1000;
 const TICK_MS = 100;
 
 const dialogStore = useDialogStore();
+const connectionStore = useConnectionStore();
 const open = ref(false);
 
 // The reboot window is nulled the moment the reboot concludes, so snapshot its numbers —
@@ -37,7 +38,7 @@ const status = computed(() => {
         return i18n.getMessage("rebootFlightController");
     }
     return i18n.getMessage(
-        CONFIGURATOR.connectionValid ? "rebootFlightControllerReady" : "rebootFlightControllerFailed",
+        connectionStore.connectionValid ? "rebootFlightControllerReady" : "rebootFlightControllerFailed",
     );
 });
 

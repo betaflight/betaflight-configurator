@@ -22,7 +22,7 @@
 import { computed, type ComputedRef } from "vue";
 import { useTranslation } from "i18next-vue";
 import type { Locale, Messages } from "@nuxt/ui/runtime/types/locale.js";
-import { i18n } from "@/js/localization.js";
+import { i18n } from "@/js/localization";
 
 /**
  * Reactive Nuxt UI locale for the active language, for `UApp`'s `locale` prop.
@@ -31,7 +31,7 @@ import { i18n } from "@/js/localization.js";
  * table, so built-in strings (close buttons, pagination, calendar, file upload) follow
  * the selected language instead of staying English.
  *
- * The locale list itself lives in `localization.js` alongside `languagesAvailables`, so
+ * The locale list itself lives in `localization.ts` alongside `languagesAvailables`, so
  * there is one list to maintain. No extra reactive state is needed there either: the
  * i18next instance handed out by `useTranslation()` is a Proxy that records reactive
  * access on every property read and is invalidated on `languageChanged`, so reading

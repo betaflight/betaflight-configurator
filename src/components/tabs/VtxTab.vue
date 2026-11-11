@@ -417,7 +417,6 @@ import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
-import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import { useVtx } from "../../composables/useVtx";
 import { useInterval } from "../../composables/useInterval";
@@ -582,7 +581,6 @@ export default defineComponent({
             await loadOsdPort();
             addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
             i18n.localizePage();
-            GUI.content_ready();
         });
 
         const handleSave = () =>

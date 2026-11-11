@@ -73,16 +73,14 @@ import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { millitime } from "@/js/utils/common";
-import GUI from "@/js/gui";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
 import FileSystem from "@/js/FileSystem";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
 import { useInterval } from "@/composables/useInterval";
+import { useLoggingData } from "@/composables/logging/useLoggingData";
 
 const PROPERTY_ORDER: PropertyCode[] = [
     "MSP_RAW_IMU",
@@ -103,6 +101,7 @@ const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
 const dialog = useDialog();
 const { addInterval, removeInterval } = useInterval();
+const { requestInitialData, requestProperties } = useLoggingData();
 
 type PickedFile = Awaited<ReturnType<typeof FileSystem.pickSaveFile>>;
 type OpenedFile = Awaited<ReturnType<typeof FileSystem.openFile>>;
@@ -321,14 +320,6 @@ function appendToFile(data: string) {
     return FileSystem.writeChunck(fileWriter.value, new Blob([data], { type: "text/plain" }));
 }
 
-function sendRequests() {
-    requestedProperties.forEach((property) => {
-        if (MSPCodes[property]) {
-            MSP.send_message(MSPCodes[property]);
-        }
-    });
-}
-
 async function writePendingData() {
     if (!fileWriter.value || !logBuffer.length) {
         return;
@@ -427,7 +418,7 @@ async function startLogging() {
                     crunchData();
                 }
 
-                sendRequests();
+                requestProperties(requestedProperties);
                 hasPreviousRequest = true;
             },
             samplingInterval.value,
@@ -474,15 +465,10 @@ async function toggleLogging() {
 
 function sendInitialRequests() {
     if (!connectionStore.connectionValid) {
-        GUI.content_ready();
         return;
     }
 
-    MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
-        MSP.send_message(MSPCodes.MSP_MOTOR, false, false, () => {
-            GUI.content_ready();
-        });
-    });
+    requestInitialData();
 }
 
 onMounted(() => {

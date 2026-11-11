@@ -27,40 +27,19 @@
  * chirp-active segments.
  *
  * Depends on:
- *   - ./datastream.js  (ArrayDataStream, signExtend helpers)
- *   - ./decoders.js    (Tag2_3S32, Tag2_3SVariable, Tag8_4S16, Tag8_8SVB)
+ *   - ./datastream.ts  (ArrayDataStream, signExtend helpers)
+ *   - ./decoders.ts    (Tag2_3S32, Tag2_3SVariable, Tag8_4S16, Tag8_8SVB)
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { ArrayDataStream } from "./datastream";
-import "./decoders"; // side-effect: extends ArrayDataStream prototype
-import CONFIGURATOR from "../data_storage";
+import "./decoders"; // side-effect: adds the tag readers to ArrayDataStream
+import { API_VERSION_MAX_SUPPORTED } from "../data_storage";
 import { getDebugModeIndex } from "../utils/debugModes";
 
-/**
- * ArrayDataStream as this parser uses it. datastream.js defines the base reader and
- * decoders.js patches the tag readers onto its prototype at import time, which
- * TypeScript cannot follow; this is the combined surface.
- */
-interface ChirpDataStream {
-    pos: number;
-    end: number;
-    eof: boolean;
-    readChar(): string;
-    readByte(): number;
-    unreadChar(): void;
-    readUnsignedVB(): number;
-    readSignedVB(): number;
-    readTag2_3S32(values: number[]): void;
-    readTag2_3SVariable(values: number[]): void;
-    readTag8_4S16_v1(values: number[]): void;
-    readTag8_4S16_v2(values: number[]): void;
-    readTag8_8SVB(values: number[], valueCount: number): void;
-}
-
-function openStream(data: Uint8Array, start: number, end: number): ChirpDataStream {
-    return new ArrayDataStream(data, start, end) as ArrayDataStream & ChirpDataStream;
+function openStream(data: Uint8Array, start: number, end: number): ArrayDataStream {
+    return new ArrayDataStream(data, start, end);
 }
 
 /** Field definitions of one frame type, from the `Field X ...` header lines. */
@@ -599,7 +578,7 @@ function buildFieldIndices(names: string[]): FieldIndices {
  * @returns The first (or only) decoded value.
  */
 function readFieldValue(
-    stream: ChirpDataStream,
+    stream: ArrayDataStream,
     encoding: number,
     dataVersion: number,
     groupValues: number[],
@@ -737,7 +716,7 @@ function applyPrediction( // NOSONAR S107,S3776 — ported predictor from blackb
 const GROUP_VALUES_SCRATCH: number[] = new Array(8);
 
 function parseFrame( // NOSONAR S107,S3776 — ported frame decoder; signature fixed by encoding spec
-    stream: ChirpDataStream,
+    stream: ArrayDataStream,
     frameDef: FrameDef,
     current: Int32Array,
     previous: Int32Array | null,
@@ -846,7 +825,7 @@ function parseFrame( // NOSONAR S107,S3776 — ported frame decoder; signature f
  * Try to skip an event frame. Returns true if we consumed a recognized
  * event, false if we had to scan for the next frame marker.
  */
-function parseEventFrame(stream: ChirpDataStream, _sysConfig: SysConfig): ParsedEvent | null {
+function parseEventFrame(stream: ArrayDataStream, _sysConfig: SysConfig): ParsedEvent | null {
     const eventType = stream.readByte();
 
     switch (eventType) {
@@ -920,7 +899,7 @@ function isFrameMarker(byte: number) {
  * by at least one plausible data byte (i.e. we skip at most a few hundred
  * bytes of junk).
  */
-function skipToNextFrame(stream: ChirpDataStream) {
+function skipToNextFrame(stream: ArrayDataStream) {
     const maxScan = 4096;
     for (let n = 0; n < maxScan && !stream.eof; n++) {
         const b = stream.readByte();
@@ -968,7 +947,7 @@ function validateDebugModeIsChirp(sysConfig: SysConfig, apiVersion: string | und
     } else if (hasApiVersion) {
         effectiveApiVersion = apiVersion;
     } else {
-        effectiveApiVersion = CONFIGURATOR.API_VERSION_MAX_SUPPORTED;
+        effectiveApiVersion = API_VERSION_MAX_SUPPORTED;
     }
     const debugChirpIndex = getDebugModeIndex("CHIRP", effectiveApiVersion);
     if (debugChirpIndex < 0) {
@@ -1166,7 +1145,7 @@ interface SampleBuffers {
 }
 
 interface ParseContext {
-    stream: ChirpDataStream;
+    stream: ArrayDataStream;
     frameDefs: FrameDefs;
     sysConfig: SysConfig;
     motor0Index: number;
@@ -1208,7 +1187,7 @@ function dispatchFrame(frameType: number, state: ParserState, ctx: ParseContext)
     }
 }
 
-function skipOrEnd(stream: ChirpDataStream) {
+function skipOrEnd(stream: ArrayDataStream) {
     if (!skipToNextFrame(stream)) {
         stream.pos = stream.end;
     }

@@ -1,10 +1,31 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
 import MSP from "../../src/js/msp";
 import { serial } from "../../src/js/serial";
 import MspHelper from "../../src/js/msp/MSPHelper";
 import MSPCodes from "../../src/js/msp/MSPCodes";
-import CONFIGURATOR from "../../src/js/data_storage";
 import { MspCancelledError, MspTimeoutError, MspCrcError } from "../../src/js/msp/mspErrors";
+import { useConnectionStore } from "../../src/stores/connection";
 
 const EEPROM_WRITE_CODE = MSPCodes.MSP_EEPROM_WRITE;
 
@@ -39,10 +60,11 @@ describe("MSP promise semantics", () => {
     let boundProcessData: typeof mspHelper.process_data;
 
     beforeEach(() => {
+        const connectionStore = useConnectionStore();
         vi.useFakeTimers();
-        serialSendSpy = vi.spyOn(serial, "send").mockImplementation(async () => {});
+        serialSendSpy = vi.spyOn(serial, "send").mockImplementation(async () => ({ bytesSent: 0 }));
         setProtocolConnected(true);
-        CONFIGURATOR.virtualMode = false;
+        connectionStore.virtualMode = false;
 
         MSP.callbacks = [];
         MSP.parked.clear();
@@ -180,7 +202,8 @@ describe("MSP promise semantics", () => {
         });
 
         it("resolves undefined without touching serial.send when virtualMode is true", async () => {
-            CONFIGURATOR.virtualMode = true;
+            const connectionStore = useConnectionStore();
+            connectionStore.virtualMode = true;
 
             await expect(MSP.promise(EEPROM_WRITE_CODE)).resolves.toBeUndefined();
             expect(serialSendSpy).not.toHaveBeenCalled();

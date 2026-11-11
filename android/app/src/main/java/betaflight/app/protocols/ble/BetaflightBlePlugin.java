@@ -706,6 +706,13 @@ public class BetaflightBlePlugin extends Plugin {
 				writeCharacteristic = service.getCharacteristic(writeUuid);
 				notifyCharacteristic = service.getCharacteristic(notifyUuid);
 
+				// Many CC2541 modules (HM-10 firmware, MLT-BT05, T-Motor's TMFC) share the FFE0 service with
+				// the CC2541 profile but carry both directions on FFE1 and have no FFE2.
+				if (notifyCharacteristic == null && writeCharacteristic != null
+						&& (writeCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+					notifyCharacteristic = writeCharacteristic;
+				}
+
 				if (notifyCharacteristic != null && (notifyCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
 					setNotificationCallback(notifyCharacteristic).with((device, data) -> plugin.handleNotification(data));
 				}

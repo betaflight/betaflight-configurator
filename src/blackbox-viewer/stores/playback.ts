@@ -47,7 +47,7 @@ export const usePlaybackStore = defineStore("playback", () => {
     const videoExportOutTime = ref<number | null>(null);
     const videoConfig = ref({ width: 1280, height: 720, frameRate: 30, videoDim: 0.4 });
 
-    // Video DOM element — registered by main.js
+    // Video DOM element — registered by main.ts
     const videoElement = shallowRef<HTMLVideoElement | null>(null);
 
     // Offset cache for auto-syncing video to log
@@ -57,7 +57,7 @@ export const usePlaybackStore = defineStore("playback", () => {
     const isPlaying = computed(() => graphState.value === GRAPH_STATE_PLAY);
     const isPaused = computed(() => graphState.value === GRAPH_STATE_PAUSED);
 
-    // Callbacks registered by main.js (need video element + renderer closures)
+    // Callbacks registered by main.ts (need video element + renderer closures)
     const logPlayPause = shallowRef<Action | null>(null);
     const logJumpBack = shallowRef<Action | null>(null);
     const logJumpForward = shallowRef<Action | null>(null);

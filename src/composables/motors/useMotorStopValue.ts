@@ -5,8 +5,8 @@ const PWM_RANGE_MIDDLE = 1500;
 // range for 3d_neutral (firmware src/main/cli/settings.c). A pilot can set 3d_neutral via CLI
 // outside MotorsTab.vue's own 1400-1600 slider range — that is a legitimate, firmware-accepted
 // value, not corrupted data, so the plausibility check must match firmware's real range, not the
-// narrower GUI widget. FC.MOTOR_3D_CONFIG.neutral defaults to 0 before MSP_MOTOR_3D_CONFIG
-// resolves (src/js/fc.js) — outside this range, so it's still caught as implausible.
+// narrower GUI widget. fcStore.motor3dConfig.neutral defaults to 0 before MSP_MOTOR_3D_CONFIG
+// resolves (src/stores/fc.ts) — outside this range, so it's still caught as implausible.
 const NEUTRAL_3D_MIN = 750;
 const NEUTRAL_3D_MAX = 2250;
 

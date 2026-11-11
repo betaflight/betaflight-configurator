@@ -26,14 +26,14 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .port-utilization {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-}
 
-.value {
-    font-variant-numeric: tabular-nums;
+    .value {
+        font-variant-numeric: tabular-nums;
+    }
 }
 </style>

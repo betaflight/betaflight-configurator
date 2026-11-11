@@ -230,6 +230,9 @@ import {
     FIRMWARE_TYPE_INAV,
 } from "../flightlog_fielddefs";
 import { getDebugModes } from "../../js/utils/debugModes";
+import type { PropType } from "vue";
+import type { SysConfig as ParserSysConfig } from "../flightlog_parser";
+import type { HeaderValue } from "../tools";
 import { i18n } from "../../js/localization";
 
 const t = (key: string) => i18n.getMessage(key);
@@ -238,11 +241,10 @@ const open = defineModel("open", { type: Boolean, default: false });
 const cols = ref<number | null>(null);
 
 const props = defineProps({
-    sysConfig: { type: Object, default: null },
+    sysConfig: { type: Object as PropType<ParserSysConfig | null>, default: null },
 });
 
-/** The parsed log header: the parser keys it by header name, so every value is dynamic. */
-type SysConfig = NonNullable<typeof props.sysConfig>;
+type SysConfig = ParserSysConfig;
 type HeaderParam = ReturnType<typeof param>;
 
 interface HeaderField {
@@ -253,8 +255,9 @@ interface HeaderField {
 
 // --- Helpers ---
 
-const sc = computed(() => props.sysConfig || {});
-const filteredSc = computed(() => {
+// With no log loaded every field reads as absent.
+const sc = computed((): Partial<SysConfig> => props.sysConfig || {});
+const filteredSc = computed((): Partial<SysConfig> => {
     if (hiddenFields.value.size === 0) {
         return sc.value;
     }
@@ -279,11 +282,17 @@ function lte(ver: string) {
     return semver.lte(fwVer.value, ver);
 }
 
-function fmtVal(data: number | null | undefined, decimalPlaces: number) {
+// Header values are whatever the log carried; Number() is the coercion `/` applied anyway.
+function fmtVal(data: HeaderValue | null | undefined, decimalPlaces: number) {
     if (data == null) {
         return null;
     }
-    return (data / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
+    return (Number(data) / Math.pow(10, decimalPlaces)).toFixed(decimalPlaces);
+}
+
+/** `value?.[index]` for a header value that may have been logged as a single number. */
+function headerItem(value: HeaderValue | null | undefined, index: number) {
+    return typeof value === "number" ? undefined : value?.[index];
 }
 
 function fmtFloat(data: number | null | undefined, decimalPlaces: number) {
@@ -632,16 +641,13 @@ const gyroFilterParams = computed(() => {
     ];
 
     // Dynamic gyro LPF
-    if (
-        isBF.value &&
-        gte("4.0.0") &&
-        s.gyro_lowpass_dyn_hz?.[0] > 0 &&
-        s.gyro_lowpass_dyn_hz?.[1] > s.gyro_lowpass_dyn_hz?.[0]
-    ) {
+    // A missing (null) bound compares as 0, as it did before typing.
+    const gyroDyn = s.gyro_lowpass_dyn_hz;
+    if (isBF.value && gte("4.0.0") && gyroDyn && (gyroDyn[0] ?? 0) > 0 && (gyroDyn[1] ?? 0) > (gyroDyn[0] ?? 0)) {
         result.push(
             param("Dyn LPF Type", selectVal(s.gyro_soft_type, FILTER_TYPE)),
-            param("Dyn LPF Min", fmtVal(s.gyro_lowpass_dyn_hz[0], 0)),
-            param("Dyn LPF Max", fmtVal(s.gyro_lowpass_dyn_hz[1], 0)),
+            param("Dyn LPF Min", fmtVal(gyroDyn[0], 0)),
+            param("Dyn LPF Max", fmtVal(gyroDyn[1], 0)),
         );
     }
 
@@ -649,9 +655,9 @@ const gyroFilterParams = computed(() => {
     if (Array.isArray(s.gyro_notch_hz)) {
         result.push(
             param("Notch 1 Hz", fmtVal(s.gyro_notch_hz[0], 0)),
-            param("Notch 1 Cutoff", fmtVal(s.gyro_notch_cutoff?.[0], 0)),
+            param("Notch 1 Cutoff", fmtVal(headerItem(s.gyro_notch_cutoff, 0), 0)),
             param("Notch 2 Hz", fmtVal(s.gyro_notch_hz[1], 0)),
-            param("Notch 2 Cutoff", fmtVal(s.gyro_notch_cutoff?.[1], 0)),
+            param("Notch 2 Cutoff", fmtVal(headerItem(s.gyro_notch_cutoff, 1), 0)),
         );
     } else {
         result.push(
@@ -693,16 +699,12 @@ const dtermFilterParams = computed(() => {
     ];
 
     // Dynamic D-term LPF
-    if (
-        isBF.value &&
-        gte("4.0.0") &&
-        s.dterm_lpf_dyn_hz?.[0] > 0 &&
-        s.dterm_lpf_dyn_hz?.[1] > s.dterm_lpf_dyn_hz?.[0]
-    ) {
+    const dtermDyn = s.dterm_lpf_dyn_hz;
+    if (isBF.value && gte("4.0.0") && dtermDyn && (dtermDyn[0] ?? 0) > 0 && (dtermDyn[1] ?? 0) > (dtermDyn[0] ?? 0)) {
         result.push(
             param("Dyn Type", selectVal(s.dterm_filter_type, FILTER_TYPE)),
-            param("Dyn Min Hz", fmtVal(s.dterm_lpf_dyn_hz[0], 0)),
-            param("Dyn Max Hz", fmtVal(s.dterm_lpf_dyn_hz[1], 0)),
+            param("Dyn Min Hz", fmtVal(dtermDyn[0], 0)),
+            param("Dyn Max Hz", fmtVal(dtermDyn[1], 0)),
         );
     }
 
@@ -756,7 +758,7 @@ const rpmFilterParams = computed(() => {
 
 // --- RC Smoothing ---
 
-function buildRcSmoothing43(s: SysConfig) {
+function buildRcSmoothing43(s: Partial<SysConfig>) {
     const result = [
         param("Mode", selectVal(s.rc_smoothing_mode, RC_SMOOTHING_MODE)),
         param("Setpoint Hz", fmtVal(s.rc_smoothing_setpoint_hz, 0)),
@@ -785,7 +787,7 @@ function buildRcSmoothing43(s: SysConfig) {
     return result;
 }
 
-function buildRcSmoothing34(s: SysConfig) {
+function buildRcSmoothing34(s: Partial<SysConfig>) {
     const result = [param("Mode", selectVal(s.rc_smoothing_mode, RC_SMOOTHING_TYPE))];
     const cutoffs = s.rc_smoothing_cutoffs;
     if (cutoffs) {
@@ -1468,7 +1470,7 @@ const HEADER_SKIP_KEYS = new Set([
     "flightControllerVersion",
 ]);
 
-function buildGroupMap(s: SysConfig) {
+function buildGroupMap(s: Partial<SysConfig>) {
     const groups: Record<string, HeaderField[]> = {};
     for (const key of Object.keys(s)) {
         if (HEADER_SKIP_KEYS.has(key)) {

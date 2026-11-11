@@ -106,7 +106,7 @@ export function getPortDisplayName(identifier: number): string {
  * ports the FC reported can settle it. A name this board does not report reads as unassigned,
  * which is also what the firmware does with an assignment naming a port it has no driver for.
  *
- * @param ports FC.SERIAL_CONFIG.ports
+ * @param ports fcStore.serialConfig.ports
  * @param name as the CLI prints it, e.g. "UART3", "VCP", "NONE"
  * @returns identifier, or PORT_NONE
  */

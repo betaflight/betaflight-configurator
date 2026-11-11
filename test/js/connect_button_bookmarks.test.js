@@ -57,7 +57,7 @@ vi.mock("../../src/stores/connection", () => ({
 }));
 
 import ConnectButton from "../../src/components/device-picker/ConnectButton.vue";
-import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks.js";
+import { useConnectionBookmarksStore } from "../../src/stores/connectionBookmarks";
 import { get as getConfig } from "../../src/js/ConfigStorage";
 
 const mountLogic = () => effectScope().run(() => ConnectButton.setup({}, { emit: vi.fn() }));

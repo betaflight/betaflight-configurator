@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
 import { effectScope, type EffectScope } from "vue";
-import FC from "../../src/js/fc";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 
@@ -46,13 +47,17 @@ vi.mock("../../src/composables/useReboot", () => ({
 
 import { useVtx } from "../../src/composables/useVtx";
 
+let fcStore: ReturnType<typeof useFlightControllerStore>;
+
 describe("useVtx", () => {
     let scope: EffectScope;
     let vtx: ReturnType<typeof useVtx>;
     let promiseSpy: MockInstance<typeof MSP.promise>;
 
     beforeEach(async () => {
-        FC.resetState();
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
         saveToEepromMock.mockClear();
         trackingMock.sendSaveAndChangeEvents.mockClear();
 

@@ -20,6 +20,7 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { chunksOf } from "../fakeChunks";
 import {
     buildTrack,
     extractSamples,
@@ -334,7 +335,7 @@ describe("extractSamples", () => {
         }
         const log: FlightLogSource = {
             getMainFieldIndexByName: (name) => (fields.includes(name) ? fields.indexOf(name) : undefined),
-            getChunksInTimeRange: () => [{ frames }],
+            getChunksInTimeRange: () => chunksOf(frames),
             getMinTime: () => 0,
             getMaxTime: () => durationS * 1e6,
         };

@@ -22,6 +22,7 @@
 import { describe, expect, it } from "vitest";
 import { Quaternion, Vector3 } from "three";
 import { buildAttitudeTrack, decodeFcQuaternion, fcToScene } from "../../../src/blackbox-viewer/flight3d/fcAttitude";
+import { chunksOf } from "../fakeChunks";
 
 const NOSE = new Vector3(1, 0, 0);
 const UP = new Vector3(0, 1, 0);
@@ -139,7 +140,7 @@ describe("buildAttitudeTrack", () => {
         }
         return {
             getMainFieldIndexByName: (name: string) => (fields.includes(name) ? fields.indexOf(name) : undefined),
-            getChunksInTimeRange: () => [{ frames }],
+            getChunksInTimeRange: () => chunksOf(frames),
             getMinTime: () => 0,
             getMaxTime: () => durationS * 1e6,
         };

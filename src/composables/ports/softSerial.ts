@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import type { SerialPort } from "@/stores/fc.types";
 import { SOFT_SERIAL_IDENTIFIERS } from "./portNames";
 
@@ -31,13 +31,13 @@ import { SOFT_SERIAL_IDENTIFIERS } from "./portNames";
  * offer one. The build still accepts an assignment naming it, which is what lets
  * a feature claim a soft serial port and only then have the feature turned on.
  *
- * @param ports FC.SERIAL_CONFIG.ports
+ * @param ports fcStore.serialConfig.ports
  * @returns identifiers, empty when the build has no soft serial at all
  */
 export function unreportedSoftSerialIdentifiers(
     ports: readonly Pick<SerialPort, "identifier">[] | null | undefined,
 ): number[] {
-    if (!FC.boardHasSoftSerial()) {
+    if (!useFlightControllerStore().boardHasSoftSerial()) {
         return [];
     }
 

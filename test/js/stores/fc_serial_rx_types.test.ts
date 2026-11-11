@@ -25,15 +25,15 @@ describe("flightController store getSupportedSerialRxTypes", () => {
 
     it("falls back to the API-version list when build options are unknown", () => {
         const store = useFlightControllerStore();
-        store.CONFIG.apiVersion = "1.47.0";
-        store.CONFIG.buildOptions = [];
+        store.config.apiVersion = "1.47.0";
+        store.config.buildOptions = [];
 
         expect(store.getSupportedSerialRxTypes()).toEqual(store.getSerialRxTypes());
     });
 
     it("lists every provider, in presentation order, when every option is built", () => {
         const store = useFlightControllerStore();
-        store.CONFIG.buildOptions = [...ALL_RX_BUILD_OPTIONS].reverse();
+        store.config.buildOptions = [...ALL_RX_BUILD_OPTIONS].reverse();
 
         expect(store.getSupportedSerialRxTypes()).toEqual([
             "NONE",
@@ -58,14 +58,14 @@ describe("flightController store getSupportedSerialRxTypes", () => {
 
     it("keeps only the providers whose option is built, plus NONE", () => {
         const store = useFlightControllerStore();
-        store.CONFIG.buildOptions = ["USE_GPS", "USE_SERIALRX_CRSF", "USE_SERIALRX_SBUS"];
+        store.config.buildOptions = ["USE_GPS", "USE_SERIALRX_CRSF", "USE_SERIALRX_SBUS"];
 
         expect(store.getSupportedSerialRxTypes()).toEqual(["NONE", "SBUS", "CRSF"]);
     });
 
     it("offers only NONE when no receiver option is built", () => {
         const store = useFlightControllerStore();
-        store.CONFIG.buildOptions = ["USE_GPS"];
+        store.config.buildOptions = ["USE_GPS"];
 
         expect(store.getSupportedSerialRxTypes()).toEqual(["NONE"]);
     });

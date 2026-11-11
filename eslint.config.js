@@ -4,12 +4,14 @@ import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
 import tseslint from "typescript-eslint";
 import globals from "globals";
+import boundariesPlugin from "eslint-plugin-boundaries";
+import noHexColours from "./scripts/eslint/no-hex-colours.mjs";
 
 export default [
     {
         // Build output has to be ignored globally rather than per-config: a `dist/` left in the
         // tree otherwise gets linted as source, and minified bundles produce thousands of errors.
-        ignores: ["src/js/webworkers/**", "dist/**", "src/dist/**"],
+        ignores: ["dist/**", "src/dist/**"],
     },
     {
         files: ["**/*.js", "**/*.ts", "**/*.vue"],
@@ -53,10 +55,11 @@ export default [
         ignores: ["dist/", "src/dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
     },
     {
-        // vendor.js pulls in Leaflet and its plugins for their side effects, and they register
+        // vendor.ts pulls in Leaflet and its plugins for their side effects, and they register
         // themselves on `window.L` rather than exporting anything. `chrome` is the Chrome Apps
         // storage path, absent everywhere else, which is why pref_storage guards on it.
-        files: ["src/blackbox-viewer/**/*.js", "src/blackbox-viewer/**/*.vue"],
+        // TypeScript files get both from their declarations; a .vue file still runs no-undef.
+        files: ["src/blackbox-viewer/**/*.vue"],
         languageOptions: {
             globals: {
                 L: "readonly",
@@ -85,6 +88,11 @@ export default [
         files: ["**/*.vue"],
         rules: {
             "no-undef": "error",
+            // Shared styles belong in theme.css or nuxt-ui.css; a component's own styles nest
+            // under its root class instead of relying on `scoped` (#4995, #5542).
+            "vue/enforce-style-attribute": ["error", { allow: ["plain", "module"] }],
+            // Colours are theme tokens from src/css/theme.css, so light, dark and the colour themes apply.
+            "betaflight/no-hex-colours": "error",
         },
     },
     {
@@ -96,6 +104,9 @@ export default [
             },
         },
         processor: "vue/vue",
+        plugins: {
+            betaflight: { rules: { "no-hex-colours": noHexColours } },
+        },
     },
     {
         // Build and release tooling: real Node scripts, not browser code. Without this
@@ -126,6 +137,67 @@ export default [
                 },
             ],
             "no-undef": "error",
+        },
+    },
+    {
+        // The app is TypeScript (#5542), and tsconfig.json has `allowJs: false`.
+        files: ["src/**/*.js"],
+        // The MSP debug tools are dev-only and loaded on demand, so they stay JavaScript behind a
+        // .d.ts for their entry point. The vendored three.js renderer stays close to its upstream
+        // source, typed by a .d.ts.
+        ignores: ["src/js/msp/debug/**", "src/js/utils/three/**"],
+        rules: {
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: "Program",
+                    message: "The app is TypeScript-only: write a .ts file instead (#5542).",
+                },
+            ],
+        },
+    },
+    {
+        // A component that imports MSP talks to the flight controller itself, past the store
+        // that keeps FC state authoritative (#4800): MSP belongs in a store action or a composable.
+        // `src/js/**` is the transport layer that MSP itself is built from, so it may use it too.
+        // Type-only imports carry no runtime dependency, so they stay allowed (OSD's MspResponse).
+        files: ["src/**/*.js", "src/**/*.ts", "src/**/*.vue"],
+        plugins: {
+            boundaries: boundariesPlugin,
+        },
+        settings: {
+            "import/resolver": {
+                typescript: { project: "./tsconfig.json" },
+            },
+            // First match wins, so the MSP clients are carved out before the catch-all.
+            "boundaries/elements": [
+                {
+                    type: "msp-client",
+                    pattern: ["src/stores/**", "src/composables/**", "src/js/**"],
+                    partialMatch: false,
+                },
+                { type: "ui", pattern: "src/**", partialMatch: false },
+            ],
+            "boundaries/files": [{ category: "msp", pattern: ["src/js/msp.ts", "src/js/msp/**"] }],
+        },
+        rules: {
+            "boundaries/dependencies": [
+                "error",
+                {
+                    default: "allow",
+                    policies: [
+                        {
+                            from: { element: { type: "ui" } },
+                            disallow: {
+                                to: { file: { categories: "msp" } },
+                                dependency: { kind: "value" },
+                            },
+                            message:
+                                "Only stores, composables and src/js may import MSP: move the call into a store action or a composable (#4800).",
+                        },
+                    ],
+                },
+            ],
         },
     },
     // Must stay last: turns off every core/plugin rule that overlaps with Prettier.

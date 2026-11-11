@@ -32,7 +32,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .subtab-nav {
     width: calc(100% - 22px);
     margin-bottom: 6px;

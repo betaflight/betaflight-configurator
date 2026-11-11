@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import FC from "../../src/js/fc";
+import { createPinia, setActivePinia } from "pinia";
+import { useFlightControllerStore } from "../../src/stores/fc";
 import type { SerialPort } from "../../src/stores/fc.types";
 import { parsePeripherals, usePeripherals } from "../../src/composables/ports/usePeripherals";
 
@@ -28,6 +29,8 @@ function port(identifier: number): SerialPort {
         blackbox_baudrate: "115200",
     };
 }
+
+let fcStore: ReturnType<typeof useFlightControllerStore>;
 
 describe("parsePeripherals", () => {
     it("reads serial claims with the active one starred", () => {
@@ -99,14 +102,16 @@ describe("parsePeripherals", () => {
 
 describe("usePeripherals", () => {
     beforeEach(() => {
-        FC.resetState();
-        FC.CONFIG.flightControllerVersion = "4.6.0";
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+        fcStore.config.flightControllerVersion = "4.6.0";
         cliSend.mockReset();
         loadSerialConfig.mockClear();
     });
 
     it("builds one tile per reported port, unclaimed ones empty", async () => {
-        FC.SERIAL_CONFIG.ports = [port(20), port(0), port(1)];
+        fcStore.serialConfig.ports = [port(20), port(0), port(1)];
         cliSend.mockResolvedValue(["serial VCP: msp_1*", "serial UART2: gps"]);
 
         const peripherals = usePeripherals();
@@ -131,7 +136,7 @@ describe("usePeripherals", () => {
     });
 
     it("tiles a soft serial port the FC cannot open, with the reason", async () => {
-        FC.SERIAL_CONFIG.ports = [port(20)];
+        fcStore.serialConfig.ports = [port(20)];
         cliSend.mockResolvedValue(["serial VCP: msp_1*", "serial SOFT1 (feature SOFTSERIAL off): vtx"]);
 
         const peripherals = usePeripherals();
@@ -146,7 +151,7 @@ describe("usePeripherals", () => {
     });
 
     it("reports unsupported on a build without the command", async () => {
-        FC.SERIAL_CONFIG.ports = [port(20)];
+        fcStore.serialConfig.ports = [port(20)];
         cliSend.mockResolvedValue(["###ERROR IN cli: UNKNOWN COMMAND###"]);
 
         const peripherals = usePeripherals();

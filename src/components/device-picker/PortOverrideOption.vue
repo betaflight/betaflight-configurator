@@ -46,7 +46,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #port-override-option {
     label {
         display: flex;

@@ -111,7 +111,7 @@ import { useDebugStore } from "@/stores/debug";
 import { decodeDebugFieldToFriendly } from "@/js/utils/debugModes";
 import { useSensorsStore, type RatedSensor, type ScaledSensor } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
-import { useInterval } from "../../../composables/useInterval";
+import { useLiveSensorData } from "@/composables/sensors/useLiveSensorData";
 import { have_sensor } from "../../../js/sensor_helpers";
 import { radToDeg, clamp } from "../../../js/utils/common";
 import {
@@ -123,15 +123,13 @@ import {
     REFRESH_RATE_OPTIONS,
 } from "./constants";
 import SensorGraph from "./SensorGraph.vue";
-import MSP from "../../../js/msp";
-import MSPCodes from "../../../js/msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../../js/data_storage";
 
 const fcStore = useFlightControllerStore();
 const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
-const { addInterval, removeInterval } = useInterval();
+const { loadMotorConfig, loadAdvancedConfig, startPolling, stopPolling } = useLiveSensorData();
 
 const { checkboxes, globalRate, rates, scales, debugScales, debugColumns } = storeToRefs(sensorsStore);
 
@@ -261,67 +259,29 @@ function initSensorData() {
 }
 
 function initializeTimers() {
-    removeInterval("IMU_pull");
-    removeInterval("altitude_pull");
-    removeInterval("sonar_pull");
-    removeInterval("debug_pull");
+    stopPolling();
 
     // Gyro/accel/mag share one MSP_RAW_IMU pull, so use the fastest of the three.
     const fastest = Math.min(rates.value.gyro, rates.value.accel, rates.value.mag);
 
     if (checkboxes.value[0] || checkboxes.value[1] || checkboxes.value[2]) {
-        addInterval(
-            "IMU_pull",
-            () => {
-                MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_imu_graphs);
-            },
-            fastest,
-            true,
-        );
+        startPolling("imu", fastest, update_imu_graphs);
     }
 
     if (checkboxes.value[3]) {
-        addInterval(
-            "altitude_pull",
-            () => {
-                MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, update_altitude_graph);
-            },
-            rates.value.altitude,
-            true,
-        );
+        startPolling("altitude", rates.value.altitude, update_altitude_graph);
     }
 
     if (checkboxes.value[4]) {
-        addInterval(
-            "sonar_pull",
-            () => {
-                MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
-            },
-            rates.value.sonar,
-            true,
-        );
+        startPolling("sonar", rates.value.sonar, update_sonar_graphs);
     }
 
     if (checkboxes.value[5]) {
-        addInterval(
-            "pitot_pull",
-            () => {
-                MSP.send_message(MSPCodes.MSP_PITOT, false, false, update_pitot_graphs);
-            },
-            rates.value.pitot,
-            true,
-        );
+        startPolling("pitot", rates.value.pitot, update_pitot_graphs);
     }
 
     if (checkboxes.value[6]) {
-        addInterval(
-            "debug_pull",
-            () => {
-                MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
-            },
-            rates.value.debug,
-            true,
-        );
+        startPolling("debug", rates.value.debug, update_debug_graphs);
     }
 }
 
@@ -455,11 +415,11 @@ onMounted(async () => {
 
     // Needed for DSHOT_RPM_TELEMETRY debug decoding (motor_poles); other tabs
     // load it on mount too, and it isn't fetched at connection time.
-    await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+    await loadMotorConfig();
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         sensorsStore.debugColumns = 8;
-        await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+        await loadAdvancedConfig();
         displayDebugColumnNames();
     } else {
         sensorsStore.debugColumns = 4;

@@ -20,7 +20,7 @@
  */
 
 import { ref, computed } from "vue";
-import FC from "@/js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -141,6 +141,7 @@ async function saveConfig() {
 }
 
 export function useLedStrip() {
+    const fcStore = useFlightControllerStore();
     const wireMode = ref(false);
     const selectedColorIndex = ref<number | null>(null);
     const selectedModeColor = ref<LedModeColorSelection | null>(null);
@@ -152,14 +153,14 @@ export function useLedStrip() {
 
     // Filter overlays based on API version
     let overlays = ["t", "y", "o", "b", "v", "i", "w"];
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
         overlays = overlays.filter((x) => x !== "y");
     }
 
-    const ledStrip = computed(() => FC.LED_STRIP);
-    const ledColors = computed(() => FC.LED_COLORS);
-    const ledModeColors = computed(() => FC.LED_MODE_COLORS);
-    const ledConfigValues = computed(() => FC.LED_CONFIG_VALUES);
+    const ledStrip = computed(() => fcStore.ledStrip);
+    const ledColors = computed(() => fcStore.ledColors);
+    const ledModeColors = computed(() => fcStore.ledModeColors);
+    const ledConfigValues = computed(() => fcStore.ledConfigValues);
 
     // Load LED configuration data
     async function loadData() {
@@ -168,7 +169,7 @@ export function useLedStrip() {
             await MSP.promise(MSPCodes.MSP_LED_COLORS, false);
             await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR, false);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                 await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES, false);
             }
         } catch (error) {
@@ -178,8 +179,8 @@ export function useLedStrip() {
 
     // Find LED at specific grid coordinates
     function findLed(x: number, y: number) {
-        for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
-            const led = FC.LED_STRIP[ledIndex];
+        for (let ledIndex = 0; ledIndex < fcStore.ledStrip.length; ledIndex++) {
+            const led = fcStore.ledStrip[ledIndex];
             if (led.x === x && led.y === y) {
                 return { index: ledIndex, led };
             }
@@ -189,7 +190,7 @@ export function useLedStrip() {
 
     // Build LED strip from grid state
     function buildLedStripFromGrid(gridState: LedGridCell[]) {
-        const ledStripLength = FC.LED_STRIP.length;
+        const ledStripLength = fcStore.ledStrip.length;
         const newLedStrip: LedStripEntry[] = [];
 
         gridState.forEach((led, index) => {
@@ -220,7 +221,7 @@ export function useLedStrip() {
             }
         }
 
-        FC.LED_STRIP = newLedStrip;
+        fcStore.ledStrip = newLedStrip;
     }
 
     // Get next available wire number
@@ -237,7 +238,7 @@ export function useLedStrip() {
 
     // Get mode color
     function getModeColor(mode: number, dir: number) {
-        for (const mc of FC.LED_MODE_COLORS) {
+        for (const mc of fcStore.ledModeColors) {
             if (mc.mode === mode && mc.direction === dir) {
                 return mc.color;
             }
@@ -247,7 +248,7 @@ export function useLedStrip() {
 
     // Set mode color
     function setModeColor(mode: number, dir: number, color: number) {
-        for (const mc of FC.LED_MODE_COLORS) {
+        for (const mc of fcStore.ledModeColors) {
             if (mc.mode === mode && mc.direction === dir) {
                 mc.color = color;
                 return true;
@@ -258,7 +259,7 @@ export function useLedStrip() {
 
     // Check if rainbow is active for function
     function isRainbowActive(activeFunction: string) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
             return ["function-c", "function-a", "function-f"].includes(activeFunction);
         }
         return false;
@@ -267,7 +268,7 @@ export function useLedStrip() {
     // Update LED config values (brightness, rainbow delta/freq). Fire-and-forget: the send is
     // callback-based, so there is no reply to wait for here.
     function updateLedConfigValue(key: keyof LedConfigValues, value: number) {
-        FC.LED_CONFIG_VALUES[key] = value;
+        fcStore.ledConfigValues[key] = value;
         mspHelper.sendLedStripConfigValues();
     }
 

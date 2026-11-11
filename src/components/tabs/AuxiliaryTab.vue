@@ -2,7 +2,7 @@
     <BaseTab tab-name="auxiliary">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabAuxiliary") }}</div>
-            <WikiButton docUrl="modes" />
+            <WikiButton docUrl="auxiliary" />
 
             <div class="flex flex-col gap-4">
                 <UiBox highlight>
@@ -174,20 +174,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed, onMounted, watch, nextTick } from "vue";
+import { defineComponent, reactive, ref, computed, onMounted, watch } from "vue";
 import { useWindowSize } from "@vueuse/core";
 import { useFlightControllerStore } from "@/stores/fc";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
-import GUI from "../../js/gui";
-import { useInterval } from "../../composables/useInterval";
 import { useDirtyState } from "../../composables/useDirtyState";
-import { useSaving } from "../../composables/useSaving";
-import { useReboot } from "../../composables/useReboot";
 import { runTabLoad } from "../../composables/useTabLoad";
-import MSP from "../../js/msp";
-import MSPCodes from "../../js/msp/MSPCodes";
-import { mspHelper } from "../../js/msp/MSPHelper";
+import { useAuxiliaryData } from "../../composables/auxiliary/useAuxiliaryData";
+import { useAuxiliarySave } from "../../composables/auxiliary/useAuxiliarySave";
 import { bit_check, bit_set } from "../../js/bit";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import adjustBoxNameIfPeripheralWithModeID from "../../js/peripherals";
@@ -201,7 +196,6 @@ import {
     DEFAULT_RANGE,
     normalizeRangeValues,
     entriesFromModeRanges,
-    buildModeRangePayload,
     serializeModes,
     type Mode,
     type ModeEntry,
@@ -493,60 +487,30 @@ export default defineComponent({
             autoSelectChannel(channels, activeChannels, fcStore.rssiConfig?.channel || 0);
         };
 
-        const { isSaving, runSave } = useSaving();
-        const { saveToEeprom } = useReboot();
-
-        const saveModes = () =>
-            runSave(async () => {
-                const { modeRanges, modeRangesExtra } = buildModeRangePayload(modes, requiredModeRangeCount.value || 0);
-
-                const savedSnapshot = takeSnapshot();
-
-                fcStore.modeRanges = modeRanges;
-                fcStore.modeRangesExtra = modeRangesExtra;
-
-                await mspHelper.sendModeRanges();
-                await saveToEeprom();
-
-                // Only after a successful persist: refresh the dirty baseline.
-                markClean(savedSnapshot);
-            });
+        const { saveModes, isSaving } = useAuxiliarySave(modes, requiredModeRangeCount, { takeSnapshot, markClean });
+        const { loadAuxiliaryData, startPolling } = useAuxiliaryData();
 
         const loadData = async () => {
-            try {
-                await runTabLoad(
-                    async () => {
-                        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-                        await MSP.promise(MSPCodes.MSP_MODE_RANGES);
-                        await MSP.promise(MSPCodes.MSP_MODE_RANGES_EXTRA);
-                        await MSP.promise(MSPCodes.MSP_BOXIDS);
-                        await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
-                        await MSP.promise(MSPCodes.MSP_RC);
-                        await new Promise<void>((resolve) => mspHelper.loadSerialConfig(resolve));
+            await runTabLoad(
+                async () => {
+                    await loadAuxiliaryData();
 
-                        requiredModeRangeCount.value = fcStore.modeRanges.length;
-                        auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
-                        buildModesFromFC();
-                        updateMarkers();
-                        modesLoaded.value = true;
-                    },
-                    (error) => console.error("Failed to load auxiliary data", error),
-                );
-            } finally {
-                await nextTick();
-                GUI.content_ready();
-            }
+                    requiredModeRangeCount.value = fcStore.modeRanges.length;
+                    auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
+                    buildModesFromFC();
+                    updateMarkers();
+                    modesLoaded.value = true;
+                },
+                (error) => console.error("Failed to load auxiliary data", error),
+            );
         };
-
-        const { addInterval } = useInterval();
 
         onMounted(() => {
             const stored = getConfig("hideUnusedModes") || {};
             hideUnused.value = !!stored.hideUnusedModes;
 
             loadData();
-            addInterval("aux_data_pull", () => MSP.send_message(MSPCodes.MSP_RC, false, false, updateMarkers), 50);
-            addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
+            startPolling(updateMarkers);
         });
 
         watch(hideUnused, (value) => setConfig({ hideUnusedModes: value }));

@@ -37,6 +37,7 @@
                     :on-flash-manual-baud-change="handleFlashManualBaudChange"
                     :on-flash-manual-baud-rate-change="handleFlashManualBaudRateChange"
                     :on-restore-backup="handleRestoreBackup"
+                    :firmware-accepts-config="firmwareAcceptsConfig"
                 />
             </div>
         </div>
@@ -78,15 +79,21 @@
             </UFieldGroup>
         </div>
 
-        <UModal v-model:open="unstableFirmwareOpen" :title="$t('warningTitle')" :close="false" :dismissible="false">
+        <UModal
+            v-model:open="unstableFirmwareOpen"
+            class="dialog-unstable-firmware"
+            :title="$t('warningTitle')"
+            :close="false"
+            :dismissible="false"
+        >
             <template #body>
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
                 <div class="flex items-center gap-2 mt-3">
                     <USwitch
                         v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
-                        :aria-label="$t('unstableFirmwareAcknowledgement')"
+                        :aria-label="$t('developmentFirmwareAcknowledgement')"
                     />
-                    <span v-html="$t('unstableFirmwareAcknowledgement')"></span>
+                    <span v-html="$t('developmentFirmwareAcknowledgement')"></span>
                 </div>
             </template>
             <template #footer>
@@ -125,24 +132,24 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
-import GUI, { TABS } from "../../js/gui";
 import { useCloudBuild } from "../../composables/useCloudBuild";
-import { useBoardSelection } from "../../composables/useBoardSelection";
+import { requireTargetReleases, useBoardSelection } from "../../composables/useBoardSelection";
 import { useFirmwareFlashing, cleanUnifiedConfigFile } from "../../composables/useFirmwareFlashing";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { get as getStorage, set as setStorage } from "../../js/SessionStorage";
 import BuildApi from "../../js/BuildApi";
+import { hasCustomDefaultsArea } from "../../js/ConfigInserter";
 import { getTracking } from "../../js/Analytics";
 import DeviceHandler from "../../js/device_handler";
 import { gui_log } from "../../js/gui_log";
 import semver from "semver";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup";
-import AutoRestore from "../../js/utils/AutoRestore.js";
+import AutoRestore from "../../js/utils/AutoRestore";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection";
-import FC from "../../js/fc";
+import { useFlightControllerStore } from "@/stores/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
 import FlasherBoardBuildTab from "./firmware-flasher/FlasherBoardBuildTab.vue";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
@@ -161,6 +168,8 @@ import type { FirmwareData, FlashMessageTypes, ShowDialogVerifyBoard } from "../
 import type { DropdownMenuItem } from "@nuxt/ui";
 import SubtabNav from "../elements/SubtabNav.vue";
 import { applyExpertMode } from "../../js/utils/applyExpertMode";
+import { useConnectionStore } from "../../stores/connection";
+import { useNavigationStore } from "../../stores/navigation";
 
 type Translate = (key: string, params?: Record<string, unknown>) => string;
 
@@ -183,9 +192,12 @@ export default defineComponent({
         SubtabNav,
     },
     setup() {
+        const connectionStore = useConnectionStore();
+        const navigationStore = useNavigationStore();
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject<Translate>("$t", (key, params) => i18n.getMessage(key, params));
         const dialog = useDialog();
+        const fcStore = useFlightControllerStore();
 
         // Reactive state, provided to the sub-tabs below
         const state = createFlasherState();
@@ -298,27 +310,24 @@ export default defineComponent({
                 state.lastFlashResultText = state.progressLabelText;
                 state.lastFlashResultClass = state.progressLabelClass;
             }
-
-            return TABS.firmware_flasher;
         };
 
         const flashProgress = (value: number) => {
             const n = Number(value);
             if (!Number.isFinite(n)) {
-                return TABS.firmware_flasher;
+                return;
             }
             state.flashProgressValue = Math.max(0, Math.min(100, n));
             if (n >= 100) {
                 state.flashingInProgress = false;
-                GUI.flashingInProgress = false;
+                connectionStore.flashingInProgress = false;
             }
-            return TABS.firmware_flasher;
         };
 
         const resetFlashingState = () => {
             state.flashProgressValue = 0;
             state.flashingInProgress = false;
-            GUI.flashingInProgress = false;
+            connectionStore.flashingInProgress = false;
             enableFlashButton(
                 !!firmwareFlashing.getParsedHex() ||
                     !!firmwareFlashing.getUf2Binary() ||
@@ -370,6 +379,7 @@ export default defineComponent({
             state.firmwareLoadedName = "";
             state.firmwareLoadedSize = "";
             state.firmwareLoadedIsLocal = false;
+            cloudBuild.clearCommitInfo();
         };
 
         const clearBufferedFirmware = () => {
@@ -486,8 +496,6 @@ export default defineComponent({
             state.releaseNameLink = summary.releaseUrl || "#";
             state.releaseDateText = summary.date || "";
             state.targetMCUText = summary.mcu || "";
-            // A null filename rendered as empty text before; `?? ""` keeps that.
-            state.configFilenameText = state.isConfigLocal ? (state.configFilename ?? "") : "[default]";
 
             state.cloudTargetInfoVisible = !!summary.cloudBuild;
         };
@@ -607,7 +615,7 @@ export default defineComponent({
             }
 
             // extract osd protocols from general options and add to osdProtocols
-            const cloudBuildOptions = FC.CONFIG.buildOptions || [];
+            const cloudBuildOptions = fcStore.config.buildOptions || [];
             state.cloudBuildOptions = cloudBuildOptions;
 
             // Mark all options as default if they're in cloudBuildOptions
@@ -695,13 +703,13 @@ export default defineComponent({
         // Build types configuration
         const buildTypes: { tag: string }[] = [
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeRelease",
+                tag: "firmwareFlasherOptionLabelShowReleases",
             },
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeReleaseCandidate",
+                tag: "firmwareFlasherOptionLabelShowAllReleases",
             },
             {
-                tag: "firmwareFlasherOptionLabelBuildTypeDevelopment",
+                tag: "firmwareFlasherOptionLabelShowDevelopmentReleases",
             },
         ];
 
@@ -832,6 +840,13 @@ export default defineComponent({
                 enableLoadFileButton(true);
             };
 
+            // With no board or release there is nothing to ask the build server for. The requests
+            // used to go out anyway, as ".../undefined", and their 404s ended in the same state.
+            if (!target || !releaseStr) {
+                await loadTargetDetail(null);
+                return;
+            }
+
             try {
                 const targetDetail = await buildApi.loadTarget(target, releaseStr);
                 await loadTargetDetail(targetDetail);
@@ -848,8 +863,10 @@ export default defineComponent({
             }
 
             try {
-                if (validateBuildKey()) {
-                    const options = await buildApi.loadOptionsByBuildKey(releaseStr, cloudBuild.state.cloudBuildKey);
+                // validateBuildKey() already requires a 32-character key; the local check narrows it.
+                const buildKey = cloudBuild.state.cloudBuildKey;
+                if (buildKey && validateBuildKey()) {
+                    const options = await buildApi.loadOptionsByBuildKey(releaseStr, buildKey);
                     if (options) {
                         buildOptions(options);
                         return;
@@ -902,7 +919,8 @@ export default defineComponent({
         const saveFirmware = async () => {
             const fileType = state.firmware_type;
             try {
-                if (!fileType) {
+                const contents = fileType === "UF2" ? firmwareFlashing.getUf2Binary() : firmwareFlashing.getIntelHex();
+                if (!fileType || !state.filename || !contents) {
                     // Reading .toUpperCase() of undefined threw here before, into the same catch.
                     throw new TypeError("No firmware loaded to save");
                 }
@@ -916,10 +934,7 @@ export default defineComponent({
                     return false;
                 }
 
-                await FileSystem.writeFile(
-                    file,
-                    fileType === "UF2" ? firmwareFlashing.getUf2Binary() : firmwareFlashing.getIntelHex(),
-                );
+                await FileSystem.writeFile(file, contents);
                 return true;
             } catch (err) {
                 console.error(err);
@@ -947,9 +962,7 @@ export default defineComponent({
         };
 
         onMounted(async () => {
-            if (GUI.active_tab !== "firmware_flasher") {
-                GUI.active_tab = "firmware_flasher";
-            }
+            navigationStore.activeTab = "firmware_flasher";
 
             // Reset state on tab initialization
             activeFlasherStep.value = "board-build";
@@ -966,30 +979,6 @@ export default defineComponent({
             // Setup UI handlers and event bus listeners
             await setupUIHandlers();
             setupEventBusListeners();
-
-            // Register this module for backward compatibility
-            TABS.firmware_flasher = {
-                targets: boardSelection.state.targets,
-                validateBuildKey,
-                resetFlashingState,
-                preservePreFlashingState,
-                flashingMessage,
-                flashProgress,
-                cleanup,
-                FLASH_MESSAGE_TYPES,
-                requestDfuPermission,
-                get parsed_hex() {
-                    return firmwareFlashing.getParsedHex();
-                },
-                get hex() {
-                    return firmwareFlashing.getIntelHex();
-                },
-                get uf2_binary() {
-                    return firmwareFlashing.getUf2Binary();
-                },
-            };
-
-            GUI.content_ready(function () {});
 
             // Localize content
             i18n.localizePage();
@@ -1060,13 +1049,13 @@ export default defineComponent({
         };
 
         // Flashing methods
-        const startFlashing = async () => {
+        const startFlashing = () => {
             const selectedBoardTarget = boardSelection.state.selectedBoard;
 
             // Pause sponsor during flashing
             sponsorTile.value?.pause();
 
-            await firmwareFlashing.startFlashing({
+            firmwareFlashing.startFlashing({
                 config: state.config,
                 clearBoardConfig,
                 // Flash HEX options
@@ -1076,6 +1065,7 @@ export default defineComponent({
                 flashManualBaudRate: state.flashManualBaudRate,
                 filename: state.filename,
                 resetFlashingState,
+                requestDfuPermission,
                 // Board verification options
                 selectedBoard: selectedBoardTarget ?? undefined,
                 localFirmwareLoaded: state.localFirmwareLoaded,
@@ -1088,12 +1078,12 @@ export default defineComponent({
         };
 
         const startBackup = async (callback: () => void) => {
-            GUI.connect_lock = true;
+            connectionStore.connectLock = true;
 
             const aborted = function (message: string) {
-                GUI.connect_lock = false;
+                connectionStore.connectLock = false;
                 state.flashingInProgress = false;
-                GUI.flashingInProgress = false;
+                connectionStore.flashingInProgress = false;
                 enableFlashButton(true);
                 enableLoadRemoteFileButton(true);
                 enableLoadFileButton(true);
@@ -1114,7 +1104,7 @@ export default defineComponent({
             };
 
             AutoBackup.execute((result) => {
-                GUI.connect_lock = false;
+                connectionStore.connectLock = false;
                 if (result) {
                     callBackWhenPortAvailable();
                 } else {
@@ -1137,7 +1127,7 @@ export default defineComponent({
             if (!lastWarning || Date.now() - lastWarning > DAY_MS) {
                 await showAcknowledgementDialog(setAcknowledgementTimestamp);
             } else {
-                await startFlashing();
+                startFlashing();
             }
         };
 
@@ -1153,7 +1143,7 @@ export default defineComponent({
             if (isUnstableFirmware) {
                 await checkShowAcknowledgementDialog();
             } else {
-                await startFlashing();
+                startFlashing();
             }
         };
 
@@ -1234,6 +1224,7 @@ export default defineComponent({
             }
 
             enableLoadRemoteFileButton(true);
+            return !!result;
         };
 
         // Initialize firmware flashing composable
@@ -1243,6 +1234,11 @@ export default defineComponent({
             FLASH_MESSAGE_TYPES,
             $t,
             logHead,
+        });
+
+        const firmwareAcceptsConfig = computed(() => {
+            const parsedHex = firmwareFlashing.getParsedHex();
+            return !!parsedHex && hasCustomDefaultsArea(parsedHex);
         });
 
         // Initialize cloud build composable
@@ -1384,7 +1380,7 @@ export default defineComponent({
 
                 if (boardTarget) {
                     try {
-                        const targetReleases = await buildApi.loadTargetReleases(boardTarget);
+                        const targetReleases = await requireTargetReleases(buildApi, boardTarget);
                         await populateReleases({ target: boardTarget, releases: targetReleases.releases });
                     } catch (error) {
                         console.error(
@@ -1428,7 +1424,7 @@ export default defineComponent({
         const handleExitDfu = async () => {
             await firmwareFlashing.exitDfu({
                 dfuExitButtonDisabled: state.dfuExitButtonDisabled,
-                connectLock: GUI.connect_lock,
+                connectLock: connectionStore.connectLock,
             });
         };
 
@@ -1446,12 +1442,12 @@ export default defineComponent({
             state.restoreInProgress = false;
             state.restoreCompleted = false;
             state.flashingInProgress = true;
-            GUI.flashingInProgress = true;
+            connectionStore.flashingInProgress = true;
             activeFlasherStep.value = "flash";
             await nextTick();
 
             const options = {
-                connectLock: GUI.connect_lock,
+                connectLock: connectionStore.connectLock,
                 firmwareType: state.firmware_type,
                 filename: state.filename,
                 flashOnConnect: state.flashOnConnect,
@@ -1475,7 +1471,7 @@ export default defineComponent({
                 await firmwareFlashing.runFlashWorkflow(options);
             } catch (error) {
                 state.flashingInProgress = false;
-                GUI.flashingInProgress = false;
+                connectionStore.flashingInProgress = false;
                 throw error;
             }
         };
@@ -1529,6 +1525,7 @@ export default defineComponent({
             });
             if (result) {
                 state.firmware_type = result.firmwareType;
+                cloudBuild.clearCommitInfo();
             }
             enableLoadFileButton(true);
         };
@@ -1604,7 +1601,7 @@ export default defineComponent({
             }
         };
 
-        const handleUnstableFirmwareFlash = async () => {
+        const handleUnstableFirmwareFlash = () => {
             if (!state.dialogUnstableFirmwareAcknowledgementCheckbox) {
                 return;
             }
@@ -1619,9 +1616,7 @@ export default defineComponent({
                 acknowledgementCallback();
             }
 
-            await startFlashing().catch((error) => {
-                console.error("Flash error:", error);
-            });
+            startFlashing();
         };
 
         const handleUnstableFirmwareCancel = () => {
@@ -1681,16 +1676,16 @@ export default defineComponent({
                     const cliLines = hasDefaultsNoSave ? fileLines : ["defaults nosave", ...fileLines];
 
                     // Set connect lock to prevent tab switching interference
-                    GUI.connect_lock = true;
+                    connectionStore.connectLock = true;
                     state.restoreInProgress = true;
 
                     // Open wait dialog
                     dialog.openWait($t("firmwareFlasherRestoreBackupTitle"), null);
 
                     // Execute restore
-                    AutoRestore.execute(cliLines, (result: { success: boolean; skipped?: number; errors?: string }) => {
+                    AutoRestore.execute(cliLines, (result) => {
                         dialog.close();
-                        GUI.connect_lock = false;
+                        connectionStore.connectLock = false;
                         state.restoreInProgress = false;
 
                         if (result.success) {
@@ -1793,12 +1788,20 @@ export default defineComponent({
             { label: $t("firmwareFlasherSubTabFlash"), value: "flash", icon: "i-lucide-zap" },
         ]);
 
+        const selectSubtab = (subtab: string) => {
+            if (subtabItems.value.some((item) => item.value === subtab)) {
+                activeFlasherStep.value = subtab;
+            }
+        };
+
         // Return all public methods and state
         return {
             state,
             flashRingColor,
+            firmwareAcceptsConfig,
             activeFlasherStep,
             subtabItems,
+            selectSubtab,
             flashActionMenuItems,
             loadFirmwareMenuItems,
             cloudBuild,
@@ -1855,7 +1858,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 .tab-firmware_flasher {
     min-height: 100%;
 
@@ -1877,19 +1880,8 @@ export default defineComponent({
         border-radius: 0.25rem;
         font-size: 0.85rem;
     }
-    .flash-status-error {
-        background-color: var(--error-500);
-        color: #fff;
-    }
     .grid-box-spacer {
         height: 1rem;
-    }
-    ul {
-        li {
-            list-style: initial;
-            list-style-type: circle;
-            margin-inline-start: 30px;
-        }
     }
     .options {
         position: relative;
@@ -1955,25 +1947,6 @@ export default defineComponent({
         justify-content: flex-end;
         align-self: center;
     }
-    .select-wrapper-simple {
-        &.no-board-selected {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-    }
-    .select-wrapper {
-        width: calc(100% - 2rem) !important;
-        max-width: 30rem !important;
-        display: grid;
-        grid-template-columns: 1fr auto auto;
-        align-items: center;
-        gap: 0.5rem;
-        box-sizing: border-box;
-        &.no-board-selected {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-    }
     .detect-board {
         position: relative;
         top: auto;
@@ -2011,15 +1984,11 @@ export default defineComponent({
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
-        .select-wrapper {
-            width: 100% !important;
-            max-width: none !important;
-        }
         strong {
             font-size: 12px;
         }
     }
-    /* Keep help icons inline with multiselects inside Build Configuration */
+    /* Keep help icons inline with the selects inside Build Configuration */
     .build_configuration .select-group {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -2028,12 +1997,6 @@ export default defineComponent({
     }
     .build_configuration .select-group > strong {
         grid-column: 1 / -1;
-    }
-    .build_configuration .select-group .select-wrapper {
-        grid-column: 1;
-        /* allow help icon to sit alongside; avoid forcing full-width */
-        max-width: none !important;
-        width: 100% !important;
     }
     .build_configuration .select-group .helpicon {
         grid-column: 2;
@@ -2049,36 +2012,6 @@ export default defineComponent({
         .spacer_box_title {
             white-space: nowrap;
         }
-        #customDefinesInfo {
-            width: 100%;
-        }
-    }
-
-    /* Style multiselect tags for "Other options" selector */
-    #optionsInfo :deep(.multiselect__tags) {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
-        gap: 4px !important;
-    }
-
-    #optionsInfo :deep(.multiselect__tag) {
-        background: var(--surface-500) !important;
-        color: var(--text) !important;
-        font-size: 11px;
-        padding: 3px 20px 3px 6px;
-        border-radius: 3px;
-        display: inline-flex !important;
-        align-items: center !important;
-    }
-
-    #optionsInfo :deep(.multiselect__tag-icon) {
-        &:after {
-            color: var(--text) !important;
-        }
-        &:hover {
-            background: var(--surface-600) !important;
-        }
     }
 
     .default_btn {
@@ -2088,69 +2021,6 @@ export default defineComponent({
         a {
             padding: 0.15rem 0.5rem;
         }
-    }
-
-    /* Three-column grid layout for release info */
-    .release_info_grid {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 1rem 2rem;
-        align-items: center;
-    }
-
-    .release_info_grid .info_row {
-        display: contents;
-    }
-
-    .release_info_grid strong {
-        text-align: end;
-        white-space: nowrap;
-        padding-inline-end: 1rem;
-    }
-
-    .release_info_grid span,
-    .release_info_grid a {
-        text-align: start;
-    }
-
-    .release_info_grid .board_support {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-        justify-self: start;
-    }
-
-    .release_info_grid .board_support a#targetSupportInfoUrl {
-        padding: 0 0.5rem;
-        background-color: var(--primary-500);
-        cursor: pointer;
-        color: var(--surface-50);
-        font-size: 10px;
-        border-radius: 999px;
-        transition: all 200ms;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        height: auto;
-        line-height: 1.4;
-        text-decoration: none;
-
-        &:hover {
-            background-color: var(--primary-400);
-            transition: all ease 0.2s;
-        }
-
-        &:active {
-            background-color: var(--primary-500);
-            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-        }
-    }
-
-    .release_info_grid .board_support .helpicon {
-        margin-top: 0;
-        float: none;
-        display: inline-block;
-        align-self: center;
     }
 
     /* Waiting overlay shown during flashing */
@@ -2191,70 +2061,10 @@ export default defineComponent({
         gap: 0.5rem;
     }
 
-    #cloudTargetStatus {
-        padding-inline-start: 0.5rem;
-    }
-
-    .release_info_grid .btn {
-        justify-self: start;
-    }
-
-    .release_info_grid .btn a.cloud_build_cancel {
-        padding: 0 0.5rem;
-        background-color: var(--primary-500);
-        cursor: pointer;
-        color: var(--surface-50);
-        font-size: 10px;
-        border-radius: 999px;
-        transition: all 200ms;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        height: auto;
-        line-height: 1.4;
-        text-decoration: none;
-
-        &:hover:not(.disabled) {
-            background-color: var(--primary-400);
-            transition: all ease 0.2s;
-        }
-
-        &:active:not(.disabled) {
-            background-color: var(--primary-500);
-            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-        }
-
-        &.disabled {
-            pointer-events: none;
-            cursor: default;
-            background-color: var(--surface-500);
-            color: var(--text);
-        }
-    }
-
-    @media all and (max-width: 1455px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-    }
-    @media all and (max-width: 991px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr;
-            }
-        }
-    }
     & + .content_toolbar {
         width: fit-content;
     }
     @media all and (max-width: 575px) {
-        .grid-box {
-            &.col2 {
-                grid-template-columns: 1fr;
-            }
-        }
         .detect-board {
             span {
                 height: 18px;
@@ -2265,32 +2075,73 @@ export default defineComponent({
             }
         }
     }
-}
 
-:deep(.toolbar_fixed_bottom.content_toolbar) {
-    width: fit-content;
-}
-
-:deep(.content_toolbar) {
-    width: fit-content;
-    background-color: var(--surface-300);
-    box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem 0.75rem 1rem;
-    border-start-start-radius: 1.5rem;
-    &::before {
-        width: 1.5rem;
-        aspect-ratio: 1;
-        content: "";
-        mask: url(../../images/corner.svg);
-        background-color: var(--surface-300);
-        position: absolute;
-        inset-inline-start: -1.5rem;
-        bottom: 0;
+    .toolbar_fixed_bottom.content_toolbar {
+        width: fit-content;
     }
+
+    .content_toolbar {
+        width: fit-content;
+        background-color: var(--surface-300);
+        box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem 0.75rem 1rem;
+        border-start-start-radius: 1.5rem;
+        &::before {
+            width: 1.5rem;
+            aspect-ratio: 1;
+            content: "";
+            mask: url(../../images/corner.svg);
+            background-color: var(--surface-300);
+            position: absolute;
+            inset-inline-start: -1.5rem;
+            bottom: 0;
+        }
+        .btn {
+            a {
+                margin-top: 0;
+                margin-bottom: 0;
+                background-color: var(--primary-500);
+                border-radius: 3px;
+                border: 1px solid var(--primary-600);
+                color: black;
+                float: inline-end;
+                font-weight: bold;
+                font-size: 12px;
+                display: block;
+                cursor: pointer;
+                transition: all ease 0.2s;
+                padding: 0 0.5rem;
+                line-height: 28px;
+                user-select: none;
+                white-space: nowrap;
+                &:hover {
+                    background-color: var(--primary-400);
+                    transition: all ease 0.2s;
+                }
+                &:active {
+                    background-color: var(--primary-500);
+                    transition: all ease 0s;
+                    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
+                }
+                .helpicon {
+                    margin-inline-start: 5px;
+                }
+            }
+            a.disabled {
+                cursor: default;
+                color: var(--surface-900);
+                background-color: var(--surface-500);
+                border: 1px solid var(--surface-500);
+                pointer-events: none;
+                opacity: 1;
+            }
+        }
+    }
+
     .btn {
         a {
             margin-top: 0;
@@ -2298,7 +2149,7 @@ export default defineComponent({
             background-color: var(--primary-500);
             border-radius: 3px;
             border: 1px solid var(--primary-600);
-            color: #000;
+            color: black;
             float: inline-end;
             font-weight: bold;
             font-size: 12px;
@@ -2318,303 +2169,68 @@ export default defineComponent({
                 transition: all ease 0s;
                 box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
             }
-            .helpicon {
-                margin-inline-start: 5px;
+            &.disabled {
+                background-color: var(--surface-500);
+                border: 1px solid var(--surface-400);
+                color: var(--surface-900);
+                cursor: default;
             }
         }
-        a.disabled {
-            cursor: default;
-            color: var(--surface-900);
-            background-color: var(--surface-500);
-            border: 1px solid var(--surface-500);
-            pointer-events: none;
-            opacity: 1;
-        }
     }
-}
 
-.btn {
-    a {
-        margin-top: 0;
-        margin-bottom: 0;
-        background-color: var(--primary-500);
-        border-radius: 3px;
-        border: 1px solid var(--primary-600);
-        color: #000;
-        float: inline-end;
-        font-weight: bold;
-        font-size: 12px;
-        display: block;
-        cursor: pointer;
-        transition: all ease 0.2s;
-        padding: 0 0.5rem;
-        line-height: 28px;
-        user-select: none;
-        white-space: nowrap;
-        &:hover {
-            background-color: var(--primary-400);
-            transition: all ease 0.2s;
-        }
-        &:active {
-            background-color: var(--primary-500);
-            transition: all ease 0s;
-            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-        }
-        &.disabled {
-            background-color: var(--surface-500);
-            border: 1px solid var(--surface-400);
-            color: var(--surface-900);
-            cursor: default;
-        }
+    /* Container management */
+
+    /* Multi Selects */
+
+    /* FIX: Hide search text when selection is present */
+
+    /* Dropdown list styling */
+
+    /* 1. Reset the internal input to remove borders/outlines */
+
+    /* 2. Target the placeholder text specifically */
+
+    /* 3. Target the native placeholder inside the search input */
+
+    /* 4. Ensure the selected single value matches page font size */
+
+    /* Firmware version dropdown should appear above expert options but below board select when both open */
+
+    /* List styling for recovery and warning text in FlasherFlashTab */
+
+    .note-text-format ul {
+        list-style: none !important;
+        margin-inline-start: 0.5rem !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        padding-inline-start: 0 !important;
     }
-}
 
-.osd-needs-attention {
-    :deep(.multiselect__single),
-    :deep(.multiselect__placeholder) {
-        color: red !important;
-    }
-}
-
-/* Container management */
-.select-wrapper.fixed-width {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    min-width: 240px;
-    max-width: 440px;
-    position: relative;
-    z-index: 1002; /* Lower than board select, but active state will be above expert options */
-}
-
-:deep(.standard-select) {
-    min-height: 28px;
-    font-size: 12px;
-    flex: 1;
-    z-index: 1001 !important;
-    font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
-    position: relative;
-}
-
-/* Multi Selects */
-:deep(.standard-select .multiselect__tags) {
-    min-height: 28px;
-    padding: 0 30px 0 8px;
-    border: 1px solid var(--surface-500);
-    border-radius: 3px;
-    background: var(--surface-200);
-    display: flex;
-    align-items: center;
-}
-
-:deep(.standard-select .multiselect__single),
-:deep(.standard-select .multiselect__input),
-:deep(.standard-select .multiselect__placeholder) {
-    color: var(--text) !important;
-    background: transparent !important;
-    line-height: 26px;
-    margin-bottom: 0;
-}
-
-/* FIX: Hide search text when selection is present */
-:deep(.standard-select:not(.multiselect--active) .multiselect__input) {
-    opacity: 0 !important;
-    position: absolute !important;
-}
-
-/* Dropdown list styling */
-:deep(.standard-select .multiselect__content-wrapper) {
-    position: absolute;
-    display: block;
-    background: var(--surface-400);
-    border: 1px solid var(--surface-600);
-    border-top: none;
-    z-index: 99999 !important;
-    max-height: 250px;
-    overflow-y: auto;
-    width: 100%;
-    inset-inline-start: 0;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-}
-
-:deep(.standard-select .multiselect__option) {
-    font-size: 12px !important;
-    color: var(--text) !important;
-    padding: 8px 12px;
-    min-height: 30px;
-}
-
-:deep(.standard-select .multiselect__option--highlight) {
-    background: var(--surface-300) !important; /* Darker blue for better contrast */
-    color: var(--text) !important;
-}
-
-/* 1. Reset the internal input to remove borders/outlines */
-:deep(.standard-select .multiselect__input) {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    color: var(--text) !important;
-    font-size: 12px !important;
-}
-
-/* 2. Target the placeholder text specifically */
-:deep(.standard-select .multiselect__placeholder) {
-    color: var(--text) !important;
-    font-size: 12px !important;
-    margin-bottom: 0;
-    padding-top: 0;
-    line-height: 26px; /* Vertical centering */
-    border: none !important;
-}
-
-/* 3. Target the native placeholder inside the search input */
-:deep(.standard-select .multiselect__input::placeholder) {
-    color: var(--text) !important;
-    font-size: 12px !important;
-    border: none !important;
-}
-
-/* 4. Ensure the selected single value matches page font size */
-:deep(.standard-select .multiselect__single) {
-    font-size: 12px !important;
-    line-height: 26px;
-    padding: 0 0 0 2px;
-    margin-bottom: 0;
-}
-
-/* Firmware version dropdown should appear above expert options but below board select when both open */
-.select-wrapper.fixed-width :deep(.standard-select.multiselect--active) {
-    z-index: 1005 !important; /* Below board select active (100000) but above everything else */
-}
-
-.select-wrapper.fixed-width :deep(.standard-select .multiselect__content-wrapper) {
-    z-index: 1001 !important;
-}
-
-.select-wrapper {
-    /* When multiselect is open, enable positioning and high z-index */
-    :deep(.standard-select.multiselect--active) {
+    .note-text-format li {
+        margin-bottom: 0.25rem !important;
+        margin-inline-start: 0 !important;
+        padding-inline-start: 1.5em !important; /* space for dash */
+        text-indent: -1.5em !important; /* hanging indent so wrapped lines align after dash */
         position: relative;
-        z-index: 10000 !important;
     }
 
-    :deep(.standard-select.multiselect--active .multiselect__content-wrapper) {
-        z-index: 10001 !important;
-    }
-
-    :deep(.standard-select.multiselect--active .multiselect__content) {
-        z-index: 10001 !important;
+    .note-text-format li::before {
+        content: "– " !important;
+        margin-inline-end: 0.5rem !important;
+        color: var(--text) !important;
     }
 }
 
-.select-wrapper-simple {
-    /* When multiselect is open, enable positioning and high z-index */
-    :deep(.standard-select.multiselect--active) {
-        position: relative;
-        z-index: 10000 !important;
-    }
-
-    :deep(.standard-select.multiselect--active .multiselect__content-wrapper) {
-        z-index: 10001 !important;
-    }
-
-    :deep(.standard-select.multiselect--active .multiselect__content) {
-        z-index: 10001 !important;
-    }
-}
-
-/* When multiselect is open, increase z-index to be above everything */
-:deep(.standard-select.multiselect--active) {
-    position: relative;
-    z-index: 10000 !important;
-}
-
-:deep(.standard-select.multiselect--active .multiselect__content-wrapper) {
-    z-index: 10001 !important;
-}
-
-:deep(.standard-select.multiselect--active .multiselect__content) {
-    z-index: 10001 !important;
-}
-
-:deep(.standard-select .multiselect__option--selected) {
-    background: var(--surface-300) !important;
-    color: var(--text) !important;
-    font-weight: normal;
-}
-
-:deep(.standard-select .multiselect__option--selected.multiselect__option--highlight) {
-    background: var(--surface-500) !important;
-    color: var(--surface-50) !important;
-}
-
-/* Group headers (Legacy, Supported, etc.) */
-:deep(.standard-select .multiselect__option--group) {
-    background: var(--surface-600) !important;
-    color: var(--text) !important;
-    font-size: 10px !important;
-    font-weight: bold;
-}
-
-/* List styling for recovery and warning text - using :deep to pierce scoped styles */
-:deep(.note-text-format ul) {
-    list-style: none !important;
-    margin-inline-start: 0.5rem !important;
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
-    padding-inline-start: 0 !important;
-}
-
-:deep(.note-text-format li) {
-    margin-bottom: 0.25rem !important;
-    margin-inline-start: 0 !important;
-    padding-inline-start: 1.5em !important; /* space for dash */
-    text-indent: -1.5em !important; /* hanging indent so wrapped lines align after dash */
-    position: relative;
-}
-
-:deep(.note-text-format li::before) {
-    content: "– " !important;
-    margin-inline-end: 0.5rem !important;
-    color: var(--text) !important;
-}
-
-/* Unstable firmware dialog content styling */
-#dialogUnstableFirmwareAcknowledgement {
-    .content {
-        margin-bottom: 1rem;
-
-        ul {
-            margin: 0.5rem 0;
-            padding-inline-start: 1.5rem;
-            list-style-type: disc;
-        }
-
-        li {
-            margin: 0.25rem 0;
-            line-height: 1.5;
-        }
-
-        strong {
-            font-weight: bold;
-            color: var(--warning);
-        }
-    }
-}
-
-/* Unstable firmware dialog list styling */
-#dialogUnstableFirmwareAcknowledgement {
-    :deep(ul) {
+/* The unstable-firmware dialog is teleported out of the tab, so it is styled by its own class.
+   Its message is a list, which Tailwind's base styles would otherwise strip of bullets. */
+.dialog-unstable-firmware {
+    ul {
         margin-inline-start: 1.5rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
     }
 
-    :deep(li) {
+    li {
         list-style: disc;
         margin-bottom: 0.25rem;
         margin-inline-start: 0.5rem;

@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import FC from "../../src/js/fc";
+import { createPinia, setActivePinia } from "pinia";
 import MSP from "../../src/js/msp";
 import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
 import { fetchSensorNames, gpsProtocols, sensorTypes } from "../../src/js/sensor_types";
+import { useFlightControllerStore } from "../../src/stores/fc";
 
 function replyToCli(lines: string[]) {
     return vi.spyOn(MSP, "send_cli_command").mockImplementation((_command, callback) => {
@@ -11,8 +12,11 @@ function replyToCli(lines: string[]) {
 }
 
 describe("sensor_types", () => {
+    let fcStore: ReturnType<typeof useFlightControllerStore>;
+
     beforeEach(() => {
-        FC.resetState();
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
     });
 
     afterEach(() => {
@@ -26,10 +30,10 @@ describe("sensor_types", () => {
             await fetchSensorNames();
 
             expect(cli).toHaveBeenCalledWith("sensor_hardware", expect.any(Function));
-            expect(FC.SENSOR_NAMES.gyro).toEqual(["AUTO", "NONE", "BMI270"]);
-            expect(FC.SENSOR_NAMES.sonar).toEqual(["NONE", "TFMINI"]);
-            expect(FC.SENSOR_NAMES.mag).toEqual(["AUTO", "NONE", "QMC5883"]);
-            expect(FC.SENSOR_NAMES.acc).toEqual([]);
+            expect(fcStore.sensorNames.gyro).toEqual(["AUTO", "NONE", "BMI270"]);
+            expect(fcStore.sensorNames.sonar).toEqual(["NONE", "TFMINI"]);
+            expect(fcStore.sensorNames.mag).toEqual(["AUTO", "NONE", "QMC5883"]);
+            expect(fcStore.sensorNames.acc).toEqual([]);
         });
 
         it("ignores lines without a separator and sensor types it does not know", async () => {
@@ -37,14 +41,14 @@ describe("sensor_types", () => {
 
             await fetchSensorNames();
 
-            expect(FC.SENSOR_NAMES).not.toHaveProperty("lidar");
-            expect(FC.SENSOR_NAMES.baro).toEqual(["DEFAULT", "NONE"]);
+            expect(fcStore.sensorNames).not.toHaveProperty("lidar");
+            expect(fcStore.sensorNames.baro).toEqual(["DEFAULT", "NONE"]);
         });
     });
 
     describe("sensorTypes", () => {
         it("uses the names the FC reports from API 1.48, fetching them once", async () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_48;
+            fcStore.config.apiVersion = API_VERSION_1_48;
             const cli = replyToCli(["mag: AUTO,NONE,DRONECAN"]);
 
             const types = await sensorTypes();
@@ -56,7 +60,7 @@ describe("sensor_types", () => {
         });
 
         it("adds pitot from API 1.49", async () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_49;
+            fcStore.config.apiVersion = API_VERSION_1_49;
             replyToCli(["pitot: NONE,MS4525"]);
 
             const types = await sensorTypes();
@@ -65,7 +69,7 @@ describe("sensor_types", () => {
         });
 
         it("falls back to the built-in lists before API 1.48", async () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_46;
+            fcStore.config.apiVersion = API_VERSION_1_46;
             const cli = replyToCli([]);
 
             const types = await sensorTypes();
@@ -76,7 +80,7 @@ describe("sensor_types", () => {
         });
 
         it("drops deprecated gyros and adds new ones for API 1.47", async () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_47;
+            fcStore.config.apiVersion = API_VERSION_1_47;
 
             const types = await sensorTypes();
 
@@ -95,10 +99,10 @@ describe("sensor_types", () => {
 
     describe("gpsProtocols", () => {
         it("offers VIRTUAL from API 1.47", () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_46;
+            fcStore.config.apiVersion = API_VERSION_1_46;
             expect(gpsProtocols()).toEqual(["NMEA", "UBLOX", "MSP"]);
 
-            FC.CONFIG.apiVersion = API_VERSION_1_47;
+            fcStore.config.apiVersion = API_VERSION_1_47;
             expect(gpsProtocols()).toEqual(["NMEA", "UBLOX", "MSP", "VIRTUAL"]);
         });
     });

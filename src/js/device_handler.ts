@@ -21,8 +21,8 @@
 
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
-import { serial } from "./serial.js";
-import { getConnectionState } from "./connection_state.js";
+import { serial } from "./serial";
+import { getConnectionState } from "./connection_state";
 import defaultDfu, { UsbDfuProtocol } from "./protocols/usbdfu";
 import CapacitorDfuTransport from "./protocols/CapacitorDfuTransport";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
@@ -35,13 +35,13 @@ import {
     isAndroid,
     isNetworkOnlyBrowser,
     isTauri,
-} from "./utils/checkCompatibility.js";
+} from "./utils/checkCompatibility";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
 // Where a network-only browser starts looking. A browser has no raw sockets, so it reaches
 // SITL through the websockify proxy's own port rather than the raw 5761 — the same address
-// the seeded SITL bookmark uses, see sitlBookmark() in stores/connectionBookmarks.js.
+// the seeded SITL bookmark uses, see sitlBookmark() in stores/connectionBookmarks.ts.
 const DEFAULT_NETWORK_TARGET = "ws://127.0.0.1:6761";
 
 const networkOnly = isNetworkOnlyBrowser();
@@ -509,7 +509,7 @@ class DeviceHandler {
      * @returns {Promise} - Promise that resolves after updating the ports list
      */
     async updateDeviceList(deviceType: DeviceType): Promise<PortDevice[]> {
-        let ports = [];
+        let ports: PortDevice[] = [];
 
         try {
             switch (deviceType) {

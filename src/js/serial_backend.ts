@@ -19,19 +19,19 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import GUI, { TABS } from "./gui";
 import { i18n } from "./localization";
 // NOTE: this is a circular dependency, needs investigating
 import Features from "./Features";
 import MspHelper from "./msp/MSPHelper";
 import VirtualFC from "./VirtualFC";
 import Beepers from "./Beepers";
-import FC from "./fc";
+import { type CONFIGURATION_PROBLEM_FLAGS, useFlightControllerStore } from "../stores/fc";
 import MSP from "./msp";
 import MSPCodes, { MSP2TextType } from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import DeviceHandler from "./device_handler";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
+import { isPersistentUsbBridge } from "./protocols/devices";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_ACCEPTED } from "./data_storage";
 import { bit_check } from "./bit";
 import { have_sensor } from "./sensor_helpers";
 import { gui_log } from "./gui_log";
@@ -44,19 +44,25 @@ import semver from "semver";
 import { SHA1 } from "crypto-es";
 import BuildApi from "./BuildApi";
 
-import { serial } from "./serial.js";
-import { getConnectionState, State as ConnPhase } from "./connection_state.js";
+import { serial } from "./serial";
+import { getConnectionState, State as ConnPhase } from "./connection_state";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
-import { switchTab } from "./tab_switch";
+import { selectDefaultTabWhenConnected, switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
 import { isMspCancelled } from "./msp/mspErrors";
-
-// Expandos on the reactive GUI object that GuiControl does not declare: pendingTab is set by
-// tab_switch.js; configuration_loaded is only ever written.
-const GuiState = GUI as typeof GUI & { configuration_loaded?: boolean; pendingTab?: string | null };
+import { TABS, tabSwitchCleanup } from "./tab_adapters";
+import { addTimeout, killAllIntervals, killAllTimeouts, removeTimeout } from "./timers";
+import { showCliPanel } from "./cli_panel";
+import {
+    DEFAULT_ALLOWED_FC_TABS_WHEN_CONNECTED,
+    DEFAULT_ALLOWED_TABS,
+    DEFAULT_ALLOWED_TABS_WHEN_DISCONNECTED,
+    DEFAULT_CLOUD_BUILD_TAB_OPTIONS,
+    useNavigationStore,
+} from "../stores/navigation";
 
 type ReadInfo = Parameters<typeof MSP.read>[0];
 
@@ -135,6 +141,17 @@ function isDrivenRebootTarget(port: string): boolean {
 }
 
 /**
+ * Whether the link to this target stays open across an FC reboot and must be dropped by the
+ * reconnect cycle itself for serial ports behind a USB-UART bridge.
+ * @param {string} port - the selected port path
+ * @returns {boolean}
+ */
+function linkSurvivesReboot(port: string): boolean {
+    const device = DeviceHandler.describeDevice(port);
+    return Boolean(device && isPersistentUsbBridge(device.vendorId, device.productId));
+}
+
+/**
  * Reconnect-window duration for the currently-selected target: driven (BLE/manual) reboots
  * get the longer window, serial re-enumeration keeps the original. Evaluated once per reboot
  * (passed to requestReboot) so the loop, dialog and dialog-suppression share one snapshot.
@@ -201,6 +218,7 @@ function connectFromDeeplink() {
 }
 
 export function initializeSerialBackend() {
+    const connectionStore = useConnectionStore();
     // Exposed via EventBus so modules that can't import serial_backend directly
     // (notably gui.js, which is on the other side of an import cycle) can still
     // request a connect/disconnect toggle.
@@ -213,12 +231,12 @@ export function initializeSerialBackend() {
 
     EventBus.$on("device-handler:auto-select-serial-device", function () {
         if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
+            !connectionStore.connectedTo &&
+            !connectionStore.connectingTo &&
             // The listener must also stay off the CLI tab: a live CLI session is not an MSP
             // connection and taking the port would end it. The reconnect cycle has its own,
             // wider rule — it runs when a reboot has already ended that session.
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+            !["cli", "firmware_flasher"].includes(useNavigationStore().activeTab ?? "") &&
             DeviceHandler.devicePicker.autoConnect &&
             !isCliOnlyMode() &&
             (connectionTimestamp === null || connectionTimestamp > 0)
@@ -237,7 +255,7 @@ export function initializeSerialBackend() {
         // event.detail.path is now a stable per-device id (WebSerial: "serial_N"),
         // so this match is device-specific: removing device A no longer triggers a
         // disconnect when device B is the connected one.
-        if (detail?.path && detail.path === GUI.connected_to) {
+        if (detail?.path && detail.path === connectionStore.connectedTo) {
             connectDisconnect();
         }
     });
@@ -264,22 +282,23 @@ export function initializeSerialBackend() {
     connectFromDeeplink();
 }
 
-async function sendConfigTracking() {
+function sendConfigTracking() {
+    const fcStore = useFlightControllerStore();
     // It is set up before any connection.
     const tracking = getTracking();
     tracking?.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
-        boardIdentifier: FC.CONFIG.boardIdentifier,
-        targetName: FC.CONFIG.targetName,
-        boardName: FC.CONFIG.boardName,
-        hardware: FC.CONFIG.hardwareName,
-        manufacturerId: FC.CONFIG.manufacturerId,
-        apiVersion: FC.CONFIG.apiVersion,
-        flightControllerVersion: FC.CONFIG.flightControllerVersion,
-        flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
-        mcu: FC.CONFIG.targetName,
+        boardIdentifier: fcStore.config.boardIdentifier,
+        targetName: fcStore.config.targetName,
+        boardName: fcStore.config.boardName,
+        hardware: fcStore.config.hardwareName,
+        manufacturerId: fcStore.config.manufacturerId,
+        apiVersion: fcStore.config.apiVersion,
+        flightControllerVersion: fcStore.config.flightControllerVersion,
+        flightControllerIdentifier: fcStore.config.flightControllerIdentifier,
+        mcu: fcStore.config.targetName,
         // Only reached after MSP_UID succeeded, which stores a hex string (the number is VirtualFC's).
-        deviceIdentifier: SHA1(FC.CONFIG.deviceIdentifier as string).toString(),
-        buildKey: FC.CONFIG.buildKey,
+        deviceIdentifier: SHA1(fcStore.config.deviceIdentifier as string).toString(),
+        buildKey: fcStore.config.buildKey,
     });
 }
 
@@ -291,7 +310,7 @@ async function sendConfigTracking() {
  * @returns {boolean} true while the flasher is active
  */
 function flasherOwnsPort() {
-    return GUI.active_tab === "firmware_flasher";
+    return useNavigationStore().activeTab === "firmware_flasher";
 }
 
 /**
@@ -338,10 +357,9 @@ function prepareDisconnect() {
     // mid-reboot disconnectForReboot() path (which must KEEP the REBOOTING/RECONNECTING phase so
     // the reconnect can continue). So the reconnect window is owned by those callers, not here.
 
-    GuiState.configuration_loaded = false;
-    GUI.timeout_kill_all();
-    GUI.interval_kill_all();
-    GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
+    killAllTimeouts();
+    killAllIntervals();
+    tabSwitchCleanup(() => (useNavigationStore().tabSwitchInProgress = false));
 }
 
 function beginDisconnect() {
@@ -385,6 +403,7 @@ function resetAppConnectionState() {
 // "disconnected". Drop it for real; a link that made it back to connected (or is
 // mid-handshake, owned by its stall watchdog) is left alone.
 function releaseKeptRebootLink() {
+    const connectionStore = useConnectionStore();
     if (!rebootLinkKept) {
         return;
     }
@@ -393,10 +412,10 @@ function releaseKeptRebootLink() {
     // disconnecting under a live WebBluetooth.connect() would tear the device out from
     // under the coroutine. The attempt's own watchdog chain finishes the cleanup —
     // its handshake either completes or fails into the normal teardown.
-    if (serial.connected && !isConnected() && !GUI.connecting_to) {
+    if (serial.connected && !isConnected() && !connectionStore.connectingTo) {
         // Already app-level disconnected — skip the redundant unexpected-disconnect teardown.
         getConnectionState().markIntentionalDisconnect();
-        serial.disconnect();
+        void serial.disconnect();
     }
 }
 
@@ -421,14 +440,15 @@ function softResetForReboot() {
 // "connect" if `isConnected` has already been toggled off (e.g. when the UI
 // state still shows "connected" but the internal flag just changed).
 export function disconnect() {
-    if (GUI.connect_lock || !isConnected()) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.connectLock || !isConnected()) {
         return;
     }
     beginDisconnect();
 }
 
 /**
- * GUI.connecting_to is set while an attempt is in flight. A second open() on the same SerialPort
+ * The connection store's connectingTo is set while an attempt is in flight. A second open() on the same SerialPort
  * gives an InvalidStateError, and its failure dialog hides that the first attempt was good. The
  * reboot loop and the auto-select listener each make this test before they call
  * connectDisconnect(). Make it here, for all callers.
@@ -436,8 +456,12 @@ export function disconnect() {
  * @returns {boolean} true when a connect attempt can start now
  */
 function canStartConnectionAction(selectedDevice: string): boolean {
+    const connectionStore = useConnectionStore();
     return (
-        !GUI.connect_lock && !GUI.connecting_to && selectedDevice !== "noselection" && !selectedDevice.startsWith("usb")
+        !connectionStore.connectLock &&
+        !connectionStore.connectingTo &&
+        selectedDevice !== "noselection" &&
+        !selectedDevice.startsWith("usb")
     );
 }
 
@@ -446,6 +470,7 @@ function canStartConnectionAction(selectedDevice: string): boolean {
  * @param {boolean} automatic - the app started this attempt, not the user
  */
 function beginConnect(selectedDevice: string, automatic: boolean) {
+    const connectionStore = useConnectionStore();
     // Clear the intentional-disconnect guard on every connect attempt. A protocol whose
     // disconnect() short-circuits (e.g. WebBluetooth when closeRequested is already set)
     // may never dispatch the "disconnect" event that would otherwise consume the flag, so
@@ -460,7 +485,7 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     const deviceName = selectedDevice === "manual" ? DeviceHandler.devicePicker.portOverride : selectedDevice;
 
     console.log(`${logHead} Connecting to: ${deviceName}`);
-    GUI.connecting_to = deviceName;
+    connectionStore.connectingTo = deviceName;
 
     // lock port select & baud while we are connecting / connected
     DeviceHandler.devicePickerDisabled = true;
@@ -474,10 +499,10 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
     // give them a wider window than the enumerated-serial default before the safety net calls
     // the attempt failed.
     const connectAttemptTimeout = selectedDevice === "manual" ? 20000 : 10000;
-    GUI.timeout_add(
+    addTimeout(
         "connectAttempt",
         function () {
-            if (GUI.connecting_to && !CONFIGURATOR.connectionValid) {
+            if (connectionStore.connectingTo && !connectionStore.connectionValid) {
                 abortConnection("connectionFailed");
             }
         },
@@ -495,7 +520,7 @@ function beginConnect(selectedDevice: string, automatic: boolean) {
         getConnectionState().attemptStarted(automatic);
     }
 
-    serial.connect(
+    void serial.connect(
         deviceName,
         { baudRate: DeviceHandler.devicePicker.selectedBauds },
         selectedDevice === "virtual" ? onOpenVirtual : undefined,
@@ -512,8 +537,13 @@ function registerCliHotkey() {
         if (!isCliHotkey(e)) {
             return;
         }
-        if (serial.connected && GUI.active_tab !== "cli" && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            GUI.showCliPanel();
+        const fcStore = useFlightControllerStore();
+        if (
+            serial.connected &&
+            useNavigationStore().activeTab !== "cli" &&
+            semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)
+        ) {
+            showCliPanel();
         }
     };
 }
@@ -523,7 +553,8 @@ function registerCliHotkey() {
  * @param {{automatic?: boolean}} [options] - automatic: the app started this, not the user
  */
 export function connectDisconnect({ automatic = false } = {}) {
-    if (GUI.connect_lock) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.connectLock) {
         return;
     }
 
@@ -537,7 +568,6 @@ export function connectDisconnect({ automatic = false } = {}) {
     }
 
     // GUI control overrides the user control
-    GuiState.configuration_loaded = false;
 
     if (isConnected()) {
         beginDisconnect();
@@ -590,28 +620,31 @@ function defaultDisplayForTag(tag: string): string {
 // resetConnection() — it must NOT repeat resetConnection's work (listeners,
 // connectionValid/cli flags, live-data timer, devicePickerDisabled).
 function teardownConnectionUi() {
+    const fcStore = useFlightControllerStore();
     MSP.disconnect_cleanup();
     PortUsage.reset();
     // To trigger the UI updates by Vue reset the state.
-    FC.resetState();
+    fcStore.resetState();
 
-    GUI.connected_to = false;
-    GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
+    const connectionStore = useConnectionStore();
+    const navigationStore = useNavigationStore();
+    connectionStore.connectedTo = false;
+    navigationStore.allowedTabs = [...DEFAULT_ALLOWED_TABS_WHEN_DISCONNECTED];
     // Release any in-progress operation lock (OSD save / flashing). The disconnect
     // invalidates that operation, and switchTab is silently rejected while the lock is
     // held — which would otherwise leave a blank content area after unmountVueTab().
-    GUI.connect_lock = false;
+    connectionStore.connectLock = false;
 
     // allowedTabs (set above) must already include "landing"/"firmware_flasher" before this,
     // or switchTab silently rejects the disconnected tab.
-    const pendingTab = GuiState.pendingTab;
-    GuiState.pendingTab = null;
+    const pendingTab = navigationStore.pendingTab;
+    navigationStore.pendingTab = null;
     const target = pendingTab === "firmware_flasher" ? "firmware_flasher" : "landing";
 
     // Only unmount when actually leaving the current tab: a repeated teardown (disconnect
     // burst) already sits on the destination, and unmounting there blanks the content
     // while switchTab no-ops on the same tab or races an in-flight mount.
-    if (GUI.active_tab !== target) {
+    if (navigationStore.activeTab !== target) {
         // Clear the active root-mounted tab before navigation selects the next one.
         try {
             unmountVueTab();
@@ -623,16 +656,18 @@ function teardownConnectionUi() {
 }
 
 function finishClose() {
-    const wasConnected = CONFIGURATOR.connectionValid;
+    const connectionStore = useConnectionStore();
+    const fcStore = useFlightControllerStore();
+    const wasConnected = connectionStore.connectionValid;
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
         (document.getElementById("dialogResetToCustomDefaults") as HTMLDialogElement | null)?.close();
     }
 
-    serial.disconnect();
+    void serial.disconnect();
 
-    if (CONFIGURATOR.virtualMode) {
+    if (connectionStore.virtualMode) {
         onClosed(true);
     }
 
@@ -662,10 +697,10 @@ function finishClose() {
 // event (no "removedDevice") for BLE/Capacitor/WebSocket/TCP. Deliberately does NOT call
 // mspHelper.enableArming — the link is already gone, so that MSP callback would never fire.
 function finishUnexpectedDisconnect() {
-    // Clear this connection's handshake watchdogs. GUI.timeout_add does NOT de-duplicate
+    // Clear this connection's handshake watchdogs. addTimeout does NOT de-duplicate
     // names, so a stale timer left armed here would fire into a healthy successor connection.
-    GUI.timeout_remove("connecting");
-    GUI.timeout_remove("connectAttempt");
+    removeTimeout("connecting");
+    removeTimeout("connectAttempt");
 
     // Before the UI teardown, so a late removedDevice cannot re-enter connectDisconnect()
     // against a still-"connected" state.
@@ -697,6 +732,7 @@ function dropStalledRebootConnection() {
 }
 
 function setConnectionTimeout() {
+    const connectionStore = useConnectionStore();
     // A reboot-driven reconnect stalls fast and retries: the loop is alive, so a link
     // that opened but never answers MSP belongs to a still-booting FC. The normal 10s
     // wait would eat the remaining reboot window (the loop skips ticks while a
@@ -704,10 +740,10 @@ function setConnectionTimeout() {
     const duringRebootLoop = rebootReconnectTimerId !== false;
 
     // disconnect after the timeout with error if we don't get IDENT data
-    GUI.timeout_add(
+    addTimeout(
         "connecting",
         function () {
-            if (CONFIGURATOR.connectionValid) {
+            if (connectionStore.connectionValid) {
                 return;
             }
 
@@ -741,6 +777,7 @@ function setConnectionTimeout() {
 }
 
 function resetConnection() {
+    const connectionStore = useConnectionStore();
     clearLiveDataRefreshTimer();
 
     // Safety net: any normal teardown clears a lingering FLASHING state, so the
@@ -764,17 +801,17 @@ function resetConnection() {
     hide("#tabs ul.mode-connected-cli");
     show("#tabs ul.mode-disconnected");
 
-    CONFIGURATOR.connectionValid = false;
-    CONFIGURATOR.cliValid = false;
-    CONFIGURATOR.cliActive = false;
+    connectionStore.connectionValid = false;
+    connectionStore.cliValid = false;
+    connectionStore.cliActive = false;
 
     // unlock port select & baud
     DeviceHandler.devicePickerDisabled = false;
 }
 
 function abortConnection(messageKey?: string) {
-    GUI.timeout_remove("connecting"); // kill post-open connecting timer
-    GUI.timeout_remove("connectAttempt"); // kill pre-open watchdog
+    removeTimeout("connecting"); // kill post-open connecting timer
+    removeTimeout("connectAttempt"); // kill pre-open watchdog
 
     // Read before setPhase(FAILED) below, which ends the attempt it describes.
     const reportFailure = getConnectionState().failureIsUserFacing;
@@ -783,10 +820,12 @@ function abortConnection(messageKey?: string) {
     // the handshake (e.g. invalid API version) did not "fail to open". A manual/TCP/WebSocket
     // target (e.g. an ELRS Wi-Fi bridge) never opens a "serial port" either, so report a
     // network-appropriate failure rather than the misleading serial one.
-    const connectingTo = GUI.connecting_to || "";
+    const connectionStore = useConnectionStore();
+    const connectingTo = connectionStore.connectingTo || "";
     const isManualTarget =
         DeviceHandler.devicePicker.selectedDevice === "manual" || /^(tcp|ws|wss):\/\//i.test(connectingTo);
-    const effectiveKey = messageKey ?? (GUI.connected_to || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
+    const effectiveKey =
+        messageKey ?? (connectionStore.connectedTo || isManualTarget ? "connectionFailed" : "serialPortOpenFail");
     const message = i18n.getMessage(effectiveKey);
 
     // A failed handshake (invalid/garbage API version) is a HANDSHAKING ->
@@ -794,8 +833,8 @@ function abortConnection(messageKey?: string) {
     // settles to IDLE.
     getConnectionState().setPhase(ConnPhase.FAILED);
 
-    GUI.connected_to = false;
-    GUI.connecting_to = false;
+    connectionStore.connectedTo = false;
+    connectionStore.connectingTo = false;
 
     // FAILED is not a reconnecting phase, so selectActivePort() resumes its normal
     // fallback rather than staying aimed at a dead target.
@@ -854,16 +893,15 @@ function read_serial_adapter(event: Event) {
 }
 
 function onOpen(openInfo: unknown) {
+    const connectionStore = useConnectionStore();
+    const fcStore = useFlightControllerStore();
     if (openInfo) {
-        CONFIGURATOR.virtualMode = false;
+        connectionStore.virtualMode = false;
 
-        GUI.timeout_remove("connectAttempt"); // port opened — pre-open watchdog no longer needed
+        removeTimeout("connectAttempt"); // port opened — pre-open watchdog no longer needed
 
-        // update connected_to
-        GUI.connected_to = GUI.connecting_to;
-
-        // reset connecting_to
-        GUI.connecting_to = false;
+        connectionStore.connectedTo = connectionStore.connectingTo;
+        connectionStore.connectingTo = false;
 
         // The link is open; the MSP handshake begins now. CONNECTING ->
         // HANDSHAKING. Readiness (finishOpen/connectCli) advances to CONNECTED/CLI;
@@ -882,7 +920,7 @@ function onOpen(openInfo: unknown) {
         // Fresh handshake, fresh progress signal for the stall watchdog.
         rebootHandshakeSawTraffic = false;
         setConnectionTimeout();
-        FC.resetState();
+        fcStore.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
         MSP.onTimeout = handleConnectionTimeout;
@@ -890,38 +928,36 @@ function onOpen(openInfo: unknown) {
         console.log(`${logHead} Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
-            gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
+            gui_log(i18n.getMessage("apiVersionReceived", fcStore.config.apiVersion));
 
             // "0.0.0" is the uninitialised default (no valid version received), and any
             // unparseable string (e.g. "null.null.0" from a corrupt/truncated payload)
             // would make the semver.gte() below throw. Reject both robustly instead of
             // matching a specific garbage substring.
-            if (FC.CONFIG.apiVersion === "0.0.0" || !semver.valid(FC.CONFIG.apiVersion)) {
+            if (fcStore.config.apiVersion === "0.0.0" || !semver.valid(fcStore.config.apiVersion)) {
                 abortConnection();
                 return;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_ACCEPTED)) {
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
-                    if (FC.CONFIG.flightControllerIdentifier === "BTFL") {
+                    if (fcStore.config.flightControllerIdentifier === "BTFL") {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
                             gui_log(
                                 i18n.getMessage("fcInfoReceived", [
-                                    FC.CONFIG.flightControllerIdentifier,
-                                    FC.CONFIG.flightControllerVersion,
+                                    fcStore.config.flightControllerIdentifier,
+                                    fcStore.config.flightControllerVersion,
                                 ]),
                             );
 
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
-                                gui_log(i18n.getMessage("buildInfoReceived", [FC.CONFIG.buildInfo]));
+                                gui_log(i18n.getMessage("buildInfoReceived", [fcStore.config.buildInfo]));
 
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
                         });
                     } else {
-                        showVersionMismatchAndCli(
-                            i18n.getMessage("firmwareTypeNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
-                        );
+                        showVersionMismatchAndCli(i18n.getMessage("firmwareTypeNotSupported", [API_VERSION_ACCEPTED]));
                     }
                 });
             } else {
@@ -934,16 +970,18 @@ function onOpen(openInfo: unknown) {
 }
 
 function onOpenVirtual() {
-    GUI.timeout_remove("connectAttempt"); // virtual link is up — pre-open watchdog no longer needed
-    GUI.connected_to = GUI.connecting_to;
-    GUI.connecting_to = false;
+    const fcStore = useFlightControllerStore();
+    removeTimeout("connectAttempt"); // virtual link is up — pre-open watchdog no longer needed
+    const connectionStore = useConnectionStore();
+    connectionStore.connectedTo = connectionStore.connectingTo;
+    connectionStore.connectingTo = false;
 
     // Readiness edge #3: virtual is ready immediately (no MSP chain) -> CONNECTED.
     getConnectionState().setPhase(ConnPhase.CONNECTED);
 
-    CONFIGURATOR.connectionValid = true;
-    CONFIGURATOR.virtualMode = true;
-    CONFIGURATOR.virtualApiVersion = DeviceHandler.devicePicker.virtualMspVersion;
+    connectionStore.connectionValid = true;
+    connectionStore.virtualMode = true;
+    connectionStore.virtualApiVersion = DeviceHandler.devicePicker.virtualMspVersion;
 
     getConnectionState().setLinkOpen(true);
 
@@ -961,14 +999,15 @@ function onOpenVirtual() {
 
     processBoardInfo();
 
-    updateTabList(FC.FEATURE_CONFIG.features);
+    updateTabList(fcStore.features.features);
 }
 
 function processCustomDefaults() {
+    const fcStore = useFlightControllerStore();
     if (
-        bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) &&
-        bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) &&
-        FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE
+        bit_check(fcStore.config.targetCapabilities, fcStore.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) &&
+        bit_check(fcStore.config.targetCapabilities, fcStore.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) &&
+        fcStore.config.configurationState === fcStore.CONFIGURATION_STATES.DEFAULTS_BARE
     ) {
         const dialogStore = useDialogStore();
         dialogStore.open(
@@ -987,7 +1026,7 @@ function processCustomDefaults() {
                     buffer.push(mspHelper!.RESET_TYPES.CUSTOM_DEFAULTS);
                     MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
 
-                    GUI.timeout_add(
+                    addTimeout(
                         "disconnect",
                         function () {
                             connectDisconnect(); // disconnect
@@ -999,32 +1038,34 @@ function processCustomDefaults() {
                     dialogStore.close();
 
                     setConnectionTimeout();
-                    checkReportProblems();
+                    void checkReportProblems();
                 },
             },
         );
 
-        GUI.timeout_remove("connecting"); // kill connecting timer
+        removeTimeout("connecting"); // kill connecting timer
     } else {
-        checkReportProblems();
+        void checkReportProblems();
     }
 }
 
 function processBoardInfo() {
-    gui_log(i18n.getMessage("boardInfoReceived", [FC.CONFIG.hardwareName, FC.CONFIG.boardVersion]));
+    const fcStore = useFlightControllerStore();
+    gui_log(i18n.getMessage("boardInfoReceived", [fcStore.config.hardwareName, fcStore.config.boardVersion]));
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-        checkReportProblems();
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+        void checkReportProblems();
     } else {
         processCustomDefaults();
     }
 }
 
 function checkReportProblem(
-    problemName: keyof typeof FC.CONFIGURATION_PROBLEM_FLAGS,
+    problemName: keyof typeof CONFIGURATION_PROBLEM_FLAGS,
     problems: ReportedProblem[],
 ): boolean {
-    if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
+    const fcStore = useFlightControllerStore();
+    if (bit_check(fcStore.config.configurationProblems, fcStore.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
         problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
         return true;
     }
@@ -1032,6 +1073,7 @@ function checkReportProblem(
 }
 
 async function checkReportProblems() {
+    const fcStore = useFlightControllerStore();
     try {
         await MSP.promise(MSPCodes.MSP_STATUS);
     } catch (error) {
@@ -1045,7 +1087,7 @@ async function checkReportProblems() {
     needsProblemReportingDialog =
         checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
 
-    if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
+    if (have_sensor(fcStore.config.activeSensors, "acc")) {
         needsProblemReportingDialog =
             checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
     }
@@ -1055,11 +1097,12 @@ async function checkReportProblems() {
         dialogStore.open("ReportProblemsDialog", { problems }, { close: () => dialogStore.close() });
     }
 
-    processUid();
+    void processUid();
 }
 
 async function processBuildConfiguration() {
-    const buildOptionsSupported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+    const fcStore = useFlightControllerStore();
+    const buildOptionsSupported = semver.gte(fcStore.config.apiVersion, API_VERSION_1_45);
 
     if (buildOptionsSupported) {
         // get build key from firmware
@@ -1068,16 +1111,20 @@ async function processBuildConfiguration() {
         } catch (error) {
             console.error("Failed to request build key:", error);
         }
-        gui_log(i18n.getMessage("buildKey", FC.CONFIG.buildKey));
+        gui_log(i18n.getMessage("buildKey", fcStore.config.buildKey));
 
         // firmware 1_45 or higher is required to support cloud build options
         // firmware 1_46 or higher retrieves build options from the flight controller
-        if (FC.CONFIG.buildKey.length === 32 && ispConnected() && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (
+            fcStore.config.buildKey.length === 32 &&
+            ispConnected() &&
+            semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)
+        ) {
             const buildApi = new BuildApi();
             try {
-                const options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
+                const options = await buildApi.requestBuildOptions(fcStore.config.buildKey);
                 if (options) {
-                    FC.CONFIG.buildOptions = options?.request?.options ?? [];
+                    fcStore.config.buildOptions = options?.request?.options ?? [];
                 }
             } catch (error) {
                 console.error("Failed to request build options: ", error);
@@ -1089,6 +1136,7 @@ async function processBuildConfiguration() {
 }
 
 async function processUid() {
+    const fcStore = useFlightControllerStore();
     try {
         await MSP.promise(MSPCodes.MSP_UID);
     } catch (error) {
@@ -1106,15 +1154,16 @@ async function processUid() {
         }
     }, 100);
 
-    gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
+    gui_log(i18n.getMessage("uniqueDeviceIdReceived", fcStore.config.deviceIdentifier));
 
     await processBuildConfiguration();
-    await sendConfigTracking();
+    sendConfigTracking();
 }
 
 async function processCraftName() {
+    const fcStore = useFlightControllerStore();
     try {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
                 mspHelper!.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.CRAFT_NAME),
@@ -1129,11 +1178,13 @@ async function processCraftName() {
     gui_log(
         i18n.getMessage(
             "craftNameReceived",
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? [FC.CONFIG.craftName] : [FC.CONFIG.name],
+            semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)
+                ? [fcStore.config.craftName]
+                : [fcStore.config.name],
         ),
     );
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         try {
             await MSP.promise(
                 MSPCodes.MSP2_GET_TEXT,
@@ -1144,7 +1195,7 @@ async function processCraftName() {
         }
     }
 
-    FC.CONFIG.armingDisabled = false;
+    fcStore.config.armingDisabled = false;
     mspHelper!.disableArming(setRtc);
 }
 
@@ -1153,28 +1204,32 @@ function setRtc() {
 }
 
 function finishOpen() {
-    CONFIGURATOR.connectionValid = true;
+    const connectionStore = useConnectionStore();
+    const fcStore = useFlightControllerStore();
+    connectionStore.connectionValid = true;
 
     if (isCliOnlyMode()) {
         connectCli();
         return;
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
-        GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && fcStore.config.buildOptions.length) {
+        const allowedTabs = [...DEFAULT_ALLOWED_TABS];
 
-        for (const tab of GUI.defaultCloudBuildTabOptions) {
-            if (FC.CONFIG.buildOptions.some((opt) => opt.toLowerCase().includes(tab))) {
-                GUI.allowedTabs.push(tab);
+        for (const tab of DEFAULT_CLOUD_BUILD_TAB_OPTIONS) {
+            if (fcStore.config.buildOptions.some((opt) => opt.toLowerCase().includes(tab))) {
+                allowedTabs.push(tab);
             }
         }
 
         // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
-        if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
-            GUI.allowedTabs.push("servos");
+        if (fcStore.config.buildOptions.some((opt) => opt.includes("USE_WING")) && !allowedTabs.includes("servos")) {
+            allowedTabs.push("servos");
         }
+
+        useNavigationStore().allowedTabs = allowedTabs;
     } else {
-        GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
+        useNavigationStore().allowedTabs = [...DEFAULT_ALLOWED_FC_TABS_WHEN_CONNECTED];
     }
 
     onConnect();
@@ -1182,12 +1237,13 @@ function finishOpen() {
     // Readiness edge #1: full MSP chain complete -> CONNECTED (FULLY_READY).
     getConnectionState().setPhase(ConnPhase.CONNECTED);
 
-    GUI.selectDefaultTabWhenConnected();
+    selectDefaultTabWhenConnected();
 }
 
 function connectCli() {
-    CONFIGURATOR.connectionValid = true; // making it possible to open the CLI tab
-    GUI.allowedTabs = ["cli"];
+    const connectionStore = useConnectionStore();
+    connectionStore.connectionValid = true; // making it possible to open the CLI tab
+    useNavigationStore().allowedTabs = ["cli"];
 
     MSP.clearListeners();
     MSP.disconnect_cleanup();
@@ -1201,7 +1257,7 @@ function connectCli() {
 }
 
 function onConnect() {
-    GUI.timeout_remove("connecting"); // kill connecting timer
+    removeTimeout("connecting"); // kill connecting timer
 
     // A connection is now established: any pending save/reboot reconnect has completed.
     // Reaching a ready state (CONNECTED/CLI, dispatched right after this in
@@ -1216,14 +1272,15 @@ function onConnect() {
     initFeaturesOnConnect();
 }
 
-// Update which tabs are visible based on `GUI.allowedTabs` and board type
+// Update which tabs are visible based on the navigation store's allowedTabs and board type
 function updateTabVisibility() {
+    const fcStore = useFlightControllerStore();
     const connectedItems = document.querySelectorAll<HTMLElement>("#tabs ul.mode-connected li");
     for (const li of connectedItems) {
         const classes = new Set(li.className.split(/\s+/));
         let found = false;
 
-        for (const value of GUI.allowedTabs) {
+        for (const value of useNavigationStore().allowedTabs) {
             const tabName = `tab_${value}`;
             if (classes.has(tabName)) {
                 found = true;
@@ -1231,7 +1288,7 @@ function updateTabVisibility() {
             }
         }
 
-        if (FC.CONFIG.boardType == 0 && classes.has("osd-required")) {
+        if (fcStore.config.boardType == 0 && classes.has("osd-required")) {
             found = false;
         }
 
@@ -1241,11 +1298,13 @@ function updateTabVisibility() {
 
 // Initialize feature-related UI and fetch configs from the flight controller
 function initFeaturesOnConnect() {
-    if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        if (!CONFIGURATOR.virtualMode && DeviceHandler.devicePicker.selectedDevice !== "virtual") {
-            FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
-            FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
-            FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+    const connectionStore = useConnectionStore();
+    const fcStore = useFlightControllerStore();
+    if (fcStore.config.flightControllerVersion !== "" && !isCliOnlyMode()) {
+        if (!connectionStore.virtualMode && DeviceHandler.devicePicker.selectedDevice !== "virtual") {
+            fcStore.features.features = new Features(fcStore.config);
+            fcStore.beepers.beepers = new Beepers(fcStore.config);
+            fcStore.beepers.dshotBeaconConditions = new Beepers(fcStore.config, ["RX_LOST", "RX_SET"]);
         }
 
         show("#tabs ul.mode-connected");
@@ -1256,19 +1315,24 @@ function initFeaturesOnConnect() {
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
         MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false);
 
-        if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
+        if (fcStore.config.boardType === 0 || fcStore.config.boardType === 2) {
             startLiveDataRefreshTimer();
         }
     }
 }
 
 function onClosed(result: unknown) {
+    const connectionStore = useConnectionStore();
     // A "disconnect" that arrives while we are still in the connect phase (onOpen never ran, so
     // the link never became valid) is a *failed connection attempt*, not the loss of an
     // established link — e.g. a ws:// endpoint refused before onopen, which dispatches only
     // "disconnect" and never "connect". Recover the Connect button and tell the user instead of
     // running the established-connection teardown.
-    if (GUI.connecting_to && !CONFIGURATOR.connectionValid && !getConnectionState().intentionalDisconnect) {
+    if (
+        connectionStore.connectingTo &&
+        !connectionStore.connectionValid &&
+        !getConnectionState().intentionalDisconnect
+    ) {
         abortConnection("connectionFailed");
         return;
     }
@@ -1328,7 +1392,8 @@ function onClosed(result: unknown) {
 }
 
 export function read_serial(info: ReadInfo) {
-    if (CONFIGURATOR.cliActive) {
+    const connectionStore = useConnectionStore();
+    if (connectionStore.cliActive) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
         // CliTab.vue registers useCli's read here while the CLI tab is mounted.
@@ -1405,6 +1470,7 @@ function handleConnectionTimeout() {
 }
 
 export async function update_sensor_status() {
+    const fcStore = useFlightControllerStore();
     if (!(await requestLiveData(MSPCodes.MSP_ANALOG, "MSP_ANALOG"))) {
         return;
     }
@@ -1418,7 +1484,7 @@ export async function update_sensor_status() {
         return;
     }
 
-    if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
+    if (have_sensor(fcStore.config.activeSensors, "gps")) {
         await requestLiveData(MSPCodes.MSP_RAW_GPS, "MSP_RAW_GPS");
     }
 }
@@ -1428,7 +1494,7 @@ async function update_live_status() {
     // tab_switch_cleanup() clears the MSP queue, so a poll issued now would just be cancelled.
     // Skipping keeps the background poller from firing requests straight into that cleanup;
     // the interval resumes normally on the next tick once the switch has settled.
-    if (GUI.tab_switch_in_progress) {
+    if (useNavigationStore().tabSwitchInProgress) {
         return;
     }
 
@@ -1439,7 +1505,8 @@ async function update_live_status() {
     }
 
     // cli or presets tab do not use MSP connection
-    if (GUI.active_tab !== "cli" && GUI.active_tab !== "presets") {
+    const activeTab = useNavigationStore().activeTab;
+    if (activeTab !== "cli" && activeTab !== "presets") {
         await update_sensor_status();
     }
 }
@@ -1458,10 +1525,11 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection() {
+    const connectionStore = useConnectionStore();
     // Virtual has no FC to reboot: toggle the fake link, and toggle it back with Auto-Connect
     // on. No reboot window — nothing is going away that we have to wait for, and the phase
     // follows the toggle instead of being declared CONNECTED before the reconnect runs.
-    if (CONFIGURATOR.virtualMode) {
+    if (connectionStore.virtualMode) {
         connectDisconnect();
         if (DeviceHandler.devicePicker.autoConnect) {
             setTimeout(() => connectDisconnect({ automatic: true }), 500);
@@ -1483,19 +1551,20 @@ export function reinitializeConnection() {
     // re-points the selection when the device returns under a new id.
 
     // Send reboot command to the flight controller
-    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+    MSP.send_message(MSPCodes.MSP_REBOOT, false, false);
 
     // A BLE/manual link survives the reboot command (only the MCU restarts), so
     // connectionValid stays stale-true until the flush drops it ~1.5s later. Force it
     // false now so the reboot dialog and retry loop wait for a real reconnect.
-    CONFIGURATOR.connectionValid = false;
+    connectionStore.connectionValid = false;
 
     // One reconnect cycle for every hardware target. It owns the window: it waits for the FC
     // to answer, retries while Auto-Connect is on, and concludes on success or timeout —
     // including for serial, which previously had no owner at all and relied on a device event
     // reaching the auto-select listener.
-    if (["cli", "presets"].includes(GUI.active_tab)) {
-        console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
+    const activeTab = useNavigationStore().activeTab;
+    if (activeTab === "cli" || activeTab === "presets") {
+        console.log(`${logHead} Rebooting in ${activeTab} tab, skipping reboot dialog`);
         gui_log(i18n.getMessage("deviceRebooting"));
     } else {
         showRebootDialog();
@@ -1506,7 +1575,7 @@ export function reinitializeConnection() {
 
 /**
  * Drive a reconnect for a reboot initiated OUTSIDE this module (CLI `save`/`exit` via
- * useMspCliSession, which already rebooted the FC — so no MSP_SET_REBOOT is sent). Needed
+ * useMspCliSession, which already rebooted the FC — so no MSP_REBOOT is sent). Needed
  * for transports that never re-enumerate (BLE, manual/TCP): they emit no addedDevice for a
  * reboot, so nothing else would trigger the reconnect. Runs the same flush -> drop-stale-link
  * -> retry cycle as a BLE/manual Save & Reboot; Auto-Connect is honored inside rebootReconnect().
@@ -1524,9 +1593,10 @@ export function scheduleRebootReconnect() {
  * Stops the timers and settles the window; harmless when no reboot is running.
  */
 export function cancelRebootReconnect() {
+    const connectionStore = useConnectionStore();
     stopRebootReconnect();
     if (getConnectionState().isRebootWindowOpen) {
-        getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
+        getConnectionState().concludeReboot(connectionStore.connectionValid);
     }
 }
 
@@ -1534,6 +1604,7 @@ export function cancelRebootReconnect() {
 // as the FC restarts, and no single disconnect event marks "FC ready". Runs whether or not the
 // reboot dialog is shown.
 function rebootReconnect() {
+    const connectionStore = useConnectionStore();
     // Cancel any prior reboot cycle (e.g. a second Save-and-Reboot within the window) so we
     // never run two overlapping retry loops.
     stopRebootReconnect();
@@ -1548,9 +1619,10 @@ function rebootReconnect() {
         // user off the tab they just opened, which is what leaving the CLI tab does. Leave it
         // to the transport. The exception is a BLE target about to auto-reconnect: keep its
         // GATT session (softResetForReboot), because re-establishing it produces deaf sessions
-        // on Linux/BlueZ.
-        if (driven && isConnected()) {
-            const target = DeviceHandler.devicePicker.selectedDevice;
+        // on Linux/BlueZ. A serial port behind a USB-UART bridge also survives the reboot (the
+        // bridge does not re-enumerate), so it is closed and reopened like a manual link.
+        const target = DeviceHandler.devicePicker.selectedDevice;
+        if ((driven || linkSurvivesReboot(target)) && isConnected()) {
             const keepBleLink =
                 typeof target === "string" && target.startsWith("bluetooth") && DeviceHandler.devicePicker.autoConnect;
             if (keepBleLink) {
@@ -1605,16 +1677,16 @@ function rebootReconnect() {
             // which is exactly what stops the flasher from picking up the board.
             const waitedOut = !mayConnect && (driven || flasherOwnsPort() || ourDeviceBack);
 
-            if (CONFIGURATOR.connectionValid || timedOut || waitedOut) {
+            if (connectionStore.connectionValid || timedOut || waitedOut) {
                 stopRebootReconnect();
                 // The reboot window has closed (reconnected, timed out, or nothing left to wait
                 // for): concludeReboot settles to IDLE so normal selection resumes. A kept BLE
                 // link that never made it back to connected is dropped for real here.
-                getConnectionState().concludeReboot(CONFIGURATOR.connectionValid);
+                getConnectionState().concludeReboot(connectionStore.connectionValid);
                 releaseKeptRebootLink();
                 return;
             }
-            if (mayConnect && !isConnected() && !GUI.connecting_to) {
+            if (mayConnect && !isConnected() && !connectionStore.connectingTo) {
                 // Re-derive the kept-link flag from protocol truth before reconnecting.
                 // A real transport close normally clears it via onClosed, but between
                 // attempts serial_backend's disconnect listener is detached

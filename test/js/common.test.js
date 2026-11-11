@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getMixerImageSrc } from "../../src/js/utils/common";
 import { mixerList } from "../../src/js/model.js";
 
-// FC.MIXER_CONFIG.mixer is 0 until MSP_MIXER_CONFIG arrives, and a tab can render before that
+// fcStore.mixerConfig.mixer is 0 until MSP_MIXER_CONFIG arrives, and a tab can render before that
 // — "Reopen last tab on connect" mounts the Motors tab straight after the handshake. The
 // lookup is 1-based into a 0-based list, so an unset id reaches mixerList[-1].
 describe("getMixerImageSrc", () => {

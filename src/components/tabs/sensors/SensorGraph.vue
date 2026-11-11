@@ -6,7 +6,7 @@
                 <!-- The `x` groups are positioned on the plot baseline by
                      useSensorGraph's applyGraphTransforms — their offset depends on the
                      measured height, so it must not be hardcoded here. -->
-                <svg :id="svgId" ref="svgElement" class="w-full h-full">
+                <svg :id="svgId" ref="svgElement" class="sensor-graph w-full h-full">
                     <g class="grid x"></g>
                     <g class="grid y" transform="translate(40, 10)"></g>
                     <g class="data" transform="translate(40, 10)"></g>
@@ -44,9 +44,9 @@
                             <span
                                 class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px]"
                                 :class="{
-                                    'bg-[#e24761]': axis === 'x',
-                                    'bg-[#49c747]': axis === 'y',
-                                    'bg-[#477ac7]': axis === 'z',
+                                    'bg-axis-roll': axis === 'x',
+                                    'bg-axis-pitch': axis === 'y',
+                                    'bg-axis-yaw': axis === 'z',
                                 }"
                                 >{{ displayValues[i] }}</span
                             >
@@ -55,7 +55,7 @@
                     <template v-else>
                         <div class="flex justify-between py-0.5">
                             <span>X:</span>
-                            <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#e24761]">{{
+                            <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-axis-roll">{{
                                 displayValues[0]
                             }}</span>
                         </div>
@@ -66,7 +66,7 @@
         <!-- Debug layout (own UiBox, same graph-grid as normal sensors) -->
         <UiBox v-else>
             <div class="grid grid-cols-[1fr_10rem] gap-4 w-full">
-                <svg :id="svgId" ref="svgElement" class="w-full h-[140px]">
+                <svg :id="svgId" ref="svgElement" class="sensor-graph w-full h-[140px]">
                     <g class="grid x"></g>
                     <g class="grid y" transform="translate(40, 10)"></g>
                     <g class="data" transform="translate(40, 10)"></g>
@@ -97,7 +97,7 @@
                     </div>
                     <div class="flex justify-between py-0.5">
                         <span>Value:</span>
-                        <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-[#e24761]">{{
+                        <span class="w-24 text-right px-[3px] py-[2px] text-black rounded-[3px] bg-axis-roll">{{
                             displayValues[0]
                         }}</span>
                     </div>
@@ -147,6 +147,12 @@ defineExpose({ svgElement });
 
 <style>
 /* D3 runtime-generated elements — cannot use Tailwind. */
+/* D3 positions every tick label in absolute coordinates and anchors the y labels with
+   text-anchor: end. Under an RTL locale the inherited direction flips that anchor, so the
+   labels spill into the plot area. The graph is numeric, so keep it LTR in every locale. */
+.tab-sensors svg.sensor-graph {
+    direction: ltr;
+}
 .tab-sensors svg g.grid .tick {
     stroke: silver;
     stroke-width: 1px;

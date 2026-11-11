@@ -1,13 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("../../src/js/gui", () => {
-    const flasher = {
-        FLASH_MESSAGE_TYPES: { NEUTRAL: 0, VALID: 1, INVALID: 2, ACTION: 3, FLASHING: 4, VERIFYING: 5 },
-        flashingMessage: () => flasher,
-        flashProgress: () => flasher,
-    };
-    return { default: { connect_lock: false }, TABS: { firmware_flasher: flasher } };
-});
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (k: string) => k } }));
 
 import STM32 from "../../src/js/protocols/webstm32";

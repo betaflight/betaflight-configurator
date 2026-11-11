@@ -1161,13 +1161,13 @@ each(range(12), {
 }
 .plot_control {
     .x {
-        background-color: #e24761;
+        background-color: var(--color-axis-roll);
     }
     .y {
-        background-color: #49c747;
+        background-color: var(--color-axis-pitch);
     }
     .z {
-        background-color: #477ac7;
+        background-color: var(--color-axis-yaw);
     }
     .x,
     .y,
@@ -1177,25 +1177,25 @@ each(range(12), {
 }
 .line {
     &:nth-child(1) {
-        stroke: #e24761;
+        stroke: var(--color-axis-roll);
     }
     &:nth-child(2) {
-        stroke: #49c747;
+        stroke: var(--color-axis-pitch);
     }
     &:nth-child(3) {
-        stroke: #477ac7;
+        stroke: var(--color-axis-yaw);
     }
 }
 .legend {
     .item {
         &:nth-child(1) {
-            fill: #e24761;
+            fill: var(--color-axis-roll);
         }
         &:nth-child(2) {
-            fill: #49c747;
+            fill: var(--color-axis-pitch);
         }
         &:nth-child(3) {
-            fill: #477ac7;
+            fill: var(--color-axis-yaw);
         }
     }
 }
