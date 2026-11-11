@@ -136,6 +136,9 @@ const INITIAL_CONFIG: FcState["config"] = {
     batteryProfile: 0,
     numberOfBatteryProfiles: 0,
     batteryProfileNames: new Array<string>(MAX_BATTERY_PROFILES).fill(""),
+    psasProfileNames: ["", "", "", ""],
+    numberOfPsasProfiles: 0,
+    psasProfile: 0,
 };
 
 const INITIAL_ANALOG: FcState["analogData"] = {

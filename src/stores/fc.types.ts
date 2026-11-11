@@ -217,6 +217,9 @@ export interface FcConfig {
     batteryProfile: number;
     numberOfBatteryProfiles: number;
     batteryProfileNames: string[];
+    psasProfile: number;
+    numberOfPsasProfiles: number;
+    psasProfileNames: string[];
 }
 
 export interface CopyProfile {

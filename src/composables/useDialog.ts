@@ -56,6 +56,7 @@ export interface CopyProfileOption {
 export interface CopyProfileSelection {
     profile: number | null;
     rateProfile: number | null;
+    psasProfile: number | null;
 }
 
 export interface WaitHandle {
