@@ -2250,6 +2250,9 @@
     "pidTuningRateProfileOption": {
         "message": "Rateprofile $1"
     },
+    "pidTuningPsasProfileOption": {
+        "message": "PSASprofile $1"
+    },
     "portsFunction_LIDAR_TF": {
         "message": "Benewake LIDAR"
     },
@@ -2273,6 +2276,18 @@
     },
     "rateProfileNameHelp": {
         "message": "Rate profile name which can describe what type of flying this profile is for: cine, race, freestyle, etc."
+    },
+    "psasProfileName": {
+        "message": "PSAS profile name"
+    },
+    "psasProfileNameHelp": {
+        "message": "PSAS profile name which can describe what type of flying this profile is for"
+    },
+    "pidTuningPsasProfile": {
+        "message": "PSASprofile"
+    },
+    "pidTuningPsasProfileHelp": {
+        "message": "Up to 4 different psasprofiles can be stored on the flight controller"
     },
     "pidTuningShowAllPids": {
         "message": "Show all PIDs"
@@ -2835,6 +2850,9 @@
     "pidTuningCopyRateProfile": {
         "message": "Copy rateprofile"
     },
+    "pidTuningCopyPsasProfile": {
+        "message": "Copy PSAS profile"
+    },
     "dialogCopyProfileText": {
         "message": "Copy values from current profile to"
     },
@@ -2856,14 +2874,23 @@
     "pidTuningResetPidProfile": {
         "message": "Reset this Profile"
     },
+    "pidTuningResetPsasProfile": {
+        "message": "Reset PSAS Profile"
+    },
     "pidTuningPidProfileReset": {
         "message": "Loaded default values for the current PID profile."
+    },
+    "pidTuningPsasProfileReset": {
+        "message": "Loaded default values for the current PSAS profile."
     },
     "pidTuningReceivedProfile": {
         "message": "Flight controller set Profile: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
         "message": "Flight controller set Rateprofile: <strong class=\"message-positive\">$1</strong>"
+    },
+    "pidTuningReceivedPsasProfile": {
+        "message": "Flight controller set PSASprofile: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
         "message": "PID data <strong>refreshed</strong>"

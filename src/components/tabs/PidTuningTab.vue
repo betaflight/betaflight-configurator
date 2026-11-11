@@ -6,7 +6,7 @@
 
             <div class="flex items-start gap-3 flex-wrap mb-2">
                 <!-- Profile Selector -->
-                <div v-if="['pid', 'filter', 'psas'].includes(activeSubtab)" class="flex flex-col gap-1 min-w-[130px]">
+                <div v-if="['pid', 'filter'].includes(activeSubtab)" class="flex flex-col gap-1 min-w-[130px]">
                     <SettingRow :label="$t('pidTuningProfile')" :help="$t('pidTuningProfileTip')">
                         <USelect
                             v-model="currentProfile"
@@ -30,6 +30,20 @@
                         />
                     </SettingRow>
                 </div>
+
+                <!-- PSAS Profile Selector -->
+                <div v-if="activeSubtab === 'psas'" class="flex flex-col gap-1 min-w-[130px]">
+                    <SettingRow :label="$t('pidTuningPsasProfile')" :help="$t('pidTuningPsasProfileHelp')">
+                        <USelect
+                            v-model="currentPsasProfile"
+                            :items="psasProfileItems"
+                            class="min-w-20"
+                            :disabled="hasEdits"
+                            @update:model-value="onPsasProfileChange"
+                        />
+                    </SettingRow>
+                </div>
+
                 <div>
                     <!-- Profile Name (API 1.45+) -->
                     <SettingRow v-if="showProfileName" :label="$t('pidProfileName')" :help="$t('pidProfileNameHelp')">
@@ -42,6 +56,13 @@
                         :help="$t('rateProfileNameHelp')"
                     >
                         <UInput v-model="localRateProfileName" maxlength="8" class="w-28" />
+                    </SettingRow>
+                    <SettingRow
+                        v-if="showPsasProfileName"
+                        :label="$t('psasProfileName')"
+                        :help="$t('psasProfileNameHelp')"
+                    >
+                        <UInput v-model="localPsasProfileName" maxlength="8" class="w-28" />
                     </SettingRow>
                 </div>
 
@@ -74,6 +95,20 @@
                         color="neutral"
                         variant="outline"
                         @click="toggleShowAllPids"
+                    />
+                    <UButton
+                        v-if="activeSubtab === 'psas'"
+                        :label="$t('pidTuningCopyPsasProfile')"
+                        color="neutral"
+                        variant="outline"
+                        @click="copyPsasProfile"
+                    />
+                    <UButton
+                        v-if="activeSubtab === 'psas'"
+                        :label="$t('pidTuningResetPsasProfile')"
+                        color="neutral"
+                        variant="outline"
+                        @click="resetPsasProfile"
                     />
                 </div>
             </div>
@@ -125,7 +160,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_50 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
@@ -136,10 +171,11 @@ import { useReboot } from "@/composables/useReboot";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { CopyProfileType, usePidTuningMsp } from "@/composables/pidTuning/usePidTuningMsp";
 
-/** What CopyProfileDialog confirms with: the selected target profile and/or rate profile. */
+/** What CopyProfileDialog confirms with: the selected target profile and/or rate, psas profile. */
 interface CopyProfileSelection {
     profile: number | null;
     rateProfile: number | null;
+    psasProfile: number | null;
 }
 
 const { t } = useTranslation();
@@ -154,6 +190,8 @@ const {
     selectRateProfile,
     copyProfile: sendCopyProfile,
     resetPidProfile,
+    selectPsasProfile,
+    resetPsasProfile: sendResetPsasProfile,
 } = usePidTuningMsp();
 
 // State - use navigation store for expert mode
@@ -162,6 +200,7 @@ const activeSubtab = ref("pid");
 const showAllPids = ref(false);
 const currentProfile = ref(fcStore.config.profile);
 const currentRateProfile = ref(0);
+const currentPsasProfile = ref(0);
 const isMounted = useIsMounted();
 // Guards for the TX-driven profile sync (see watchers below).
 const isLoading = ref(false);
@@ -169,6 +208,11 @@ let syncingFromFc = false;
 const pidSubTab = ref<InstanceType<typeof PidSubTab> | null>(null);
 const filterSubTab = ref<InstanceType<typeof FilterSubTab> | null>(null);
 const ratesSubTab = ref(null);
+
+const hasPSAS = () => {
+    const fcStore = useFlightControllerStore();
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_50) && fcStore.config.buildOptions.includes("USE_PSAS");
+};
 
 // Profile count — matches original loadProfilesList() logic
 const numberOfProfiles = computed(() => fcStore.config.numProfiles ?? 3);
@@ -179,6 +223,14 @@ const numberOfRateProfiles = computed(() => {
         return fcStore.config.numberOfRateProfiles ?? 4;
     }
     return 4;
+});
+
+// PSAS profile count — matches original loadPsasProfilesList() logic
+const numberOfPsasProfiles = computed(() => {
+    if (hasPSAS()) {
+        return fcStore.config.numberOfPsasProfiles ?? 4;
+    }
+    return 0;
 });
 
 // Items arrays for USelect / UTabs
@@ -198,10 +250,13 @@ const rateProfileItems = computed(() => {
     return items;
 });
 
-const hasPSAS = () => {
-    const fcStore = useFlightControllerStore();
-    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
-};
+const psasProfileItems = computed(() => {
+    const items = [];
+    for (let i = 0; i < numberOfPsasProfiles.value; i++) {
+        items.push({ label: i18n.getMessage("pidTuningPsasProfileOption", [i + 1]), value: i });
+    }
+    return items;
+});
 
 const subtabItems = computed(() => {
     const items = [
@@ -220,16 +275,16 @@ const subtabItems = computed(() => {
 // Profile name state lifted from child components
 const pidProfileName = ref("");
 const rateProfileName = ref("");
+const psasProfileName = ref("");
 
 const showProfileName = computed(
-    () =>
-        semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) &&
-        ["pid", "filter", "psas"].includes(activeSubtab.value),
+    () => semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && ["pid", "filter"].includes(activeSubtab.value),
 );
 const showRateProfileName = computed(
     () => semver.gte(fcStore.config.apiVersion, API_VERSION_1_45) && activeSubtab.value === "rates",
 );
 
+const showPsasProfileName = computed(() => activeSubtab.value === "psas");
 const localProfileName = computed({
     get: () => pidProfileName.value,
     set: (val) => {
@@ -241,6 +296,13 @@ const localRateProfileName = computed({
     get: () => rateProfileName.value,
     set: (val) => {
         rateProfileName.value = val;
+    },
+});
+
+const localPsasProfileName = computed({
+    get: () => psasProfileName.value,
+    set: (val) => {
+        psasProfileName.value = val;
     },
 });
 
@@ -267,6 +329,10 @@ async function loadData() {
                 if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     pidProfileName.value = fcStore.config.pidProfileNames?.[fcStore.config.profile] || "";
                     rateProfileName.value = fcStore.config.rateProfileNames?.[fcStore.config.rateProfile] || "";
+                }
+
+                if (hasPSAS()) {
+                    psasProfileName.value = fcStore.config.psasProfileNames?.[fcStore.config.psasProfile] || "";
                 }
 
                 if (!isMounted.value) {
@@ -308,6 +374,7 @@ function initializeUI() {
     // Set current profiles
     currentProfile.value = fcStore.config.profile;
     currentRateProfile.value = fcStore.config.rateProfile;
+    currentPsasProfile.value = fcStore.config.psasProfile;
     // Get expert mode from global checkbox (in header) and sync to global state
     navigationStore.expertMode = isExpertModeEnabled();
 }
@@ -328,6 +395,16 @@ async function onRateProfileChange() {
 
     // Select rate profile via MSP
     await selectRateProfile(currentRateProfile.value);
+
+    // Reload data
+    await loadData();
+}
+
+async function onPsasProfileChange() {
+    fcStore.config.psasProfile = currentPsasProfile.value;
+
+    // Select rate profile via MSP
+    await selectPsasProfile(currentPsasProfile.value);
 
     // Reload data
     await loadData();
@@ -367,6 +444,49 @@ async function copyProfile() {
                     console.log(`[PidTuningTab] Copied profile ${currentProfile.value} to ${targetProfile}`);
                 } catch (error) {
                     console.error("[PidTuningTab] Failed to copy profile:", error);
+                }
+            }
+        },
+        () => {
+            // cancelled
+        },
+    );
+}
+
+async function copyPsasProfile() {
+    // Create options for profiles excluding current one
+    const options = [];
+    for (let i = 0; i < numberOfPsasProfiles.value; i++) {
+        if (i !== currentPsasProfile.value) {
+            const name = i18n.getMessage("pidTuningPsasProfileOption", [i + 1]);
+            options.push({ value: i, label: name });
+        }
+    }
+
+    if (options.length === 0) {
+        console.warn("[PsasTuningTab] No other profiles available to copy to");
+        return;
+    }
+
+    // Show copy profile dialog (Vue component with profile + rate selects)
+    dialog.openCopyProfile(
+        t("dialogCopyProfileTitle"),
+        t("dialogCopyProfileNote"),
+        options,
+        [],
+        async (selected: CopyProfileSelection | null) => {
+            // selected: { profile, psasProfile }
+            if (selected && typeof selected.profile === "number") {
+                const targetProfile = selected.profile;
+
+                try {
+                    await sendCopyProfile(CopyProfileType.PSAS, currentPsasProfile.value, targetProfile);
+                    // The copy landed in the destination profile in RAM only, and nothing on screen
+                    // reflects it — flag it so Save is the way out.
+                    pidTuningStore.markProfileUnsaved();
+                    console.log(`[PsasTuningTab] Copied profile ${currentPsasProfile.value} to ${targetProfile}`);
+                } catch (error) {
+                    console.error("[PsasTuningTab] Failed to copy profile:", error);
                 }
             }
         },
@@ -430,6 +550,20 @@ async function resetProfile() {
     }
 }
 
+async function resetPsasProfile() {
+    try {
+        await sendResetPsasProfile();
+        // The reset rewrote the profile in RAM only, and the reload below adopts those defaults as
+        // the clean value baseline — so flag the reset itself as work that still needs an EEPROM
+        // write, or it would read as saved the moment the reload lands.
+        pidTuningStore.markProfileUnsaved();
+        await loadData();
+        gui_log(t("pidTuningPsasProfileReset"));
+    } catch (error) {
+        console.error("[PsasTuningTab] Failed to reset profile:", error);
+    }
+}
+
 function toggleShowAllPids() {
     showAllPids.value = !showAllPids.value;
 }
@@ -454,6 +588,13 @@ function save() {
         }
         if (fcStore.config.rateProfileNames) {
             fcStore.config.rateProfileNames[fcStore.config.rateProfile] = rateProfileName.value;
+        }
+
+        if (hasPSAS()) {
+            psasProfileName.value = psasProfileName.value.trim();
+            if (fcStore.config.psasProfileNames) {
+                fcStore.config.psasProfileNames[fcStore.config.psasProfile] = psasProfileName.value;
+            }
         }
 
         // Pin what this save is about to write. The form stays live while the MSP writes are
@@ -516,13 +657,22 @@ watch(
     },
 );
 
+watch(
+    () => psasProfileName.value,
+    (newValue) => {
+        if (fcStore.config.psasProfileNames) {
+            fcStore.config.psasProfileNames[fcStore.config.psasProfile] = newValue;
+        }
+    },
+);
+
 // Keep the profile / rate-profile selectors in sync with TX-driven changes.
 // The global live-status poller (serial_backend.js) refreshes fcStore.config.profile and
 // fcStore.config.rateProfile via MSP_STATUS_EX every 250ms; an adjustment switch on the TX
 // can therefore change the active profile out from under the UI. Reflect that here and
 // reload — but never clobber unsaved edits or interrupt an in-flight load. Restores the
 // checkUpdateProfile() behaviour lost in the Vue migration (issue #5230).
-async function syncProfileFromFc(kind: "profile" | "rate") {
+async function syncProfileFromFc(kind: "profile" | "rate" | "psas") {
     // Skip while loading, while our own change is applying, or when values have been edited
     // (an in-progress edit takes precedence over a switch flip, matching legacy behaviour).
     // A pending profile switch must not block this, or the selector would stay stuck on the
@@ -535,16 +685,27 @@ async function syncProfileFromFc(kind: "profile" | "rate") {
     try {
         currentProfile.value = fcStore.config.profile;
         currentRateProfile.value = fcStore.config.rateProfile;
+        currentPsasProfile.value = fcStore.config.psasProfile;
         // Only announce (and adopt) the profile once the reload actually succeeded. The FC picked
         // this profile itself, so the tab is mirroring it rather than holding a pending switch —
         // but a pending reset or copy is untouched by that, and stays unsaved.
         if (await loadData()) {
             pidTuningStore.markProfileSelectionClean();
-            gui_log(
-                i18n.getMessage(kind === "rate" ? "pidTuningReceivedRateProfile" : "pidTuningReceivedProfile", [
-                    (kind === "rate" ? fcStore.config.rateProfile : fcStore.config.profile) + 1,
-                ]),
-            );
+            let text, value;
+            switch (kind) {
+                case "rate":
+                    text = "pidTuningReceivedRateProfile";
+                    value = fcStore.config.rateProfile;
+                    break;
+                case "psas":
+                    text = "pidTuningReceivedPsasProfile";
+                    value = fcStore.config.psasProfile;
+                    break;
+                default:
+                    text = "pidTuningReceivedProfile";
+                    value = fcStore.config.profile;
+            }
+            gui_log(i18n.getMessage(text, [value + 1]));
         }
     } finally {
         syncingFromFc = false;
@@ -565,6 +726,15 @@ watch(
     (newValue) => {
         if (newValue !== currentRateProfile.value) {
             syncProfileFromFc("rate");
+        }
+    },
+);
+
+watch(
+    () => fcStore.config.psasProfile,
+    (newValue) => {
+        if (newValue !== currentPsasProfile.value) {
+            syncProfileFromFc("psas");
         }
     },
 );

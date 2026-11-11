@@ -29,6 +29,7 @@ import {
     API_VERSION_1_47,
     API_VERSION_1_48,
     API_VERSION_1_49,
+    API_VERSION_1_50,
 } from "../../../js/data_storage";
 import semver from "semver";
 import { have_sensor } from "../../../js/sensor_helpers";
@@ -1909,7 +1910,7 @@ type FcStore = ReturnType<typeof useFlightControllerStore>;
 
 const hasPSAS = () => {
     const fcStore = useFlightControllerStore();
-    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_50) && fcStore.config.buildOptions.includes("USE_PSAS");
 };
 
 function chooseDisplayFields(fcStore: FcStore) {

@@ -70,6 +70,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
             // lifted refs into fcStore.config, and a second source would be free to drift (#5385).
             pidProfileName: fcStore.config.pidProfileNames?.[fcStore.config.profile] ?? "",
             rateProfileName: fcStore.config.rateProfileNames?.[fcStore.config.rateProfile] ?? "",
+            psasProfileName: fcStore.config.psasProfileNames?.[fcStore.config.psasProfile] ?? "",
         });
 
     const {

@@ -23,17 +23,21 @@ import semver from "semver";
 import MSP from "@/js/msp";
 import MSPCodes, { MSP2TextType } from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
-import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49, API_VERSION_1_50 } from "@/js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
 
 /** `fcStore.copyProfile.type`: which kind of profile MSP_COPY_PROFILE copies. */
 export enum CopyProfileType {
     PID = 0,
     RATE = 1,
+    PSAS = 2,
 }
 
 /** Rate profiles share MSP_SELECT_SETTING with PID profiles; the high bit marks a rate profile. */
 const RATE_PROFILE_SELECT_FLAG = 128;
+
+/** PSAS profiles share MSP_SELECT_SETTING with PID profiles; the 7 bit marks a rate profile. */
+const PSAS_PROFILE_SELECT_FLAG = 32;
 
 const hasWing = () => {
     const fcStore = useFlightControllerStore();
@@ -42,7 +46,7 @@ const hasWing = () => {
 
 const hasPSAS = () => {
     const fcStore = useFlightControllerStore();
-    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_50) && fcStore.config.buildOptions.includes("USE_PSAS");
 };
 
 /**
@@ -91,6 +95,10 @@ export function usePidTuningMsp() {
 
         // Plane SAS
         if (hasPSAS()) {
+            await MSP.promise(
+                MSPCodes.MSP2_GET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSP2TextType.PSAS_PROFILE_NAME),
+            );
             await MSP.promise(MSPCodes.MSP_PSAS_CONFIG);
         }
     };
@@ -139,6 +147,12 @@ export function usePidTuningMsp() {
         // Plane SAS
         if (hasPSAS()) {
             await MSP.promise(MSPCodes.MSP_SET_PSAS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_PSAS_CONFIG));
+            if (fcStore.config.psasProfileNames) {
+                await MSP.promise(
+                    MSPCodes.MSP2_SET_TEXT,
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSP2TextType.PSAS_PROFILE_NAME),
+                );
+            }
         }
     };
 
@@ -162,6 +176,13 @@ export function usePidTuningMsp() {
     /** Reset the active PID profile to defaults, in the FC's RAM. */
     const resetPidProfile = () => MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
 
+    /** Switch the FC to another PSAS profile. */
+    const selectPsasProfile = (psasProfile: number) =>
+        MSP.promise(MSPCodes.MSP_SELECT_SETTING, [psasProfile | PSAS_PROFILE_SELECT_FLAG]);
+
+    /** Reset the active PSAS profile to defaults, in the FC's RAM. */
+    const resetPsasProfile = () => MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PSAS);
+
     return {
         loadPidTuningData,
         writePidTuningConfig,
@@ -169,5 +190,7 @@ export function usePidTuningMsp() {
         selectRateProfile,
         copyProfile,
         resetPidProfile,
+        selectPsasProfile,
+        resetPsasProfile,
     };
 }

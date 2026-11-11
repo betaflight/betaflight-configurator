@@ -35,6 +35,7 @@ import {
     API_VERSION_1_47,
     API_VERSION_1_48,
     API_VERSION_1_49,
+    API_VERSION_1_50,
 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
@@ -837,6 +838,11 @@ const NOTHING_TO_DO = () => {
     // intentionally empty: the code is known, there is just no payload to handle
 };
 
+const hasPSAS = () => {
+    const fcStore = useFlightControllerStore();
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_50) && fcStore.config.buildOptions.includes("USE_PSAS");
+};
+
 // One decoder per MSP reply code; process_data dispatches here and logs codes with no entry.
 const DECODERS: Partial<Record<number, Decoder>> = {
     [MSPCodes.MSP_STATUS](data) {
@@ -889,6 +895,15 @@ const DECODERS: Partial<Record<number, Decoder>> = {
             // Grow batteryProfileNames to match actual profile count from FC
             while (fcStore.config.batteryProfileNames.length < fcStore.config.numberOfBatteryProfiles) {
                 fcStore.config.batteryProfileNames.push("");
+            }
+        }
+
+        if (hasPSAS()) {
+            fcStore.config.numberOfPsasProfiles = data.readU8();
+            fcStore.config.psasProfile = data.readU8();
+            // Grow psasProfileNames to match actual profile count from FC
+            while (fcStore.config.psasProfileNames.length < fcStore.config.numberOfPsasProfiles) {
+                fcStore.config.psasProfileNames.push("");
             }
         }
     },
@@ -1687,6 +1702,9 @@ const DECODERS: Partial<Record<number, Decoder>> = {
                 break;
             case MSP2TextType.BATTERY_PROFILE_NAME:
                 fcStore.config.batteryProfileNames[fcStore.config.batteryProfile] = this.getText(data);
+                break;
+            case MSP2TextType.PSAS_PROFILE_NAME:
+                fcStore.config.psasProfileNames[fcStore.config.psasProfile] = this.getText(data);
                 break;
             default:
                 console.log("Unsupport text type");
@@ -3118,6 +3136,9 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
                     fcStore.config.batteryProfileNames[fcStore.config.batteryProfile],
                     8,
                 );
+                break;
+            case MSP2TextType.PSAS_PROFILE_NAME:
+                this.setText(buffer, modifierCode, fcStore.config.psasProfileNames[fcStore.config.psasProfile], 8);
                 break;
             default:
                 console.log("Unsupported text type");
