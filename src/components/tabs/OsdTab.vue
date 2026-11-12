@@ -587,7 +587,7 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2 items-center">
                 <UButton
-                    :disabled="!osdStore.state.isMax7456FontDeviceDetected"
+                    :disabled="!osdStore.state.isMax7456FontDeviceDetected || isSaving"
                     @click="openFontManager()"
                     variant="soft"
                 >

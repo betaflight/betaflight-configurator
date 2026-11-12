@@ -586,11 +586,18 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <UButton
                 :label="$t('receiverButtonSticks')"
+                :disabled="isSaving"
                 @click="openSticksWindow"
                 v-if="showSticksButton"
                 variant="soft"
             />
-            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
+            <UButton
+                :label="$t('receiverButtonBind')"
+                :disabled="isSaving"
+                @click="sendBind"
+                v-if="showBindButton"
+                variant="soft"
+            />
             <UFieldGroup orientation="horizontal" class="flex!">
                 <UButton @click="saveConfig(needReboot)" :disabled="!dirty" :loading="isSaving">
                     {{ saveButtonLabel }}

@@ -58,18 +58,22 @@
                         :variant="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'soft' : 'solid'"
                         :class="{
                             'bg-success/30 hover:bg-success/40 ring ring-inset ring-success/40':
-                                state.flashButtonDisabled || activeFlasherStep !== 'flash',
+                                !state.flashingInProgress &&
+                                (state.flashButtonDisabled || activeFlasherStep !== 'flash'),
                         }"
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :aria-label="$t('firmwareFlasherFlashFirmwareOptions')"
+                        :disabled="state.flashingInProgress"
                         square
                     />
                 </UDropdownMenu>
             </UFieldGroup>
             <UFieldGroup orientation="horizontal" class="flex!">
-                <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">{{
-                    $t("firmwareFlasherButtonLoadOnline")
-                }}</UButton>
+                <UButton
+                    :label="$t('firmwareFlasherButtonLoadOnline')"
+                    :disabled="state.loadRemoteButtonDisabled || state.flashingInProgress"
+                    @click="handleLoadRemoteFile"
+                />
                 <UDropdownMenu
                     v-slot="{ open }"
                     :items="loadFirmwareMenuItems"
@@ -78,8 +82,12 @@
                     <UButton
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :variant="state.loadRemoteButtonDisabled ? 'soft' : 'solid'"
-                        :class="{ 'ring ring-inset ring-primary/40': state.loadRemoteButtonDisabled }"
+                        :class="{
+                            'ring ring-inset ring-primary/40':
+                                state.loadRemoteButtonDisabled && !state.flashingInProgress,
+                        }"
                         :aria-label="$t('firmwareFlasherLoadFirmwareOptions')"
+                        :disabled="state.flashingInProgress"
                         square
                     />
                 </UDropdownMenu>
@@ -1738,13 +1746,13 @@ export default defineComponent({
                 {
                     label: $t("firmwareFlasherButtonLoadOnline"),
                     icon: "i-lucide-cloud-download",
-                    disabled: state.loadRemoteButtonDisabled,
+                    disabled: state.loadRemoteButtonDisabled || state.flashingInProgress,
                     onSelect: handleLoadRemoteFile,
                 },
                 {
                     label: $t("firmwareFlasherButtonLoadLocal"),
                     icon: "i-lucide-hard-drive-download",
-                    disabled: state.loadFileButtonDisabled,
+                    disabled: state.loadFileButtonDisabled || state.flashingInProgress,
                     onSelect: handleLoadFile,
                 },
             ],
@@ -1755,13 +1763,14 @@ export default defineComponent({
                 {
                     label: $t("firmwareFlasherFlashFirmware"),
                     icon: "i-lucide-zap",
-                    disabled: state.flashButtonDisabled || activeFlasherStep.value !== "flash",
+                    disabled:
+                        state.flashButtonDisabled || activeFlasherStep.value !== "flash" || state.flashingInProgress,
                     onSelect: handleFlashFirmware,
                 },
                 {
                     label: $t("firmwareFlasherExitDfu"),
                     icon: "i-lucide-usb",
-                    disabled: state.dfuExitButtonDisabled,
+                    disabled: state.dfuExitButtonDisabled || state.flashingInProgress,
                     onSelect: handleExitDfu,
                 },
             ];
@@ -1769,6 +1778,7 @@ export default defineComponent({
                 group.push({
                     label: $t("firmwareFlasherFindDfuDevice"),
                     icon: "i-lucide-cpu",
+                    disabled: state.flashingInProgress,
                     onSelect: handleRequestDfuPermission,
                 });
             }

@@ -389,22 +389,24 @@
         <!-- Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
             <UFieldGroup orientation="horizontal">
-                <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" variant="soft" />
+                <UButton :label="$t('vtxButtonLoadFile')" :disabled="isSaving" @click="loadJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :aria-label="$t('vtxButtonLoadOptions')"
+                        :disabled="isSaving"
                         square
                         variant="soft"
                     />
                 </UDropdownMenu>
             </UFieldGroup>
             <UFieldGroup orientation="horizontal">
-                <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" variant="soft" />
+                <UButton :label="$t('vtxButtonSaveFile')" :disabled="isSaving" @click="saveJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :aria-label="$t('vtxButtonSaveFileOptions')"
+                        :disabled="isSaving"
                         square
                         variant="soft"
                     />
@@ -560,11 +562,13 @@ export default defineComponent({
                 {
                     label: t("vtxButtonLoadFile"),
                     icon: "i-lucide-hard-drive-download",
+                    disabled: isSaving.value,
                     onSelect: loadJsonFile,
                 },
                 {
                     label: t("vtxButtonLoadClipboard"),
                     icon: "i-lucide-clipboard-paste",
+                    disabled: isSaving.value,
                     onSelect: loadClipboardJson,
                 },
             ],
@@ -575,11 +579,13 @@ export default defineComponent({
                 {
                     label: t("vtxButtonSaveFile"),
                     icon: "i-lucide-hard-drive-upload",
+                    disabled: isSaving.value,
                     onSelect: saveJsonFile,
                 },
                 {
                     label: t("vtxButtonSaveLua"),
                     icon: "i-lucide-file-code",
+                    disabled: isSaving.value,
                     onSelect: saveLuaFile,
                 },
             ],

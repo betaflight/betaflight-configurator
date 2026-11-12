@@ -268,6 +268,7 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <UButton
                 :label="$t('powerCalibrationManagerButton')"
+                :disabled="isSaving"
                 v-if="showCalibration"
                 @click="openCalibrationManager"
                 variant="soft"

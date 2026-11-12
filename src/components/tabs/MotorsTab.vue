@@ -545,7 +545,7 @@
             <div class="flex gap-2">
                 <UButton
                     :label="$t('escDshotDirectionDialog-StopWizard')"
-                    :disabled="buttonStates.stopDisabled"
+                    :disabled="buttonStates.stopDisabled || isSaving"
                     @click="stopMotors()"
                     color="error"
                 />

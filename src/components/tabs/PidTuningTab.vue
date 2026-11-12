@@ -103,7 +103,7 @@
             <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
                 <UButton
                     :label="$t('pidTuningButtonRefresh')"
-                    :disabled="!hasChanges"
+                    :disabled="!hasChanges || isSaving"
                     @click="refresh"
                     variant="soft"
                 />
