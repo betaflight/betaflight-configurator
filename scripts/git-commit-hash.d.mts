@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ResolveGitBinaryOptions {
+export interface ResolveGitBinariesOptions {
     platform?: string;
     env?: Record<string, string | undefined>;
     exists?: (path: string) => boolean;
@@ -27,9 +27,9 @@ export interface ResolveGitBinaryOptions {
 
 export interface GetCommitHashOptions {
     cwd?: string;
-    gitBinary?: string;
+    gitBinaries?: string[];
     exec?: (file: string, args: string[], options: { cwd: string; encoding: "utf8"; shell: false }) => string;
 }
 
-export function resolveGitBinary(options?: ResolveGitBinaryOptions): string;
+export function resolveGitBinaries(options?: ResolveGitBinariesOptions): string[];
 export function getCommitHash(options?: GetCommitHashOptions): string;
