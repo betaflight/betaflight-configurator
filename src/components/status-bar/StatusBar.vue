@@ -409,7 +409,7 @@ export default defineComponent({
     /* Compact: the bar floats clear of the content and above the home indicator, and carries only
        its two controls. The readouts do not fit on one phone-width line, so they move behind the
        expand control, which grows the same element into a panel rather than duplicating them. */
-    body.mobile-app-shell & {
+    & {
         @media all and (max-width: 575px),
             all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
             .status-bar__tabs {
@@ -513,8 +513,7 @@ export default defineComponent({
     }
 
     /* Only the readout row: an `#status-bar > *` here would outrank the `display: none` on the tab
-       strip and the expand control by specificity, showing both outside the phone shell (desktop,
-       browser and installed PWA). */
+       strip and the expand control by specificity, showing both outside the compact layout. */
     &#status-bar > .status-bar__items {
         display: flex;
         align-items: center;
