@@ -26,7 +26,7 @@ interface ImportMetaEnv {
     readonly VITE_PREVIEW_BUILD?: string;
 }
 
-// Injected by Vite's `define` (vite.config.js).
+// Injected by Vite's `define` (vite.config.ts).
 declare const __APP_VERSION__: string;
 declare const __APP_PRODUCTNAME__: string;
 declare const __APP_REVISION__: string;

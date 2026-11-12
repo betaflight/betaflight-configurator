@@ -50,9 +50,28 @@ import { win32 } from "node:path";
 const POSIX_GIT_CANDIDATES = ["/usr/bin/git", "/usr/local/bin/git", "/opt/homebrew/bin/git"];
 const PATH_GIT = "git";
 
-function windowsGitCandidates(env) {
+export interface ResolveGitBinariesOptions {
+    platform?: NodeJS.Platform;
+    env?: NodeJS.ProcessEnv;
+    exists?: (path: string) => boolean;
+}
+
+/** The slice of execFileSync this module calls: no shell, UTF-8 output. */
+export type GitExec = (
+    file: string,
+    args: string[],
+    options: { cwd: string; encoding: "utf8"; shell: false },
+) => string;
+
+export interface GetCommitHashOptions {
+    cwd?: string;
+    gitBinaries?: string[];
+    exec?: GitExec;
+}
+
+function windowsGitCandidates(env: NodeJS.ProcessEnv): string[] {
     return [env.ProgramFiles, env["ProgramFiles(x86)"], env.ProgramW6432]
-        .filter(Boolean)
+        .filter((programFiles): programFiles is string => Boolean(programFiles))
         .map((programFiles) => win32.join(programFiles, "Git", "cmd", "git.exe"));
 }
 
@@ -60,7 +79,11 @@ function windowsGitCandidates(env) {
  * The git executables to try, in order: the absolute paths of the fixed
  * install locations that exist, then the bare name "git" for a PATH lookup.
  */
-export function resolveGitBinaries({ platform = process.platform, env = process.env, exists = existsSync } = {}) {
+export function resolveGitBinaries({
+    platform = process.platform,
+    env = process.env,
+    exists = existsSync,
+}: ResolveGitBinariesOptions = {}): string[] {
     const candidates = platform === "win32" ? windowsGitCandidates(env) : POSIX_GIT_CANDIDATES;
     return [...new Set(candidates)].filter((candidate) => exists(candidate)).concat(PATH_GIT);
 }
@@ -69,8 +92,12 @@ export function resolveGitBinaries({ platform = process.platform, env = process.
  * Runs `git rev-parse --short HEAD` with each binary in turn and returns the
  * first answer; throws the last failure when none of them gives one.
  */
-export function getCommitHash({ cwd = process.cwd(), gitBinaries = resolveGitBinaries(), exec = execFileSync } = {}) {
-    let lastError;
+export function getCommitHash({
+    cwd = process.cwd(),
+    gitBinaries = resolveGitBinaries(),
+    exec = execFileSync,
+}: GetCommitHashOptions = {}): string {
+    let lastError: unknown;
     for (const gitBinary of gitBinaries) {
         try {
             // The PATH fallback is justified in the trust assumptions above.

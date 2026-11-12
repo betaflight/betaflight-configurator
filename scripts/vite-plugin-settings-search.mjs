@@ -292,7 +292,7 @@ export default function settingsSearchIndexPlugin(options = {}) {
             if (!existsSync(filePath)) {
                 throw new Error(
                     `[settings-search] ${filePath} is listed in nestedViews but does not exist. ` +
-                        "Update the plugin options in vite.config.js.",
+                        "Update the plugin options in vite.config.ts.",
                 );
             }
         }

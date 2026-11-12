@@ -20,7 +20,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { getCommitHash, resolveGitBinaries } from "../../scripts/git-commit-hash.mjs";
+import { getCommitHash, resolveGitBinaries } from "../../scripts/git-commit-hash";
 
 const REV_PARSE = ["rev-parse", "--short", "HEAD"];
 

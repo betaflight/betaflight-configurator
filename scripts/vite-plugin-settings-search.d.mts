@@ -19,17 +19,18 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ResolveGitBinariesOptions {
-    platform?: string;
-    env?: Record<string, string | undefined>;
-    exists?: (path: string) => boolean;
+import type { Plugin } from "vite";
+
+export interface SettingsSearchView {
+    tab: string;
+    subtab: string;
 }
 
-export interface GetCommitHashOptions {
-    cwd?: string;
-    gitBinaries?: string[];
-    exec?: (file: string, args: string[], options: { cwd: string; encoding: "utf8"; shell: false }) => string;
+export interface SettingsSearchIndexPluginOptions {
+    /** Directory holding the *Tab.vue components. */
+    tabsDir?: string;
+    nestedViews?: Record<string, SettingsSearchView>;
+    parentSettingSubtabs?: Record<string, Record<string, string>>;
 }
 
-export function resolveGitBinaries(options?: ResolveGitBinariesOptions): string[];
-export function getCommitHash(options?: GetCommitHashOptions): string;
+export default function settingsSearchIndexPlugin(options?: SettingsSearchIndexPluginOptions): Plugin;
