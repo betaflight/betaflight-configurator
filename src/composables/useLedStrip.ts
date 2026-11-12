@@ -21,6 +21,7 @@
 
 import { ref, computed } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -132,10 +133,17 @@ function isVtxActive(activeFunction: string) {
 // and persists to EEPROM.
 async function saveConfig() {
     const { saveToEeprom } = useReboot();
+    const fcStore = useFlightControllerStore();
 
     await mspHelper.sendLedStripConfig();
-    await mspHelper.sendLedStripColors();
-    await mspHelper.sendLedStripModeColors();
+    if (fcStore.ledStripAdvanced !== false) {
+        await mspHelper.sendLedStripColors();
+        await mspHelper.sendLedStripModeColors();
+    }
+
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+        await mspHelper.saveLedStripConfigValues();
+    }
 
     await saveToEeprom();
 }
@@ -164,16 +172,18 @@ export function useLedStrip() {
 
     // Load LED configuration data
     async function loadData() {
-        try {
-            await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG, false);
+        if (!useConnectionStore().virtualMode) fcStore.ledConfigValuesLoaded = false;
+        await MSP.promise(MSPCodes.MSP_LED_STRIP_CONFIG, false);
+        if (fcStore.ledStripAdvanced === null || fcStore.ledStripProfile === null || fcStore.ledStrip.length === 0) {
+            throw new Error("LED strip configuration was not loaded");
+        }
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES, false);
+            if (!fcStore.ledConfigValuesLoaded) throw new Error("LED config values were not loaded");
+        }
+        if (fcStore.ledStripAdvanced !== false) {
             await MSP.promise(MSPCodes.MSP_LED_COLORS, false);
             await MSP.promise(MSPCodes.MSP_LED_STRIP_MODECOLOR, false);
-
-            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-                await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES, false);
-            }
-        } catch (error) {
-            console.error("Error loading LED strip data:", error);
         }
     }
 
@@ -268,6 +278,7 @@ export function useLedStrip() {
     // Update LED config values (brightness, rainbow delta/freq). Fire-and-forget: the send is
     // callback-based, so there is no reply to wait for here.
     function updateLedConfigValue(key: keyof LedConfigValues, value: number) {
+        if (!fcStore.ledConfigValuesLoaded || fcStore.ledConfigValues[key] === value) return;
         fcStore.ledConfigValues[key] = value;
         mspHelper.sendLedStripConfigValues();
     }

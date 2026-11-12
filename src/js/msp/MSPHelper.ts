@@ -78,7 +78,8 @@ export type DataflashReadCallback = (
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
-let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+const ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+const legacyLedOverlayLetters = ledOverlayLetters.filter((letter) => letter !== "y");
 
 let lastI2cErrorCount: number | null = null;
 
@@ -121,7 +122,7 @@ function buildLedStripMask(led: LedStripEntry, colorOffset: number, directionOff
     }
 
     for (const overlayLetter of led.functions) {
-        const bitIndex = ledOverlayLetters.indexOf(overlayLetter);
+        const bitIndex = (colorOffset === 18 ? legacyLedOverlayLetters : ledOverlayLetters).indexOf(overlayLetter);
         if (bitIndex >= 0) {
             mask |= bit_set(mask, bitIndex + 12);
         }
@@ -171,7 +172,7 @@ function decodeLedMask(mask: number, layout: LedMaskLayout): LedStripEntry {
     }
 
     const overlayMask = (mask >> 12) & layout.overlayMask;
-    ledOverlayLetters.forEach((letter, index) => {
+    (layout.hasParameters ? legacyLedOverlayLetters : ledOverlayLetters).forEach((letter, index) => {
         if (bit_check(overlayMask, index)) {
             functions.push(letter);
         }
@@ -681,12 +682,31 @@ class MspHelper {
     }
 
     sendLedStripConfigValues(onCompleteCallback?: () => void) {
-        const fcStore = useFlightControllerStore();
-        const buffer = new MspBuffer();
-        buffer.push8(fcStore.ledConfigValues.brightness ?? 0);
-        buffer.push16(fcStore.ledConfigValues.rainbow_delta ?? 0);
-        buffer.push16(fcStore.ledConfigValues.rainbow_freq ?? 0);
+        const buffer = this.ledStripConfigValuesBuffer();
+        if (!buffer) return;
         MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
+    }
+
+    async saveLedStripConfigValues() {
+        const buffer = this.ledStripConfigValuesBuffer();
+        if (!buffer) return;
+        await MSP.promise(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer);
+    }
+
+    private ledStripConfigValuesBuffer() {
+        const { ledConfigValues, ledConfigValuesLoaded } = useFlightControllerStore();
+        const { brightness, rainbow_delta, rainbow_freq } = ledConfigValues;
+        // Never substitute defaults for values not read from this connection.
+        if (
+            !ledConfigValuesLoaded ||
+            brightness === undefined ||
+            rainbow_delta === undefined ||
+            rainbow_freq === undefined
+        )
+            return null;
+        const buffer = new MspBuffer();
+        buffer.push8(brightness).push16(rainbow_delta).push16(rainbow_freq);
+        return buffer;
     }
 
     serialPortFunctionMaskToFunctions(functionMask: number): SerialPortFunction[] {
@@ -1695,9 +1715,14 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
     [MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES](data) {
         const fcStore = useFlightControllerStore();
-        fcStore.ledConfigValues.brightness = data.readU8();
-        fcStore.ledConfigValues.rainbow_delta = data.readU16();
-        fcStore.ledConfigValues.rainbow_freq = data.readU16();
+        fcStore.ledConfigValuesLoaded = false;
+        if (data.byteLength < 5) return;
+        fcStore.ledConfigValues = {
+            brightness: data.readU8(),
+            rainbow_delta: data.readU16(),
+            rainbow_freq: data.readU16(),
+        };
+        fcStore.ledConfigValuesLoaded = true;
     },
 
     [MSPCodes.MSP_CF_SERIAL_CONFIG](data) {
@@ -2084,6 +2109,12 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         const fcStore = useFlightControllerStore();
         fcStore.ledStrip = [];
 
+        fcStore.ledStripAdvanced = null;
+        fcStore.ledStripProfile = null;
+        if (data.byteLength < 2 || (data.byteLength - 2) % 4 !== 0) {
+            return;
+        }
+
         const ledCount = (data.byteLength - 2) / 4;
 
         // The 32 bit config of each LED contains the following in LSB:
@@ -2101,13 +2132,11 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         const layout = semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)
             ? LED_MASK_LAYOUT
             : LED_MASK_LAYOUT_PRE_1_46;
-        if (layout === LED_MASK_LAYOUT_PRE_1_46) {
-            ledOverlayLetters = ledOverlayLetters.filter((x) => x !== "y"); //remove rainbow because it's only supported after API 1.46
-        }
-
         for (let i = 0; i < ledCount; i++) {
             fcStore.ledStrip.push(decodeLedMask(data.readU32(), layout));
         }
+        fcStore.ledStripAdvanced = data.readU8() === 1;
+        fcStore.ledStripProfile = data.readU8();
     },
 
     [MSPCodes.MSP_SET_LED_STRIP_CONFIG]() {
