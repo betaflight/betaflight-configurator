@@ -5,14 +5,14 @@ import path from "node:path";
 import { readFileSync, existsSync } from "node:fs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import pkg from "./package.json" with { type: "json" };
-import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
 import ui from "@nuxt/ui/vite";
 import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
 import nuxtUiViteOptions from "./nuxt-ui.vite.js";
+import { getCommitHash } from "./scripts/git-commit-hash.mjs";
 
-const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
+const commitHash = getCommitHash({ cwd: import.meta.dirname });
 
 const devHostname = process.env.BF_DEV_HOSTNAME || "local.betaflight.com";
 
