@@ -539,7 +539,7 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <UButton
                 :label="$t('escDshotDirectionDialog-StopWizard')"
-                :disabled="buttonStates.stopDisabled || isSaving"
+                :disabled="buttonStates.stopDisabled"
                 @click="stopMotors()"
                 color="error"
             />
