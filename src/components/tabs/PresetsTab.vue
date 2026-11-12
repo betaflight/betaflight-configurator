@@ -104,7 +104,7 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="flex gap-2">
                 <UButton
-                    :label="$t('presetsButtonCancel')"
+                    :label="$t('presetsButtonClearSelection')"
                     :disabled="!store.canApply"
                     @click="store.clearPickedPresets()"
                     color="error"

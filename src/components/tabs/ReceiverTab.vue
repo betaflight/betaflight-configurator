@@ -593,7 +593,7 @@
             <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
             <UFieldGroup orientation="horizontal" class="flex!">
                 <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
-                    {{ $t("receiverButtonSave") }}
+                    {{ saveButtonLabel }}
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton
@@ -832,10 +832,12 @@ function serializeReceiverState() {
 
 const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
 
+const saveButtonLabel = computed(() => t(needReboot.value ? "configurationButtonSave" : "receiverButtonSave"));
+
 const saveMenuItems = computed(() => [
     [
         {
-            label: t("receiverButtonSave"),
+            label: saveButtonLabel.value,
             icon: "i-lucide-save",
             disabled: !dirty.value || isSaving.value,
             onSelect: () => saveConfig(needReboot.value),

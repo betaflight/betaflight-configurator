@@ -3858,7 +3858,7 @@
         "message": "Blackbox configuration"
     },
     "blackboxButtonSave": {
-        "message": "Save and reboot"
+        "message": "Save and Reboot"
     },
     "blackboxLoggingNone": {
         "message": "No Logging"
@@ -7900,7 +7900,11 @@
     },
     "presetsButtonCancel": {
         "message": "Cancel",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+        "description": "Cancel the current dialog action"
+    },
+    "presetsButtonClearSelection": {
+        "message": "Clear Selection",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "Applying configuration...",
