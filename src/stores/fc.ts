@@ -291,6 +291,7 @@ export function createInitialState(): FcState {
         adjustmentRanges: [],
         servoConfig: [],
         servoRules: [],
+        servoRulesParseOk: true,
         serialConfig: {
             ports: [],
 

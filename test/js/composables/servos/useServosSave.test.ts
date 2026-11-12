@@ -3,10 +3,14 @@ import { flushPromises } from "@vue/test-utils";
 import { mspHelper } from "../../../../src/js/msp/MSPHelper";
 import { MspCancelledError } from "../../../../src/js/msp/mspErrors";
 import { useServosSave } from "../../../../src/composables/servos/useServosSave";
+import { createPinia, setActivePinia } from "pinia";
+import { useFlightControllerStore } from "../../../../src/stores/fc";
 
 const saveToEeprom = vi.fn();
 
-vi.mock("../../../../src/js/msp/MSPHelper", () => ({ mspHelper: { sendServoConfigurations: vi.fn() } }));
+vi.mock("../../../../src/js/msp/MSPHelper", () => ({
+    mspHelper: { sendServoConfigurations: vi.fn(), sendServoMixRules: vi.fn() },
+}));
 vi.mock("../../../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom }) }));
 vi.mock("../../../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
@@ -19,6 +23,7 @@ describe("useServosSave", () => {
     beforeEach(() => {
         // reset, not clear: a failure stubbed in one test must not leak into the next
         vi.resetAllMocks();
+        setActivePinia(createPinia());
         order = [];
         marshal = vi.fn(() => {
             order.push("marshal");
@@ -32,6 +37,9 @@ describe("useServosSave", () => {
         saveToEeprom.mockImplementation(async () => {
             order.push("eeprom");
         });
+        vi.mocked(mspHelper.sendServoMixRules).mockImplementation(async () => {
+            order.push("rules");
+        });
     });
 
     describe("saveServoConfig", () => {
@@ -39,6 +47,15 @@ describe("useServosSave", () => {
             await useServosSave(marshal, markClean).saveServoConfig();
 
             expect(order).toEqual(["marshal", "send", "eeprom", "markClean"]);
+            expect(mspHelper.sendServoMixRules).not.toHaveBeenCalled();
+        });
+
+        it("writes the given mixer rules after the servo config, before EEPROM", async () => {
+            const rules = [{ target: 2, input: 0, rate: 100, speed: 0, min: 0, max: 100, box: 0 }];
+            await useServosSave(marshal, markClean).saveServoConfig(rules);
+
+            expect(useFlightControllerStore().servoRules).toEqual(rules);
+            expect(order).toEqual(["marshal", "send", "rules", "eeprom", "markClean"]);
         });
 
         it("waits for the send before writing EEPROM", async () => {

@@ -23,6 +23,8 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import { isMspCancelled } from "@/js/msp/mspErrors";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { useFlightControllerStore } from "@/stores/fc";
+import type { ServoRule } from "@/stores/fc.types";
 
 /**
  * Live-preview and save paths for the Servos tab.
@@ -45,10 +47,18 @@ export function useServosSave(marshalServoConfigs: () => void, markClean: () => 
         });
     };
 
-    const saveServoConfig = () =>
+    /**
+     * Persist the servo config, and the servo mixer rules when `mixerRules` is given
+     * (every rule slot, so removed rules are cleared).
+     */
+    const saveServoConfig = (mixerRules: ServoRule[] | null = null) =>
         runSave(async () => {
             marshalServoConfigs();
             await mspHelper.sendServoConfigurations();
+            if (mixerRules) {
+                useFlightControllerStore().servoRules = mixerRules;
+                await mspHelper.sendServoMixRules();
+            }
             await saveToEeprom();
             // saveToEeprom() already emits the shared "EEPROM saved" toast; servosEepromSave
             // resolved to the same string, so it's dropped here to avoid a duplicate.
