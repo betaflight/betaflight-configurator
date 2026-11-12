@@ -7,6 +7,7 @@
         "test/**/*.ts",
         "*.d.ts",
         "vite.config.ts",
+        "nuxt-ui.vite.ts",
         "scripts/git-commit-hash.ts"
     ],
     "exclude": ["src/dist", "dist", "node_modules"],

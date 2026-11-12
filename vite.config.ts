@@ -9,7 +9,7 @@ import pkg from "./package.json" with { type: "json" };
 import { VitePWA } from "vite-plugin-pwa";
 import ui from "@nuxt/ui/vite";
 import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
-import nuxtUiViteOptions from "./nuxt-ui.vite.js";
+import nuxtUiViteOptions from "./nuxt-ui.vite";
 import { getCommitHash } from "./scripts/git-commit-hash";
 
 const commitHash = getCommitHash({ cwd: import.meta.dirname });
