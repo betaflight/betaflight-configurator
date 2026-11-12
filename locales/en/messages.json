@@ -2487,6 +2487,46 @@
         "message": "An additional drive factor, derived purely from stick input, that helps push the aircraft quickly into fast stick moves.<br><br>FF cannot cause oscillation, allows a lower P for similar stick responses, and offsets the natural opposition of D to sick inputs.<br><br>Low or zero values will result in a smoother but more delayed response to stick inputs.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningPhysicalUnits": {
+        "message": "Physical units",
+        "description": "Section label above the PID gains expressed in physical units"
+    },
+    "pidTuningPhysicalUnitsHelp": {
+        "message": "These values show the gains above in physical units. You cannot edit them. In flight, TPA, battery sag compensation and motor mixing change the effective values.",
+        "description": "Help for the physical units section of the PID table"
+    },
+    "pidTuningPhysicalUnitP": {
+        "message": "% / 100°/s",
+        "description": "Unit label for P in physical units"
+    },
+    "pidTuningPhysicalUnitPHelp": {
+        "message": "The motor output from P for a rate error of 100 deg/s, in percent of the motor range.",
+        "description": "Help for P in physical units"
+    },
+    "pidTuningPhysicalUnitI": {
+        "message": "reset ms",
+        "description": "Unit label for I in physical units"
+    },
+    "pidTuningPhysicalUnitIHelp": {
+        "message": "Reset time. The time for I to make the same output as P when the rate error is constant. A shorter time gives a stronger I.",
+        "description": "Help for I in physical units"
+    },
+    "pidTuningPhysicalUnitD": {
+        "message": "lead ms",
+        "description": "Unit label for D and D Max in physical units"
+    },
+    "pidTuningPhysicalUnitDHelp": {
+        "message": "Lead time. The time that D looks ahead on the gyro rate to give damping. A longer time gives more damping.",
+        "description": "Help for D in physical units"
+    },
+    "pidTuningPhysicalUnitF": {
+        "message": "lead ms",
+        "description": "Unit label for Feedforward in physical units"
+    },
+    "pidTuningPhysicalUnitFHelp": {
+        "message": "Lead time. The time that feedforward moves the motors ahead of the stick. A longer time gives a faster stick response.",
+        "description": "Help for Feedforward in physical units"
+    },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Warning:</b></span> very high rates can result in desyncs from rapid decelerations."
     },
