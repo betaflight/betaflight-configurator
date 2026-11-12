@@ -216,7 +216,7 @@ export function useCli(): Cli {
         promptInput: "",
         snippetPreview: "",
         supportDialogInput: "",
-        copyButtonText: i18n.getMessage("cliCopyToClipboardBtn"),
+        copyButtonText: i18n.getMessage("copyToClipboard"),
         copyButtonWidth: "",
     });
 
@@ -443,7 +443,7 @@ export function useCli(): Cli {
             }
             state.copyButtonText = i18n.getMessage("cliCopySuccessful");
             copyResetTimeout = setTimeout(() => {
-                state.copyButtonText = i18n.getMessage("cliCopyToClipboardBtn");
+                state.copyButtonText = i18n.getMessage("copyToClipboard");
                 copyResetTimeout = null;
             }, 1500);
         }

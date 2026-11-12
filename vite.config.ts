@@ -1,16 +1,16 @@
-import { normalizePath, type Connect, type Plugin, type ViteDevServer } from "vite";
+import type { Plugin, Connect } from "vite";
+import { normalizePath } from "vite";
 import { defineConfig } from "vitest/config";
-import type { ServerResponse } from "node:http";
 import vue from "@vitejs/plugin-vue";
-import path from "node:path";
+import path, { resolve } from "node:path";
 import { readFileSync, existsSync } from "node:fs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import pkg from "./package.json" with { type: "json" };
 import { VitePWA } from "vite-plugin-pwa";
 import ui from "@nuxt/ui/vite";
 import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
-import nuxtUiViteOptions from "./nuxt-ui.vite";
-import { getCommitHash } from "./scripts/git-commit-hash";
+import nuxtUiViteOptions from "./nuxt-ui.vite.ts";
+import { getCommitHash } from "./scripts/git-commit-hash.ts";
 
 const commitHash = getCommitHash({ cwd: import.meta.dirname });
 
@@ -86,7 +86,7 @@ function serveFileFromDirectory(directory: string): Connect.NextHandleFunction {
 
             res.end(fileContents);
         } catch {
-            // If file not found or any other error, pass to the next middleware
+            // Let Vite handle files this middleware cannot serve, including its normal 404 response.
             next();
         }
     };
@@ -100,8 +100,8 @@ function serveFileFromDirectory(directory: string): Connect.NextHandleFunction {
 function serveLocalesPlugin(): Plugin {
     return {
         name: "serve-locales",
-        configureServer(server: ViteDevServer) {
-            server.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
+        configureServer(server) {
+            server.middlewares.use((req, res, next) => {
                 if (req.url?.startsWith("/locales/")) {
                     serveFileFromDirectory("locales")(req, res, next);
                 } else if (req.url?.startsWith("/resources/")) {
@@ -146,7 +146,7 @@ function stripManifestFromSecondaryEntriesPlugin(): Plugin {
 // are silenced, so a genuinely pointless dynamic import added later still warns.
 const CYCLE_BREAKING_DYNAMIC_IMPORTS = ["src/js/msp.js", "src/js/serial_backend.js", "src/js/tab_switch.js"];
 
-function isCycleBreakingImport(warning: { message?: string }): boolean {
+function isCycleBreakingImport(warning: { message?: string }) {
     // The message is prefixed with the (colourised) warning code, so match on the
     // "<id> is dynamically imported by" phrase rather than the start of the string.
     const message = warning.message ?? "";
@@ -163,9 +163,9 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                main: path.resolve(import.meta.dirname, "src/index.html"),
-                receiver_msp: path.resolve(import.meta.dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
-                log_window: path.resolve(import.meta.dirname, "src/components/log/log_window.html"),
+                main: resolve(import.meta.dirname, "src/index.html"),
+                receiver_msp: resolve(import.meta.dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
+                log_window: resolve(import.meta.dirname, "src/components/log/log_window.html"),
             },
             onwarn(warning, defaultHandler) {
                 if (warning.code === "INEFFECTIVE_DYNAMIC_IMPORT" && isCycleBreakingImport(warning)) {
