@@ -67,20 +67,19 @@
         </Dialog>
 
         <!-- Bottom toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
-            <UButton variant="soft" color="error" size="xs" @click="handleClear">
+        <div class="content_toolbar toolbar_fixed_bottom">
+            <UButton variant="soft" color="error" :disabled="isSaving" @click="handleClear">
                 {{ $t("flightPlanClear") }}
             </UButton>
             <UButton
                 variant="soft"
-                :disabled="!canUseFC"
+                :disabled="!canUseFC || isSaving"
                 :title="$t('flightPlanLoadFromFC')"
-                size="xs"
                 @click="handleLoad"
             >
                 {{ $t("flightPlanLoad") }}
             </UButton>
-            <UButton :disabled="!canUseFC" :title="$t('flightPlanSaveToFC')" size="xs" @click="handleSave">
+            <UButton :disabled="!canUseFC" :loading="isSaving" :title="$t('flightPlanSaveToFC')" @click="handleSave">
                 {{ $t("save") }}
             </UButton>
         </div>
@@ -88,6 +87,7 @@
 </template>
 
 <script setup lang="ts">
+import { useSaving } from "@/composables/useSaving";
 import { ref, computed, onMounted } from "vue";
 import { useTranslation } from "i18next-vue";
 import BaseTab from "./BaseTab.vue";
@@ -103,6 +103,8 @@ import { useConnectionStore } from "@/stores/connection";
 import { useBuildOptions } from "@/composables/useBuildOptions";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
+
+const { isSaving, runSave } = useSaving();
 
 const { loadFromFC, saveToFC, clearOnFC, clearPlan, loadPlan, waypoints } = useFlightPlan();
 const { t } = useTranslation();
@@ -136,7 +138,7 @@ const handleSave = async () => {
     if (!canUseFC.value) {
         return;
     }
-    await saveToFC();
+    await runSave(saveToFC);
 };
 
 const handleLoad = async () => {
@@ -172,13 +174,3 @@ const declineLoadFromFC = () => {
     showLoadPromptDialog.value = false;
 };
 </script>
-
-<style lang="less">
-.tab-flight_plan {
-    /* Bottom toolbar (CRITICAL: must be exactly 2rem) */
-    .content_toolbar.toolbar_fixed_bottom {
-        position: fixed;
-        bottom: 2rem;
-    }
-}
-</style>

@@ -102,22 +102,19 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="flex gap-2">
-                <UButton
-                    :label="$t('presetsButtonCancel')"
-                    :disabled="!store.canApply"
-                    size="xs"
-                    @click="store.clearPickedPresets()"
-                    color="error"
-                    variant="soft"
-                />
-                <UButton
-                    :label="$t('presetsButtonSave')"
-                    :disabled="!store.canApply"
-                    size="xs"
-                    @click="applyPickedPresets()"
-                />
-            </div>
+            <UButton
+                :label="$t('presetsButtonClearSelection')"
+                :disabled="!store.canApply || isSaving"
+                @click="store.clearPickedPresets()"
+                color="error"
+                variant="soft"
+            />
+            <UButton
+                :label="$t('saveAndReboot')"
+                :loading="isSaving"
+                :disabled="!store.canApply"
+                @click="applyPickedPresets()"
+            />
         </div>
 
         <PresetDetailsDialog
@@ -199,12 +196,7 @@
             </template>
             <template #footer>
                 <div class="flex justify-end gap-2 w-full">
-                    <UButton
-                        :label="$t('presetsButtonCancel')"
-                        variant="outline"
-                        size="xs"
-                        @click="closeCliErrorsWithoutSaving"
-                    />
+                    <UButton :label="$t('cancel')" variant="outline" size="xs" @click="closeCliErrorsWithoutSaving" />
                     <UButton :label="$t('presetsSaveAnyway')" size="xs" @click="saveAnywayAfterCliErrors" />
                 </div>
             </template>
@@ -213,6 +205,7 @@
 </template>
 
 <script setup lang="ts">
+import { useSaving } from "@/composables/useSaving";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -238,6 +231,8 @@ import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
 import { update_sensor_status } from "@/js/serial_backend";
+
+const { isSaving, runSave } = useSaving();
 
 const store = usePresetsStore();
 const connectionStore = useConnectionStore();
@@ -375,7 +370,9 @@ async function saveConfigBackup() {
     }
 }
 
-async function loadConfigBackup() {
+const loadConfigBackup = () => runSave(performLoadConfigBackup);
+
+async function performLoadConfigBackup() {
     if (!(await ensureCliPresetActionSupported())) {
         return;
     }
@@ -398,7 +395,7 @@ async function loadConfigBackup() {
         }
 
         store.appendPickedPreset({ title: i18n.getMessage("presetsBackupLoad") }, text.split(/\r?\n/), undefined);
-        await applyPickedPresets();
+        await performApplyPickedPresets();
     } catch (error) {
         if (isPickerAbortError(error)) {
             return;
@@ -439,7 +436,7 @@ function pickPresetAfterVersionCheck() {
         null,
         {
             yesText: i18n.getMessage("presetsWarningDialogYesButton"),
-            noText: i18n.getMessage("presetsWarningDialogNoButton"),
+            noText: i18n.getMessage("cancel"),
         },
     );
 }
@@ -468,12 +465,14 @@ async function applyPresetSelection() {
         null,
         {
             yesText: i18n.getMessage("presetsWarningDialogYesButton"),
-            noText: i18n.getMessage("presetsWarningDialogNoButton"),
+            noText: i18n.getMessage("cancel"),
         },
     );
 }
 
-async function applyPickedPresets() {
+const applyPickedPresets = () => runSave(performApplyPickedPresets);
+
+async function performApplyPickedPresets() {
     if (!(await ensureCliPresetActionSupported())) {
         return;
     }
@@ -501,8 +500,10 @@ async function applyPickedPresets() {
 }
 
 async function saveAnywayAfterCliErrors() {
-    store.closeCliErrorsDialog(true);
-    await saveAndReconnect();
+    await runSave(async () => {
+        store.closeCliErrorsDialog(true);
+        await saveAndReconnect();
+    });
 }
 
 function closeCliErrorsWithoutSaving() {
@@ -576,10 +577,6 @@ async function handleCliErrorsDialogClose() {
 @media only screen and (max-width: 1055px) {
     .tab-presets .content_wrapper {
         height: calc(100% - 87px);
-    }
-
-    .tab-presets .content_toolbar {
-        margin-top: 5px;
     }
 }
 

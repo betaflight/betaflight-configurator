@@ -176,9 +176,11 @@ describe("blackbox debug mode curves", () => {
         expect(rangeFor("1.48.0", "GPS_RESCUE_TRACKING", "debug[2]")).toEqual({ min: -50, max: 50 });
 
         expect(rangeFor("1.49.0", "AUTOPILOT_ALTITUDE", "debug[0]")).toEqual({ min: 1000, max: 2000 });
-        expect(rangeFor("1.49.0", "AUTOPILOT_PID", "debug[7]")).toEqual({ min: 0, max: 500 });
+        expect(rangeFor("1.49.0", "AUTOPILOT_PID", "debug[7]")).toEqual({ min: 0, max: 511 });
         expect(rangeFor("1.49.0", "AUTOPILOT_STOP", "debug[0]")).toEqual({ min: -5, max: 5 });
-        expect(rangeFor("1.49.0", "POSITION_NAV", "debug[7]")).toEqual({ min: 0, max: 500 });
+        expect(rangeFor("1.49.0", "AUTOPILOT_STOP", "debug[6]")).toEqual({ min: 0, max: 511 });
+        expect(rangeFor("1.49.0", "AUTOPILOT_STOP", "debug[7]")).toEqual({ min: 0, max: 1.5 });
+        expect(rangeFor("1.49.0", "POSITION_NAV", "debug[7]")).toEqual({ min: 0, max: 3 });
 
         // Before 1.49 these four modes logged a different field layout, so they auto-scale instead.
         for (const debugModeName of ["AUTOPILOT_ALTITUDE", "AUTOPILOT_PID", "AUTOPILOT_STOP", "POSITION_NAV"]) {

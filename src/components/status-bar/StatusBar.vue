@@ -360,7 +360,7 @@ export default defineComponent({
            contents up by the same amount, so the row keeps a constant 2rem content box. */
         height: calc(2.5rem + var(--bf-inset-bottom));
         padding: 0.25rem 1rem calc(0.25rem + var(--bf-inset-bottom));
-        background-color: var(--surface-100);
+        background-color: var(--surface-300);
         line-height: 1.2;
         overflow-x: auto;
         scrollbar-width: none;
