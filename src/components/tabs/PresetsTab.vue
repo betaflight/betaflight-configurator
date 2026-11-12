@@ -370,7 +370,9 @@ async function saveConfigBackup() {
     }
 }
 
-async function loadConfigBackup() {
+const loadConfigBackup = () => runSave(performLoadConfigBackup);
+
+async function performLoadConfigBackup() {
     if (!(await ensureCliPresetActionSupported())) {
         return;
     }
@@ -393,7 +395,7 @@ async function loadConfigBackup() {
         }
 
         store.appendPickedPreset({ title: i18n.getMessage("presetsBackupLoad") }, text.split(/\r?\n/), undefined);
-        await applyPickedPresets();
+        await performApplyPickedPresets();
     } catch (error) {
         if (isPickerAbortError(error)) {
             return;
