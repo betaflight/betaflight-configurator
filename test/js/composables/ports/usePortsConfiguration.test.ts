@@ -23,16 +23,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises } from "@vue/test-utils";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
+import { MspCancelledError } from "@/js/msp/mspErrors";
 import { gui_log } from "@/js/gui_log";
 import { usePortsConfiguration } from "@/composables/ports/usePortsConfiguration";
 
-const { saveAndReboot } = vi.hoisted(() => ({ saveAndReboot: vi.fn() }));
+const { saveToEeprom, reboot } = vi.hoisted(() => ({ saveToEeprom: vi.fn(), reboot: vi.fn() }));
+vi.mock("@/js/tab_adapters", () => ({ tabSwitchCleanup: (callback: () => void) => callback() }));
 vi.mock("@/js/msp", () => ({ default: { promise: vi.fn() } }));
 vi.mock("@/js/msp/MSPHelper", () => ({ mspHelper: { crunch: (code: number) => [code] } }));
 vi.mock("@/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("@/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 vi.mock("@/js/Analytics", () => ({ getTracking: () => undefined }));
-vi.mock("@/composables/useReboot", () => ({ useReboot: () => ({ saveAndReboot }) }));
+vi.mock("@/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom, reboot }) }));
 vi.mock("@/stores/fc", () => ({
     useFlightControllerStore: () => ({
         serialConfig: { ports: [] },
@@ -52,7 +54,7 @@ describe("Ports toolbar saving state", () => {
     beforeEach(() => {
         vi.resetAllMocks();
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
-        saveAndReboot.mockResolvedValue(undefined);
+        saveToEeprom.mockResolvedValue(undefined);
     });
 
     it("stays busy across both writes and persistence, rejecting duplicate clicks", async () => {
@@ -60,13 +62,13 @@ describe("Ports toolbar saving state", () => {
         const features = deferred();
         const persist = deferred();
         vi.mocked(MSP.promise).mockReturnValueOnce(serial.promise).mockReturnValueOnce(features.promise);
-        saveAndReboot.mockReturnValueOnce(persist.promise);
+        saveToEeprom.mockReturnValueOnce(persist.promise);
         const { saveConfig, isSaving } = usePortsConfiguration([], {}, []);
         const saving = saveConfig();
         expect(isSaving.value).toBe(true);
         await saveConfig();
         expect(MSP.promise).toHaveBeenCalledTimes(1);
-        expect(saveAndReboot).not.toHaveBeenCalled();
+        expect(saveToEeprom).not.toHaveBeenCalled();
 
         serial.resolve();
         await flushPromises();
@@ -74,15 +76,17 @@ describe("Ports toolbar saving state", () => {
         expect(MSP.promise).toHaveBeenNthCalledWith(2, MSPCodes.MSP_SET_FEATURE_CONFIG, [
             MSPCodes.MSP_SET_FEATURE_CONFIG,
         ]);
-        expect(saveAndReboot).not.toHaveBeenCalled();
+        expect(saveToEeprom).not.toHaveBeenCalled();
 
         features.resolve();
         await flushPromises();
         expect(isSaving.value).toBe(true);
-        expect(saveAndReboot).toHaveBeenCalledTimes(1);
+        expect(saveToEeprom).toHaveBeenCalledTimes(1);
+        expect(reboot).not.toHaveBeenCalled();
         persist.resolve();
         await saving;
         expect(isSaving.value).toBe(false);
+        expect(reboot).toHaveBeenCalledTimes(1);
     });
 
     it.each(["serial", "features", "persist"])(
@@ -93,13 +97,14 @@ describe("Ports toolbar saving state", () => {
             if (step === "serial") vi.mocked(MSP.promise).mockRejectedValueOnce(error);
             if (step === "features")
                 vi.mocked(MSP.promise).mockResolvedValueOnce(undefined).mockRejectedValueOnce(error);
-            if (step === "persist") saveAndReboot.mockRejectedValueOnce(error);
+            if (step === "persist") saveToEeprom.mockRejectedValueOnce(error);
             const { saveConfig, isSaving } = usePortsConfiguration([], {}, []);
             try {
                 await saveConfig();
                 expect(isSaving.value).toBe(false);
                 expect(gui_log).toHaveBeenCalledWith("configurationSaveFailed");
-                if (step !== "persist") expect(saveAndReboot).not.toHaveBeenCalled();
+                expect(reboot).not.toHaveBeenCalled();
+                if (step !== "persist") expect(saveToEeprom).not.toHaveBeenCalled();
                 await saveConfig();
                 expect(isSaving.value).toBe(false);
                 expect(gui_log).toHaveBeenCalledWith("portsEepromSave");
@@ -108,4 +113,14 @@ describe("Ports toolbar saving state", () => {
             }
         },
     );
+    it("clears busy state without rebooting when persistence is cancelled", async () => {
+        saveToEeprom.mockRejectedValueOnce(new MspCancelledError());
+        const { saveConfig, isSaving } = usePortsConfiguration([], {}, []);
+        await saveConfig();
+        expect(isSaving.value).toBe(false);
+        expect(reboot).not.toHaveBeenCalled();
+        expect(gui_log).not.toHaveBeenCalled();
+        await saveConfig();
+        expect(reboot).toHaveBeenCalledTimes(1);
+    });
 });

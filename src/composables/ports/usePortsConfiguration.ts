@@ -20,6 +20,7 @@
  */
 
 import { toRaw } from "vue";
+import { tabSwitchCleanup } from "@/js/tab_adapters";
 import { useFlightControllerStore } from "@/stores/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -39,7 +40,7 @@ export function usePortsConfiguration(
     functionRules: PortFunctionRule[],
 ) {
     const fcStore = useFlightControllerStore();
-    const { saveAndReboot } = useReboot();
+    const { saveToEeprom, reboot } = useReboot();
     const { isSaving, runSave } = useSaving();
 
     const getEnabledFeaturesFromPorts = (portsList: SerialPort[]) => {
@@ -158,7 +159,10 @@ export function usePortsConfiguration(
                 mspHelper.crunch(MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG),
             );
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-            await saveAndReboot();
+            await saveToEeprom();
+            tabSwitchCleanup(() => {
+                void reboot();
+            });
             gui_log(i18n.getMessage("portsEepromSave"));
         });
 
