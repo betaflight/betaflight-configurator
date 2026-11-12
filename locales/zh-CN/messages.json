@@ -353,17 +353,13 @@
     "tabOptions": {
         "message": "选项"
     },
-    "sidebarOpenOptions": {
-        "message": "选项",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "切换黑暗/明亮模式",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "切换专家模式",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "设置"
@@ -629,9 +625,6 @@
     },
     "tabAuxiliary": {
         "message": "模式"
-    },
-    "logActionShow": {
-        "message": "显示日志"
     },
     "tabLog": {
         "message": "日志"

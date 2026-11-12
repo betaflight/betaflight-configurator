@@ -361,17 +361,17 @@
     "tabOptions": {
         "message": "Options"
     },
-    "sidebarOpenOptions": {
-        "message": "Options",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+    "sidebarSettingsMenu": {
+        "message": "Paramètres",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "Changer le mode sombre/clair",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Activer/désactiver le mode expert",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Installation"
@@ -641,8 +641,9 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-    "logActionShow": {
-        "message": "Afficher les logs"
+    "logActionOpenWindow": {
+        "message": "Ouvrir dans une nouvelle fenêtre",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "Journal"
@@ -702,6 +703,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "DFU USB non détecté"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "Impossible d'ouvrir le périphérique DFU. Reconnectez le contrôleur de vol et réessayez"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "L'accès au périphérique DFU a été refusé. Vérifiez que les règles udev sont installées, consultez la documentation pour les instructions"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "L'accès au périphérique DFU a été refusé. Installez le pilote WinUSB (ImpulseRC Driver Fixer ou Radio) et fermez tout autre programme en utilisant le contrôleur de vol"
     },
     "stm32DfuPermissionRequired": {
         "message": "L'appareil a redémarré en mode DFU.<br><br>Votre navigateur nécessite une autorisation USB pour accéder au périphérique DFU. Cliquez sur le bouton ci-dessous pour le sélectionner dans le sélecteur de périphérique."
@@ -3951,6 +3961,9 @@
     },
     "firmwareFlasherReleaseDate": {
         "message": "Date:"
+    },
+    "firmwareFlasherReleaseCommit": {
+        "message": "Valider :"
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Cible:"
@@ -9358,6 +9371,9 @@
     },
     "pidTuningWingTpaAdvSpeedCurveDetails": {
         "message": "Graphique des courbes hyperboliques"
+    },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "La courbe classique n'est pas recommandée pour les ailes, elle applique le taux de TPA multirotor et le point d'arrêt à la vitesse estimée au lieu de la limite."
     },
     "pidTuningWingMiscSettings": {
         "message": "Paramètres divers"

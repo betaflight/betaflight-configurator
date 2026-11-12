@@ -179,9 +179,6 @@
     "tabAuxiliary": {
         "message": "模式"
     },
-    "logActionShow": {
-        "message": "顯示日誌"
-    },
     "serialPortOpened": {
         "message": "打開串口 <span class=\"message-positive\">成功</span> ID: $1"
     },
