@@ -35,7 +35,7 @@ import {
     isAndroid,
     isNetworkOnlyBrowser,
     isTauri,
-} from "./utils/checkCompatibility.js";
+} from "./utils/checkCompatibility";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;

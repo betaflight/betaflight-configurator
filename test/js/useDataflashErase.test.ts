@@ -22,7 +22,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { effectScope, nextTick, type EffectScope } from "vue";
-import { useDataflashErase, DATAFLASH_ERASE_TIMEOUT_MS } from "../../src/composables/useDataflashErase";
+import { useDataflashErase, getDataflashEraseTimeoutMs } from "../../src/composables/useDataflashErase";
 import { useConnectionStore } from "../../src/stores/connection";
 import { useFlightControllerStore } from "../../src/stores/fc";
 import MSP from "../../src/js/msp";
@@ -30,6 +30,8 @@ import MSPCodes from "../../src/js/msp/MSPCodes";
 import { MspTimeoutError } from "../../src/js/msp/mspErrors";
 
 let fcStore: ReturnType<typeof useFlightControllerStore>;
+
+const MIB = 1024 * 1024;
 
 describe("useDataflashErase", () => {
     let scope: EffectScope;
@@ -94,7 +96,7 @@ describe("useDataflashErase", () => {
 
         await erase.start({ clearQueue: false });
         eraseAcknowledgements[0]();
-        await vi.advanceTimersByTimeAsync(DATAFLASH_ERASE_TIMEOUT_MS + 500);
+        await vi.advanceTimersByTimeAsync(getDataflashEraseTimeoutMs(0) + 500);
 
         expect(vi.mocked(MSP.promise).mock.calls.at(-1)).toEqual([
             MSPCodes.MSP_DATAFLASH_SUMMARY,
@@ -105,6 +107,68 @@ describe("useDataflashErase", () => {
         expect(connectionStore.liveDataPaused).toBe(false);
         expect(callbacks.onError).toHaveBeenCalledOnce();
         expect(callbacks.onFinish).toHaveBeenCalledWith("error");
+    });
+
+    it("keeps polling while the FC reports the erase is still running", async () => {
+        vi.mocked(MSP.promise).mockResolvedValue(undefined);
+
+        await erase.start({ clearQueue: false });
+        eraseAcknowledgements[0]();
+        await vi.advanceTimersByTimeAsync(120000);
+
+        expect(erase.isErasing.value).toBe(true);
+        expect(callbacks.onError).not.toHaveBeenCalled();
+        expect(vi.mocked(MSP.promise).mock.calls.every(([, , options]) => options?.notifyTimeout === false)).toBe(true);
+
+        fcStore.dataflash.ready = true;
+        await vi.advanceTimersByTimeAsync(500);
+
+        expect(erase.isErasing.value).toBe(false);
+        expect(callbacks.onComplete).toHaveBeenCalledOnce();
+        expect(callbacks.onFinish).toHaveBeenCalledWith("complete");
+    });
+
+    it("tolerates a silent FC for the whole erase window", async () => {
+        vi.mocked(MSP.promise).mockRejectedValue(new MspTimeoutError("timed out", MSPCodes.MSP_DATAFLASH_SUMMARY));
+
+        await erase.start({ clearQueue: false });
+        eraseAcknowledgements[0]();
+        await vi.advanceTimersByTimeAsync(getDataflashEraseTimeoutMs(0) - 1000);
+
+        expect(erase.isErasing.value).toBe(true);
+        expect(callbacks.onFinish).not.toHaveBeenCalled();
+        expect(vi.mocked(MSP.promise).mock.calls.every(([, , options]) => options?.notifyTimeout === false)).toBe(true);
+    });
+
+    it("fails when the FC still reports not ready after the erase window", async () => {
+        vi.mocked(MSP.promise).mockResolvedValue(undefined);
+        fcStore.dataflash.totalSize = 32 * MIB;
+        const timeoutMs = getDataflashEraseTimeoutMs(32 * MIB);
+
+        await erase.start({ clearQueue: false });
+        eraseAcknowledgements[0]();
+        await vi.advanceTimersByTimeAsync(timeoutMs - 1000);
+
+        expect(erase.isErasing.value).toBe(true);
+
+        await vi.advanceTimersByTimeAsync(1500);
+
+        expect(vi.mocked(MSP.promise).mock.calls.at(-1)).toEqual([
+            MSPCodes.MSP_DATAFLASH_SUMMARY,
+            false,
+            { notifyTimeout: true },
+        ]);
+        expect(erase.isErasing.value).toBe(false);
+        expect(callbacks.onError).toHaveBeenCalledOnce();
+        expect(callbacks.onFinish).toHaveBeenCalledWith("error");
+    });
+
+    it("scales the erase window with NOR flash size", () => {
+        expect(getDataflashEraseTimeoutMs(0)).toBe(300000);
+        expect(getDataflashEraseTimeoutMs(16 * MIB)).toBe(300000);
+        expect(getDataflashEraseTimeoutMs(32 * MIB)).toBe(500000);
+        expect(getDataflashEraseTimeoutMs(64 * MIB)).toBe(900000);
+        expect(getDataflashEraseTimeoutMs(128 * MIB)).toBe(900000);
     });
 
     it("cleans up immediately when the physical connection closes", async () => {

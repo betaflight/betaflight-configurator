@@ -9,6 +9,8 @@ cache/
 apps/
 dist/
 debug/
+# ...but not the MSP debug tools' source folder
+!src/js/msp/debug/
 release/
 testresults/
 .eslintcache

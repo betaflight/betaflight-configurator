@@ -31,6 +31,18 @@
     "search": {
         "message": "חיפוש"
     },
+    "settingsSearchTitle": {
+        "message": "חיפוש הגדרות",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "חפש הגדרות...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "לא נמצאו הגדרות",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "אל תציג שוב"
     },
@@ -349,17 +361,13 @@
     "tabOptions": {
         "message": "אפשרויות"
     },
-    "sidebarOpenOptions": {
-        "message": "אפשרויות",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "החלף בין מצב כהה/בהיר",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "החלף למצב מומחה",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "הגדרות"
@@ -369,6 +377,9 @@
     },
     "sensorConfigHardware": {
         "message": "חומרת חיישנים"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "ג'ירוסקופ פעיל"
     },
     "sensorConfigGyroLabel": {
         "message": "ג'ירוסקופ $1"
@@ -582,7 +593,7 @@
         "message": "ניתוח תדרי ג'ירוסקופ "
     },
     "tabReceiver": {
-        "message": "מקלט (RX)"
+        "message": "מקלט"
     },
     "tabServos": {
         "message": "מנועי סרוו"
@@ -591,7 +602,7 @@
         "message": "מנגנון חירום"
     },
     "tabOsd": {
-        "message": "OSD"
+        "message": "תצוגת מסך (OSD)"
     },
     "tabVtx": {
         "message": "משדר וידאו"
@@ -625,9 +636,6 @@
     },
     "tabAuxiliary": {
         "message": "מצבים"
-    },
-    "logActionShow": {
-        "message": "הצג לוג"
     },
     "tabLog": {
         "message": "יומן"
@@ -935,7 +943,7 @@
         "message": "תרומה"
     },
     "defaultContributingText": {
-        "message": "אם תרצה לעזור להפוך את Betaflight לטובה עוד יותר תוכל לעזור בדרכים רבות, כולל:<br /><ul><li>שימוש בידע שלך ב-Betaflight כדי ליצור או לעדכן תוכן ב<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">wiki שלנו</a>, או לענות על שאלות של משתמשים אחרים בפורומים מקוונים.</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">תרומת קוד</a> לקושחה ולאפליקציה - תכונות חדשות, תיקונים, שיפורים.</li><li>בדיקת <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">תכונות ותיקונים חדשים</a> ומתן משוב.</li><li>עזרה למשתמשים אחרים לפתור את הבעיות שהם מדווחים עליהן ב<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">מעקב הבעיות (Issue tracker) שלנו</a>, והשתתפות בדיונים על בקשות לתכונות.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">תרגום</a> אפליקציית Betaflight לשפה חדשה, או עזרה בתחזוקת התרגומים הקיימים.</li></ul>"
+        "message": "אם תרצה לעזור להפוך את Betaflight לטובה עוד יותר תוכל לעזור בדרכים רבות, כולל:<br /><ul><li>שימוש בידע שלך ב-Betaflight כדי ליצור או לעדכן תוכן ב<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">wiki שלנו</a>, או לענות על שאלות של משתמשים אחרים בפורומים מקוונים.</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">תרומת קוד</a> לקושחה ולאפליקציה - תכונות חדשות, תיקונים, שיפורים.</li><li>בדיקת <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">תכונות ותיקונים חדשים</a> ומתן משוב.</li><li>עזרה למשתמשים אחרים לפתור את הבעיות שהם מדווחים עליהן ב<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">מעקב הבעיות שלנו</a>, והשתתפות בדיונים על בקשות לתכונות.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">תרגום</a> אפליקציית Betaflight לשפה חדשה, או עזרה בתחזוקת התרגומים הקיימים.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "יש לנו גם <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">קבוצת פייסבוק</a>.<br />הצטרף אלינו כדי לקבל מקום לדבר על Betaflight, לשאול שאלות תצורה, או פשוט לבלות עם טייסים אחרים."
@@ -1106,11 +1114,11 @@
         "description": "Message that pops up to describe the FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
-        "message": "לא זוהה אות מקלט (RX) תקין",
+        "message": "לא זוהה אות מקלט תקין",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
-        "message": "המקלט (RX) שלך בדיוק התאושש ממצב מנגנון חירום אך מתג החימוש עדיין פועל",
+        "message": "המקלט שלך בדיוק התאושש ממצב מנגנון חירום אך מתג החימוש עדיין פועל",
         "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
@@ -1310,6 +1318,12 @@
     "initialSetupAccelCalibEnded": {
         "message": "כיול מד התאוצה <span class=\"message-positive\">הסתיים</span>"
     },
+    "initialSetupMagCalibStarted": {
+        "message": "כיול מגנטומטר התחיל"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "כיול מגנטומטר<span class=\"message-positive\">הסתיים</span>"
+    },
     "initialSetupSettingsRestored": {
         "message": "ההגדרות שוחזרו ל<strong>ברירת מחדל</strong>"
     },
@@ -1360,7 +1374,7 @@
         "message": "פלט טלמטריה"
     },
     "featureTELEMETRYTip": {
-        "message": "הפעל פלט טלמטריה לשליחה לשלט (TX)"
+        "message": "הפעל פלט טלמטריה לשליחה לשלט"
     },
     "feature3D": {
         "message": "מצב 3D (לשימוש עם בקרי מהירות דו-כיווניים)"
@@ -1408,7 +1422,7 @@
         "message": "הפעל Airmode באופן קבוע"
     },
     "featureRX_SPI": {
-        "message": "מקלט SPI Rx (לדוגמה מקלט מובנה)"
+        "message": "מקלט SPI (לדוגמה מקלט מובנה)"
     },
     "escSensorSerialPort": {
         "message": "יציאה טורית של טלמטריית בקר המהירות"
@@ -1465,7 +1479,7 @@
         "message": "ה-UART שאליו מחוברת מצלמה בפרוטוקול RunCam. מוגדר במכשיר עצמו החל מ-API 1.49; לשונית היציאות רק מציגה אותו."
     },
     "configurationTelemetryHelp": {
-        "message": "פלט טלמטריה מהמקלט (RX)"
+        "message": "פלט טלמטריה מהמקלט"
     },
     "configurationRSSI": {
         "message": "RSSI (עוצמת אות)"
@@ -1756,10 +1770,10 @@
         "message": "מצפצף כאשר הג'ירוסקופ מכויל"
     },
     "beeperRX_LOST": {
-        "message": "מצפצף כאשר השלט (TX) כבוי או האות אבד (חוזר עד שה-TX תקין)"
+        "message": "מצפצף כאשר השלט כבוי או האות אבד (חוזר עד שהשלט תקין)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "מצפצף SOS כאשר חמוש והשלט (TX) כבוי או האות אבד (נחיתה אוטומטית/פרוק אוטומטי)"
+        "message": "מצפצף SOS כאשר חמוש והשלט כבוי או האות אבד (נחיתה אוטומטית/פרוק אוטומטי)"
     },
     "beeperDISARMING": {
         "message": "צפצוף בעת פרוק בקר הטיסה"
@@ -1973,7 +1987,7 @@
         "message": "מקלט טורי"
     },
     "portsSerialRxHelp": {
-        "message": "הפעל או השבת מקלט טורי של שלט רחוק (RX) על UART שצוין. מותר רק אחד."
+        "message": "הפעל או השבת מקלט טורי של שלט רחוק על UART שצוין. מותר רק אחד."
     },
     "portsSensorIn": {
         "message": "קלט חיישן"
@@ -2069,7 +2083,7 @@
         "message": "זרימה אופטית"
     },
     "portsClaimOsd": {
-        "message": "OSD"
+        "message": "תצוגת מסך (OSD)"
     },
     "portsClaimOsdCustomText": {
         "message": "טקסט OSD מותאם אישית"
@@ -2553,7 +2567,7 @@
         "message": "מזהה התאמת מודל"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">בדוק תמיד שמנגנון החירום עובד כראוי!</a></strong></b> ההגדרות נמצאות בלשונית מנגנון חירום, שדורשת מצב מומחה.<br> &#8226; <b>השתמש בקושחה העדכנית ביותר לשלט (TX)!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">השבת את מסנן ה-ADC החומרתי</a></strong> בשלט אם אתה משתמש ב-OpenTx או ב-EdgeTx.<br>הגדרה בסיסית: הגדר את תצורת 'המקלט' כראוי. בחר את ה-'מפת ערוצים' הנכון לשלט שלך. ודא שהעמודות של גלגול, עלרוד ושאר הערוצים זזות כראוי. התאם את ערכי הקצה של הערוצים בשלט לכ-1000 ועד כ-2000, ושים את נקודת האמצע על 1500. למידע נוסף, קרא את ה-<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">תיעוד</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">בדוק תמיד שמנגנון החירום עובד כראוי!</a></strong></b> ההגדרות נמצאות בלשונית מנגנון חירום, שדורשת מצב מומחה.<br> &#8226; <b>השתמש בקושחה העדכנית ביותר לשלט!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">השבת את מסנן ה-ADC החומרתי</a></strong> בשלט אם אתה משתמש ב-OpenTx או ב-EdgeTx.<br>הגדרה בסיסית: הגדר את תצורת 'המקלט' כראוי. בחר את ה-'מפת ערוצים' הנכון לשלט שלך. ודא שהעמודות של גלגול, עלרוד ושאר הערוצים זזות כראוי. התאם את ערכי הקצה של הערוצים בשלט לכ-1000 ועד כ-2000, ושים את נקודת האמצע על 1500. למידע נוסף, קרא את ה-<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">תיעוד</a></strong>."
     },
     "receiverFailsafeActiveTitle": {
         "message": "מנגנון חירום פעיל"
@@ -2592,7 +2606,7 @@
         "message": "הערך המינימלי (במיקרו-שניות) שיזוהה כ'סטיק למעלה / ימינה' לטובת קלט פקודה (MAX_CHECK)."
     },
     "receiverDeadband": {
-        "message": "שטח מת RC"
+        "message": "שטח מת שלט"
     },
     "receiverHelpDeadband": {
         "message": "אלו ערכים (במיקרו-שניות) המגדירים עד כמה פקודות הרדיו צריכות להיות שונות כדי להיחשב כתקינות. עבור שלטים עם קפיצות בפלט, ניתן להגדיל את הערך הזה אם יש קפיצות בערוצים בזמן מנוחה."
@@ -2604,7 +2618,7 @@
         "message": "אלו ערכים (במיקרו-שניות) המגדירים עד כמה פקודות הרדיו צריכות להיות שונות כדי להיחשב כתקינות. עבור שלטים עם קפיצות בפלט, ניתן להגדיל את הערך הזה אם יש קפיצות בערוצים בזמן מנוחה. <strong>הגדרה זו חלה על סבסוב בלבד.</strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": "שטח מת מצערת(3D)"
+        "message": "שטח מת מצערת 3D"
     },
     "receiverHelp3dDeadbandThrottle": {
         "message": "אלו ערכים (במיקרו-שניות). כדי להרחיב את האזור הניטרלי יש להגדיל את הערך. <strong>הגדרה זו חלה על מצערת תלת-מימד (3D) בלבד.</strong>"
@@ -2656,7 +2670,7 @@
         "message": "ביטוי שיוך (Binding Phrase)"
     },
     "receiverButtonSticks": {
-        "message": "מדמה שלט (Radio Emulator)",
+        "message": "מדמה שלט",
         "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
@@ -2685,10 +2699,10 @@
         "message": "אין מצבים התואמים למסננים הנוכחיים."
     },
     "auxiliaryMin": {
-        "message": "מינימום (Min)"
+        "message": "מינימום"
     },
     "auxiliaryMax": {
-        "message": "מקסימום (Max)"
+        "message": "מקסימום"
     },
     "auxiliaryDisabled": {
         "message": "(מושבת)",
@@ -2840,7 +2854,7 @@
         "description": "Help text to LEDLOW mode"
     },
     "auxiliaryHelpMode_MAG": {
-        "message": "נעילת כיוון לפי המגנומטר (שליטת מצפן)",
+        "message": "נעילת כיוון לפי המגנטומטר (שליטת מצפן)",
         "description": "Help text to MAG mode"
     },
     "auxiliaryHelpMode_MSPOVERRIDE": {
@@ -2922,6 +2936,10 @@
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "העבר את משדר הוידאו למצב פיט (Pit Mode, עוצמת שידור חלשה, אם נתמך)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "דגימת נקודות ציון בטיסה: לחיצה קצרה מוסיפה את המיקום הנוכחי לתוכנית הטיסה כנקודת ציון, החזקת המפסק למשך 1.5 שניות מוחקת את נקודת הציון האחרונה",
+        "description": "Help text to WP CAPTURE mode"
     },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "איפוס שעון ההקפות של המשיב",
@@ -3084,7 +3102,7 @@
         "message": "{{active}} מתוך {{total}} משבצות פעילות"
     },
     "servosChangeDirection": {
-        "message": "שנה כיוון בשלט (TX) כדי שיתאים"
+        "message": "שנה כיוון בשלט כדי שיתאים"
     },
     "servosForwardChannel": {
         "message": "העבר ערוץ {{channel}} למנוע סרוו {{servo}}"
@@ -3118,7 +3136,7 @@
         "message": "GPS"
     },
     "gpsHeadHelp": {
-        "message": "מציג מידע שונה הקשור ל-GPS. כיוון מוצג רק כאשר משתמשים במגנומטר",
+        "message": "מציג מידע שונה הקשור ל-GPS. כיוון מוצג רק כאשר משתמשים במגנטומטר",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3627,10 +3645,10 @@
         "message": "שחרר כדי לעצור"
     },
     "escDshotDirectionDialog-Start": {
-        "message": "בנפרד (Individually)"
+        "message": "בנפרד"
     },
     "escDshotDirectionDialog-StartWizard": {
-        "message": "אשף (Wizard)"
+        "message": "אשף"
     },
     "escDshotDirectionDialog-SetDirectionHint": {
         "message": "שנה כיוון של מנוע(ים) נבחרים"
@@ -3678,7 +3696,7 @@
         "message": "מד תאוצה"
     },
     "sensorsMagSelect": {
-        "message": "מגנומטר"
+        "message": "מגנטומטר"
     },
     "sensorsAltitudeSelect": {
         "message": "גובה"
@@ -3699,7 +3717,7 @@
         "message": "מד תאוצה - g"
     },
     "sensorsMagTitle": {
-        "message": "מגנומטר"
+        "message": "מגנטומטר"
     },
     "sensorsAltitudeTitle": {
         "message": "גובה - מטרים"
@@ -3981,6 +3999,12 @@
     "firmwareFlasherNoReboot": {
         "message": "ללא תהליך אתחול"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "סוג בנייה"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "לוח"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "בחר סוג בנייה כדי לראות לוחות זמינים."
     },
@@ -4013,21 +4037,6 @@
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "בחירה ידנית של קצב השידור עבור לוחות שלא תומכים במהירות ברירת המחדל, או לצריבה דרך בלוטוס.<br /><span class=\"message-negative\">הערה:</span> לא בשימוש בזמן צריבה דרך USB DFU"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "הצג מועמדים לשחרור"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "הצג גרסאות 'מועמדות לשחרור' (RC) בנוסף לגרסאות יציבות"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "שחרור רשמי"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "שחרור ומועמד לשחרור"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "פיתוח"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "בחר גרסת קושחה"
@@ -4188,9 +4197,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "אתה עומד לצרוב <strong>גרסת מפתחים של הקושחה</strong>. אלו גרסאות שנמצאות בתהליכי עבודה, וכל אחד מהמקרים הבאים עלול לקרות:<strong><ul><li>הקושחה לא תעבוד בכלל;</li><li>לא יהיה ניתן להטיס את הרחפן עם הקושחה הזו;</li><li>ישנן בעיות בטיחות בקושחה, למשל בריחת כלי הטיס (Flyaways)</li><li>הקושחה עלולה לגרום לבקר הטיסה להפסיק להגיב, או להיהרס לחלוטין</li></ul></strong>אם תמשיך עם צריבת הקושחה הזו, <strong>אתה לוקח על עצמך אחריות מלאה לסיכון שכל אחד מהמקרים הנ\"ל יקרה</strong>. בנוסף אתה מאשר שחובה לבצע <strong>בדיקות שולחן (Bench tests) יסודיות ללא פרופלורים</strong> לפני כל ניסיון להטיס עם קושחה זו."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "קראתי את האמור לעיל ואני <strong>לוקח אחריות מלאה<strong> לצריבת קושחה לא יציבה זו"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "צרוב (Flash)"
@@ -4577,7 +4583,7 @@
         "message": "ברומטר ו - Sonar /גובה"
     },
     "pidTuningMag": {
-        "message": "מגנומטר/כיוון (Heading)"
+        "message": "מגנטומטר/כיוון (Heading)"
     },
     "pidTuningGps": {
         "message": "ניווט GPS"
@@ -6348,14 +6354,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayLeft": {
-        "message": "שכבת על (Overlay) המציגה את מיקום הסטיק השמאלי בשלט."
+        "message": "שכבת על המציגה את מיקום הסטיק השמאלי בשלט."
     },
     "osdTextElementStickOverlayRight": {
         "message": "תצוגת סטיק ימני",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayRight": {
-        "message": "שכבת על (Overlay) המציגה את מיקום הסטיק הימני בשלט."
+        "message": "שכבת על המציגה את מיקום הסטיק הימני בשלט."
     },
     "osdTextElementDisplayName": {
         "message": "שם תצוגה",
@@ -6439,7 +6445,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescTxUplinkPower": {
-        "message": "מציג ערך של עוצמת שידור השלט (ב-mW או ב-W). שימושי כאשר <i>הספק דינמי (Dynamic Power)</i> מופעל בשלטים התומכים בכך"
+        "message": "מציג ערך של עוצמת שידור השלט (ב-mW או ב-W). שימושי כאשר <i>הספק דינמי</i> מופעל בשלטים התומכים בכך"
     },
     "osdTextElementReadyMode": {
         "message": "מצב מוכן",
@@ -7284,7 +7290,7 @@
         "message": "Pitot"
     },
     "configurationMagHardware": {
-        "message": "מגנומטר (אם נתמך)"
+        "message": "מגנטומטר (אם נתמך)"
     },
     "configurationMagDeclinationSet": {
         "message": "הנטייה המגנטית הוגדרה ל - {{declination}}° מהמיקום שזוהה."
@@ -7369,6 +7375,15 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "כיול הקושחה הושלם!"
+    },
+    "magCalibrationNotSent": {
+        "message": "הכיול לא יכול היה להתחיל: בקר הטיסה לא קיבל את הפקודה."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "מתחיל..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "מכייל... {{seconds}} שניות"
     },
     "magCalibrationCheck": {
         "message": "בדיקה"

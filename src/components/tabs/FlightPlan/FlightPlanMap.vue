@@ -31,6 +31,7 @@ import { DragPan } from "ol/interaction";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { useMapViewport } from "@/composables/useMapViewport";
 import { ipCoordinates } from "@/js/utils/ipGeolocation";
+import { getCssVar } from "@/js/utils/cssVar";
 
 const { waypoints, positionalWaypoints, selectedWaypointUid, selectWaypoint, addWaypointAtLocation, updateWaypoint } =
     useFlightPlan();
@@ -144,7 +145,7 @@ const setupMapLayers = () => {
         source: new SourceVector(),
         style: new Style({
             stroke: new Stroke({
-                color: "#FF00FF", // Magenta
+                color: getCssVar("--map-route"),
                 width: 3,
             }),
         }),
@@ -365,18 +366,18 @@ const updateMapFeatures = (autoFit = true) => {
         const isBeingDragged = draggingWaypointUid.value === wp.uid;
 
         // Determine color: green for dragging, orange for selected, blue for normal
-        let fillColor = "#0080FF"; // Blue for normal
+        let fillColor = getCssVar("--map-waypoint");
         let radius = 10;
         let strokeWidth = 2;
         let fontSize = "bold 12px sans-serif";
 
         if (isBeingDragged) {
-            fillColor = "#00FF00"; // Green for dragging
+            fillColor = getCssVar("--map-waypoint-dragging");
             radius = 16;
             strokeWidth = 3;
             fontSize = "bold 14px sans-serif";
         } else if (isSelected) {
-            fillColor = "#FF8C00"; // Orange for selected
+            fillColor = getCssVar("--map-waypoint-selected");
             radius = 14;
             strokeWidth = 3;
             fontSize = "bold 13px sans-serif";
@@ -391,14 +392,14 @@ const updateMapFeatures = (autoFit = true) => {
                         color: fillColor,
                     }),
                     stroke: new Stroke({
-                        color: "#FFFFFF",
+                        color: getCssVar("--map-waypoint-text"),
                         width: strokeWidth,
                     }),
                 }),
                 text: new Text({
                     text: String(wp.order + 1),
                     fill: new Fill({
-                        color: "#FFFFFF",
+                        color: getCssVar("--map-waypoint-text"),
                     }),
                     font: fontSize,
                 }),
@@ -491,69 +492,69 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .flight-plan-map {
     display: flex;
     flex-direction: column;
     height: 100%;
-}
 
-.flight-plan-map :deep(> div:last-child) {
-    flex: 1;
-    min-height: 0;
-}
+    & > div:last-child {
+        flex: 1;
+        min-height: 0;
+    }
 
-.map-container {
-    flex: 1;
-    min-height: 480px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid var(--surface-500);
-    background: var(--surface-100);
-    position: relative;
-}
-
-.map {
-    width: 100%;
-    height: 100%;
-}
-
-.map-loading {
-    position: absolute;
-    top: 0;
-    inset-inline-start: 0;
-    inset-inline-end: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface-100);
-    z-index: 1000;
-}
-
-.loading-message {
-    font-size: 1rem;
-    color: var(--text);
-    font-weight: 500;
-}
-
-.map-instructions {
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    background: var(--surface-100);
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: var(--surface-700);
-    text-align: center;
-}
-
-.map-instructions p {
-    margin: 0;
-}
-
-@media (max-width: 1055px) {
     .map-container {
-        min-height: 320px;
+        flex: 1;
+        min-height: 480px;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid var(--surface-500);
+        background: var(--surface-100);
+        position: relative;
+    }
+
+    .map {
+        width: 100%;
+        height: 100%;
+    }
+
+    .map-loading {
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface-100);
+        z-index: 1000;
+    }
+
+    .loading-message {
+        font-size: 1rem;
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .map-instructions {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: var(--surface-100);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        color: var(--surface-700);
+        text-align: center;
+    }
+
+    .map-instructions p {
+        margin: 0;
+    }
+
+    @media (max-width: 1055px) {
+        .map-container {
+            min-height: 320px;
+        }
     }
 }
 </style>

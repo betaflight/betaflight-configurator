@@ -228,103 +228,105 @@ const handleDragEnd = (event: DragEvent) => {
 };
 </script>
 
-<style scoped>
-.note {
-    padding: 1rem;
-    text-align: center;
-    color: var(--surface-700);
-    font-style: italic;
-}
+<style lang="less">
+.waypoint-list {
+    .note {
+        padding: 1rem;
+        text-align: center;
+        color: var(--surface-700);
+        font-style: italic;
+    }
 
-.waypoint-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    background: var(--surface-50);
-    border-bottom: 1px solid var(--surface-500);
-    color: var(--text);
-    cursor: grab;
-    transition:
-        background 0.2s,
-        opacity 0.2s,
-        transform 0.2s;
-}
+    .waypoint-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        background: var(--surface-50);
+        border-bottom: 1px solid var(--surface-500);
+        color: var(--text);
+        cursor: grab;
+        transition:
+            background 0.2s,
+            opacity 0.2s,
+            transform 0.2s;
+    }
 
-.waypoint-item:active {
-    cursor: grabbing;
-}
+    .waypoint-item:active {
+        cursor: grabbing;
+    }
 
-.waypoint-item.dragging {
-    opacity: 0.4;
-}
+    .waypoint-item.dragging {
+        opacity: 0.4;
+    }
 
-.waypoint-item.drag-over {
-    border-top: 3px solid var(--primary-500);
-    transform: translateY(2px);
-}
+    .waypoint-item.drag-over {
+        border-top: 3px solid var(--primary-500);
+        transform: translateY(2px);
+    }
 
-.waypoint-item:first-child {
-    border-start-start-radius: 8px;
-    border-start-end-radius: 8px;
-}
+    .waypoint-item:first-child {
+        border-start-start-radius: 8px;
+        border-start-end-radius: 8px;
+    }
 
-.waypoint-item:last-child {
-    border-end-start-radius: 8px;
-    border-end-end-radius: 8px;
-    border-bottom: none;
-}
+    .waypoint-item:last-child {
+        border-end-start-radius: 8px;
+        border-end-end-radius: 8px;
+        border-bottom: none;
+    }
 
-.waypoint-item:hover {
-    background: var(--surface-100);
-}
+    .waypoint-item:hover {
+        background: var(--surface-100);
+    }
 
-.waypoint-item.selected {
-    background: var(--primary-500);
-    border-inline-start: 3px solid var(--primary-700);
-}
+    .waypoint-item.selected {
+        background: var(--primary-500);
+        border-inline-start: 3px solid var(--primary-700);
+    }
 
-.waypoint-item.selected .waypoint-order {
-    background: var(--surface-50);
-    color: var(--primary-500);
-}
+    .waypoint-item.selected .waypoint-order {
+        background: var(--surface-50);
+        color: var(--primary-500);
+    }
 
-.waypoint-item.selected .waypoint-coords,
-.waypoint-item.selected .waypoint-details {
-    color: var(--surface-50);
-}
+    .waypoint-item.selected .waypoint-coords,
+    .waypoint-item.selected .waypoint-details {
+        color: var(--surface-50);
+    }
 
-.waypoint-order {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--primary-500);
-    color: var(--surface-50);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-inline-end: 0.75rem;
-    flex-shrink: 0;
-}
+    .waypoint-order {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--primary-500);
+        color: var(--surface-50);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-inline-end: 0.75rem;
+        flex-shrink: 0;
+    }
 
-.waypoint-info {
-    flex: 1;
-    min-width: 0;
-}
+    .waypoint-info {
+        flex: 1;
+        min-width: 0;
+    }
 
-.waypoint-coords {
-    font-size: 0.85rem;
-    color: var(--text);
-    font-weight: 500;
-}
+    .waypoint-coords {
+        font-size: 0.85rem;
+        color: var(--text);
+        font-weight: 500;
+    }
 
-.waypoint-details {
-    font-size: 0.75rem;
-    color: var(--surface-700);
-    margin-top: 0.2rem;
-}
+    .waypoint-details {
+        font-size: 0.75rem;
+        color: var(--surface-700);
+        margin-top: 0.2rem;
+    }
 
-.hold-details {
-    font-style: italic;
+    .hold-details {
+        font-style: italic;
+    }
 }
 </style>

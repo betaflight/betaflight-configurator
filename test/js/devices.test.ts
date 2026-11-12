@@ -87,6 +87,41 @@ describe("devices", () => {
         });
     });
 
+    describe("isPersistentUsbBridge", () => {
+        it("matches every product of a bridge-only vendor", async () => {
+            const { isPersistentUsbBridge } = await freshDevices();
+
+            expect(isPersistentUsbBridge(0x10c4, 0xea60)).toBe(true); // CP2102
+            expect(isPersistentUsbBridge(0x1a86, 0x55d4)).toBe(true); // CH9102
+            expect(isPersistentUsbBridge(0x0403, 0x1234)).toBe(true); // FTDI, unknown product
+            expect(isPersistentUsbBridge(0x067b, 0x2303)).toBe(true); // PL2303
+        });
+
+        it("matches a vendor that also makes native-USB MCUs only by listed product", async () => {
+            const { isPersistentUsbBridge } = await freshDevices();
+
+            expect(isPersistentUsbBridge(0x04d8, 0x00dd)).toBe(true); // MCP2221
+            expect(isPersistentUsbBridge(0x04d8, 0x000a)).toBe(false); // PIC native CDC
+            expect(isPersistentUsbBridge(0x04d8, undefined)).toBe(false);
+        });
+
+        it("rejects ports that re-enumerate on an FC reboot", async () => {
+            const { isPersistentUsbBridge } = await freshDevices();
+
+            expect(isPersistentUsbBridge(0x0483, 0x5740)).toBe(false); // STM32 VCP
+            expect(isPersistentUsbBridge(0x0483, 0x374e)).toBe(false); // ST-Link, deliberately not a bridge
+            expect(isPersistentUsbBridge(0x303a, 0x1001)).toBe(false); // ESP32 USB-Serial/JTAG
+            expect(isPersistentUsbBridge(0x2e8a, 0x0009)).toBe(false); // Pico VCP
+        });
+
+        it("rejects a port without USB ids", async () => {
+            const { isPersistentUsbBridge } = await freshDevices();
+
+            expect(isPersistentUsbBridge(undefined, undefined)).toBe(false);
+            expect(isPersistentUsbBridge("4292", "60000")).toBe(false);
+        });
+    });
+
     describe("loadDeviceFilters", () => {
         it("applies the build server's lists in place and caches them", async () => {
             const devices = await freshDevices();

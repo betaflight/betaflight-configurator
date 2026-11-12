@@ -324,17 +324,13 @@
     "tabOptions": {
         "message": "オプション"
     },
-    "sidebarOpenOptions": {
-        "message": "オプション",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "ダーク / ライトモード切替",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "エキスパートモード切替",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "セットアップ"
@@ -555,9 +551,6 @@
     },
     "tabAuxiliary": {
         "message": "モード"
-    },
-    "logActionShow": {
-        "message": "ログ表示"
     },
     "tabLog": {
         "message": "ログ"
@@ -3671,21 +3664,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "シリアル接続に対しデフォルト伝送速度に対応しない、またはBluetooth経由で書き込みするFCボードの伝送速度を手動で選択します。<br /><span class=\"message-negative\">注:</span> USB DFUで書き込みさせる場合は使用しません。"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "リリース候補を表示"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "安定版リリースに加えRC版リリースも表示"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "リリース"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "リリースおよびRCバージョン"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "開発用"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "ファームウェアバージョンを選択"
     },
@@ -3842,9 +3820,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "<strong>開発ビルド版ファームウェア</strong>をフラッシュしようとしています。これらのビルドは開発作業中のものであり、次のいずれかが当てはまる場合があります:<strong><ul><li>ファームウェアがまったく機能しない場合;</li><li>ファームウェアが飛行不能な場合;</li><li>飛行散逸 [フライアウェイ] など、ファームウェアに安全性の問題がある場合;</li><li>ファームウェアが原因で、フライトコントローラが応答しなくなったり、破損したりする可能性がある場合</li></ul></strong>このファームウェアのフラッシュを続行する場合は、<strong>上記のいずれかのリスクに対して自己責任を負うこととなります。</strong>さらにこのファームウェアを飛ばす前に、<strong>プロペラを外し徹底的なベンチテストを実行する</strong>必要があることを周知してください。"
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "上記を確認し、<strong>自己責任において</strong>未検証ファームウェアをフラッシュします"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "フラッシュ"

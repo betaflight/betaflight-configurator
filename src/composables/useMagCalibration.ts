@@ -179,7 +179,7 @@ export function useMagCalibration() {
     let lastMag: Vec3 | null = null;
     let firmwareFlagSeen = false;
     let reconstructionOffsets: Vec3 | null = null; // firmware offsets to add back in full mode for raw sensor reconstruction
-    let starting = false;
+    const starting = ref(false);
     // Bumped by every teardown path. startCalibration() captures it before awaiting the
     // CLI offset read and re-checks after, so a cancel/retry/discard/unmount during that
     // await cannot resurrect the phase and start polling on a session the user abandoned.
@@ -193,11 +193,13 @@ export function useMagCalibration() {
      *   'check': real-time validation without altering calibration.
      */
     async function startCalibration(calMode: MagCalibrationMode = "full") {
-        if (phase.value !== "idle" || starting) {
+        // Only an active session blocks a new one. A finished one ('complete' or 'error') must
+        // not: the legacy Calibrate button has no Retry/Close to reset the phase to idle (#5650).
+        if (phase.value === "waiting" || phase.value === "collecting" || starting.value) {
             return;
         }
 
-        starting = true;
+        starting.value = true;
         const startToken = ++startSequence;
         try {
             cleanup();
@@ -217,7 +219,10 @@ export function useMagCalibration() {
 
             firmwareOffsets.value = await readFirmwareOffsets();
         } finally {
-            starting = false;
+            // A teardown already cleared the flag, and a newer start may own it now.
+            if (startToken === startSequence) {
+                starting.value = false;
+            }
         }
 
         // Abandoned while the CLI read was in flight — leave the teardown state alone.
@@ -237,10 +242,16 @@ export function useMagCalibration() {
             statusMessage.value = "magCalibrationCollecting";
             startDataPolling();
         } else {
-            // Quick / legacy mode: trigger firmware calibration
+            // Quick / legacy mode: trigger firmware calibration. send_message returns false when the
+            // command never left (disconnected or virtual mode); end the session instead of waiting
+            // for a calibration flag that will never arrive.
+            if (MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false) === false) {
+                phase.value = "error";
+                statusMessage.value = "magCalibrationNotSent";
+                return;
+            }
             phase.value = "waiting";
             statusMessage.value = "magCalibrationWaiting";
-            MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false);
             startDataPolling();
             startCompletionMonitor();
         }
@@ -249,7 +260,7 @@ export function useMagCalibration() {
     function cancelCalibration() {
         cleanup();
         startSequence++;
-        starting = false;
+        starting.value = false;
         phase.value = "idle";
         statusMessage.value = "";
     }
@@ -424,7 +435,7 @@ export function useMagCalibration() {
     function retry() {
         cleanup();
         startSequence++;
-        starting = false;
+        starting.value = false;
         phase.value = "idle";
         statusMessage.value = "";
         samples.value = [];
@@ -487,7 +498,7 @@ export function useMagCalibration() {
     function discardCalibration() {
         cleanup();
         startSequence++;
-        starting = false;
+        starting.value = false;
         samples.value = [];
         sphereFitResult.value = null;
         coverage.value = null;
@@ -516,6 +527,7 @@ export function useMagCalibration() {
         liveMag,
         liveFieldStrength,
         firmwareOffsets,
+        starting,
 
         // Actions
         startCalibration,

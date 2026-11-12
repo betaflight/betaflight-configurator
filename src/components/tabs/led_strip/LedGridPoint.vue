@@ -114,9 +114,10 @@ const colorStyle = computed(() => {
 });
 </script>
 
-<style scoped>
-/* Base gPoint styles */
+<style lang="less">
 .gPoint {
+    /* Base gPoint styles */
+
     float: inline-start;
     border: solid 1px var(--surface-500);
     width: 23px;
@@ -126,335 +127,348 @@ const colorStyle = computed(() => {
     background: var(--surface-300);
     cursor: pointer;
     position: relative;
-}
 
-.gPoint:hover {
-    opacity: 0.9;
-}
+    &:hover {
+        opacity: 0.9;
+    }
 
-/* Selection states */
-.gPoint.ui-selected {
-    box-shadow: inset 0 0 8px rgba(255, 0, 255, 1) !important;
-    border: solid 1px #000 !important;
-}
+    /* Function-specific backgrounds */
 
-/* Function-specific backgrounds */
-.gPoint.function-s {
-    background: brown;
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: rgb(52, 155, 255);
-}
+    &.function-s {
+        background: brown;
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: rgb(52, 155, 255);
+    }
 
-.gPoint.function-c {
-    background: linear-gradient(
-        to bottom right,
-        rgba(255, 0, 0, 0.5) 0%,
-        rgba(255, 255, 0, 0.5) 15%,
-        rgba(0, 255, 0, 0.5) 30%,
-        rgba(0, 255, 255, 0.5) 50%,
-        rgba(0, 0, 255, 0.5) 65%,
-        rgba(255, 0, 255, 0.5) 80%,
-        rgba(255, 0, 0, 0.5) 100%
-    );
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: grey;
-}
+    &.function-c {
+        background: linear-gradient(
+            to bottom right,
+            rgba(255, 0, 0, 0.5) 0%,
+            rgba(255, 255, 0, 0.5) 15%,
+            rgba(0, 255, 0, 0.5) 30%,
+            rgba(0, 255, 255, 0.5) 50%,
+            rgba(0, 0, 255, 0.5) 65%,
+            rgba(255, 0, 255, 0.5) 80%,
+            rgba(255, 0, 0, 0.5) 100%
+        );
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: grey;
+    }
 
-.gPoint.function-f {
-    background: rgb(50, 205, 50);
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: rgb(50, 205, 50);
-}
+    &.function-f {
+        background: rgb(50, 205, 50);
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: rgb(50, 205, 50);
+    }
 
-.gPoint.function-a {
-    background: rgb(52, 155, 255);
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: rgb(52, 155, 255);
-}
+    &.function-a {
+        background: rgb(52, 155, 255);
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: rgb(52, 155, 255);
+    }
 
-.gPoint.function-l {
-    background: magenta;
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: rgb(52, 155, 255);
-}
+    &.function-l {
+        background: magenta;
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: rgb(52, 155, 255);
+    }
 
-.gPoint.function-r {
-    background: radial-gradient(
-        ellipse at center,
-        rgba(0, 0, 0, 1) 0%,
-        rgba(0, 0, 0, 1) 60%,
-        white 60%,
-        white 70%,
-        black 70%,
-        black 100%
-    );
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: black;
-}
+    &.function-r {
+        background: radial-gradient(
+            ellipse at center,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 60%,
+            white 60%,
+            white 70%,
+            black 70%,
+            black 100%
+        );
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: black;
+    }
 
-.gPoint.function-g {
-    background: green;
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: rgb(52, 155, 255);
-}
+    &.function-g {
+        background: green;
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: rgb(52, 155, 255);
+    }
 
-.gPoint.function-p {
-    background: rgb(0, 128, 85);
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: rgb(52, 155, 255);
-}
+    &.function-p {
+        background: rgb(0, 128, 85);
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: rgb(52, 155, 255);
+    }
 
-.gPoint.function-e {
-    background: rgb(0, 0, 128);
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: rgb(52, 155, 255);
-}
+    &.function-e {
+        background: rgb(0, 0, 128);
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: rgb(52, 155, 255);
+    }
 
-.gPoint.function-u {
-    background: linear-gradient(
-        to bottom right,
-        rgba(191, 0, 255, 0.5) 0%,
-        rgba(0, 179, 255, 0.5) 33%,
-        rgba(0, 4, 255, 0.5) 66%,
-        rgba(191, 0, 255, 0.5) 100%
-    );
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-    border-color: grey;
-}
+    &.function-u {
+        background: linear-gradient(
+            to bottom right,
+            rgba(191, 0, 255, 0.5) 0%,
+            rgba(0, 179, 255, 0.5) 33%,
+            rgba(0, 4, 255, 0.5) 66%,
+            rgba(191, 0, 255, 0.5) 100%
+        );
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        border-color: grey;
+    }
 
-/* Wire number display */
-.wire {
-    text-align: center;
-    font-size: 12px;
-    display: block;
-    margin-inline-start: -1px;
-    margin-top: -21px;
-    width: 24px;
-    height: 24px;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-    line-height: 24px;
-}
+    /* Selection state: after the function rules above, which set the same properties at the
+       same specificity, so the selection wins by coming later. */
+    &.ui-selected {
+        box-shadow: inset 0 0 8px rgba(255, 0, 255, 1);
+        border: solid 1px black;
+    }
 
-/* Direction indicators */
-.indicators {
-    position: relative;
-    height: 24px;
-}
+    /* Wire number display */
 
-.indicators span {
-    width: 0;
-    height: 0;
-    position: absolute;
-    display: none;
-    font-size: 10px;
-    font-weight: bold;
-}
+    .wire {
+        text-align: center;
+        font-size: 12px;
+        display: block;
+        margin-inline-start: -1px;
+        margin-top: -21px;
+        width: 24px;
+        height: 24px;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        line-height: 24px;
+    }
 
-.indicators .north {
-    top: -9px;
-    inset-inline-start: 5px;
-    border-inline-start: 7px solid transparent;
-    border-inline-end: 7px solid transparent;
-    border-bottom: 7px solid rgba(0, 0, 0, 0.8);
-}
+    /* Direction indicators */
 
-.indicators .south {
-    bottom: -8px;
-    inset-inline-start: 5px;
-    border-inline-start: 7px solid transparent;
-    border-inline-end: 7px solid transparent;
-    border-top: 7px solid rgba(0, 0, 0, 0.8);
-}
+    .indicators {
+        position: relative;
+        height: 24px;
+    }
 
-.indicators .east {
-    bottom: 7px;
-    inset-inline-end: -9px;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-inline-start: 7px solid rgba(0, 0, 0, 0.8);
-}
+    .indicators span {
+        width: 0;
+        height: 0;
+        position: absolute;
+        display: none;
+        font-size: 10px;
+        font-weight: bold;
+    }
 
-.indicators .west {
-    bottom: 7px;
-    inset-inline-start: -9px;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-inline-end: 7px solid rgba(0, 0, 0, 0.8);
-}
+    .indicators .north {
+        top: -9px;
+        inset-inline-start: 5px;
+        border-inline-start: 7px solid transparent;
+        border-inline-end: 7px solid transparent;
+        border-bottom: 7px solid rgba(0, 0, 0, 0.8);
+    }
 
-.indicators .up {
-    display: none;
-    width: auto;
-    height: auto;
-    top: 0px;
-    inset-inline-start: 2px;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-}
+    .indicators .south {
+        bottom: -8px;
+        inset-inline-start: 5px;
+        border-inline-start: 7px solid transparent;
+        border-inline-end: 7px solid transparent;
+        border-top: 7px solid rgba(0, 0, 0, 0.8);
+    }
 
-.indicators .down {
-    display: none;
-    width: auto;
-    height: auto;
-    bottom: 17px;
-    inset-inline-end: 10px;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-}
+    .indicators .east {
+        bottom: 7px;
+        inset-inline-end: -9px;
+        border-top: 7px solid transparent;
+        border-bottom: 7px solid transparent;
+        border-inline-start: 7px solid rgba(0, 0, 0, 0.8);
+    }
 
-/* Show indicators based on direction classes */
-.gPoint.dir-n .north {
-    display: inline;
-}
+    .indicators .west {
+        bottom: 7px;
+        inset-inline-start: -9px;
+        border-top: 7px solid transparent;
+        border-bottom: 7px solid transparent;
+        border-inline-end: 7px solid rgba(0, 0, 0, 0.8);
+    }
 
-.gPoint.dir-s .south {
-    display: inline;
-}
+    .indicators .up {
+        display: none;
+        width: auto;
+        height: auto;
+        top: 0px;
+        inset-inline-start: 2px;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
 
-.gPoint.dir-e .east {
-    display: inline;
-}
+    .indicators .down {
+        display: none;
+        width: auto;
+        height: auto;
+        bottom: 17px;
+        inset-inline-end: 10px;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
 
-.gPoint.dir-w .west {
-    display: inline;
-}
+    /* Show indicators based on direction classes */
 
-.gPoint.dir-u .up {
-    display: inline;
-}
+    &.dir-n .north {
+        display: inline;
+    }
 
-.gPoint.dir-d .down {
-    display: inline;
-}
+    &.dir-s .south {
+        display: inline;
+    }
 
-/* Overlay indicators */
-.gPoint.function-w .overlay-w {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(1px at 8px 50%, red 0%, red 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
-    margin-top: -30px;
-    margin-inline-start: -9px;
-}
+    &.dir-e .east {
+        display: inline;
+    }
 
-.gPoint.function-v .overlay-v {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(
-        1px at 8px 50%,
-        black 0%,
-        black 2px,
-        rgba(0, 0, 0, 0.3) 3px,
-        rgba(0, 0, 0, 0) 4px
-    );
-    margin-top: -6px;
-    margin-inline-start: 4px;
-}
+    &.dir-w .west {
+        display: inline;
+    }
 
-.gPoint.function-i .overlay-i {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(
-        1px at 8px 50%,
-        yellow 0%,
-        yellow 2px,
-        rgba(0, 0, 0, 0.3) 3px,
-        rgba(0, 0, 0, 0) 4px
-    );
-    margin-top: -30px;
-    margin-inline-start: 16px;
-}
+    &.dir-u .up {
+        display: inline;
+    }
 
-.gPoint.function-t .overlay-t {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(
-        1px at 8px 50%,
-        orange 0%,
-        orange 2px,
-        rgba(0, 0, 0, 0.3) 3px,
-        rgba(0, 0, 0, 0) 4px
-    );
-    margin-top: -6px;
-    margin-inline-start: -9px;
-}
+    &.dir-d .down {
+        display: inline;
+    }
 
-.gPoint.function-o .overlay-o {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(
-        1px at 8px 50%,
-        brown 0%,
-        brown 2px,
-        rgba(0, 0, 0, 0.3) 3px,
-        rgba(0, 0, 0, 0) 4px
-    );
-    margin-top: -6px;
-    margin-inline-start: 16px;
-}
+    /* Overlay indicators */
 
-.gPoint.function-b .overlay-b {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(
-        1px at 8px 50%,
-        rgb(52, 155, 255) 0%,
-        rgb(52, 155, 255) 2px,
-        rgba(0, 0, 0, 0.3) 3px,
-        rgba(0, 0, 0, 0) 4px
-    );
-    margin-top: -18px;
-    margin-inline-start: -9px;
-}
+    &.function-w .overlay-w {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            red 0%,
+            red 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -30px;
+        margin-inline-start: -9px;
+    }
 
-.gPoint.function-y .overlay-y {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(
-        1px at 8px 50%,
-        rgb(0, 242, 12) 0%,
-        rgb(0, 242, 12) 2px,
-        rgba(0, 0, 0, 0.3) 3px,
-        rgba(0, 0, 0, 0) 4px
-    );
-    margin-top: -30px;
-    margin-inline-start: 4px;
-}
+    &.function-v .overlay-v {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            black 0%,
+            black 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -6px;
+        margin-inline-start: 4px;
+    }
 
-.gPoint.function-s .overlay-s {
-    float: inline-start;
-    height: 6px;
-    width: 16px;
-    background-image: radial-gradient(
-        1px at 8px 50%,
-        brown 0%,
-        brown 2px,
-        rgba(0, 0, 0, 0.3) 3px,
-        rgba(0, 0, 0, 0) 4px
-    );
-    margin-top: -6px;
-    margin-inline-start: 16px;
-}
+    &.function-i .overlay-i {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            yellow 0%,
+            yellow 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -30px;
+        margin-inline-start: 16px;
+    }
 
-/* Color overlay for color function */
-.gPoint.function-c .overlay-color,
-.gPoint.function-r .overlay-color,
-.gPoint.function-b .overlay-color,
-.gPoint.function-u .overlay-color,
-.gPoint .overlay-color {
-    float: inline-start;
-    height: 15px;
-    width: 15px;
-    margin-top: -23px;
-    margin-inline-start: 4px;
-    border-radius: 4px;
-    display: block;
+    &.function-t .overlay-t {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            orange 0%,
+            orange 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -6px;
+        margin-inline-start: -9px;
+    }
+
+    &.function-o .overlay-o {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            brown 0%,
+            brown 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -6px;
+        margin-inline-start: 16px;
+    }
+
+    &.function-b .overlay-b {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            rgb(52, 155, 255) 0%,
+            rgb(52, 155, 255) 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -18px;
+        margin-inline-start: -9px;
+    }
+
+    &.function-y .overlay-y {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            rgb(0, 242, 12) 0%,
+            rgb(0, 242, 12) 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -30px;
+        margin-inline-start: 4px;
+    }
+
+    &.function-s .overlay-s {
+        float: inline-start;
+        height: 6px;
+        width: 16px;
+        background-image: radial-gradient(
+            1px at 8px 50%,
+            brown 0%,
+            brown 2px,
+            rgba(0, 0, 0, 0.3) 3px,
+            rgba(0, 0, 0, 0) 4px
+        );
+        margin-top: -6px;
+        margin-inline-start: 16px;
+    }
+
+    /* Color overlay for color function */
+
+    &.function-c .overlay-color,
+    &.function-r .overlay-color,
+    &.function-b .overlay-color,
+    &.function-u .overlay-color,
+    & .overlay-color {
+        float: inline-start;
+        height: 15px;
+        width: 15px;
+        margin-top: -23px;
+        margin-inline-start: 4px;
+        border-radius: 4px;
+        display: block;
+    }
 }
 </style>

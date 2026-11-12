@@ -328,17 +328,13 @@
     "tabOptions": {
         "message": "Опције"
     },
-    "sidebarOpenOptions": {
-        "message": "Опције",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "Пребаци на тамни / светли мод",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Пребаци на експертски мод",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Почетно подешавање"
@@ -598,9 +594,6 @@
     },
     "tabAuxiliary": {
         "message": "Модови"
-    },
-    "logActionShow": {
-        "message": "Прикажи дневник"
     },
     "tabLog": {
         "message": "Дневник"
@@ -3907,21 +3900,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Ручни избор baud rate-а за плочице које не подржавају фабричку брзину или за флешовање путем Bluetooth-а.<br /><span class=\"message-negative\">Напомена:</span> Не користи се приликом флешовања путем USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Прикажи кандидате за издање"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Прикажи кандидате за издање поред стабилних издања"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Званично издање"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Званично издање и кандидат за издање"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Развојна верзија"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Изаберите верзију фирмвера"
     },
@@ -4078,9 +4056,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Спремате се да флешујете <strong>развојну верзију фирмвера</strong>. Ове верзије су у процесу израде и било шта од следећег може бити случај:<strong><ul><li>фирмвер уопште не ради;</li><li>са фирмвером се не може летети;</li><li>постоје безбедносни проблеми са фирмвером, на пример одлетање летелице;</li><li>фирмвер може узроковати да flight контролер постане неодзиван или да се оштети</li></ul></strong>Ако наставите са флешовањем овог фирмвера, <strong>преузимате пуну одговорност за ризик од било ког од горе наведених догађаја</strong>. Такође потврђујете да је неопходно извршити <strong>темељна тестирања на столу без пропелер</strong> пре било каквог покушаја летења са овим фирмвером."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Прочитао сам горе наведено и <strong>преузимам пуну одговорност<strong> за упис нестабилног фирмвера"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Флешуј"

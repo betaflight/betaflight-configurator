@@ -84,12 +84,50 @@ describe("useMagCalibration", () => {
             expect(cal.phase.value).toBe(phaseBefore);
         });
 
+        it("starts a new quick calibration after the previous one completed", async () => {
+            await cal.startCalibration("quick");
+            await cal.completeCalibration();
+            expect(cal.phase.value).toBe("complete");
+            MSP.send_message.mockClear();
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("waiting");
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
+        it("starts a new calibration after the previous one ended in error", async () => {
+            await cal.startCalibration("quick");
+            // Mag readings never change, so the no-movement timeout fires.
+            vi.advanceTimersByTime(31000);
+            expect(cal.phase.value).toBe("error");
+            MSP.send_message.mockClear();
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("waiting");
+            expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
         it("starts quick mode and triggers MSP_MAG_CALIBRATION", async () => {
             await cal.startCalibration("quick");
 
             expect(cal.mode.value).toBe("quick");
             expect(cal.phase.value).toBe("waiting");
             expect(MSP.send_message).toHaveBeenCalledWith(MSPCodes.MSP_MAG_CALIBRATION, false, false);
+        });
+
+        it("ends in error when the quick calibration command cannot be sent", async () => {
+            MSP.send_message.mockReturnValue(false);
+
+            await cal.startCalibration("quick");
+
+            expect(cal.phase.value).toBe("error");
+            expect(cal.statusMessage.value).toBe("magCalibrationNotSent");
+            MSP.send_message.mockClear();
+            vi.advanceTimersByTime(5000);
+            // no data polling or completion monitor was left running
+            expect(MSP.send_message).not.toHaveBeenCalled();
         });
 
         it("starts full mode without sending MSP_MAG_CALIBRATION", async () => {
@@ -307,6 +345,35 @@ describe("useMagCalibration", () => {
 
             expect(MSP.send_message).not.toHaveBeenCalled();
             expect(cal.samples.value).toEqual([]);
+        });
+
+        it("keeps a newer start's starting flag when an abandoned start settles", async () => {
+            let releaseFirstRead;
+            send.mockReturnValueOnce(
+                new Promise((resolve) => {
+                    releaseFirstRead = () => resolve([]);
+                }),
+            );
+            let releaseSecondRead;
+            send.mockReturnValueOnce(
+                new Promise((resolve) => {
+                    releaseSecondRead = () => resolve([]);
+                }),
+            );
+
+            const first = cal.startCalibration("quick");
+            cal.cancelCalibration();
+            const second = cal.startCalibration("quick");
+            expect(cal.starting.value).toBe(true);
+
+            releaseFirstRead();
+            await first;
+            expect(cal.starting.value).toBe(true);
+
+            releaseSecondRead();
+            await second;
+            expect(cal.starting.value).toBe(false);
+            expect(cal.phase.value).toBe("waiting");
         });
     });
 

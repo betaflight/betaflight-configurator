@@ -519,7 +519,7 @@ defineExpose({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 @import "@/components/EscDshotDirection/Styles.css";
 
 .escDshotDirection-dialog {
@@ -533,67 +533,67 @@ defineExpose({
     padding: 20px;
     overflow-y: auto;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
-}
 
-.escDshotDirection-dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.95); /* More opaque backdrop */
-    backdrop-filter: blur(6px); /* Add blur for readability */
-}
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.95); /* More opaque backdrop */
+        backdrop-filter: blur(6px); /* Add blur for readability */
+    }
 
-.display-contents {
-    display: contents;
-}
+    .display-contents {
+        display: contents;
+    }
 
-.red-text {
-    color: var(--error-500);
-}
+    .red-text {
+        color: var(--error-500);
+    }
 
-.regular-button {
-    margin: 5px;
-    cursor: pointer;
-}
+    .regular-button {
+        margin: 5px;
+        cursor: pointer;
+    }
 
-.regular-button.pushed {
-    opacity: 0.5;
-}
+    .regular-button.pushed {
+        opacity: 0.5;
+    }
 
-.regular-button.highlighted {
-    background-color: rgba(255, 187, 0, 0.6);
-}
+    .regular-button.highlighted {
+        background-color: rgba(255, 187, 0, 0.6);
+    }
 
-.componentContent {
-    margin-top: 15px;
-}
+    .componentContent {
+        margin-top: 15px;
+    }
 
-.escDshotDirectionErrorTextBlock {
-    color: var(--error-500);
-    font-weight: bold;
-    margin: 10px 0;
-}
+    .escDshotDirectionErrorTextBlock {
+        color: var(--error-500);
+        font-weight: bold;
+        margin: 10px 0;
+    }
 
-#escDshotDirectionDialog-SelectMotorButtonsWrapper,
-#escDshotDirectionDialog-CommandsWrapper,
-#escDshotDirectionDialog-WizardMotorButtons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 15px 0;
-}
+    #escDshotDirectionDialog-SelectMotorButtonsWrapper,
+    #escDshotDirectionDialog-CommandsWrapper,
+    #escDshotDirectionDialog-WizardMotorButtons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 15px 0;
+    }
 
-#escDshotDirectionDialog-MixerPreview {
-    width: 100%;
-    padding-top: 8px;
-    padding-bottom: 9px;
-    margin-bottom: 8px;
-}
+    #escDshotDirectionDialog-MixerPreview {
+        width: 100%;
+        padding-top: 8px;
+        padding-bottom: 9px;
+        margin-bottom: 8px;
+    }
 
-#escDshotDirectionDialog-MixerPreviewImg {
-    display: block;
-    width: 160px;
-    height: 160px;
-    margin-inline-start: auto;
-    margin-inline-end: auto;
-    margin-top: auto;
-    margin-bottom: auto;
+    #escDshotDirectionDialog-MixerPreviewImg {
+        display: block;
+        width: 160px;
+        height: 160px;
+        margin-inline-start: auto;
+        margin-inline-end: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
 }
 </style>

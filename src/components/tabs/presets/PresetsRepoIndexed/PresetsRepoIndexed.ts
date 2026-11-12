@@ -36,6 +36,13 @@ export interface PresetsIndex {
     presets: Preset[];
 }
 
+/** A repository whose index.json has loaded, so its `index` is not null. */
+export type LoadedPresetsRepo<R extends PresetsRepoIndexed = PresetsRepoIndexed> = R & { readonly index: PresetsIndex };
+
+export function hasLoadedIndex<R extends PresetsRepoIndexed>(repository: R): repository is LoadedPresetsRepo<R> {
+    return repository.index !== null;
+}
+
 // No `private` members, for the same reason as PresetParser: the presets store keeps repositories in a ref().
 export default class PresetsRepoIndexed {
     _urlRaw: string;
@@ -54,12 +61,9 @@ export default class PresetsRepoIndexed {
         this._official = official;
     }
 
-    /**
-     * The loaded index.json. It is null until loadIndex() resolves; the presets store
-     * only keeps repositories whose index has loaded, and reads it without a check.
-     */
-    get index(): PresetsIndex {
-        return this._index as PresetsIndex;
+    /** The loaded index.json; null until loadIndex() resolves. Narrow with hasLoadedIndex(). */
+    get index(): PresetsIndex | null {
+        return this._index;
     }
 
     get official(): boolean {

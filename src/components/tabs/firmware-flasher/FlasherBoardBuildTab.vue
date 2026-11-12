@@ -11,8 +11,8 @@
             <USwitch v-model="state.expertMode" @change="onExpertModeChange" />
         </SettingRow>
         <SettingRow
-            :label="$t('firmwareFlasherShowDevelopmentReleases')"
-            :help="$t('firmwareFlasherShowDevelopmentReleasesDescription')"
+            :label="$t('firmwareFlasherShowReleaseOptions')"
+            :help="$t('firmwareFlasherShowReleaseOptionsDescription')"
             fullWidth
         >
             <USwitch v-model="state.showDevelopmentReleases" @change="onShowDevelopmentReleasesChange" />

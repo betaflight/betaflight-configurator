@@ -87,4 +87,24 @@ describe("gui_log", () => {
         expect(useLogStore(first).entries.map((entry) => entry.message)).toEqual(["into the first"]);
         expect(useLogStore(second).entries.map((entry) => entry.message)).toEqual(["into the second"]);
     });
+
+    it("keeps the formatting the log templates use", async () => {
+        setActivePinia(createPinia());
+        const { useLogStore, gui_log } = await loadModules();
+
+        gui_log('Board: <strong>SITL</strong><br><span class="message-positive">ok</span>');
+
+        expect(messages(useLogStore)).toEqual([
+            'Board: <strong>SITL</strong><br><span class="message-positive">ok</span>',
+        ]);
+    });
+
+    it("strips script and event handlers from device-supplied text", async () => {
+        setActivePinia(createPinia());
+        const { useLogStore, gui_log } = await loadModules();
+
+        gui_log('CLI command failed: set x ###ERROR <img src=x onerror="alert(1)"><script>alert(2)</script>');
+
+        expect(messages(useLogStore)).toEqual(['CLI command failed: set x ###ERROR <img src="x">']);
+    });
 });

@@ -365,16 +365,16 @@ body.mobile-app-shell {
 }
 
 .tab-cli .cli-window .cli-comment {
-    color: #7f848e;
+    color: var(--code-comment);
 }
 
 .tab-cli .cli-window .cli-cmd,
 .tab-cli .cli-window .cli-label {
-    color: #61afef;
+    color: var(--code-label);
 }
 
 .tab-cli .cli-window .cli-num {
-    color: #e5c07b;
+    color: var(--code-number);
 }
 
 /* On narrow screens the fixed bottom toolbar would wrap its 5 buttons onto

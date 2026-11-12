@@ -19,6 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+import DOMPurify from "dompurify";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -28,7 +29,7 @@ export interface LogEntry {
     id: number;
     /** Local wall-clock time, formatted for display only. */
     timestamp: string;
-    /** Rendered as HTML by LogDialog, so callers own any escaping. */
+    /** HTML, sanitised on append because device replies can end up in it. */
     message: string;
 }
 
@@ -49,21 +50,24 @@ function formatTimestamp(date: Date): string {
 export const useLogStore = defineStore("log", () => {
     const entries = ref<LogEntry[]>([]);
 
-    function add(message: string): void {
-        const entry: LogEntry = {
-            id: entries.value.length ? entries.value[entries.value.length - 1].id + 1 : 1,
-            timestamp: formatTimestamp(new Date()),
-            message,
-        };
-        entries.value.push(entry);
+    function append(entry: LogEntry): void {
+        entries.value.push({ ...entry, message: DOMPurify.sanitize(entry.message) });
         if (entries.value.length > MAX_ENTRIES) {
             entries.value.splice(0, entries.value.length - MAX_ENTRIES);
         }
+    }
+
+    function add(message: string): void {
+        append({
+            id: entries.value.length ? entries.value[entries.value.length - 1].id + 1 : 1,
+            timestamp: formatTimestamp(new Date()),
+            message,
+        });
     }
 
     function clear(): void {
         entries.value = [];
     }
 
-    return { entries, add, clear };
+    return { entries, add, append, clear };
 });

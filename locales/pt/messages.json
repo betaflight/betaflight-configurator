@@ -332,17 +332,13 @@
     "tabOptions": {
         "message": "Opções"
     },
-    "sidebarOpenOptions": {
-        "message": "Opções",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "Alternar modo escuro / claro",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Alternar modo expert",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Opções"
@@ -590,9 +586,6 @@
     },
     "tabAuxiliary": {
         "message": "Modos"
-    },
-    "logActionShow": {
-        "message": "Exibir Histórico"
     },
     "tabLog": {
         "message": "Log"
@@ -3710,21 +3703,6 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "A seleção manual do baud rate é para placas que não suportam a velocidade padrão ou para flash via Bluetooth.<br /><span class=\"message-negative\">Nota:</span> Esta opção não é utilizada quando estiver a atualizar via USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostrar versões candidatas"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Mostrar versões candidatas em conjunto com versões estáveis"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Versões Finais"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Versões Finais e Versões Candidatas"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Versões de Desenvolvimento"
-    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Escolha uma versão do Firmware"
     },
@@ -3881,9 +3859,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Está prestes a instalar uma <strong>compilação de desenvolvimento do firmware</strong>. Estas compilações são um trabalho em curso, e qualquer uma das opções a seguir podem ser o caso:<strong><ul><li>o firmware não funciona de forma alguma;</li><li>o firmware não é voável;</li><li>há problemas de segurança com o firmware, por exemplo, flyaways</li><li>o firmware pode fazer com que a controladora de voo fique sem resposta, ou se danifique</li></ul></strong>Se prosseguir com a instalação deste firmware, <strong> está a assumir a responsabilidade total pelo risco de qualquer uma das opções acima acontecerem</strong>. Além disso, reconhece que é necessário executar <strong>testes de bancada rigorosos sem hélices</strong> antes de qualquer tentativa de voar com este firmware."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Li o acima indicado e <strong>assumo total responsabilidade</strong> por instalar firmware instável"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"

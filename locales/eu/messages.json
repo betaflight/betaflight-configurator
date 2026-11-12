@@ -179,9 +179,6 @@
     "tabAuxiliary": {
         "message": "Moduak"
     },
-    "logActionShow": {
-        "message": "Log-ak Erakutsi"
-    },
     "serialPortOpened": {
         "message": "Serie Ataka <span class=\"message-positive\">arrakastaz</span> irekia ID: $1 -rekin"
     },
@@ -1673,18 +1670,6 @@
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "Eskuzko aukeraketa baud -tasa ez duten abiadura lehenetsia onartzen kontroladorentzat edo bluetooth bidez. <br/><span class=\"message-negative\">Oharra:</span> Ez da erabiltzen USB DFU bidez egitean"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Erakutsi hautagai bertsioak, egonkor bertsioak gain"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Egonkor bertsioa"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Egonkor bertsioak eta hautagai bertsioak"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Garapena"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Firmware bertsioa aukeratu"

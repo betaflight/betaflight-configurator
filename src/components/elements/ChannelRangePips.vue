@@ -39,71 +39,71 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .pips-channel-range {
     position: relative;
-}
 
-.pips-channel-range.aux {
-    height: 24px;
-    margin-top: 16px;
-    /* 20px is the width of the slider thumbs in DraggableMultiSlider, taking 10px from each side of the pip range makes the thumbs align cleanly */
-    width: calc(100% - 20px);
-}
+    &.aux {
+        height: 24px;
+        margin-top: 16px;
+        /* 20px is the width of the slider thumbs in DraggableMultiSlider, taking 10px from each side of the pip range makes the thumbs align cleanly */
+        width: calc(100% - 20px);
+    }
 
-.pips-channel-range.adjustments {
-    height: 20px;
-    margin-top: 4px;
-}
+    &.adjustments {
+        height: 20px;
+        margin-top: 4px;
+    }
 
-/* The slider these pips annotate mirrors in RTL, so the offsets are inline-relative; the
-   centering shift has to follow the same axis by hand because translateX is always physical. */
-.pip {
-    position: absolute;
-    transform: translateX(-50%);
-    white-space: nowrap;
-}
+    /* The slider these pips annotate mirrors in RTL, so the offsets are inline-relative; the
+       centering shift has to follow the same axis by hand because translateX is always physical. */
+    .pip {
+        position: absolute;
+        transform: translateX(-50%);
+        white-space: nowrap;
+    }
 
-html[dir="rtl"] .pip {
-    transform: translateX(50%);
-}
+    html[dir="rtl"] & .pip {
+        transform: translateX(50%);
+    }
 
-.pips-channel-range.aux .pip {
-    top: 12px;
-    font-size: 11px;
-    color: var(--text-muted);
-}
+    &.aux .pip {
+        top: 12px;
+        font-size: 11px;
+        color: var(--text-muted);
+    }
 
-.pips-channel-range.aux .pip::before {
-    content: "";
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 16px;
-    background: var(--surface-600);
-}
+    &.aux .pip::before {
+        content: "";
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 16px;
+        background: var(--surface-600);
+    }
 
-.pips-channel-range.adjustments .pip {
-    font-size: 10px;
-    color: var(--text-tertiary);
-}
+    &.adjustments .pip {
+        font-size: 10px;
+        color: var(--text-tertiary);
+    }
 
-.pip-marker {
-    position: absolute;
-    bottom: 12px;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 20px;
-    background: var(--primary-500);
-    box-shadow: 0 0 6px rgba(255, 187, 0, 0.9);
-    pointer-events: none;
-    z-index: 10;
-    border-radius: 9999px;
-}
+    .pip-marker {
+        position: absolute;
+        bottom: 12px;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 20px;
+        background: var(--primary-500);
+        box-shadow: 0 0 6px rgba(255, 187, 0, 0.9);
+        pointer-events: none;
+        z-index: 10;
+        border-radius: 9999px;
+    }
 
-html[dir="rtl"] .pip-marker {
-    transform: translateX(50%);
+    html[dir="rtl"] & .pip-marker {
+        transform: translateX(50%);
+    }
 }
 </style>

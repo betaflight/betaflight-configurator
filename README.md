@@ -180,12 +180,13 @@ Any change make in the code will reload the app in the Android device.
 
 `npm run lint` runs ESLint and the TypeScript checker (`vue-tsc`); CI runs the same checks. `npm run lint:fix` and `npm run format` fix what they can.
 
-The App is migrating from JavaScript to TypeScript ([#5542](https://github.com/betaflight/betaflight-configurator/issues/5542)):
+The App is written in TypeScript ([#5542](https://github.com/betaflight/betaflight-configurator/issues/5542)):
 
-- New files are `.ts`, and new components use `<script setup lang="ts">`.
-- A `.js` file you change for another reason converts to TypeScript in the same pull request.
-- `src/components/`, `src/composables/`, `src/stores/` and `src/js/msp/` are TypeScript-only; lint rejects a `.js` file there. The dev-only `src/js/msp/debug/` is exempt.
+- New files are `.ts`, and components use `<script setup lang="ts">`. Lint rejects a `.js` file under `src/`; the only exceptions are the dev-only `src/js/msp/debug/` and the vendored `src/js/utils/three/`, each typed by a `.d.ts`.
+- `strict` is on and `allowJs` is off, so everything the App imports is type-checked.
+- A test you change for another reason converts to `.test.ts` in the same pull request.
 - Components never import MSP at runtime. Talking to the flight controller belongs in a Pinia store action or a composable, and lint enforces this. Type-only imports (`import type`) are allowed.
+- Colours come from the theme tokens in `src/css/theme.css`; lint rejects a hex colour in a component's styles.
 
 [AGENTS.md](./AGENTS.md) has the full coding conventions and architecture rules.
 

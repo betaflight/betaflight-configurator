@@ -104,7 +104,51 @@ const defaultSerialDevices: UsbDeviceId[] = [
     { vendorId: 6790, productId: 21795 }, // CH341 USB-to-Serial
     { vendorId: 6790, productId: 30084 }, // CH340S USB-to-Serial
     { vendorId: 14743, productId: 22336 }, // X32 VCP
+    { vendorId: 14698, productId: 4096 }, // UM32 VCP
+    { vendorId: 1027, productId: 24592 }, // FT2232H (also ESP-Prog)
+    { vendorId: 1027, productId: 24593 }, // FT4232H
+    { vendorId: 1027, productId: 24596 }, // FT232H
+    { vendorId: 1027, productId: 24597 }, // FT230X / FT231X
+    { vendorId: 4292, productId: 60016 }, // CP2105
+    { vendorId: 4292, productId: 60017 }, // CP2108
+    { vendorId: 6790, productId: 21971 }, // CH343 USB-to-Serial
+    { vendorId: 6790, productId: 21972 }, // CH9102 USB-to-Serial
+    { vendorId: 1659, productId: 8963 }, // PL2303
+    { vendorId: 1659, productId: 9123 }, // PL2303GC
+    { vendorId: 1240, productId: 221 }, // MCP2221
+    { vendorId: 1240, productId: 223 }, // MCP2200
+    { vendorId: 12346, productId: 4097 }, // ESP32-S3/C3 USB-Serial/JTAG
 ];
+
+/** A USB device id; without a productId it matches every product of the vendor. */
+interface UsbBridgeId {
+    vendorId: number;
+    productId?: number;
+}
+
+// USB-UART bridges whose USB side is independent of the FC MCU, so an FC reset never
+// re-enumerates the port. A vendor that also makes MCUs with native USB (which do
+// re-enumerate) is listed by product. ESP32-S3/C3 USB Serial/JTAG intentionally
+// omitted here, as it can be programmed to re-enumerate after normal or unexpected reboot
+const persistentUsbBridges: UsbBridgeId[] = [
+    { vendorId: 0x0403 }, // FTDI
+    { vendorId: 0x067b }, // Prolific PL2303
+    { vendorId: 0x10c4 }, // Silicon Labs CP210x
+    { vendorId: 0x1a86 }, // WCH CH34x / CH343 / CH9102
+    { vendorId: 0x04d8, productId: 0x00dd }, // Microchip MCP2221
+    { vendorId: 0x04d8, productId: 0x00df }, // Microchip MCP2200
+];
+
+/**
+ * Whether a port sits behind a USB-UART bridge that stays enumerated across an FC reboot.
+ * @param vendorId - USB vendor id from the port listing (absent for non-USB ports)
+ * @param productId - USB product id from the port listing
+ */
+export function isPersistentUsbBridge(vendorId: unknown, productId: unknown): boolean {
+    return persistentUsbBridges.some(
+        (bridge) => bridge.vendorId === vendorId && (bridge.productId === undefined || bridge.productId === productId),
+    );
+}
 
 const defaultUsbFilters: UsbDeviceId[] = [
     { vendorId: 1155, productId: 57105 }, // STM Device in DFU Mode || Digital Radio in USB mode
@@ -113,18 +157,23 @@ const defaultUsbFilters: UsbDeviceId[] = [
     { vendorId: 12619, productId: 262 }, // APM32 DFU Bootloader
     { vendorId: 11914, productId: 15 }, // Raspberry Pi Pico in Bootloader mode
     { vendorId: 14743, productId: 57105 }, // X32 DFU Bootloader
+    { vendorId: 14698, productId: 57088 }, // UM32 DFU Bootloader
 ];
 
 const defaultVendorIdNames: Record<string, string> = {
     1027: "FTDI",
     1155: "STM Electronics",
+    1240: "Microchip",
+    1659: "Prolific",
     4292: "Silicon Labs",
+    12346: "Espressif",
     6790: "WCH (QinHeng Electronics)",
     11836: "AT32",
     12619: "Geehy Semiconductor",
     11914: "Raspberry Pi Pico",
     14743: "X-CORE LABS",
     10473: "GDMicroelectronics",
+    14698: "UnicMicro",
 };
 
 // Updated in place by loadDeviceFilters, so every importer sees the build server's lists.

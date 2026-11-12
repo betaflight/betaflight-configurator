@@ -2004,11 +2004,8 @@ function chooseDisplayFields(fcStore: FcStore) {
 
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat(buildGatedDisplayFields(fcStore, F));
 
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
-        }
-        // Motor thermal estimator: appended after AIRSPEED, as in the firmware enum. Shown only when the
-        // firmware reports stator geometry in MSP_MOTOR_CONFIG (built with the estimator).
+        // Motor thermal estimator: appended after the gated fields (AIRSPEED), as in the firmware enum. Shown only
+        // when the firmware reports stator geometry in MSP_MOTOR_CONFIG (built with the estimator).
         if (hasMotorThermalEstimator(fcStore)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.MOTOR_TEMP_EST]);
         }
@@ -2019,7 +2016,9 @@ function chooseDisplayFields(fcStore: FcStore) {
 // The motor thermal estimator (OSD element, warning and statistic) exists only in firmware built with
 // USE_MOTOR_THERMAL; such firmware reports the stator geometry after motor_kv in MSP_MOTOR_CONFIG.
 function hasMotorThermalEstimator(fcStore: FcStore): boolean {
-    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && (fcStore.motorConfig?.motor_stator_diameter ?? 0) > 0;
+    return (
+        semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && (fcStore.motorConfig?.motor_stator_diameter ?? 0) > 0
+    );
 }
 
 function buildGatedDisplayFields(fcStore: FcStore, F: typeof OSD.ALL_DISPLAY_FIELDS): OsdDisplayField[] {
@@ -2037,6 +2036,7 @@ function buildGatedDisplayFields(fcStore: FcStore, F: typeof OSD.ALL_DISPLAY_FIE
     const hasNavMap =
         hasFlightPlanWaypoints && !reports("USE_WING") && (reports("USE_OSD_SD") || reports("USE_OSD_HD"));
     const hasPositionHold = reports("USE_POSITION_HOLD");
+    const hasPitot = reports("USE_PITOT");
 
     if (hasFlightPlanWaypoints) {
         fields = fields.concat([
@@ -2058,6 +2058,13 @@ function buildGatedDisplayFields(fcStore: FcStore, F: typeof OSD.ALL_DISPLAY_FIE
     if (hasPositionHold) {
         fields = fields.concat([F.POS_HOLD_READY]);
     }
+
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+        if (hasPitot) {
+            fields = fields.concat([F.PITOT_AIRSPEED]);
+        }
+    }
+
     return fields;
 }
 

@@ -26,7 +26,23 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "../stores/connection";
 
 const ERASE_POLL_INTERVAL_MS = 500;
-export const DATAFLASH_ERASE_TIMEOUT_MS = 60000;
+const NOR_ERASE_UNIT_BYTES = 16 * 1024 * 1024;
+const NOR_ERASE_MAX_MS_PER_UNIT = 200000;
+const LARGEST_NOR_BYTES = 64 * 1024 * 1024;
+const ERASE_TIMEOUT_MARGIN_MS = 100000;
+
+/**
+ * Bound the erase window by the worst-case NOR chip erase, which older firmware spends entirely
+ * silent on MSP. W25Q128 tCE max is 200 s per 16 MiB. Larger parts are NAND, erased block by block
+ * in seconds, so the window stops scaling at the largest supported NOR part.
+ *
+ * @param totalSize dataflash size in bytes, or 0 when unknown
+ * @returns erase window in milliseconds
+ */
+export function getDataflashEraseTimeoutMs(totalSize: number): number {
+    const norBytes = Math.min(Math.max(totalSize, NOR_ERASE_UNIT_BYTES), LARGEST_NOR_BYTES);
+    return Math.ceil(norBytes / NOR_ERASE_UNIT_BYTES) * NOR_ERASE_MAX_MS_PER_UNIT + ERASE_TIMEOUT_MARGIN_MS;
+}
 
 type EraseFinishReason = "complete" | "error" | "disconnected" | "cancelled" | "disposed";
 
@@ -49,9 +65,10 @@ interface DataflashEraseApi {
 /**
  * Manage dataflash erase polling and connection liveness as one operation.
  *
- * Some flash implementations legitimately stop servicing MSP while erasing. Summary polls
- * therefore suppress the global connection watchdog until the bounded erase window expires.
- * After that window, one normal poll restores dead-link detection before the operation exits.
+ * Some flash implementations legitimately stop servicing MSP while erasing; others keep answering
+ * with not-ready. Summary polls therefore suppress the global connection watchdog and keep polling
+ * until the bounded erase window expires. After that window, one normal poll restores dead-link
+ * detection before the operation exits.
  *
  * @param callbacks lifecycle callbacks
  * @returns reactive erase state and lifecycle actions
@@ -224,7 +241,10 @@ export function useDataflashErase({ onComplete, onError, onFinish }: DataflashEr
                 return;
             }
 
-            deadlineTimer = setTimeout(() => expireDeadline(sequence), DATAFLASH_ERASE_TIMEOUT_MS);
+            deadlineTimer = setTimeout(
+                () => expireDeadline(sequence),
+                getDataflashEraseTimeoutMs(fcStore.dataflash?.totalSize ?? 0),
+            );
             MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, () => {
                 if (isCurrentOperation(sequence)) {
                     void pollForCompletion(sequence);

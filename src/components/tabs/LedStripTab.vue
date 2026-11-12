@@ -1089,511 +1089,534 @@ watch(auxChannelValue, (newVal) => {
 });
 </script>
 
-<style scoped>
-.content_wrapper {
-    position: relative;
-    padding: 1rem;
-}
+<style lang="less">
+.tab-led-strip {
+    .content_wrapper {
+        position: relative;
+        padding: 1rem;
+    }
 
-.cf_column {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
+    .cf_column {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
 
-.note {
-    margin-bottom: 1.5rem;
-    padding: 0.75rem;
-    background: var(--surface-100);
-    border-inline-start: 3px solid var(--primary-500);
-}
+    .note {
+        margin-bottom: 1.5rem;
+        padding: 0.75rem;
+        background: var(--surface-100);
+        border-inline-start: 3px solid var(--primary-500);
+    }
 
-.section {
-    color: var(--text);
-    font-size: 1.1em;
-    margin: 20px 0 5px 0;
-    border-bottom: 1px solid var(--primary-500);
-}
+    .section {
+        color: var(--text);
+        font-size: 1.1em;
+        margin: 20px 0 5px 0;
+        border-bottom: 1px solid var(--primary-500);
+    }
 
-/* Grid Container */
-.grid-container {
-    position: relative;
-    float: inline-start;
-    margin-inline-end: 30px;
-    width: calc(29px * 16 + 3px);
-    height: calc(29px * 16 + 3px);
-}
+    /* Grid Container */
 
-/* Grid Sections Overlay */
-.gridSections {
-    position: absolute;
-    top: 0;
-    inset-inline-start: 0;
-    z-index: 0;
-    width: calc(29px * 16 + 3px);
-    height: calc(29px * 16 + 3px);
-    border: 1px solid var(--surface-500);
-    border-radius: 3px;
-    pointer-events: none;
-    user-select: none;
-}
+    .grid-container {
+        position: relative;
+        float: inline-start;
+        margin-inline-end: 30px;
+        width: calc(29px * 16 + 3px);
+        height: calc(29px * 16 + 3px);
+    }
 
-.gridSections .block {
-    width: 25%;
-    height: 25%;
-    float: inline-start;
-    border: 1px solid var(--surface-500);
-    box-sizing: border-box;
-}
+    /* Grid Sections Overlay */
 
-/* Controls Panel */
-.controls {
-    position: relative;
-    float: inline-start;
-    width: 325px;
-}
+    .gridSections {
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
+        z-index: 0;
+        width: calc(29px * 16 + 3px);
+        height: calc(29px * 16 + 3px);
+        border: 1px solid var(--surface-500);
+        border-radius: 3px;
+        pointer-events: none;
+        user-select: none;
+    }
 
-/* Top controls layout */
-.top-controls {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
+    .gridSections .block {
+        width: 25%;
+        height: 25%;
+        float: inline-start;
+        border: 1px solid var(--surface-500);
+        box-sizing: border-box;
+    }
 
-.clear-buttons-container {
-    display: flex;
-    gap: 4px;
-    flex: 1;
-}
+    /* Controls Panel */
 
-.clear-buttons-container button {
-    flex: 1;
-    margin: 0;
-}
+    .controls {
+        position: relative;
+        float: inline-start;
+        width: 325px;
+    }
 
-.wires-remaining {
-    text-align: center;
-    font-size: 14px;
-    flex-shrink: 0;
-}
+    /* Top controls layout */
 
-.wires-remaining div {
-    font-size: 40px;
-    color: var(--primary-500);
-    margin-bottom: -5px;
-    margin-top: -10px;
-}
+    .top-controls {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
 
-.wires-remaining.error div {
-    color: var(--error-500);
-}
+    .clear-buttons-container {
+        display: flex;
+        gap: 4px;
+        flex: 1;
+    }
 
-/* Swatch buttons (mode colors, special colors, colour palette).
+    .clear-buttons-container button {
+        flex: 1;
+        margin: 0;
+    }
+
+    .wires-remaining {
+        text-align: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .wires-remaining div {
+        font-size: 40px;
+        color: var(--primary-500);
+        margin-bottom: -5px;
+        margin-top: -10px;
+    }
+
+    .wires-remaining.error div {
+        color: var(--error-500);
+    }
+
+    /* Swatch buttons (mode colors, special colors, colour palette).
  * These stay plain <button> elements because their background is driven by the
  * LED colour data, but they follow the same radius/typography as UButton so the
  * tab matches the rest of the UI.  The selectors are deliberately scoped to the
  * swatch containers — a bare `button` rule would also hit every UButton on the
  * tab and undo its Nuxt UI styling. */
-.mode_colors > button,
-.colors > button {
-    text-align: center;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 1;
-    border: 1px solid var(--primary-600);
-    background-color: var(--primary-500);
-    border-radius: var(--ui-radius);
-    padding: 7px 10px;
-    margin: 3px 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
 
-/* Label contrast is chosen against the swatch background, not the theme: these
+    .mode_colors > button,
+    .colors > button {
+        text-align: center;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 1;
+        border: 1px solid var(--primary-600);
+        background-color: var(--primary-500);
+        border-radius: var(--ui-radius);
+        padding: 7px 10px;
+        margin: 3px 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    /* Label contrast is chosen against the swatch background, not the theme: these
  * buttons carry an inline background-color taken from the LED colour data (and
  * --primary-500 until it loads), which does not follow light/dark mode.  var(--text)
  * would turn the label white over a yellow or cyan swatch.  The palette swatches
  * below pick their own literal per colour for the same reason. */
-.mode_colors > button {
-    color: black;
-}
 
-.mode_colors > button:hover:not(:disabled),
-.colors > button:hover:not(:disabled) {
-    background-color: var(--primary-600);
-    border-color: var(--primary-700);
-}
+    .mode_colors > button {
+        color: black;
+    }
 
-.mode_colors > button:active:not(:disabled),
-.colors > button:active:not(:disabled) {
-    transform: scale(0.98);
-}
+    .mode_colors > button:hover:not(:disabled),
+    .colors > button:hover:not(:disabled) {
+        background-color: var(--primary-600);
+        border-color: var(--primary-700);
+    }
 
-/* Disabled swatch buttons */
-.mode_colors > button:disabled,
-.colors > button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color: var(--surface-300);
-    border-color: var(--surface-500);
-    color: white;
-}
+    .mode_colors > button:active:not(:disabled),
+    .colors > button:active:not(:disabled) {
+        transform: scale(0.98);
+    }
 
-.w50 {
-    width: 49%;
-}
+    /* Disabled swatch buttons */
 
-/* Wiring section layout */
-.wiring-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    margin-bottom: 10px;
-}
+    .mode_colors > button:disabled,
+    .colors > button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: var(--surface-300);
+        border-color: var(--surface-500);
+        color: white;
+    }
 
-.wiringControls {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-    width: 100%;
-}
+    .w50 {
+        width: 49%;
+    }
 
-.wiringControls > button {
-    flex: 0 0 calc(50% - 0.25rem);
-}
+    /* Wiring section layout */
 
-/* Select Dropdowns */
-.select span {
-    display: block;
-    margin-bottom: 5px;
-    margin-inline-start: 3px;
-}
+    .wiring-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 10px;
+    }
 
-/* Function-specific select backgrounds — reach USelect's trigger button */
-.select .functionSelect.function-c :deep(button) {
-    background: linear-gradient(
-        to bottom right,
-        rgba(255, 0, 0, 0.5) 0%,
-        rgba(255, 255, 0, 0.5) 15%,
-        rgba(0, 255, 0, 0.5) 30%,
-        rgba(0, 255, 255, 0.5) 50%,
-        rgba(0, 0, 255, 0.5) 65%,
-        rgba(255, 0, 255, 0.5) 80%,
-        rgba(255, 0, 0, 0.5) 100%
-    );
-}
+    .wiringControls {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        width: 100%;
+    }
 
-.select .functionSelect.function-f :deep(button) {
-    background: rgb(50, 205, 50);
-}
+    .wiringControls > button {
+        flex: 0 0 calc(50% - 0.25rem);
+    }
 
-.select .functionSelect.function-a :deep(button) {
-    background: rgb(52, 155, 255);
-}
+    /* Select Dropdowns */
 
-.select .functionSelect.function-u :deep(button) {
-    background: linear-gradient(
-        to bottom right,
-        rgba(191, 0, 255, 0.5) 0%,
-        rgba(0, 179, 255, 0.5) 33%,
-        rgba(0, 4, 255, 0.5) 66%,
-        rgba(191, 0, 255, 0.5) 100%
-    );
-}
+    .select > span {
+        display: block;
+        margin-bottom: 5px;
+        margin-inline-start: 3px;
+    }
 
-.select .functionSelect.function-l :deep(button) {
-    background: magenta;
-}
+    /* Function-specific select backgrounds — reach USelect's trigger button */
 
-.select .functionSelect.function-s :deep(button) {
-    background: brown;
-}
+    .select .functionSelect.function-c button {
+        background: linear-gradient(
+            to bottom right,
+            rgba(255, 0, 0, 0.5) 0%,
+            rgba(255, 255, 0, 0.5) 15%,
+            rgba(0, 255, 0, 0.5) 30%,
+            rgba(0, 255, 255, 0.5) 50%,
+            rgba(0, 0, 255, 0.5) 65%,
+            rgba(255, 0, 255, 0.5) 80%,
+            rgba(255, 0, 0, 0.5) 100%
+        );
+    }
 
-.select .functionSelect.function-g :deep(button) {
-    background: green;
-}
+    .select .functionSelect.function-f button {
+        background: rgb(50, 205, 50);
+    }
 
-.select .functionSelect.function-r :deep(button) {
-    background: var(--surface-500);
-}
+    .select .functionSelect.function-a button {
+        background: rgb(52, 155, 255);
+    }
 
-/* Headers */
-.header {
-    color: var(--surface-600);
-    font-size: 13px;
-    font-weight: 600;
-    display: block;
-    margin-bottom: 5px;
-}
+    .select .functionSelect.function-u button {
+        background: linear-gradient(
+            to bottom right,
+            rgba(191, 0, 255, 0.5) 0%,
+            rgba(0, 179, 255, 0.5) 33%,
+            rgba(0, 4, 255, 0.5) 66%,
+            rgba(191, 0, 255, 0.5) 100%
+        );
+    }
 
-/* Modifiers */
-.modifiers {
-    display: block;
-    margin-top: 5px;
-}
+    .select .functionSelect.function-l button {
+        background: magenta;
+    }
 
-.modifier-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 5px 0;
-}
+    .select .functionSelect.function-s button {
+        background: brown;
+    }
 
-.modifiers .auxSelect {
-    width: auto;
-    min-width: 10rem;
-}
+    .select .functionSelect.function-g button {
+        background: green;
+    }
 
-.modifiers .rainbowOverlay {
-    margin-top: 1px;
-    flex-wrap: wrap;
-}
+    .select .functionSelect.function-r button {
+        background: var(--surface-500);
+    }
 
-.modifiers .sliders-group {
-    margin-top: 5px;
-    margin-inline-start: 20px;
-    width: 100%;
-}
+    /* Headers */
 
-/* Overlays */
-.overlays {
-    display: block;
-    margin-top: 5px;
-}
+    .header {
+        color: var(--surface-600);
+        font-size: 13px;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+    }
 
-/* Unified Slider Styles */
-.slider-container {
-    margin-top: 10px;
-}
+    /* Modifiers */
 
-.slider-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 5px 0;
-}
+    .modifiers {
+        display: block;
+        margin-top: 5px;
+    }
 
-.slider-value {
-    min-width: 2.5rem;
-    text-align: end;
-    font-variant-numeric: tabular-nums;
-    font-size: 12px;
-    color: var(--text);
-}
+    .modifier-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 5px 0;
+    }
 
-.colors {
-    height: 130px;
-    position: relative;
-    display: inline-grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 4px;
-    width: 49%;
-    vertical-align: middle;
-}
+    .modifiers .auxSelect {
+        width: auto;
+        min-width: 10rem;
+    }
 
-/* Colors button defaults */
-.colors > button {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    color: white;
-}
+    .modifiers .rainbowOverlay {
+        margin-top: 1px;
+        flex-wrap: wrap;
+    }
 
-.colors button:hover {
-    border-style: solid;
-}
+    .modifiers .sliders-group {
+        margin-top: 5px;
+        margin-inline-start: 20px;
+        width: 100%;
+    }
 
-.colors button.btnOn {
-    border: 2px solid var(--text);
-}
+    /* Overlays */
 
-/* Default color backgrounds */
-.color-0 {
-    background: black;
-}
+    .overlays {
+        display: block;
+        margin-top: 5px;
+    }
 
-.color-1 {
-    background: white;
-    color: black !important;
-}
+    /* Unified Slider Styles */
 
-.color-2 {
-    background: red;
-}
+    .slider-container {
+        margin-top: 10px;
+    }
 
-.color-3 {
-    background: orange;
-}
+    .slider-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 5px 0;
+    }
 
-.color-4 {
-    background: yellow;
-    color: black !important;
-}
+    .slider-value {
+        min-width: 2.5rem;
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+        font-size: 12px;
+        color: var(--text);
+    }
 
-.color-5 {
-    background: greenyellow;
-    color: black !important;
-}
+    .colors {
+        height: 130px;
+        position: relative;
+        display: inline-grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: 4px;
+        width: 49%;
+        vertical-align: middle;
+    }
 
-.color-6 {
-    background: limegreen;
-}
+    /* Colors button defaults */
 
-.color-7 {
-    background: palegreen;
-    color: black !important;
-}
+    .colors > button {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        color: white;
+    }
 
-.color-8 {
-    background: cyan;
-    color: black !important;
-}
+    .colors button:hover {
+        border-style: solid;
+    }
 
-.color-9 {
-    background: lightcyan;
-    color: black !important;
-}
+    .colors button.btnOn {
+        border: 2px solid var(--text);
+    }
 
-.color-10 {
-    background: dodgerblue;
-}
+    /* Default color backgrounds */
 
-.color-11 {
-    background: darkviolet;
-}
+    :where(.colors) .color-0 {
+        background: black;
+    }
 
-.color-12 {
-    background: magenta;
-}
+    :where(.colors) .color-1 {
+        background: white;
+        color: black !important;
+    }
 
-.color-13 {
-    background: deeppink;
-}
+    :where(.colors) .color-2 {
+        background: red;
+    }
 
-.color-14 {
-    background: black;
-}
+    :where(.colors) .color-3 {
+        background: orange;
+    }
 
-.color-15 {
-    background: black;
-}
+    :where(.colors) .color-4 {
+        background: yellow;
+        color: black !important;
+    }
 
-/* Color Define Sliders */
-.colorDefineSliders {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    background: var(--surface-50);
-    padding: 5px;
-    border: 2px solid var(--surface-600);
-    border-radius: 6px;
-    width: 167px;
-    box-shadow: var(--shadow-popup);
-}
+    :where(.colors) .color-5 {
+        background: greenyellow;
+        color: black !important;
+    }
 
-.colorDefineSliderContainer {
-    display: flex;
-    align-items: center;
-    margin: 5px 0;
-}
+    :where(.colors) .color-6 {
+        background: limegreen;
+    }
 
-.colorDefineSliderLabel {
-    width: 15px;
-    display: inline-block;
-    margin-inline-end: 5px;
-}
+    :where(.colors) .color-7 {
+        background: palegreen;
+        color: black !important;
+    }
 
-.colorDefineSliderContainer input {
-    flex: 1;
-    margin: 0 5px;
-}
+    :where(.colors) .color-8 {
+        background: cyan;
+        color: black !important;
+    }
 
-.colorDefineSliderValue {
-    width: 30px;
-    display: inline-block;
-    text-align: end;
-}
+    :where(.colors) .color-9 {
+        background: lightcyan;
+        color: black !important;
+    }
 
-/* Directions */
-/* Reproduce the compass-with-U/D layout from the pre-Nuxt-UI version:
+    :where(.colors) .color-10 {
+        background: dodgerblue;
+    }
+
+    :where(.colors) .color-11 {
+        background: darkviolet;
+    }
+
+    :where(.colors) .color-12 {
+        background: magenta;
+    }
+
+    :where(.colors) .color-13 {
+        background: deeppink;
+    }
+
+    :where(.colors) .color-14 {
+        background: black;
+    }
+
+    :where(.colors) .color-15 {
+        background: black;
+    }
+
+    /* Color Define Sliders */
+
+    .colorDefineSliders {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        background: var(--surface-50);
+        padding: 5px;
+        border: 2px solid var(--surface-600);
+        border-radius: 6px;
+        width: 167px;
+        box-shadow: var(--shadow-popup);
+    }
+
+    .colorDefineSliderContainer {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+    }
+
+    .colorDefineSliderLabel {
+        width: 15px;
+        display: inline-block;
+        margin-inline-end: 5px;
+    }
+
+    .colorDefineSliderContainer > input {
+        flex: 1;
+        margin: 0 5px;
+    }
+
+    .colorDefineSliderValue {
+        width: 30px;
+        display: inline-block;
+        text-align: end;
+    }
+
+    /* Directions */
+
+    /* Reproduce the compass-with-U/D layout from the pre-Nuxt-UI version:
  *   Row 1:  .   N   .   U
  *   Row 2:  W   .   E   D
  *   Row 3:  .   S   .   .
- * :deep() is needed because UButton renders through ULink/ULinkBase, so
- * the rendered <button> sits outside this component's scoped selector. */
-.directions {
-    display: inline-grid;
-    grid-template-columns: 30px 30px 30px 30px;
-    grid-template-rows: 30px 30px 30px;
-    gap: 4px;
-    direction: ltr;
-    vertical-align: middle;
-    margin-inline-end: 12px;
-}
+ * The rules target the <button> that UButton renders through ULink/ULinkBase. */
 
-.directions :deep(button) {
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    line-height: 1;
-}
+    .directions {
+        display: inline-grid;
+        grid-template-columns: 30px 30px 30px 30px;
+        grid-template-rows: 30px 30px 30px;
+        gap: 4px;
+        direction: ltr;
+        vertical-align: middle;
+        margin-inline-end: 12px;
+    }
 
-.directions :deep(.dir-n) {
-    grid-column: 2;
-    grid-row: 1;
-}
+    .directions button {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        line-height: 1;
+    }
 
-.directions :deep(.dir-u) {
-    grid-column: 4;
-    grid-row: 1;
-}
+    .directions .dir-n {
+        grid-column: 2;
+        grid-row: 1;
+    }
 
-.directions :deep(.dir-w) {
-    grid-column: 1;
-    grid-row: 2;
-}
+    .directions .dir-u {
+        grid-column: 4;
+        grid-row: 1;
+    }
 
-.directions :deep(.dir-e) {
-    grid-column: 3;
-    grid-row: 2;
-}
+    .directions .dir-w {
+        grid-column: 1;
+        grid-row: 2;
+    }
 
-.directions :deep(.dir-d) {
-    grid-column: 4;
-    grid-row: 2;
-}
+    .directions .dir-e {
+        grid-column: 3;
+        grid-row: 2;
+    }
 
-.directions :deep(.dir-s) {
-    grid-column: 2;
-    grid-row: 3;
-}
+    .directions .dir-d {
+        grid-column: 4;
+        grid-row: 2;
+    }
 
-/* Mode / Special Color Buttons */
-.mode_colors button.btnOn {
-    border: 2px solid var(--text);
-}
+    .directions .dir-s {
+        grid-column: 2;
+        grid-row: 3;
+    }
 
-/* Utility */
-.clear-both {
-    clear: both;
-}
+    /* Mode / Special Color Buttons */
 
-/* Responsive */
-@media all and (max-width: 575px) {
-    .controls {
-        width: 100%;
+    .mode_colors button.btnOn {
+        border: 2px solid var(--text);
+    }
+
+    /* Utility */
+
+    .clear-both {
+        clear: both;
+    }
+
+    /* Responsive */
+
+    @media all and (max-width: 575px) {
+        .controls {
+            width: 100%;
+        }
     }
 }
 </style>

@@ -78,7 +78,8 @@ export type DataflashReadCallback = (
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
-let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+const ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+const legacyLedOverlayLetters = ledOverlayLetters.filter((letter) => letter !== "y");
 
 let lastI2cErrorCount: number | null = null;
 
@@ -121,7 +122,7 @@ function buildLedStripMask(led: LedStripEntry, colorOffset: number, directionOff
     }
 
     for (const overlayLetter of led.functions) {
-        const bitIndex = ledOverlayLetters.indexOf(overlayLetter);
+        const bitIndex = (colorOffset === 18 ? legacyLedOverlayLetters : ledOverlayLetters).indexOf(overlayLetter);
         if (bitIndex >= 0) {
             mask |= bit_set(mask, bitIndex + 12);
         }
@@ -171,7 +172,7 @@ function decodeLedMask(mask: number, layout: LedMaskLayout): LedStripEntry {
     }
 
     const overlayMask = (mask >> 12) & layout.overlayMask;
-    ledOverlayLetters.forEach((letter, index) => {
+    (layout.hasParameters ? legacyLedOverlayLetters : ledOverlayLetters).forEach((letter, index) => {
         if (bit_check(overlayMask, index)) {
             functions.push(letter);
         }
@@ -1983,11 +1984,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.advancedTuning.levelAngleLimit = data.readU8();
         fcStore.advancedTuning.levelSensitivity = data.readU8();
         fcStore.advancedTuning.itermThrottleThreshold = data.readU16();
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-            fcStore.advancedTuning.antiGravityGain = data.readU16();
-        } else {
-            fcStore.advancedTuning.itermAcceleratorGain = data.readU16();
-        }
+        fcStore.advancedTuning.antiGravityGain = data.readU16();
 
         fcStore.advancedTuning.dtermSetpointWeight = data.readU16();
         fcStore.advancedTuning.itermRotation = data.readU8();
@@ -2115,9 +2112,6 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         const layout = semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)
             ? LED_MASK_LAYOUT
             : LED_MASK_LAYOUT_PRE_1_46;
-        if (layout === LED_MASK_LAYOUT_PRE_1_46) {
-            ledOverlayLetters = ledOverlayLetters.filter((x) => x !== "y"); //remove rainbow because it's only supported after API 1.46
-        }
 
         for (let i = 0; i < ledCount; i++) {
             fcStore.ledStrip.push(decodeLedMask(data.readU32(), layout));
@@ -2549,6 +2543,12 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.wingConfig.tpa_speed_pitch_offset = data.read16();
         fcStore.wingConfig.yaw_type = data.readU8();
         fcStore.wingConfig.angle_pitch_offset = data.read16();
+        if (data.byteLength >= 51) {
+            fcStore.wingConfig.speed_curve_vref = data.readU8();
+            fcStore.wingConfig.speed_curve_power = data.readU8();
+            fcStore.wingConfig.speed_curve_min = data.readU16();
+            fcStore.wingConfig.speed_curve_max = data.readU16();
+        }
     },
 
     [MSPCodes.MSP_SET_WING]: NOTHING_TO_DO,
@@ -2986,13 +2986,8 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push8(fcStore.advancedTuning.levelSensitivity)
             .push16(fcStore.advancedTuning.itermThrottleThreshold);
 
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-            buffer.push16(fcStore.advancedTuning.antiGravityGain);
-        } else {
-            buffer.push16(fcStore.advancedTuning.itermAcceleratorGain);
-        }
-
         buffer
+            .push16(fcStore.advancedTuning.antiGravityGain)
             .push16(fcStore.advancedTuning.dtermSetpointWeight)
             .push8(fcStore.advancedTuning.itermRotation)
             .push8(fcStore.advancedTuning.smartFeedforward)
@@ -3277,7 +3272,11 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push16(fcStore.wingConfig.tpa_speed_max_voltage)
             .push16(fcStore.wingConfig.tpa_speed_pitch_offset)
             .push8(fcStore.wingConfig.yaw_type)
-            .push16(fcStore.wingConfig.angle_pitch_offset);
+            .push16(fcStore.wingConfig.angle_pitch_offset)
+            .push8(fcStore.wingConfig.speed_curve_vref)
+            .push8(fcStore.wingConfig.speed_curve_power)
+            .push16(fcStore.wingConfig.speed_curve_min)
+            .push16(fcStore.wingConfig.speed_curve_max);
     },
 };
 

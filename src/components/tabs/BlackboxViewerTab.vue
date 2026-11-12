@@ -50,8 +50,8 @@
 import { nextTick, onActivated, onDeactivated, onMounted, onBeforeUnmount, provide, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import BlackboxViewerApp from "../../blackbox-viewer/App.vue";
-import { bootstrapViewer } from "../../blackbox-viewer/main.js";
-import { setBlackboxViewerDark, setViewerActive } from "../../blackbox-viewer/vue_init.js";
+import { bootstrapViewer } from "../../blackbox-viewer/main";
+import { setBlackboxViewerDark, setViewerActive } from "../../blackbox-viewer/vue_init";
 import { useGraphStore } from "../../blackbox-viewer/stores/graph";
 import { useDataflashPull } from "../../composables/useDataflashPull";
 
@@ -127,36 +127,36 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .tab-blackbox-viewer-host {
     height: 100%;
-}
 
-.blackbox-viewer-root {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    /* The vendored viewer was a full-page app and lays out with position: fixed. A transform
-       on this root makes those fixed descendants resolve against the tab pane instead of the
-       window, so the viewer stays inside the content area and never covers the sidebar. */
-    transform: translateZ(0);
-}
+    .blackbox-viewer-root {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        /* The vendored viewer was a full-page app and lays out with position: fixed. A transform
+           on this root makes those fixed descendants resolve against the tab pane instead of the
+           window, so the viewer stays inside the content area and never covers the sidebar. */
+        transform: translateZ(0);
+    }
 
-/* Fullscreen: the viewer covers the sidebar menu and the status bar. Everything inside it
-   already lays out with `position: fixed` against this root (see the transform above), so
-   pinning the root to #main-wrapper's box is all it takes to grow the whole viewer with it.
-   Gated on a log being open: the welcome page has no toolbar to leave fullscreen from. */
-.blackbox-viewer-root.is-fullscreen:is(.has-log, .has-video) {
-    position: fixed;
-    inset: 0;
-    background-color: var(--surface-100);
-}
-
-/* The mobile top bar paints above the viewer, so keep the toolbar clear of it. */
-@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    /* Fullscreen: the viewer covers the sidebar menu and the status bar. Everything inside it
+       already lays out with `position: fixed` against this root (see the transform above), so
+       pinning the root to #main-wrapper's box is all it takes to grow the whole viewer with it.
+       Gated on a log being open: the welcome page has no toolbar to leave fullscreen from. */
     .blackbox-viewer-root.is-fullscreen:is(.has-log, .has-video) {
-        top: calc(3rem + var(--bf-inset-top));
+        position: fixed;
+        inset: 0;
+        background-color: var(--surface-100);
+    }
+
+    /* The mobile top bar paints above the viewer, so keep the toolbar clear of it. */
+    @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+        .blackbox-viewer-root.is-fullscreen:is(.has-log, .has-video) {
+            top: calc(3rem + var(--bf-inset-top));
+        }
     }
 }
 </style>

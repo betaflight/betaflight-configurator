@@ -53,10 +53,9 @@
  *      yaw from internal CCW-positive to Betaflight's CW-positive [0, 360).
  */
 
-import { eulerToMatrix, mat3mul } from "./magAlignment.js";
+import { eulerToMatrix, mat3mul, type Mat3 } from "./magAlignment";
 
 type Vec3 = [number, number, number];
-type Mat3 = number[][];
 
 /** ZYX Euler angles in degrees. */
 export interface EulerAngles {

@@ -15,14 +15,5 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
-  path_instructions:
-    # ESLint cannot tell a new scoped block from one of the legacy ones
-    # without a list of exceptions, so new ones are caught in review (#5542).
-    - path: "src/**/*.vue"
-      instructions: |
-        Flag any `<style scoped>` block this change adds, including in a new
-        file or by adding `scoped` to an existing `<style>`. New styles go in
-        `src/css/theme.css` or `nuxt-ui.css`, or as Tailwind classes (AGENTS.md,
-        #4995). An existing scoped block that is kept, edited or removed is fine.
 chat:
   auto_reply: true

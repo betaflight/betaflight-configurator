@@ -15,7 +15,7 @@
                         :firmware-id="fcStore.config.flightControllerIdentifier"
                         :hardware-id="fcStore.config.hardwareName"
                     ></betaflight-logo>
-                    <Teleport to=".floating-connect" :disabled="!useFloatingChrome">
+                    <Teleport to=".floating-connect" :disabled="!isCompactBreakpoint">
                         <ConnectButton />
                     </Teleport>
                     <Sidebar />
@@ -51,15 +51,16 @@
             </div>
         </div>
         <GlobalDialogs />
+        <LogPanel />
     </UApp>
 </template>
 
 <script setup lang="ts">
-import { isAndroid } from "@/js/utils/checkCompatibility.js";
 import { computed, nextTick, provide, reactive, ref, shallowRef, watch } from "vue";
 import { onKeyStroke, useMediaQuery } from "@vueuse/core";
 import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
+import LogPanel from "./components/log/LogPanel.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
 import PortUsageModule from "./js/port_usage";
 import { i18n } from "./js/localization";
@@ -138,14 +139,8 @@ watch(isCompactBreakpoint, (compact) => {
     }
 });
 
-// The branded top bar is a landing-page affordance. Every other tab reaches the drawer from the
-// hamburger in the status bar instead, so the bar only costs vertical space there.
+// The branded top bar is a landing-page affordance; navigation is in the compact status bar.
 const isLandingTab = computed(() => vueTabState.activeTabName === "landing");
-
-// Connecting is the app's primary action and it lives in the drawer, which the phone shell no
-// longer opens. Teleport it into the floating chrome there, and leave it in place everywhere else.
-const isAppShell = isAndroid();
-const useFloatingChrome = computed(() => isAppShell && isCompactBreakpoint.value);
 
 const topbarHidden = ref(false);
 let lastScrollTop = 0;
@@ -168,7 +163,7 @@ function onContentScroll(event: Event) {
     }
 }
 
-// Ensure the topbar is visible when the drawer opens so the hamburger stays reachable.
+// Ensure the topbar is visible when the drawer opens.
 watch(isRevealed, (revealed) => {
     if (revealed) {
         topbarHidden.value = false;
@@ -240,8 +235,8 @@ watch(
 );
 </script>
 
-<style scoped>
-@keyframes spin {
+<style lang="less">
+@keyframes app-spin {
     0% {
         transform: rotate(0deg);
     }
@@ -265,8 +260,7 @@ watch(
     display: none;
 }
 
-/* Mobile top bar — the landing page's branding, auto-hides on scroll down. The drawer is
-   reached from the status bar, which is present on every tab.
+/* Mobile top bar — the landing page's branding, auto-hides on scroll down.
    The bar grows by the safe-area inset and pads its contents down by the same amount, so the
    controls sit below the Android/iOS status bar with the content box unchanged. */
 .mobile-topbar {
@@ -335,22 +329,18 @@ watch(
 .dark .mobile-topbar__logo {
     background-image: url(./images/bf_logo_black.svg);
 }
-body.mobile-app-shell {
-    @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
-        .mobile-topbar {
-            display: flex;
-        }
-        .floating-account,
-        .floating-connect {
-            display: block;
-        }
-        /* One reserved strip at the top, whether it holds the landing page's bar or just the
-       floating account button. Without it a tab's title renders underneath that button. */
-        #content {
-            padding-top: calc(3rem + var(--bf-inset-top));
-            /* The status bar floats over the content, so the last row needs somewhere to scroll to. */
-            padding-bottom: calc(5.75rem + var(--bf-inset-bottom));
-        }
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .mobile-topbar {
+        display: flex;
+    }
+    .floating-account,
+    .floating-connect {
+        display: block;
+    }
+    /* Reserve space for the floating controls at both ends of the content. */
+    #content {
+        padding-top: calc(3rem + var(--bf-inset-top));
+        padding-bottom: calc(5.75rem + var(--bf-inset-bottom));
     }
 }
 </style>

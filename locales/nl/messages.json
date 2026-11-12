@@ -202,9 +202,6 @@
     "tabAuxiliary": {
         "message": "Modussen"
     },
-    "logActionShow": {
-        "message": "Toon Log"
-    },
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">succesvol</span> geopend met ID: $1"
     },
@@ -1793,18 +1790,6 @@
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "Handmatige selectie van baud rate voor borden die de standaard snelheid niet ondersteunen of flashen via bluetooth.<br /><span class=\"message-negative\">Opmerking:</span> Wordt niet gebruikt bij het flashen via USB DFU"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Toon ook release candidaten naast de stabiele releases"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Release"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Release en Release Candidaten"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Ontwikkeling"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Kies een Firmware versie"

@@ -32,6 +32,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { i18n } from "../../../js/localization";
 import { degToRad } from "../../../js/utils/common";
+import { getCssVar } from "../../../js/utils/cssVar";
 import type { MagSample, MagVizMode, Vec3 } from "@/composables/useMagCalibration";
 import type { Quaternion } from "@/stores/fc.types";
 
@@ -247,7 +248,7 @@ function initCanvas2D(sampleList: MagSample[]) {
     const ctx = context2D(canvas);
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = "#1a1a2e";
+    ctx.fillStyle = getCssVar("--scene-background");
     ctx.fillRect(0, 0, w, h);
 
     if (!sampleList || sampleList.length === 0) {
@@ -292,7 +293,7 @@ function initScene() {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x1a1a2e, 1);
+    renderer.setClearColor(getCssVar("--scene-background"), 1);
 
     // Scene
     scene = new THREE.Scene();
@@ -315,12 +316,30 @@ function initScene() {
     // Axis lines — thin lines connecting opposite cardinal points through origin
     const axisLength = DEFAULT_SPHERE_RADIUS;
     // Red: N–S in horizontal plane (full span)
-    addAxisLine(scene, new THREE.Vector3(-axisLength, 0, 0), new THREE.Vector3(axisLength, 0, 0), 0xff4444, 0.35);
+    addAxisLine(
+        scene,
+        new THREE.Vector3(-axisLength, 0, 0),
+        new THREE.Vector3(axisLength, 0, 0),
+        getCssVar("--scene-axis-x"),
+        0.35,
+    );
     // Green: W–E in horizontal plane (full span)
-    addAxisLine(scene, new THREE.Vector3(0, -axisLength, 0), new THREE.Vector3(0, axisLength, 0), 0x44ff44, 0.35);
+    addAxisLine(
+        scene,
+        new THREE.Vector3(0, -axisLength, 0),
+        new THREE.Vector3(0, axisLength, 0),
+        getCssVar("--scene-axis-y"),
+        0.35,
+    );
     // Blue: vertical axis — bold upward, faded downward
-    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), 0x4444ff, 1);
-    addAxisLine(scene, new THREE.Vector3(0, 0, -axisLength), new THREE.Vector3(0, 0, 0), 0x4444ff, 0.15);
+    addAxisLine(scene, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, axisLength), getCssVar("--scene-axis-z"), 1);
+    addAxisLine(
+        scene,
+        new THREE.Vector3(0, 0, -axisLength),
+        new THREE.Vector3(0, 0, 0),
+        getCssVar("--scene-axis-z"),
+        0.15,
+    );
 
     // Ghost reference sphere — gives visual context before data arrives
     ghostGroup = createGhostSphere(DEFAULT_SPHERE_RADIUS);
@@ -378,7 +397,7 @@ function initScene() {
     // XYZ vector lines — body frame (children of quadIcon, move with quad)
     // 6 meshes: [xPos, xNeg, yPos, yNeg, zPos, zNeg]
     // Positive halves are always bold, negative halves always thin
-    const VECTOR_COLORS = [0xff4444, 0x44ff44, 0x4444ff];
+    const VECTOR_COLORS = ["--scene-axis-x", "--scene-axis-y", "--scene-axis-z"].map((name) => getCssVar(name));
     vectorLines = [];
     for (const color of VECTOR_COLORS) {
         for (const positive of [true, false]) {
@@ -418,24 +437,32 @@ function initScene() {
     fieldRefGroup.visible = false;
     const shaftGeo = new THREE.CylinderGeometry(3, 3, 1, 8);
     shaftGeo.translate(0, 0.5, 0);
-    const shaftMat = new THREE.MeshBasicMaterial({ color: 0xff8800, opacity: 0.7, transparent: true });
+    const shaftMat = new THREE.MeshBasicMaterial({
+        color: getCssVar("--scene-field"),
+        opacity: 0.7,
+        transparent: true,
+    });
     fieldRefGroup.userData.shaft = new THREE.Mesh(shaftGeo, shaftMat);
     fieldRefGroup.add(fieldRefGroup.userData.shaft);
     const coneGeo = new THREE.ConeGeometry(8, 24, 8);
-    const coneMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
+    const coneMat = new THREE.MeshBasicMaterial({ color: getCssVar("--scene-field") });
     fieldRefGroup.userData.cone = new THREE.Mesh(coneGeo, coneMat);
     fieldRefGroup.add(fieldRefGroup.userData.cone);
 
     // South-pole shaft (orange, thinner — same color as north, differentiated by thickness)
     const southShaftGeo = new THREE.CylinderGeometry(3, 3, 1, 8);
     southShaftGeo.translate(0, 0.5, 0);
-    const southShaftMat = new THREE.MeshBasicMaterial({ color: 0xff8800, opacity: 0.7, transparent: true });
+    const southShaftMat = new THREE.MeshBasicMaterial({
+        color: getCssVar("--scene-field"),
+        opacity: 0.7,
+        transparent: true,
+    });
     fieldRefGroup.userData.southShaft = new THREE.Mesh(southShaftGeo, southShaftMat);
     fieldRefGroup.add(fieldRefGroup.userData.southShaft);
 
     // South-pole cone (orange, tip points outward along south pole)
     const southConeGeo = new THREE.ConeGeometry(8, 24, 8);
-    const southConeMat = new THREE.MeshBasicMaterial({ color: 0xff8800 });
+    const southConeMat = new THREE.MeshBasicMaterial({ color: getCssVar("--scene-field") });
     fieldRefGroup.userData.southCone = new THREE.Mesh(southConeGeo, southConeMat);
     fieldRefGroup.add(fieldRefGroup.userData.southCone);
 
@@ -672,7 +699,7 @@ function makeFieldLabel(group: THREE.Group, text: string, x: number, z: number, 
     cv.width = 128;
     cv.height = 64;
     const c = context2D(cv);
-    c.fillStyle = "#ff8800";
+    c.fillStyle = getCssVar("--scene-field");
     c.font = "bold 48px sans-serif";
     c.textAlign = "center";
     c.textBaseline = "middle";
@@ -750,7 +777,7 @@ function addInclinationArc(group: THREE.Group, incl: number, radius: number, inc
         arcPoints.push(new THREE.Vector3(Math.cos(a) * arcRadius, 0, -Math.sin(a) * arcRadius));
     }
     const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPoints);
-    const arcMat = new THREE.LineBasicMaterial({ color: 0xff8800, opacity: 0.6, transparent: true });
+    const arcMat = new THREE.LineBasicMaterial({ color: getCssVar("--scene-field"), opacity: 0.6, transparent: true });
     group.userData.arc = new THREE.Line(arcGeo, arcMat);
     group.add(group.userData.arc);
 
@@ -760,7 +787,7 @@ function addInclinationArc(group: THREE.Group, incl: number, radius: number, inc
     labelCanvas.width = 128;
     labelCanvas.height = 48;
     const ctx = context2D(labelCanvas);
-    ctx.fillStyle = "#ff8800";
+    ctx.fillStyle = getCssVar("--scene-field");
     ctx.font = "bold 28px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -903,9 +930,9 @@ function updateHeatmap(sampleList: MagSample[]) {
 
 // --- Triple Projection (2D canvas) ---
 const PROJ_PLANES = [
-    { label: "XY", a: 0, b: 1, aLabel: "X", bLabel: "Y", aColor: "#ff4444", bColor: "#44ff44" },
-    { label: "XZ", a: 0, b: 2, aLabel: "X", bLabel: "Z", aColor: "#ff4444", bColor: "#4444ff" },
-    { label: "YZ", a: 1, b: 2, aLabel: "Y", bLabel: "Z", aColor: "#44ff44", bColor: "#4444ff" },
+    { label: "XY", a: 0, b: 1, aLabel: "X", bLabel: "Y", aColorVar: "--scene-axis-x", bColorVar: "--scene-axis-y" },
+    { label: "XZ", a: 0, b: 2, aLabel: "X", bLabel: "Z", aColorVar: "--scene-axis-x", bColorVar: "--scene-axis-z" },
+    { label: "YZ", a: 1, b: 2, aLabel: "Y", bLabel: "Z", aColorVar: "--scene-axis-y", bColorVar: "--scene-axis-z" },
 ];
 
 function drawProjection(sampleList: MagSample[]) {
@@ -972,7 +999,7 @@ function drawProjection(sampleList: MagSample[]) {
             // Draw center cross
             const ccx = px + cA * scale;
             const ccy = py - cB * scale;
-            ctx.strokeStyle = "#ffff00";
+            ctx.strokeStyle = getCssVar("--scene-marker");
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(ccx - 4, ccy);
@@ -997,10 +1024,10 @@ function drawProjection(sampleList: MagSample[]) {
         ctx.font = "bold 11px sans-serif";
         ctx.textAlign = "center";
         // Horizontal axis label
-        ctx.fillStyle = plane.aColor;
+        ctx.fillStyle = getCssVar(plane.aColorVar);
         ctx.fillText(plane.aLabel, px, py + plotR + 14);
         // Vertical axis label
-        ctx.fillStyle = plane.bColor;
+        ctx.fillStyle = getCssVar(plane.bColorVar);
         ctx.save();
         ctx.translate(px - plotR - 10, py);
         ctx.rotate(-Math.PI / 2);
@@ -1119,7 +1146,9 @@ function drawPolarDensity(sampleList: MagSample[]) {
         ["X-", Math.PI / 2],
         ["Y-", Math.PI],
     ];
-    const labelColors = ["#ff4444", "#44ff44", "#ff4444", "#44ff44"];
+    const labelColors = ["--scene-axis-x", "--scene-axis-y", "--scene-axis-x", "--scene-axis-y"].map((name) =>
+        getCssVar(name),
+    );
     for (let i = 0; i < labels.length; i++) {
         const [text, angle] = labels[i];
         ctx.fillStyle = labelColors[i];
@@ -1180,7 +1209,13 @@ function onResize() {
     updateActiveViz(props.samples);
 }
 
-function addAxisLine(targetScene: THREE.Scene, from: THREE.Vector3, to: THREE.Vector3, color: number, opacity = 0.5) {
+function addAxisLine(
+    targetScene: THREE.Scene,
+    from: THREE.Vector3,
+    to: THREE.Vector3,
+    color: THREE.ColorRepresentation,
+    opacity = 0.5,
+) {
     const geometry = new THREE.BufferGeometry().setFromPoints([from, to]);
     const material = new THREE.LineBasicMaterial({ color, opacity, transparent: opacity < 1, depthTest: false });
     const line = new THREE.Line(geometry, material);
@@ -1326,11 +1361,11 @@ function createCompassRing(radius: number) {
     const r = radius * 1.05;
     // Compass markers in the scene's NED frame: North=+X, East=+Y.
     // N/S are on ±X — the fixed axis of the Rx180 adapter — so unchanged.
-    makeLabel("N", "#ff4444").position.set(r, 0, 0);
-    makeLabel("S", "#aabbcc").position.set(-r, 0, 0);
+    makeLabel("N", getCssVar("--scene-axis-x")).position.set(r, 0, 0);
+    makeLabel("S", getCssVar("--scene-compass")).position.set(-r, 0, 0);
     // E/W are on ±Y, which the Rx180 adapter negates; with it in place East is +Y.
-    makeLabel("E", "#aabbcc").position.set(0, r, 0);
-    makeLabel("W", "#aabbcc").position.set(0, -r, 0);
+    makeLabel("E", getCssVar("--scene-compass")).position.set(0, r, 0);
+    makeLabel("W", getCssVar("--scene-compass")).position.set(0, -r, 0);
 
     return group;
 }
@@ -1617,94 +1652,94 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .mag-sphere-container {
     width: 100%;
     height: 100%;
     min-height: 300px;
     position: relative;
-}
 
-.mag-sphere-container canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-}
+    & canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
 
-.mag-sphere-proj-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-}
+    .mag-sphere-proj-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+    }
 
-.mag-sphere-axis-legend {
-    position: absolute;
-    top: 6px;
-    inset-inline-end: 6px;
-    display: flex;
-    gap: 8px;
-    font-size: 0.75em;
-    font-weight: bold;
-    pointer-events: none;
-}
+    .mag-sphere-axis-legend {
+        position: absolute;
+        top: 6px;
+        inset-inline-end: 6px;
+        display: flex;
+        gap: 8px;
+        font-size: 0.75em;
+        font-weight: bold;
+        pointer-events: none;
+    }
 
-.mag-sphere-axis-legend .axis-x {
-    color: #ff4444;
-}
+    .mag-sphere-axis-legend .axis-x {
+        color: var(--scene-axis-x);
+    }
 
-.mag-sphere-axis-legend .axis-y {
-    color: #44ff44;
-}
+    .mag-sphere-axis-legend .axis-y {
+        color: var(--scene-axis-y);
+    }
 
-.mag-sphere-axis-legend .axis-z {
-    color: #4444ff;
-}
+    .mag-sphere-axis-legend .axis-z {
+        color: var(--scene-axis-z);
+    }
 
-.mag-sphere-axis-legend .axis-field {
-    color: #ff8800;
-}
+    .mag-sphere-axis-legend .axis-field {
+        color: var(--scene-field);
+    }
 
-.mag-sphere-axis-legend .axis-incl {
-    color: #ff8800;
-    opacity: 0.7;
-}
+    .mag-sphere-axis-legend .axis-incl {
+        color: var(--scene-field);
+        opacity: 0.7;
+    }
 
-.mag-sphere-age-legend {
-    position: absolute;
-    top: 26px;
-    inset-inline-end: 6px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.65em;
-    color: rgba(255, 255, 255, 0.6);
-    pointer-events: none;
-}
+    .mag-sphere-age-legend {
+        position: absolute;
+        top: 26px;
+        inset-inline-end: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65em;
+        color: rgba(255, 255, 255, 0.6);
+        pointer-events: none;
+    }
 
-.mag-sphere-age-legend .age-gradient {
-    display: inline-block;
-    width: 48px;
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(
-        to right,
-        hsl(234, 100%, 50%),
-        hsl(180, 100%, 50%),
-        hsl(120, 100%, 50%),
-        hsl(60, 100%, 50%),
-        hsl(0, 100%, 50%)
-    );
-}
+    .mag-sphere-age-legend .age-gradient {
+        display: inline-block;
+        width: 48px;
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(
+            to right,
+            hsl(234, 100%, 50%),
+            hsl(180, 100%, 50%),
+            hsl(120, 100%, 50%),
+            hsl(60, 100%, 50%),
+            hsl(0, 100%, 50%)
+        );
+    }
 
-.mag-sphere-legend {
-    position: absolute;
-    bottom: 6px;
-    inset-inline-start: 6px;
-    inset-inline-end: 6px;
-    font-size: 0.7em;
-    color: rgba(255, 255, 255, 0.5);
-    pointer-events: none;
-    line-height: 1.3;
+    .mag-sphere-legend {
+        position: absolute;
+        bottom: 6px;
+        inset-inline-start: 6px;
+        inset-inline-end: 6px;
+        font-size: 0.7em;
+        color: rgba(255, 255, 255, 0.5);
+        pointer-events: none;
+        line-height: 1.3;
+    }
 }
 </style>

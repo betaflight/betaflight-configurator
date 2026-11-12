@@ -31,6 +31,18 @@
     "search": {
         "message": "Søg"
     },
+    "settingsSearchTitle": {
+        "message": "Indstillinger for søgning",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "Indstillinger for søgning...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "Ingen indstillinger fundet",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "Vis ikke igen"
     },
@@ -357,17 +369,17 @@
     "tabOptions": {
         "message": "Configurator indstillinger"
     },
-    "sidebarOpenOptions": {
+    "sidebarSettingsMenu": {
         "message": "Indstillinger",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "Slå mørk / lys til/fra",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Ekspert tilstand til/fra",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Initiel indstilling"
@@ -610,8 +622,9 @@
     "tabAuxiliary": {
         "message": "Kanaler"
     },
-    "logActionShow": {
-        "message": "Vis log"
+    "logActionOpenWindow": {
+        "message": "Åbner i nyt vindue",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "Log"
@@ -671,6 +684,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU ikke fundet"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "Kunne ikke forbinde til DFU enhed. Forbind FC, og prøv igen"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "Der er ikke adgang til DFU enhed. Tjek udev regler er installeret, se dokumentation for instruktioner"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "Der er ikke adgang til DFU enhed. Installer WinUSB driveren (ImpulseRC Driver Fixer eller Zadig) og luk ethvert andet program ved hjælp af FC"
     },
     "stm32DfuPermissionRequired": {
         "message": "Enheden er genstartet i DFU-tilstand.<br><br>Din browser kræver tilladelse til USB for at få adgang til DFU-enheden. Klik på knappen nedenfor for at vælge enheden."
@@ -1293,6 +1315,12 @@
     },
     "initialSetupAccelCalibEnded": {
         "message": "Accelerometer kalibrering <span class=\"message-positive\">færdig</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "Kompas kalibrering startet"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Kompas kalibrering <span class=\"message-positive\">færdig</span>"
     },
     "initialSetupSettingsRestored": {
         "message": "Opsætninger sat til <strong>standardindstillinger</strong>"
@@ -2906,6 +2934,10 @@
         "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Optag vejpunkter under flyvning: Et kort tryk tilføjer den aktuelle position til flyveplan som et vejpunkt, holdes kontakt 1,5 sek slettes det sidste registerede vejpunkt",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "Nulstil transponder timer",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3964,6 +3996,12 @@
     "firmwareFlasherNoReboot": {
         "message": "Ingen genstart sekvens"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "Byg type"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "FC"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Vælg FC type for at se mulige versioner."
     },
@@ -3997,20 +4035,20 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "Manuel valg af baud rate for FC, som ikke understøtter standard hastighed eller forbinder via bluetooth.<br /><span class=\"message-negative\">Bemærk:</span> Ikke brugt hvis forbundet via USB DFU"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Vis udviklings releases"
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "Vis tilvalg for udgivelser"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Vis foreløbige mulige versioner, sammen med endelige versioner"
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "Vælg hvilke udgivelser som vises"
     },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Version"
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "Vis udgivelser"
     },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Endelige versioner og foreløbige mulige versioner"
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "Vis udgivelser"
     },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Udvikling"
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "Vis udviklings udgivelser"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Vælg Firmware image"
@@ -4172,7 +4210,7 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Du er ved at installere en <strong>firmware et udviklings Build</strong>. Da udviklingen er undervejs, er der risiko for at du kan opleve:<strong><ul><li>firmwaren slet ikke  fungerer </li><li>firmwaren ikke kan bruges til flyvning</li><li>der er sikkerhedsproblemer med firmwaren for eksempel at fartøjet flyver væk</li><li>firmwaren kan bevirke, at FC ikke reagerer eller bliver beskadiget</li></ul></strong>Hvis du fortsætter med dette Build, <strong>påtager du dig det fulde ansvar i risikoen for, at noget af ovenstående sker</strong>. Desuden anerkender du, at det er nødvendigt at udføre <strong>grundige test UDEN propeller</strong> , før du forsøger at flyve med den firmware som kommer med dette Build."
     },
-    "unstableFirmwareAcknowledgement": {
+    "developmentFirmwareAcknowledgement": {
         "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar</strong> for at anvende en udviklings firmware release"
     },
     "unstableFirmwareAcknowledgementFlash": {
@@ -7353,6 +7391,15 @@
     "magCalibrationUnguidedDone": {
         "message": "Firmware kalibrering fuldført!"
     },
+    "magCalibrationNotSent": {
+        "message": "Kalibrering kunne ikke starte: FC modtog ikke kommando."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "Starter..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "Kalibrerer... {{seconds}}s"
+    },
     "magCalibrationCheck": {
         "message": "Kontroller"
     },
@@ -8819,6 +8866,15 @@
     "preflightFlightWindow": {
         "message": "Flyve vindue"
     },
+    "preflightTimelineDescription": {
+        "message": "Tidslinje, der viser nat, blå time, gylden time og dagslys, med markør for solopgang og solnedgang"
+    },
+    "preflightMorning": {
+        "message": "Morgen"
+    },
+    "preflightEvening": {
+        "message": "Aften"
+    },
     "preflightSunrise": {
         "message": "Solopgang"
     },
@@ -8833,6 +8889,9 @@
     },
     "preflightTempRange": {
         "message": "Temp. område"
+    },
+    "preflightNow": {
+        "message": "Nu"
     },
     "preflightCurrentlyDay": {
         "message": "Nuværende"
@@ -9212,6 +9271,9 @@
     "pidTuningWingTpaAdvSpeedCurveExpo": {
         "message": "Expo"
     },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "Klassisk kurve anbefales ikke til vinger. Det anvender multirotor TPA hastighed og breakpoint til den estimerede flyvehastighed i stedet for gassen."
+    },
     "pidTuningWingMiscSettings": {
         "message": "Diverse indstillinger"
     },
@@ -9232,5 +9294,11 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "Højde forskydning for vinkel tilstande i decigrader. Positive værdier vipper vingen ned"
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "Referencehastighed"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "Referencehastighed, m/s - kurverne har 1,0 værdi i dette punkt"
     }
 }

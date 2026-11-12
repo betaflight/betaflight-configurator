@@ -31,6 +31,18 @@
     "search": {
         "message": "ძებნა"
     },
+    "settingsSearchTitle": {
+        "message": "ძიების პარამეტრები",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "ძიების პარამეტრები...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "პარამეტრები არ მოიძებნა",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "მეორედ არ მაჩვენო"
     },
@@ -353,17 +365,17 @@
     "tabOptions": {
         "message": "ოფციები"
     },
-    "sidebarOpenOptions": {
-        "message": "სარჩევი",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+    "sidebarSettingsMenu": {
+        "message": "პარამეტრები",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "მუქი/ღია რეჟიმის გადართვა",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "ექსპერტის რეჟიმზე გადართვა",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "დაყენება"
@@ -373,6 +385,9 @@
     },
     "sensorConfigHardware": {
         "message": "სენსორის აპარატურა"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "აქტიური გირო"
     },
     "sensorConfigGyroLabel": {
         "message": "გირო $1"
@@ -630,8 +645,9 @@
     "tabAuxiliary": {
         "message": "რეჟიმები"
     },
-    "logActionShow": {
-        "message": "ლოგის ჩვენება"
+    "logActionOpenWindow": {
+        "message": "ახალ ფანჯარაში გახსნა",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "ჩანაწერი"
@@ -691,6 +707,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU ვერ მოიძებნა"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "DFU მოწყობილობის გახსნა ვერ მოხერხდა. ხელახლა შეაერთეთ ფრენის კონტროლერი და სცადეთ თავიდან"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "DFU მოწყობილობასთან წვდომა უარყოფილია. შეამოწმეთ, რომ udev წესები დაყენებულია, ინსტრუქციისთვის იხილეთ დოკუმენტაცია"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "DFU მოწყობილობასთან წვდომა უარყოფილია. დააინსტალირეთ WinUSB დრაივერი (ImpulseRC Driver Fixer ან Zadig) და დახურეთ ნებისმიერი სხვა პროგრამა, რომელიც ფრენის კონტროლერს იყენებს"
     },
     "stm32DfuPermissionRequired": {
         "message": "მოწყობილობა გადაიტვირთა DFU რეჟიმში.\n<br><br>თქვენს ბრაუზერს ესაჭიროება USB ნებართვა DFU მოწყობილობასთან დასაკავშირებლად. დააჭირეთ ქვემოთ მოცემულ ღილაკს, რათა აირჩიოთ ის მოწყობილობების სიიდან."
@@ -1313,6 +1338,12 @@
     },
     "initialSetupAccelCalibEnded": {
         "message": "აქსელელომეტრის კალიბრაცია<span class=\"message-positive\">დასრულდა</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "დაიწყო მაგნეტომეტრის კალიბრაცია"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "მაგნეტომეტრისკალიბრაცია<span class=\"message-positive\">დასრულდა</span>"
     },
     "initialSetupSettingsRestored": {
         "message": "პარამეტრები აღდგენილია <strong> ნაგულისხმევზე </strong>"
@@ -2927,6 +2958,10 @@
         "message": "გადართეთ VTX ორმოს რეჟიმში (დაბალი გამომავალი სიმძლავრე, მხარდაჭერის შემთხვევაში)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "ფრენისას მარშრუტის წერტილების დამახსოვრება: გადამრთველზე მოკლე დაჭერა ამატებს მიმდინარე პოზიციას ფრენის გეგმაში, როგორც მარშრუტის წერტილს, ხოლო გადამრთველის 1.5 წამის განმავლობაში დაჭერა და გაჩერება შლის ბოლო წერტილს",
+        "description": "Help text to WP CAPTURE mode"
+    },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "ტრანსპონდერის წრის ტაიმერის განულება",
         "description": "Help text to LAP TIMER RESET mode"
@@ -3934,6 +3969,9 @@
     "firmwareFlasherReleaseDate": {
         "message": "თარიღი:"
     },
+    "firmwareFlasherReleaseCommit": {
+        "message": "კომიტი:"
+    },
     "firmwareFlasherReleaseTarget": {
         "message": "სამიზნე:"
     },
@@ -3985,6 +4023,12 @@
     "firmwareFlasherNoReboot": {
         "message": "არაა გადატვირთვის თანმიმდევრობა"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "აწყობის ტიპი"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "დაფა"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "აირჩიეთ შენების ტიპი რომ ნახოთ ხელმისაწვდომი დაფები."
     },
@@ -4018,20 +4062,20 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "ბაუდის სიჩქარის ხელით შერჩევა დაფებისთვის, რომლებსაც არ გააჩნიათ ნაგულისხმევი სიჩქარე, ან ბლუთუზით ციმციმებისთვის.<br /><span class=\"message-negative\">შენიშვნა:</span> არ გამოიყენება USB DFU-ით ციმციმისას"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "მაჩვენე გამოშვების კანდიდატები"
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "რელიზის პარამეტრების ჩვენება"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "მაჩვენე გამოშბის კანდიდატები სტაბილურ ვერსიებთან ერთად"
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "აირჩიეთ, რომელი რელიზები გამოჩნდეს"
     },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "გამოშვება"
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "რელიზების ჩვენება"
     },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "გამოსვება და გამოსვების კანდიდატი"
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "ყველა რელიზის ჩვენება"
     },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "დამუშავების პროცესში მყოფი პროგრამა"
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "სადეველოპერო (Development) რელიზების ჩვენება"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "აირჩიე პროგრამის ვერსია"
@@ -4193,8 +4237,8 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "თქვენ აპირებთ ჩართოთ firmware</strong><strong>განვითარების კონსტრუქცია. ეს კონსტრუქციები დამუშავების პროცესშია და შეიძლება იყოს რომელიმე შემდეგი:<strong><ul><li>firmware საერთოდ არ მუშაობს;</li><li>firmware არ არის შესაძლებელი; fluaways</li><li> firmware-მ შეიძლება გამოიწვიოს ფრენის კონტროლერი უპასუხოდ ან დაზიანდეს</li></ul></strong>თუ თქვენ გააგრძელებთ ამ პროგრამული უზრუნველყოფის ციმციმებს, <strong>თქვენ იღებთ რისკს__0 სრულ პასუხისმგებლობაზე__0 გარდა ამისა, თქვენ აცნობიერებთ, რომ აუცილებელია ჩაატაროთ <strong>საფუძვლიანი ტესტები სკამზე გამორთული საყრდენებით</strong> ამ პროგრამული უზრუნველყოფის ფრენის მცდელობამდე."
     },
-    "unstableFirmwareAcknowledgement": {
-        "message": "მე წავიკითხე ზემოთ და <strong>ვიღებ სრულ პასუხისმგებლობას</strong> არასტაბილური პროგრამული უზრუნველყოფის ციმციმისთვის"
+    "developmentFirmwareAcknowledgement": {
+        "message": "მე წავიკითხე ზემოთ და <strong>ვიღებ სრულ პასუხისმგებლობას</strong> არასტაბილური პროგრამული უზრუნველყოფის ჩაწერისთვის"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "ფლეში"
@@ -7374,6 +7418,15 @@
     "magCalibrationUnguidedDone": {
         "message": "პროგრამული უზრუნველყოფის კალიბრაცია დასრულდა!"
     },
+    "magCalibrationNotSent": {
+        "message": "კალიბრაცია ვერ დაიწყო: ფრენის კონტროლერმა ბრძანება ვერ მიიღო."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "იწყება..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "მიმდინარეობს კალიბრაცია... {{seconds}}წმ"
+    },
     "magCalibrationCheck": {
         "message": "შემოწმება"
     },
@@ -8836,6 +8889,30 @@
     "preflightFlightWindow": {
         "message": "ფრენის ფანჯარა"
     },
+    "preflightTimelineDescription": {
+        "message": "დროის ზოლი, რომელიც აჩვენებს ღამეს, ლურჯ საათს, ოქროს საათს და დღის სინათლეს, მზის ამოსვლისა და ჩასვლის მარკერებით"
+    },
+    "preflightTimelineHelp": {
+        "message": "მიიტანეთ კურსორი, შეეხეთ ან მონიშნეთ სეგმენტი მისი დროის სანახავად. გამოიყენეთ ლეგენდა შესაბამისი ტიპის ყველა პერიოდის გამოსაკვეთად."
+    },
+    "preflightTimelineHint": {
+        "message": "ზუსტი დროის სანახავად მიიტანეთ კურსორი ან შეეხეთ სეგმენტს."
+    },
+    "preflightTimelineNight": {
+        "message": "ღამე და სხვა ბინდი"
+    },
+    "preflightBlueHour": {
+        "message": "ლურჯი საათი"
+    },
+    "preflightGoldenHour": {
+        "message": "ოქროს საათი"
+    },
+    "preflightMorning": {
+        "message": "დილა"
+    },
+    "preflightEvening": {
+        "message": "საღამო"
+    },
     "preflightSunrise": {
         "message": "მზის ამოსვლა"
     },
@@ -8850,6 +8927,9 @@
     },
     "preflightTempRange": {
         "message": "ტემპერატურის დიაპაზონი"
+    },
+    "preflightNow": {
+        "message": "ახლა"
     },
     "preflightCurrentlyDay": {
         "message": "ამჟამად"
@@ -9202,6 +9282,9 @@
     "pidTuningWingTpaCurveHyperbolic": {
         "message": "ჰიპერბოლური"
     },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "ჰიპერბოლური, საბაზისო სიჩქარით"
+    },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "სიჩქარის ძირითადი პარამეტრები"
     },
@@ -9312,5 +9395,29 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "Pitch წანაცვლება angle რეჟიმებისთვის, დეციგრადუსებში. დადებითი მნიშვნელობები ფრთას ქვემოთ ხრის"
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "საბაზისო სიჩქარე"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "საბაზისო სიჩქარე, მ/წმ - ამ წერტილში მრუდების მნიშვნელობა 1.0-ია"
+    },
+    "speedCurvesPower": {
+        "message": "მრუდების ხარისხი"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "ჰიპერბოლური მრუდების ხარისხი, *0.1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "მრუდების მინიმალური მნიშვნელობა"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "ჰიპერბოლური მრუდების მინიმალური მნიშვნელობის ზღვარი, *0.01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "მრუდების მაქსიმალური მნიშვნელობა"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "ჰიპერბოლური მრუდების მაქსიმალური მნიშვნელობის ზღვარი, *0.01"
     }
 }

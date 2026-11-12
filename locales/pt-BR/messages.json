@@ -255,9 +255,6 @@
     "tabAuxiliary": {
         "message": "Modos"
     },
-    "logActionShow": {
-        "message": "Exibir Histórico"
-    },
     "fileSystemPickerFiles": {
         "message": "Arquivos {{typeof}}",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
@@ -2529,21 +2526,6 @@
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "A seleção manual do baud rate é para placas que não suportam a velocidade padrão ou para atualização por Bluetooth.<br /><span class=\"message-negative\">Nota:</span> Esta opção não é utilizada quando estiver atualizando por USB DFU"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostrar versões candidatas"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Exibir versões candidatas em conjunto com versões estáveis"
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Versões finais"
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Versões finais e Release Candidate"
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Desenvolvimento"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Escolha uma versão do Firmware"
