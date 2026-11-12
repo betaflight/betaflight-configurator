@@ -113,7 +113,7 @@ export default [
         // block `.mjs` matches no `files` pattern and is linted with zero rules.
         // The root config files are `.js` but equally Node-side, so the Node globals apply
         // there too.
-        files: ["**/*.mjs", "*.config.js", "nuxt-ui.vite.js"],
+        files: ["**/*.mjs", "*.config.js", "nuxt-ui.vite.ts"],
         languageOptions: {
             ecmaVersion: "latest",
             sourceType: "module",

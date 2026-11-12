@@ -10,7 +10,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
 import ui from "@nuxt/ui/vite";
 import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
-import nuxtUiViteOptions from "./nuxt-ui.vite.js";
+import nuxtUiViteOptions from "./nuxt-ui.vite.ts";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
 
