@@ -598,19 +598,13 @@
                 v-if="showBindButton"
                 variant="soft"
             />
-            <UFieldGroup orientation="horizontal" class="flex!">
-                <UButton @click="saveConfig(needReboot)" :disabled="!dirty" :loading="isSaving">
-                    {{ saveButtonLabel }}
-                </UButton>
-                <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton
-                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                        :disabled="!dirty || isSaving"
-                        :aria-label="$t('receiverButtonSaveOptions')"
-                        square
-                    />
-                </UDropdownMenu>
-            </UFieldGroup>
+            <UButton
+                :label="$t('receiverButtonRefresh')"
+                :disabled="!dirty || isSaving"
+                variant="soft"
+                @click="refreshTab"
+            />
+            <UButton :label="saveButtonLabel" :disabled="!dirty" :loading="isSaving" @click="saveConfig(needReboot)" />
         </div>
     </BaseTab>
 </template>
@@ -841,23 +835,6 @@ function serializeReceiverState() {
 const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
 
 const saveButtonLabel = computed(() => t(needReboot.value ? "configurationButtonSave" : "receiverButtonSave"));
-
-const saveMenuItems = computed(() => [
-    [
-        {
-            label: saveButtonLabel.value,
-            icon: "i-lucide-save",
-            disabled: !dirty.value || isSaving.value,
-            onSelect: () => saveConfig(needReboot.value),
-        },
-        {
-            label: t("receiverButtonRefresh"),
-            icon: "i-lucide-refresh-cw",
-            disabled: !dirty.value || isSaving.value,
-            onSelect: refreshTab,
-        },
-    ],
-]);
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text: string) {

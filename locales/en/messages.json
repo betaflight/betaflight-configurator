@@ -2690,10 +2690,6 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSaveOptions": {
-        "message": "Receiver save options",
-        "description": "Accessible label for the toolbar dropdown button"
-    },
     "receiverButtonSave": {
         "message": "Save"
     },

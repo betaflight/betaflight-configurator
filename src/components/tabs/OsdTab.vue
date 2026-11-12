@@ -593,6 +593,12 @@
                 >
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
+                <UButton
+                    :label="$t('osdSetupRefresh')"
+                    :disabled="isSaving || (hasLoadedConfig && !portsOrConfigDirty)"
+                    variant="soft"
+                    @click="refreshConfig"
+                />
                 <UFieldGroup orientation="horizontal" class="flex!">
                     <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty" :loading="isSaving">
                         {{ saveButtonText }}
@@ -751,12 +757,6 @@ const saveMenuItems = computed(() => [
             icon: "i-lucide-rotate-cw",
             disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveAndRebootConfig,
-        },
-        {
-            label: i18n.getMessage("osdSetupRefresh"),
-            icon: "i-lucide-refresh-cw",
-            disabled: isSaving.value || (hasLoadedConfig.value && !portsOrConfigDirty.value),
-            onSelect: refreshConfig,
         },
     ],
 ]);
