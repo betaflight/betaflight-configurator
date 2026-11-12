@@ -34,7 +34,7 @@ import { computed, toRaw } from "vue";
 // getConnectionState().isReconnecting being false — see the tests below.
 // ---------------------------------------------------------------------------
 
-const { serial, dfuProtocol, isExpertModeEnabled, CapacitorDfuTransportMock } = vi.hoisted(() => {
+const { serial, dfuProtocol, isExpertModeEnabled, isAndroid, CapacitorDfuTransportMock } = vi.hoisted(() => {
     return {
         CapacitorDfuTransportMock: class {},
         serial: {
@@ -56,6 +56,7 @@ const { serial, dfuProtocol, isExpertModeEnabled, CapacitorDfuTransportMock } = 
             removeEventListener: vi.fn(),
         },
         isExpertModeEnabled: vi.fn(() => true),
+        isAndroid: vi.fn(() => false),
     };
 });
 
@@ -111,7 +112,7 @@ vi.mock("../../src/js/utils/checkCompatibility", () => ({
     checkBluetoothSupport: () => true,
     checkSerialSupport: () => true,
     checkUsbSupport: () => true,
-    isAndroid: () => false,
+    isAndroid,
     isNetworkOnlyBrowser: () => false,
     isTauri: () => true,
 }));
@@ -135,6 +136,7 @@ function resetPortHandler() {
     serial.connectionId = null;
     dfuProtocol.usbDevice = null;
     isExpertModeEnabled.mockReturnValue(true);
+    isAndroid.mockReturnValue(false);
     DeviceHandler.currentSerialPorts = [];
     DeviceHandler.currentUsbPorts = [];
     DeviceHandler.currentBluetoothPorts = [];
@@ -211,6 +213,28 @@ describe("DeviceHandler.selectActivePort — preset/reboot -> virtual regression
 
         expect(selected).not.toBe("virtual");
         expect(DeviceHandler.devicePicker.selectedDevice).toBe("noselection");
+    });
+
+    // On Android, Connect asks for USB permission only while nothing is selected. A virtual or
+    // manual default would take that press, so a fresh install could never reach the FC.
+    it("leaves 'noselection' on Android so Connect requests USB permission (expert + virtual + manual on)", () => {
+        isAndroid.mockReturnValue(true);
+        isExpertModeEnabled.mockReturnValue(true);
+        DeviceHandler.showVirtualMode = true;
+        DeviceHandler.showManualMode = true;
+
+        const selected = DeviceHandler.selectActivePort();
+
+        expect(selected).toBeFalsy();
+        expect(DeviceHandler.devicePicker.selectedDevice).toBe("noselection");
+    });
+
+    it("still selects a permitted serial port on Android", () => {
+        isAndroid.mockReturnValue(true);
+        DeviceHandler.showVirtualMode = true;
+        DeviceHandler.currentSerialPorts = [{ path: "capacitor-1155:22336:2002", displayName: "Betaflight STM32" }];
+
+        expect(DeviceHandler.selectActivePort()).toBe("capacitor-1155:22336:2002");
     });
 
     // Regression for the connected-device highlight: getConnectedDevice() returns
