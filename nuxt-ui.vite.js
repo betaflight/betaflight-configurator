@@ -7,7 +7,7 @@ export default {
     ui: {
         button: {
             slots: {
-                base: "font-semibold cursor-pointer",
+                base: "font-semibold cursor-pointer toolbar-disabled:opacity-100",
             },
             variants: {
                 size: {
@@ -20,6 +20,41 @@ export default {
                 },
             },
             compoundVariants: [
+                {
+                    color: ["primary", "neutral"],
+                    variant: "solid",
+                    class: "toolbar-disabled:bg-accented toolbar-disabled:!text-toned",
+                },
+                {
+                    color: "primary",
+                    variant: "soft",
+                    class: "toolbar-disabled:bg-accented toolbar-disabled:!text-toned",
+                },
+                {
+                    color: "neutral",
+                    variant: "soft",
+                    class: "toolbar-disabled:bg-accented/60 toolbar-disabled:ring toolbar-disabled:ring-inset toolbar-disabled:ring-accented toolbar-disabled:!text-toned",
+                },
+                {
+                    color: "success",
+                    variant: "solid",
+                    class: "toolbar-disabled:bg-success/20 toolbar-disabled:text-success",
+                },
+                {
+                    color: "error",
+                    variant: "solid",
+                    class: "toolbar-disabled:bg-error/20 toolbar-disabled:text-error",
+                },
+                {
+                    color: "success",
+                    variant: "soft",
+                    class: "toolbar-disabled:bg-success/5 toolbar-disabled:text-success/60",
+                },
+                {
+                    color: "error",
+                    variant: "soft",
+                    class: "toolbar-disabled:bg-error/5 toolbar-disabled:text-error/60",
+                },
                 {
                     color: "primary",
                     variant: "solid",

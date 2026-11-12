@@ -46,7 +46,7 @@
             <UFieldGroup orientation="horizontal" class="flex!">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
-                    :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
+                    color="success"
                     :loading="state.flashingInProgress"
                     @click="handleFlashFirmware"
                 >
@@ -54,7 +54,12 @@
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="flashActionMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton
-                        :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
+                        color="success"
+                        :variant="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'soft' : 'solid'"
+                        :class="{
+                            'bg-success/30 hover:bg-success/40 ring ring-inset ring-success/40':
+                                state.flashButtonDisabled || activeFlasherStep !== 'flash',
+                        }"
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :aria-label="$t('firmwareFlasherFlashFirmwareOptions')"
                         square
@@ -72,6 +77,8 @@
                 >
                     <UButton
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :variant="state.loadRemoteButtonDisabled ? 'soft' : 'solid'"
+                        :class="{ 'ring ring-inset ring-primary/40': state.loadRemoteButtonDisabled }"
                         :aria-label="$t('firmwareFlasherLoadFirmwareOptions')"
                         square
                     />
