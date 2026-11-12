@@ -1,5 +1,5 @@
 /**
- * Options for `@nuxt/ui/vite` (see vite.config.js plugins).
+ * Options for `@nuxt/ui/vite` (see vite.config.ts plugins).
  * light/dark mode is handled elsewhere in the app itself; Nuxt UI would otherwise override it.
  */
 export default {
