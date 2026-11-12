@@ -39,58 +39,54 @@ if (tauriDev) {
     console.log("  Server will be available at: http://localhost:8080");
 }
 
+// Binary files are served as read, everything else is read as UTF-8 text.
+const BINARY_EXTENSIONS = [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".webp",
+    ".ico",
+    ".bmp",
+    ".tiff",
+    ".tif",
+    ".svg",
+    ".woff",
+    ".woff2",
+    ".ttf",
+    ".eot",
+];
+
+// Extensions not listed are served without a Content-Type header.
+const CONTENT_TYPES: Record<string, string> = {
+    ".svg": "image/svg+xml",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".webp": "image/webp",
+    ".ico": "image/x-icon",
+    ".json": "application/json",
+    ".css": "text/css",
+    ".js": "application/javascript",
+};
+
 function serveFileFromDirectory(directory: string): Connect.NextHandleFunction {
     return (req, res, next) => {
         const filePath = (req.url ?? "").replace(new RegExp(`^/${directory}/`), "");
         const absolutePath = path.resolve(process.cwd(), directory, filePath);
 
         try {
-            // Define binary file extensions that should not be read as UTF-8
-            const binaryExtensions = [
-                ".png",
-                ".jpg",
-                ".jpeg",
-                ".gif",
-                ".webp",
-                ".ico",
-                ".bmp",
-                ".tiff",
-                ".tif",
-                ".svg",
-                ".woff",
-                ".woff2",
-                ".ttf",
-                ".eot",
-            ];
-            const isBinary = binaryExtensions.some((ext) => filePath.toLowerCase().endsWith(ext));
-
-            // Read file with appropriate encoding
+            const isBinary = BINARY_EXTENSIONS.some((ext) => filePath.toLowerCase().endsWith(ext));
             const fileContents = isBinary ? readFileSync(absolutePath) : readFileSync(absolutePath, "utf-8");
 
-            // Set Content-Type based on file extension
-            if (filePath.endsWith(".svg")) {
-                res.setHeader("Content-Type", "image/svg+xml");
-            } else if (filePath.endsWith(".png")) {
-                res.setHeader("Content-Type", "image/png");
-            } else if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg")) {
-                res.setHeader("Content-Type", "image/jpeg");
-            } else if (filePath.endsWith(".gif")) {
-                res.setHeader("Content-Type", "image/gif");
-            } else if (filePath.endsWith(".webp")) {
-                res.setHeader("Content-Type", "image/webp");
-            } else if (filePath.endsWith(".ico")) {
-                res.setHeader("Content-Type", "image/x-icon");
-            } else if (filePath.endsWith(".json")) {
-                res.setHeader("Content-Type", "application/json");
-            } else if (filePath.endsWith(".css")) {
-                res.setHeader("Content-Type", "text/css");
-            } else if (filePath.endsWith(".js")) {
-                res.setHeader("Content-Type", "application/javascript");
+            const contentType = CONTENT_TYPES[path.extname(filePath)];
+            if (contentType) {
+                res.setHeader("Content-Type", contentType);
             }
 
             res.end(fileContents);
-            // eslint-disable-next-line unused-imports/no-unused-vars
-        } catch (e) {
+        } catch {
             // If file not found or any other error, pass to the next middleware
             next();
         }
