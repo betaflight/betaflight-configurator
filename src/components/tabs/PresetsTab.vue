@@ -498,8 +498,10 @@ async function performApplyPickedPresets() {
 }
 
 async function saveAnywayAfterCliErrors() {
-    store.closeCliErrorsDialog(true);
-    await saveAndReconnect();
+    await runSave(async () => {
+        store.closeCliErrorsDialog(true);
+        await saveAndReconnect();
+    });
 }
 
 function closeCliErrorsWithoutSaving() {
