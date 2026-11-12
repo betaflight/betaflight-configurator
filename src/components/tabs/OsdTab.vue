@@ -585,34 +585,32 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="flex gap-2 items-center">
-                <UButton
-                    :disabled="!osdStore.state.isMax7456FontDeviceDetected || isSaving"
-                    @click="openFontManager()"
-                    variant="soft"
-                >
-                    {{ $t("osdSetupFontManagerTitle") }}
+            <UButton
+                :disabled="!osdStore.state.isMax7456FontDeviceDetected || isSaving"
+                @click="openFontManager()"
+                variant="soft"
+            >
+                {{ $t("osdSetupFontManagerTitle") }}
+            </UButton>
+            <UButton
+                :label="$t('osdSetupRefresh')"
+                :disabled="isSaving || (hasLoadedConfig && !portsOrConfigDirty)"
+                variant="soft"
+                @click="refreshConfig"
+            />
+            <UFieldGroup orientation="horizontal">
+                <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty" :loading="isSaving">
+                    {{ saveButtonText }}
                 </UButton>
-                <UButton
-                    :label="$t('osdSetupRefresh')"
-                    :disabled="isSaving || (hasLoadedConfig && !portsOrConfigDirty)"
-                    variant="soft"
-                    @click="refreshConfig"
-                />
-                <UFieldGroup orientation="horizontal" class="flex!">
-                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty" :loading="isSaving">
-                        {{ saveButtonText }}
-                    </UButton>
-                    <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                        <UButton
-                            :disabled="!portsOrConfigDirty || isSaving"
-                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                            :aria-label="$t('osdSetupSaveOptions')"
-                            square
-                        />
-                    </UDropdownMenu>
-                </UFieldGroup>
-            </div>
+                <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton
+                        :disabled="!portsOrConfigDirty || isSaving"
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('osdSetupSaveOptions')"
+                        square
+                    />
+                </UDropdownMenu>
+            </UFieldGroup>
         </div>
     </BaseTab>
 </template>

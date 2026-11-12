@@ -542,20 +542,18 @@
 
         <!-- Fixed Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="flex gap-2">
-                <UButton
-                    :label="$t('escDshotDirectionDialog-StopWizard')"
-                    :disabled="buttonStates.stopDisabled || isSaving"
-                    @click="stopMotors()"
-                    color="error"
-                />
-                <UButton
-                    :label="$t('configurationButtonSave')"
-                    :disabled="buttonStates.saveDisabled"
-                    :loading="isSaving"
-                    @click="handleSave(true)"
-                />
-            </div>
+            <UButton
+                :label="$t('escDshotDirectionDialog-StopWizard')"
+                :disabled="buttonStates.stopDisabled || isSaving"
+                @click="stopMotors()"
+                color="error"
+            />
+            <UButton
+                :label="$t('configurationButtonSave')"
+                :disabled="buttonStates.saveDisabled"
+                :loading="isSaving"
+                @click="handleSave(true)"
+            />
         </div>
     </BaseTab>
 </template>

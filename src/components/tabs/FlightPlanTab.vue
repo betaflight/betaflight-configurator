@@ -67,7 +67,7 @@
         </Dialog>
 
         <!-- Bottom toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <UButton variant="soft" color="error" :disabled="isSaving" @click="handleClear">
                 {{ $t("flightPlanClear") }}
             </UButton>
@@ -174,13 +174,3 @@ const declineLoadFromFC = () => {
     showLoadPromptDialog.value = false;
 };
 </script>
-
-<style lang="less">
-.tab-flight_plan {
-    /* Bottom toolbar (CRITICAL: must be exactly 2rem) */
-    .content_toolbar.toolbar_fixed_bottom {
-        position: fixed;
-        bottom: 2rem;
-    }
-}
-</style>

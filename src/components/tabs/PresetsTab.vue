@@ -102,21 +102,19 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="flex gap-2">
-                <UButton
-                    :label="$t('presetsButtonClearSelection')"
-                    :disabled="!store.canApply || isSaving"
-                    @click="store.clearPickedPresets()"
-                    color="error"
-                    variant="soft"
-                />
-                <UButton
-                    :label="$t('presetsButtonSave')"
-                    :loading="isSaving"
-                    :disabled="!store.canApply"
-                    @click="applyPickedPresets()"
-                />
-            </div>
+            <UButton
+                :label="$t('presetsButtonClearSelection')"
+                :disabled="!store.canApply || isSaving"
+                @click="store.clearPickedPresets()"
+                color="error"
+                variant="soft"
+            />
+            <UButton
+                :label="$t('presetsButtonSave')"
+                :loading="isSaving"
+                :disabled="!store.canApply"
+                @click="applyPickedPresets()"
+            />
         </div>
 
         <PresetDetailsDialog
@@ -580,10 +578,6 @@ async function handleCliErrorsDialogClose() {
 @media only screen and (max-width: 1055px) {
     .tab-presets .content_wrapper {
         height: calc(100% - 87px);
-    }
-
-    .tab-presets .content_toolbar {
-        margin-top: 5px;
     }
 }
 

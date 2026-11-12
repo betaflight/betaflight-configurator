@@ -43,7 +43,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UFieldGroup orientation="horizontal" class="flex!">
+            <UFieldGroup orientation="horizontal">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
                     color="success"
@@ -68,7 +68,7 @@
                     />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UFieldGroup orientation="horizontal" class="flex!">
+            <UFieldGroup orientation="horizontal">
                 <UButton
                     :label="$t('firmwareFlasherButtonLoadOnline')"
                     :disabled="state.loadRemoteButtonDisabled || state.flashingInProgress"
@@ -2078,9 +2078,6 @@ export default defineComponent({
         gap: 0.5rem;
     }
 
-    & + .content_toolbar {
-        width: fit-content;
-    }
     @media all and (max-width: 575px) {
         .detect-board {
             span {
@@ -2089,72 +2086,6 @@ export default defineComponent({
                 & > div {
                     display: none;
                 }
-            }
-        }
-    }
-
-    .toolbar_fixed_bottom.content_toolbar {
-        width: fit-content;
-    }
-
-    .content_toolbar {
-        width: fit-content;
-        background-color: var(--surface-300);
-        box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: end;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem 0.75rem 1rem;
-        border-start-start-radius: 1.5rem;
-        &::before {
-            width: 1.5rem;
-            aspect-ratio: 1;
-            content: "";
-            mask: url(../../images/corner.svg);
-            background-color: var(--surface-300);
-            position: absolute;
-            inset-inline-start: -1.5rem;
-            bottom: 0;
-        }
-        .btn {
-            a {
-                margin-top: 0;
-                margin-bottom: 0;
-                background-color: var(--primary-500);
-                border-radius: 3px;
-                border: 1px solid var(--primary-600);
-                color: black;
-                float: inline-end;
-                font-weight: bold;
-                font-size: 12px;
-                display: block;
-                cursor: pointer;
-                transition: all ease 0.2s;
-                padding: 0 0.5rem;
-                line-height: 28px;
-                user-select: none;
-                white-space: nowrap;
-                &:hover {
-                    background-color: var(--primary-400);
-                    transition: all ease 0.2s;
-                }
-                &:active {
-                    background-color: var(--primary-500);
-                    transition: all ease 0s;
-                    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-                }
-                .helpicon {
-                    margin-inline-start: 5px;
-                }
-            }
-            a.disabled {
-                cursor: default;
-                color: var(--surface-900);
-                background-color: var(--surface-500);
-                border: 1px solid var(--surface-500);
-                pointer-events: none;
-                opacity: 1;
             }
         }
     }

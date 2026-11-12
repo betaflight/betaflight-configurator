@@ -299,9 +299,6 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <!-- <div class="btn save_btn">
-                <button type="button" class="save" @click="saveConfig">{{ $t("configurationButtonSave") }}</button>
-            </div> -->
             <UButton
                 :label="$t('configurationButtonSave')"
                 :disabled="!canSave"

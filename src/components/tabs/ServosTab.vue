@@ -137,14 +137,12 @@
 
         <!-- Save button toolbar -->
         <div v-if="isSupported" class="content_toolbar toolbar_fixed_bottom">
-            <div class="flex gap-2">
-                <UButton
-                    :label="$t('servosButtonSave')"
-                    :disabled="!configHasChanged"
-                    :loading="isSaving"
-                    @click="saveServoConfig"
-                />
-            </div>
+            <UButton
+                :label="$t('servosButtonSave')"
+                :disabled="!configHasChanged"
+                :loading="isSaving"
+                @click="saveServoConfig"
+            />
         </div>
     </BaseTab>
 </template>

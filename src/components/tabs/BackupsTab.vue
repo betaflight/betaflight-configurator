@@ -227,8 +227,7 @@
         </div>
 
         <!-- Bottom toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
-            <div class="flex-1"></div>
+        <div class="content_toolbar toolbar_fixed_bottom">
             <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
                 <span>
                     <UButton
