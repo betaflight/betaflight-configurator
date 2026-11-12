@@ -594,7 +594,7 @@
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
                 <UFieldGroup orientation="horizontal" class="flex!">
-                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty || isSaving">
+                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty" :loading="isSaving">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
@@ -624,7 +624,6 @@ import {
 } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useBuildOptions } from "@/composables/useBuildOptions";
-import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { useOsdFontUpload } from "@/composables/osd/useOsdFontUpload";
@@ -735,7 +734,7 @@ const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
 };
-const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() =>
+const saveButtonText = computed(() =>
     i18n.getMessage(portSettingsChanged.value ? "osdSetupSaveReboot" : "osdSetupSave"),
 );
 const saveMenuItems = computed(() => [
@@ -1489,7 +1488,7 @@ async function refreshConfig() {
 }
 
 // Save OSD configuration to FC
-const saveConfig = () =>
+const persistConfig = (withReboot: boolean) =>
     runSave(async () => {
         // Warn before a pick that would take a port from another feature; a cancel here leaves the
         // save untouched, before anything has been written to the FC.
@@ -1516,14 +1515,14 @@ const saveConfig = () =>
 
         // Show success
         gui_log(i18n.getMessage("osdSettingsSaved"));
-        flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
+        if (withReboot) {
+            await reboot();
+        }
     });
 
 // A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
-const saveAndRebootConfig = async () => {
-    await saveConfig();
-    await reboot();
-};
+const saveConfig = () => persistConfig(false);
+const saveAndRebootConfig = () => persistConfig(true);
 
 // The primary button does what its label says: with a port change pending it saves and reboots.
 const savePrimaryAction = () => (portSettingsChanged.value ? saveAndRebootConfig() : saveConfig());

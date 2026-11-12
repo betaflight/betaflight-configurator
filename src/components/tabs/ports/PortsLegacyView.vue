@@ -172,7 +172,12 @@
 
     <div class="content_toolbar toolbar_fixed_bottom">
         <div class="flex gap-2">
-            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
+            <UButton
+                :label="$t('configurationButtonSave')"
+                :disabled="!dirty"
+                :loading="isSaving"
+                @click="saveConfig"
+            />
         </div>
     </div>
 </template>
@@ -199,7 +204,7 @@ const { functionRules, mspBaudRates, gpsBaudRates, telemetryBaudRates, blackboxB
 
 const { ports, analyticsChanges, getPortName, vtxTableNotConfigured, dirty, isLoading } = usePortsState(getRules);
 
-const { saveConfig, onTelemetryChange, onPeripheralChange } = usePortsConfiguration(
+const { saveConfig, isSaving, onTelemetryChange, onPeripheralChange } = usePortsConfiguration(
     ports,
     analyticsChanges,
     functionRules,

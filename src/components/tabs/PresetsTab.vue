@@ -105,12 +105,17 @@
             <div class="flex gap-2">
                 <UButton
                     :label="$t('presetsButtonClearSelection')"
-                    :disabled="!store.canApply"
+                    :disabled="!store.canApply || isSaving"
                     @click="store.clearPickedPresets()"
                     color="error"
                     variant="soft"
                 />
-                <UButton :label="$t('presetsButtonSave')" :disabled="!store.canApply" @click="applyPickedPresets()" />
+                <UButton
+                    :label="$t('presetsButtonSave')"
+                    :loading="isSaving"
+                    :disabled="!store.canApply"
+                    @click="applyPickedPresets()"
+                />
             </div>
         </div>
 
@@ -207,6 +212,7 @@
 </template>
 
 <script setup lang="ts">
+import { useSaving } from "@/composables/useSaving";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -232,6 +238,8 @@ import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
 import { update_sensor_status } from "@/js/serial_backend";
+
+const { isSaving, runSave } = useSaving();
 
 const store = usePresetsStore();
 const connectionStore = useConnectionStore();
@@ -467,7 +475,9 @@ async function applyPresetSelection() {
     );
 }
 
-async function applyPickedPresets() {
+const applyPickedPresets = () => runSave(performApplyPickedPresets);
+
+async function performApplyPickedPresets() {
     if (!(await ensureCliPresetActionSupported())) {
         return;
     }

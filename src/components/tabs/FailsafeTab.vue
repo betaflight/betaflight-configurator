@@ -375,7 +375,12 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('configurationButtonSave')" :disabled="!configHasChanged" @click="saveConfig" />
+            <UButton
+                :label="$t('configurationButtonSave')"
+                :disabled="!configHasChanged"
+                :loading="isSaving"
+                @click="saveConfig"
+            />
         </div>
     </BaseTab>
 </template>
@@ -739,7 +744,7 @@ const gpsRescueAllowArmingWithoutFix = computed({
 
 // --- Save ---
 
-const { saveConfig } = useFailsafeSave(initializeDefaults);
+const { saveConfig, isSaving } = useFailsafeSave(initializeDefaults);
 
 onMounted(async () => {
     await loadConfig();

@@ -28,6 +28,7 @@ import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { getTracking } from "../../js/Analytics";
 import { useReboot } from "../useReboot";
+import { useSaving } from "../useSaving";
 import type { SerialPort } from "@/stores/fc.types";
 import type { PortFunctionRule } from "./usePortsRules";
 import type { PortAnalyticsChanges, PortRow } from "./usePortsState";
@@ -39,6 +40,7 @@ export function usePortsConfiguration(
 ) {
     const fcStore = useFlightControllerStore();
     const { saveAndReboot } = useReboot();
+    const { isSaving, runSave } = useSaving();
 
     const getEnabledFeaturesFromPorts = (portsList: SerialPort[]) => {
         const flags = {
@@ -106,63 +108,59 @@ export function usePortsConfiguration(
         }
     };
 
-    const saveConfig = () => {
-        const tracking = getTracking();
-        tracking?.sendSaveAndChangeEvents(
-            tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-            toRaw(analyticsChanges),
-            "ports",
-        );
-
-        // Clear analytics changes
-        for (const key in analyticsChanges) {
-            delete analyticsChanges[key];
-        }
-
-        // Reconstruct fcStore.serialConfig.ports
-        fcStore.serialConfig.ports = ports.map((p) => {
-            const functions: string[] = [];
-            if (p.msp) {
-                functions.push("MSP");
-            }
-            if (p.rxSerial) {
-                functions.push("RX_SERIAL");
-            }
-            if (p.telemetry) {
-                functions.push(p.telemetry);
-            }
-            if (p.sensor) {
-                functions.push(p.sensor);
-            }
-            if (p.peripheral) {
-                functions.push(p.peripheral);
-            }
-
-            return {
-                identifier: p.identifier,
-                msp_baudrate: p.msp_baudrate,
-                telemetry_baudrate: p.telemetry_baudrate,
-                gps_baudrate: p.gps_baudrate === "AUTO" ? "57600" : p.gps_baudrate,
-                blackbox_baudrate: p.blackbox_baudrate === "AUTO" ? "115200" : p.blackbox_baudrate,
-                functions,
-            };
-        });
-
-        updateFeatures();
-
-        const saveEeprom = () => {
-            void saveAndReboot().then(() => gui_log(i18n.getMessage("portsEepromSave")));
-        };
-
-        mspHelper.sendSerialConfig(() => {
-            MSP.send_message(
-                MSPCodes.MSP_SET_FEATURE_CONFIG,
-                mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
-                false,
-                saveEeprom,
+    const saveConfig = () =>
+        runSave(async () => {
+            const tracking = getTracking();
+            tracking?.sendSaveAndChangeEvents(
+                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+                toRaw(analyticsChanges),
+                "ports",
             );
+
+            // Clear analytics changes
+            for (const key in analyticsChanges) {
+                delete analyticsChanges[key];
+            }
+
+            // Reconstruct fcStore.serialConfig.ports
+            fcStore.serialConfig.ports = ports.map((p) => {
+                const functions: string[] = [];
+                if (p.msp) {
+                    functions.push("MSP");
+                }
+                if (p.rxSerial) {
+                    functions.push("RX_SERIAL");
+                }
+                if (p.telemetry) {
+                    functions.push(p.telemetry);
+                }
+                if (p.sensor) {
+                    functions.push(p.sensor);
+                }
+                if (p.peripheral) {
+                    functions.push(p.peripheral);
+                }
+
+                return {
+                    identifier: p.identifier,
+                    msp_baudrate: p.msp_baudrate,
+                    telemetry_baudrate: p.telemetry_baudrate,
+                    gps_baudrate: p.gps_baudrate === "AUTO" ? "57600" : p.gps_baudrate,
+                    blackbox_baudrate: p.blackbox_baudrate === "AUTO" ? "115200" : p.blackbox_baudrate,
+                    functions,
+                };
+            });
+
+            updateFeatures();
+
+            await MSP.promise(
+                MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG,
+                mspHelper.crunch(MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG),
+            );
+            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+            await saveAndReboot();
+            gui_log(i18n.getMessage("portsEepromSave"));
         });
-    };
 
     const findRule = (name: string) => functionRules.find((r) => r.name === name);
     const isMspShareable = (rule: PortFunctionRule | undefined) => rule?.sharableWith?.includes("msp") === true;
@@ -210,6 +208,7 @@ export function usePortsConfiguration(
 
     return {
         saveConfig,
+        isSaving,
         onTelemetryChange,
         onPeripheralChange,
     };

@@ -592,7 +592,7 @@
             />
             <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
             <UFieldGroup orientation="horizontal" class="flex!">
-                <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
+                <UButton @click="saveConfig(needReboot)" :disabled="!dirty" :loading="isSaving">
                     {{ saveButtonLabel }}
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
