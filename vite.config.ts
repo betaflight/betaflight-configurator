@@ -2,13 +2,12 @@ import type { Plugin, Connect } from "vite";
 import { normalizePath } from "vite";
 import { defineConfig } from "vitest/config";
 import vue from "@vitejs/plugin-vue";
-import path from "node:path";
+import path, { resolve } from "node:path";
 import { readFileSync, existsSync } from "node:fs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import pkg from "./package.json" with { type: "json" };
-import * as child from "child_process";
+import * as child from "node:child_process";
 import { VitePWA } from "vite-plugin-pwa";
-import { resolve } from "path";
 import ui from "@nuxt/ui/vite";
 import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
 import nuxtUiViteOptions from "./nuxt-ui.vite.ts";
@@ -89,9 +88,8 @@ function serveFileFromDirectory(directory: string): Connect.NextHandleFunction {
             }
 
             res.end(fileContents);
-            // eslint-disable-next-line unused-imports/no-unused-vars
-        } catch (e) {
-            // If file not found or any other error, pass to the next middleware
+        } catch {
+            // Let Vite handle files this middleware cannot serve, including its normal 404 response.
             next();
         }
     };

@@ -161,7 +161,7 @@ export function usePortsConfiguration(
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             await saveToEeprom();
             tabSwitchCleanup(() => {
-                void reboot();
+                reboot();
             });
             gui_log(i18n.getMessage("portsEepromSave"));
         });
