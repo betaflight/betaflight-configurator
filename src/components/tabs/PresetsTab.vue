@@ -110,7 +110,7 @@
                 variant="soft"
             />
             <UButton
-                :label="$t('presetsButtonSave')"
+                :label="$t('saveAndReboot')"
                 :loading="isSaving"
                 :disabled="!store.canApply"
                 @click="applyPickedPresets()"
@@ -196,12 +196,7 @@
             </template>
             <template #footer>
                 <div class="flex justify-end gap-2 w-full">
-                    <UButton
-                        :label="$t('presetsButtonCancel')"
-                        variant="outline"
-                        size="xs"
-                        @click="closeCliErrorsWithoutSaving"
-                    />
+                    <UButton :label="$t('cancel')" variant="outline" size="xs" @click="closeCliErrorsWithoutSaving" />
                     <UButton :label="$t('presetsSaveAnyway')" size="xs" @click="saveAnywayAfterCliErrors" />
                 </div>
             </template>
@@ -439,7 +434,7 @@ function pickPresetAfterVersionCheck() {
         null,
         {
             yesText: i18n.getMessage("presetsWarningDialogYesButton"),
-            noText: i18n.getMessage("presetsWarningDialogNoButton"),
+            noText: i18n.getMessage("cancel"),
         },
     );
 }
@@ -468,7 +463,7 @@ async function applyPresetSelection() {
         null,
         {
             yesText: i18n.getMessage("presetsWarningDialogYesButton"),
-            noText: i18n.getMessage("presetsWarningDialogNoButton"),
+            noText: i18n.getMessage("cancel"),
         },
     );
 }

@@ -215,11 +215,7 @@
                 </template>
                 <template #footer>
                     <div class="flex justify-end gap-2 w-full">
-                        <UButton
-                            :label="$t('presetsButtonCancel')"
-                            variant="outline"
-                            @click="closeRestoreErrors(false)"
-                        />
+                        <UButton :label="$t('cancel')" variant="outline" @click="closeRestoreErrors(false)" />
                         <UButton :label="$t('presetsSaveAnyway')" @click="closeRestoreErrors(true)" />
                     </div>
                 </template>
@@ -482,7 +478,7 @@ async function restoreBackup(backup: Backup) {
         t("userBackupRestoreConfirm", { name: backup.name || t("itemBackup") }),
         {
             yesText: t("actionRestore"),
-            noText: t("presetsButtonCancel"),
+            noText: t("cancel"),
         },
     );
 

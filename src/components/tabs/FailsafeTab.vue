@@ -376,7 +376,7 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <UButton
-                :label="$t('configurationButtonSave')"
+                :label="$t('saveAndReboot')"
                 :disabled="!configHasChanged"
                 :loading="isSaving"
                 @click="saveConfig"

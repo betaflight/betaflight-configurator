@@ -273,7 +273,7 @@
                 @click="openCalibrationManager"
                 variant="soft"
             />
-            <UButton :label="$t('powerButtonSave')" :disabled="!dirty" :loading="isSaving" @click="handleSave" />
+            <UButton :label="$t('save')" :disabled="!dirty" :loading="isSaving" @click="handleSave" />
         </div>
 
         <!-- Calibration Manager Dialog -->

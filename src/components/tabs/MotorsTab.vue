@@ -524,12 +524,7 @@
                 </template>
                 <template #footer>
                     <div class="flex justify-end gap-2 w-full">
-                        <UButton
-                            :label="$t('presetsWarningDialogNoButton')"
-                            variant="outline"
-                            size="xs"
-                            @click="closeDynFiltersDialog"
-                        />
+                        <UButton :label="$t('cancel')" variant="outline" size="xs" @click="closeDynFiltersDialog" />
                         <UButton
                             :label="$t('presetsWarningDialogYesButton')"
                             size="xs"
@@ -549,7 +544,7 @@
                 color="error"
             />
             <UButton
-                :label="$t('configurationButtonSave')"
+                :label="$t('saveAndReboot')"
                 :disabled="buttonStates.saveDisabled"
                 :loading="isSaving"
                 @click="handleSave(true)"

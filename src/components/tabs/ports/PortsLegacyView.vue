@@ -171,7 +171,7 @@
     </div>
 
     <div class="content_toolbar toolbar_fixed_bottom">
-        <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveConfig" />
+        <UButton :label="$t('saveAndReboot')" :disabled="!dirty" :loading="isSaving" @click="saveConfig" />
     </div>
 </template>
 

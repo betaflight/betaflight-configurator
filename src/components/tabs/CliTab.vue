@@ -106,8 +106,8 @@
 
         <!-- Bottom toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton :label="$t('cliSaveToFileBtn')" @click="cli.saveFile" variant="soft" />
-            <UButton :label="$t('cliLoadFromFileBtn')" @click="handleLoadFile" variant="soft" />
+            <UButton :label="$t('saveToFile')" @click="cli.saveFile" variant="soft" />
+            <UButton :label="$t('loadFromFile')" @click="handleLoadFile" variant="soft" />
             <UButton :label="$t('cliClearOutputHistoryBtn')" @click="cli.clearHistory" variant="soft" />
             <UButton
                 :label="cli.state.copyButtonText"

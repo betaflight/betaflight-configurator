@@ -593,7 +593,7 @@
                 {{ $t("osdSetupFontManagerTitle") }}
             </UButton>
             <UButton
-                :label="$t('osdSetupRefresh')"
+                :label="$t('refresh')"
                 :disabled="isSaving || (hasLoadedConfig && !portsOrConfigDirty)"
                 variant="soft"
                 @click="refreshConfig"
@@ -739,19 +739,17 @@ const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
 };
-const saveButtonText = computed(() =>
-    i18n.getMessage(portSettingsChanged.value ? "osdSetupSaveReboot" : "osdSetupSave"),
-);
+const saveButtonText = computed(() => i18n.getMessage(portSettingsChanged.value ? "saveAndReboot" : "save"));
 const saveMenuItems = computed(() => [
     [
         {
-            label: i18n.getMessage("osdSetupSave"),
+            label: i18n.getMessage("save"),
             icon: "i-lucide-save",
             disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveConfig,
         },
         {
-            label: i18n.getMessage("osdSetupSaveReboot"),
+            label: i18n.getMessage("saveAndReboot"),
             icon: "i-lucide-rotate-cw",
             disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveAndRebootConfig,

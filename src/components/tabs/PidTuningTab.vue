@@ -101,13 +101,8 @@
 
             <!-- Save/Revert Buttons -->
             <div class="content_toolbar toolbar_fixed_bottom">
-                <UButton
-                    :label="$t('pidTuningButtonRefresh')"
-                    :disabled="!hasChanges || isSaving"
-                    @click="refresh"
-                    variant="soft"
-                />
-                <UButton :label="$t('pidTuningButtonSave')" :disabled="!hasChanges" :loading="isSaving" @click="save" />
+                <UButton :label="$t('refresh')" :disabled="!hasChanges || isSaving" @click="refresh" variant="soft" />
+                <UButton :label="$t('save')" :disabled="!hasChanges" :loading="isSaving" @click="save" />
             </div>
         </div>
     </BaseTab>

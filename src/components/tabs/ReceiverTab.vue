@@ -598,12 +598,7 @@
                 v-if="showBindButton"
                 variant="soft"
             />
-            <UButton
-                :label="$t('receiverButtonRefresh')"
-                :disabled="!dirty || isSaving"
-                variant="soft"
-                @click="refreshTab"
-            />
+            <UButton :label="$t('refresh')" :disabled="!dirty || isSaving" variant="soft" @click="refreshTab" />
             <UButton :label="saveButtonLabel" :disabled="!dirty" :loading="isSaving" @click="saveConfig(needReboot)" />
         </div>
     </BaseTab>
@@ -834,7 +829,7 @@ function serializeReceiverState() {
 
 const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
 
-const saveButtonLabel = computed(() => t(needReboot.value ? "configurationButtonSave" : "receiverButtonSave"));
+const saveButtonLabel = computed(() => t(needReboot.value ? "saveAndReboot" : "save"));
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text: string) {
