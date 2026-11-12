@@ -548,14 +548,12 @@
                     :disabled="buttonStates.stopDisabled"
                     @click="stopMotors()"
                     color="error"
-                    size="xs"
                 />
                 <UButton
                     :label="$t('configurationButtonSave')"
                     :disabled="buttonStates.saveDisabled"
                     :loading="isSaving"
                     @click="handleSave(true)"
-                    size="xs"
                 />
             </div>
         </div>

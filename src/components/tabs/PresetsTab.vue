@@ -106,17 +106,11 @@
                 <UButton
                     :label="$t('presetsButtonCancel')"
                     :disabled="!store.canApply"
-                    size="xs"
                     @click="store.clearPickedPresets()"
                     color="error"
                     variant="soft"
                 />
-                <UButton
-                    :label="$t('presetsButtonSave')"
-                    :disabled="!store.canApply"
-                    size="xs"
-                    @click="applyPickedPresets()"
-                />
+                <UButton :label="$t('presetsButtonSave')" :disabled="!store.canApply" @click="applyPickedPresets()" />
             </div>
         </div>
 

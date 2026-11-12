@@ -304,7 +304,6 @@
             </div> -->
             <UButton
                 :label="$t('configurationButtonSave')"
-                size="xs"
                 :disabled="!canSave"
                 :loading="isSaving"
                 @click="saveConfig"

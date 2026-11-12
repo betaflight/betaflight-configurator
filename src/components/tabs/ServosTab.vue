@@ -142,7 +142,6 @@
                     :label="$t('servosButtonSave')"
                     :disabled="!configHasChanged"
                     :loading="isSaving"
-                    size="xs"
                     @click="saveServoConfig"
                 />
             </div>

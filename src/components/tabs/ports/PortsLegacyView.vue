@@ -172,7 +172,7 @@
 
     <div class="content_toolbar toolbar_fixed_bottom">
         <div class="flex gap-2">
-            <UButton :label="$t('configurationButtonSave')" size="xs" :disabled="!dirty" @click="saveConfig" />
+            <UButton :label="$t('configurationButtonSave')" :disabled="!dirty" @click="saveConfig" />
         </div>
     </div>
 </template>

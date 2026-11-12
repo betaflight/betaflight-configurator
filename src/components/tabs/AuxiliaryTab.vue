@@ -162,13 +162,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton
-                :label="$t('auxiliaryButtonSave')"
-                size="xs"
-                :disabled="!dirty"
-                :loading="isSaving"
-                @click="saveModes"
-            />
+            <UButton :label="$t('auxiliaryButtonSave')" :disabled="!dirty" :loading="isSaving" @click="saveModes" />
         </div>
     </BaseTab>
 </template>

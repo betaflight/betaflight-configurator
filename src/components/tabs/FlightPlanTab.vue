@@ -68,19 +68,13 @@
 
         <!-- Bottom toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
-            <UButton variant="soft" color="error" size="xs" @click="handleClear">
+            <UButton variant="soft" color="error" @click="handleClear">
                 {{ $t("flightPlanClear") }}
             </UButton>
-            <UButton
-                variant="soft"
-                :disabled="!canUseFC"
-                :title="$t('flightPlanLoadFromFC')"
-                size="xs"
-                @click="handleLoad"
-            >
+            <UButton variant="soft" :disabled="!canUseFC" :title="$t('flightPlanLoadFromFC')" @click="handleLoad">
                 {{ $t("flightPlanLoad") }}
             </UButton>
-            <UButton :disabled="!canUseFC" :title="$t('flightPlanSaveToFC')" size="xs" @click="handleSave">
+            <UButton :disabled="!canUseFC" :title="$t('flightPlanSaveToFC')" @click="handleSave">
                 {{ $t("save") }}
             </UButton>
         </div>

@@ -232,7 +232,6 @@
             <UTooltip :text="$t('backupRequiresConnection')" :disabled="isConnected">
                 <span>
                     <UButton
-                        size="xs"
                         icon="i-lucide-save"
                         :disabled="!isConnected"
                         :class="{ 'pointer-events-none': !isConnected }"

@@ -375,12 +375,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton
-                :label="$t('configurationButtonSave')"
-                :disabled="!configHasChanged"
-                size="xs"
-                @click="saveConfig"
-            />
+            <UButton :label="$t('configurationButtonSave')" :disabled="!configHasChanged" @click="saveConfig" />
         </div>
     </BaseTab>
 </template>

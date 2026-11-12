@@ -388,13 +388,13 @@
 
         <!-- Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UFieldGroup size="xs" orientation="horizontal">
+            <UFieldGroup orientation="horizontal">
                 <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UFieldGroup size="xs" orientation="horizontal">
+            <UFieldGroup orientation="horizontal">
                 <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />

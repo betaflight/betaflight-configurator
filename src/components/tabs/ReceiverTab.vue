@@ -589,17 +589,10 @@
                 @click="openSticksWindow"
                 v-if="showSticksButton"
                 variant="soft"
-                size="xs"
             />
-            <UButton
-                :label="$t('receiverButtonBind')"
-                @click="sendBind"
-                v-if="showBindButton"
-                variant="soft"
-                size="xs"
-            />
-            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                <UButton @click="saveConfig(needReboot)" size="xs" :disabled="!dirty || isSaving">
+            <UButton :label="$t('receiverButtonBind')" @click="sendBind" v-if="showBindButton" variant="soft" />
+            <UFieldGroup orientation="horizontal" class="flex!">
+                <UButton @click="saveConfig(needReboot)" :disabled="!dirty || isSaving">
                     {{ $t("receiverButtonSave") }}
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">

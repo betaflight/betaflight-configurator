@@ -51,7 +51,6 @@
             <UButton
                 :label="$t('loggingButtonLogFile')"
                 :disabled="isLogging || isBusy"
-                size="xs"
                 @click="selectLogFile"
                 variant="soft"
             />
@@ -59,7 +58,6 @@
                 :label="startStopLabel"
                 :disabled="!canToggle"
                 :color="isLogging ? 'error' : selectedProperties.length ? 'success' : 'primary'"
-                size="xs"
                 @click="toggleLogging"
             />
         </div>

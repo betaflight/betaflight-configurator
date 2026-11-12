@@ -320,7 +320,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton size="xs" :label="saveButtonText" :disabled="!dirty" :loading="isSaving" @click="save" />
+            <UButton :label="saveButtonText" :disabled="!dirty" :loading="isSaving" @click="save" />
         </div>
     </BaseTab>
 </template>

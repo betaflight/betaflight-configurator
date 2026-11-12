@@ -271,15 +271,8 @@
                 v-if="showCalibration"
                 @click="openCalibrationManager"
                 variant="soft"
-                size="xs"
             />
-            <UButton
-                :label="$t('powerButtonSave')"
-                :disabled="!dirty"
-                :loading="isSaving"
-                @click="handleSave"
-                size="xs"
-            />
+            <UButton :label="$t('powerButtonSave')" :disabled="!dirty" :loading="isSaving" @click="handleSave" />
         </div>
 
         <!-- Calibration Manager Dialog -->

@@ -590,12 +590,11 @@
                     :disabled="!osdStore.state.isMax7456FontDeviceDetected"
                     @click="openFontManager()"
                     variant="soft"
-                    size="xs"
                 >
                     {{ $t("osdSetupFontManagerTitle") }}
                 </UButton>
-                <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
+                <UFieldGroup orientation="horizontal" class="flex!">
+                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty || isSaving">
                         {{ saveButtonText }}
                     </UButton>
                     <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
@@ -603,7 +602,6 @@
                             :disabled="!portsOrConfigDirty || isSaving"
                             :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                             square
-                            size="xs"
                         />
                     </UDropdownMenu>
                 </UFieldGroup>
