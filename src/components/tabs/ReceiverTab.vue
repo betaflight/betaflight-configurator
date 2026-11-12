@@ -599,6 +599,7 @@
                     <UButton
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :disabled="!dirty || isSaving"
+                        :aria-label="$t('receiverButtonSaveOptions')"
                         square
                     />
                 </UDropdownMenu>

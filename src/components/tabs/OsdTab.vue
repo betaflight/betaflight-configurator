@@ -601,6 +601,7 @@
                         <UButton
                             :disabled="!portsOrConfigDirty || isSaving"
                             :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                            :aria-label="$t('osdSetupSaveOptions')"
                             square
                         />
                     </UDropdownMenu>

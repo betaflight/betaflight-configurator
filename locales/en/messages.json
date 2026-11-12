@@ -2690,6 +2690,10 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
+    "receiverButtonSaveOptions": {
+        "message": "Receiver save options",
+        "description": "Accessible label for the toolbar dropdown button"
+    },
     "receiverButtonSave": {
         "message": "Save"
     },
@@ -5777,6 +5781,10 @@
     "osdSetupSaveReboot": {
         "message": "Save and Reboot"
     },
+    "osdSetupSaveOptions": {
+        "message": "OSD save options",
+        "description": "Accessible label for the toolbar dropdown button"
+    },
     "osdSetupSave": {
         "message": "Save"
     },
@@ -7271,6 +7279,10 @@
         "message": "<span class=\"message-negative\">Error</span> while loading the VTX Config info from clipboard. Maybe the contents are not correct",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
+    "vtxButtonSaveFileOptions": {
+        "message": "Export VTX table options",
+        "description": "Accessible label for the toolbar dropdown button"
+    },
     "vtxButtonSaveFile": {
         "message": "Save to file",
         "description": "Save to file button in the VTX tab"
@@ -7278,6 +7290,10 @@
     "vtxButtonSaveLua": {
         "message": "Save Lua Script",
         "description": "Save Lua script button in the VTX tab"
+    },
+    "vtxButtonLoadOptions": {
+        "message": "Load VTX table options",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "vtxButtonLoadFile": {
         "message": "Load from file",

@@ -391,13 +391,23 @@
             <UFieldGroup orientation="horizontal">
                 <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
+                    <UButton
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('vtxButtonLoadOptions')"
+                        square
+                        variant="soft"
+                    />
                 </UDropdownMenu>
             </UFieldGroup>
             <UFieldGroup orientation="horizontal">
                 <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
+                    <UButton
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('vtxButtonSaveFileOptions')"
+                        square
+                        variant="soft"
+                    />
                 </UDropdownMenu>
             </UFieldGroup>
             <UButton
