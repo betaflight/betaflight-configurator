@@ -7,7 +7,6 @@ import { readFileSync, existsSync } from "node:fs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import pkg from "./package.json" with { type: "json" };
 import { VitePWA } from "vite-plugin-pwa";
-import { resolve } from "path";
 import ui from "@nuxt/ui/vite";
 import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
 import nuxtUiViteOptions from "./nuxt-ui.vite.js";
@@ -164,9 +163,9 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                main: resolve(import.meta.dirname, "src/index.html"),
-                receiver_msp: resolve(import.meta.dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
-                log_window: resolve(import.meta.dirname, "src/components/log/log_window.html"),
+                main: path.resolve(import.meta.dirname, "src/index.html"),
+                receiver_msp: path.resolve(import.meta.dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
+                log_window: path.resolve(import.meta.dirname, "src/components/log/log_window.html"),
             },
             onwarn(warning, defaultHandler) {
                 if (warning.code === "INEFFECTIVE_DYNAMIC_IMPORT" && isCycleBreakingImport(warning)) {
