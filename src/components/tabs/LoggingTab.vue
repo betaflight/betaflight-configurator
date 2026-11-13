@@ -47,11 +47,10 @@
             </UiBox>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom flex items-center gap-2">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <UButton
                 :label="$t('loggingButtonLogFile')"
                 :disabled="isLogging || isBusy"
-                size="xs"
                 @click="selectLogFile"
                 variant="soft"
             />
@@ -59,7 +58,6 @@
                 :label="startStopLabel"
                 :disabled="!canToggle"
                 :color="isLogging ? 'error' : selectedProperties.length ? 'success' : 'primary'"
-                size="xs"
                 @click="toggleLogging"
             />
         </div>

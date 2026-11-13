@@ -264,21 +264,20 @@ async function startProcess() {
         switchTab("landing", { mode: "disconnected" });
     }
 
-    // The phone/tablet shell only. A narrow desktop or browser window is still the desktop
-    // experience, so width alone must not opt anything in here.
-    document.body.classList.toggle("mobile-app-shell", isAndroid());
+    const nativeAndroid = isAndroid();
+    document.body.classList.toggle("mobile-app-shell", nativeAndroid);
 
-    // The on-screen keyboard leaves no room for the tab strip in the floating bar. Track focus
-    // rather than viewport height: the layout viewport shrinks with the keyboard, so measuring
-    // it cannot tell the two apart.
-    document.addEventListener("focusin", (event) => {
-        if (event.target instanceof Element && event.target.matches("input, textarea, [contenteditable]")) {
-            document.body.classList.add("keyboard-visible");
-        }
-    });
-    document.addEventListener("focusout", () => {
-        document.body.classList.remove("keyboard-visible");
-    });
+    if (nativeAndroid) {
+        // The layout viewport shrinks with the on-screen keyboard, so track focus instead.
+        document.addEventListener("focusin", (event) => {
+            if (event.target instanceof Element && event.target.matches("input, textarea, [contenteditable]")) {
+                document.body.classList.add("keyboard-visible");
+            }
+        });
+        document.addEventListener("focusout", () => {
+            document.body.classList.remove("keyboard-visible");
+        });
+    }
 
     const compactHeaderLayoutMediaQuery = window.matchMedia(
         "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",

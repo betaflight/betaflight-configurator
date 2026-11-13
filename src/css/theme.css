@@ -6,7 +6,9 @@
 
 @import "tailwindcss";
 @import "@nuxt/ui";
-@source "../../nuxt-ui.vite.js";
+@source "../../nuxt-ui.vite.ts";
+
+@custom-variant toolbar-disabled (&:where(.content_toolbar *):is(:disabled, [aria-disabled="true"]));
 
 @theme static {
     /* Extending Tailwind colors with Betaflight primary colors */
