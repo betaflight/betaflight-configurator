@@ -462,7 +462,7 @@ async function copyProfile() {
     );
 }
 
-async function copyPsasProfile() {
+function copyPsasProfile() {
     // Create options for profiles excluding current one
     const options = [];
     for (let i = 0; i < numberOfPsasProfiles.value; i++) {
@@ -728,7 +728,7 @@ watch(
     () => fcStore.config.profile,
     (newValue) => {
         if (newValue !== currentProfile.value) {
-            syncProfileFromFc("profile");
+            void syncProfileFromFc("profile");
         }
     },
 );
@@ -737,7 +737,7 @@ watch(
     () => fcStore.config.rateProfile,
     (newValue) => {
         if (newValue !== currentRateProfile.value) {
-            syncProfileFromFc("rate");
+            void syncProfileFromFc("rate");
         }
     },
 );
@@ -746,7 +746,7 @@ watch(
     () => fcStore.config.psasProfile,
     (newValue) => {
         if (newValue !== currentPsasProfile.value) {
-            syncProfileFromFc("psas");
+            void syncProfileFromFc("psas");
         }
     },
 );
