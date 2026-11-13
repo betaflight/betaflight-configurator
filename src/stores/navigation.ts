@@ -91,8 +91,8 @@ export const useNavigationStore = defineStore("navigation", () => {
     // Sidebar.vue consumes and resets this flag.
     const optionsDialogOpen = ref(false);
 
-    // Same contract for the log dialog.
-    const logDialogOpen = ref(false);
+    // Whether the floating log panel is shown. Unlike optionsDialogOpen this is the panel's own state.
+    const logPanelOpen = ref(false);
 
     return {
         activeTab,
@@ -101,6 +101,6 @@ export const useNavigationStore = defineStore("navigation", () => {
         allowedTabs,
         expertMode,
         optionsDialogOpen,
-        logDialogOpen,
+        logPanelOpen,
     };
 });

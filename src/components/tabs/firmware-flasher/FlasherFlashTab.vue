@@ -43,14 +43,27 @@
             <!-- Date Row -->
             <div class="info_row">
                 <strong>{{ $t("firmwareFlasherReleaseDate") }}</strong>
-                <span class="date">{{ state.releaseDateText }}</span>
+                <span class="date">{{ cloudBuild.state.cloudBuildCommitDate || state.releaseDateText }}</span>
+                <div></div>
+            </div>
+
+            <!-- Commit Row -->
+            <div v-if="cloudBuild.state.cloudBuildCommitHash" class="info_row">
+                <strong>{{ $t("firmwareFlasherReleaseCommit") }}</strong>
+                <a
+                    class="commit"
+                    :href="`https://github.com/betaflight/betaflight/commit/${cloudBuild.state.cloudBuildCommitHash}`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ cloudBuild.state.cloudBuildCommitHash }}</a
+                >
                 <div></div>
             </div>
 
             <!-- Configuration File Row -->
-            <div class="info_row">
+            <div v-if="configFilenameVisible" class="info_row">
                 <strong>{{ $t("firmwareFlasherConfigurationFile") }}</strong>
-                <span class="configFilename">{{ state.configFilenameText }}</span>
+                <span class="configFilename">{{ state.isConfigLocal ? state.configFilename : "[default]" }}</span>
                 <div></div>
             </div>
 
@@ -243,9 +256,9 @@ import ProgressRing from "@/components/ProgressRing.vue";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { getLastBackupData } from "@/js/utils/AutoBackup";
 import type { useCloudBuild } from "@/composables/useCloudBuild";
-import { injectFlasherState } from "./flasherState";
+import { injectBoardSelection, injectFlasherState } from "./flasherState";
 
-defineProps({
+const props = defineProps({
     cloudBuild: { type: Object as PropType<ReturnType<typeof useCloudBuild>>, required: true },
     onSaveFirmware: { type: Function as PropType<() => void>, required: true },
     flashRingColor: { type: String, required: true },
@@ -254,9 +267,22 @@ defineProps({
     onFlashManualBaudChange: { type: Function as PropType<() => void>, required: true },
     onFlashManualBaudRateChange: { type: Function as PropType<() => void>, required: true },
     onRestoreBackup: { type: Function as PropType<() => void>, required: true },
+    firmwareAcceptsConfig: { type: Boolean, required: true },
 });
 
 const state = injectFlasherState();
+const boardSelection = injectBoardSelection();
+
+const configFilenameVisible = computed(() => {
+    if (state.isConfigLocal) {
+        return true;
+    }
+    if (state.localFirmwareLoaded) {
+        return props.firmwareAcceptsConfig && typeof state.config === "string" && state.config !== "";
+    }
+    const { firmwareVersionOptions, selectedFirmwareVersion } = boardSelection.state;
+    return firmwareVersionOptions.find((option) => option.release === selectedFirmwareVersion)?.unifiedConfig === true;
+});
 
 // True while flash is actively running (progress updates flowing)
 const flashStatusLive = computed(() => state.flashingInProgress || state.flashProgressValue > 0);

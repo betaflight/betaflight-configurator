@@ -58,7 +58,7 @@ const workspaceStore = useWorkspaceStore();
         padding: 0 0.75rem;
         height: 1.5rem;
         font-size: 0.65rem;
-        color: var(--graph-text-secondary);
+        color: var(--text-secondary);
         background: var(--surface-200, hsl(0, 0%, 92%));
         border-top: 1px solid var(--border-color);
     }
