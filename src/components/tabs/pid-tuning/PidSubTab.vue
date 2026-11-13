@@ -1525,7 +1525,13 @@ import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WingCurvesChart from "./WingCurvesChart.vue";
 import getTpaHyperbolicCurve from "./WingTpaCurvesData";
-import { dLeadTimeMs, feedforwardLeadTimeMs, iResetTimeMs, pMotorPercentPer100Dps } from "./PidPhysicalUnits";
+import {
+    dLeadTimeMs,
+    feedforwardLeadTimeMs,
+    iResetTimeMs,
+    pMotorPercentPer100Dps,
+    YAW_KI_MULTIPLIER,
+} from "./PidPhysicalUnits";
 
 const { t } = useTranslation();
 const fcStore = useFlightControllerStore();
@@ -1776,6 +1782,8 @@ const physicalUnitRows = computed(() => {
             pid: fcStore.pids[0],
             dMax: tuning.dMaxRoll,
             ff: tuning.feedforwardRoll,
+            kiMultiplier: 1,
+            integrated: false,
         },
         {
             axis: "PITCH",
@@ -1783,18 +1791,30 @@ const physicalUnitRows = computed(() => {
             pid: fcStore.pids[1],
             dMax: tuning.dMaxPitch,
             ff: tuning.feedforwardPitch,
+            kiMultiplier: 1,
+            integrated: false,
         },
-        { axis: "YAW", class: "bg-axis-yaw", pid: fcStore.pids[2], dMax: tuning.dMaxYaw, ff: tuning.feedforwardYaw },
-    ].map(({ axis, class: axisClass, pid: [p, i, d], dMax, ff }) => ({
+        {
+            axis: "YAW",
+            class: "bg-axis-yaw",
+            pid: fcStore.pids[2],
+            dMax: tuning.dMaxYaw,
+            ff: tuning.feedforwardYaw,
+            kiMultiplier: YAW_KI_MULTIPLIER,
+            integrated: Boolean(tuning.useIntegratedYaw),
+        },
+    ].map(({ axis, class: axisClass, pid: [p, i, d], dMax, ff, kiMultiplier, integrated }) => ({
         axis,
         class: axisClass,
-        values: [
-            formatPhysical(pMotorPercentPer100Dps(p), 1),
-            formatPhysical(iResetTimeMs(p, i), 0),
-            formatPhysical(dLeadTimeMs(p, d), 1),
-            formatPhysical(dLeadTimeMs(p, dMax), 1),
-            formatPhysical(feedforwardLeadTimeMs(p, ff), 1),
-        ],
+        values: integrated
+            ? Array(physicalUnitHeaders.length).fill(formatPhysical(null, 0))
+            : [
+                  formatPhysical(pMotorPercentPer100Dps(p), 1),
+                  formatPhysical(iResetTimeMs(p, i, kiMultiplier), 0),
+                  formatPhysical(dLeadTimeMs(p, d), 1),
+                  formatPhysical(dLeadTimeMs(p, dMax), 1),
+                  formatPhysical(feedforwardLeadTimeMs(p, ff), 1),
+              ],
     }));
 });
 

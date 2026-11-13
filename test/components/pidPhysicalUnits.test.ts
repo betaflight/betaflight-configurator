@@ -25,6 +25,7 @@ import {
     feedforwardLeadTimeMs,
     iResetTimeMs,
     pMotorPercentPer100Dps,
+    YAW_KI_MULTIPLIER,
 } from "@/components/tabs/pid-tuning/PidPhysicalUnits";
 
 describe("PID physical units", () => {
@@ -34,6 +35,10 @@ describe("PID physical units", () => {
         expect(dLeadTimeMs(45, 30)).toBeCloseTo(11.0, 1);
         expect(dLeadTimeMs(45, 40)).toBeCloseTo(14.7, 1);
         expect(feedforwardLeadTimeMs(45, 120)).toBeCloseTo(11.5, 1);
+    });
+
+    it("applies the firmware's yaw Ki multiplier to the yaw reset time (P45 I80)", () => {
+        expect(iResetTimeMs(45, 80, YAW_KI_MULTIPLIER)).toBeCloseTo(29.5, 1);
     });
 
     it("matches a firmware loop where I integrates a constant error until it equals P", () => {

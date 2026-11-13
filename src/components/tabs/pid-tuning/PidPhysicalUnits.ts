@@ -27,6 +27,8 @@ export const PTERM_SCALE = 0.032029;
 export const ITERM_SCALE = 0.244381;
 export const DTERM_SCALE = 0.000529;
 export const FEEDFORWARD_SCALE = 0.013754;
+/** pid_init.c multiplies yaw Ki by this, bar integrated yaw on firmware before 2026.12. */
+export const YAW_KI_MULTIPLIER = 2.5;
 
 /** Motor output, in percent, commanded by P for a 100 deg/s rate error. */
 export function pMotorPercentPer100Dps(p: number): number {
@@ -34,8 +36,8 @@ export function pMotorPercentPer100Dps(p: number): number {
 }
 
 /** Time for I to build the same output as P under a constant error (Kp/Ki), in ms. */
-export function iResetTimeMs(p: number, i: number): number | null {
-    return p > 0 && i > 0 ? (1000 * PTERM_SCALE * p) / (ITERM_SCALE * i) : null;
+export function iResetTimeMs(p: number, i: number, kiMultiplier = 1): number | null {
+    return p > 0 && i > 0 ? (1000 * PTERM_SCALE * p) / (ITERM_SCALE * kiMultiplier * i) : null;
 }
 
 /** How far ahead a D gain projects the gyro rate when damping (Kd/Kp), in ms. */
