@@ -2031,19 +2031,22 @@ function chooseDisplayFields(fcStore: FcStore) {
         ]);
 
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat(buildGatedDisplayFields(fcStore, F));
+    }
 
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
-        }
+    if (
+        semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) &&
+        (!hasPSAS() || configReportsBuildOption(fcStore.config, "USE_PITOT"))
+    ) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PITOT_AIRSPEED]);
+    }
 
-        if (hasPSAS()) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                F.PSAS_AOA_LIMITER,
-                F.PSAS_TRIM_ROLL,
-                F.PSAS_TRIM_PITCH,
-                F.PSAS_TRIM_YAW,
-            ]);
-        }
+    if (hasPSAS()) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.PSAS_AOA_LIMITER,
+            F.PSAS_TRIM_ROLL,
+            F.PSAS_TRIM_PITCH,
+            F.PSAS_TRIM_YAW,
+        ]);
     }
 }
 
