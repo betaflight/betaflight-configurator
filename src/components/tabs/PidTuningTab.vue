@@ -376,6 +376,14 @@ function initializeUI() {
     currentProfile.value = fcStore.config.profile;
     currentRateProfile.value = fcStore.config.rateProfile;
     currentPsasProfile.value = fcStore.config.psasProfile;
+
+    // The tab is now showing these profiles' data: baseline names against them.
+    pidTuningStore.setDisplayedProfiles({
+        profile: currentProfile.value,
+        rateProfile: currentRateProfile.value,
+        psasProfile: currentPsasProfile.value,
+    });
+
     // Get expert mode from global checkbox (in header) and sync to global state
     navigationStore.expertMode = isExpertModeEnabled();
 }

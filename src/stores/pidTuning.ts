@@ -56,6 +56,23 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         return positions;
     };
 
+    /**
+     * The profiles the tab is actually showing. Names are read against these, not against
+     * fcStore.config.*Profile, which the status poller can change out from under the UI before
+     * the tab has synchronised. Reading by the live config key would make an external profile
+     * switch look like a name edit, blocking the very sync that would have adopted it.
+     */
+    const displayedProfiles = ref({
+        profile: fcStore.config.profile,
+        rateProfile: fcStore.config.rateProfile,
+        psasProfile: fcStore.config.psasProfile,
+    });
+
+    /** Adopt the profiles the FC is now running, once the tab has loaded their data. */
+    function setDisplayedProfiles(next: Partial<typeof displayedProfiles.value>) {
+        displayedProfiles.value = { ...displayedProfiles.value, ...next };
+    }
+
     /** The editable set: the same six objects the tab writes back over MSP, plus the profile names. */
     const serializeEdits = () =>
         JSON.stringify({
@@ -68,9 +85,11 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
             psasConfig: fcStore.psasConfig,
             // Read the names off FC rather than taking them as arguments: the tab mirrors its
             // lifted refs into fcStore.config, and a second source would be free to drift (#5385).
-            pidProfileName: fcStore.config.pidProfileNames?.[fcStore.config.profile] ?? "",
-            rateProfileName: fcStore.config.rateProfileNames?.[fcStore.config.rateProfile] ?? "",
-            psasProfileName: fcStore.config.psasProfileNames?.[fcStore.config.psasProfile] ?? "",
+            // Index by displayedProfiles, not fcStore.config.*Profile: the status poller can move
+            // the live config key before the tab syncs, and that must not read as a name edit.
+            pidProfileName: fcStore.config.pidProfileNames?.[displayedProfiles.value.profile] ?? "",
+            rateProfileName: fcStore.config.rateProfileNames?.[displayedProfiles.value.rateProfile] ?? "",
+            psasProfileName: fcStore.config.psasProfileNames?.[displayedProfiles.value.psasProfile] ?? "",
         });
 
     const {
@@ -108,6 +127,8 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     return {
         hasChanges,
         hasEdits,
+        displayedProfiles,
+        setDisplayedProfiles,
         takeEditsSnapshot,
         markEditsClean,
         markProfileUnsaved,
