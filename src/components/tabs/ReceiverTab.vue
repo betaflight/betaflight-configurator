@@ -586,30 +586,20 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <UButton
                 :label="$t('receiverButtonSticks')"
+                :disabled="isSaving"
                 @click="openSticksWindow"
                 v-if="showSticksButton"
                 variant="soft"
-                size="xs"
             />
             <UButton
                 :label="$t('receiverButtonBind')"
+                :disabled="isSaving"
                 @click="sendBind"
                 v-if="showBindButton"
                 variant="soft"
-                size="xs"
             />
-            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                <UButton @click="saveConfig(needReboot)" size="xs" :disabled="!dirty || isSaving">
-                    {{ $t("receiverButtonSave") }}
-                </UButton>
-                <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton
-                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                        :disabled="!dirty || isSaving"
-                        square
-                    />
-                </UDropdownMenu>
-            </UFieldGroup>
+            <UButton :label="$t('refresh')" :disabled="!dirty || isSaving" variant="soft" @click="refreshTab" />
+            <UButton :label="saveButtonLabel" :disabled="!dirty" :loading="isSaving" @click="saveConfig(needReboot)" />
         </div>
     </BaseTab>
 </template>
@@ -839,22 +829,7 @@ function serializeReceiverState() {
 
 const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
 
-const saveMenuItems = computed(() => [
-    [
-        {
-            label: t("receiverButtonSave"),
-            icon: "i-lucide-save",
-            disabled: !dirty.value || isSaving.value,
-            onSelect: () => saveConfig(needReboot.value),
-        },
-        {
-            label: t("receiverButtonRefresh"),
-            icon: "i-lucide-refresh-cw",
-            disabled: !dirty.value || isSaving.value,
-            onSelect: refreshTab,
-        },
-    ],
-]);
+const saveButtonLabel = computed(() => t(needReboot.value ? "saveAndReboot" : "save"));
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text: string) {

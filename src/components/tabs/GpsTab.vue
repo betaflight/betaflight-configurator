@@ -299,16 +299,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <!-- <div class="btn save_btn">
-                <button type="button" class="save" @click="saveConfig">{{ $t("configurationButtonSave") }}</button>
-            </div> -->
-            <UButton
-                :label="$t('configurationButtonSave')"
-                size="xs"
-                :disabled="!canSave"
-                :loading="isSaving"
-                @click="saveConfig"
-            />
+            <UButton :label="$t('saveAndReboot')" :disabled="!canSave" :loading="isSaving" @click="saveConfig" />
         </div>
     </BaseTab>
 </template>

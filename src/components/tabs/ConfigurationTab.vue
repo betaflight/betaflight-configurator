@@ -229,13 +229,7 @@
                 </div>
             </div>
             <div class="content_toolbar toolbar_fixed_bottom">
-                <UButton
-                    :label="$t('configurationButtonSave')"
-                    size="xs"
-                    :disabled="!dirty"
-                    :loading="isSaving"
-                    @click="saveConfig"
-                />
+                <UButton :label="$t('saveAndReboot')" :disabled="!dirty" :loading="isSaving" @click="saveConfig" />
             </div>
         </div>
     </BaseTab>

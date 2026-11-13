@@ -459,8 +459,8 @@ const DEBUG_MODE_CURVES: Record<string, DebugFieldCurves | ApiGatedCurves> = {
         3: [-500, 500], // PID sum north
         4: [-500, 500], // roll angle command
         5: [-500, 500], // pitch angle command
-        6: [0, 500], // status flags east
-        7: [0, 500], // status flags north
+        6: [0, 500], // status flags (bit flags, ranged by their annotation)
+        7: [0, 1.5], // braking time (s), gives up after 1.2 s
     }),
     POSITION_EST: {
         0: [-10, 10], // position

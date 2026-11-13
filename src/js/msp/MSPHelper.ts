@@ -78,7 +78,8 @@ export type DataflashReadCallback = (
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
-let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+const ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
+const legacyLedOverlayLetters = ledOverlayLetters.filter((letter) => letter !== "y");
 
 let lastI2cErrorCount: number | null = null;
 
@@ -121,7 +122,7 @@ function buildLedStripMask(led: LedStripEntry, colorOffset: number, directionOff
     }
 
     for (const overlayLetter of led.functions) {
-        const bitIndex = ledOverlayLetters.indexOf(overlayLetter);
+        const bitIndex = (colorOffset === 18 ? legacyLedOverlayLetters : ledOverlayLetters).indexOf(overlayLetter);
         if (bitIndex >= 0) {
             mask |= bit_set(mask, bitIndex + 12);
         }
@@ -171,7 +172,7 @@ function decodeLedMask(mask: number, layout: LedMaskLayout): LedStripEntry {
     }
 
     const overlayMask = (mask >> 12) & layout.overlayMask;
-    ledOverlayLetters.forEach((letter, index) => {
+    (layout.hasParameters ? legacyLedOverlayLetters : ledOverlayLetters).forEach((letter, index) => {
         if (bit_check(overlayMask, index)) {
             functions.push(letter);
         }
@@ -2101,9 +2102,6 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         const layout = semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)
             ? LED_MASK_LAYOUT
             : LED_MASK_LAYOUT_PRE_1_46;
-        if (layout === LED_MASK_LAYOUT_PRE_1_46) {
-            ledOverlayLetters = ledOverlayLetters.filter((x) => x !== "y"); //remove rainbow because it's only supported after API 1.46
-        }
 
         for (let i = 0; i < ledCount; i++) {
             fcStore.ledStrip.push(decodeLedMask(data.readU32(), layout));
