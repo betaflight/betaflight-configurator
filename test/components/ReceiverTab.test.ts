@@ -33,12 +33,16 @@ import { useFlightControllerStore } from "../../src/stores/fc";
 import { useNavigationStore } from "../../src/stores/navigation";
 
 const saveToEeprom = vi.fn();
-const saveAndReboot = vi.fn();
+const reboot = vi.fn();
 
 vi.mock("../../src/js/timers", () => ({ addInterval: vi.fn(), removeInterval: vi.fn() }));
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({ mspHelper: { crunch: vi.fn(), setRawRx: vi.fn() } }));
-vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom, saveAndReboot }) }));
+vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom, reboot }) }));
+vi.mock("../../src/js/tab_adapters", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("../../src/js/tab_adapters")>()),
+    tabSwitchCleanup: (callback: () => void) => callback(),
+}));
 vi.mock("../../src/js/model", () => ({ default: vi.fn() }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
@@ -83,7 +87,6 @@ describe("Receiver MSP wiring", () => {
         vi.mocked(MSP.promise).mockResolvedValue(undefined);
         vi.mocked(mspHelper.crunch).mockReturnValue([]);
         saveToEeprom.mockResolvedValue(undefined);
-        saveAndReboot.mockResolvedValue(undefined);
     });
 
     afterEach(() => {
@@ -128,30 +131,34 @@ describe("Receiver MSP wiring", () => {
         expect(vi.mocked(MSP.send_message).mock.calls.at(-1)![3]).toBe(onRcData);
     });
 
-    it.each([
-        [false, saveToEeprom],
-        [true, saveAndReboot],
-    ])("saves the settings, then the feature mask, then persists (reboot: %s)", async (withReboot, persist) => {
-        await mountLoaded();
-        const steps: Array<number | string> = [];
-        vi.mocked(MSP.promise).mockImplementation(async (code) => {
-            steps.push(code ?? "no code");
-        });
-        persist.mockImplementation(async () => {
-            steps.push("persist");
-        });
+    it.each([false, true])(
+        "saves the settings, then the feature mask, then persists (reboot: %s)",
+        async (withReboot) => {
+            await mountLoaded();
+            const steps: Array<number | string> = [];
+            vi.mocked(MSP.promise).mockImplementation(async (code) => {
+                steps.push(code ?? "no code");
+            });
+            saveToEeprom.mockImplementation(async () => {
+                steps.push("persist");
+            });
+            reboot.mockImplementation(() => {
+                steps.push("reboot");
+            });
 
-        await vm.saveConfig(withReboot);
+            await vm.saveConfig(withReboot);
 
-        expect(steps).toEqual([
-            MSPCodes.MSP_SET_RX_MAP,
-            MSPCodes.MSP_SET_RSSI_CONFIG,
-            MSPCodes.MSP_SET_RC_DEADBAND,
-            MSPCodes.MSP_SET_RX_CONFIG,
-            MSPCodes.MSP_SET_FEATURE_CONFIG,
-            "persist",
-        ]);
-    });
+            expect(steps).toEqual([
+                MSPCodes.MSP_SET_RX_MAP,
+                MSPCodes.MSP_SET_RSSI_CONFIG,
+                MSPCodes.MSP_SET_RC_DEADBAND,
+                MSPCodes.MSP_SET_RX_CONFIG,
+                MSPCodes.MSP_SET_FEATURE_CONFIG,
+                "persist",
+                ...(withReboot ? ["reboot"] : []),
+            ]);
+        },
+    );
 
     it("persists only once the feature mask write is acknowledged", async () => {
         await mountLoaded();
