@@ -20,65 +20,36 @@
                 :aria-label="t('settingsSearchTitle')"
                 @click="settingsSearchOpen = true"
                 size="xs"
-            />
-        </UTooltip>
-        <UTooltip :text="$t('sidebarOpenOptions')" :delay-duration="300">
-            <UButton
-                icon="i-lucide-settings"
-                variant="ghost"
-                color="neutral"
-                square
-                :aria-label="$t('sidebarOpenOptions')"
-                @click="optionsOpen = true"
-                size="xs"
-            />
-        </UTooltip>
-        <UTooltip :text="$t('sidebarToggleDarkMode')" :delay-duration="300">
-            <UButton
-                :icon="isDark ? 'i-lucide-sun' : 'i-lucide-moon'"
-                variant="ghost"
-                color="neutral"
-                square
-                :aria-label="$t('sidebarToggleDarkMode')"
-                @click="toggleDarkMode"
-                size="xs"
-            />
-        </UTooltip>
-        <UTooltip :text="$t('sidebarToggleExpertMode')" :delay-duration="300">
-            <UButton
-                icon="i-lucide-wrench"
-                :variant="expertModeOn ? 'soft' : 'ghost'"
-                :color="expertModeOn ? 'primary' : 'neutral'"
-                square
-                :aria-label="$t('sidebarToggleExpertMode')"
-                @click="toggleExpertMode"
-                size="xs"
-            />
-        </UTooltip>
-        <UTooltip :text="$t('logActionShow')" :delay-duration="300">
-            <UButton
-                :icon="sidebarItems.find((item) => item.key === 'log')?.icon"
-                variant="ghost"
-                color="neutral"
-                square
-                :aria-label="$t('logActionShow')"
-                @click="logOpen = true"
-                size="xs"
                 :class="{ 'mr-auto': !isCompact }"
             />
+        </UTooltip>
+        <UTooltip :text="$t('sidebarSettingsMenu')" :delay-duration="300">
+            <UDropdownMenu
+                :items="settingsMenuItems"
+                :content="{ side: 'top', align: isCompact ? 'start' : 'end' }"
+                :ui="{ content: 'z-3001' }"
+            >
+                <UButton
+                    icon="i-lucide-settings"
+                    variant="ghost"
+                    color="neutral"
+                    square
+                    :aria-label="$t('sidebarSettingsMenu')"
+                    size="xs"
+                />
+            </UDropdownMenu>
         </UTooltip>
         <UserSession :is-compact="isCompact" />
     </div>
     <SettingsSearch v-model="settingsSearchOpen" :expert-mode="expertModeOn" @select="onSettingSelected" />
     <OptionsDialog v-model="optionsOpen" />
-    <LogDialog v-model="logOpen" />
 </template>
 
 <script setup lang="ts">
 import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import UserSession from "@/components/user-session/UserSession.vue";
-import { sidebarItems } from "./sidebar_items";
+import type { DropdownMenuItem } from "@nuxt/ui";
 import { useVisibleTabs } from "./useVisibleTabs";
 import { useNavigationStore } from "@/stores/navigation";
 import { vueTabState } from "@/js/vue_tab_mounter.js";
@@ -90,7 +61,6 @@ import { applyExpertMode } from "@/js/utils/applyExpertMode";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
 import OptionsDialog from "@/components/dialogs/OptionsDialog.vue";
-import LogDialog from "@/components/dialogs/LogDialog.vue";
 import SettingsSearch from "@/components/settings-search/SettingsSearch.vue";
 import type { SettingsSearchEntry } from "virtual:settings-search-index";
 
@@ -141,17 +111,36 @@ watch(
     },
 );
 
-// Log dialog
-const logOpen = ref(false);
-watch(
-    () => navigationStore.logDialogOpen,
-    (val) => {
-        if (val) {
-            logOpen.value = true;
-            navigationStore.logDialogOpen = false;
-        }
-    },
-);
+const settingsMenuItems = computed<DropdownMenuItem[][]>(() => [
+    [
+        { label: t("tabOptions"), icon: "i-lucide-sliders-horizontal", onSelect: () => (optionsOpen.value = true) },
+        {
+            label: t("tabLog"),
+            icon: "i-lucide-file-text",
+            onSelect: () => (navigationStore.logPanelOpen = !navigationStore.logPanelOpen),
+        },
+    ],
+    [
+        {
+            label: t("sidebarToggleDarkMode"),
+            icon: isDark.value ? "i-lucide-sun" : "i-lucide-moon",
+            onSelect: (event: Event) => {
+                event.preventDefault();
+                toggleDarkMode();
+            },
+        },
+        {
+            label: t("sidebarToggleExpertMode"),
+            icon: "i-lucide-wrench",
+            type: "checkbox",
+            checked: expertModeOn.value,
+            onSelect: (event: Event) => {
+                event.preventDefault();
+                toggleExpertMode();
+            },
+        },
+    ],
+]);
 
 // Re-sync isDark when the options dialog closes (user may have changed dark theme there).
 watch(optionsOpen, (open) => {

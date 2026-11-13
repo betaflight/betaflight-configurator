@@ -228,7 +228,7 @@ describe("SensorsTab MSP wiring", () => {
         });
         fcStore.boardAlignment.roll = 99; // overwritten from the tab's copy before the send
 
-        clickButton(wrapper, "configurationButtonSave");
+        clickButton(wrapper, "saveAndReboot");
         await flushPromises();
         expect(data.sendSensorsConfig).toHaveBeenCalledOnce();
         expect(alignmentAtSend).toMatchObject({ roll: 0 });

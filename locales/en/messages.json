@@ -221,6 +221,24 @@
     "save": {
         "message": "Save"
     },
+    "saveAndReboot": {
+        "message": "Save and Reboot"
+    },
+    "refresh": {
+        "message": "Refresh"
+    },
+    "saveToFile": {
+        "message": "Save to File"
+    },
+    "loadFromFile": {
+        "message": "Load from File"
+    },
+    "loadFromClipboard": {
+        "message": "Load from Clipboard"
+    },
+    "copyToClipboard": {
+        "message": "Copy to Clipboard"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connect: Enabled - App automatically tries to connect when new port is detected"
     },
@@ -465,17 +483,17 @@
     "tabOptions": {
         "message": "Options"
     },
-    "sidebarOpenOptions": {
-        "message": "Options",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+    "sidebarSettingsMenu": {
+        "message": "Settings",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "Toggle dark / light mode",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Toggle expert mode",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Setup"
@@ -649,8 +667,9 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-    "logActionShow": {
-        "message": "Show Log"
+    "logActionOpenWindow": {
+        "message": "Open in new window",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "Log"
@@ -710,6 +729,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU not found"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "Failed to open the DFU device. Reconnect the flight controller and try again"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "Access to the DFU device was denied. Check the udev rules are installed, see the docs for instructions"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "Access to the DFU device was denied. Install the WinUSB driver (ImpulseRC Driver Fixer or Zadig) and close any other program using the flight controller"
     },
     "stm32DfuPermissionRequired": {
         "message": "The device has rebooted to DFU mode.<br><br>Your browser requires USB permission to access the DFU device. Click the button below to select it from the device picker."
@@ -2006,9 +2034,6 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "configurationButtonSave": {
-        "message": "Save and Reboot"
-    },
     "dialogClose": {
         "message": "Close"
     },
@@ -2546,12 +2571,6 @@
     "throttle": {
         "message": "Throttle"
     },
-    "pidTuningButtonSave": {
-        "message": "Save"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Refresh"
-    },
     "pidTuningCopyProfile": {
         "message": "Copy profile"
     },
@@ -2695,12 +2714,6 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Save"
-    },
-    "receiverButtonRefresh": {
-        "message": "Refresh"
-    },
     "receiverButtonBind": {
         "message": "Bind Receiver"
     },
@@ -2754,9 +2767,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Add Link"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Save"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -3130,9 +3140,6 @@
         "message": "Battery Profile Selection",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Save"
-    },
     "adjustmentsShowAll": {
         "message": "Show all slots"
     },
@@ -3169,9 +3176,6 @@
     },
     "servosLiveMode": {
         "message": "Enable Live mode"
-    },
-    "servosButtonSave": {
-        "message": "Save"
     },
     "gpsHead": {
         "message": "General"
@@ -3790,20 +3794,11 @@
     "cliReboot": {
         "message": "CLI reboot detected"
     },
-    "cliSaveToFileBtn": {
-        "message": "Save to File"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Clear output history"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Copy to clipboard"
-    },
     "cliCopySuccessful": {
         "message": "Copied!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Load from file"
     },
     "cliSupportRequestBtn": {
         "message": "Submit Support Data"
@@ -3861,9 +3856,6 @@
     },
     "blackboxConfiguration": {
         "message": "Blackbox configuration"
-    },
-    "blackboxButtonSave": {
-        "message": "Save and reboot"
     },
     "blackboxLoggingNone": {
         "message": "No Logging"
@@ -3988,6 +3980,9 @@
     },
     "firmwareFlasherReleaseDate": {
         "message": "Date:"
+    },
+    "firmwareFlasherReleaseCommit": {
+        "message": "Commit:"
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
@@ -4287,9 +4282,6 @@
     },
     "ledStripHelp": {
         "message": "The flight controller can control colors and effects of individual LEDs on a strip.<br />Configure LEDs on the grid, configure wiring order then attach LEDs on your aircraft according to grid positions. LEDs without wire ordering number will not be saved.<br />Double-click on a color to edit the HSV values."
-    },
-    "ledStripButtonSave": {
-        "message": "Save"
     },
     "ledStripColorSetupTitle": {
         "message": "Color setup",
@@ -5251,9 +5243,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Kill"
     },
-    "powerButtonSave": {
-        "message": "Save"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Firmware upgrade <span class=\"message-negative\">required</span>. Battery/Amperage/Voltage configurations using API &lt; 1.33.0 (Betaflight release &lt;= 3.17) is not supported."
     },
@@ -5776,14 +5765,9 @@
         "message": "The selected font is a small font for framebuffer OSDs, but this OSD uses standard size fonts. It will not display correctly. Upload anyway?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
-    "osdSetupSaveReboot": {
-        "message": "Save and Reboot"
-    },
-    "osdSetupSave": {
-        "message": "Save"
-    },
-    "osdSetupRefresh": {
-        "message": "Refresh"
+    "osdSetupSaveOptions": {
+        "message": "OSD save options",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Battery voltage",
@@ -7008,7 +6992,7 @@
         "message": "Airspeed"
     },
     "vtxHelp": {
-        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
+        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(loadFromFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(save.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -7020,11 +7004,11 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Attention:</span> The selected VTX type does not support the 'factory' setting for bands, but some of your bands have this setting. Click '$t(vtxButtonSave.message)' to fix this.",
+        "message": "<span class=\"message-negative\">Attention:</span> The selected VTX type does not support the 'factory' setting for bands, but some of your bands have this setting. Click '$t(save.message)' to fix this.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Attention:</span> The values of the VTX Table have been loaded, but not yet stored on the flight controller. You must verify and modify the values to be sure that they are valid and legal in your country and then press the $t(vtxButtonSave.message) button to store them on the flight controller.",
+        "message": "<span class=\"message-negative\">Attention:</span> The values of the VTX Table have been loaded, but not yet stored on the flight controller. You must verify and modify the values to be sure that they are valid and legal in your country and then press the $t(save.message) button to store them on the flight controller.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -7273,25 +7257,17 @@
         "message": "<span class=\"message-negative\">Error</span> while loading the VTX Config info from clipboard. Maybe the contents are not correct",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Save to file",
-        "description": "Save to file button in the VTX tab"
+    "vtxButtonSaveFileOptions": {
+        "message": "Export VTX table options",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "vtxButtonSaveLua": {
         "message": "Save Lua Script",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxButtonLoadFile": {
-        "message": "Load from file",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Load from clipboard",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Save",
-        "description": "Save button in the VTX tab"
+    "vtxButtonLoadOptions": {
+        "message": "Load VTX table options",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "buttonSaving": {
         "message": "Saving",
@@ -7896,13 +7872,9 @@
         "message": "Error loading presets from the internet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Save and Reboot",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Cancel",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+    "presetsButtonClearSelection": {
+        "message": "Clear Selection",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "Applying configuration...",
@@ -7927,10 +7899,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Agree",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Cancel",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Add favorite preset",
@@ -9399,6 +9367,9 @@
     },
     "pidTuningWingTpaAdvSpeedCurveDetails": {
         "message": "Hyperbolic curves chart"
+    },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "The Classic curve is not recommended for wings. It applies the multirotor TPA rate and breakpoint to the estimated airspeed instead of throttle."
     },
     "pidTuningWingMiscSettings": {
         "message": "Miscellaneous settings"

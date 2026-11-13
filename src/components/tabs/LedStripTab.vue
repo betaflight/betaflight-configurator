@@ -320,7 +320,7 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton size="xs" :label="saveButtonText" :disabled="!dirty" :loading="isSaving" @click="save" />
+            <UButton :label="$t('save')" :disabled="!dirty" :loading="isSaving" @click="save" />
         </div>
     </BaseTab>
 </template>
@@ -334,7 +334,6 @@ import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip, type LedGridCell, type LedModeColorSelection } from "@/composables/useLedStrip";
 import { useSaving } from "@/composables/useSaving";
 import { useDirtyState } from "@/composables/useDirtyState";
-import { useTransientLabel } from "@/composables/useTransientLabel";
 import { runTabLoad } from "@/composables/useTabLoad";
 import { i18n } from "@/js/localization";
 import semver from "semver";
@@ -416,10 +415,6 @@ const selectedModeColor = ref<LedModeColorSelection | null>(null);
 const auxChannelValue = ref("3");
 const colorDefineSliders = ref<HTMLElement | null>(null);
 const colorHSV = reactive({ h: 0, s: 0, v: 0 });
-const { label: transientSaveButtonText, flash: flashSaveButtonText } = useTransientLabel(
-    i18n.getMessage("ledStripButtonSave"),
-);
-const saveButtonText = computed(() => transientSaveButtonText.value);
 const { isSaving, runSave } = useSaving();
 
 // Color setup popup state
@@ -1019,7 +1014,6 @@ function save() {
 
         // Post-save UI runs only after the persist resolves.
         markClean(savedSnapshot);
-        flashSaveButtonText(i18n.getMessage("buttonSaved"), 1500);
         // saveConfig() ends in saveToEeprom(), which already emits the shared "EEPROM saved"
         // toast; eeprom_saved_ok resolves to the same string, so it's dropped here to avoid
         // showing the identical toast twice.

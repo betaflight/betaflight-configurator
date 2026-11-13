@@ -585,29 +585,32 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="flex gap-2 items-center">
-                <UButton
-                    :disabled="!osdStore.state.isMax7456FontDeviceDetected"
-                    @click="openFontManager()"
-                    variant="soft"
-                    size="xs"
-                >
-                    {{ $t("osdSetupFontManagerTitle") }}
+            <UButton
+                :disabled="!osdStore.state.isMax7456FontDeviceDetected || isSaving"
+                @click="openFontManager()"
+                variant="soft"
+            >
+                {{ $t("osdSetupFontManagerTitle") }}
+            </UButton>
+            <UButton
+                :label="$t('refresh')"
+                :disabled="isSaving || (hasLoadedConfig && !portsOrConfigDirty)"
+                variant="soft"
+                @click="refreshConfig"
+            />
+            <UFieldGroup orientation="horizontal">
+                <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty" :loading="isSaving">
+                    {{ saveButtonText }}
                 </UButton>
-                <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                    <UButton @click="savePrimaryAction()" :disabled="!portsOrConfigDirty || isSaving" size="xs">
-                        {{ saveButtonText }}
-                    </UButton>
-                    <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
-                        <UButton
-                            :disabled="!portsOrConfigDirty || isSaving"
-                            :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                            square
-                            size="xs"
-                        />
-                    </UDropdownMenu>
-                </UFieldGroup>
-            </div>
+                <UDropdownMenu v-slot="{ open }" :items="saveMenuItems" :content="{ align: 'end', side: 'top' }">
+                    <UButton
+                        :disabled="!portsOrConfigDirty || isSaving"
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('osdSetupSaveOptions')"
+                        square
+                    />
+                </UDropdownMenu>
+            </UFieldGroup>
         </div>
     </BaseTab>
 </template>
@@ -626,7 +629,6 @@ import {
 } from "@/composables/useOsdPreview";
 import { useOsdRuler } from "@/composables/useOsdRuler";
 import { useBuildOptions } from "@/composables/useBuildOptions";
-import { useTransientLabel } from "@/composables/useTransientLabel";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { useOsdFontUpload } from "@/composables/osd/useOsdFontUpload";
@@ -739,28 +741,20 @@ const logoImageSizeParams = {
     logoWidthPx: FONT.constants.SIZES.CHAR_WIDTH * 24,
     logoHeightPx: FONT.constants.SIZES.CHAR_HEIGHT * 4,
 };
-const { label: saveButtonText, flash: flashSaveButtonText } = useTransientLabel(() =>
-    i18n.getMessage(portSettingsChanged.value ? "osdSetupSaveReboot" : "osdSetupSave"),
-);
+const saveButtonText = computed(() => i18n.getMessage(portSettingsChanged.value ? "saveAndReboot" : "save"));
 const saveMenuItems = computed(() => [
     [
         {
-            label: i18n.getMessage("osdSetupSave"),
+            label: i18n.getMessage("save"),
             icon: "i-lucide-save",
             disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveConfig,
         },
         {
-            label: i18n.getMessage("osdSetupSaveReboot"),
+            label: i18n.getMessage("saveAndReboot"),
             icon: "i-lucide-rotate-cw",
             disabled: !portsOrConfigDirty.value || isSaving.value,
             onSelect: saveAndRebootConfig,
-        },
-        {
-            label: i18n.getMessage("osdSetupRefresh"),
-            icon: "i-lucide-refresh-cw",
-            disabled: isSaving.value || (hasLoadedConfig.value && !portsOrConfigDirty.value),
-            onSelect: refreshConfig,
         },
     ],
 ]);
@@ -1493,7 +1487,7 @@ async function refreshConfig() {
 }
 
 // Save OSD configuration to FC. Resolves true once the save went through.
-const saveConfig = async () => {
+const persistConfig = async (withReboot: boolean) => {
     // Warn before a pick that would take a port from another feature; a cancel here leaves the
     // save untouched, before anything has been written to the FC, and counts as not saved. The
     // prompt is modal, so no second save can start while it is open.
@@ -1521,20 +1515,17 @@ const saveConfig = async () => {
 
         // Show success
         gui_log(i18n.getMessage("osdSettingsSaved"));
-        flashSaveButtonText(i18n.getMessage("osdButtonSaved"), 2000);
+        if (withReboot) {
+            await reboot();
+        }
     });
 };
 
 // A UART assignment only takes effect at serial init, so the port rows need a reboot to bite.
 // A cancelled or failed save does not reboot, so the tab stays open with the edits intact.
 // Resolves false then, so the unsaved-changes prompt keeps the user on the tab.
-const saveAndRebootConfig = async () => {
-    if (!(await saveConfig())) {
-        return false;
-    }
-    await reboot();
-    return true;
-};
+const saveConfig = () => persistConfig(false);
+const saveAndRebootConfig = () => persistConfig(true);
 
 // The primary button does what its label says: with a port change pending it saves and reboots.
 const savePrimaryAction = () => (portSettingsChanged.value ? saveAndRebootConfig() : saveConfig());

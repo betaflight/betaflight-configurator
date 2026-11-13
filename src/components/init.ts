@@ -26,6 +26,7 @@ import i18next from "i18next";
 import { createApp, reactive } from "vue";
 import ui from "@nuxt/ui/vue-plugin";
 import I18NextVue from "i18next-vue";
+import { publishLog } from "../js/log_window";
 import DeviceHandler from "../js/device_handler";
 import PortUsage from "../js/port_usage";
 import { BetaflightComponents } from "../js/vue_components";
@@ -83,6 +84,8 @@ i18next.on("initialized", function () {
         .use(getNuxtUiRouter())
         .use(ui)
         .mount("#main-wrapper");
+
+    publishLog();
 
     if (process.env.NODE_ENV === "development") {
         // Vue 3 enables devtools in development builds on its own; this adds performance tracing.

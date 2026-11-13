@@ -388,24 +388,31 @@
 
         <!-- Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UFieldGroup size="xs" orientation="horizontal">
-                <UButton :label="$t('vtxButtonLoadFile')" @click="loadJsonFile" variant="soft" />
+            <UFieldGroup orientation="horizontal">
+                <UButton :label="$t('loadFromFile')" :disabled="isSaving" @click="loadJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="loadMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
+                    <UButton
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('vtxButtonLoadOptions')"
+                        :disabled="isSaving"
+                        square
+                        variant="soft"
+                    />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UFieldGroup size="xs" orientation="horizontal">
-                <UButton :label="$t('vtxButtonSaveFile')" @click="saveJsonFile" variant="soft" />
+            <UFieldGroup orientation="horizontal">
+                <UButton :label="$t('saveToFile')" :disabled="isSaving" @click="saveJsonFile" variant="soft" />
                 <UDropdownMenu v-slot="{ open }" :items="saveFileMenuItems" :content="{ align: 'end', side: 'top' }">
-                    <UButton :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" square variant="soft" />
+                    <UButton
+                        :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :aria-label="$t('vtxButtonSaveFileOptions')"
+                        :disabled="isSaving"
+                        square
+                        variant="soft"
+                    />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UButton
-                :label="$t('vtxButtonSave')"
-                :disabled="saveButtonDisabled"
-                :loading="isSaving"
-                @click="handleSave"
-            />
+            <UButton :label="$t('save')" :disabled="saveButtonDisabled" :loading="isSaving" @click="handleSave" />
         </div>
     </BaseTab>
 </template>
@@ -549,13 +556,15 @@ export default defineComponent({
         const loadMenuItems = computed(() => [
             [
                 {
-                    label: t("vtxButtonLoadFile"),
+                    label: t("loadFromFile"),
                     icon: "i-lucide-hard-drive-download",
+                    disabled: isSaving.value,
                     onSelect: loadJsonFile,
                 },
                 {
-                    label: t("vtxButtonLoadClipboard"),
+                    label: t("loadFromClipboard"),
                     icon: "i-lucide-clipboard-paste",
+                    disabled: isSaving.value,
                     onSelect: loadClipboardJson,
                 },
             ],
@@ -564,13 +573,15 @@ export default defineComponent({
         const saveFileMenuItems = computed(() => [
             [
                 {
-                    label: t("vtxButtonSaveFile"),
+                    label: t("saveToFile"),
                     icon: "i-lucide-hard-drive-upload",
+                    disabled: isSaving.value,
                     onSelect: saveJsonFile,
                 },
                 {
                     label: t("vtxButtonSaveLua"),
                     icon: "i-lucide-file-code",
+                    disabled: isSaving.value,
                     onSelect: saveLuaFile,
                 },
             ],
