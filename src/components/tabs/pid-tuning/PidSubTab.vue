@@ -411,6 +411,29 @@
                         :format-options="{ useGrouping: false }"
                         class="w-full"
                     />
+
+                    <!-- Physical units -->
+                    <div class="col-span-6 flex items-center gap-0.5 pt-2 text-xs text-dimmed">
+                        <span>{{ $t("pidTuningPhysicalUnits") }}</span>
+                        <HelpIcon :text="$t('pidTuningPhysicalUnitsHelp')" />
+                    </div>
+                    <div></div>
+                    <div
+                        v-for="(unit, index) in physicalUnitHeaders"
+                        :key="index"
+                        class="flex items-center justify-center gap-0.5 text-xs text-dimmed"
+                    >
+                        <span>{{ $t(unit.label) }}</span>
+                        <HelpIcon :text="$t(unit.help)" />
+                    </div>
+                    <template v-for="row in physicalUnitRows" :key="row.axis">
+                        <div class="font-bold text-white text-center py-0.5 px-1 rounded text-xs" :class="row.class">
+                            {{ row.axis }}
+                        </div>
+                        <div v-for="(value, index) in row.values" :key="index" class="text-center text-sm tabular-nums">
+                            {{ value }}
+                        </div>
+                    </template>
                 </div>
             </UiBox>
 
@@ -1502,6 +1525,13 @@ import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WingCurvesChart from "./WingCurvesChart.vue";
 import getTpaHyperbolicCurve from "./WingTpaCurvesData";
+import {
+    dLeadTimeMs,
+    feedforwardLeadTimeMs,
+    iResetTimeMs,
+    pMotorPercentPer100Dps,
+    YAW_KI_MULTIPLIER,
+} from "./PidPhysicalUnits";
 
 const { t } = useTranslation();
 const fcStore = useFlightControllerStore();
@@ -1732,6 +1762,61 @@ const pidNavRD = createPidComputed("NavR", 2);
 
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => fcStore.advancedTuning);
+
+const physicalUnitHeaders = [
+    { label: "pidTuningPhysicalUnitP", help: "pidTuningPhysicalUnitPHelp" },
+    { label: "pidTuningPhysicalUnitI", help: "pidTuningPhysicalUnitIHelp" },
+    { label: "pidTuningPhysicalUnitD", help: "pidTuningPhysicalUnitDHelp" },
+    { label: "pidTuningPhysicalUnitD", help: "pidTuningPhysicalUnitDHelp" },
+    { label: "pidTuningPhysicalUnitF", help: "pidTuningPhysicalUnitFHelp" },
+];
+
+const formatPhysical = (value: number | null, digits: number) => (value === null ? "–" : value.toFixed(digits));
+
+const physicalUnitRows = computed(() => {
+    const tuning = advancedTuning.value;
+    return [
+        {
+            axis: "ROLL",
+            class: "bg-axis-roll",
+            pid: fcStore.pids[0],
+            dMax: tuning.dMaxRoll,
+            ff: tuning.feedforwardRoll,
+            kiMultiplier: 1,
+            integrated: false,
+        },
+        {
+            axis: "PITCH",
+            class: "bg-axis-pitch",
+            pid: fcStore.pids[1],
+            dMax: tuning.dMaxPitch,
+            ff: tuning.feedforwardPitch,
+            kiMultiplier: 1,
+            integrated: false,
+        },
+        {
+            axis: "YAW",
+            class: "bg-axis-yaw",
+            pid: fcStore.pids[2],
+            dMax: tuning.dMaxYaw,
+            ff: tuning.feedforwardYaw,
+            kiMultiplier: YAW_KI_MULTIPLIER,
+            integrated: Boolean(tuning.useIntegratedYaw),
+        },
+    ].map(({ axis, class: axisClass, pid: [p, i, d], dMax, ff, kiMultiplier, integrated }) => ({
+        axis,
+        class: axisClass,
+        values: integrated
+            ? Array(physicalUnitHeaders.length).fill(formatPhysical(null, 0))
+            : [
+                  formatPhysical(pMotorPercentPer100Dps(p), 1),
+                  formatPhysical(iResetTimeMs(p, i, kiMultiplier), 0),
+                  formatPhysical(dLeadTimeMs(p, d), 1),
+                  formatPhysical(dLeadTimeMs(p, dMax), 1),
+                  formatPhysical(feedforwardLeadTimeMs(p, ff), 1),
+              ],
+    }));
+});
 
 // Dynamic Idle visibility and state
 const dshotTelemetryEnabled = computed(() => fcStore.motorConfig.use_dshot_telemetry ?? false);
