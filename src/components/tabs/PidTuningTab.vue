@@ -108,6 +108,7 @@
                         :label="$t('pidTuningResetPsasProfile')"
                         color="neutral"
                         variant="outline"
+                        :disabled="hasEdits"
                         @click="resetPsasProfile"
                     />
                 </div>
@@ -551,6 +552,9 @@ async function resetProfile() {
 }
 
 async function resetPsasProfile() {
+    if (pidTuningStore.hasEdits) {
+        return;
+    }
     try {
         await sendResetPsasProfile();
         // The reset rewrote the profile in RAM only, and the reload below adopts those defaults as
