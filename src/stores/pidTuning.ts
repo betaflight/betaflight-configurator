@@ -80,7 +80,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     } = useDirtyState(serializeEdits);
 
     const { dirty: profileChanged, markClean: markProfileSelectionClean } = useDirtyState(
-        () => `${fcStore.config.profile}:${fcStore.config.rateProfile}`,
+        () => `${fcStore.config.profile}:${fcStore.config.rateProfile}:${fcStore.config.psasProfile}`,
     );
 
     // Rewriting profile data (MSP_SET_RESET_CURR_PID, MSP_COPY_PROFILE) needs a flag rather than a
