@@ -903,9 +903,10 @@ import MagSphereView from "../dialogs/mag-calibration/MagSphereView.vue";
 import MagCalOffsetEditor from "../dialogs/mag-calibration/MagCalOffsetEditor.vue";
 import LiveSensorPanel from "./sensors/LiveSensorPanel.vue";
 import { registerTabSave } from "@/js/unsaved_changes";
+import { tabSwitchCleanup } from "@/js/tab_adapters";
 
 const fcStore = useFlightControllerStore();
-const { saveAndReboot } = useReboot();
+const { reboot, saveToEeprom } = useReboot();
 
 // From API 1.49 each of these owns its own UART. Both still set the same FUNCTION_LIDAR bit in the
 // synthesised mask, which is why neither can be read back from it — the setting is the only thing
@@ -2415,14 +2416,14 @@ const loadConfig = async () => {
 
 // --- Save ---
 
-const saveConfig = () =>
-    runSave(async () => {
-        // Warn before a pick that would take a port from another feature; a cancel here leaves the
-        // save untouched, before anything has been written to the FC.
-        if (!(await confirmPortConflicts())) {
-            return;
-        }
+const saveConfig = async () => {
+    // Warn before a pick that would take a port from another feature; a cancel here leaves the
+    // save untouched, before anything has been written to the FC, and counts as not saved.
+    if (!(await confirmPortConflicts())) {
+        return false;
+    }
 
+    return runSave(async () => {
         const savedSnapshot = takeSnapshot();
 
         // Push sensor hardware to store
@@ -2495,11 +2496,15 @@ const saveConfig = () =>
 
         gui_log(i18n.getMessage("sensorConfigSaved"));
 
-        // Save to EEPROM and reboot
-        await saveAndReboot();
+        // Error-aware persist: a timeout rejects here instead of leaving the save pending.
+        await saveToEeprom();
+        tabSwitchCleanup(() => {
+            reboot();
+        });
 
         markClean(savedSnapshot);
     });
+};
 registerTabSave(() => saveConfig());
 
 // --- Lifecycle ---
