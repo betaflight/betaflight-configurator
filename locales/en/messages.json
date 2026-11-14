@@ -964,6 +964,9 @@
     "dfu_hex_address_errors": {
         "message": "Firmware image contains addresses not found on target device"
     },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "Firmware image spans flash memories this app cannot switch between on this device"
+    },
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
