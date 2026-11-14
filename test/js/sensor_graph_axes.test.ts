@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { useSensorGraph } from "../../src/composables/useSensorGraph";
+import { useDisplayUnits } from "../../src/composables/useDisplayUnits";
 
 // The graph SVGs stretch with their container, so the x-axis offset cannot be
 // baked into the template — it has to be derived from the measured height, or the
@@ -121,6 +122,20 @@ describe("sensor graph samples", () => {
         addAltitudeSample([-3]);
         addAltitudeSample([7]);
         expect([series.min, series.max]).toEqual([-3, 7]);
+    });
+
+    it("changes altitude axis labels without changing recorded samples", () => {
+        const units = useDisplayUnits();
+        units.setUnitSystem("metric");
+        const { initializeGraphs, addAltitudeSample, altitude_data, updateGraphs } = useSensorGraph();
+        initializeGraphs(null, 0);
+        addAltitudeSample([2]);
+        updateGraphs();
+        units.setUnitSystem("imperial");
+        addAltitudeSample([2]);
+        updateGraphs();
+        expect(document.querySelector("#altitude .axis.y")?.textContent).toContain("6.56");
+        expect(altitude_data.value[0].at(-1)?.[1]).toBe(2);
     });
 
     it("numbers debug samples by the shared counter, and ignores a column it has no graph for", () => {

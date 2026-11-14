@@ -559,6 +559,7 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDialog } from "@/composables/useDialog";
 import { mixerList } from "@/js/model";
@@ -582,6 +583,7 @@ import { runTabLoad } from "@/composables/useTabLoad";
 import { API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 
 const fcStore = useFlightControllerStore();
+const { formatTemperature } = useDisplayUnits();
 const dialog = useDialog();
 const { hasBuildOption } = useBuildOptions();
 
@@ -1719,7 +1721,7 @@ const getTelemetryHtml = (index: number) => {
     }
 
     if (fcStore.motorTelemetryData.temperature) {
-        html += `<br>Temp: ${fcStore.motorTelemetryData.temperature[index]}°C`;
+        html += `<br>Temp: ${formatTemperature(fcStore.motorTelemetryData.temperature[index])}`;
     }
 
     return html;
