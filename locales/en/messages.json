@@ -6156,6 +6156,13 @@
     "osdDescElementPIDRateProfile": {
         "message": "Numerical display of the active PID and rate profiles"
     },
+    "osdTextElementPIDRateBatProfile": {
+        "message": "Profile: PID, rate and battery",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPIDRateBatProfile": {
+        "message": "Numerical display of the active PID, rate and battery profiles"
+    },
     "osdTextElementBatteryWarning": {
         "message": "Battery warning",
         "description": "One of the elements of the OSD"
