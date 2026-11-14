@@ -209,6 +209,9 @@ const VirtualFC = {
             motor_poles: 14,
             use_dshot_telemetry: true,
             use_esc_sensor: false,
+            // a 2207 stator, so the thermal estimator's OSD elements and stats are offered
+            motor_stator_diameter: 22,
+            motor_stator_height: 70,
         };
 
         fcStore.servoConfig = Array.from({ length: 8 });

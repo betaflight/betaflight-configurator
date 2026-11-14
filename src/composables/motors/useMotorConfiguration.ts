@@ -136,6 +136,16 @@ export function useMotorConfiguration(
             (newVal, oldVal) => handleChange("motor_kv", newVal, oldVal),
         );
 
+        // Motor stator size (thermal estimator)
+        watch(
+            () => fcStore.motorConfig.motor_stator_diameter,
+            (newVal, oldVal) => handleChange("motor_stator_diameter", newVal, oldVal),
+        );
+        watch(
+            () => fcStore.motorConfig.motor_stator_height,
+            (newVal, oldVal) => handleChange("motor_stator_height", newVal, oldVal),
+        );
+
         // ESC Sensor feature
         watch(
             () => fcStore.features?.features?.isEnabled?.("ESC_SENSOR") ?? false,
