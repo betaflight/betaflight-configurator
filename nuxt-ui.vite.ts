@@ -2,6 +2,8 @@
  * Options for `@nuxt/ui/vite` (see vite.config.ts plugins).
  * light/dark mode is handled elsewhere in the app itself; Nuxt UI would otherwise override it.
  */
+import type { NuxtUIOptions } from "@nuxt/ui/vite";
+
 export default {
     colorMode: false,
     ui: {
@@ -143,4 +145,4 @@ export default {
             warning: "orange",
         },
     },
-};
+} satisfies NuxtUIOptions;

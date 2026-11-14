@@ -1,6 +1,15 @@
 {
     "extends": "@vue/tsconfig/tsconfig.dom.json",
-    "include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.d.ts", "test/**/*.ts", "*.d.ts", "nuxt-ui.vite.ts"],
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.vue",
+        "src/**/*.d.ts",
+        "test/**/*.ts",
+        "*.d.ts",
+        "vite.config.ts",
+        "nuxt-ui.vite.ts",
+        "scripts/git-commit-hash.ts"
+    ],
     "exclude": ["src/dist", "dist", "node_modules"],
     "compilerOptions": {
         "strict": true,
