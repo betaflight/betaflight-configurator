@@ -329,6 +329,10 @@ const PARSE_INT_FIELDS = [
     "tpa_curve_pid_thr0",
     "tpa_curve_pid_thr100",
     "tpa_curve_expo",
+    "speed_curve_vref",
+    "speed_curve_power",
+    "speed_curve_min",
+    "speed_curve_max",
     "yaw_type",
 ] as const;
 
@@ -970,6 +974,10 @@ export class FlightLogParser {
             tpa_curve_pid_thr0: null,
             tpa_curve_pid_thr100: null,
             tpa_curve_expo: null,
+            speed_curve_vref: null,
+            speed_curve_power: null,
+            speed_curve_min: null,
+            speed_curve_max: null,
             yaw_type: null,
             unknownHeaders: null, // Unknown Extra Headers
         };
