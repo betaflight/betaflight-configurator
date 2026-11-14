@@ -21,13 +21,18 @@
 
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
-import { bluetoothDevices, type BluetoothDeviceProfile } from "./devices";
+import { bluetoothDevices, pickCharacteristics, type BluetoothDeviceProfile } from "./devices";
 import type { SerialConnectOptions, SerialPayload } from "../serial";
 
 /** The W3C `BluetoothRemoteGATTCharacteristic`, as far as this transport uses it. */
 interface BleCharacteristic extends EventTarget {
     readonly uuid: string;
-    readonly properties: { readonly notify: boolean };
+    readonly properties: {
+        readonly write?: boolean;
+        readonly writeWithoutResponse?: boolean;
+        readonly notify?: boolean;
+        readonly indicate?: boolean;
+    };
     /** The last value read or notified; unset before the first. */
     readonly value?: DataView;
     writeValue(value: Uint8Array<ArrayBuffer>): Promise<void>;
@@ -432,33 +437,23 @@ class WebBluetooth extends EventTarget {
         // getServices() ran first and threw unless it found a service and its description.
         const description = this.deviceDescription!;
         const characteristics = await this.service!.getCharacteristics();
+        const picked = pickCharacteristics(
+            description,
+            characteristics.map(({ uuid, properties }) => ({
+                uuid,
+                writable: Boolean(properties.write || properties.writeWithoutResponse),
+                notifies: Boolean(properties.notify || properties.indicate),
+            })),
+        );
 
-        for (const characteristic of characteristics) {
-            if (characteristic.uuid === description.writeCharacteristic) {
-                this.writeCharacteristic = characteristic;
-            }
-
-            if (characteristic.uuid === description.readCharacteristic) {
-                this.readCharacteristic = characteristic;
-            }
+        if (!picked) {
+            throw new Error(
+                `No usable characteristics - expected to write ${description.writeCharacteristic} and read ${description.readCharacteristic}`,
+            );
         }
 
-        // The expected UUID used to go in Error's second argument, which takes an options
-        // object, so it never reached the message.
-        if (!this.writeCharacteristic) {
-            throw new Error(`Unexpected write characteristic found - should be ${description.writeCharacteristic}`);
-        }
-
-        // Many CC2541 modules (HM-10 firmware, MLT-BT05, T-Motor's TMFC) share the FFE0 service with
-        // the CC2541 profile but carry both directions on FFE1 and have no FFE2.
-        if (!this.readCharacteristic && this.writeCharacteristic.properties?.notify) {
-            this.readCharacteristic = this.writeCharacteristic;
-        }
-
-        if (!this.readCharacteristic) {
-            throw new Error(`Unexpected read characteristic found - should be ${description.readCharacteristic}`);
-        }
-
+        this.writeCharacteristic = characteristics.find((c) => c.uuid === picked.write)!;
+        this.readCharacteristic = characteristics.find((c) => c.uuid === picked.read)!;
         this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification);
     }
 
@@ -478,7 +473,7 @@ class WebBluetooth extends EventTarget {
             throw new Error("No read characteristic");
         }
 
-        if (!this.readCharacteristic.properties.notify) {
+        if (!this.readCharacteristic.properties.notify && !this.readCharacteristic.properties.indicate) {
             throw new Error("Read characteristic unable to notify.");
         }
 
