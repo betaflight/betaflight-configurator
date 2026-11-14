@@ -17,7 +17,7 @@ use tauri::{AppHandle, Emitter, State};
 use tokio::sync::Mutex as TokioMutex;
 use uuid::Uuid;
 
-use tauri_plugin_blec::models::{BleDevice, CharProps, ScanFilter, Service, WriteType};
+use tauri_plugin_blec::models::{BleDevice, CharProps, Characteristic, ScanFilter, Service, WriteType};
 use tauri_plugin_blec::{get_handler, OnDisconnectHandler};
 
 /// How long a scan runs before returning the peripherals seen so far. BLE
@@ -122,6 +122,26 @@ struct MatchedProfile {
     write_type: WriteType,
 }
 
+/// Chooses the characteristics to write to and subscribe to, as `pickCharacteristics` in
+/// devices.ts does: modules disagree on which way round a profile's two characteristics go, so
+/// each direction takes the first of the two that can carry it, the profile's own choice first.
+fn pick_characteristics(
+    characteristics: &[Characteristic],
+    write_uuid: Uuid,
+    read_uuid: Uuid,
+) -> Option<(&Characteristic, &Characteristic)> {
+    let find = |uuids: [Uuid; 2], props: [CharProps; 2]| {
+        uuids.into_iter().find_map(|uuid| {
+            characteristics
+                .iter()
+                .find(|c| c.uuid == uuid && props.iter().any(|&p| c.properties.contains(p)))
+        })
+    };
+    let write = find([write_uuid, read_uuid], [CharProps::Write, CharProps::WriteWithoutResponse])?;
+    let read = find([read_uuid, write_uuid], [CharProps::Notify, CharProps::Indicate])?;
+    Some((write, read))
+}
+
 /// Picks the first descriptor whose service and both characteristics resolve on
 /// the connected peripheral. Order matters: the JS table lists device variants
 /// most-specific first, which is what lets a family like SpeedyBee fall through
@@ -139,12 +159,9 @@ fn match_descriptor(services: &[Service], descriptors: &[BleDeviceDescriptor]) -
         let Some(service) = services.iter().find(|s| s.uuid == service_uuid) else {
             continue;
         };
-        let Some(write) = service.characteristics.iter().find(|c| c.uuid == write_uuid) else {
+        let Some((write, read)) = pick_characteristics(&service.characteristics, write_uuid, read_uuid) else {
             continue;
         };
-        if !service.characteristics.iter().any(|c| c.uuid == read_uuid) {
-            continue;
-        }
 
         // Prefer acknowledged writes when the characteristic supports them (matching
         // the Web Bluetooth path), falling back to write-without-response otherwise.
@@ -156,8 +173,8 @@ fn match_descriptor(services: &[Service], descriptors: &[BleDeviceDescriptor]) -
         return Some(MatchedProfile {
             service_uuid: descriptor.service_uuid.clone(),
             service: service_uuid,
-            write: write_uuid,
-            read: read_uuid,
+            write: write.uuid,
+            read: read.uuid,
             write_type,
         });
     }
@@ -279,4 +296,46 @@ pub async fn ble_disconnect(state: State<'_, BleState>) -> Result<(), String> {
         .disconnect()
         .await
         .map_err(|e| e.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const RX: Uuid = Uuid::from_u128(0x6e400002_b5a3_f393_e0a9_e50e24dcca9e);
+    const TX: Uuid = Uuid::from_u128(0x6e400003_b5a3_f393_e0a9_e50e24dcca9e);
+
+    fn characteristic(uuid: Uuid, properties: &[CharProps]) -> Characteristic {
+        Characteristic {
+            uuid,
+            descriptors: Vec::new(),
+            properties: properties.iter().copied().collect(),
+        }
+    }
+
+    #[test]
+    fn follows_the_profile_when_the_module_does() {
+        let chars = [
+            characteristic(RX, &[CharProps::Write, CharProps::WriteWithoutResponse]),
+            characteristic(TX, &[CharProps::Notify]),
+        ];
+        let (write, read) = pick_characteristics(&chars, RX, TX).unwrap();
+        assert_eq!((write.uuid, read.uuid), (RX, TX));
+    }
+
+    #[test]
+    fn swaps_for_a_module_wired_the_other_way_round() {
+        let chars = [
+            characteristic(RX, &[CharProps::Notify]),
+            characteristic(TX, &[CharProps::WriteWithoutResponse]),
+        ];
+        let (write, read) = pick_characteristics(&chars, RX, TX).unwrap();
+        assert_eq!((write.uuid, read.uuid), (TX, RX));
+    }
+
+    #[test]
+    fn rejects_a_module_that_cannot_notify() {
+        let chars = [characteristic(RX, &[CharProps::Write]), characteristic(TX, &[CharProps::Write])];
+        assert!(pick_characteristics(&chars, RX, TX).is_none());
+    }
 }
