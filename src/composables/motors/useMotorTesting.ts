@@ -70,6 +70,14 @@ export function useMotorTesting(
         }
     };
 
+    // The firmware keeps the last MSP_SET_MOTOR value with no timeout, so a hidden page
+    // would leave the motors spinning with nobody watching them.
+    const stopWhenHidden = (): void => {
+        if (document.hidden && motorsTestingEnabled.value) {
+            motorsTestingEnabled.value = false;
+        }
+    };
+
     /**
      * Enable motor testing
      * - Sends DShot extended telemetry command
@@ -89,6 +97,7 @@ export function useMotorTesting(
 
         // Add keyboard safety listener
         document.addEventListener("keydown", disableMotorTest);
+        document.addEventListener("visibilitychange", stopWhenHidden);
 
         // Enable arming during motor testing
         mspHelper.enableArmingForMotorTest();
@@ -104,6 +113,7 @@ export function useMotorTesting(
     const disableMotorTesting = (): void => {
         // Remove keyboard listener
         document.removeEventListener("keydown", disableMotorTest);
+        document.removeEventListener("visibilitychange", stopWhenHidden);
 
         // Disable arming
         mspHelper.disableArming();
