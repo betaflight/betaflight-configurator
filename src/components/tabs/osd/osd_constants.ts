@@ -298,6 +298,11 @@ export const OSD_CONSTANTS = {
             text: "osdWarningTextAutopilotAbort",
             desc: "osdWarningAutopilotAbort",
         },
+        GPS_SPOOFING: {
+            name: "GPS_SPOOFING",
+            text: "osdWarningTextGpsSpoofing",
+            desc: "osdWarningGpsSpoofing",
+        },
     },
     FONT_TYPES: [
         { file: "default", name: "osdSetupFontTypeDefault" },
