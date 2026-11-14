@@ -245,15 +245,21 @@ const i18n: I18n = {
     getMessage(messageID, parameters) {
         let parametersObject: Record<string, unknown> | undefined;
 
-        // Option 1, no parameters or Object as parameters (i18Next type parameters)
-        if (parameters === undefined || (parameters.constructor !== Array && parameters instanceof Object)) {
+        // Option 1, no parameters or Object as parameters (i18Next type parameters).
+        // `typeof` and `Array.isArray` rather than `instanceof`/`constructor`: a popup window
+        // (the Radio Emulator) shares this instance but builds its objects in its own realm,
+        // where `instanceof Object` against this window's Object is false.
+        if (
+            parameters === undefined ||
+            (typeof parameters === "object" && parameters !== null && !Array.isArray(parameters))
+        ) {
             parametersObject = parameters as Record<string, unknown> | undefined;
 
             // Option 2: parameters as $1, $2, etc.
             // (deprecated, from the old Chrome i18n
         } else {
             // Convert the input to an array
-            const parametersArray = (parameters.constructor === Array ? parameters : [parameters]) as unknown[];
+            const parametersArray = (Array.isArray(parameters) ? parameters : [parameters]) as unknown[];
 
             const positional: Record<string, unknown> = {};
             parametersArray.forEach(function (parameter, index) {
