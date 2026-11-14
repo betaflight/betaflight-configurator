@@ -20,6 +20,7 @@
  */
 
 import { computed, ref, type ComputedRef } from "vue";
+import { registerUnsavedChangesForComponent } from "../js/unsaved_changes";
 
 export interface DirtyState {
     dirty: ComputedRef<boolean>;
@@ -38,9 +39,20 @@ export interface DirtyState {
  * left Modes permanently dirty in #5385. A null baseline means "not tracking yet", so a tab
  * whose load failed never reports dirty.
  *
+ * Called from a component, the dirty flag is also registered for the unsaved-changes prompt
+ * shown when leaving the tab. That holds for any component that calls it, directly or through a
+ * composable such as useVtx, usePower, useAdjustmentsState or usePortsState: each such dirty
+ * flag takes part in the prompt for as long as the component is mounted.
+ *
+ * A Pinia store must pass `{ promptOnLeave: false }` and let the tab that shows it register the
+ * flag instead. A store is created lazily, often during a tab's setup, so the component check in
+ * registerUnsavedChangesForComponent would pass and tie the flag to the store's own scope, which
+ * is never disposed. The flag would then keep the prompt showing on every tab after the tab is
+ * gone, for example once a reconnect leaves the store's baseline stale.
+ *
  * @param serialize side-effect free, since `dirty` calls it during render
  */
-export function useDirtyState(serialize: () => string): DirtyState {
+export function useDirtyState(serialize: () => string, { promptOnLeave = true } = {}): DirtyState {
     const baseline = ref<string | null>(null);
 
     const dirty = computed(() => baseline.value !== null && baseline.value !== serialize());
@@ -50,6 +62,10 @@ export function useDirtyState(serialize: () => string): DirtyState {
     }
 
     const takeSnapshot = () => serialize();
+
+    if (promptOnLeave) {
+        registerUnsavedChangesForComponent(() => dirty.value);
+    }
 
     return { dirty, markClean, takeSnapshot };
 }

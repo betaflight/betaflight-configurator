@@ -340,6 +340,7 @@ import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 import UiBox from "../elements/UiBox.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 // Decode HTML entities in translations (some use &amp; etc) so plain-text
 // component props (e.g. USelect item labels) render correctly.
@@ -1006,7 +1007,7 @@ watch(isColorSlidersOpen, (newValue) => {
 
 // Save
 function save() {
-    runSave(async () => {
+    return runSave(async () => {
         const savedSnapshot = takeSnapshot();
 
         await saveConfig();
@@ -1018,6 +1019,7 @@ function save() {
         // showing the identical toast twice.
     });
 }
+registerTabSave(() => save());
 
 // Helper functions
 function getColorStyle(colorIndex: number) {

@@ -335,6 +335,8 @@ import {
     SdcardState,
 } from "../../composables/onboardLogging/useOnboardLoggingData";
 import { useOnboardLoggingSave } from "../../composables/onboardLogging/useOnboardLoggingSave";
+import { registerTabSave } from "@/js/unsaved_changes";
+import { tabSwitchCleanup } from "@/js/tab_adapters";
 
 const BLOCK_SIZE = 4096;
 
@@ -392,7 +394,7 @@ export default defineComponent({
         const connectionStore = useConnectionStore();
         const debugStore = useDebugStore();
         const { isSaving, runSave } = useSaving();
-        const { saveAndReboot } = useReboot();
+        const { reboot, saveToEeprom } = useReboot();
         const {
             loadOnboardLoggingData,
             requestDataflashSummary,
@@ -639,18 +641,19 @@ export default defineComponent({
             debugFieldsEnabled.value.splice(index, 1, value);
         }
 
-        function saveSettings() {
+        async function saveSettings() {
             if (!fcStore.blackbox?.supported) {
                 return;
             }
 
-            return runSave(async () => {
-                // Warn before a pick that would take a port from another feature; a cancel here
-                // leaves the save untouched, before anything has been written to the FC.
-                if (!(await confirmPortConflicts())) {
-                    return;
-                }
+            // Warn before a pick that would take a port from another feature; a cancel here
+            // leaves the save untouched, before anything has been written to the FC, and counts
+            // as not saved.
+            if (!(await confirmPortConflicts())) {
+                return false;
+            }
 
+            return runSave(async () => {
                 const savedSnapshot = takeSnapshot();
 
                 fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
@@ -672,11 +675,16 @@ export default defineComponent({
                 // refused port throws before anything reaches EEPROM.
                 await writeBlackboxPort();
 
-                await saveAndReboot();
+                // Error-aware persist: a timeout rejects here instead of leaving the save pending.
+                await saveToEeprom();
+                tabSwitchCleanup(() => {
+                    reboot();
+                });
 
                 markClean(savedSnapshot);
             });
         }
+        registerTabSave(() => saveSettings());
 
         function askToEraseFlash() {
             if (dataflashUsedSize.value === 0) {

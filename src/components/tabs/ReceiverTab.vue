@@ -640,12 +640,14 @@ import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import SettingColumn from "../elements/SettingColumn.vue";
 import { useNavigationStore } from "@/stores/navigation";
+import { registerTabSave } from "@/js/unsaved_changes";
+import { tabSwitchCleanup } from "@/js/tab_adapters";
 
 const t = (key: string) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
 const navigationStore = useNavigationStore();
-const { saveAndReboot, saveToEeprom } = useReboot();
+const { reboot, saveToEeprom } = useReboot();
 const { loadReceiverData, startModelPreviewPolling, startRcPolling, restartRcPolling } = useReceiverData();
 const { sendReceiverSettings, sendFeatureConfig } = useReceiverSave();
 const { bindReceiver, sendRawRx } = useReceiverCommands();
@@ -1278,14 +1280,14 @@ async function loadConfig() {
 }
 
 // Save configuration
-const saveConfig = (withReboot = false) =>
-    runSave(async () => {
-        // Warn before a pick that would take a port from another feature; a cancel here leaves the
-        // save untouched, before anything has been written to the FC.
-        if (!(await confirmPortConflicts())) {
-            return;
-        }
+const saveConfig = async (withReboot = false) => {
+    // Warn before a pick that would take a port from another feature; a cancel here leaves the
+    // save untouched, before anything has been written to the FC, and counts as not saved.
+    if (!(await confirmPortConflicts())) {
+        return false;
+    }
 
+    return runSave(async () => {
         const savedSnapshot = takeSnapshot();
 
         // Update RC_MAP from channel map string
@@ -1334,7 +1336,11 @@ const saveConfig = (withReboot = false) =>
         await sendFeatureConfig();
 
         if (withReboot) {
-            await saveAndReboot();
+            // Error-aware persist: a timeout rejects here instead of leaving the save pending.
+            await saveToEeprom();
+            tabSwitchCleanup(() => {
+                reboot();
+            });
         } else {
             await saveToEeprom();
             gui_log(t("receiverConfigSaved") || "Configuration saved");
@@ -1344,6 +1350,8 @@ const saveConfig = (withReboot = false) =>
 
         needReboot.value = false;
     });
+};
+registerTabSave(() => saveConfig(needReboot.value));
 
 // Model preview
 function initModelPreview() {

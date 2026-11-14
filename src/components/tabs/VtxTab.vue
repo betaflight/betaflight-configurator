@@ -432,6 +432,7 @@ import { useFeaturePort } from "@/composables/ports/useFeaturePort";
 import { usePortConflicts } from "@/composables/ports/usePortConflicts";
 import { PORT_NONE } from "@/composables/ports/portNames";
 import { useTranslation } from "i18next-vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 export default defineComponent({
     name: "VtxTab",
@@ -594,19 +595,22 @@ export default defineComponent({
             i18n.localizePage();
         });
 
-        const handleSave = () =>
-            runSave(async () => {
-                // Warn before a pick that would take a port from another feature; a cancel here
-                // leaves the save untouched, before anything has been written to the FC.
-                if (!(await confirmPortConflicts())) {
-                    return;
-                }
+        const handleSave = async () => {
+            // Warn before a pick that would take a port from another feature; a cancel here
+            // leaves the save untouched, before anything has been written to the FC, and counts
+            // as not saved.
+            if (!(await confirmPortConflicts())) {
+                return false;
+            }
 
+            return runSave(async () => {
                 await saveVtx(writeVtxPort);
                 await loadVtxConfig();
                 await loadVtxPort();
                 await loadOsdPort();
             });
+        };
+        registerTabSave(() => handleSave());
 
         // --- VTX Table count setters (with change tracking) ---
 

@@ -28,6 +28,8 @@ import { mountVueTab, vueTabState } from "./vue_tab_mounter";
 import { sidebarItems } from "../components/sidebar/sidebar_items";
 import { useConnectionStore } from "../stores/connection";
 import { useNavigationStore } from "../stores/navigation";
+import { useAuthStore } from "../stores/auth";
+import { confirmLeaveTab } from "./unsaved_changes";
 
 export interface SwitchTabOptions {
     /**
@@ -158,12 +160,43 @@ export function switchTab(tabKey: string, options: SwitchTabOptions = {}): boole
     return true;
 }
 
-/** Opens the remembered last tab after connecting, when that option is on and the tab is allowed, else Setup. */
+/**
+ * Opens a tab the user picked (sidebar, status bar, account menu, settings search). Picking the
+ * tab already open does nothing; leaving a tab with unsaved changes asks first (confirmLeaveTab).
+ * @returns true when the tab is open, or its switch has started, once this resolves; false when
+ * the user stayed, a save is reopening it after a reboot, or switchTab refused
+ */
+export async function navigateToTab(tabKey: string, options: SwitchTabOptions = {}): Promise<boolean> {
+    if (vueTabState.activeTabName === tabKey) {
+        return true;
+    }
+    if (!(await confirmLeaveTab(tabKey, options.mode))) {
+        return false;
+    }
+    return switchTab(tabKey, options);
+}
+
+/**
+ * Opens the tab a save-and-reboot was leaving for, else the remembered last tab when that option
+ * is on and the tab is allowed, else Setup.
+ */
 export function selectDefaultTabWhenConnected(): void {
+    const navigationStore = useNavigationStore();
+    const pending = navigationStore.tabAfterReconnect;
+    navigationStore.tabAfterReconnect = null;
+    if (pending) {
+        // Account tabs are not in the connected allowed list; they need the user still signed in.
+        const allowed =
+            pending.mode === "loggedin" ? useAuthStore().isLoggedIn : navigationStore.allowedTabs.includes(pending.tab);
+        if (allowed && switchTab(pending.tab, { mode: pending.mode })) {
+            return;
+        }
+    }
+
     const result = getConfig(["rememberLastTab", "lastTab"]);
     const lastTab = typeof result.lastTab === "string" ? result.lastTab.substring(4) : "";
     const tabKey =
-        result.rememberLastTab && lastTab && useNavigationStore().allowedTabs.includes(lastTab) ? lastTab : "setup";
+        result.rememberLastTab && lastTab && navigationStore.allowedTabs.includes(lastTab) ? lastTab : "setup";
 
     if (!switchTab(tabKey, { mode: "connected" })) {
         switchTab("setup", { mode: "connected" });

@@ -23,7 +23,8 @@ const data = vi.hoisted(() => ({
 }));
 const gates = vi.hoisted(() => [] as { value: unknown }[][]);
 const writeFeaturePort = vi.hoisted(() => vi.fn());
-const saveAndReboot = vi.hoisted(() => vi.fn());
+const saveToEeprom = vi.hoisted(() => vi.fn());
+const reboot = vi.hoisted(() => vi.fn());
 
 vi.mock("../../src/js/timers", () => ({
     addInterval: vi.fn(),
@@ -73,7 +74,11 @@ vi.mock("../../src/composables/useDronecanDevice", () => ({
         write: async () => {},
     }),
 }));
-vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveAndReboot }) }));
+vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom, reboot }) }));
+vi.mock("../../src/js/tab_adapters", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("../../src/js/tab_adapters")>()),
+    tabSwitchCleanup: (callback: () => void) => callback(),
+}));
 vi.mock("../../src/js/utils/ipGeolocation", async (importOriginal) => ({
     ...(await importOriginal<typeof import("../../src/js/utils/ipGeolocation")>()),
     ipCoordinates: vi.fn(),
@@ -124,7 +129,7 @@ describe("SensorsTab MSP wiring", () => {
         data.loadSensorsConfig.mockResolvedValue(undefined);
         data.sendSensorsConfig.mockResolvedValue(undefined);
         data.loadGpsData.mockResolvedValue(undefined);
-        saveAndReboot.mockResolvedValue(undefined);
+        saveToEeprom.mockResolvedValue(undefined);
         writeFeaturePort.mockResolvedValue(undefined);
 
         const fcStore = useFlightControllerStore();
@@ -237,7 +242,8 @@ describe("SensorsTab MSP wiring", () => {
         release();
         await flushPromises();
         expect(writeFeaturePort).toHaveBeenCalled();
-        expect(saveAndReboot).toHaveBeenCalledOnce();
+        expect(saveToEeprom).toHaveBeenCalledOnce();
+        expect(reboot).toHaveBeenCalledOnce();
     });
 });
 

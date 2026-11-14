@@ -132,6 +132,7 @@ import { gui_log } from "@/js/gui_log";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { runTabLoad } from "@/composables/useTabLoad";
+import { registerTabSave, registerUnsavedChangesForComponent } from "@/js/unsaved_changes";
 import { CopyProfileType, usePidTuningMsp } from "@/composables/pidTuning/usePidTuningMsp";
 
 /** What CopyProfileDialog confirms with: the selected target profile and/or rate profile. */
@@ -229,6 +230,7 @@ const localRateProfileName = computed({
 
 // hasChanges is owned by the Pinia store
 const hasChanges = computed(() => pidTuningStore.hasChanges);
+registerUnsavedChangesForComponent(() => hasChanges.value);
 // Value edits only: a pending profile switch is unsaved work, but it must not lock the profile
 // selectors — otherwise a switch could only be undone by saving it first.
 const hasEdits = computed(() => pidTuningStore.hasEdits);
@@ -468,6 +470,7 @@ function save() {
         pidTuningStore.markProfileClean();
     });
 }
+registerTabSave(() => save());
 
 async function refresh() {
     try {
