@@ -70,7 +70,17 @@ export function getTpaHyperbolicCurve(wingConfig: WingConfig, motorKv: number): 
 function computeMaximalSpeed(wingConfig: WingConfig, motorKv: number): number {
     const G_ACCELERATION = 9.80665;
     let maxSpeed: number;
-    if (wingConfig.tpa_speed_type === 1) {
+    if (wingConfig.tpa_speed_type === 0) {
+        if (wingConfig.tpa_speed_basic_gravity === 0) {
+            return 1;
+        }
+        const basicGravity = wingConfig.tpa_speed_basic_gravity / 100;
+        const basicDelay = wingConfig.tpa_speed_basic_delay / 1000;
+
+        const twr = 1 / (basicGravity * basicGravity);
+        const massDragRatio = (2 / Math.log(3)) * (2 / Math.log(3)) * twr * G_ACCELERATION * basicDelay * basicDelay;
+        maxSpeed = Math.sqrt(massDragRatio * twr * G_ACCELERATION + G_ACCELERATION);
+    } else if (wingConfig.tpa_speed_type === 1) {
         if (wingConfig.tpa_speed_adv_mass === 0 || wingConfig.tpa_speed_adv_drag_k === 0) {
             return 1;
         }
@@ -94,15 +104,7 @@ function computeMaximalSpeed(wingConfig: WingConfig, motorKv: number): number {
         const maxDiveSpeed = D >= 0 ? (-b + Math.sqrt(D)) / (2 * a) : 0;
         maxSpeed = Math.max(maxFallSpeed, maxDiveSpeed);
     } else {
-        if (wingConfig.tpa_speed_basic_gravity === 0) {
-            return 1;
-        }
-        const basicGravity = wingConfig.tpa_speed_basic_gravity / 100;
-        const basicDelay = wingConfig.tpa_speed_basic_delay / 1000;
-
-        const twr = 1 / (basicGravity * basicGravity);
-        const massDragRatio = (2 / Math.log(3)) * (2 / Math.log(3)) * twr * G_ACCELERATION * basicDelay * basicDelay;
-        maxSpeed = Math.sqrt(massDragRatio * twr * G_ACCELERATION + G_ACCELERATION);
+        maxSpeed = wingConfig.tpa_max_pitot_speed;
     }
 
     return Math.max(maxSpeed, 1);
