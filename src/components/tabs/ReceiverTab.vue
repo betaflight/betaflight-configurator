@@ -1498,6 +1498,13 @@ onUnmounted(() => {
 .tab-receiver {
     .content_wrapper {
         padding-bottom: 60px;
+
+        /* Compact: match main.less, which leaves room for the fixed toolbar wrapping to two rows
+           above the floating status bar. This rule outranks it, so it has to be restated here. */
+        @media all and (max-width: 575px),
+            all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+            padding-bottom: 6rem;
+        }
     }
 
     .bars {
