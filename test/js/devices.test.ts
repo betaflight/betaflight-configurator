@@ -139,7 +139,6 @@ describe("devices", () => {
             const { isPersistentUsbBridge } = await freshDevices();
 
             expect(isPersistentUsbBridge(0x10c4, 0xea60)).toBe(true); // CP2102
-            expect(isPersistentUsbBridge(0x1a86, 0x55d4)).toBe(true); // CH9102
             expect(isPersistentUsbBridge(0x0403, 0x1234)).toBe(true); // FTDI, unknown product
             expect(isPersistentUsbBridge(0x067b, 0x2303)).toBe(true); // PL2303
         });
@@ -150,6 +149,8 @@ describe("devices", () => {
             expect(isPersistentUsbBridge(0x04d8, 0x00dd)).toBe(true); // MCP2221
             expect(isPersistentUsbBridge(0x04d8, 0x000a)).toBe(false); // PIC native CDC
             expect(isPersistentUsbBridge(0x04d8, undefined)).toBe(false);
+            expect(isPersistentUsbBridge(0x1a86, 0x55d4)).toBe(true); // CH9102
+            expect(isPersistentUsbBridge(0x1a86, 0xe205)).toBe(false); // WCH native VCP
         });
 
         it("rejects ports that re-enumerate on an FC reboot", async () => {
