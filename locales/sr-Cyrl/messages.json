@@ -1891,9 +1891,6 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "configurationButtonSave": {
-        "message": "Сачувај и рестартуј"
-    },
     "dialogClose": {
         "message": "Затвори"
     },
@@ -2410,12 +2407,6 @@
     "throttle": {
         "message": "Гас"
     },
-    "pidTuningButtonSave": {
-        "message": "Сачувај"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Освежи"
-    },
     "pidTuningCopyProfile": {
         "message": "Копирај профил"
     },
@@ -2559,12 +2550,6 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Сачувај"
-    },
-    "receiverButtonRefresh": {
-        "message": "Освежи"
-    },
     "receiverButtonBind": {
         "message": "Биндовање пријемника"
     },
@@ -2611,9 +2596,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Add Link"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Сачувај"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -2983,9 +2965,6 @@
         "message": "Избор профила батерије",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Сачувај"
-    },
     "adjustmentsShowAll": {
         "message": "Прикажи све слотове"
     },
@@ -3022,9 +3001,6 @@
     },
     "servosLiveMode": {
         "message": "Укључи Live мод"
-    },
-    "servosButtonSave": {
-        "message": "Сачувај"
     },
     "gpsHead": {
         "message": "Опште"
@@ -3617,20 +3593,11 @@
     "cliReboot": {
         "message": "Препознато је CLI поновно покретање"
     },
-    "cliSaveToFileBtn": {
-        "message": "Сачувај у фајл"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Очисти историју излаза"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Копирај у оставу"
-    },
     "cliCopySuccessful": {
         "message": "Копирано"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Учитај из фајла"
     },
     "cliSupportRequestBtn": {
         "message": "Пошаљи податке за подршку"
@@ -3688,9 +3655,6 @@
     },
     "blackboxConfiguration": {
         "message": "Blackbox подешавање"
-    },
-    "blackboxButtonSave": {
-        "message": "Сачувај и поново покрени"
     },
     "blackboxLoggingNone": {
         "message": "Без бележења"
@@ -4087,9 +4051,6 @@
     },
     "ledStripHelp": {
         "message": "Flight контролер може управљати бојама и ефектима појединачних LED лампица на траци.<br />Подесите LED лампице на мрежи, подесите редослед повезивања, а затим причврстите LED лампице на Вашу летелицу према позицијама на мрежи. LED лампице без редног броја жице неће бити сачуване.<br />Двапут кликните на боју да бисте изменили HSV вредности."
-    },
-    "ledStripButtonSave": {
-        "message": "Сачувај"
     },
     "ledStripColorSetupTitle": {
         "message": "Подешавање боја",
@@ -5051,9 +5012,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Тренутно гашење"
     },
-    "powerButtonSave": {
-        "message": "Сачувај"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Потребно је <span class=\"message-negative\">ажурирање фирмвера</span>. Подешавања батерије, напона и струје са API-јем &lt; 1.33.0 (Betaflight &lt;= 3.17) нису подржана."
     },
@@ -5560,15 +5518,6 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Слање није успело"
-    },
-    "osdSetupSaveReboot": {
-        "message": "Сачувај и рестартуј"
-    },
-    "osdSetupSave": {
-        "message": "Сачувај"
-    },
-    "osdSetupRefresh": {
-        "message": "Освежи"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Напон батерије",
@@ -6789,10 +6738,6 @@
     "osdPitotAirSpeed": {
         "message": "Ваздушна брзина"
     },
-    "vtxHelp": {
-        "message": "Овде можете конфигурисати вредности за Ваш Видео предајник (VTX). Можете прегледати и променити вредности преноса, укључујући VTX табеле, ако flight контролер и VTX to подржавају.<br>Да бисте подесили Ваш VTX, користите следеће кораке:<br>1. Идите на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">ову</a> страницу;<br>2. Пронађите одговарајућу VTX конфигурациону фајл за Вашу земљу и Ваш VTX модел и преузмите је;<br>3. Кликните на '$t(vtxButtonLoadFile.message)' испод, изаберите VTX конфигурациону фајл, учитајте је;<br>4. Проверите да ли су подешавања тачна;<br>5. Кликните на '$t(vtxButtonSave.message)' да бисте сачували VTX подешавања на flight контролеру.<br>6. Опционо кликните на '$t(vtxButtonSaveLua.message)' да бисте сачували lua конфигурациону фајл коју можете користити са betaflight lua скриптама (Више погледајте <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">овде</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Пажња:</span> Ниједан видео-предајник се још не јавља. Изаберите протокол који видео-предајник користи и UART на који је повезан, па сачувајте; преостала подешавања се појављују када уређај одговори.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6800,14 +6745,6 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Пажња:</span> Морате ПРВО конфигурисати и сачувати VTX табелу на дну пре него што можете користити поља $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Пажња:</span> Изабрани тип VTX-а не подржава 'фабричко' подешавање за опсеге, али неки од Ваших опсега имају ово подешавање. Кликните на '$t(vtxButtonSave.message)' да бисте ово поправили.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Пажња:</span> Вредности VTX табеле су учитане, али још нису сачуване на flight контролеру. Морате проверити и изменити вредности да бисте били сигурни да су валидне и легалне у Вашој земљи, а затим притисните дугме $t(vtxButtonSave.message) да бисте их сачували на flight контролеру.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "Унесите фреквенцију директно",
@@ -7055,25 +6992,9 @@
         "message": "<span class=\"message-negative\">Грешка</span> при учитавању подешавања видео-предајника из привремене меморије",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Сачувај у фајл",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Сачувај Lua скрипту",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Учитај из фајла",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Учитај из привремене меморије",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Сачувај",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Чување",
@@ -7666,14 +7587,6 @@
         "message": "Грешка при учитавању preset-а са интернета",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Сачувај и рестартуј",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Откажи",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Примењивање конфигурације...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7697,10 +7610,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Прихватам",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Откажи",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Додај омиљени preset",
