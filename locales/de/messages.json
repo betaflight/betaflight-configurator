@@ -1167,9 +1167,6 @@
     "configurationSpiRX": {
         "message": "SPI-Bus Empfänger"
     },
-    "configurationButtonSave": {
-        "message": "Speichern und Neustarten"
-    },
     "dialogDynFiltersChangeTitle": {
         "message": "Filterbereich des Dynamischen Notch-Filters"
     },
@@ -1510,12 +1507,6 @@
     "throttle": {
         "message": "Gas"
     },
-    "pidTuningButtonSave": {
-        "message": "Speichern"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Neu laden"
-    },
     "pidTuningCopyProfile": {
         "message": "Profil kopieren"
     },
@@ -1641,12 +1632,6 @@
         "message": "Gas [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Speichern"
-    },
-    "receiverButtonRefresh": {
-        "message": "Neu laden"
-    },
     "receiverButtonBind": {
         "message": "Empfänger koppeln"
     },
@@ -1690,9 +1675,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Link hinzufügen"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Speichern"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -1986,9 +1968,6 @@
     "adjustmentsFunction31": {
         "message": "LED Helligkeit anpassen"
     },
-    "adjustmentsSave": {
-        "message": "Speichern"
-    },
     "servosChangeDirection": {
         "message": "Ändere die Richtung im Sender damit es übereinstimmt"
     },
@@ -2010,9 +1989,6 @@
     },
     "servosLiveMode": {
         "message": "Aktiviere Live Modus"
-    },
-    "servosButtonSave": {
-        "message": "Speichern"
     },
     "gpsMapMessage1": {
         "message": "Bitte Internetverbindung prüfen"
@@ -2335,20 +2311,11 @@
     "cliReboot": {
         "message": "CLI Neustart erkannt"
     },
-    "cliSaveToFileBtn": {
-        "message": "In Datei speichern"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "CLI-Ausgaben löschen"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "In die Zwischenablage kopieren"
-    },
     "cliCopySuccessful": {
         "message": "Kopiert!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Aus Datei laden"
     },
     "cliSupportRequestBtn": {
         "message": "Support-Daten übermitteln"
@@ -2394,9 +2361,6 @@
     },
     "blackboxConfiguration": {
         "message": "Flugschreiber Konfiguration"
-    },
-    "blackboxButtonSave": {
-        "message": "Speichern und Neustarten"
     },
     "blackboxLoggingNone": {
         "message": "Kein Logging"
@@ -2668,9 +2632,6 @@
     },
     "ledStripHelp": {
         "message": "Der FC kann Farben und Effekte von LED-Leisten steuern.<br />Konfiguriere die LEDs, sowie die Verkabelungreihenfolge auf dem Raster und bringe die LEDs entsprechend an.<br/>Doppelklick auf die Farben erlaubt das Anpassen der HSV-Werte."
-    },
-    "ledStripButtonSave": {
-        "message": "Speichern"
     },
     "ledStripColorSetupTitle": {
         "message": "Farben-Setup",
@@ -3480,9 +3441,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Kill"
     },
-    "powerButtonSave": {
-        "message": "Speichern"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Firmware-Aktualisierung <span class=\"message-negative\">benötigt</span>. Batterie-/Strom-/Spannungsmessungs-Konfiguration via API &lt; 1.33.0 (Betaflight Version &lt;= 3.17) wird nicht unterstützt."
     },
@@ -3926,9 +3884,6 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Alle {{length}} Zeichen ins OSD geladen"
-    },
-    "osdSetupSave": {
-        "message": "Speichern"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Batteriespannung",
@@ -5081,14 +5036,6 @@
         "message": "<span class=\"message-negative\">Achtung:</span> Du musst die VTX-Tabelle unten ZUERST konfigurieren und speichern, bevor du die $t(vtxSelectedMode.message) Felder verwenden kannst.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Achtung:</span> Der gewählte VTX-Typ unterstützt nicht die 'Standard' Einstellung für die Bänder, einige deiner Bänder haben aber diese Einstellung. Klicke$t(vtxButtonSave.message)', um dies zu beheben.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Achtung:</span> Die Werte des VTX-Table wurden geladen, aber noch nicht auf dem Flugcontroller gespeichert. Sie müssen die Werte überprüfen und ändern, um sicherzustellen, dass sie in deinem Land gültig und legal sind und dann auf den $t(vtxButtonSave.message) Button drücken, um sie auf dem Flugcontroller zu speichern.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
-    },
     "vtxFrequencyChannel": {
         "message": "Frequenz direkt eingeben",
         "description": "Text of one of the fields of the VTX tab"
@@ -5309,25 +5256,9 @@
         "message": "<span class=\"message-negative\">Fehler</span> beim Laden der VTX Config-Informationen aus der Zwischenablage. Vielleicht sind die Inhalte nicht korrekt",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "In Datei speichern",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Lua Script speichern",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Aus Datei laden",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Aus Zwischenablage laden",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Speichern",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Speichern",
@@ -5630,14 +5561,6 @@
         "message": "Fehler beim Laden der Presets (Voreinstellungen) aus dem Internet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Speichern und Neustarten",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Abbrechen",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Konfiguration wird angewendet...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -5657,10 +5580,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Akzeptieren",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Abbrechen",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsBackupSave": {
         "message": "Backup speichern",

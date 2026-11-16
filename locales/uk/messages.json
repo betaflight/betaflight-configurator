@@ -1948,9 +1948,6 @@
     "configurationSaveFailed": {
         "message": "Не вдалося зберегти налаштування"
     },
-    "configurationButtonSave": {
-        "message": "Зберегти та перезавантажити"
-    },
     "dialogClose": {
         "message": "Закрити"
     },
@@ -2488,12 +2485,6 @@
     "throttle": {
         "message": "Тяга"
     },
-    "pidTuningButtonSave": {
-        "message": "Зберегти"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Оновити"
-    },
     "pidTuningCopyProfile": {
         "message": "Копіювати профіль"
     },
@@ -2637,12 +2628,6 @@
         "message": "Тяга [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Зберегти"
-    },
-    "receiverButtonRefresh": {
-        "message": "Оновити"
-    },
     "receiverButtonBind": {
         "message": "Прив'язати приймач"
     },
@@ -2696,9 +2681,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Додати посилання"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Зберегти"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "АВТО"
@@ -3068,9 +3050,6 @@
         "message": "Вибір профілю батареї",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Зберегти"
-    },
     "adjustmentsShowAll": {
         "message": "Показати всі слоти"
     },
@@ -3107,9 +3086,6 @@
     },
     "servosLiveMode": {
         "message": "Включити \"живий режим\""
-    },
-    "servosButtonSave": {
-        "message": "Зберегти"
     },
     "gpsHead": {
         "message": "Загальне"
@@ -3728,20 +3704,11 @@
     "cliReboot": {
         "message": "Виявлено перезавантаження з CLI"
     },
-    "cliSaveToFileBtn": {
-        "message": "Зберегти до файлу"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Очистити історію виводу"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Скопіювати до буферу обміну"
-    },
     "cliCopySuccessful": {
         "message": "Скопійовано!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Завантажити з файлу"
     },
     "cliSupportRequestBtn": {
         "message": "Надіслати дані в підтримку"
@@ -3799,9 +3766,6 @@
     },
     "blackboxConfiguration": {
         "message": "Конфігурація чорної скрині"
-    },
-    "blackboxButtonSave": {
-        "message": "Зберегти й перезавантажити"
     },
     "blackboxLoggingNone": {
         "message": "Без логування"
@@ -4201,9 +4165,6 @@
     },
     "ledStripHelp": {
         "message": "Польотний контролер може керувати кольорами та ефектами окремих світлодіодів в смузі.<br />Налаштуйте світлодіоди на сітці, налаштуйте порядок підключення дротів, а потім закріпіть світлодіоди на вашому літальному апараті відповідно до позицій на сітці. Світлодіоди без порядового номера не будуть збережені.<br />Подвійний клік на кольорі дозволяє редагувати значення HSV - Hue - Saturation - Value."
-    },
-    "ledStripButtonSave": {
-        "message": "Зберегти"
     },
     "ledStripColorSetupTitle": {
         "message": "Налаштування кольору",
@@ -5165,9 +5126,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Вбити"
     },
-    "powerButtonSave": {
-        "message": "Зберегти"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">Необхідно</span> оновити прошивку. Налаштування батареї/струму/напруги з використанням API &lt; 1.33.0 (Betaflight release &lt;= 3.17) не підтримуються."
     },
@@ -5689,15 +5647,6 @@
     "osdSetupUploadFontWarningNeedStandardFont": {
         "message": "Вибрано малий шрифт для наекранного меню з кадровим буфером, але це наекранне меню використовує шрифти стандартного розміру. Він показуватиметься неправильно. Усе одно завантажити?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
-    },
-    "osdSetupSaveReboot": {
-        "message": "Зберегти й перезавантажити"
-    },
-    "osdSetupSave": {
-        "message": "Зберегти"
-    },
-    "osdSetupRefresh": {
-        "message": "Оновити"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Напруга акумулятора",
@@ -6921,10 +6870,6 @@
     "osdPitotAirSpeed": {
         "message": "Повітряна швидкість"
     },
-    "vtxHelp": {
-        "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">цю сторінку;</a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації Lua для роботи з lua скриптами Betaflight (докладніше <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">тут</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Увага:</span> Відеопередавач ще не відповідає. Виберіть нижче його протокол і UART, до якого він під'єднаний, та збережіть; решта налаштувань з'явиться, коли пристрій відповість.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6932,14 +6877,6 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Увага:</span> Вам потрібно СПОЧАТКУ налаштувати та зберегти таблицю відеопередавача внизу, перш ніж ви зможете використовувати поля $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Увага:</span> Вибраний тип відеопередавача не підтримує «фабричні» налаштування для діапазонів, але деякі з ваших діапазонів мають таке налаштування. Натисніть \"$t(vtxButtonSave.message)\", щоб виправити це.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Увага:</span> Значення таблиці відеопередавача завантажено, але все ще не збережено на польотному контролері. Ви повинні перевірити та змінити значення, щоб впевнитись, що вони дійсні та законні у вашій країні, а потім натиснути кнопку $t(vtxButtonSave.message), щоб зберегти їх на польотному контролері.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "Введіть частоту безпосередньо",
@@ -7187,25 +7124,9 @@
         "message": "<span class=\"message-negative\">Помилка</span> під час завантаження конфігурації відеопередавача з буфера обміну. Можливо, зміст не є правильним",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Зберегти до файлу",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Зберегти сценарій Lua",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Завантажити з файлу",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Завантажити з буфера обміну",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Зберегти",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Зберігається",
@@ -7801,14 +7722,6 @@
         "message": "Помилка при завантаженні попередніх налаштувань з Інтернету",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Зберегти й перезавантажити",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Скасувати",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Застосування конфігурації...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7832,10 +7745,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Погоджуюсь",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Скасувати",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Додати обраний шаблон",

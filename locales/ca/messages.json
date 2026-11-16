@@ -221,6 +221,24 @@
     "save": {
         "message": "Desa"
     },
+    "saveAndReboot": {
+        "message": "Desa i Reinicia"
+    },
+    "refresh": {
+        "message": "Actualitza"
+    },
+    "saveToFile": {
+        "message": "Desa a arxiu"
+    },
+    "loadFromFile": {
+        "message": "Carrega des del fitxer"
+    },
+    "loadFromClipboard": {
+        "message": "Carrega des del porta-retalls"
+    },
+    "copyToClipboard": {
+        "message": "Copia al porta-retalls"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connectar: Habilitat - L'App provarà de connectar-se automàticament quan el nou port sigui detectat"
     },
@@ -949,6 +967,9 @@
     },
     "dfu_hex_address_errors": {
         "message": "La imatge del firmware conté adreces que no s'han trobat al dispositiu de destinació"
+    },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "La imatge del firmware abasta memòries flash entre les quals aquesta aplicació no pot commutar en aquest dispositiu"
     },
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">desada</span>"
@@ -2002,9 +2023,6 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "configurationButtonSave": {
-        "message": "Desa i Reinicia"
-    },
     "dialogClose": {
         "message": "Tanca"
     },
@@ -2542,12 +2560,6 @@
     "throttle": {
         "message": "Throttle"
     },
-    "pidTuningButtonSave": {
-        "message": "Desa"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Actualitza"
-    },
     "pidTuningCopyProfile": {
         "message": "Copia el perfil"
     },
@@ -2691,12 +2703,6 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Desa"
-    },
-    "receiverButtonRefresh": {
-        "message": "Refresca"
-    },
     "receiverButtonBind": {
         "message": "Lliga el receptor"
     },
@@ -2750,9 +2756,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Afegir enllaç"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Desa"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -3126,9 +3129,6 @@
         "message": "Selecció del perfil de bateria",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Desa"
-    },
     "adjustmentsShowAll": {
         "message": "Mostra tots els espais"
     },
@@ -3165,9 +3165,6 @@
     },
     "servosLiveMode": {
         "message": "Habilita live mode"
-    },
-    "servosButtonSave": {
-        "message": "Desa"
     },
     "gpsHead": {
         "message": "General"
@@ -3786,20 +3783,11 @@
     "cliReboot": {
         "message": "Reinici CLI detectat"
     },
-    "cliSaveToFileBtn": {
-        "message": "Desa a arxiu"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Esborra l'historial de sortides"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Copia al porta-retalls"
-    },
     "cliCopySuccessful": {
         "message": "Copiat!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Carrega des del fitxer"
     },
     "cliSupportRequestBtn": {
         "message": "Envieu dades de suport"
@@ -3857,9 +3845,6 @@
     },
     "blackboxConfiguration": {
         "message": "Configuració Blackbox"
-    },
-    "blackboxButtonSave": {
-        "message": "Desa i reinicia"
     },
     "blackboxLoggingNone": {
         "message": "No enregistrar"
@@ -4286,9 +4271,6 @@
     },
     "ledStripHelp": {
         "message": "La controladora pot controlar colors i efectes d'una tira de LEDs individualment.<br />Configura els LEDs a la graella i configura l'ordre del cablejat. Els LEDs que no tinguin ordre no es desaran.<br />Fes doble clic a un color per editar el valor HSV."
-    },
-    "ledStripButtonSave": {
-        "message": "Desa"
     },
     "ledStripColorSetupTitle": {
         "message": "Configuració de color",
@@ -5250,9 +5232,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Matar"
     },
-    "powerButtonSave": {
-        "message": "Desa"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Actualització de firmware <span class=\"message-negative\">requerida</span>. La configuració de Batería/Amperatge/Voltatge fa servir l'API &lt; 1.33.0 (Versió de Betaflight &lt;= 3.17) no està suportada."
     },
@@ -5775,14 +5754,9 @@
         "message": "La tipografia seleccionada és de mida petita per a OSD de *framebuffer*, però aquest OSD utilitza tipografies de mida estàndard. No es visualitzarà correctament. Voleu carregar-la igualment?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
-    "osdSetupSaveReboot": {
-        "message": "Desa i reinicia"
-    },
-    "osdSetupSave": {
-        "message": "Desa"
-    },
-    "osdSetupRefresh": {
-        "message": "Actualitza"
+    "osdSetupSaveOptions": {
+        "message": "Opcions de desament de l'OSD",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Voltatge de la bateria",
@@ -7007,7 +6981,7 @@
         "message": "Velocitat de l'aire"
     },
     "vtxHelp": {
-        "message": "Aquí podeu configurar els valors del vostre transmissor de vídeo (VTX). Podeu veure i canviar els valors de transmissió, incloses les taules VTX, si el controlador de vol i el VTX ho admeten.<br>Per configurar el vostre VTX, seguiu els passos següents:<br>1. Aneu a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">aquesta</a> pàgina;<br>2. Trobeu el fitxer de configuració VTX adequat per al vostre país i el vostre model VTX i descarregueu-lo;<br>3. Feu clic a \"$t(vtxButtonLoadFile.message)\" a continuació, seleccioneu el fitxer de configuració VTX, carregueu-lo;<br>4. Comproveu que la configuració sigui correcta;<br>5. Feu clic a \"$t(vtxButtonSave.message)\" per emmagatzemar la configuració de VTX al controlador de vol.<br>6. Opcionalment, feu clic a \"$t(vtxButtonSaveLua.message)\" per desar un fitxer de configuració lua que podeu utilitzar amb els scripts lua betaflight (vegeu més <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\">aquí</a>.)",
+        "message": "Aquí podeu configurar els valors del vostre transmissor de vídeo (VTX). Podeu veure i canviar els valors de transmissió, incloses les taules VTX, si el controlador de vol i el VTX ho admeten.<br>Per configurar el vostre VTX, seguiu els passos següents:<br>1. Aneu a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">aquesta</a> pàgina;<br>2. Trobeu el fitxer de configuració VTX adequat per al vostre país i el vostre model VTX i descarregueu-lo;<br>3. Feu clic a '$t(loadFromFile.message)' a continuació, seleccioneu el fitxer de configuració VTX, carregueu-lo;<br>4. Comproveu que la configuració sigui correcta;<br>5. Feu clic a '$t(save.message)' per emmagatzemar la configuració de VTX al controlador de vol.<br>6. Opcionalment, feu clic a '$t(vtxButtonSaveLua.message) per desar un fitxer de configuració lua que podeu utilitzar amb els scripts lua betaflight (vegeu més<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -7019,11 +6993,11 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Atenció:</span> El tipus de VTX seleccionat no admet la configuració \"de fàbrica\" de bandes, però algunes de les vostres bandes tenen aquesta configuració. Feu clic a \"$t(vtxButtonSave.message)\" per solucionar-ho.",
+        "message": "<span class=\"message-negative\">Atenció:</span> El tipus de VTX seleccionat no admet la configuració \"de fàbrica\" de bandes, però algunes de les vostres bandes tenen aquesta configuració. Feu clic a \"$t(save.message)\" per solucionar-ho.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Atenció:</span> Els valors de la taula VTX s'han carregat, però encara no s'han emmagatzemat al controlador de vol. Heu de verificar i modificar els valors per assegurar-vos que són vàlids i legals al vostre país i, a continuació, premeu el botó $t(vtxButtonSave.message) per emmagatzemar-los al controlador de vol.",
+        "message": "<span class=\"message-negative\">Atenció:</span> Els valors de la taula VTX s'han carregat, però encara no s'han emmagatzemat al controlador de vol. Heu de verificar i modificar els valors per assegurar-vos que són vàlids i legals al vostre país i, a continuació, premeu el botó $t(save.message) per emmagatzemar-los al controlador de vol.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -7272,25 +7246,17 @@
         "message": "<span class=\"message-negative\">Error</span> al carregar la informació de configuració de VTX des del porta-retalls. Potser el contingut no és correcte",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Desar en arxiu",
-        "description": "Save to file button in the VTX tab"
+    "vtxButtonSaveFileOptions": {
+        "message": "Opcions d'exportació de la taula VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "vtxButtonSaveLua": {
         "message": "Desar Script Lua",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxButtonLoadFile": {
-        "message": "Carrega des del fitxer",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Carrega des del porta-retalls",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Desa",
-        "description": "Save button in the VTX tab"
+    "vtxButtonLoadOptions": {
+        "message": "Opcions de càrrega de la taula VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "buttonSaving": {
         "message": "Desant",
@@ -7895,13 +7861,9 @@
         "message": "Error al carregar preajustos des de Internet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Desa i reinicia",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Canceŀlar",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+    "presetsButtonClearSelection": {
+        "message": "Esborrar Selecció",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "Aplicant configuració...",
@@ -7926,10 +7888,6 @@
     "presetsWarningDialogYesButton": {
         "message": "D'acord",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Canceŀlar",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Afegir pre-ajust favorit",
