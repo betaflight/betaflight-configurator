@@ -113,6 +113,7 @@ const defaultSerialDevices: UsbDeviceId[] = [
     { vendorId: 4292, productId: 60017 }, // CP2108
     { vendorId: 6790, productId: 21971 }, // CH343 USB-to-Serial
     { vendorId: 6790, productId: 21972 }, // CH9102 USB-to-Serial
+    { vendorId: 6790, productId: 57861 }, // 1a86:e205 WCH VCP
     { vendorId: 1659, productId: 8963 }, // PL2303
     { vendorId: 1659, productId: 9123 }, // PL2303GC
     { vendorId: 1240, productId: 221 }, // MCP2221
@@ -134,7 +135,12 @@ const persistentUsbBridges: UsbBridgeId[] = [
     { vendorId: 0x0403 }, // FTDI
     { vendorId: 0x067b }, // Prolific PL2303
     { vendorId: 0x10c4 }, // Silicon Labs CP210x
-    { vendorId: 0x1a86 }, // WCH CH34x / CH343 / CH9102
+    { vendorId: 0x1a86, productId: 0x7522 }, // WCH CH340 (variant)
+    { vendorId: 0x1a86, productId: 0x7523 }, // WCH CH340
+    { vendorId: 0x1a86, productId: 0x5523 }, // WCH CH341
+    { vendorId: 0x1a86, productId: 0x7584 }, // WCH CH340S
+    { vendorId: 0x1a86, productId: 0x55d3 }, // WCH CH343
+    { vendorId: 0x1a86, productId: 0x55d4 }, // WCH CH9102
     { vendorId: 0x04d8, productId: 0x00dd }, // Microchip MCP2221
     { vendorId: 0x04d8, productId: 0x00df }, // Microchip MCP2200
 ];
@@ -158,6 +164,7 @@ const defaultUsbFilters: UsbDeviceId[] = [
     { vendorId: 11914, productId: 15 }, // Raspberry Pi Pico in Bootloader mode
     { vendorId: 14743, productId: 57105 }, // X32 DFU Bootloader
     { vendorId: 14698, productId: 57088 }, // UM32 DFU Bootloader
+    { vendorId: 6790, productId: 57860 }, // 1a86:e204 WCH DFU Bootloader
 ];
 
 const defaultVendorIdNames: Record<string, string> = {
