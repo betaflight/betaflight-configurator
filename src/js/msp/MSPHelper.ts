@@ -1073,7 +1073,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
         fcStore.batteryState.voltage = data.readU8() / 10.0; // V
         fcStore.batteryState.mAhDrawn = data.readU16(); // mAh
-        fcStore.batteryState.amperage = data.readU16() / 100; // A
+        fcStore.batteryState.amperage = data.read16() / 100; // A
         fcStore.batteryState.batteryState = data.readU8();
         fcStore.batteryState.voltage = data.readU16() / 100;
     },
