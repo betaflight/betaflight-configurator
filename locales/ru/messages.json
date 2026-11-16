@@ -1897,9 +1897,6 @@
     "configurationSaved": {
         "message": "Конфигурация сохранена"
     },
-    "configurationButtonSave": {
-        "message": "Сохранить и Перезагрузить"
-    },
     "dialogClose": {
         "message": "Закрыть"
     },
@@ -2350,12 +2347,6 @@
     "throttle": {
         "message": "Газ"
     },
-    "pidTuningButtonSave": {
-        "message": "Сохранить"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Обновить"
-    },
     "pidTuningCopyProfile": {
         "message": "Копировать профиль"
     },
@@ -2499,12 +2490,6 @@
         "message": "Газ [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Сохранить"
-    },
-    "receiverButtonRefresh": {
-        "message": "Обновить"
-    },
     "receiverButtonBind": {
         "message": "Привязать приёмник"
     },
@@ -2551,9 +2536,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Добавить связь"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Сохранить"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "АВТО"
@@ -2923,9 +2905,6 @@
         "message": "Выбор профиля батареи",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Сохранить"
-    },
     "adjustmentsShowAll": {
         "message": "Показать все слоты"
     },
@@ -2962,9 +2941,6 @@
     },
     "servosLiveMode": {
         "message": "Включить живой режим"
-    },
-    "servosButtonSave": {
-        "message": "Сохранить"
     },
     "gpsHead": {
         "message": "Основные"
@@ -3551,20 +3527,11 @@
     "cliReboot": {
         "message": "Обнаружен переход в режим CLI"
     },
-    "cliSaveToFileBtn": {
-        "message": "Сохранить в файл"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Очистить историю"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Копировать в буфер обмена"
-    },
     "cliCopySuccessful": {
         "message": "Скопировано!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Загрузить из файла"
     },
     "cliSupportRequestBtn": {
         "message": "Отправить данные поддержки"
@@ -3622,9 +3589,6 @@
     },
     "blackboxConfiguration": {
         "message": "Конфигурация Blackbox"
-    },
-    "blackboxButtonSave": {
-        "message": "Сохранить и Перезагрузить"
     },
     "blackboxLoggingNone": {
         "message": "Логирование отключено"
@@ -4021,9 +3985,6 @@
     },
     "ledStripHelp": {
         "message": "Полетный контроллер может контролировать цвет и индивидуальные эффекты светодиодов на ленте.<br />Конфигурировать светодиоды на сетке, настроить порядок проводников затем установить светодиоды на ваш аппарат согласно позиции на сетке. Светодиоды без назначения номера цепи сохранены не будут.<br />Двойной щелчок на цвете меняет HSV значение."
-    },
-    "ledStripButtonSave": {
-        "message": "Сохранить"
     },
     "ledStripColorSetupTitle": {
         "message": "Настройка цвета",
@@ -4985,9 +4946,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Убить"
     },
-    "powerButtonSave": {
-        "message": "Сохранить"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Firmware <span class=\"message-negative\">требует</span> обновления. Батарея/Ток/Напряжение конфигурация использует API &lt; 1.33.0 (Betaflight release &lt;= 3.17) это не поддерживается."
     },
@@ -5494,15 +5452,6 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Загрузка не удалась"
-    },
-    "osdSetupSaveReboot": {
-        "message": "Сохранить и перезагрузить"
-    },
-    "osdSetupSave": {
-        "message": "Сохранить"
-    },
-    "osdSetupRefresh": {
-        "message": "Обновить"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Напряжение батареи",
@@ -6720,21 +6669,9 @@
     "osdButtonSaved": {
         "message": "Сохранено"
     },
-    "vtxHelp": {
-        "message": "Здесь можно настроить параметры видеопередатчика (VTX). Вы можете просматривать и изменять параметры передачи, включая таблицы VTX (VTX Tables), если это поддерживают полётный контроллер и сам VTX.<br>Чтобы настроить VTX, выполните следующие шаги:<br>1. Перейдите на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">эту</a> страницу;<br>2. Найдите подходящий файл конфигурации VTX для вашей страны и модели VTX и скачайте его;<br>3. Нажмите '$t(vtxButtonLoadFile.message)' ниже, выберите файл конфигурации VTX, загрузите его;<br>4. Убедитесь, что настройки заданы верно;<br>5. Нажмите '$t(vtxButtonSave.message)', чтобы сохранить настройки VTX на полётном контроллере.<br>6. При желании нажмите '$t(vtxButtonSaveLua.message)', чтобы сохранить lua-файл конфигурации для использования со скриптами betaflight lua (подробнее <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">здесь</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Внимание:</span> До того, как использовать поля $t(vtxSelectedMode.message) вы должны настроить и сохранить Таблицу VTX.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Внимание:</span> Выбранный тип VTX не поддерживает 'заводские' настройки диапазонов, но некоторые из ваших диапазонов имеют эту настройку. Нажмите '$t(vtxButtonSave.message)' чтобы исправить это.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Внимание:</span> Значения Таблицы VTX были загружены, но ещё не были сохранены в полётном контроллере. Вам нужно проверить и поправить значения, чтобы быть уверенным что они правильны и разрешены в вашей стране. После этого нажмите кнопку $t(vtxButtonSave.message) чтобы сохранить их в полётном контроллере.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "Ввести частоту напрямую",
@@ -6979,25 +6916,9 @@
         "message": "<span class=\"message-negative\">Ошибка</span> во время загрузки конфигурации видеопередатчика из буфера обмена. Возможно содержимое содержит ошибки",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Сохранить в файл",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Сохранить скрипт Lua",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Загрузить из файла",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Загрузить из буфера обмена",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Сохранить",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Сохранение",
@@ -7590,14 +7511,6 @@
         "message": "Ошибка загрузки предустановок из интернета",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Сохранить и перезагрузить",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Отмена",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Применение конфигурации...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7621,10 +7534,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Принять",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Отмена",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Добавить предустановку в избранное",
