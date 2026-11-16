@@ -831,9 +831,6 @@
     "configurationSpiRX": {
         "message": "SPI Bus Hartzaileen Hornitzailea"
     },
-    "configurationButtonSave": {
-        "message": "Gorde eta berrabiarazi"
-    },
     "dialogDynFiltersChangeTitle": {
         "message": "Notch Dinamikoaren balioen aldaketa"
     },
@@ -1028,12 +1025,6 @@
     "throttle": {
         "message": "Throttle"
     },
-    "pidTuningButtonSave": {
-        "message": "Gorde"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Berritu"
-    },
     "dialogCopyProfileText": {
         "message": "Kopiatu hemen uneko profilaren balioak"
     },
@@ -1118,12 +1109,6 @@
     "receiverResetRefreshRate": {
         "message": "Leheneratu"
     },
-    "receiverButtonSave": {
-        "message": "Gorde"
-    },
-    "receiverButtonRefresh": {
-        "message": "Berritu"
-    },
     "receiverButtonBind": {
         "message": "Hartzailea Lotu"
     },
@@ -1160,9 +1145,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Esteka erantzi"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Gorde"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -1275,9 +1257,6 @@
     "adjustmentsFunction30": {
         "message": "LED Profilaren Hautapena"
     },
-    "adjustmentsSave": {
-        "message": "Gorde"
-    },
     "servosChangeDirection": {
         "message": "Egokitzeko, aldatu TX norabidea"
     },
@@ -1295,9 +1274,6 @@
     },
     "servosLiveMode": {
         "message": "Zuzeneko modua gaitu"
-    },
-    "servosButtonSave": {
-        "message": "Gorde"
     },
     "gpsMapMessage1": {
         "message": "Mesedez, egiaztatu zure Interneteko konexioa"
@@ -1476,20 +1452,11 @@
     "cliReboot": {
         "message": "CLI berrabiarazi da"
     },
-    "cliSaveToFileBtn": {
-        "message": "Fitxategian gorde"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Garbitu arbela"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Arbelean kopiatu"
-    },
     "cliCopySuccessful": {
         "message": "Kopiatzen!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Fitxategitik kopiatu"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Oharra</strong>: komandoak berrikusi eta editatu ditzakezu exekutatu aurretik."
@@ -1523,9 +1490,6 @@
     },
     "blackboxConfiguration": {
         "message": "Kutxabeltza konfigurazioa"
-    },
-    "blackboxButtonSave": {
-        "message": "Gorde eta berrabiarazi"
     },
     "blackboxLoggingNone": {
         "message": "Ez dago erregistratzen"
@@ -1714,9 +1678,6 @@
     },
     "ledStripHelp": {
         "message": "Hegaldi-kontroladoreak banda bateko LED banakako koloreak eta efektuak kontrolatu ditzake.<br/> Konfiguratu saretako LEDak, kableatu ordena konfiguratu eta ondoren itsatsi LED hegazkinaren saretako posizioen arabera. Ez dira alanbreak ordenatzen dituzten LEDak gordeko.<br/> Egin klik bikoitza kolorean HSVren balioak editatzeko."
-    },
-    "ledStripButtonSave": {
-        "message": "Gorde"
     },
     "ledStripColorSetupTitle": {
         "message": "Kolorearen konfigurazioa",
@@ -2217,9 +2178,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Hilketa"
     },
-    "powerButtonSave": {
-        "message": "Gorde"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Firmwarea eguneratzea<span class=\"message-negative\">beharrezkoa da</span>. Bateria/Intentsitate/Tentsio konfigurazioak API &lt; 1.33.0 (Betaflight release &lt;= 3.17) es du onartzen."
     },
@@ -2602,9 +2560,6 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Kargatu {{length}} karaktere guztiak OSD-ra"
-    },
-    "osdSetupSave": {
-        "message": "Gorde"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Bateriaren tentsioa",
@@ -3422,14 +3377,6 @@
         "message": "<span class=\"message-negative\">Abisua:</span> Lehenik eta behin beheko VTX taula konfiguratu eta gorde behar duzu $t(vtxSelectedMode.message) eremuak erabili ahal izateko.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Arreta:</span> Aukeratutako VTX motak ez du banden \"fabrika\" ezarpena onartzen, baina zure banda batzuek ezarpen hau dute. Klik egin '$t(vtxButtonSave.message)' hau konpontzeko.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Abisua:</span> VTX taulako balioak kargatu dira, baina oraindik ez dira hegaldi kontroladorean gorde. Balioak egiaztatu eta aldatu behar dituzu zure herrialdean baliozkoak eta legezkoak direla ziurtatzeko, eta ondoren $t(vtxButtonSave.message) botoia sakatu hegaldi kontroladorean gordetzeko.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
-    },
     "vtxFrequencyChannel": {
         "message": "Frekuentzia sartu",
         "description": "Text of one of the fields of the VTX tab"
@@ -3622,25 +3569,9 @@
         "message": "<span class=\"message-negative\">Errorea</span> arbeletik VTX konfigurazio informazioa kargatzean. Baliteke edukia zuzena ez izatea",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Gorde fitxategian",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Lua Script-a gorde",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Fitxategitik kargatu",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Arbeletik kargatu",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Gorde",
-        "description": "Save button in the VTX tab"
     },
     "mainHelpArmed": {
         "message": "Motorea armatua"

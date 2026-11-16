@@ -221,6 +221,24 @@
     "save": {
         "message": "Enregistrer"
     },
+    "saveAndReboot": {
+        "message": "Sauvegarder et Redémarrer"
+    },
+    "refresh": {
+        "message": "Actualiser"
+    },
+    "saveToFile": {
+        "message": "Enregistrer sous"
+    },
+    "loadFromFile": {
+        "message": "Charger à partir d’un fichier"
+    },
+    "loadFromClipboard": {
+        "message": "Coller depuis le presse-papiers"
+    },
+    "copyToClipboard": {
+        "message": "Copier dans le presse-papiers"
+    },
     "autoConnectEnabled": {
         "message": "Connexion auto : Activée - Connexion dès la détection d'un port"
     },
@@ -937,6 +955,9 @@
     },
     "dfu_hex_address_errors": {
         "message": "L'image du Firmware contient des adresses introuvables sur le périphérique cible"
+    },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "L'image du firmware s'étend sur les mémoires flash de cette application ne peut pas basculer entre cet appareil"
     },
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">enregistrée</span>"
@@ -1982,9 +2003,6 @@
     "configurationSaveFailed": {
         "message": "Échec de l'enregistrement de la configuration"
     },
-    "configurationButtonSave": {
-        "message": "Sauvegarder et Redémarrer"
-    },
     "dialogClose": {
         "message": "Fermer"
     },
@@ -2522,12 +2540,6 @@
     "throttle": {
         "message": "Gaz"
     },
-    "pidTuningButtonSave": {
-        "message": "Sauvegarder"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Rafraîchir"
-    },
     "pidTuningCopyProfile": {
         "message": "Copier le profil"
     },
@@ -2668,12 +2680,6 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Enregistrer"
-    },
-    "receiverButtonRefresh": {
-        "message": "Rafraîchir"
-    },
     "receiverButtonBind": {
         "message": "Appairer le récepteur"
     },
@@ -2727,9 +2733,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Ajouter un lien"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Enregistrer"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTOMATIQUE"
@@ -3103,9 +3106,6 @@
         "message": "Sélection du profil de batterie",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Enregistrer"
-    },
     "adjustmentsShowAll": {
         "message": "Afficher tous les emplacements"
     },
@@ -3142,9 +3142,6 @@
     },
     "servosLiveMode": {
         "message": "Activer le mode direct"
-    },
-    "servosButtonSave": {
-        "message": "Sauvegarder"
     },
     "gpsHead": {
         "message": "Général"
@@ -3763,20 +3760,11 @@
     "cliReboot": {
         "message": "Redémarrage CLI détecté"
     },
-    "cliSaveToFileBtn": {
-        "message": "Enregistrer sous"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Effacer l'historique"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Copier dans le presse-papier"
-    },
     "cliCopySuccessful": {
         "message": "Copié !"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Charger à partir du fichier"
     },
     "cliSupportRequestBtn": {
         "message": "Soumettre les données d’assistance"
@@ -3834,9 +3822,6 @@
     },
     "blackboxConfiguration": {
         "message": "Configuration de la Blackbox"
-    },
-    "blackboxButtonSave": {
-        "message": "Sauvegarder et redémarrer"
     },
     "blackboxLoggingNone": {
         "message": "Pas d'enregistrement"
@@ -4263,9 +4248,6 @@
     },
     "ledStripHelp": {
         "message": "Le contrôleur de vol peut piloter des LEDs RGB.<br />Configurez les LEDs sur la grille et câblez les LEDs en fonction de votre grille. Les LEDs sans numéro ne seront pas sauvegardées.<br />Double-cliquer sur une couleur pour éditer sa valeur."
-    },
-    "ledStripButtonSave": {
-        "message": "Sauvegarder"
     },
     "ledStripColorSetupTitle": {
         "message": "Configurer la couleur",
@@ -5223,9 +5205,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Tue"
     },
-    "powerButtonSave": {
-        "message": "Sauvegarder"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Mise à jour du firmware <span class=\"message-negative\">nécessaire</span>.  L'API &lt; 1.33.0 (Betaflight release &lt;= 3.17) ne permet de configurer les rubriques Batterie / Intensité / Tension."
     },
@@ -5748,14 +5727,9 @@
         "message": "La police sélectionnée est une petite police pour les OSD framebuffer, mais cet OSD utilise des polices de taille standard. Il ne s'affichera pas correctement. Télécharger quand même ?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
-    "osdSetupSaveReboot": {
-        "message": "Sauvegarder et Redémarrer"
-    },
-    "osdSetupSave": {
-        "message": "Sauvegarder"
-    },
-    "osdSetupRefresh": {
-        "message": "Actualiser"
+    "osdSetupSaveOptions": {
+        "message": "Options de sauvegarde OSD",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Tension batterie",
@@ -6980,7 +6954,7 @@
         "message": "Vitesse de l'air"
     },
     "vtxHelp": {
-        "message": "Ici, vous pouvez configurer les valeurs de votre Transmetteur Vidéo (VTX). Vous pouvez voir et modifier les valeurs de transmission, y compris les tables VTX, si le contrôleur de vol et le VTX le supportent.<br>Pour configurer votre VTX utilisez les étapes suivantes :<br>1. Allez sur <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">cette</a> page ;<br>2. Trouvez le fichier de configuration VTX approprié pour votre pays et votre modèle VTX et téléchargez-le ;<br>3. Cliquez sur '$t(vtxButtonLoadFile.message)' ci-dessous, sélectionnez le fichier de configuration VTX, chargez-le ;<br>4. Vérifiez que les paramètres sont corrects ;<br>5. Cliquez sur '$t(vtxButtonSave.message)' pour stocker les paramètres VTX sur le contrôleur de vol.<br>6. Vous pouvez éventuellement cliquer sur '$t(vtxButtonSaveLua.message)' pour enregistrer un fichier de configuration de lua que vous pouvez utiliser avec les scripts de betaflight lua (Voir plus <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">ici</a>.)",
+        "message": "Ici, vous pouvez configurer les valeurs de votre Transmetteur Vidéo (VTX). Vous pouvez voir et modifier les valeurs de transmission, y compris les tables VTX, si le contrôleur de vol et le VTX le supportent.<br>Pour configurer votre VTX utilisez les étapes suivantes:<br>1. Allez sur <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">cette</a> page;<br>2. Trouvez le fichier de configuration VTX approprié pour votre pays et votre modèle VTX et téléchargez-le ;<br>3. Cliquez sur '$t(loadFromFile.message)' ci-dessous, sélectionnez le fichier de configuration VTX, chargez-le ;<br>4. Vérifiez que les paramètres sont corrects ;<br>5. Cliquez sur '$t(save.message)' pour stocker les paramètres VTX sur le contrôleur de vol.<br>6. Vous pouvez éventuellement cliquer sur '$t(vtxButtonSaveLua.message)' pour enregistrer un fichier de configuration de lua que vous pouvez utiliser avec les scripts de betaflight lua (Voir plus <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">ici</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6992,11 +6966,11 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Attention:</span> Le type VTX sélectionné ne prend pas en charge le paramètre \"usine\" pour les bandes, mais certaines de vos bandes ont ce paramètre. Cliquez sur '$t(vtxButtonSave.message)' pour résoudre ce problème.",
+        "message": "<span class=\"message-negative\">Attention:</span> Le type VTX sélectionné ne prend pas en charge le paramètre \"usine\" pour les bandes, mais certaines de vos bandes ont ce paramètre. Cliquez sur '$t(save.message)' pour résoudre ce problème.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Attention:</span> Les valeurs de la table VTX ont été chargées, mais pas encore stockées dans le contrôleur de vol. Vous devez vérifier et modifier les valeurs pour être sûr qu'elles sont valides et légales dans votre pays et puis cliquer sur le bouton $t(vtxButtonSave.message) pour les stocker dans le contrôleur de vol.",
+        "message": "<span class=\"message-negative\">Attention:</span> Les valeurs de la table VTX ont été chargées, mais pas encore stockées dans le contrôleur de vol. Vous devez vérifier et modifier les valeurs pour être sûr qu'elles sont valides et légales dans votre pays et puis cliquer sur le bouton $t(save.message) pour les stocker dans le contrôleur de vol.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -7245,25 +7219,17 @@
         "message": "<span class=\"message-negative\">Erreur</span> lors du chargement des informations de configuration VTX depuis le presse-papiers. Le contenu est peut-être inapproprié",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Enregistrer sous",
-        "description": "Save to file button in the VTX tab"
+    "vtxButtonSaveFileOptions": {
+        "message": "Exporter les options de table VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "vtxButtonSaveLua": {
         "message": "Sauvegarder Script Lua",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxButtonLoadFile": {
-        "message": "Charger à partir du fichier",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Charger depuis le presse-papiers",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Enregistrer",
-        "description": "Save button in the VTX tab"
+    "vtxButtonLoadOptions": {
+        "message": "Charger les options de table VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "buttonSaving": {
         "message": "Sauvegarde",
@@ -7868,13 +7834,9 @@
         "message": "Erreur lors du chargement des préréglages depuis Internet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Enregistrer et redémarrer",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Annuler",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+    "presetsButtonClearSelection": {
+        "message": "Effacer la sélection",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "Application de la configuration...",
@@ -7899,10 +7861,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Accepter",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Annuler",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Ajouter un préréglage favori",
@@ -9267,6 +9225,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "Avancé"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "Capteur Pitot"
+    },
     "pidTuningWingTpaCurveType": {
         "message": "Type de courbe"
     },
@@ -9287,6 +9248,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "Réglage avancé de la vitesse"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Configuration de la vitesse de Pitot"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "Délai"
@@ -9341,6 +9305,12 @@
     },
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "Décalage du pitch en degrés*10 pour l'estimation de la vitesse de fabrication"
+    },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "Vitesse pitot maximale"
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "Vitesse maximale de l'air par capteur Pitot"
     },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "Paramètres de courbe hyperbolique"

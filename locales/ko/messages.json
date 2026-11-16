@@ -1994,9 +1994,6 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "configurationButtonSave": {
-        "message": "저장 및 재부팅"
-    },
     "dialogClose": {
         "message": "닫기"
     },
@@ -2534,12 +2531,6 @@
     "throttle": {
         "message": "스로틀"
     },
-    "pidTuningButtonSave": {
-        "message": "저장"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "새로고침"
-    },
     "pidTuningCopyProfile": {
         "message": "프로필 복사"
     },
@@ -2683,12 +2674,6 @@
         "message": "스로틀 [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "저장"
-    },
-    "receiverButtonRefresh": {
-        "message": "새로고침"
-    },
     "receiverButtonBind": {
         "message": "수신기 바인드"
     },
@@ -2742,9 +2727,6 @@
     },
     "auxiliaryAddLink": {
         "message": "링크 추가"
-    },
-    "auxiliaryButtonSave": {
-        "message": "저장"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "자동"
@@ -3118,9 +3100,6 @@
         "message": "배터리 프로필 선택",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "저장"
-    },
     "adjustmentsShowAll": {
         "message": "모든 슬롯 보기"
     },
@@ -3157,9 +3136,6 @@
     },
     "servosLiveMode": {
         "message": "실시간 모드 사용"
-    },
-    "servosButtonSave": {
-        "message": "저장"
     },
     "gpsHead": {
         "message": "일반"
@@ -3778,20 +3754,11 @@
     "cliReboot": {
         "message": "CLI 재부팅이 감지됨"
     },
-    "cliSaveToFileBtn": {
-        "message": "파일로 저장"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "출력 이력 삭제"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "클립보드로 복사"
-    },
     "cliCopySuccessful": {
         "message": "복사됨!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "파일로부터 불러오기"
     },
     "cliSupportRequestBtn": {
         "message": "지원 데이터 제출"
@@ -3849,9 +3816,6 @@
     },
     "blackboxConfiguration": {
         "message": "블랙박스 환경설정"
-    },
-    "blackboxButtonSave": {
-        "message": "저장 및 재부팅"
     },
     "blackboxLoggingNone": {
         "message": "로그기록 없음"
@@ -4278,9 +4242,6 @@
     },
     "ledStripHelp": {
         "message": "비행 컨트롤러는 스트립에서 개별 LED의 색상과 효과를 제어할 수 있습니다.<br />그리드에서 LED를 구성하고, 배선 순서를 구성한 다음 그리드 위치에 따라 기체에 LED를 부착하십시오. 배선 순서 번호가 없는 LED는 저장되지 않습니다.<br />HSV 값을 편집하려면 색상을 더블클릭하십시오."
-    },
-    "ledStripButtonSave": {
-        "message": "저장"
     },
     "ledStripColorSetupTitle": {
         "message": "색상 설정",
@@ -5242,9 +5203,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Kill"
     },
-    "powerButtonSave": {
-        "message": "저장"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "펌웨어 업그레이드가 <span class=\"message-negative\">필요합니다</span>. API &lt; 1.33.0 (베타플라이트 릴리즈 &lt;= 3.17)을 사용하는 배터리/전류/전압 환경설정은 지원되지 않습니다."
     },
@@ -5766,15 +5724,6 @@
     "osdSetupUploadFontWarningNeedStandardFont": {
         "message": "선택된 글꼴은 프레임버퍼 OSD용 소형 글꼴이지만, 이 OSD는 표준 크기 글꼴을 사용합니다. 제대로 표시되지 않습니다. 그래도 업로드하시겠어요?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
-    },
-    "osdSetupSaveReboot": {
-        "message": "저장 및 재부팅"
-    },
-    "osdSetupSave": {
-        "message": "저장"
-    },
-    "osdSetupRefresh": {
-        "message": "새로고침"
     },
     "osdTextElementMainBattVoltage": {
         "message": "배터리 전압",
@@ -6998,10 +6947,6 @@
     "osdPitotAirSpeed": {
         "message": "에어스피드"
     },
-    "vtxHelp": {
-        "message": "여기에서 영상 송신기(VTX)에 대한 값을 구성할 수 있습니다. 비행 컨트롤러와 VTX가 지원하는 경우 VTX 테이블을 포함한 전송 값을 보고 변경할 수 있습니다.<br>VTX를 설정하려면 다음의 단계를 사용하십시오:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">이 페이지</a>로 가십시오;<br>2. 당신의 국가와 VTX 모델에 적합한 VTX 구성 파일을 찾아 다운로드하십시오;<br>3. 아래에서 '$t(vtxButtonLoadFile.message)'를 클릭하고 VTX 구성 파일을 선택하고 로드하십시오;<br>4. 설정이 올바른지 확인하십시오;<br>5. VTX 설정을 비행 컨트롤러에 저장하려면 '$t(vtxButtonSave.message)'를 클릭하십시오.<br>6. 옵션으로 베타플라이트 루아 스크립트로 사용 가능한 루아 환경설정 파일로 저장하려면 '$t(vtxButtonSaveLua.message)'을 클릭하세요. (더 자세한 정보는 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">여기</a>를 보세요.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">주의:</span> 아직 VTX에서 응답이 없습니다. 아래에서 VTX가 사용할 프로토콜과 UART 연결 방식을 선택한 후 저장하세요. 장치가 응답하면 나머지 설정이 나타납니다.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -7009,14 +6954,6 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">주의:</span> $t(vtxSelectedMode.message) 필드를 사용하려면 먼저 아래쪽에 VTX 테이블을 구성하고 저장하십시오.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">주의:</span>선택한 VTX 유형은 밴드에 대한 '공장' 설정을 지원하지 않지만, 일부 밴드는 이 설정을 가지고 있다. 이 문제를 해결하려면 '$t(vtxButtonSave.message)'을 클릭하십시오.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">주의:</span> VTX 테이블의 값이 로드되었지만, 아직 비행 컨트롤러에 저장되지 않았습니다. 해당 값이 당신의 국가에서 유효하고 합법적인지 확인하고 수정해야 하며, $t(vtxButtonSave.message) 버튼을 눌러 비행 컨트롤러에 저장해야 합니다.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "직접 주파수 입력",
@@ -7264,25 +7201,9 @@
         "message": "VTX 환경설정 정보를 클립보드로부터 로딩중 <span class=\"message-negative\">오류</span>가 발생하였습니다. 내용이 올바르지 않을 것입니다.",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "파일로 저장",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "루아 스크립트 저장",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "파일로부터 불러오기",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "클립보드로부터 로드",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "저장",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "저장 중",
@@ -7887,14 +7808,6 @@
         "message": "인터넷에서 사전 설정 로드 오류",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "저장 및 재부팅",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "취소",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "환경설정을 적용하는 중...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7918,10 +7831,6 @@
     "presetsWarningDialogYesButton": {
         "message": "동의",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "취소",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "즐겨찾기 프리셋 추가",
