@@ -81,9 +81,56 @@ describe("devices", () => {
                 readCharacteristic: "0000ffe2-0000-1000-8000-00805f9b34fb",
                 susceptibleToCrcCorruption: true,
             });
-            // Pins the configuration as shipped: write 0003, read 0002.
-            expect(nordic.writeCharacteristic).toBe("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
-            expect(nordic.readCharacteristic).toBe("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+            // Nordic's spec: the central writes RX (0002) and subscribes to TX (0003).
+            expect(nordic.writeCharacteristic).toBe("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+            expect(nordic.readCharacteristic).toBe("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+        });
+    });
+
+    describe("pickCharacteristics", () => {
+        const profile = { writeCharacteristic: "rx", readCharacteristic: "tx" };
+
+        it("follows the profile when the module does", async () => {
+            const { pickCharacteristics } = await freshDevices();
+            const picked = pickCharacteristics(profile, [
+                { uuid: "rx", writable: true, notifies: false },
+                { uuid: "tx", writable: false, notifies: true },
+            ]);
+            expect(picked).toEqual({ write: "rx", read: "tx" });
+        });
+
+        it("swaps for a module wired the other way round", async () => {
+            const { pickCharacteristics } = await freshDevices();
+            const picked = pickCharacteristics(profile, [
+                { uuid: "rx", writable: false, notifies: true },
+                { uuid: "tx", writable: true, notifies: false },
+            ]);
+            expect(picked).toEqual({ write: "tx", read: "rx" });
+        });
+
+        it("keeps the profile's order when both characteristics can do both", async () => {
+            const { pickCharacteristics } = await freshDevices();
+            const picked = pickCharacteristics(profile, [
+                { uuid: "tx", writable: true, notifies: true },
+                { uuid: "rx", writable: true, notifies: true },
+            ]);
+            expect(picked).toEqual({ write: "rx", read: "tx" });
+        });
+
+        it("carries both directions on one characteristic when the other is missing", async () => {
+            const { pickCharacteristics } = await freshDevices();
+            const picked = pickCharacteristics(profile, [{ uuid: "rx", writable: true, notifies: true }]);
+            expect(picked).toEqual({ write: "rx", read: "rx" });
+        });
+
+        it("ignores characteristics outside the profile and fails without a direction", async () => {
+            const { pickCharacteristics } = await freshDevices();
+            expect(
+                pickCharacteristics(profile, [
+                    { uuid: "rx", writable: true, notifies: false },
+                    { uuid: "other", writable: false, notifies: true },
+                ]),
+            ).toBeNull();
         });
     });
 

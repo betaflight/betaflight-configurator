@@ -68,8 +68,8 @@ const profile = (
 // Nordic UART is a vendor 128-bit service rather than a SIG identifier.
 const NORDIC_UART = [
     "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-    "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
     "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+    "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
 ] as const;
 
 // Order matters: a board exposing more than one of these services matches the first
@@ -86,6 +86,32 @@ const defaultBluetoothDevices: BluetoothDeviceProfile[] = [
     profile("SpeedyBee V1", [bt16("1000"), bt16("1001"), bt16("1002")]),
     profile("DroneBridge", [bt16("db32"), bt16("db33"), bt16("db34")]),
 ];
+
+/** A characteristic of a profile's service, as far as choosing which way data flows through it. */
+export interface CharacteristicCapabilities {
+    uuid: string;
+    writable: boolean;
+    notifies: boolean;
+}
+
+/**
+ * Chooses the characteristics to write to and subscribe to. Modules disagree on which way round a
+ * profile's two characteristics go (Nordic UART clones in particular), so each direction takes the
+ * first of the two that can carry it, the profile's own choice first. Many CC2541 modules (HM-10
+ * firmware, MLT-BT05, T-Motor's TMFC) share the FFE0 service with the CC2541 profile but carry both
+ * directions on FFE1 and have no FFE2.
+ */
+export function pickCharacteristics(
+    profile: Pick<BluetoothDeviceProfile, "writeCharacteristic" | "readCharacteristic">,
+    characteristics: readonly CharacteristicCapabilities[],
+): { write: string; read: string } | null {
+    const find = (uuids: string[], can: (c: CharacteristicCapabilities) => boolean) =>
+        uuids.map((uuid) => characteristics.find((c) => c.uuid === uuid && can(c))).find(Boolean)?.uuid;
+    const { writeCharacteristic: write, readCharacteristic: read } = profile;
+    const writeUuid = find([write, read], (c) => c.writable);
+    const readUuid = find([read, write], (c) => c.notifies);
+    return writeUuid && readUuid ? { write: writeUuid, read: readUuid } : null;
+}
 
 const defaultSerialDevices: UsbDeviceId[] = [
     { vendorId: 1027, productId: 24577 }, // FT232R USB UART
