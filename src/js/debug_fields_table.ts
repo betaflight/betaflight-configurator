@@ -4,7 +4,7 @@
  * Generator    : `scripts/generate-debug-modes.mjs`
  * Source       : https://github.com/betaflight/betaflight (`//!<` annotations on the DEBUG_SET() call sites)
  * Firmware refs:
- *   API 1.49.0  399e958dee 2026-11-12  (580 annotated fields)
+ *   API 1.49.0  b780e4af0e 2026-11-16  (599 annotated fields)
  */
 
 /**
@@ -410,6 +410,7 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             1: Object.freeze({ label: "Missing Edge Count", unit: null, scale: 1 }),
             2: Object.freeze({ label: "Failed Frame Count", unit: null, scale: 1 }),
             3: Object.freeze({ label: "Preamble Skip", unit: null, scale: 1 }),
+            4: Object.freeze({ label: "Telemetry Wait Count", unit: null, scale: 1 }),
         }),
         DYN_IDLE: Object.freeze({
             0: Object.freeze({ label: "Dyn Idle P", unit: null, scale: 0.0001 }),
@@ -847,6 +848,15 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             6: Object.freeze({ label: "Filtered Flow Rate X", unit: "rad/s", scale: 0.001 }),
             7: Object.freeze({ label: "Filtered Flow Rate Y", unit: "rad/s", scale: 0.001 }),
         }),
+        PB04: Object.freeze({
+            0: Object.freeze({ label: "Distance", unit: "m", scale: 0.001 }),
+            1: Object.freeze({ label: "Confidence", unit: "%", scale: 1 }),
+            2: Object.freeze({ label: "Flow Rate X", unit: "rad/s", scale: 0.001 }),
+            3: Object.freeze({ label: "Flow Rate Y", unit: "rad/s", scale: 0.001 }),
+            4: Object.freeze({ label: "Flow Valid Status", unit: null, scale: 1 }),
+            5: Object.freeze({ label: "Frame Gap", unit: "us", scale: 1 }),
+            6: Object.freeze({ label: "Reported Distance", unit: "cm", scale: 1 }),
+        }),
         PIDLOOP: Object.freeze({
             0: Object.freeze({ label: "Gyro Update Time", unit: "us", scale: 1 }),
             1: Object.freeze({ label: "PID Controller Time", unit: "us", scale: 1 }),
@@ -996,12 +1006,38 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             1: Object.freeze({ label: "Filtered Phase Offset", unit: "us", scale: 1 }),
             2: Object.freeze({ label: "Timer Frequency Offset", unit: "ticks", scale: 1 }),
             3: Object.freeze({ label: "Timer Phase Shift", unit: "us", scale: 1 }),
+            4: Object.freeze({ label: "Resync Count", unit: null, scale: 1 }),
+            5: Object.freeze({
+                label: "Resync Trigger Bits",
+                unit: null,
+                scale: 1,
+                flags: Object.freeze(["Was Disconnected", "Nonce Mismatch", "FHSS Mismatch", "Model Match Change"]),
+            }),
+            6: Object.freeze({ label: "Resync Nonce Delta", unit: null, scale: 1 }),
+            7: Object.freeze({ label: "Resync FHSS Index Delta", unit: null, scale: 1 }),
         }),
         RX_EXPRESSLRS_SPI: Object.freeze({
             0: Object.freeze({ label: "Lost Connection Count", unit: null, scale: 1 }),
             1: Object.freeze({ label: "Filtered RSSI", unit: "dBm", scale: 1 }),
             2: Object.freeze({ label: "SNR", unit: "dB", scale: 1 }),
             3: Object.freeze({ label: "Uplink Link Quality", unit: "%", scale: 1 }),
+            4: Object.freeze({ label: "RC Payload Age", unit: "ms", scale: 1 }),
+            5: Object.freeze({ label: "Model Match", unit: null, scale: 1 }),
+            6: Object.freeze({
+                label: "Last Lost Connection Reason",
+                unit: null,
+                scale: 1,
+                enumTag: "lostConnectionReason_e",
+                values: Object.freeze([
+                    "ELRS_LOST_NONE",
+                    "ELRS_LOST_RATE_CHANGE",
+                    "ELRS_LOST_TENTATIVE_TIMEOUT",
+                    "ELRS_LOST_PACKET_TIMEOUT",
+                    "ELRS_LOST_CHAOS_RESYNC",
+                    "ELRS_LOST_STOP",
+                ]),
+            }),
+            7: Object.freeze({ label: "Connection State | Timer State << 8", unit: null, scale: 1 }),
         }),
         RX_FRSKY_SPI: Object.freeze({
             0: Object.freeze({ label: "Data Error Count", unit: null, scale: 1 }),
@@ -1124,6 +1160,11 @@ export const FIRMWARE_DEBUG_FIELDS: FirmwareDebugFields = Object.freeze({
             3: Object.freeze({ label: "Wing Throttle", unit: null, scale: 0.001 }),
             4: Object.freeze({ label: "Estimated Airspeed", unit: "m/s", scale: 0.1 }),
             5: Object.freeze({ label: "TPA Argument", unit: null, scale: 0.001 }),
+        }),
+        UART_BIDIR: Object.freeze({
+            0: Object.freeze({ label: "UART number", unit: null, scale: 1 }),
+            1: Object.freeze({ label: "TEMT timeouts", unit: null, scale: 1 }),
+            2: Object.freeze({ label: "TX fault latched", unit: null, scale: 1 }),
         }),
         UPT1: Object.freeze({
             0: Object.freeze({ label: "Distance", unit: "m", scale: 0.001 }),
@@ -1300,6 +1341,14 @@ export const FIRMWARE_DEBUG_ENUMS: Readonly<Record<string, Readonly<Record<strin
                 "LAUNCH_WING_FINISH",
                 "LAUNCH_WING_FLYING",
                 "LAUNCH_WING_ABORTED",
+            ]),
+            lostConnectionReason_e: Object.freeze([
+                "ELRS_LOST_NONE",
+                "ELRS_LOST_RATE_CHANGE",
+                "ELRS_LOST_TENTATIVE_TIMEOUT",
+                "ELRS_LOST_PACKET_TIMEOUT",
+                "ELRS_LOST_CHAOS_RESYNC",
+                "ELRS_LOST_STOP",
             ]),
             max7456DeviceType_e: Object.freeze(["MAX7456_DEVICE_TYPE_MAX", "MAX7456_DEVICE_TYPE_AT"]),
             rescueFailureState_e: Object.freeze([
