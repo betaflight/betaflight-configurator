@@ -1207,6 +1207,9 @@ export function getDebugFieldNames(apiVersion?: string): Record<string, Record<s
         },
         DSHOT_TELEMETRY_COUNTS: {
             "debug[all]": "Dshot Telemetry Counts",
+            "debug[0]": "Telemetry Packets Read",
+            "debug[1]": "Missing Edge Count",
+            "debug[2]": "Reception Timeout Count",
             "debug[3]": "Preamble Skip",
         },
         RPM_LIMIT: {

@@ -593,50 +593,6 @@ dialog {
         inset-inline-start: -1.5rem;
         bottom: 0;
     }
-    .btn {
-        a,
-        button {
-            margin-top: 0;
-            margin-bottom: 0;
-            background-color: var(--primary-500);
-            border-radius: 3px;
-            border: 1px solid var(--primary-600);
-            color: #000;
-            float: inline-end;
-            font-family: inherit;
-            font-weight: bold;
-            font-size: 12px;
-            display: block;
-            cursor: pointer;
-            transition: all ease 0.2s;
-            padding: 0 0.5rem;
-            line-height: 28px;
-            user-select: none;
-            white-space: nowrap;
-            text-decoration: none;
-            &:hover {
-                background-color: var(--primary-400);
-                transition: all ease 0.2s;
-            }
-            &:active {
-                background-color: var(--primary-500);
-                transition: all ease 0s;
-                box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-            }
-            .helpicon {
-                margin-inline-start: 5px;
-            }
-        }
-        a.disabled,
-        button.disabled {
-            cursor: default;
-            color: var(--surface-900);
-            background-color: var(--surface-500);
-            border: 1px solid var(--surface-500);
-            pointer-events: none;
-            opacity: 1;
-        }
-    }
 }
 .toolbar_scroll_bottom {
     .content_wrapper {
@@ -647,16 +603,12 @@ dialog {
 
 .toolbar_fixed_bottom {
     &.content_toolbar {
-        display: flex;
         flex-wrap: wrap;
         position: fixed;
         /* Sit directly on top of #status-bar, which grows by the bottom safe-area inset */
         bottom: calc(2.5rem + var(--bf-inset-bottom));
         inset-inline-end: 0;
     }
-}
-.content_toolbar.xs-compressed {
-    max-width: 75%;
 }
 .toolbar_expand_btn {
     display: none;
@@ -1286,13 +1238,6 @@ each(range(12), {
         padding: 0 3px 0 3px;
         font-size: 10px;
     }
-    .toolbar_fixed_bottom {
-        .content_wrapper {
-            height: fit-content;
-            overflow-y: auto;
-            position: initial;
-        }
-    }
 }
 @container main-wrapper (max-width: 1055px) {
     #tabs {
@@ -1360,21 +1305,6 @@ each(range(12), {
     .gps_true {
         padding: 0 3px 0 3px;
         font-size: 10px;
-    }
-    .content_toolbar {
-        .btn {
-            a,
-            button {
-                margin-inline-end: 15px;
-            }
-        }
-    }
-    .toolbar_fixed_bottom {
-        .content_wrapper {
-            height: calc(100% - 81px);
-            overflow-y: auto;
-            position: initial;
-        }
     }
 }
 .compact-header-layout() {

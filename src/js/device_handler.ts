@@ -445,6 +445,13 @@ class DeviceHandler {
             return this.devicePicker.selectedDevice;
         }
 
+        // The Android app has no USB permission until Connect asks for it, and Connect only asks
+        // when nothing is selected. A virtual or manual default would take that first press, so
+        // leave both to an explicit pick in the device picker.
+        if (isAndroid()) {
+            return recognised;
+        }
+
         // Expert-only fallbacks: only surface virtual/manual when expert mode is on.
         if (isExpertModeEnabled() && this.showVirtualMode) {
             return "virtual";

@@ -35,6 +35,7 @@ import NotificationManager from "./utils/notifications";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager";
 import { enableDevelopmentOptions } from "./utils/developmentOptions";
+import { isPreviewOrDevBuild } from "./utils/buildEnvironment";
 import { loadDeviceFilters } from "./protocols/devices";
 import {
     checkBluetoothSupport,
@@ -104,6 +105,10 @@ function cleanupLocalStorage() {
 function openFirstRunOptions() {
     const firstRunCfg = getConfig("firstRun") ?? {};
     if (firstRunCfg.firstRun !== undefined) {
+        return;
+    }
+
+    if (isPreviewOrDevBuild()) {
         return;
     }
 
@@ -231,38 +236,19 @@ async function startProcess() {
     // log library versions in console to make version tracking easier
     console.log(`Libraries: three.js - ${THREE.REVISION}`);
 
-    const windowHref = window.location.href;
-    let subdomain = "";
-    let isDevelopmentUrl = false;
-
-    try {
-        const url = new URL(windowHref);
-        const hostname = url.hostname;
-
-        // Derive the left-most label as subdomain
-        if (hostname) {
-            const hostnameParts = hostname.split(".");
-            subdomain = hostnameParts[0] || "";
-        }
-
-        // Set isDevelopmentUrl to true only if hostname includes "localhost" OR subdomain matches /^pr\d+/i
-        isDevelopmentUrl =
-            hostname.includes("localhost") ||
-            hostname.includes("127.0.0.1") ||
-            /^pr\d+/i.test(subdomain) ||
-            subdomain.includes("master");
-    } catch {
-        // Handle file:// or malformed URLs - fallback to checking href string
-        isDevelopmentUrl = windowHref.includes("localhost") || windowHref.includes("127.0.0.1");
-    }
-
-    if (isDevelopmentUrl) {
-        console.log("Detected development URL");
+    if (isPreviewOrDevBuild()) {
+        console.log("Detected development or preview build");
 
         const automaticDevOptions = getConfig("automaticDevOptions", true).automaticDevOptions;
         if (automaticDevOptions) {
             console.log("Automatically enabling development settings");
             enableDevelopmentOptions();
+
+            // Virtual and manual mode are only offered in expert mode. Default it on, but keep
+            // a tester's explicit choice; applyExpertMode() below picks it up.
+            if (getConfig("expertMode").expertMode === undefined) {
+                setConfig({ expertMode: true });
+            }
         }
     }
 
@@ -278,21 +264,20 @@ async function startProcess() {
         switchTab("landing", { mode: "disconnected" });
     }
 
-    // The phone/tablet shell only. A narrow desktop or browser window is still the desktop
-    // experience, so width alone must not opt anything in here.
-    document.body.classList.toggle("mobile-app-shell", isAndroid());
+    const nativeAndroid = isAndroid();
+    document.body.classList.toggle("mobile-app-shell", nativeAndroid);
 
-    // The on-screen keyboard leaves no room for the tab strip in the floating bar. Track focus
-    // rather than viewport height: the layout viewport shrinks with the keyboard, so measuring
-    // it cannot tell the two apart.
-    document.addEventListener("focusin", (event) => {
-        if (event.target instanceof Element && event.target.matches("input, textarea, [contenteditable]")) {
-            document.body.classList.add("keyboard-visible");
-        }
-    });
-    document.addEventListener("focusout", () => {
-        document.body.classList.remove("keyboard-visible");
-    });
+    if (nativeAndroid) {
+        // The layout viewport shrinks with the on-screen keyboard, so track focus instead.
+        document.addEventListener("focusin", (event) => {
+            if (event.target instanceof Element && event.target.matches("input, textarea, [contenteditable]")) {
+                document.body.classList.add("keyboard-visible");
+            }
+        });
+        document.addEventListener("focusout", () => {
+            document.body.classList.remove("keyboard-visible");
+        });
+    }
 
     const compactHeaderLayoutMediaQuery = window.matchMedia(
         "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",

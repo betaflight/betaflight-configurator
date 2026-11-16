@@ -31,6 +31,18 @@
     "search": {
         "message": "검색"
     },
+    "settingsSearchTitle": {
+        "message": "설정 검색",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "설정 검색중...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "설정 항목 없음",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "다시 보지 않기"
     },
@@ -84,6 +96,23 @@
     },
     "portsSelectManual": {
         "message": "수동 선택"
+    },
+    "networkOnlyBrowserTitle": {
+        "message": "네트워크 연결만",
+        "description": "Title of the notice shown once on a browser without Web Serial, Web Bluetooth or WebUSB."
+    },
+    "networkOnlyBrowserText": {
+        "message": "이 브라우저는 Wi-Fi 브리지, ELRS 모듈, 또는 SITL과 같은 네트워크를 통해서만 비행 컨트롤러에 접속할 수 있습니다. USB나 블루투스를 사용할 때는 크롬이나 엣지를 이용하거나, 데스크톱에 베타플라이트 앱을 설치하세요. 여기에 없음:",
+        "description": "Body of the network-only browser notice, followed by the list of unavailable APIs."
+    },
+    "networkOnlyBrowserNoSerial": {
+        "message": "웹 시리얼을 사용할 수 없습니다."
+    },
+    "networkOnlyBrowserNoBluetooth": {
+        "message": "웹 블루투스를 사용할 수 없습니다."
+    },
+    "networkOnlyBrowserNoUsb": {
+        "message": "웹 USB가 지원되지 않아 DFU를 통한 펌웨어 플래싱이 비활성화되어 있습니다."
     },
     "portsSelectNone": {
         "message": "접속 불가"
@@ -259,6 +288,10 @@
     "userLanguageSelect": {
         "message": "기본 언어 선택"
     },
+    "language_DEFAULT": {
+        "message": "시스템 기본 ({{systemLanguage}})",
+        "description": "In the selection of languages, this is the default language of the system or English as fallback."
+    },
     "language_pl": {
         "message": "Polski",
         "description": "Don't translate!!!"
@@ -332,17 +365,17 @@
     "tabOptions": {
         "message": "옵션"
     },
-    "sidebarOpenOptions": {
-        "message": "옵션",
-        "description": "Tooltip for the options icon button in the sidebar footer."
+    "sidebarSettingsMenu": {
+        "message": "설정",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "다크 / 라이트 모드 전환",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "전문가 모드 전환",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "설정"
@@ -352,6 +385,9 @@
     },
     "sensorConfigHardware": {
         "message": "센서 하드웨어"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "자이로 활성화"
     },
     "sensorConfigGyroLabel": {
         "message": "자이로 $1"
@@ -473,6 +509,12 @@
     },
     "autotuneApplied": {
         "message": "게인이 적용되고 저장됨."
+    },
+    "autotuneApplyConfirmText": {
+        "message": "적용시 튜닝 슬라이더가 비행 컨트롤러에 기록되고 EEPROM에 저장됩니다. 권장 게인은 첫 번째 아밍시 기체를 불안정하게 만들 수 있으니, 첫 테스트 시에는 디스아밍을 준비 하세요."
+    },
+    "autotuneApplyConfirmTitle": {
+        "message": "권장 게인을 적용하시겠습니까?"
     },
     "autotuneApplyFailed": {
         "message": "게인 적용 실패"
@@ -603,8 +645,9 @@
     "tabAuxiliary": {
         "message": "모드"
     },
-    "logActionShow": {
-        "message": "로그 보기"
+    "logActionOpenWindow": {
+        "message": "새 창에서 열기",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
     },
     "tabLog": {
         "message": "로그"
@@ -664,6 +707,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU 발견되지 않음"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "DFU 장치를 열 수 없습니다. 비행 컨트롤러를 다시 연결한 후 재시도하세요"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "DFU 장치에 대한 접근이 거부되었습니다. udev 규칙이 설치되어 있는지 확인하세요. 자세한 내용은 문서를 참고하세요"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "DFU 장치에 대한 접근이 거부되었습니다. WinUSB 드라이버(ImpulseRC Driver Fixer 또는 Zadig)를 설치한 후, 비행 컨트롤러를 사용하는 다른 프로그램을 모두 종료하세요"
     },
     "stm32DfuPermissionRequired": {
         "message": "기기가 DFU 모드로 재부팅되었습니다.<br><br>브라우저에서 DFU 장치에 액세스하려면 USB 권한이 필요합니다. 아래 버튼을 클릭하여 장치 피커에서 장치를 선택합니다."
@@ -767,6 +819,12 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\">사용된 앱 버전($1)은 펌웨어 $2를 지원하지 않습니다</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>선택된 모터 출력 프로토콜이 없습니다</strong>.<br>'$t(tabMotorTesting.message)' 탭의 '$t(configurationEscFeatures.message)'에서 ESC에 적합한 모터 출력 프로토콜을 선택하십시오.<br> $t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>가속도계가 활성화되었지만 교정되지 않았습니다</strong>.<br> 가속도계를 사용하려는 경우 '$t(tabSetup.message)' 탭에서 '$t(initialSetupButtonCalibrateAccel.message)'에 대한 지침을 따르십시오. 가속도계(자동 레벨 모드, GPS 레스큐 등)가 필요한 기능이 활성화된 경우, 가속도계가 교정될 때까지 기체의 아밍이 비활성화됩니다.<br>가속도계를 사용할 계획이 없는 경우 '$t(tabConfiguration.message)' 탭의 '$t(configurationSystem.message)'에서 가속도계를 사용하지 않도록 설정하는 것이 좋습니다."
+    },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -867,6 +925,14 @@
         "message": "연결:",
         "description": "Connection time text shown in the status bar"
     },
+    "statusbar_expand": {
+        "message": "상태 상세보기",
+        "description": "Accessible label for the status bar expand button on the compact phone layout"
+    },
+    "statusbar_collapse": {
+        "message": "상태 상세보기 숨기기",
+        "description": "Accessible label for the status bar collapse button on the compact phone layout"
+    },
     "dfu_erased_kilobytes": {
         "message": "플래시 $1 kB가 <span class=\"message-positive\">성공적으로</span> 삭제됨"
     },
@@ -884,6 +950,9 @@
     },
     "defaultHardwareHead": {
         "message": "하드웨어"
+    },
+    "defaultHardwareText": {
+        "message": "베타플라이트는 펌웨어 플래셔 탭에 나와 있는 여러 제조사의 비행 컨트롤러에서 실행됩니다. 하드웨어 지원은 제조사에서 제공하며, 자세한 내용은 <a href=\"https://betaflight.com/support\" target=\"_blank\" rel=\"noopener noreferrer\">하드웨어 지원</a>을 참고하세요.<br /><br />유용한 하드웨어 유틸리티 / 드라이버:<ul><li>CP210x USB 시리얼 칩을 사용하는 기존 하드웨어의 경우, 최신 <b>CP210x 드라이버</b>를 <a href=\"https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 다운로드할 수 있습니다</li><li>Windows USB 드라이버 설치를 위한 최신 <b>Zadig</b>는 <a href=\"https://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 다운로드할 수 있습니다</li><li><b>ImpulseRC 드라이버 픽서</b>는 <a href=\"https://github.com/ImpulseRC/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 다운로드할 수 있습니다</li></ul>"
     },
     "defaultSoftwareHead": {
         "message": "소프트웨어"
@@ -949,6 +1018,9 @@
     "defaultSupportSubline2": {
         "message": "개발자"
     },
+    "defaultSupport": {
+        "message": "베타플라이트 팀이 베타플라이트 버그를 수정합니다: GitHub에서 버그를 보고하세요. 하드웨어 관련 도움이 필요하면 제조사에 문의하세요. 빌드와 설치에 도움이 필요하면 디스코드 커뮤니티에 문의하거나 위키를 참고하세요.<br /><br />"
+    },
     "defaultSupport2": {
         "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 위키</a>"
     },
@@ -957,6 +1029,9 @@
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">디스코드 베타플라이트 커뮤니티</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "가속도계 교정"
@@ -1264,6 +1339,12 @@
     "initialSetupAccelCalibEnded": {
         "message": "가속도계 교정 <span class=\"message-positive\">완료됨</span>"
     },
+    "initialSetupMagCalibStarted": {
+        "message": "자력계 교정이 시작됨"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "자력계 교정 <span class=\"message-positive\">완료됨</span>"
+    },
     "initialSetupSettingsRestored": {
         "message": "설정이 <strong>기본값</strong>으로 복구됨"
     },
@@ -1277,7 +1358,7 @@
         "message": "비행중 레벨 교정"
     },
     "featureRX_SERIAL": {
-        "message": "Serial (UART를 통해)"
+        "message": "시리얼 (UART를 통해)"
     },
     "featureMOTOR_STOP": {
         "message": "아밍시 모터 회전 안함"
@@ -1368,6 +1449,12 @@
     "featureRX_SPI": {
         "message": "SPI Rx (예. 빌드인 Rx)"
     },
+    "escSensorSerialPort": {
+        "message": "ESC 텔레메트리 시리얼 포트"
+    },
+    "escSensorSerialPortHelp": {
+        "message": "ESC 텔레메트리를 읽기 위한 UART. API 1.49부터 ESC 센서 자체에 설정되며, 포트 탭에만 표시됩니다."
+    },
     "featureESC_SENSOR": {
         "message": "<b>별도의 선에</b> KISS/BLHeli_32 ESC 텔레메트리 사용"
     },
@@ -1394,6 +1481,27 @@
     },
     "configurationTelemetry": {
         "message": "텔레메트리"
+    },
+    "telemetryInstanceTitle": {
+        "message": "텔레메트리 $1"
+    },
+    "telemetryInstanceProtocol": {
+        "message": "프로토콜"
+    },
+    "telemetryInstancePort": {
+        "message": "시리얼 포트"
+    },
+    "telemetryInstanceBaud": {
+        "message": "전송 속도"
+    },
+    "rcdeviceSectionTitle": {
+        "message": "카메라 제어"
+    },
+    "rcdeviceSerialPort": {
+        "message": "시리얼 포트"
+    },
+    "rcdeviceSerialPortHelp": {
+        "message": "RunCam 프로토콜 카메라를 연결하기 위한 UART. API 1.49부터 기기 자체에서 설정하며, 포트 탭에만 표시됩니다."
     },
     "configurationTelemetryHelp": {
         "message": "수신기로부터 텔레메트리 출력"
@@ -1425,6 +1533,18 @@
     "configurationRangefinder": {
         "message": "레인지파인더",
         "description": "Don't translate!!!"
+    },
+    "rangefinderSerialPort": {
+        "message": "레인지파인더 시리얼 포트"
+    },
+    "rangefinderSerialPortHelp": {
+        "message": "레인지파인더를 연결하기 위한 UART. API 1.49부터 레인지파인터 자체에 설정되며, 포트 탭에만 표시됩니다."
+    },
+    "opticalflowSerialPort": {
+        "message": "옵티컬 플로우 시리얼 포트"
+    },
+    "opticalflowSerialPortHelp": {
+        "message": "옵티컬 플로우 센서를 연결하기 위한 UART. 유량과 범위를 모두 보고하는 모듈은 각각 별도로 설정해야 합니다."
     },
     "configurationOpticalflow": {
         "message": "옵티컬 플로우",
@@ -1524,7 +1644,7 @@
         "message": "이 마법사를 실행하려면 가속도계가 필요합니다."
     },
     "boardAlignmentWizard-AccNeedsCalibration": {
-        "message": "이 마법사를 실행하기 전에 가속도계를 보정해 주세요."
+        "message": "이 마법사를 실행하기 전에 가속도계를 교정해 주세요."
     },
     "boardAlignmentWizard-Error-missing_samples": {
         "message": "일부 샘플이 수집되지 않았습니다. 다시 시도해 주세요."
@@ -1640,6 +1760,9 @@
     },
     "configurationThrottleMaximum": {
         "message": "최대 스로틀 (아밍시 가장 높은 ESC 값)"
+    },
+    "configurationMotorKv": {
+        "message": "모터 KV"
     },
     "configurationThrottleMinimumCommand": {
         "message": "최소 명령값 (모터 해제시 ESC 값)"
@@ -1783,6 +1906,34 @@
     "configurationGPSubxSbas": {
         "message": "지상 지원 형식"
     },
+    "gpsSerialPort": {
+        "message": "시리얼 포트"
+    },
+    "gpsSerialPortHelp": {
+        "message": "GPS 모듈을 연결하기 위한 UART. 변경하려면 재부팅이 필요합니다."
+    },
+    "gpsSerialBaud": {
+        "message": "전송 속도"
+    },
+    "gpsSerialBaudHelp": {
+        "message": "GPS 모듈이 동작할 것으로 예상되는 속도입니다. 베타플라이트는 접촉이 안 될 때 다른 속도도 시도해보므로, 이 값은 고정된 설정이 아니라 시작점으로 봐야 합니다."
+    },
+    "gpsSerialPortSaveFailed": {
+        "message": "GPS 시리얼 포트를 설정할 수 없어서 아무것도 저장되지 않았습니다."
+    },
+    "gpsProtocolUnknown": {
+        "message": "알 수 없음 ({{1}})",
+        "description": "Shown in the GPS protocol list when the FC reports a provider this build cannot name; {{1}} is the raw provider index."
+    },
+    "dronecanCanDevice": {
+        "message": "CAN 버스"
+    },
+    "dronecanCanDeviceHelp": {
+        "message": "DroneCAN 모듈이 연결된 CAN 버스입니다. 이 기능은 DroneCAN 전체에 속해 있어서, 변경하면 GPS뿐 아니라 모든 DroneCAN 장치가 영향을 받습니다. 변경하려면 재부팅이 필요합니다."
+    },
+    "dronecanSaveFailed": {
+        "message": "DroneCAN 설정을 변경할 수 없어 아무것도 저장되지 않았습니다."
+    },
     "configurationGPSAutoBaud": {
         "message": "자동 전송속도"
     },
@@ -1819,7 +1970,7 @@
         "message": "시리얼 포트"
     },
     "receiverSerialPortHelp": {
-        "message": "시리얼 수신기가 연결된 UART입니다. 전송 속도는 제공업체를 따르므로 여기서 설정할 필요가 없습니다. 포트를 변경하려면 재부팅이 필요합니다."
+        "message": "시리얼 수신기를 연결하기 위한 UART. 전송 속도는 제공업체를 따르므로 여기서 설정할 필요가 없습니다. 포트를 변경하려면 재부팅이 필요합니다."
     },
     "receiverSerialPortSaveFailed": {
         "message": "수신기 시리얼 포트를 설정할 수 없어서 아무것도 저장되지 않았습니다."
@@ -1835,6 +1986,9 @@
     },
     "configurationSaved": {
         "message": "설정이 저장되었습니다"
+    },
+    "configurationSaveFailed": {
+        "message": "환경설정 저장 실패"
     },
     "configurationEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -1881,6 +2035,123 @@
     },
     "portsMSPHelp": {
         "message": "<strong>참고:</strong> 당신이 하는 일을 모르는 경우 첫 번째 시리얼 포트의 MSP를 비활성화 하지  <span class=\"message-negative\">마십시오</span>. 만약 그렇게 할 경우 펌웨어 플래싱을 다시 하고 환경설정을 지워야 할 수도 있습니다."
+    },
+    "portsTilesHelp": {
+        "message": "이 펌웨어는 각 기능의 탭에 직렬 포트를 할당합니다.  아래 각 타일은 보드에 무엇이 부착되어 있는지, 그리고 각 포트가 현재 어떤 기능을 제공하는지 보여줍니다."
+    },
+    "portsPeripheralsUnsupported": {
+        "message": "이 펌웨어는 아직 주변 장치 목록을 보고하지 않습니다."
+    },
+    "portsSectionSerial": {
+        "message": "시리얼 포트"
+    },
+    "portsSectionDronecan": {
+        "message": "DroneCAN"
+    },
+    "portsSectionSensors": {
+        "message": "센서"
+    },
+    "portsTileUnassigned": {
+        "message": "할당되지 않음"
+    },
+    "portsTileConfigure": {
+        "message": "설정"
+    },
+    "portsTileCanNode": {
+        "message": "노드"
+    },
+    "portsClaimActiveHelp": {
+        "message": "이 기능에 대해 포트가 활성화되어 있습니다"
+    },
+    "portsClaimInactiveHelp": {
+        "message": "할당되었으나 활성화되지 않음 — 포트 충돌이 발생했거나 재부팅이 예정되어 있습니다"
+    },
+    "portsInactiveSoftSerialFeature": {
+        "message": "비활성 — 환경설정 탭에서 소프트시리얼 기능을 활성화하세요"
+    },
+    "portsInactiveNoPins": {
+        "message": "비활성 — 이 포트에 핀이 할당되어 있지 않습니다"
+    },
+    "portsInactiveReason": {
+        "message": "비활성 — {{1}}"
+    },
+    "portsPortInactive": {
+        "message": "비활성"
+    },
+    "portsPortFree": {
+        "message": "자유"
+    },
+    "portsClaimMsp": {
+        "message": "MSP"
+    },
+    "portsClaimGps": {
+        "message": "GPS"
+    },
+    "portsClaimRx": {
+        "message": "시리얼 수신기"
+    },
+    "portsClaimBlackbox": {
+        "message": "블랙박스 로그기록"
+    },
+    "portsClaimEscSensor": {
+        "message": "ESC 텔레메트리"
+    },
+    "portsClaimRcdevice": {
+        "message": "카메라 (런캠 기기)"
+    },
+    "portsClaimGimbal": {
+        "message": "짐벌"
+    },
+    "portsClaimVtx": {
+        "message": "영상 송신기"
+    },
+    "portsClaimRangefinder": {
+        "message": "레인지파인더"
+    },
+    "portsClaimOpticalflow": {
+        "message": "옵티컬 플로우"
+    },
+    "portsClaimOsd": {
+        "message": "OSD"
+    },
+    "portsClaimOsdCustomText": {
+        "message": "OSD 커스텀 텍스트"
+    },
+    "portsClaimTelemetry": {
+        "message": "텔레메트리"
+    },
+    "portsConflictTitle": {
+        "message": "해당 포트는 이미 사용 중입니다"
+    },
+    "portsConflictWarning": {
+        "message": "다른 기능이 이미 사용 중인 시리얼 포트를 할당하고 있습니다. 저장하면 모든 포트가 기본값(미설정 상태)으로 초기화됩니다:"
+    },
+    "portsConflictItem": {
+        "message": "<strong>{{port}}</strong>가 현재 {{features}}으로 사용되고 있습니다"
+    },
+    "portsConflictQuestion": {
+        "message": "그래도 저장 하시겠습니까?"
+    },
+    "portsConflictSaveAnyway": {
+        "message": "무시하고 저장"
+    },
+    "portsConflictCancel": {
+        "message": "취소"
+    },
+    "portsSensorGyro": {
+        "message": "자이로"
+    },
+    "portsSensorAcc": {
+        "message": "가속도계"
+    },
+    "portsSensorBaro": {
+        "message": "기압계"
+    },
+    "portsSensorMag": {
+        "message": "자력계"
+    },
+    "portsSensorNotDetected": {
+        "message": "환경설정 되었으나 감지되지 않음"
     },
     "portsTelemetryDisabled": {
         "message": "비활성화"
@@ -1944,6 +2215,12 @@
     },
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + 디스플레이포트)"
+    },
+    "portsFunction_GIMBAL": {
+        "message": "짐벌"
+    },
+    "portsFunction_OSD_CUSTOM_TEXT": {
+        "message": "OSD 커스텀 텍스트"
     },
     "pidTuningProfileOption": {
         "message": "프로필 $1"
@@ -2443,6 +2720,13 @@
     "auxiliaryToggleUnused": {
         "message": "사용하지 않는 모드 숨기기"
     },
+    "auxiliarySearch": {
+        "message": "검색 모드",
+        "description": "Accessible label and placeholder for the Modes tab search field. Matches any part of a mode name from the second character."
+    },
+    "auxiliaryNoModesFound": {
+        "message": "현재 필터와 일치하는 모드가 없습니다."
+    },
     "auxiliaryMin": {
         "message": "최소값"
     },
@@ -2681,6 +2965,10 @@
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "VTX를 피트모드로 전환합니다 (지원시 저전력 모드로 진입)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "비행 중 웨이포인트 저장: 짧게 누르면 현재 위치가 비행 계획에 웨이포인트로 추가되고, 1.5초간 누르면 마지막 웨이포인트가 삭제됩니다",
+        "description": "Help text to WP CAPTURE mode"
     },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "트랜스폰더 랩 타이머 초기화",
@@ -3018,6 +3306,32 @@
     },
     "flightPlanLongitude": {
         "message": "경도 <span class=\"units\">°</span>"
+    },
+    "flightPlanAltitudeWithUnit": {
+        "message": "고도 <span class=\"units\">{{unit}} AMSL</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected altitude unit: ft or m"
+    },
+    "flightPlanAltitudeAria": {
+        "message": "고도 {{unit}} AMSL",
+        "description": "Plain-text aria-label variant of flightPlanAltitudeWithUnit for screen readers. {{unit}} is ft or m"
+    },
+    "flightPlanSpeedWithUnit": {
+        "message": "속도 <span class=\"units\">{{unit}}</span>",
+        "description": "Waypoint editor label. {{unit}} is the selected speed unit: kts or km/h"
+    },
+    "flightPlanSpeedAria": {
+        "message": "속도 {{unit}}",
+        "description": "Plain-text aria-label variant of flightPlanSpeedWithUnit for screen readers. {{unit}} is kts or km/h"
+    },
+    "flightPlanUnits": {
+        "message": "단위",
+        "description": "Label of the Flight Plan tab selector that switches between imperial and metric display units"
+    },
+    "flightPlanUnitsImperial": {
+        "message": "영국식 단위 (ft, kts, nm)"
+    },
+    "flightPlanUnitsMetric": {
+        "message": "미터법 (m, km/h, km)"
     },
     "flightPlanType": {
         "message": "웨이포인트 형식"
@@ -3419,6 +3733,9 @@
     "sensorsSonarSelect": {
         "message": "초음파"
     },
+    "sensorsPitotSelect": {
+        "message": "피토"
+    },
     "sensorsDebugSelect": {
         "message": "디버그"
     },
@@ -3439,6 +3756,9 @@
     },
     "sensorsSonarTitle": {
         "message": "초음파 - cm"
+    },
+    "sensorsPitotTitle": {
+        "message": "에어스피드 - cm/s"
     },
     "cliInfo": {
         "message": "<strong>참고:</strong> CLI 탭을 빠져 나가거나 연결끊기를 누르면 <strong>자동으로</strong>보드에 \"<strong>exit</strong>\"를 보냅니다. 최신 펌웨어를 사용하면 컨트롤러를 <strong>재시작</strong>하고, 저장되지 않은 변경은 <strong>상실</strong>합니다. <p><strong><span class=\"message-negative\">경고:</span></strong> CLI에서 일부 명령은 임의로 신호를 모터 출력 핀으로 보내는 결과를 초래할 수 있습니다. 이것은 만약 배터리가 연결된 상태에서 모터의 회전을 유발할 수 있습니다. 그러므로 <strong>CLI에서 명령을 입력하기 전에 배터리를 연결하지 말 것을</strong> 강력히 권장합니다."
@@ -3657,6 +3977,9 @@
     "firmwareFlasherReleaseDate": {
         "message": "일자:"
     },
+    "firmwareFlasherReleaseCommit": {
+        "message": "커밋:"
+    },
     "firmwareFlasherReleaseTarget": {
         "message": "타겟:"
     },
@@ -3708,6 +4031,12 @@
     "firmwareFlasherNoReboot": {
         "message": "재부팅 절차 없음"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "빌드 형식"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "보드"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "사용 가능한 보드를 보고 빌드 형식을 선택하세요."
     },
@@ -3740,6 +4069,21 @@
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "보드가 기본 속도를 지원하지 않거나 블루투스를 통해 플래시할 경우 전송속도를 수동으로 선택하세요.<br /><span class=\"message-negative\">참고:</span> USB DFU를 통하여 플래시하는 경우는 사용하지 마십시오."
+    },
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "릴리즈 옵션 보기"
+    },
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "어느 릴리즈를 보여줄지 선택하세요"
+    },
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "릴리즈 보기"
+    },
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "모든 릴리즈 보기"
+    },
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "개발 릴리즈 보기"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "펌웨어 버전을 선택하십시오."
@@ -3801,6 +4145,9 @@
     },
     "firmwareFlasherFirmwareSize": {
         "message": "{{bytes}} 바이트"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "로드된 로컬 펌웨어: {{filename}} ({{bytes}} 바이트). 이 버전은 베타플라이트 클라우드 빌드에서 나온 것이 아니므로, 지원은 해당 빌드를 만든 쪽에서 제공합니다."
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "로드된 온라인 펌웨어: {{filename}} ({{bytes}} bytes)"
@@ -3897,6 +4244,9 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "당신은 이제 막 <strong>펌웨어의 개발 빌드</strong>을 플래시하려고 합니다. 이러한 빌드는 진행 중인 작업이며, 다음 중 하나의 경우가 될 수 있습니다:<strong><ul><li>펌웨어가 전혀작동하지 않습니다;</li><li>펌웨어는 비행할 수 없습니다;</li><li>폭주이륙(flyaways) 같은 펌웨어에 안전 문제가 있습니다;</li><li>펌웨어는 비행 컨트롤러를 응답하지 않거나 손상을 줄 수 있습니다.</li></ul></strong>만약 당신이 이 펌웨어를 계속 플래시한다면, <strong>당신은 위와 같은 일이 일어날 위험에 대해 모든 책임을 져야 할 것입니다.</strong> 또한 당신은 이 펌웨어를 띄우려고 시도하기 전에 <strong>프롭을 제거하고 벤치 테스트를</strong> 수행해야 한다는 것을 인지하여야 합니다."
+    },
+    "developmentFirmwareAcknowledgement": {
+        "message": "나는 위의 내용을 읽었으며 개발 펌웨어를 플래시하는 것에 대하여 <strong>모든 책임을 집니다</strong>"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "플래시"
@@ -5195,6 +5545,9 @@
     "powerBatteryCapacity": {
         "message": "용량 (mAh)"
     },
+    "powerBatteryCapacityHelp": {
+        "message": "활성된 배터리 프로필의 용량. 배터리 프로필이 제공될 때, 펌웨어는 이 값을 mAh 잔량 및 OSD 용량 경고에 사용합니다."
+    },
     "osdSetupTitle": {
         "message": "OSD"
     },
@@ -5280,6 +5633,10 @@
         "message": "강조 약",
         "description": "Font Impact Mini"
     },
+    "osdSetupFontTypeFBSmallOne": {
+        "message": "FB 작은 것",
+        "description": "First small font for FB OSD"
+    },
     "osdSetupVideoFormatTitle": {
         "message": "비디오 형식"
     },
@@ -5298,6 +5655,30 @@
     "osdSetupVideoFormatOptionHd": {
         "message": "HD",
         "description": "Option for the video format in the OSD"
+    },
+    "osdProtocol": {
+        "message": "OSD 프로토콜"
+    },
+    "osdProtocolHelp": {
+        "message": "OSD를 그릴 때 사용할 프로토콜입니다. MAX7456과 FrSky OSD는 아날로그 칩이나 모듈을 구동하며, MSP는 DJI, HDZero, Walksnail 고글에서 기대하는 대로 아래 UART를 통해 OSD를 전송합니다."
+    },
+    "osdSerialPort": {
+        "message": "OSD 시리얼 포트"
+    },
+    "osdSerialPortHelp": {
+        "message": "시리얼 OSD를 연결하기 위한 UART. API 1.49부터 OSD 자체에서 설정하며, 포트 탭에만 표시됩니다."
+    },
+    "osdCustomTextSerialPort": {
+        "message": "커스텀 텍스트 시리얼 포트"
+    },
+    "osdCustomTextSerialPortHelp": {
+        "message": "커스텀 OSD 텍스트를 수신하기 위한 UART."
+    },
+    "osdCustomTextSerialBaud": {
+        "message": "커스텀 텍스트 전송 속도"
+    },
+    "osdCustomTextSerialBaudHelp": {
+        "message": "커스텀 OSD 텍스트 포트 전송 속도"
     },
     "osdSetupUnitsTitle": {
         "message": "단위"
@@ -5377,6 +5758,17 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "업로드 실패"
+    },
+    "osdSetupUploadFontWarningNeedSmallFont": {
+        "message": "OSD는 작은 글꼴 모드이지만, 선택된 글꼴은 표준 크기 글꼴입니다. 제대로 표시되지 않습니다. 그래도 업로드하시겠어요?",
+        "description": "Confirmation shown before uploading a standard font to a framebuffer OSD running in small font mode"
+    },
+    "osdSetupUploadFontWarningNeedStandardFont": {
+        "message": "선택된 글꼴은 프레임버퍼 OSD용 소형 글꼴이지만, 이 OSD는 표준 크기 글꼴을 사용합니다. 제대로 표시되지 않습니다. 그래도 업로드하시겠어요?",
+        "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
+    },
+    "osdSetupSaveReboot": {
+        "message": "저장 및 재부팅"
     },
     "osdSetupSave": {
         "message": "저장"
@@ -5996,6 +6388,14 @@
     "osdDescElementLinkQuality": {
         "message": "성공적으로 수신된 손상되지 않은 데이터 패킷의 비율에 따른 링크 품질 표시기"
     },
+    "osdTextElementLinkQualityVariantRfMode": {
+        "message": "RF 모드:링크 품질",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
+    "osdTextElementLinkQualityVariantQualityOnly": {
+        "message": "링크 품질만",
+        "description": "One of the variants of the Link Quality element of the OSD"
+    },
     "osdTextElementFlightDist": {
         "message": "비행 거리",
         "description": "One of the elements of the OSD"
@@ -6528,6 +6928,9 @@
         "message": "배터리 용량 초과",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningOverCap": {
+        "message": "소비된 mAh가 활성된 배터리 프로필 용량을 초과하거나, 프로필 용량 설정되지 않은 경우는 기존 OSD 용량 알람이 발생하면 경고합니다"
+    },
     "osdWarningTextRSNR": {
         "message": "RSNR",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6592,9 +6995,16 @@
     "osdButtonSaved": {
         "message": "저장됨"
     },
+    "osdPitotAirSpeed": {
+        "message": "에어스피드"
+    },
     "vtxHelp": {
         "message": "여기에서 영상 송신기(VTX)에 대한 값을 구성할 수 있습니다. 비행 컨트롤러와 VTX가 지원하는 경우 VTX 테이블을 포함한 전송 값을 보고 변경할 수 있습니다.<br>VTX를 설정하려면 다음의 단계를 사용하십시오:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">이 페이지</a>로 가십시오;<br>2. 당신의 국가와 VTX 모델에 적합한 VTX 구성 파일을 찾아 다운로드하십시오;<br>3. 아래에서 '$t(vtxButtonLoadFile.message)'를 클릭하고 VTX 구성 파일을 선택하고 로드하십시오;<br>4. 설정이 올바른지 확인하십시오;<br>5. VTX 설정을 비행 컨트롤러에 저장하려면 '$t(vtxButtonSave.message)'를 클릭하십시오.<br>6. 옵션으로 베타플라이트 루아 스크립트로 사용 가능한 루아 환경설정 파일로 저장하려면 '$t(vtxButtonSaveLua.message)'을 클릭하세요. (더 자세한 정보는 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">여기</a>를 보세요.)",
         "description": "Introduction message in the VTX tab"
+    },
+    "vtxMessageNotSupported": {
+        "message": "<span class=\"message-negative\">주의:</span> 아직 VTX에서 응답이 없습니다. 아래에서 VTX가 사용할 프로토콜과 UART 연결 방식을 선택한 후 저장하세요. 장치가 응답하면 나머지 설정이 나타납니다.",
+        "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">주의:</span> $t(vtxSelectedMode.message) 필드를 사용하려면 먼저 아래쪽에 VTX 테이블을 구성하고 저장하십시오.",
@@ -6735,6 +7145,24 @@
     "vtxPitModeFrequencyHelp": {
         "message": "Pit 모드가 활성화된 경우 변경되는 주파수.",
         "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxDeviceSetup": {
+        "message": "VTX 기기"
+    },
+    "vtxProtocol": {
+        "message": "프로토콜"
+    },
+    "vtxProtocolHelp": {
+        "message": "VTX가 사용하는 제어 프로토콜입니다. 스마트오디오와 트램프는 아래 UART에서 동작하며, DJI, HDZero, Walksnail과 마찬가지로 MSP간에 공유합니다."
+    },
+    "vtxSerialPort": {
+        "message": "시리얼 포트"
+    },
+    "vtxSerialPortHelp": {
+        "message": "VTX 제어 프로토콜이 실행되는 UART입니다. API 1.49부터 VTX 자체에 설정되며, 포트 탭에만 표시됩니다."
+    },
+    "vtxSerialPortMspHelp": {
+        "message": "MSP VTX는 고글이 그려진 동일한 MSP 링크에 대해 응답하므로, OSD 탭의 OSD 시리얼 포트를 따르며 여기서 설정할 수 없습니다."
     },
     "vtxLowPowerDisarm": {
         "message": "디스아밍시 낮은 출력",
@@ -6912,6 +7340,9 @@
     "configurationBaroHardware": {
         "message": "기압계"
     },
+    "configurationPitot": {
+        "message": "피토"
+    },
     "configurationMagHardware": {
         "message": "자력계"
     },
@@ -6994,10 +7425,19 @@
         "message": "펌웨어 교정"
     },
     "magCalibrationUnguidedInstruction": {
-        "message": "기체를 모든 방향으로 회전할 수 있는 시간은 30초입니다. 시간이 지나면 펌웨어가 보정 값을 자동으로 저장합니다."
+        "message": "기체를 모든 방향으로 회전할 수 있는 시간은 30초입니다. 시간이 지나면 펌웨어가 교정 값을 자동으로 저장합니다."
     },
     "magCalibrationUnguidedDone": {
         "message": "펌웨어 교정 완료!"
+    },
+    "magCalibrationNotSent": {
+        "message": "교정을 시작할 수 없습니다: 비행 컨트롤러가 명령을 받지 못했습니다."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "시작하는 중..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "교정중... {{seconds}}초"
     },
     "magCalibrationCheck": {
         "message": "확인"
@@ -7019,6 +7459,15 @@
     },
     "magCalibrationSaveError": {
         "message": "교정 값 저장 실패"
+    },
+    "magCalibrationFull": {
+        "message": "교정 및 정렬 감지"
+    },
+    "magCalibrationFullDesc": {
+        "message": "센서를 모든 방향으로 회전시켜 교정하고, 장착 방향을 자동으로 감지합니다."
+    },
+    "magCalibrationFullTitle": {
+        "message": "교정 & 정렬 감지"
     },
     "magCalibrationFullInstruction": {
         "message": "아래 단계를 따라 각 회전마다 기체를 고정된 상태로 유지하세요. 새로운 각도에 도달하면 구역 수가 증가하여 20개를 모두 커버하는 것을 목표로 합니다."
@@ -7053,6 +7502,12 @@
     "magCalibrationFullZones": {
         "message": "{{covered}} / {{total}} 구역 커버됨"
     },
+    "magCalibrationFullCompute": {
+        "message": "교정 완료"
+    },
+    "magCalibrationFullCoverageHint": {
+        "message": "커버 범위가 넓을수록 정확도가 높아지니, 최상의 교정과 정렬 감지를 위해 20/20을 목표로 하세요."
+    },
     "magCalibrationFullCoverage": {
         "message": "범위:"
     },
@@ -7079,6 +7534,27 @@
     },
     "magCalibrationFullInsufficientSamples": {
         "message": "샘플이 충분하지 않음 - 더 길게 회전하세요"
+    },
+    "magCalibrationFullRefused": {
+        "message": "교정 거절됨: {{reason}}"
+    },
+    "magCalibrationFullNoGeo": {
+        "message": "GPS, 브라우저, IP 위치 정보가 없습니다 — 좌표를 직접 입력하여 계속 진행하세요"
+    },
+    "magCalibrationManualLocationTitle": {
+        "message": "교정을 위한 위치 필요"
+    },
+    "magCalibrationManualLocationPrompt": {
+        "message": "구글 지도에서 위도와 경도를 직접 선택하여 입력하세요. 드론에 GPS 잠금 기능이 없고, 기기에서 위치 정보를 제공하지 못했습니다. 자기계 교정을 위해서는 위치가 필요합니다."
+    },
+    "magCalibrationManualLocationPlaceholder": {
+        "message": "예. 63.728263, -68.446117"
+    },
+    "magCalibrationManualLocationInvalid": {
+        "message": "잘못된 좌표 형식입니다. 위도와 경도로 입력해 주세요 (예. 63.728263, -68.446117)"
+    },
+    "magCalibrationManualLocationFailed": {
+        "message": "해당 좌표에 대한 자기 기준점을 계산할 수 없습니다. 확인해 보시고 다시 시도해 주세요."
     },
     "magCalibrationFullCliCopied": {
         "message": "CLI 명령이 클립보드에 복사되었습니다"
@@ -7163,6 +7639,18 @@
     },
     "onboardLoggingBlackbox": {
         "message": "블랙박스 로그기록 장치"
+    },
+    "onboardLoggingSerialPort": {
+        "message": "시리얼 포트"
+    },
+    "onboardLoggingSerialPortHelp": {
+        "message": "로깅 장치가 시리얼일 때 사용하는 UART. API 1.49부터 블랙박스 자체에 설정되며, 포트 탭에만 표시됩니다."
+    },
+    "onboardLoggingSerialBaud": {
+        "message": "시리얼 전송 속도"
+    },
+    "onboardLoggingSerialBaudHelp": {
+        "message": "시리얼 로깅 포트 전송 속도"
     },
     "onboardLoggingRateOfLogging": {
         "message": "블랙박스 로그기록 속도"
@@ -7647,8 +8135,20 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "OSD 프로토콜 없이 계속 진행"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ 베타플라이트 지원"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ 제조사 지원"
+    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "레거시"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ 제조사 지원 타겟. 이 보드에 대한 지원이 필요하면 제조사에 문의하세요."
+    },
+    "firmwareFlasherOptionLabelLegacyTarget": {
+        "message": "⚠️ 레거시 타겟, 더 이상 유지되지 않습니다. 자율적으로 사용하세요."
     },
     "coreBuild": {
         "message": "코어 빌드"
@@ -7831,6 +8331,12 @@
     },
     "userProfileUpdateFailed": {
         "message": "프로필을 업데이트하지 못했습니다"
+    },
+    "userAccountDeleteSuccess": {
+        "message": "귀하의 베타플라이트 계정이 삭제되었습니다"
+    },
+    "userAccountDeleteFailed": {
+        "message": "계정 삭제 실패"
     },
     "userBackupsLoadFailed": {
         "message": "백업을 불러오지 못했습니다"
@@ -8063,6 +8569,18 @@
     },
     "sectionUserPasskeys": {
         "message": "사용자 패스키"
+    },
+    "sectionDeleteAccount": {
+        "message": "계정 삭제"
+    },
+    "deleteAccountDescription": {
+        "message": "프로필, 패스키, 로그인 토큰, 클라우드 백업을 포함해 베타플라이트 계정을 영구 삭제하세요. 이 작업은 되돌릴 수 없습니다."
+    },
+    "actionDeleteAccount": {
+        "message": "계정 삭제"
+    },
+    "confirmDeleteAccount": {
+        "message": "이 작업을 하면 프로필, 패스키, 로그인 토큰 및 모든 클라우드 백업을 포함해 베타플라이트 계정이 영구 삭제됩니다. 이 작업은 되돌릴 수 없으며 데이터를 복구할 수 없습니다. 계속 진행하시겠습니까?"
     },
     "osdPresetPositionAlignTitle": {
         "message": "위치로 정렬",
@@ -8387,6 +8905,30 @@
     "preflightFlightWindow": {
         "message": "비행 윈도우"
     },
+    "preflightTimelineDescription": {
+        "message": "밤, 블루 아워, 골든 아워, 주간을 보여주는 타임라인과 일출 및 일몰 표시"
+    },
+    "preflightTimelineHelp": {
+        "message": "구간 위에 마우스를 올리거나 탭하거나 포커스를 맞추면 해당 구간의 시간을 확인할 수 있습니다. 범례를 사용하여 특정 유형의 모든 기간을 강조 표시하세요."
+    },
+    "preflightTimelineHint": {
+        "message": "정확한 시간을 확인하려면 구간 위에 마우스를 올리거나 탭하세요."
+    },
+    "preflightTimelineNight": {
+        "message": "야간 & 기타 황혼"
+    },
+    "preflightBlueHour": {
+        "message": "박명"
+    },
+    "preflightGoldenHour": {
+        "message": "골든아워"
+    },
+    "preflightMorning": {
+        "message": "오전"
+    },
+    "preflightEvening": {
+        "message": "저녁"
+    },
     "preflightSunrise": {
         "message": "일출"
     },
@@ -8401,6 +8943,9 @@
     },
     "preflightTempRange": {
         "message": "기온 범위"
+    },
+    "preflightNow": {
+        "message": "현재"
     },
     "preflightCurrentlyDay": {
         "message": "현재"
@@ -8683,5 +9228,212 @@
     },
     "preflightNotamLastFetched": {
         "message": "마지막 가져옴"
+    },
+    "pidTuningWingSettings": {
+        "message": "윙 설정"
+    },
+    "pidTuningWingSterm": {
+        "message": "S 텀"
+    },
+    "pidTuningWingSPA": {
+        "message": "SPA"
+    },
+    "pidTuningWingSpaMode": {
+        "message": "모드"
+    },
+    "pidTuningWingSpaModeHelp": {
+        "message": "각 축에 대한 SPA 모드"
+    },
+    "pidTuningWingSpaCenter": {
+        "message": "중앙"
+    },
+    "pidTuningWingSpaCenterHelp": {
+        "message": "PID가 50%로 감소하는 RPY 설정값 (설정점 PID 감쇠)입니다"
+    },
+    "pidTuningWingSpaWidth": {
+        "message": "폭"
+    },
+    "pidTuningWingSpaWidthHelp": {
+        "message": "spa_중앙 주변의 스무드한 전환 폭입니다"
+    },
+    "pidTuningWingSpaModeOff": {
+        "message": "끄기"
+    },
+    "pidTuningWingSpaModeIFreeze": {
+        "message": "I 프리즈"
+    },
+    "pidTuningWingSpaModeI": {
+        "message": "I"
+    },
+    "pidTuningWingSpaModePID": {
+        "message": "PID"
+    },
+    "pidTuningWingSpaModePDIFreeze": {
+        "message": "PD I 프리즈"
+    },
+    "pidTuningWingTPA": {
+        "message": "TPA"
+    },
+    "pidTuningWingTpaSpeedType": {
+        "message": "속도 유형"
+    },
+    "pidTuningWingTpaSpeedTypeHelp": {
+        "message": "에어 스피드 추정 모델 유형"
+    },
+    "pidTuningWingTpaSpeedBasic": {
+        "message": "기본"
+    },
+    "pidTuningWingTpaSpeedAdvanced": {
+        "message": "고급"
+    },
+    "pidTuningWingTpaCurveType": {
+        "message": "곡선 유형"
+    },
+    "pidTuningWingTpaCurveTypeHelp": {
+        "message": "쌍곡선은 보통 날개를 나타낼 때 사용합니다. 클래식은 멀티로터용이며 표준 TPA를 사용합니다."
+    },
+    "pidTuningWingTpaCurveClassic": {
+        "message": "클래식"
+    },
+    "pidTuningWingTpaCurveHyperbolic": {
+        "message": "쌍곡선"
+    },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "기준 속도에 의한 쌍곡선"
+    },
+    "pidTuningWingTpaBasicSpeedSettings": {
+        "message": "기본 속도 설정"
+    },
+    "pidTuningWingTpaAdvancedSpeedSettings": {
+        "message": "고급 속도 설정"
+    },
+    "pidTuningWingTpaBasicSpeedDelay": {
+        "message": "딜레이"
+    },
+    "pidTuningWingTpaBasicSpeedDelayHelp": {
+        "message": "스로틀에서 에어 시피드 추정 딜레이 시간 (전속력 수평 비행 시 최종 속도의 50%에 도달하는 데 걸리는 밀리초)"
+    },
+    "pidTuningWingTpaBasicSpeedGravity": {
+        "message": "중력"
+    },
+    "pidTuningWingTpaBasicSpeedGravityHelp": {
+        "message": "백분율에서 공기 속도 추정에 미치는 중력의 영향"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitch": {
+        "message": "프롭 피치"
+    },
+    "pidTuningWingTpaAdvSpeedPropPitchHelp": {
+        "message": "프롭 피치 (인치 * 100)"
+    },
+    "pidTuningWingTpaAdvSpeedMass": {
+        "message": "기체 무게"
+    },
+    "pidTuningWingTpaAdvSpeedMassHelp": {
+        "message": "기체 무게 (g)"
+    },
+    "pidTuningWingTpaAdvSpeedDragK": {
+        "message": "항력계수 K"
+    },
+    "pidTuningWingTpaAdvSpeedDragKHelp": {
+        "message": "기체 항력 계수"
+    },
+    "pidTuningWingTpaAdvSpeedThrust": {
+        "message": "추력"
+    },
+    "pidTuningWingTpaAdvSpeedThrustHelp": {
+        "message": "정지 추력 (g)"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltage": {
+        "message": "최대 배터리 전압"
+    },
+    "pidTuningWingTpaAdvSpeedMaxVoltageHelp": {
+        "message": "이론 최대 전압의 100배. 공기 속도 추정을 위한 전압 스케일링용 스로틀에 사용됩니다"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKv": {
+        "message": "모터 KV"
+    },
+    "pidTuningWingTpaAdvSpeedMotorKvHelp": {
+        "message": "모터 KV. 모터 탭에서 이 값을 변경하세요."
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffset": {
+        "message": "피치 오프셋"
+    },
+    "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
+        "message": "기체 속도 추정을 위한 피치 오프셋 (도*10)"
+    },
+    "pidTuningWingTpaAdvSpeedCurveSettings": {
+        "message": "쌍곡선 커브 설정"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeed": {
+        "message": "정지 속도, %"
+    },
+    "pidTuningWingTpaAdvSpeedCurveStallSpeedHelp": {
+        "message": "PID를 최대한으로 설정해야 하는 속도 (정지 속도), %"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0": {
+        "message": "정지 속도 PID"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr0Help": {
+        "message": "정지 속도에서의 PID 배율"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100": {
+        "message": "최대 속도 PID"
+    },
+    "pidTuningWingTpaAdvSpeedCurvePidThr100Help": {
+        "message": "최대 속도에서의 PID 배율"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpo": {
+        "message": "지수"
+    },
+    "pidTuningWingTpaAdvSpeedCurveExpoHelp": {
+        "message": "속도가 증가함에 따라 PID가 얼마나 빠르게 전이되는가"
+    },
+    "pidTuningWingTpaAdvSpeedCurveDetails": {
+        "message": "쌍곡선 커브 차트"
+    },
+    "pidTuningWingMiscSettings": {
+        "message": "기타 설정"
+    },
+    "pidTuningWingMiscYawType": {
+        "message": "요 형식"
+    },
+    "pidTuningWingMiscYawTypeHelp": {
+        "message": "요 형식 (러더 또는 차등 추력)"
+    },
+    "pidTuningWingYawTypeRudder": {
+        "message": "러더"
+    },
+    "pidTuningWingYawTypeDiffThrust": {
+        "message": "차등 추력"
+    },
+    "pidTuningWingMiscPitchOffset": {
+        "message": "피치 오프셋"
+    },
+    "pidTuningWingMiscPitchOffsetHelp": {
+        "message": "앵글 모드에서 결정하는 피치 오프셋. 양의 값이 날개를 아래로 기울입니다"
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "기준 속도"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "기준 속도, m/s - 이 지점에서 곡선 값이 1.0입니다"
+    },
+    "speedCurvesPower": {
+        "message": "커브 파워"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "쌍곡선 커브 파워, *0.1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "커브 최소 값"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "쌍곡선 커브 최소 값 제한, *0.01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "커브 최대 값"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "쌍곡선 커브 최대 값 제한, *0.01"
     }
 }

@@ -524,12 +524,7 @@
                 </template>
                 <template #footer>
                     <div class="flex justify-end gap-2 w-full">
-                        <UButton
-                            :label="$t('presetsWarningDialogNoButton')"
-                            variant="outline"
-                            size="xs"
-                            @click="closeDynFiltersDialog"
-                        />
+                        <UButton :label="$t('cancel')" variant="outline" size="xs" @click="closeDynFiltersDialog" />
                         <UButton
                             :label="$t('presetsWarningDialogYesButton')"
                             size="xs"
@@ -542,22 +537,18 @@
 
         <!-- Fixed Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
-            <div class="flex gap-2">
-                <UButton
-                    :label="$t('escDshotDirectionDialog-StopWizard')"
-                    :disabled="buttonStates.stopDisabled"
-                    @click="stopMotors()"
-                    color="error"
-                    size="xs"
-                />
-                <UButton
-                    :label="$t('configurationButtonSave')"
-                    :disabled="buttonStates.saveDisabled"
-                    :loading="isSaving"
-                    @click="handleSave(true)"
-                    size="xs"
-                />
-            </div>
+            <UButton
+                :label="$t('escDshotDirectionDialog-StopWizard')"
+                :disabled="buttonStates.stopDisabled"
+                @click="stopMotors()"
+                color="error"
+            />
+            <UButton
+                :label="$t('saveAndReboot')"
+                :disabled="buttonStates.saveDisabled"
+                :loading="isSaving"
+                @click="handleSave(true)"
+            />
         </div>
     </BaseTab>
 </template>

@@ -332,17 +332,13 @@
     "tabOptions": {
         "message": "Opções"
     },
-    "sidebarOpenOptions": {
-        "message": "Opções",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "Alternar modo escuro / claro",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "Alternar modo expert",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "Opções"
@@ -590,9 +586,6 @@
     },
     "tabAuxiliary": {
         "message": "Modos"
-    },
-    "logActionShow": {
-        "message": "Exibir Histórico"
     },
     "tabLog": {
         "message": "Log"

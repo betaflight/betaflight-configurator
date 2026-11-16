@@ -202,9 +202,6 @@
     "tabAuxiliary": {
         "message": "Modussen"
     },
-    "logActionShow": {
-        "message": "Toon Log"
-    },
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">succesvol</span> geopend met ID: $1"
     },

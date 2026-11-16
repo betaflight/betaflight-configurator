@@ -43,10 +43,10 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
+            <UFieldGroup orientation="horizontal">
                 <UButton
                     :disabled="state.flashButtonDisabled || activeFlasherStep !== 'flash'"
-                    :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
+                    color="success"
                     :loading="state.flashingInProgress"
                     @click="handleFlashFirmware"
                 >
@@ -54,17 +54,26 @@
                 </UButton>
                 <UDropdownMenu v-slot="{ open }" :items="flashActionMenuItems" :content="{ align: 'end', side: 'top' }">
                     <UButton
-                        :color="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'neutral' : 'success'"
+                        color="success"
+                        :variant="state.flashButtonDisabled || activeFlasherStep !== 'flash' ? 'soft' : 'solid'"
+                        :class="{
+                            'bg-success/30 hover:bg-success/40 ring ring-inset ring-success/40':
+                                !state.flashingInProgress &&
+                                (state.flashButtonDisabled || activeFlasherStep !== 'flash'),
+                        }"
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                         :aria-label="$t('firmwareFlasherFlashFirmwareOptions')"
+                        :disabled="state.flashingInProgress"
                         square
                     />
                 </UDropdownMenu>
             </UFieldGroup>
-            <UFieldGroup size="xs" orientation="horizontal" class="flex!">
-                <UButton :disabled="state.loadRemoteButtonDisabled" @click="handleLoadRemoteFile">{{
-                    $t("firmwareFlasherButtonLoadOnline")
-                }}</UButton>
+            <UFieldGroup orientation="horizontal">
+                <UButton
+                    :label="$t('firmwareFlasherButtonLoadOnline')"
+                    :disabled="state.loadRemoteButtonDisabled || state.flashingInProgress"
+                    @click="handleLoadRemoteFile"
+                />
                 <UDropdownMenu
                     v-slot="{ open }"
                     :items="loadFirmwareMenuItems"
@@ -72,7 +81,13 @@
                 >
                     <UButton
                         :icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                        :variant="state.loadRemoteButtonDisabled ? 'soft' : 'solid'"
+                        :class="{
+                            'ring ring-inset ring-primary/40':
+                                state.loadRemoteButtonDisabled && !state.flashingInProgress,
+                        }"
                         :aria-label="$t('firmwareFlasherLoadFirmwareOptions')"
+                        :disabled="state.flashingInProgress"
                         square
                     />
                 </UDropdownMenu>
@@ -1731,13 +1746,13 @@ export default defineComponent({
                 {
                     label: $t("firmwareFlasherButtonLoadOnline"),
                     icon: "i-lucide-cloud-download",
-                    disabled: state.loadRemoteButtonDisabled,
+                    disabled: state.loadRemoteButtonDisabled || state.flashingInProgress,
                     onSelect: handleLoadRemoteFile,
                 },
                 {
                     label: $t("firmwareFlasherButtonLoadLocal"),
                     icon: "i-lucide-hard-drive-download",
-                    disabled: state.loadFileButtonDisabled,
+                    disabled: state.loadFileButtonDisabled || state.flashingInProgress,
                     onSelect: handleLoadFile,
                 },
             ],
@@ -1748,13 +1763,14 @@ export default defineComponent({
                 {
                     label: $t("firmwareFlasherFlashFirmware"),
                     icon: "i-lucide-zap",
-                    disabled: state.flashButtonDisabled || activeFlasherStep.value !== "flash",
+                    disabled:
+                        state.flashButtonDisabled || activeFlasherStep.value !== "flash" || state.flashingInProgress,
                     onSelect: handleFlashFirmware,
                 },
                 {
                     label: $t("firmwareFlasherExitDfu"),
                     icon: "i-lucide-usb",
-                    disabled: state.dfuExitButtonDisabled,
+                    disabled: state.dfuExitButtonDisabled || state.flashingInProgress,
                     onSelect: handleExitDfu,
                 },
             ];
@@ -1762,6 +1778,7 @@ export default defineComponent({
                 group.push({
                     label: $t("firmwareFlasherFindDfuDevice"),
                     icon: "i-lucide-cpu",
+                    disabled: state.flashingInProgress,
                     onSelect: handleRequestDfuPermission,
                 });
             }
@@ -2061,9 +2078,6 @@ export default defineComponent({
         gap: 0.5rem;
     }
 
-    & + .content_toolbar {
-        width: fit-content;
-    }
     @media all and (max-width: 575px) {
         .detect-board {
             span {
@@ -2072,72 +2086,6 @@ export default defineComponent({
                 & > div {
                     display: none;
                 }
-            }
-        }
-    }
-
-    .toolbar_fixed_bottom.content_toolbar {
-        width: fit-content;
-    }
-
-    .content_toolbar {
-        width: fit-content;
-        background-color: var(--surface-300);
-        box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: end;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem 0.75rem 1rem;
-        border-start-start-radius: 1.5rem;
-        &::before {
-            width: 1.5rem;
-            aspect-ratio: 1;
-            content: "";
-            mask: url(../../images/corner.svg);
-            background-color: var(--surface-300);
-            position: absolute;
-            inset-inline-start: -1.5rem;
-            bottom: 0;
-        }
-        .btn {
-            a {
-                margin-top: 0;
-                margin-bottom: 0;
-                background-color: var(--primary-500);
-                border-radius: 3px;
-                border: 1px solid var(--primary-600);
-                color: black;
-                float: inline-end;
-                font-weight: bold;
-                font-size: 12px;
-                display: block;
-                cursor: pointer;
-                transition: all ease 0.2s;
-                padding: 0 0.5rem;
-                line-height: 28px;
-                user-select: none;
-                white-space: nowrap;
-                &:hover {
-                    background-color: var(--primary-400);
-                    transition: all ease 0.2s;
-                }
-                &:active {
-                    background-color: var(--primary-500);
-                    transition: all ease 0s;
-                    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-                }
-                .helpicon {
-                    margin-inline-start: 5px;
-                }
-            }
-            a.disabled {
-                cursor: default;
-                color: var(--surface-900);
-                background-color: var(--surface-500);
-                border: 1px solid var(--surface-500);
-                pointer-events: none;
-                opacity: 1;
             }
         }
     }

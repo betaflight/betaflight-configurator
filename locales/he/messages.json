@@ -361,17 +361,13 @@
     "tabOptions": {
         "message": "אפשרויות"
     },
-    "sidebarOpenOptions": {
-        "message": "אפשרויות",
-        "description": "Tooltip for the options icon button in the sidebar footer."
-    },
     "sidebarToggleDarkMode": {
         "message": "החלף בין מצב כהה/בהיר",
-        "description": "Tooltip for the dark mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles dark mode."
     },
     "sidebarToggleExpertMode": {
         "message": "החלף למצב מומחה",
-        "description": "Tooltip for the expert mode toggle icon button in the sidebar footer."
+        "description": "Item in the sidebar footer settings menu that toggles expert mode."
     },
     "tabSetup": {
         "message": "הגדרות"
@@ -640,9 +636,6 @@
     },
     "tabAuxiliary": {
         "message": "מצבים"
-    },
-    "logActionShow": {
-        "message": "הצג לוג"
     },
     "tabLog": {
         "message": "יומן"

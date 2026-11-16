@@ -314,7 +314,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         configHasChanged.value = true;
         await mountReady({ enable3d: true, neutral: 1460 });
 
-        const saveButton = findButton(wrapper!.container, "configurationButtonSave");
+        const saveButton = findButton(wrapper!.container, "saveAndReboot");
         saveButton.click();
         await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -332,7 +332,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         row.querySelector<HTMLButtonElement>('button[role="switch"]')!.click();
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        const saveButton = findButton(container, "configurationButtonSave");
+        const saveButton = findButton(container, "saveAndReboot");
         saveButton.click();
         await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -353,7 +353,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         fcStore.pidAdvancedConfig.fast_pwm_protocol = DSHOT300_PROTOCOL_INDEX;
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        const saveButton = findButton(wrapper!.container, "configurationButtonSave");
+        const saveButton = findButton(wrapper!.container, "saveAndReboot");
         saveButton.click();
         await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -383,7 +383,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         configHasChanged.value = true;
         const container = await mountReady({ enable3d: false, neutral: 1500 });
 
-        findButton(container, "configurationButtonSave").click();
+        findButton(container, "saveAndReboot").click();
         await new Promise((resolve) => setTimeout(resolve, 200));
 
         expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP_SET_MOTOR_CONFIG, []);
@@ -417,7 +417,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         port.changed.value = true;
         const container = await mountReady({ enable3d: false, neutral: 1500 });
 
-        findButton(container, "configurationButtonSave").click();
+        findButton(container, "saveAndReboot").click();
         await new Promise((resolve) => setTimeout(resolve, 200));
 
         expect(port.confirmPortConflicts).toHaveBeenCalledOnce();
@@ -436,9 +436,9 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
             .click();
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        findButton(container, "configurationButtonSave").click();
+        findButton(container, "saveAndReboot").click();
         await new Promise((resolve) => setTimeout(resolve, 200));
-        findButton(container, "configurationButtonSave").click();
+        findButton(container, "saveAndReboot").click();
         await new Promise((resolve) => setTimeout(resolve, 200));
 
         expect(stopAllMotors.mock.calls).toEqual([[1000], [1500]]);

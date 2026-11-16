@@ -13,6 +13,11 @@ on:
         default: true
         required: false
         type: boolean
+      preview_build:
+        description: 'Marks the frontend as a PR/master preview, which defaults the development options on'
+        default: false
+        required: false
+        type: boolean
       build_apk:
         description: 'Build the Capacitor Android APK (debug or release per debug_build)'
         default: true
@@ -78,6 +83,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+        env:
+          # A build-time marker, as the preview APK is served from https://localhost like a release one.
+          VITE_PREVIEW_BUILD: ${{ inputs.preview_build }}
 
       - name: Generate Capacitor Config
         if: ${{ inputs.build_apk }}

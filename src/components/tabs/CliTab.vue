@@ -105,9 +105,9 @@
         </UModal>
 
         <!-- Bottom toolbar -->
-        <div class="content_toolbar xs-compressed toolbar_fixed_bottom flex items-center gap-2">
-            <UButton :label="$t('cliSaveToFileBtn')" @click="cli.saveFile" variant="soft" />
-            <UButton :label="$t('cliLoadFromFileBtn')" @click="handleLoadFile" variant="soft" />
+        <div class="content_toolbar toolbar_fixed_bottom">
+            <UButton :label="$t('saveToFile')" @click="cli.saveFile" variant="soft" />
+            <UButton :label="$t('loadFromFile')" @click="handleLoadFile" variant="soft" />
             <UButton :label="$t('cliClearOutputHistoryBtn')" @click="cli.clearHistory" variant="soft" />
             <UButton
                 :label="cli.state.copyButtonText"
@@ -401,8 +401,6 @@ body.mobile-app-shell {
     .tab-cli .content_toolbar.toolbar_fixed_bottom {
         position: static;
         width: 100%;
-        max-width: 100%;
-        flex-wrap: wrap;
         justify-content: center;
         border-start-start-radius: 0;
     }

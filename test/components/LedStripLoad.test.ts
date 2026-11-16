@@ -69,7 +69,7 @@ describe("LED tab load failure", () => {
             expect(wrapper.text()).toContain("ledStripLoadFailed");
             expect(wrapper.find(".grid-container").attributes("inert")).toBeDefined();
             expect(wrapper.find(".controls").attributes("inert")).toBeDefined();
-            const save = wrapper.findAll("button").find((button) => button.text() === "ledStripButtonSave");
+            const save = wrapper.findAll("button").find((button) => button.text() === "save");
             expect(save).toBeDefined();
             expect(save!.attributes("disabled")).toBeDefined();
             expect(MSP.promise).toHaveBeenCalledTimes(1);

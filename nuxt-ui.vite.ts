@@ -1,5 +1,5 @@
 /**
- * Options for `@nuxt/ui/vite` (see vite.config.js plugins).
+ * Options for `@nuxt/ui/vite` (see vite.config.ts plugins).
  * light/dark mode is handled elsewhere in the app itself; Nuxt UI would otherwise override it.
  */
 export default {
@@ -7,7 +7,7 @@ export default {
     ui: {
         button: {
             slots: {
-                base: "font-semibold cursor-pointer",
+                base: "font-semibold cursor-pointer toolbar-disabled:opacity-100",
             },
             variants: {
                 size: {
@@ -20,6 +20,19 @@ export default {
                 },
             },
             compoundVariants: [
+                ...[
+                    [["primary", "neutral"], "solid", "toolbar-disabled:bg-accented toolbar-disabled:!text-toned"],
+                    ["primary", "soft", "toolbar-disabled:bg-accented toolbar-disabled:!text-toned"],
+                    [
+                        "neutral",
+                        "soft",
+                        "toolbar-disabled:bg-accented/60 toolbar-disabled:ring toolbar-disabled:ring-inset toolbar-disabled:ring-accented toolbar-disabled:!text-toned",
+                    ],
+                    ["success", "solid", "toolbar-disabled:bg-success/20 toolbar-disabled:text-success"],
+                    ["error", "solid", "toolbar-disabled:bg-error/20 toolbar-disabled:text-error"],
+                    ["success", "soft", "toolbar-disabled:bg-success/5 toolbar-disabled:text-success/60"],
+                    ["error", "soft", "toolbar-disabled:bg-error/5 toolbar-disabled:text-error/60"],
+                ].map(([color, variant, className]) => ({ color, variant, class: className })),
                 {
                     color: "primary",
                     variant: "solid",

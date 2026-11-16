@@ -295,13 +295,7 @@
         </div>
 
         <div class="content_toolbar toolbar_fixed_bottom">
-            <UButton
-                :label="$t('blackboxButtonSave')"
-                size="xs"
-                :disabled="!dirty"
-                :loading="isSaving"
-                @click="saveSettings"
-            />
+            <UButton :label="$t('saveAndReboot')" :disabled="!dirty" :loading="isSaving" @click="saveSettings" />
         </div>
     </BaseTab>
 </template>

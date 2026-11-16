@@ -25,6 +25,8 @@ import { useCli } from "../../src/composables/useCli";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import FileSystem from "../../src/js/FileSystem";
 import { serial } from "../../src/js/serial";
+import { killAllTimeouts } from "../../src/js/timers";
+import { useConnectionStore } from "../../src/stores/connection";
 
 function key(name: string, ime: { isComposing?: boolean; keyCode?: number } = {}): KeyboardEvent {
     return { key: name, isComposing: false, keyCode: 0, ...ime, preventDefault: vi.fn() } as unknown as KeyboardEvent;
@@ -252,6 +254,163 @@ describe("useCli", () => {
             cli.handleCommandKeyDown(key(ENTER));
 
             expect(sentText(send)).toBe("status\n");
+        });
+    });
+
+    describe("command write order", () => {
+        const commands = [
+            "vtxtable band 1 BOSCAM_A A FACTORY 6110 6130 6150 6170 6190 6210 6230 6250",
+            "vtxtable band 2 BOSCAM_B B FACTORY 6270 6290 6310 6330 6350 6370 6390 6410",
+        ];
+        let cli: ReturnType<typeof useCli>;
+        let send: ReturnType<typeof mockSend>;
+
+        const mockSend = () => vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 1 });
+
+        const submit = (input: string) => {
+            cli.state.commandInput = input;
+            cli.handleCommandKeyDown(key(ENTER));
+        };
+        const complete = (call: number, bytesSent = 1) => {
+            send.mock.calls[call][1]?.({ bytesSent });
+        };
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+            send = mockSend();
+            vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(false);
+            cli = useCli();
+        });
+
+        afterEach(() => {
+            cli.cleanup();
+            killAllTimeouts();
+            vi.clearAllTimers();
+            vi.useRealTimers();
+        });
+
+        it("waits for the entire first vtxtable write and then the line delay", () => {
+            submit(commands.join("\n"));
+            expect(sentText(send)).toBe(`${commands[0]}\n`);
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(1);
+
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs - 1);
+            expect(send).toHaveBeenCalledTimes(1);
+            vi.advanceTimersByTime(1);
+            expect(send).toHaveBeenCalledTimes(2);
+            expect(sentText(send, 1)).toBe(`${commands[1]}\n`);
+        });
+
+        it.each(["\n", "\r\n"])("preserves long commands, blank lines and a trailing %j", (newline) => {
+            const lines = [...commands, "", commands[0], ""];
+            submit(lines.map((line) => (line ? ` ${line} ` : line)).join(newline));
+            for (let i = 0; i < lines.length; i++) {
+                expect(send).toHaveBeenCalledTimes(i + 1);
+                vi.advanceTimersByTime(1000);
+                expect(send).toHaveBeenCalledTimes(i + 1);
+                complete(i);
+                vi.advanceTimersByTime(cli.state.lineDelayMs);
+            }
+            expect(send.mock.calls.map((_, i) => sentText(send, i)).join("")).toBe(`${lines.join("\n")}\n`);
+        });
+
+        it("sends a single command immediately and reconciles the FC's current input", () => {
+            useConnectionStore().cliValid = true;
+            cli.read(new TextEncoder().encode("# sta"));
+            submit(" status ");
+            expect(sentText(send)).toBe("tus\n");
+            complete(0);
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(1);
+        });
+
+        it("reconciles the final line using the latest FC input", () => {
+            useConnectionStore().cliValid = true;
+            submit("version\nstatus");
+            cli.read(new TextEncoder().encode("# wrong"));
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(sentText(send, 1)).toBe(`${String.fromCodePoint(127).repeat(5)}status\n`);
+        });
+
+        it("applies the ordinary delay before a profile and the profile delay after its completion", () => {
+            submit("status\nprofile 1\nversion");
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs - 1);
+            expect(send).toHaveBeenCalledTimes(1);
+            vi.advanceTimersByTime(1);
+            expect(sentText(send, 1)).toBe("profile 1\n");
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(2);
+            complete(1);
+            vi.advanceTimersByTime(cli.state.profileSwitchDelayMs - 1);
+            expect(send).toHaveBeenCalledTimes(2);
+            vi.advanceTimersByTime(1);
+            expect(sentText(send, 2)).toBe("version\n");
+        });
+
+        it("serializes commands from the file preview", async () => {
+            vi.spyOn(FileSystem, "pickOpenFile").mockResolvedValue({ name: "vtx.txt" });
+            vi.spyOn(FileSystem, "readFile").mockResolvedValue(commands.join("\n"));
+            const run = await cli.loadFile();
+            run!();
+            expect(cli.snippetPreviewOpen.value).toBe(false);
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(1);
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(sentText(send, 1)).toBe(`${commands[1]}\n`);
+        });
+
+        it("stops the sequence when a write sends zero bytes", () => {
+            submit(commands.join("\n"));
+            complete(0, 0);
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(1);
+        });
+
+        it.each([false, true])("cancels on cleanup with a pending %s timer", (timerPending) => {
+            submit(commands.join("\n"));
+            if (timerPending) complete(0);
+            const connection = useConnectionStore();
+            connection.connectionValid = true;
+            connection.cliValid = true;
+            connection.cliActive = true;
+            cli.cleanup();
+            expect(sentText(send, 1)).toBe("exit\r");
+            if (!timerPending) complete(0);
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(2);
+        });
+
+        it.each([0, 1])("starts the latest replacement after an outstanding write sends %i bytes", (bytesSent) => {
+            submit(commands.join("\n"));
+            submit("discarded\nalso discarded");
+            submit("status\nversion");
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(1);
+            complete(0, bytesSent);
+            expect(send).toHaveBeenCalledTimes(2);
+            expect(sentText(send, 1)).toBe("status\n");
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(sentText(send, 1)).toBe("status\n");
+            expect(send).toHaveBeenCalledTimes(2);
+            complete(1);
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(sentText(send, 2)).toBe("version\n");
+            expect(send).toHaveBeenCalledTimes(3);
+        });
+
+        it("cancels a pending timer when a replacement starts", () => {
+            submit(commands.join("\n"));
+            complete(0);
+            submit("status");
+            expect(sentText(send, 1)).toBe("status\n");
+            complete(1);
+            vi.advanceTimersByTime(1000);
+            expect(send).toHaveBeenCalledTimes(2);
         });
     });
 

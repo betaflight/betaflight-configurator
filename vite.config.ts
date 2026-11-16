@@ -1,16 +1,16 @@
-/// <reference types="vitest" />
-import { defineConfig, normalizePath } from "vite";
+import type { Plugin, Connect } from "vite";
+import { normalizePath } from "vite";
+import { defineConfig } from "vitest/config";
 import vue from "@vitejs/plugin-vue";
-import path from "node:path";
+import path, { resolve } from "node:path";
 import { readFileSync, existsSync } from "node:fs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import pkg from "./package.json" with { type: "json" };
-import * as child from "child_process";
+import * as child from "node:child_process";
 import { VitePWA } from "vite-plugin-pwa";
-import { resolve } from "path";
 import ui from "@nuxt/ui/vite";
 import settingsSearchIndexPlugin from "./scripts/vite-plugin-settings-search.mjs";
-import nuxtUiViteOptions from "./nuxt-ui.vite.js";
+import nuxtUiViteOptions from "./nuxt-ui.vite.ts";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
 
@@ -38,9 +38,9 @@ if (tauriDev) {
     console.log("  Server will be available at: http://localhost:8080");
 }
 
-function serveFileFromDirectory(directory) {
+function serveFileFromDirectory(directory: string): Connect.NextHandleFunction {
     return (req, res, next) => {
-        const filePath = req.url.replace(new RegExp(`^/${directory}/`), "");
+        const filePath = (req.url ?? "").replace(new RegExp(`^/${directory}/`), "");
         const absolutePath = path.resolve(process.cwd(), directory, filePath);
 
         try {
@@ -88,9 +88,8 @@ function serveFileFromDirectory(directory) {
             }
 
             res.end(fileContents);
-            // eslint-disable-next-line unused-imports/no-unused-vars
-        } catch (e) {
-            // If file not found or any other error, pass to the next middleware
+        } catch {
+            // Let Vite handle files this middleware cannot serve, including its normal 404 response.
             next();
         }
     };
@@ -100,16 +99,15 @@ function serveFileFromDirectory(directory) {
  * This is plugin to work around the file structure required nwjs.
  * In future this can be dropped if we restructure folder structure
  * to be more web friendly.
- * @returns {import("vite").Plugin}
  */
-function serveLocalesPlugin() {
+function serveLocalesPlugin(): Plugin {
     return {
         name: "serve-locales",
         configureServer(server) {
             server.middlewares.use((req, res, next) => {
-                if (req.url.startsWith("/locales/")) {
+                if (req.url?.startsWith("/locales/")) {
                     serveFileFromDirectory("locales")(req, res, next);
-                } else if (req.url.startsWith("/resources/")) {
+                } else if (req.url?.startsWith("/resources/")) {
                     serveFileFromDirectory("resources")(req, res, next);
                 } else {
                     next();
@@ -125,9 +123,8 @@ function serveLocalesPlugin() {
  * HTML entry, which resolves relative to the popup's own directory and 404s.
  * Strip it from everything except the main entry.
  * Registered after VitePWA so its `post` hook runs last.
- * @returns {import("vite").Plugin}
  */
-function stripManifestFromSecondaryEntriesPlugin() {
+function stripManifestFromSecondaryEntriesPlugin(): Plugin {
     return {
         name: "strip-manifest-from-secondary-entries",
         // `enforce`/`order` post so this runs after vite-plugin-pwa:build has injected the link.
@@ -152,7 +149,7 @@ function stripManifestFromSecondaryEntriesPlugin() {
 // are silenced, so a genuinely pointless dynamic import added later still warns.
 const CYCLE_BREAKING_DYNAMIC_IMPORTS = ["src/js/msp.js", "src/js/serial_backend.js", "src/js/tab_switch.js"];
 
-function isCycleBreakingImport(warning) {
+function isCycleBreakingImport(warning: { message?: string }) {
     // The message is prefixed with the (colourised) warning code, so match on the
     // "<id> is dynamically imported by" phrase rather than the start of the string.
     const message = warning.message ?? "";

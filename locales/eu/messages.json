@@ -179,9 +179,6 @@
     "tabAuxiliary": {
         "message": "Moduak"
     },
-    "logActionShow": {
-        "message": "Log-ak Erakutsi"
-    },
     "serialPortOpened": {
         "message": "Serie Ataka <span class=\"message-positive\">arrakastaz</span> irekia ID: $1 -rekin"
     },

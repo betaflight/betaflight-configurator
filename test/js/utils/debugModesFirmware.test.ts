@@ -66,7 +66,6 @@ const KNOWN_LABEL_GAPS = [
     "1.46.0 GYRO_SAMPLE: unlabelled fields [3]",
     "1.46.0 GPS_RESCUE_HEADING: unlabelled fields [4]",
     "1.46.0 GPS_RESCUE_TRACKING: unlabelled fields [6]",
-    "1.46.0 DSHOT_TELEMETRY_COUNTS: unlabelled fields [0,1,2]",
     "1.47.0 SBUS: labels for unwritten fields [1]",
     "1.47.0 RANGEFINDER: labels for unwritten fields [0]",
     "1.47.0 LIDAR_TF: unlabelled fields [4]",

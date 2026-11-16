@@ -105,7 +105,7 @@ describe("PID Tuning MSP wiring", () => {
         fcStore.pids[0][0] = 99;
         await flushPromises();
 
-        button(wrapper, "pidTuningButtonSave").vm.$emit("click");
+        button(wrapper, "save").vm.$emit("click");
         await flushPromises();
         expect(msp.writePidTuningConfig).toHaveBeenCalledOnce();
         expect(saveToEeprom).not.toHaveBeenCalled();

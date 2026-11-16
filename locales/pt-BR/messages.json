@@ -255,9 +255,6 @@
     "tabAuxiliary": {
         "message": "Modos"
     },
-    "logActionShow": {
-        "message": "Exibir Histórico"
-    },
     "fileSystemPickerFiles": {
         "message": "Arquivos {{typeof}}",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."

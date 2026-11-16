@@ -26,7 +26,7 @@ import { generateFilename } from "../js/utils/generate_filename";
 import BuildApi from "../js/BuildApi";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { gui_log } from "../js/gui_log";
-import { serial } from "../js/serial";
+import { serial, type SerialSendResult } from "../js/serial";
 import { reinitializeConnection } from "../js/serial_backend";
 import FileSystem from "../js/FileSystem";
 import { ispConnected } from "../js/utils/connection";
@@ -48,7 +48,7 @@ const CLI_ENTRY_MARKER = "CLI";
 const CLI_PROMPT = "# ";
 const CLI_ENTRY_PROMPT = `\r\n${CLI_PROMPT}`;
 
-type SendCallback = (sendInfo: unknown) => void;
+type SendCallback = (sendInfo: SerialSendResult) => void;
 
 /** What serial hands to read(): a read event carrying the bytes, or the bytes themselves. */
 type CliReadInfo = { data: ArrayBuffer } | ArrayBuffer | Uint8Array;
@@ -216,7 +216,7 @@ export function useCli(): Cli {
         promptInput: "",
         snippetPreview: "",
         supportDialogInput: "",
-        copyButtonText: i18n.getMessage("cliCopyToClipboardBtn"),
+        copyButtonText: i18n.getMessage("copyToClipboard"),
         copyButtonWidth: "",
     });
 
@@ -251,6 +251,9 @@ export function useCli(): Cli {
     let scrollRaf: number | null = null; // deferred scroll; separates DOM writes from scrollTop write (avoids forced reflow)
     let pastePollInterval: ReturnType<typeof setInterval> | null = null;
     let supportPollInterval: ReturnType<typeof setInterval> | null = null;
+    let commandExecution = 0;
+    let commandWritePending = false;
+    let pendingCommands: (() => void) | null = null;
 
     const flushOutput = () => {
         outputFlushRaf = null;
@@ -330,6 +333,8 @@ export function useCli(): Cli {
     };
 
     const executeCommands = (outString: string) => {
+        const execution = ++commandExecution;
+        removeTimeout("CLI_send_slowly");
         history.add(outString.trim());
 
         const outputArray = outString.split("\n");
@@ -349,34 +354,31 @@ export function useCli(): Cli {
             }, 100);
         }
 
-        const COMMANDS_PER_TICK = 3; // lines per tick; profile commands always get their own tick
+        function sendCommandIterative() {
+            if (execution !== commandExecution) return;
+            pendingCommands = null;
+            let line = outputArray.shift()!.trim();
+            if (outputArray.length === 0 && cliBuffer) {
+                line = getCliCommand(line, cliBuffer);
+            }
+            const processingDelay = line.toLowerCase().startsWith("profile")
+                ? state.profileSwitchDelayMs
+                : state.lineDelayMs;
 
-        function sendCommandIterative(commandArray: string[]) {
-            let processingDelay = state.lineDelayMs;
-
-            for (let n = 0; n < COMMANDS_PER_TICK && commandArray.length > 0; n++) {
-                const command = commandArray.shift()!;
-                let line = command.trim();
-                const isLast = commandArray.length === 0;
-
-                if (isLast && cliBuffer) {
-                    line = getCliCommand(line, cliBuffer);
+            commandWritePending = true;
+            // A transport may split a line into awaited chunks; never start another line between them.
+            sendLine(line, ({ bytesSent }) => {
+                commandWritePending = false;
+                if (execution !== commandExecution) {
+                    pendingCommands?.();
+                } else if (bytesSent > 0 && outputArray.length > 0) {
+                    addTimeout("CLI_send_slowly", sendCommandIterative, processingDelay);
                 }
-
-                const isProfile = line.toLowerCase().startsWith("profile");
-                if (isProfile) processingDelay = state.profileSwitchDelayMs;
-
-                sendLine(line);
-
-                if (isLast || isProfile) break;
-            }
-
-            if (commandArray.length > 0) {
-                addTimeout("CLI_send_slowly", () => sendCommandIterative(commandArray), processingDelay);
-            }
+            });
         }
 
-        sendCommandIterative(outputArray);
+        pendingCommands = sendCommandIterative;
+        if (!commandWritePending) pendingCommands();
     };
 
     /** Pick a file and preview it; resolves with the callback that runs it, or null when none was picked. */
@@ -441,7 +443,7 @@ export function useCli(): Cli {
             }
             state.copyButtonText = i18n.getMessage("cliCopySuccessful");
             copyResetTimeout = setTimeout(() => {
-                state.copyButtonText = i18n.getMessage("cliCopyToClipboardBtn");
+                state.copyButtonText = i18n.getMessage("copyToClipboard");
                 copyResetTimeout = null;
             }, 1500);
         }
@@ -820,6 +822,8 @@ export function useCli(): Cli {
      * @returns true when leaving CLI initiated an FC reboot (`exit` + MSP_REBOOT).
      */
     const cleanup = (): boolean => {
+        commandExecution++;
+        pendingCommands = null;
         removeTimeout("CLI_send_slowly");
         removeTimeout("enter_cli");
 
