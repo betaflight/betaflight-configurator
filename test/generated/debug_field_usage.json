@@ -1726,8 +1726,8 @@
             }
         },
         "1.49.0": {
-            "commit": "399e958dee4d015c3c5a1bcca26d22175cf76290",
-            "date": "2026-11-12",
+            "commit": "b780e4af0e12ef4d33b632e9b26890c9a7890c45",
+            "date": "2026-11-16",
             "modes": {
                 "ACCELEROMETER": {
                     "fields": [0, 1, 2, 3, 4],
@@ -1850,7 +1850,7 @@
                     "dynamic": false
                 },
                 "DSHOT_TELEMETRY_COUNTS": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4],
                     "dynamic": false
                 },
                 "DYN_IDLE": {
@@ -2009,6 +2009,10 @@
                     "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
+                "PB04": {
+                    "fields": [0, 1, 2, 3, 4, 5, 6],
+                    "dynamic": false
+                },
                 "PIDLOOP": {
                     "fields": [0, 1, 2, 3],
                     "dynamic": false
@@ -2066,11 +2070,11 @@
                     "dynamic": false
                 },
                 "RX_EXPRESSLRS_PHASELOCK": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "RX_EXPRESSLRS_SPI": {
-                    "fields": [0, 1, 2, 3],
+                    "fields": [0, 1, 2, 3, 4, 5, 6, 7],
                     "dynamic": false
                 },
                 "RX_FRSKY_SPI": {
@@ -2143,6 +2147,10 @@
                 },
                 "TPA": {
                     "fields": [0, 1, 2, 3, 4, 5],
+                    "dynamic": false
+                },
+                "UART_BIDIR": {
+                    "fields": [0, 1, 2],
                     "dynamic": false
                 },
                 "UPT1": {

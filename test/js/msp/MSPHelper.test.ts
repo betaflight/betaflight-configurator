@@ -131,6 +131,27 @@ describe("MspHelper", () => {
             expect(new Uint16Array(fcStore.motorData).slice(0, motorCount)).toEqual(motorBytes);
             expect(fcStore.motorData.slice(motorCount, 8)).toContain(undefined);
         });
+        it("handles a negative MSP_BATTERY_STATE amperage", () => {
+            // The firmware sends the current as a signed 16-bit value in 0.01 A steps.
+            const payload = new DataView(new ArrayBuffer(11));
+            payload.setUint8(0, 4); // cell count
+            payload.setUint16(1, 1500, true); // capacity, mAh
+            payload.setUint8(3, 168); // legacy voltage, 0.1 V
+            payload.setUint16(4, 0, true); // mAh drawn
+            payload.setInt16(6, -2, true); // amperage, 0.01 A
+            payload.setUint8(8, 0); // battery state
+            payload.setUint16(9, 1680, true); // voltage, 0.01 V
+
+            mspHelper.process_data({
+                code: MSPCodes.MSP_BATTERY_STATE,
+                dataView: new MspDataView(payload.buffer),
+                crcError: false,
+                unsupported: 0,
+                callbacks: [],
+            });
+
+            expect(fcStore.batteryState.amperage).toEqual(-0.02);
+        });
         it("handles MSP_BOARD_INFO correctly for API version", () => {
             fcStore.config.apiVersion = API_VERSION_1_47;
             const infoBuffer = new MspBuffer();

@@ -858,9 +858,6 @@
     "configurationSpiRX": {
         "message": "SPI Bus Ontvanger Provider"
     },
-    "configurationButtonSave": {
-        "message": "Sla op en herstart"
-    },
     "dialogDynFiltersChangeTitle": {
         "message": "Dynamische notch-waarden veranderen"
     },
@@ -1076,12 +1073,6 @@
     "throttle": {
         "message": "Gashendel"
     },
-    "pidTuningButtonSave": {
-        "message": "Opslaan"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Verversen"
-    },
     "dialogCopyProfileText": {
         "message": "Kopieer waarden van huidig profiel naar"
     },
@@ -1166,12 +1157,6 @@
     "receiverResetRefreshRate": {
         "message": "Resetten"
     },
-    "receiverButtonSave": {
-        "message": "Opslaan"
-    },
-    "receiverButtonRefresh": {
-        "message": "Verversen"
-    },
     "receiverButtonBind": {
         "message": "Ontvanger koppelen"
     },
@@ -1208,9 +1193,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Link toevoegen"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Opslaan"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -1323,9 +1305,6 @@
     "adjustmentsFunction30": {
         "message": "LED Profiel Selectie"
     },
-    "adjustmentsSave": {
-        "message": "Opslaan"
-    },
     "servosChangeDirection": {
         "message": "Wijzig de richting in TX om overeen te komen"
     },
@@ -1343,9 +1322,6 @@
     },
     "servosLiveMode": {
         "message": "Live modus inschakelen"
-    },
-    "servosButtonSave": {
-        "message": "Opslaan"
     },
     "gpsMapMessage1": {
         "message": "Controller alstublieft uw internetverbinding"
@@ -1596,20 +1572,11 @@
     "cliReboot": {
         "message": "CLI herstart gedetecteerd"
     },
-    "cliSaveToFileBtn": {
-        "message": "Opslaan naar bestand"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Uitvoergeschiedenis wissen"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Naar klembord kopiëren"
-    },
     "cliCopySuccessful": {
         "message": "Gekopieerd!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Laden uit bestand"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Opmerking:</strong>U kunt opdrachten beoordelen en bewerken voordat ze worden uitgevoerd."
@@ -1643,9 +1610,6 @@
     },
     "blackboxConfiguration": {
         "message": "Blackbox configuratie"
-    },
-    "blackboxButtonSave": {
-        "message": "Sla op en herstart"
     },
     "blackboxLoggingNone": {
         "message": "Geen logbestanden"
@@ -1847,9 +1811,6 @@
     },
     "ledStripHelp": {
         "message": "De vluchtcontroller kan de kleuren en effecten van individuele LED's op een strip regelen.<br />Configureer allereerst de LED's op het raster. Configureer daarna de bedradingsvolgorde en bevestig vervolgens de LED's op uw quad op basis van de rasterposities. LED's zonder een draadnummer worden niet opgeslagen.<br/>Dubbelklik op een kleur om de HSV-waarden te bewerken."
-    },
-    "ledStripButtonSave": {
-        "message": "Opslaan"
     },
     "ledStripColorSetupTitle": {
         "message": "Kleuren instellen",
@@ -2360,9 +2321,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Kill"
     },
-    "powerButtonSave": {
-        "message": "Opslaan"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Firmware upgrade <span class=\"message-negative\">vereist</span>. Batterij/Amperage/Voltage configuraties met API &lt; 1.33.0 (Betaflight release &lt;= 3.17) wordt niet ondersteund."
     },
@@ -2745,9 +2703,6 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Alle {{length}} tekens naar de OSD geüpload"
-    },
-    "osdSetupSave": {
-        "message": "Opslaan"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Batterij voltage",
@@ -3614,14 +3569,6 @@
         "message": "<span class=\"message-negative\">Waarschuwing:</span> U moet de VTX Tabel eerst configureren en daarna opslaan alvorens u gebruik kan maken van de $t(vtxSelectedMode.message) velden.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Waarschuwing:</span> Het geselecteerde VTX type ondersteunt niet de 'fabriekinstellingen' voor banden. Echter voor sommige van de in te stellen banden kan dit wel. Klik op '$t(vtxButtonSave.message)' om dit op te lossen.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Waarschuwing:</span> De waarden van de VTX Tabel zijn ingeladen, maar nog niet opgeslagen op uw vluchtcontroller. Je moet de waardes controleren en waar nodig aanpassen om er zeker van te zijn dat ze geldig maar ook legaal te gebruiken zijn in jouw land. Druk na deze controle vervolgens op de $t(vtxButtonSave.message) knop om de instellingen op te slaan op de vluchtcontroller.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
-    },
     "vtxFrequencyChannel": {
         "message": "Voer frequentie rechtstreeks in",
         "description": "Text of one of the fields of the VTX tab"
@@ -3814,25 +3761,9 @@
         "message": "<span class=\"message-negative\">Fout</span> tijdens het laden van de VTX configuratie vanaf het klembord. Controleer de inhoud van uw klembord",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Opslaan naar bestand",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Lua script opslaan",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Laden uit bestand",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Voeg toe vanaf het klembord",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Opslaan",
-        "description": "Save button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} ontgrendeld",
