@@ -269,6 +269,8 @@ export function createInitialState(): FcState {
             yaw: 0,
         },
         ledStrip: [],
+        ledStripAdvanced: null,
+        ledStripProfile: null,
         ledColors: [],
         ledModeColors: [],
         pidController: {
@@ -685,6 +687,7 @@ export function createInitialState(): FcState {
             speed_curve_max: 200,
         },
         ledConfigValues: {},
+        ledConfigValuesLoaded: false,
     };
 }
 
@@ -748,10 +751,8 @@ export const useFlightControllerStore = defineStore("flightController", () => {
 
     const failsafeActive = computed(() => isFailsafeActive(state.config.armingDisableFlags));
 
-    // ledConfigValues survives a reset, as it did in the legacy resetState().
     function resetState() {
-        const { ledConfigValues: _ledConfigValues, ...fresh } = createInitialState();
-        Object.assign(state, fresh);
+        Object.assign(state, createInitialState());
     }
 
     function isApiVersionSupported(version: string) {

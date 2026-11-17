@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "LED configuration could not be loaded. Reconnect and reload this tab before saving."
+    },
     "yes": {
         "message": "Yes",
         "description": "General Yes message to be used across the application"

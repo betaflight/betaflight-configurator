@@ -9,7 +9,7 @@
  *   API 1.46.0  5fd38528ba 2024-05-04  (90 modes)
  *   API 1.47.0  c120dd4e9d 2025-11-12  (100 modes)
  *   API 1.48.0  16e12368bc 2026-08-05  (103 modes)
- *   API 1.49.0  399e958dee 2026-11-12  (114 modes)
+ *   API 1.49.0  b780e4af0e 2026-11-16  (116 modes)
  */
 
 /**
@@ -593,6 +593,8 @@ export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> =
         "AUTOPILOT_CLIMB", // 111
         "AUTOPILOT_GUIDANCE", // 112
         "AUTOPILOT_LANDING", // 113
+        "UART_BIDIR", // 114
+        "PB04", // 115
     ]),
 });
 

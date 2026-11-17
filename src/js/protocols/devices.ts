@@ -68,8 +68,8 @@ const profile = (
 // Nordic UART is a vendor 128-bit service rather than a SIG identifier.
 const NORDIC_UART = [
     "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-    "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
     "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+    "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
 ] as const;
 
 // Order matters: a board exposing more than one of these services matches the first
@@ -86,6 +86,32 @@ const defaultBluetoothDevices: BluetoothDeviceProfile[] = [
     profile("SpeedyBee V1", [bt16("1000"), bt16("1001"), bt16("1002")]),
     profile("DroneBridge", [bt16("db32"), bt16("db33"), bt16("db34")]),
 ];
+
+/** A characteristic of a profile's service, as far as choosing which way data flows through it. */
+export interface CharacteristicCapabilities {
+    uuid: string;
+    writable: boolean;
+    notifies: boolean;
+}
+
+/**
+ * Chooses the characteristics to write to and subscribe to. Modules disagree on which way round a
+ * profile's two characteristics go (Nordic UART clones in particular), so each direction takes the
+ * first of the two that can carry it, the profile's own choice first. Many CC2541 modules (HM-10
+ * firmware, MLT-BT05, T-Motor's TMFC) share the FFE0 service with the CC2541 profile but carry both
+ * directions on FFE1 and have no FFE2.
+ */
+export function pickCharacteristics(
+    profile: Pick<BluetoothDeviceProfile, "writeCharacteristic" | "readCharacteristic">,
+    characteristics: readonly CharacteristicCapabilities[],
+): { write: string; read: string } | null {
+    const find = (uuids: string[], can: (c: CharacteristicCapabilities) => boolean) =>
+        uuids.map((uuid) => characteristics.find((c) => c.uuid === uuid && can(c))).find(Boolean)?.uuid;
+    const { writeCharacteristic: write, readCharacteristic: read } = profile;
+    const writeUuid = find([write, read], (c) => c.writable);
+    const readUuid = find([read, write], (c) => c.notifies);
+    return writeUuid && readUuid ? { write: writeUuid, read: readUuid } : null;
+}
 
 const defaultSerialDevices: UsbDeviceId[] = [
     { vendorId: 1027, productId: 24577 }, // FT232R USB UART
@@ -113,6 +139,7 @@ const defaultSerialDevices: UsbDeviceId[] = [
     { vendorId: 4292, productId: 60017 }, // CP2108
     { vendorId: 6790, productId: 21971 }, // CH343 USB-to-Serial
     { vendorId: 6790, productId: 21972 }, // CH9102 USB-to-Serial
+    { vendorId: 6790, productId: 57861 }, // 1a86:e205 WCH VCP
     { vendorId: 1659, productId: 8963 }, // PL2303
     { vendorId: 1659, productId: 9123 }, // PL2303GC
     { vendorId: 1240, productId: 221 }, // MCP2221
@@ -134,7 +161,12 @@ const persistentUsbBridges: UsbBridgeId[] = [
     { vendorId: 0x0403 }, // FTDI
     { vendorId: 0x067b }, // Prolific PL2303
     { vendorId: 0x10c4 }, // Silicon Labs CP210x
-    { vendorId: 0x1a86 }, // WCH CH34x / CH343 / CH9102
+    { vendorId: 0x1a86, productId: 0x7522 }, // WCH CH340 (variant)
+    { vendorId: 0x1a86, productId: 0x7523 }, // WCH CH340
+    { vendorId: 0x1a86, productId: 0x5523 }, // WCH CH341
+    { vendorId: 0x1a86, productId: 0x7584 }, // WCH CH340S
+    { vendorId: 0x1a86, productId: 0x55d3 }, // WCH CH343
+    { vendorId: 0x1a86, productId: 0x55d4 }, // WCH CH9102
     { vendorId: 0x04d8, productId: 0x00dd }, // Microchip MCP2221
     { vendorId: 0x04d8, productId: 0x00df }, // Microchip MCP2200
 ];
@@ -158,6 +190,7 @@ const defaultUsbFilters: UsbDeviceId[] = [
     { vendorId: 11914, productId: 15 }, // Raspberry Pi Pico in Bootloader mode
     { vendorId: 14743, productId: 57105 }, // X32 DFU Bootloader
     { vendorId: 14698, productId: 57088 }, // UM32 DFU Bootloader
+    { vendorId: 6790, productId: 57860 }, // 1a86:e204 WCH DFU Bootloader
 ];
 
 const defaultVendorIdNames: Record<string, string> = {

@@ -609,6 +609,13 @@ dialog {
         bottom: calc(2.5rem + var(--bf-inset-bottom));
         inset-inline-end: 0;
     }
+    /* Compact: #status-bar becomes a 4.5rem pill floating 0.5rem above the inset (StatusBar.vue).
+       Sit on the same line #content reserves for it (App.vue) so Save stays clear of the pill. */
+    @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+        &.content_toolbar {
+            bottom: calc(5.75rem + var(--bf-inset-bottom));
+        }
+    }
 }
 .toolbar_expand_btn {
     display: none;
@@ -1371,6 +1378,11 @@ each(range(12), {
 }
 @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
     .compact-header-layout();
+    /* Above the floating status bar the fixed toolbar wraps to two rows when the labels run long
+       (e.g. the OSD tab in French), so leave room for both rows at the end of the scroll. */
+    .content_wrapper {
+        padding-bottom: 6rem;
+    }
 }
 body.compact-header-layout {
     .compact-header-layout();

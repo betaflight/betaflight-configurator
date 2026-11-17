@@ -976,7 +976,7 @@ describe("serial_backend reinitializeConnection — serial/USB reboot path", () 
             const connectionStore = useConnectionStore();
             vi.useFakeTimers();
             try {
-                describeAs(0x1a86, 0xbeef); // WCH, a product id not in any filter list
+                describeAs(0x0403, 0xbeef); // FTDI, a product id not in any filter list
                 DeviceHandler.devicePicker.autoConnect = true;
                 connectionStore.connectionValid = true;
                 establishConnection();

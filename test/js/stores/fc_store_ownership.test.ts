@@ -40,13 +40,15 @@ describe("flightController store state", () => {
         expect(store.pids[0][0]).toBeUndefined();
     });
 
-    it("resetState keeps ledConfigValues, as the legacy reset did", () => {
+    it("resetState clears LED values and their connection-specific readiness", () => {
         const store = useFlightControllerStore();
-        const ledConfigValues = store.ledConfigValues;
+        store.ledConfigValues = { brightness: 80, rainbow_delta: 33, rainbow_freq: 120 };
+        store.ledConfigValuesLoaded = true;
 
         store.resetState();
 
-        expect(store.ledConfigValues).toBe(ledConfigValues);
+        expect(store.ledConfigValues).toEqual({});
+        expect(store.ledConfigValuesLoaded).toBe(false);
     });
 
     it("helpers read the store's config", () => {

@@ -116,12 +116,34 @@ public class BetaflightBlePlugin extends Plugin {
 		addDevice("CC2541", SERVICE_CC2541, WRITE_CC2541, NOTIFY_CC2541);
 		addDevice("HC-05", SERVICE_HC05, WRITE_HC05, NOTIFY_HC05);
 		addDevice("HM-10", SERVICE_HM10, WRITE_HM10, NOTIFY_HM10);
-		addDevice("HM-11", SERVICE_NORDIC_NUS, NOTIFY_NORDIC_NUS, WRITE_NORDIC_NUS);
-		addDevice("Nordic NRF", SERVICE_NORDIC_NUS, NOTIFY_NORDIC_NUS, WRITE_NORDIC_NUS);
+		addDevice("HM-11", SERVICE_NORDIC_NUS, WRITE_NORDIC_NUS, NOTIFY_NORDIC_NUS);
+		addDevice("Nordic NRF", SERVICE_NORDIC_NUS, WRITE_NORDIC_NUS, NOTIFY_NORDIC_NUS);
 		addDevice("SpeedyBee V1", SERVICE_SPEEDYBEE_V1, WRITE_SPEEDYBEE_V1, NOTIFY_SPEEDYBEE_V1);
 		addDevice("SpeedyBee V2", SERVICE_SPEEDYBEE_V2, WRITE_SPEEDYBEE_V2, NOTIFY_SPEEDYBEE_V2);
 		addDevice("SpeedyBee FF00", SERVICE_SPEEDYBEE_FF00, WRITE_SPEEDYBEE_FF00, NOTIFY_SPEEDYBEE_FF00);
 		addDevice("DroneBridge", SERVICE_DRONEBRIDGE, WRITE_DRONEBRIDGE, NOTIFY_DRONEBRIDGE);
+	}
+
+	private static final int WRITE_PROPERTIES =
+		BluetoothGattCharacteristic.PROPERTY_WRITE | BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE;
+	private static final int NOTIFY_PROPERTIES =
+		BluetoothGattCharacteristic.PROPERTY_NOTIFY | BluetoothGattCharacteristic.PROPERTY_INDICATE;
+
+	/**
+	 * As pickCharacteristics in devices.ts: modules disagree on which way round a profile's two
+	 * characteristics go, so each direction takes the first of the two that can carry it, the
+	 * profile's own choice first. Many CC2541 modules (HM-10 firmware, MLT-BT05, T-Motor's TMFC)
+	 * share the FFE0 service with the CC2541 profile but carry both directions on FFE1 and have no FFE2.
+	 */
+	private static BluetoothGattCharacteristic pickCharacteristic(BluetoothGattService service, int properties,
+			UUID preferred, UUID other) {
+		for (UUID uuid : new UUID[] { preferred, other }) {
+			BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuid);
+			if (characteristic != null && (characteristic.getProperties() & properties) != 0) {
+				return characteristic;
+			}
+		}
+		return null;
 	}
 
 	private static void addDevice(String name, String service, String write, String notify) {
@@ -703,17 +725,10 @@ public class BetaflightBlePlugin extends Plugin {
 					service = fallback;
 				}
 
-				writeCharacteristic = service.getCharacteristic(writeUuid);
-				notifyCharacteristic = service.getCharacteristic(notifyUuid);
+				writeCharacteristic = pickCharacteristic(service, WRITE_PROPERTIES, writeUuid, notifyUuid);
+				notifyCharacteristic = pickCharacteristic(service, NOTIFY_PROPERTIES, notifyUuid, writeUuid);
 
-				// Many CC2541 modules (HM-10 firmware, MLT-BT05, T-Motor's TMFC) share the FFE0 service with
-				// the CC2541 profile but carry both directions on FFE1 and have no FFE2.
-				if (notifyCharacteristic == null && writeCharacteristic != null
-						&& (writeCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-					notifyCharacteristic = writeCharacteristic;
-				}
-
-				if (notifyCharacteristic != null && (notifyCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+				if (notifyCharacteristic != null) {
 					setNotificationCallback(notifyCharacteristic).with((device, data) -> plugin.handleNotification(data));
 				}
 
@@ -732,7 +747,11 @@ public class BetaflightBlePlugin extends Plugin {
 					.enqueue();
 
 				if (notifyCharacteristic != null) {
-					enableNotifications(notifyCharacteristic).enqueue();
+					if ((notifyCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+						enableNotifications(notifyCharacteristic).enqueue();
+					} else {
+						enableIndications(notifyCharacteristic).enqueue();
+					}
 				}
 			}
 
