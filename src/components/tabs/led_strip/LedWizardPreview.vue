@@ -18,7 +18,7 @@ If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
     <figure class="led-wizard-preview">
-        <svg viewBox="0 0 400 320" role="img" :aria-label="$t('ledWizardPreview')">
+        <svg viewBox="0 0 400 320" role="img" :aria-label="$t('ledWizardPreview')" :aria-describedby="descriptionId">
             <g v-for="(arm, index) in arms" :key="index">
                 <line class="arm" :x1="arm.start.x" :y1="arm.start.y" :x2="arm.end.x" :y2="arm.end.y" />
                 <text class="arm-label" :x="arm.label.x" :y="arm.label.y" text-anchor="middle">
@@ -45,6 +45,19 @@ If not, see <http://www.gnu.org/licenses/>.
                 {{ $t("ledWizardCenter") }}
             </text>
         </svg>
+        <div :id="descriptionId" class="sr-only">
+            <template v-for="(indices, arm) in armIndices" :key="arm">
+                <p v-if="indices.length">
+                    {{
+                        $t(indices.length === 1 ? "ledWizardPreviewArmIndex" : "ledWizardPreviewArmIndices", {
+                            index: arm + 1,
+                            first: indices[0],
+                            last: indices.at(-1),
+                        })
+                    }}
+                </p>
+            </template>
+        </div>
         <figcaption>
             {{ $t(model.topology === "parallel" ? "ledWizardPreviewParallelNote" : "ledWizardPreviewNote") }}
         </figcaption>
@@ -52,17 +65,19 @@ If not, see <http://www.gnu.org/licenses/>.
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { ledsPerArm, previewArmIndices, type LedWizardModel } from "@/composables/ledWizard";
 
 const props = defineProps<{ model: LedWizardModel; color: string; off: boolean }>();
+const descriptionId = useId();
+const armIndices = computed(() => previewArmIndices(props.model));
 const radius = computed(() => {
     const count = Number.isFinite(props.model.count) ? props.model.count : 0;
     return Math.min(9, 65 / Math.max(1, ledsPerArm({ ...props.model, count }) ?? 0));
 });
 const arms = computed(() => {
     const model = props.model;
-    const indices = previewArmIndices(model);
+    const indices = armIndices.value;
     const perArm = indices[0]?.length ?? 0;
     const vectors =
         model.layout === "four"

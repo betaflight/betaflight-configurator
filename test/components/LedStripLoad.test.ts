@@ -53,6 +53,7 @@ describe("LED tab load failure", () => {
                 renderStubDefaultSlot: true,
                 mocks: { $t: (key: string) => key },
                 stubs: {
+                    SubtabNav: { template: '<div><slot name="advanced" /></div>' },
                     Button: {
                         props: ["label", "disabled", "loading"],
                         template: '<button :disabled="disabled || loading">{{ label }}</button>',

@@ -3,11 +3,16 @@
         <UTabs
             :items="items"
             :model-value="modelValue"
-            :content="false"
+            :content="Object.keys($slots).length > 0"
+            :unmount-on-hide="false"
             color="primary"
             variant="link"
             @update:model-value="$emit('update:modelValue', $event)"
-        />
+        >
+            <template #content="{ item }">
+                <slot :name="String(item.value)" />
+            </template>
+        </UTabs>
     </div>
 </template>
 

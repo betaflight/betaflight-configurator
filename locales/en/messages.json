@@ -21,6 +21,8 @@
         "message": "Too few LEDs for a chase animation: the firmware needs at least 3 LEDs per ring segment."
     },
     "ledWizardArm": { "message": "Arm {{index}}" },
+    "ledWizardPreviewArmIndices": { "message": "Arm {{index}}: LED indices {{first}} to {{last}}." },
+    "ledWizardPreviewArmIndex": { "message": "Arm {{index}}: LED index {{first}}." },
     "ledWizardErrorConfigValues": {
         "message": "LED brightness settings have not been loaded for this connection. Reload the LED tab before applying changes."
     },
@@ -42,7 +44,6 @@
     "ledWizardTopology": { "message": "LED topology" },
     "ledWizardTitle": { "message": "LED Setup Wizard" },
     "ledWizardAdvanced": { "message": "Advanced LED configuration" },
-    "ledWizardView": { "message": "LED configuration view" },
     "ledWizardBasic": { "message": "Basic setup" },
     "ledWizardCount": { "message": "Number of LEDs" },
     "ledWizardCapacity": { "message": "Controller limit: {{count}}" },

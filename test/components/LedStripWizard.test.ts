@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { shallowMount, flushPromises } from "@vue/test-utils";
+import { mount, shallowMount, flushPromises } from "@vue/test-utils";
 import { nextTick } from "vue";
 import LedStripTab from "../../src/components/tabs/LedStripTab.vue";
 import LedSetupWizard from "../../src/components/tabs/led_strip/LedSetupWizard.vue";
@@ -47,6 +47,8 @@ function translate(key: string, params?: Record<string, string | number>) {
         "ledWizardCountSplit",
         "ledWizardCountCapacity",
         "ledWizardRecognizedStrip",
+        "ledWizardPreviewArmIndex",
+        "ledWizardPreviewArmIndices",
     ];
     const message = countMessages.includes(key) ? englishMessages[key as keyof typeof englishMessages].message : key;
     return message.replace(/\{\{(\w+)\}\}/g, (_, name: string) => String(params?.[name] ?? ""));
@@ -62,18 +64,19 @@ beforeEach(() => {
 
 describe("Wizard and Advanced share the actual tab state", () => {
     const mountTab = () =>
-        shallowMount(LedStripTab, {
+        mount(LedStripTab, {
             global: {
                 renderStubDefaultSlot: true,
                 mocks: { $t: translate },
                 stubs: {
-                    LedSetupWizard: false,
-                    InputNumber: false,
-                    NumberFieldRoot: false,
-                    NumberFieldInput: false,
-                    Primitive: false,
-                    FormField: false,
-                    LedWizardPreview: false,
+                    BaseTab: true,
+                    WikiButton: true,
+                    LedGrid: true,
+                    UiBox: true,
+                    HelpIcon: true,
+                    Select: true,
+                    Slider: true,
+                    Switch: true,
                     Button: {
                         props: ["label", "disabled", "loading"],
                         emits: ["click"],
@@ -85,12 +88,68 @@ describe("Wizard and Advanced share the actual tab state", () => {
         });
     let wrapper: ReturnType<typeof mountTab>;
     afterEach(() => wrapper?.unmount());
+    const tabs = () => wrapper.get('[role="tablist"]').findAll('[role="tab"]');
+    async function selectTab(label: string) {
+        const tab = tabs().find((item) => item.text() === label);
+        expect(tab, label).toBeDefined();
+        await tab!.trigger("mousedown", { button: 0 });
+        await flushPromises();
+    }
     const click = async (label: string) => {
         const button = wrapper.findAll("button").find((button) => button.text() === label);
         expect(button, label).toBeDefined();
         await button!.trigger("click");
         await flushPromises();
     };
+
+    it("exposes the active tab and locks navigation while loading or saving", async () => {
+        const fc = setupLedStore();
+        fc.ledStrip[0] = { x: 1, y: 0, functions: "fo", directions: "", color: 0 };
+        wrapper = mountTab();
+        const [wizard, advanced] = tabs();
+        expect(tabs().map((tab) => tab.text())).toEqual(["ledWizardTitle", "ledWizardAdvanced"]);
+        expect(wizard.attributes("disabled")).toBeDefined();
+        expect(advanced.attributes("disabled")).toBeUndefined();
+        await selectTab("ledWizardTitle");
+        expect(advanced.attributes("aria-selected")).toBe("true");
+        expect(wizard.attributes("aria-selected")).toBe("false");
+        wrapper.getComponent(BaseTab).vm.$emit("mounted");
+        await flushPromises();
+        await selectTab("ledWizardTitle");
+        expect(wizard.attributes("aria-selected")).toBe("true");
+        expect(advanced.attributes("aria-selected")).toBe("false");
+        const panel = wrapper.get(`[id="${wizard.attributes("aria-controls")}"]`);
+        expect(panel.attributes("role")).toBe("tabpanel");
+        expect(panel.attributes("aria-labelledby")).toBe(wizard.attributes("id"));
+        await selectTab("ledWizardAdvanced");
+        expect(advanced.attributes("aria-selected")).toBe("true");
+        await selectTab("ledWizardTitle");
+        await wrapper.getComponent(LedSetupWizard).get("button").trigger("click");
+        expect(advanced.attributes("aria-selected")).toBe("true");
+        await selectTab("ledWizardTitle");
+        await click("ledWizardReview");
+        await click("ledWizardApply");
+        expect(advanced.attributes("aria-selected")).toBe("true");
+
+        let finishSave!: () => void;
+        saveToEeprom.mockReturnValueOnce(
+            new Promise<void>((resolve) => {
+                finishSave = resolve;
+            }),
+        );
+        await click("save");
+        try {
+            expect(wizard.attributes("disabled")).toBeDefined();
+            expect(advanced.attributes("disabled")).toBeDefined();
+            await selectTab("ledWizardTitle");
+            expect(advanced.attributes("aria-selected")).toBe("true");
+        } finally {
+            finishSave();
+            await flushPromises();
+        }
+        expect(wizard.attributes("disabled")).toBeUndefined();
+        expect(advanced.attributes("disabled")).toBeUndefined();
+    });
 
     it("keeps Wizard and Save disabled after the real decoder receives a truncated strip reply", async () => {
         const fc = setupLedStore();
@@ -128,7 +187,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
         const before = JSON.stringify(fc.$state);
         vi.mocked(MSP.promise).mockClear();
         vi.mocked(MSP.send_message).mockClear();
-        await click("ledWizardTitle");
+        await selectTab("ledWizardTitle");
         expect(wrapper.findComponent(LedSetupWizard).text()).toContain("ledWizardCustom");
         expect(JSON.stringify(fc.$state)).toBe(before);
         await click("ledWizardReview");
@@ -143,8 +202,31 @@ describe("Wizard and Advanced share the actual tab state", () => {
         await click("save");
         expect(saveToEeprom).toHaveBeenCalledOnce();
         await nextTick();
-        await click("ledWizardTitle");
+        await selectTab("ledWizardTitle");
         expect(wrapper.findComponent(LedSetupWizard).text()).not.toContain("ledWizardCustomNote");
+    });
+
+    it("clears the selected special color when applying a wizard configuration", async () => {
+        const fc = setupLedStore();
+        fc.ledStrip[0] = { x: 1, y: 0, functions: "a", directions: "", color: 0 };
+        wrapper = mountTab();
+        wrapper.getComponent(BaseTab).vm.$emit("mounted");
+        await flushPromises();
+        const grid = wrapper.getComponent(LedGrid);
+        grid.vm.$emit("selection-change", new Set([1]));
+        grid.vm.$emit("selection-end");
+        await nextTick();
+        const armed = wrapper.get(".mode_color-6-1");
+        expect(armed.isVisible()).toBe(true);
+        await armed.trigger("click");
+        await selectTab("ledWizardTitle");
+        await click("ledWizardReview");
+        await click("ledWizardApply");
+        const appliedColors = fc.ledModeColors.map((entry) => ({ ...entry }));
+        expect(appliedColors).toContainEqual({ mode: 6, direction: 1, color: 10 });
+
+        await wrapper.get(".colors .color-4").trigger("click");
+        expect(fc.ledModeColors).toEqual(appliedColors);
     });
 
     it.each(["outward", "inward"] as const)(
@@ -175,7 +257,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
             const before = JSON.stringify(fc.$state);
             vi.mocked(MSP.promise).mockClear();
             vi.mocked(MSP.send_message).mockClear();
-            await click("ledWizardTitle");
+            await selectTab("ledWizardTitle");
             expect(wrapper.findComponent(LedSetupWizard).text()).not.toContain("ledWizardCustomNote");
             await click("ledWizardReview");
             expectNoChanges();
@@ -188,7 +270,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
                     .props("gridLeds")
                     .filter((cell: { wireNumber: string }) => cell.wireNumber !== ""),
             ).toHaveLength(4);
-            await click("ledWizardTitle");
+            await selectTab("ledWizardTitle");
             expect(wrapper.findComponent(LedSetupWizard).text()).not.toContain("ledWizardCustomNote");
         },
     );
@@ -200,7 +282,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
         wrapper = mountTab();
         wrapper.findComponent(BaseTab).vm.$emit("mounted");
         await flushPromises();
-        await click("ledWizardTitle");
+        await selectTab("ledWizardTitle");
         const wizard = wrapper.findComponent(LedSetupWizard);
         const select = (id: string) =>
             wizard
@@ -242,7 +324,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
         wrapper = mountTab();
         wrapper.findComponent(BaseTab).vm.$emit("mounted");
         await flushPromises();
-        await click("ledWizardTitle");
+        await selectTab("ledWizardTitle");
         return wrapper.findComponent(LedSetupWizard);
     }
     const fieldSelect = (name: string) =>
@@ -288,7 +370,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
         wrapper = mountTab();
         wrapper.findComponent(BaseTab).vm.$emit("mounted");
         await flushPromises();
-        await click("ledWizardTitle");
+        await selectTab("ledWizardTitle");
         const wizard = wrapper.findComponent(LedSetupWizard);
         expect(fieldSelect("topology").props("modelValue")).toBe("serial");
         expect(fieldSelect("layout").props("modelValue")).toBe("strip");
@@ -329,7 +411,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
             await click("ledWizardReview");
             await click("ledWizardApply");
             await click("save");
-            await click("ledWizardTitle");
+            await selectTab("ledWizardTitle");
             const wizard = wrapper.findComponent(LedSetupWizard);
             expect(wizard.text()).toContain("Recognized as a single strip of 16 LEDs.");
             fieldSelect("armed-color").vm.$emit("update:modelValue", 6);
@@ -350,12 +432,12 @@ describe("Wizard and Advanced share the actual tab state", () => {
         wrapper = mountTab();
         wrapper.findComponent(BaseTab).vm.$emit("mounted");
         await flushPromises();
-        await click("ledWizardTitle");
+        await selectTab("ledWizardTitle");
         if (kind === "four") {
             await click("ledWizardReview");
             await click("ledWizardApply");
             await click("save");
-            await click("ledWizardTitle");
+            await selectTab("ledWizardTitle");
             expect(fieldSelect("layout").props("modelValue")).toBe("four");
         }
         expect(wrapper.findComponent(LedSetupWizard).text()).not.toContain("Recognized as a single strip of 16 LEDs.");
@@ -366,7 +448,7 @@ describe("Wizard and Advanced share the actual tab state", () => {
         await click("ledWizardReview");
         await click("ledWizardApply");
         await click("save");
-        await click("ledWizardTitle");
+        await selectTab("ledWizardTitle");
         fieldSelect("disarmed").vm.$emit("update:modelValue", "static");
         await nextTick();
         fieldSelect("disarmed-color").vm.$emit("update:modelValue", 6);
@@ -491,6 +573,31 @@ describe("Wizard and Advanced share the actual tab state", () => {
                 "7",
             ]);
         }
+    });
+
+    it("describes each arm's index range as the wiring changes", async () => {
+        const wizard = await openWizard();
+        const preview = wizard.getComponent(LedWizardPreview);
+        const id = preview.get('svg[role="img"]').attributes("aria-describedby");
+        const descriptions = () =>
+            preview
+                .get(`[id="${id}"]`)
+                .findAll("p")
+                .map((arm) => arm.text());
+
+        fieldSelect("direction").vm.$emit("update:modelValue", "inward");
+        await nextTick();
+        expect(descriptions()).toEqual([
+            "Arm 1: LED indices 3 to 0.",
+            "Arm 2: LED indices 7 to 4.",
+            "Arm 3: LED indices 11 to 8.",
+            "Arm 4: LED indices 15 to 12.",
+        ]);
+        await chooseTopology("parallel");
+        expect(descriptions()).toEqual([1, 2, 3, 4].map((arm) => `Arm ${arm}: LED indices 3 to 0.`));
+        fieldSelect("layout").vm.$emit("update:modelValue", "strip");
+        await enterCount("1");
+        expect(descriptions()).toEqual(["Arm 1: LED index 0."]);
     });
 
     it("keeps the Wizard and Save disabled after a failed load", async () => {
