@@ -57,7 +57,10 @@ export const armCount = (layout: LedWizardModel["layout"]) => ({ strip: 1, two: 
 export const supportsLedBrightness = (source: LedWizardSource) =>
     !!semver.valid(source.apiVersion) && semver.gte(source.apiVersion, API_VERSION_1_46);
 export const maxWizardLeds = (source: LedWizardSource) => Math.min(source.strip.length, 256);
-const letters = (value: string | string[]) => Array.from(value).sort().join("");
+const letters = (value: string | string[]) =>
+    Array.from(value)
+        .sort((a, b) => a.localeCompare(b))
+        .join("");
 const offColor = (source: LedWizardSource) => source.colors.findIndex((color) => color.v === 0);
 const specialColor = (source: LedWizardSource, direction: number) =>
     source.modeColors.find((color) => color.mode === 6 && color.direction === direction)?.color;
