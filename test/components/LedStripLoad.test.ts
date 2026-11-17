@@ -91,6 +91,7 @@ describe("LED color sliders", () => {
                 renderStubDefaultSlot: true,
                 mocks: { $t: (key: string) => key },
                 config: { errorHandler },
+                stubs: { SubtabNav: { template: '<div><slot name="advanced" /></div>' } },
             },
         });
         onTestFinished(() => wrapper.unmount());
