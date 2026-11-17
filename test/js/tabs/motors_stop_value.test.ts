@@ -480,17 +480,22 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
             return cell!;
         }
 
-        async function scrollUp(cell: HTMLElement) {
-            cell.dispatchEvent(new WheelEvent("wheel", { deltaY: -100, bubbles: true, cancelable: true }));
-            // Motor commands are buffered for 10 ms before being sent.
-            await new Promise((resolve) => setTimeout(resolve, 20));
+        function scrollUp(cell: HTMLElement) {
+            vi.useFakeTimers();
+            try {
+                cell.dispatchEvent(new WheelEvent("wheel", { deltaY: -100, bubbles: true, cancelable: true }));
+                // Motor commands are buffered for 10 ms before being sent.
+                vi.advanceTimersByTime(10);
+            } finally {
+                vi.useRealTimers();
+            }
         }
 
         it("does not change a motor whose slider was not selected", async () => {
             const container = await mountReady({ enable3d: false, neutral: 1500 });
             motorsTestingEnabled.value = true;
 
-            await scrollUp(motorSliderCell(container, 0));
+            scrollUp(motorSliderCell(container, 0));
 
             expect(sendMotorCommand).not.toHaveBeenCalled();
         });
@@ -501,7 +506,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
             const cell = motorSliderCell(container, 0);
             cell.querySelector<HTMLElement>('[role="slider"]')!.focus();
 
-            await scrollUp(cell);
+            scrollUp(cell);
 
             expect(sendMotorCommand).toHaveBeenCalledTimes(1);
             expect(sendMotorCommand.mock.calls[0][0][0]).toBe(1025);
