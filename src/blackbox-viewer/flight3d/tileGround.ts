@@ -95,7 +95,7 @@ export function tileRange(box: LatLonBox, z: number): { x0: number; x1: number; 
 }
 
 /** The box with a 20% margin on each side. */
-function padded(box: LatLonBox): LatLonBox {
+export function padded(box: LatLonBox): LatLonBox {
     const lat = (box.maxLat - box.minLat) * 0.2;
     const lon = (box.maxLon - box.minLon) * 0.2;
     return { minLat: box.minLat - lat, maxLat: box.maxLat + lat, minLon: box.minLon - lon, maxLon: box.maxLon + lon };
@@ -113,25 +113,77 @@ export function pickZoom(box: LatLonBox, zMax = 19): number {
     return MIN_ZOOM;
 }
 
+/** Scene height of the ground at a lat/lon. */
+export type SurfaceHeight = (lat: number, lon: number) => number;
+
+// Squares per tile side on terrain: about one per terrain pixel at the dataset's zoom 15, and at
+// most 64 tiles x 33 x 33 vertices. A flat map needs only the corners.
+const TERRAIN_SEGMENTS = 32;
+
 export interface GroundOptions {
     box: LatLonBox;
     source: TileSource;
-    /** Scene height of the ground plane. */
+    /** Scene height of the flat ground. */
     groundU: number;
     /** Local scene position (x = North, z = East) of a lat/lon on the ground. */
     toLocal(lat: number, lon: number): { n: number; e: number };
     /** Called whenever a tile finishes loading, so the scene can re-render. */
     onTileLoaded(): void;
+    /** Terrain to drape the map over; flat at groundU without. */
+    surface?: SurfaceHeight | null;
 }
 
 export interface Ground {
     group: Group;
     /**
-     * The map is a flat reference plane, not terrain, so the recorded altitude can pass below it.
-     * While the craft is below, the map is drawn see-through so the craft and path stay visible.
+     * The recorded altitude can pass below the map: a flat map is a reference plane, not terrain,
+     * and terrain is coarser than the ground the craft flew over. While the craft is below, the map
+     * is drawn see-through so the craft and path stay visible.
      */
     setTranslucent(translucent: boolean): void;
+    /** Drape the map over terrain, or lay it flat again (null). */
+    setSurface(surface: SurfaceHeight | null): void;
     dispose(): void;
+}
+
+/**
+ * A tile as a grid of `segments` squares a side. Vertices run west to east, then north to south,
+ * so with one segment they are the NW, NE, SW and SE corners.
+ */
+function tileGeometry(
+    x: number,
+    y: number,
+    z: number,
+    segments: number,
+    toLocal: GroundOptions["toLocal"],
+    height: SurfaceHeight,
+): BufferGeometry {
+    const positions: number[] = [];
+    const uvs: number[] = [];
+    const index: number[] = [];
+    for (let j = 0; j <= segments; j++) {
+        for (let i = 0; i <= segments; i++) {
+            const { lon, lat } = tileToLonLat(x + i / segments, y + j / segments, z);
+            const { n, e } = toLocal(lat, lon);
+            positions.push(n, height(lat, lon), e);
+            uvs.push(i / segments, 1 - j / segments);
+        }
+    }
+    const row = segments + 1;
+    for (let j = 0; j < segments; j++) {
+        for (let i = 0; i < segments; i++) {
+            const nw = j * row + i;
+            const ne = nw + 1;
+            const sw = nw + row;
+            const se = sw + 1;
+            index.push(nw, sw, ne, ne, sw, se); // wound to face up
+        }
+    }
+    const geometry = new BufferGeometry();
+    geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+    geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+    geometry.setIndex(index);
+    return geometry;
 }
 
 /**
@@ -146,35 +198,22 @@ export function buildGround(options: GroundOptions): Ground {
     const group = new Group();
     const loader = new TextureLoader().setCrossOrigin("anonymous");
     const textures: Texture[] = [];
+    const tiles: { mesh: Mesh; x: number; y: number }[] = [];
     let disposed = false;
+
+    const geometryFor = (x: number, y: number, surface: SurfaceHeight | null | undefined) =>
+        surface
+            ? tileGeometry(x, y, z, TERRAIN_SEGMENTS, toLocal, surface)
+            : tileGeometry(x, y, z, 1, toLocal, () => groundU);
 
     for (let x = range.x0; x <= range.x1; x++) {
         for (let y = range.y0; y <= range.y1; y++) {
-            const corners = [
-                [x, y],
-                [x + 1, y],
-                [x, y + 1],
-                [x + 1, y + 1],
-            ].map(([cx, cy]) => {
-                const { lon, lat } = tileToLonLat(cx, cy, z);
-                return toLocal(lat, lon);
-            });
-            const geometry = new BufferGeometry();
-            geometry.setAttribute(
-                "position",
-                new Float32BufferAttribute(
-                    corners.flatMap((c) => [c.n, groundU, c.e]),
-                    3,
-                ),
-            );
-            geometry.setAttribute("uv", new Float32BufferAttribute([0, 1, 1, 1, 0, 0, 1, 0], 2));
-            geometry.setIndex([0, 2, 1, 1, 2, 3]); // wound to face up
-
             const material = new MeshBasicMaterial();
-            const tile = new Mesh(geometry, material);
+            const tile = new Mesh(geometryFor(x, y, options.surface), material);
             tile.renderOrder = 10; // after the path, so a see-through map blends over the part below it
             tile.visible = false; // until its image arrives; a blank tile would still hide what is behind it
             group.add(tile);
+            tiles.push({ mesh: tile, x, y });
 
             const url = source.url.replace("{z}", String(z)).replace("{x}", String(x)).replace("{y}", String(y));
             loader.load(url, (texture) => {
@@ -201,6 +240,12 @@ export function buildGround(options: GroundOptions): Ground {
                 material.opacity = translucent ? SEE_THROUGH_OPACITY : 1;
                 material.depthWrite = !translucent;
                 material.needsUpdate = true;
+            }
+        },
+        setSurface(surface) {
+            for (const { mesh, x, y } of tiles) {
+                mesh.geometry.dispose();
+                mesh.geometry = geometryFor(x, y, surface);
             }
         },
         dispose() {

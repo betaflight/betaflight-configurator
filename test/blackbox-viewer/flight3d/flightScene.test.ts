@@ -63,7 +63,99 @@ vi.mock("three/examples/jsm/loaders/GLTFLoader.js", () => ({
     },
 }));
 
+const terrainLoads = vi.hoisted(() => [] as { box: unknown; signal: AbortSignal; resolve(model: unknown): void }[]);
+vi.mock("../../../src/blackbox-viewer/flight3d/terrain", async (original) => ({
+    ...(await original<typeof import("../../../src/blackbox-viewer/flight3d/terrain")>()),
+    loadElevation: (box: unknown, signal: AbortSignal) =>
+        new Promise((resolve) => terrainLoads.push({ box, signal, resolve })),
+}));
+
 afterEach(() => vi.unstubAllGlobals());
+
+describe("terrain", () => {
+    const ORIGIN = { lat: 29.9792, lon: 31.1342 };
+    const trackAt = (lat: number) =>
+        buildTrack(
+            [
+                { tUs: 0, lat, lon: ORIGIN.lon, altM: 60 },
+                { tUs: 1e6, lat: lat + 0.001, lon: ORIGIN.lon, altM: 80 },
+            ],
+            null,
+        );
+    // Rises 10 m per 100 m north of the origin; nothing south of it.
+    const slope = {
+        elevationAt: (lat: number) => (lat < ORIGIN.lat - 1e-9 ? null : 200 + (lat - ORIGIN.lat) * 11_085),
+    };
+    const settle = () => new Promise((resolve) => setTimeout(resolve));
+
+    function sceneWithTrack(lat = ORIGIN.lat) {
+        vi.stubGlobal("requestAnimationFrame", () => 1);
+        vi.stubGlobal("cancelAnimationFrame", () => {});
+        terrainLoads.length = 0;
+        const scene = new FlightScene(document.createElement("canvas"));
+        const states: string[] = [];
+        scene.onTerrainState = (state) => states.push(state);
+        scene.setGroundSource("none");
+        const track = trackAt(lat)!;
+        scene.setTrack(track);
+        return { scene, states, track };
+    }
+
+    it("loads the flight's terrain once, on first use, and lays the ground over it from the origin", async () => {
+        const { scene, states, track } = sceneWithTrack();
+        expect(terrainLoads).toHaveLength(0);
+        expect(scene.surfaceU(100, 0)).toBe(track.groundU);
+
+        scene.setTerrain(true);
+        expect(states).toEqual(["loading"]);
+        expect(terrainLoads).toHaveLength(1);
+        expect(terrainLoads[0].box).toEqual(track.box);
+        terrainLoads[0].resolve(slope);
+        await settle();
+
+        expect(states).toEqual(["loading", "ready"]);
+        expect(scene.terrainShown).toBe(true);
+        expect(scene.surfaceU(0, 0)).toBeCloseTo(track.groundU, 3);
+        expect(scene.surfaceU(100, 0)).toBeCloseTo(track.groundU + 10, 1);
+        // Where no tile loaded, the ground stays level with the origin.
+        expect(scene.surfaceU(-100, 0)).toBeCloseTo(track.groundU, 3);
+
+        scene.setTerrain(false);
+        expect(states.at(-1)).toBe("off");
+        expect(scene.terrainShown).toBe(false);
+        expect(scene.surfaceU(100, 0)).toBe(track.groundU);
+
+        scene.setTerrain(true);
+        expect(states.at(-1)).toBe("ready");
+        expect(terrainLoads).toHaveLength(1);
+        scene.dispose();
+    });
+
+    it("drops a load for a flight that has been replaced, and fetches the new one's", async () => {
+        const { scene, states } = sceneWithTrack();
+        scene.setTerrain(true);
+        const first = terrainLoads[0];
+        scene.setTrack(trackAt(ORIGIN.lat + 0.01));
+        expect(first.signal.aborted).toBe(true);
+        expect(terrainLoads).toHaveLength(2);
+        first.resolve(slope);
+        await settle();
+        expect(scene.terrainShown).toBe(false);
+        expect(states.at(-1)).toBe("loading");
+        scene.dispose();
+        expect(terrainLoads[1].signal.aborted).toBe(true);
+    });
+
+    it("reports terrain without a height at the takeoff spot as unavailable", async () => {
+        const { scene, states } = sceneWithTrack(ORIGIN.lat - 0.01);
+        scene.setTerrain(true);
+        terrainLoads[0].resolve(slope);
+        await settle();
+        expect(states).toEqual(["loading", "failed"]);
+        expect(scene.terrainShown).toBe(false);
+        scene.dispose();
+    });
+});
 
 describe("flight scene lifecycle", () => {
     it("cancels queued renders and stays idle while the viewer is hidden or disposed", () => {

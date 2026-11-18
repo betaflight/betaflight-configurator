@@ -57,6 +57,12 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         }
         setFollow() {}
         setGroundSource() {}
+        setTerrain() {}
+        terrainShown = false;
+        onTerrainState = null;
+        surfaceU() {
+            return 0;
+        }
         resize() {}
         pickTime() {
             return null;
