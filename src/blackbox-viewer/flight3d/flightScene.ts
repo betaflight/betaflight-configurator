@@ -186,10 +186,13 @@ export class FlightScene {
     /** Colour the path and curtain by altitude or by ground speed. */
     setColoring(coloring: PathColoring): void {
         this.coloring = coloring;
-        if (this.track) {
+        const track = this.track;
+        if (track) {
             this.buildPath();
             this.buildCurtain();
-            this.setTime(this.timeUs, null);
+            // Only the part flown so far: setTime would also drop the craft's attitude while paused.
+            this.traveled!.instanceCount = this.segmentsBefore[upperBound(track.samples, this.timeUs)];
+            this.requestRender();
         }
     }
 
