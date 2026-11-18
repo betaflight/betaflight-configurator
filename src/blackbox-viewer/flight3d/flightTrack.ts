@@ -611,6 +611,47 @@ function interpolate(t: number[], v: number[], at: number): number {
     return v[i] + (v[i + 1] - v[i]) * f;
 }
 
+const SPEED_HALF_WINDOW_US = 250_000;
+const SPEED_SCALE_PERCENTILE = 0.98;
+const MIN_SPEED_SCALE = 1; // m/s; a hover is not stretched over the whole gradient
+
+/**
+ * Horizontal speed at each sample, in m/s: the distance across a centred half-second window, the
+ * same measure as the receiver's ground speed. A window never spans a GPS gap.
+ */
+export function groundSpeeds(samples: TrackSample[], gapAfter: Uint8Array): Float32Array {
+    const speeds = new Float32Array(samples.length);
+    let runStart = 0;
+    for (let runEnd = 0; runEnd < samples.length; runEnd++) {
+        if (runEnd < samples.length - 1 && !gapAfter[runEnd]) {
+            continue;
+        }
+        let lo = runStart;
+        let hi = runStart;
+        for (let i = runStart; i <= runEnd; i++) {
+            while (samples[i].tUs - samples[lo].tUs > SPEED_HALF_WINDOW_US) {
+                lo++;
+            }
+            while (hi < runEnd && samples[hi + 1].tUs - samples[i].tUs <= SPEED_HALF_WINDOW_US) {
+                hi++;
+            }
+            const dtS = (samples[hi].tUs - samples[lo].tUs) / 1e6;
+            speeds[i] = dtS > 0 ? Math.hypot(samples[hi].n - samples[lo].n, samples[hi].e - samples[lo].e) / dtS : 0;
+        }
+        runStart = runEnd + 1;
+    }
+    return speeds;
+}
+
+/** Top of a speed colour scale: the 98th percentile, so one glitch does not wash out the rest. */
+export function speedScaleMax(speeds: Float32Array): number {
+    if (speeds.length === 0) {
+        return MIN_SPEED_SCALE;
+    }
+    const sorted = Float32Array.from(speeds).sort();
+    return Math.max(MIN_SPEED_SCALE, sorted[Math.floor((sorted.length - 1) * SPEED_SCALE_PERCENTILE)]);
+}
+
 /** Index of the first element whose time is greater than `at`. */
 export function upperBound(items: number[] | { tUs: number }[], at: number): number {
     let lo = 0;

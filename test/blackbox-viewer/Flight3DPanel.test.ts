@@ -35,6 +35,7 @@ interface FakeScene {
     canvasInPageAtDispose?: boolean;
     track?: FlightTrack | null;
     attitude?: Quaternion;
+    coloring: string;
 }
 const scenes: FakeScene[] = [];
 vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
@@ -58,6 +59,13 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         setFollow() {}
         setGroundSource() {}
         setTerrain() {}
+        setColoring(coloring: string) {
+            this.coloring = coloring;
+        }
+        coloring = "altitude";
+        get colorScale() {
+            return { coloring: this.coloring, max: this.coloring === "speed" ? 12.5 : 80 };
+        }
         terrainShown = false;
         onTerrainState = null;
         surfaceU() {
@@ -248,6 +256,29 @@ describe("Flight3DPanel", () => {
             } else {
                 expect(scene.attitude).toBeUndefined();
             }
+            wrapper.unmount();
+        });
+
+        it("switches the path between altitude and speed colours, with a legend in the user's units", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS));
+            graphStore.flight3d!.setCurrentTime(10e6);
+            await wrapper.vm.$nextTick();
+            const legend = () => wrapper.find('[data-testid="flight3d-legend"]').text();
+            expect(legend()).toMatch(/^Altitude 0\s*80\.00 m$/);
+
+            const button = wrapper
+                .findAllComponents({ name: "Button" })
+                .find((b) => b.attributes("aria-label") === "Colour by speed")!;
+            button.vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scenes[0].coloring).toBe("speed");
+            expect(legend()).toMatch(/^Speed 0\s*12\.50 m\/s$/);
+
+            button.vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scenes[0].coloring).toBe("altitude");
             wrapper.unmount();
         });
 

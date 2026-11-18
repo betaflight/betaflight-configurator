@@ -47,9 +47,12 @@ import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { ALTITUDE_TRAIL_COLORS } from "../graph_map.js";
-import { upperBound, type FlightTrack, type TrackPoint } from "./flightTrack";
+import { groundSpeeds, speedScaleMax, upperBound, type FlightTrack, type TrackPoint } from "./flightTrack";
 import { buildGround, TILE_SOURCES, type Ground, type GroundSourceId, type SurfaceHeight } from "./tileGround";
 import { loadElevation, localToLatLon, type ElevationModel } from "./terrain";
+
+/** What the path's colour shows. */
+export type PathColoring = "altitude" | "speed";
 
 /** Terrain progress, for the panel: off, being fetched, shown, or unavailable for this flight. */
 export type TerrainState = "off" | "loading" | "ready" | "failed";
@@ -93,6 +96,11 @@ export class FlightScene {
     private readonly trackObjects = new Group();
     private track: FlightTrack | null = null;
     private traveled: LineSegmentsGeometry | null = null;
+    private path: LineSegments2[] = [];
+    private coloring: PathColoring = "altitude";
+    private speeds: Float32Array = new Float32Array(0);
+    private speedMax = 1;
+    private timeUs = 0;
     /** segmentsBefore[i]: drawn path segments that start before sample i. */
     private segmentsBefore = new Uint32Array(0);
     private ground: Ground | null = null;
@@ -152,35 +160,9 @@ export class FlightScene {
         }
 
         const { samples, gapAfter, groundU } = track;
-        const span = Math.max(1, track.bounds.maxU - groundU);
-        const positions: number[] = [];
-        const colors: number[] = [];
-        const color = new Color();
-        this.segmentsBefore = new Uint32Array(samples.length + 1);
-        let segments = 0;
-        for (let i = 0; i < samples.length; i++) {
-            this.segmentsBefore[i] = segments;
-            if (i === samples.length - 1 || gapAfter[i]) {
-                continue;
-            }
-            for (const s of [samples[i], samples[i + 1]]) {
-                positions.push(s.n, s.u, s.e);
-                altitudeColor((s.u - groundU) / span, color);
-                colors.push(color.r, color.g, color.b);
-            }
-            segments++;
-        }
-        this.segmentsBefore[samples.length] = segments;
-
-        const full = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
-        this.traveled = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
-        this.trackObjects.add(
-            new LineSegments2(
-                full,
-                new LineMaterial({ linewidth: 2, vertexColors: true, transparent: true, opacity: 0.35 }),
-            ),
-            new LineSegments2(this.traveled, new LineMaterial({ linewidth: 4, vertexColors: true })),
-        );
+        this.speeds = groundSpeeds(samples, gapAfter);
+        this.speedMax = speedScaleMax(this.speeds);
+        this.buildPath();
 
         const { minN, maxN, minE, maxE } = track.bounds;
         const extent = Math.max(maxN - minN, maxE - minE, 50);
@@ -199,6 +181,25 @@ export class FlightScene {
         }
         this.frameTrack();
         this.setTime(samples[0].tUs, null);
+    }
+
+    /** Colour the path and curtain by altitude or by ground speed. */
+    setColoring(coloring: PathColoring): void {
+        this.coloring = coloring;
+        if (this.track) {
+            this.buildPath();
+            this.buildCurtain();
+            this.setTime(this.timeUs, null);
+        }
+    }
+
+    /** What the colours run up to, red at the top: meters above the ground level, or m/s. */
+    get colorScale(): { coloring: PathColoring; max: number } {
+        const track = this.track;
+        if (this.coloring === "speed" || !track) {
+            return { coloring: this.coloring, max: this.speedMax };
+        }
+        return { coloring: "altitude", max: Math.max(1, track.bounds.maxU - track.groundU) };
     }
 
     /**
@@ -250,6 +251,7 @@ export class FlightScene {
         if (!this.active || !track || !this.traveled) {
             return null;
         }
+        this.timeUs = tUs;
         this.traveled.instanceCount = this.segmentsBefore[upperBound(track.samples, tUs)];
 
         const position = track.positionAt(tUs);
@@ -427,6 +429,61 @@ export class FlightScene {
         this.requestRender();
     }
 
+    /** Colour of sample `i` under the current colouring. */
+    private sampleColor(i: number, out: Color): Color {
+        const track = this.track!;
+        if (this.coloring === "speed") {
+            return altitudeColor(this.speeds[i] / this.speedMax, out);
+        }
+        const span = Math.max(1, track.bounds.maxU - track.groundU);
+        return altitudeColor((track.samples[i].u - track.groundU) / span, out);
+    }
+
+    /** The whole path, faint, and the part flown so far over it. */
+    private buildPath(): void {
+        for (const line of this.path) {
+            disposeObject(line);
+            line.removeFromParent();
+        }
+        this.path = [];
+        this.traveled = null;
+        const track = this.track;
+        if (!track) {
+            return;
+        }
+        const { samples, gapAfter } = track;
+        const positions: number[] = [];
+        const colors: number[] = [];
+        const color = new Color();
+        this.segmentsBefore = new Uint32Array(samples.length + 1);
+        let segments = 0;
+        for (let i = 0; i < samples.length; i++) {
+            this.segmentsBefore[i] = segments;
+            if (i === samples.length - 1 || gapAfter[i]) {
+                continue;
+            }
+            for (const k of [i, i + 1]) {
+                const s = samples[k];
+                positions.push(s.n, s.u, s.e);
+                this.sampleColor(k, color);
+                colors.push(color.r, color.g, color.b);
+            }
+            segments++;
+        }
+        this.segmentsBefore[samples.length] = segments;
+
+        const full = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
+        this.traveled = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
+        this.path = [
+            new LineSegments2(
+                full,
+                new LineMaterial({ linewidth: 2, vertexColors: true, transparent: true, opacity: 0.35 }),
+            ),
+            new LineSegments2(this.traveled, new LineMaterial({ linewidth: 4, vertexColors: true })),
+        ];
+        this.trackObjects.add(...this.path);
+    }
+
     /** Vertical lines from the path down to the ground every few seconds, to read height by. */
     private buildCurtain(): void {
         if (this.curtain) {
@@ -438,18 +495,18 @@ export class FlightScene {
         if (!track) {
             return;
         }
-        const { samples, groundU } = track;
-        const span = Math.max(1, track.bounds.maxU - groundU);
+        const { samples } = track;
         const color = new Color();
         const curtain: number[] = [];
         const curtainColors: number[] = [];
         let nextCurtainUs = -Infinity;
-        for (const s of samples) {
+        for (let i = 0; i < samples.length; i++) {
+            const s = samples[i];
             if (s.tUs < nextCurtainUs) {
                 continue;
             }
             nextCurtainUs = s.tUs + CURTAIN_EVERY_US;
-            altitudeColor((s.u - groundU) / span, color);
+            this.sampleColor(i, color);
             curtain.push(s.n, s.u, s.e, s.n, this.surfaceU(s.n, s.e), s.e);
             curtainColors.push(color.r, color.g, color.b, color.r, color.g, color.b);
         }
@@ -501,6 +558,7 @@ export class FlightScene {
         this.trackObjects.clear();
         this.grid = null;
         this.curtain = null;
+        this.path = [];
         this.disposeGround();
         this.traveled = null;
         this.track = null;

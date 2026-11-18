@@ -72,6 +72,42 @@ vi.mock("../../../src/blackbox-viewer/flight3d/terrain", async (original) => ({
 
 afterEach(() => vi.unstubAllGlobals());
 
+describe("path colouring", () => {
+    it("recolours by speed and back, keeping the part flown so far", () => {
+        vi.stubGlobal("requestAnimationFrame", () => 1);
+        vi.stubGlobal("cancelAnimationFrame", () => {});
+        const scene = new FlightScene(document.createElement("canvas"));
+        scene.setGroundSource("none");
+        // 20 s due north at 10 m/s, climbing to 50 m.
+        const fixes = Array.from({ length: 201 }, (_, i) => ({
+            tUs: i * 100_000,
+            lat: 48.4 + (i * 1) / 111_200,
+            lon: -71.1,
+            altM: 100 + i / 4,
+        }));
+        const track = buildTrack(fixes, null)!;
+        scene.setTrack(track);
+        scene.setTime(10e6, null);
+        type Inside = { traveled: { instanceCount: number }; path: unknown[] };
+        const inside = scene as unknown as Inside;
+        const flown = inside.traveled.instanceCount;
+        const altitudeScale = scene.colorScale;
+        expect(altitudeScale.coloring).toBe("altitude");
+        expect(altitudeScale.max).toBeCloseTo(track.bounds.maxU - track.groundU, 3);
+
+        scene.setColoring("speed");
+        expect(scene.colorScale.coloring).toBe("speed");
+        expect(scene.colorScale.max).toBeCloseTo(10, 0);
+        expect(inside.path).toHaveLength(2);
+        expect(inside.traveled.instanceCount).toBe(flown);
+
+        scene.setColoring("altitude");
+        expect(scene.colorScale).toEqual(altitudeScale);
+        expect(inside.traveled.instanceCount).toBe(flown);
+        scene.dispose();
+    });
+});
+
 describe("terrain", () => {
     const ORIGIN = { lat: 29.9792, lon: 31.1342 };
     const trackAt = (lat: number) =>

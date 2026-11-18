@@ -24,6 +24,16 @@
                 <UButton
                     size="xs"
                     variant="soft"
+                    :color="coloring === 'speed' ? 'primary' : 'neutral'"
+                    icon="i-lucide-gauge"
+                    :aria-pressed="coloring === 'speed'"
+                    aria-label="Colour by speed"
+                    :title="coloring === 'speed' ? 'Colour by altitude' : 'Colour by speed'"
+                    @click="coloring = coloring === 'speed' ? 'altitude' : 'speed'"
+                />
+                <UButton
+                    size="xs"
+                    variant="soft"
                     :color="terrain ? 'primary' : 'neutral'"
                     icon="i-lucide-mountain"
                     :loading="terrainState === 'loading'"
@@ -50,6 +60,18 @@
                 {{ emptyMessage }}
             </div>
             <template v-else>
+                <div
+                    class="absolute top-1 left-1 flex items-center gap-1 rounded bg-(--surface-100)/80 px-1.5 py-0.5 text-[10px] tabular-nums"
+                    data-testid="flight3d-legend"
+                >
+                    <span>{{ coloring === "speed" ? "Speed" : "Altitude" }} 0</span>
+                    <span
+                        class="h-2 w-16 rounded-sm"
+                        :style="{ background: LEGEND_GRADIENT }"
+                        aria-hidden="true"
+                    ></span>
+                    <span>{{ legendMax }}</span>
+                </div>
                 <div
                     class="absolute bottom-1 left-1 rounded bg-(--surface-100)/80 px-1.5 py-0.5 text-xs tabular-nums"
                     :title="hudTitle"
@@ -117,7 +139,8 @@ import { FlightLogFieldPresenter, type PresentedFlightLog } from "../flightlog_f
 import type { FlightLog } from "../flightlog";
 import { buildFlightTrack, type FlightLogSource, type FlightTrack } from "../flight3d/flightTrack";
 import { buildAttitudeTrack, type AttitudeTrack } from "../flight3d/fcAttitude";
-import { FlightScene, type TerrainState } from "../flight3d/flightScene";
+import { FlightScene, type PathColoring, type TerrainState } from "../flight3d/flightScene";
+import { ALTITUDE_TRAIL_COLORS } from "../graph_map";
 import { TILE_SOURCES, type GroundSourceId } from "../flight3d/tileGround";
 import { TERRAIN_SOURCE } from "../flight3d/terrain";
 
@@ -149,6 +172,10 @@ const groundItems = [
     { label: "Satellite", value: "satellite" },
     { label: "None", value: "none" },
 ];
+const coloring = ref<PathColoring>("altitude");
+const legendMax = ref("");
+// The scene's gradient, low to high; the hex alpha is dropped as the path draws it opaque.
+const LEGEND_GRADIENT = `linear-gradient(90deg, ${ALTITUDE_TRAIL_COLORS.map(({ color }) => color.slice(0, 7)).join(", ")})`;
 const terrain = ref(false);
 const terrainState = ref<TerrainState>("off");
 const terrainShown = computed(() => terrainState.value === "ready");
@@ -309,6 +336,20 @@ function setCurrentTime(tUs: number) {
         parts.push(`Home ${present("gpsDistance", frame[fieldIndex.distance])}`);
     }
     hud.value = parts.join(" · ");
+    updateLegend();
+}
+
+/** Top of the colour scale, in the user's units. */
+function updateLegend() {
+    if (!scene || !flightLog) {
+        legendMax.value = "";
+        return;
+    }
+    const { coloring: scale, max } = scene.colorScale;
+    legendMax.value =
+        scale === "speed"
+            ? String(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "GPS_speed", max * 100, undefined))
+            : String(FlightLogFieldPresenter.decodeCorrectAltitude(max, userSettings.altitudeUnits));
 }
 
 function toggleFollow() {
@@ -336,6 +377,10 @@ function onPointerUp(event: PointerEvent) {
 
 watch(groundSource, (source) => scene?.setGroundSource(source));
 watch(terrain, (enabled) => scene?.setTerrain(enabled));
+watch(coloring, (value) => {
+    scene?.setColoring(value);
+    updateLegend();
+});
 onActivated(() => {
     scene?.setActive(true);
     if (viewportRef.value) {
