@@ -63,31 +63,47 @@ gpxWorker.onmessage = function (event) {
     const lngIndex = event.data.fieldNames.indexOf("GPS_coord[1]");
     const altitudeIndex = event.data.fieldNames.indexOf("GPS_altitude");
 
+    function trkpt(frame: (number | null)[]): string {
+        const timeMillis = Math.floor(Number(frame[timeIndex]) / 1000);
+        const lat = Number(frame[latIndex]) / 10000000;
+        const lng = Number(frame[lngIndex]) / 10000000;
+        // A null altitude counts as 0, as `/` made it.
+        const altitude = Number(frame[altitudeIndex]) / 10;
+
+        // A log without the header gives an Invalid Date, and toISOString() throws, as before.
+        const date = new Date(event.data.sysConfig["Log start datetime"] as string);
+        date.setTime(date.getTime() + timeMillis);
+
+        return `<trkpt lat="${lat}" lon="${lng}"><ele>${altitude}</ele><time>${date.toISOString()}</time></trkpt>\n`;
+    }
+
     let trkpts = "";
+    // Every main frame carries the latest GPS values, so a 10 Hz fix repeats across about a hundred
+    // frames of a 1 kHz log. Only the first frame of each new position is written, timed from when
+    // it arrived; a fix that repeats the previous position adds nothing to the track. The last frame
+    // with a position is written too, so the track lasts as long as the log.
+    let lastWritten: (number | null)[] | null = null;
+    let lastWithFix: (number | null)[] | null = null;
     for (const chunk of event.data.frames) {
         for (const frame of chunk) {
-            const latValue = frame[latIndex];
-            const lngValue = frame[lngIndex];
-            if (!latValue || !lngValue) {
+            if (!frame[latIndex] || !frame[lngIndex]) {
                 continue;
             }
-            const timeMillis = Math.floor(Number(frame[timeIndex]) / 1000);
-            const lat = latValue / 10000000;
-            const lng = lngValue / 10000000;
-            // A null altitude counts as 0, as `/` made it.
-            const altitude = Number(frame[altitudeIndex]) / 10;
-
-            // A log without the header gives an Invalid Date, and toISOString() throws, as before.
-            const date = new Date(event.data.sysConfig["Log start datetime"] as string);
-            date.setTime(date.getTime() + timeMillis);
-
-            let trkpt = `<trkpt lat="${lat}" lon="${lng}">`;
-            trkpt += `<ele>${altitude}</ele>`;
-            trkpt += `<time>${date.toISOString()}</time>`;
-            trkpt += `</trkpt>\n`;
-
-            trkpts += trkpt;
+            lastWithFix = frame;
+            if (
+                lastWritten &&
+                frame[latIndex] === lastWritten[latIndex] &&
+                frame[lngIndex] === lastWritten[lngIndex] &&
+                frame[altitudeIndex] === lastWritten[altitudeIndex]
+            ) {
+                continue;
+            }
+            lastWritten = frame;
+            trkpts += trkpt(frame);
         }
+    }
+    if (lastWithFix && lastWithFix !== lastWritten) {
+        trkpts += trkpt(lastWithFix);
     }
 
     const trk = `  <trk>
