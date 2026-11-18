@@ -94,10 +94,15 @@ export function tileRange(box: LatLonBox, z: number): { x0: number; x1: number; 
     return { x0: Math.floor(nw.x), x1: Math.floor(se.x), y0: Math.floor(nw.y), y1: Math.floor(se.y) };
 }
 
-/** The box with a 20% margin on each side. */
+/**
+ * The box with a margin on every side of 20% of its longer side, in meters: a long, thin flight
+ * still gets scenery beside the path, not only beyond its ends.
+ */
 export function padded(box: LatLonBox): LatLonBox {
-    const lat = (box.maxLat - box.minLat) * 0.2;
-    const lon = (box.maxLon - box.minLon) * 0.2;
+    const cosLat = Math.cos((((box.minLat + box.maxLat) / 2) * Math.PI) / 180);
+    const longerDeg = Math.max(box.maxLat - box.minLat, (box.maxLon - box.minLon) * cosLat); // as latitude
+    const lat = longerDeg * 0.2;
+    const lon = lat / cosLat;
     return { minLat: box.minLat - lat, maxLat: box.maxLat + lat, minLon: box.minLon - lon, maxLon: box.maxLon + lon };
 }
 

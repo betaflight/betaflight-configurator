@@ -25,6 +25,7 @@ import {
     buildGround,
     lonLatToTile,
     MAX_TILES,
+    padded,
     pickZoom,
     tileToLonLat,
     TILE_SOURCES,
@@ -88,6 +89,23 @@ describe("pickZoom", () => {
 
     it("uses full detail for a hover in one spot", () => {
         expect(pickZoom(boxAround(10))).toBe(19);
+    });
+});
+
+describe("padded", () => {
+    it("gives a long, thin flight the same margin in meters beside it as beyond its ends", () => {
+        // 2 km east-west, 20 m north-south.
+        const box = {
+            minLat: LAT0,
+            maxLat: LAT0 + 20 / M_PER_DEG_LAT,
+            minLon: LON0,
+            maxLon: LON0 + 2000 / M_PER_DEG_LON,
+        };
+        const area = padded(box);
+        expect((box.minLat - area.minLat) * M_PER_DEG_LAT).toBeCloseTo(400, 0);
+        expect((area.maxLat - box.maxLat) * M_PER_DEG_LAT).toBeCloseTo(400, 0);
+        expect((box.minLon - area.minLon) * M_PER_DEG_LON).toBeCloseTo(400, 0);
+        expect((area.maxLon - box.maxLon) * M_PER_DEG_LON).toBeCloseTo(400, 0);
     });
 });
 
