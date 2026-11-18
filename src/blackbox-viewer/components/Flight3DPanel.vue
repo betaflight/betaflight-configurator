@@ -348,7 +348,7 @@ function updateLegend() {
     const { coloring: scale, max } = scene.colorScale;
     legendMax.value =
         scale === "speed"
-            ? String(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "GPS_speed", max * 100, undefined))
+            ? String(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "GPS_speed", max * 100))
             : String(FlightLogFieldPresenter.decodeCorrectAltitude(max, userSettings.altitudeUnits));
 }
 

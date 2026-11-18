@@ -212,9 +212,16 @@ export class FlightScene {
         if (enabled && this.track && !this.terrain && !this.terrainLoad) {
             this.loadTerrain();
         } else {
-            this.onTerrainState?.(this.terrainShown ? "ready" : enabled && this.terrainLoad ? "loading" : "off");
+            this.onTerrainState?.(this.terrainState());
         }
         this.applyTerrain();
+    }
+
+    private terrainState(): TerrainState {
+        if (this.terrainShown) {
+            return "ready";
+        }
+        return this.terrainEnabled && this.terrainLoad ? "loading" : "off";
     }
 
     /** Ground height under a scene position: the terrain when shown, otherwise the flat ground. */

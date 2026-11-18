@@ -623,24 +623,28 @@ export function groundSpeeds(samples: TrackSample[], gapAfter: Uint8Array): Floa
     const speeds = new Float32Array(samples.length);
     let runStart = 0;
     for (let runEnd = 0; runEnd < samples.length; runEnd++) {
-        if (runEnd < samples.length - 1 && !gapAfter[runEnd]) {
-            continue;
+        if (runEnd === samples.length - 1 || gapAfter[runEnd]) {
+            runSpeeds(samples, runStart, runEnd, speeds);
+            runStart = runEnd + 1;
         }
-        let lo = runStart;
-        let hi = runStart;
-        for (let i = runStart; i <= runEnd; i++) {
-            while (samples[i].tUs - samples[lo].tUs > SPEED_HALF_WINDOW_US) {
-                lo++;
-            }
-            while (hi < runEnd && samples[hi + 1].tUs - samples[i].tUs <= SPEED_HALF_WINDOW_US) {
-                hi++;
-            }
-            const dtS = (samples[hi].tUs - samples[lo].tUs) / 1e6;
-            speeds[i] = dtS > 0 ? Math.hypot(samples[hi].n - samples[lo].n, samples[hi].e - samples[lo].e) / dtS : 0;
-        }
-        runStart = runEnd + 1;
     }
     return speeds;
+}
+
+/** groundSpeeds over samples first..last, which have GPS throughout. */
+function runSpeeds(samples: TrackSample[], first: number, last: number, speeds: Float32Array): void {
+    let lo = first;
+    let hi = first;
+    for (let i = first; i <= last; i++) {
+        while (samples[i].tUs - samples[lo].tUs > SPEED_HALF_WINDOW_US) {
+            lo++;
+        }
+        while (hi < last && samples[hi + 1].tUs - samples[i].tUs <= SPEED_HALF_WINDOW_US) {
+            hi++;
+        }
+        const dtS = (samples[hi].tUs - samples[lo].tUs) / 1e6;
+        speeds[i] = dtS > 0 ? Math.hypot(samples[hi].n - samples[lo].n, samples[hi].e - samples[lo].e) / dtS : 0;
+    }
 }
 
 /** Top of a speed colour scale: the 98th percentile, so one glitch does not wash out the rest. */
