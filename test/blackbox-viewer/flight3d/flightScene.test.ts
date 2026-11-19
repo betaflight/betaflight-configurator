@@ -63,11 +63,15 @@ vi.mock("three/examples/jsm/loaders/GLTFLoader.js", () => ({
     },
 }));
 
-const terrainLoads = vi.hoisted(() => [] as { box: unknown; signal: AbortSignal; resolve(model: unknown): void }[]);
+const terrainLoads = vi.hoisted(
+    () => [] as { box: unknown; signal: AbortSignal; resolve(model: unknown): void; reject(): void }[],
+);
 vi.mock("../../../src/blackbox-viewer/flight3d/terrain", async (original) => ({
     ...(await original<typeof import("../../../src/blackbox-viewer/flight3d/terrain")>()),
     loadElevation: (box: unknown, signal: AbortSignal) =>
-        new Promise((resolve) => terrainLoads.push({ box, signal, resolve })),
+        new Promise((resolve, reject) =>
+            terrainLoads.push({ box, signal, resolve, reject: () => reject(new Error("offline")) }),
+        ),
 }));
 
 afterEach(() => vi.unstubAllGlobals());
@@ -214,6 +218,22 @@ describe("terrain", () => {
         expect(states.at(-1)).toBe("loading");
         scene.dispose();
         expect(terrainLoads[1].signal.aborted).toBe(true);
+    });
+
+    it("stays off when a load switched off meanwhile fails, and retries when switched on", async () => {
+        const { scene, states } = sceneWithTrack();
+        scene.setTerrain(true);
+        scene.setTerrain(false);
+        terrainLoads[0].reject();
+        await settle();
+        expect(states).toEqual(["loading", "off", "off"]);
+
+        scene.setTerrain(true);
+        expect(terrainLoads).toHaveLength(2);
+        terrainLoads[1].reject();
+        await settle();
+        expect(states.at(-1)).toBe("failed");
+        scene.dispose();
     });
 
     it("reports terrain without a height at the takeoff spot as unavailable", async () => {

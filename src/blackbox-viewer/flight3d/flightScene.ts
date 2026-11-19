@@ -407,7 +407,7 @@ export class FlightScene {
                 this.terrainLoad = null;
                 const originM = model.elevationAt(track.origin.lat, track.origin.lon);
                 if (originM === null) {
-                    this.onTerrainState?.("failed");
+                    this.onTerrainState?.(this.terrainEnabled ? "failed" : "off");
                     return;
                 }
                 this.terrain = { model, originM };
@@ -417,7 +417,8 @@ export class FlightScene {
             () => {
                 if (!load.signal.aborted && this.track === track) {
                     this.terrainLoad = null;
-                    this.onTerrainState?.("failed");
+                    // Switched off meanwhile: nothing to report; switching on again retries.
+                    this.onTerrainState?.(this.terrainEnabled ? "failed" : "off");
                 }
             },
         );

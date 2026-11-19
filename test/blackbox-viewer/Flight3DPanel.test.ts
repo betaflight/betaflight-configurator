@@ -282,6 +282,24 @@ describe("Flight3DPanel", () => {
             wrapper.unmount();
         });
 
+        it("keeps the Terrain button usable while the terrain loads", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS));
+            await wrapper.vm.$nextTick();
+            const button = () =>
+                wrapper.findAllComponents({ name: "Button" }).find((b) => b.attributes("aria-label") === "Terrain")!;
+            button().vm.$emit("click");
+            (scenes[0] as unknown as { onTerrainState(state: string): void }).onTerrainState("loading");
+            await wrapper.vm.$nextTick();
+            expect(button().attributes("aria-busy")).toBe("true");
+            expect(button().attributes("title")).toBe("Loading terrain…");
+            // Nuxt UI disables a button while `loading` is set, which would trap the terrain on.
+            expect(button().props("loading")).toBeFalsy();
+            expect(button().props("disabled")).toBeFalsy();
+            wrapper.unmount();
+        });
+
         it("tells a log without GPS from one whose GPS never had a usable fix", async () => {
             const graphStore = useGraphStore();
             const wrapper = mountPanel();
