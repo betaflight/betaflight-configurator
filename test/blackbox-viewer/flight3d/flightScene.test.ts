@@ -20,7 +20,7 @@
  */
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { BoxGeometry, Group, Mesh, Quaternion, Vector3 } from "three";
+import { Box3, BoxGeometry, Group, Mesh, Quaternion, Vector3 } from "three";
 import { FlightScene } from "../../../src/blackbox-viewer/flight3d/flightScene";
 import { buildTrack } from "../../../src/blackbox-viewer/flight3d/flightTrack";
 
@@ -68,6 +68,17 @@ vi.mock("../../../src/blackbox-viewer/flight3d/terrain", async (original) => ({
     ...(await original<typeof import("../../../src/blackbox-viewer/flight3d/terrain")>()),
     loadElevation: (box: unknown, signal: AbortSignal) =>
         new Promise((resolve) => terrainLoads.push({ box, signal, resolve })),
+}));
+
+const buildingLoads = vi.hoisted(
+    () => [] as { box: unknown; path: unknown[]; signal: AbortSignal; resolve(f: unknown): void; reject(): void }[],
+);
+vi.mock("../../../src/blackbox-viewer/flight3d/buildings", async (original) => ({
+    ...(await original<typeof import("../../../src/blackbox-viewer/flight3d/buildings")>()),
+    loadBuildings: (box: unknown, path: unknown[], signal: AbortSignal) =>
+        new Promise((resolve, reject) =>
+            buildingLoads.push({ box, path, signal, resolve, reject: () => reject(new Error("offline")) }),
+        ),
 }));
 
 afterEach(() => vi.unstubAllGlobals());
@@ -223,6 +234,117 @@ describe("terrain", () => {
         await settle();
         expect(states).toEqual(["loading", "failed"]);
         expect(scene.terrainShown).toBe(false);
+        scene.dispose();
+    });
+});
+
+describe("buildings", () => {
+    const ORIGIN = { lat: 29.9792, lon: 31.1342 };
+    const M_PER_DEG_LAT = 110_850;
+    const settle = () => new Promise((resolve) => setTimeout(resolve));
+    // 10 m square, 30 m tall, 100 m north of the takeoff.
+    const tower = {
+        rings: [
+            [0, 10, 10, 0].map((dn, k) => ({
+                lat: ORIGIN.lat + (100 + dn) / M_PER_DEG_LAT,
+                lon: ORIGIN.lon + [0, 0, 10, 10][k] / 96_500,
+            })),
+        ],
+        height: 30,
+        minHeight: 0,
+    };
+
+    function sceneWithTrack() {
+        vi.stubGlobal("requestAnimationFrame", () => 1);
+        vi.stubGlobal("cancelAnimationFrame", () => {});
+        buildingLoads.length = 0;
+        terrainLoads.length = 0;
+        const scene = new FlightScene(document.createElement("canvas"));
+        const states: string[] = [];
+        scene.onBuildingsState = (state) => states.push(state);
+        scene.setGroundSource("none");
+        const track = buildTrack(
+            [
+                { tUs: 0, lat: ORIGIN.lat, lon: ORIGIN.lon, altM: 60 },
+                { tUs: 10e6, lat: ORIGIN.lat + 0.002, lon: ORIGIN.lon, altM: 80 },
+            ],
+            null,
+        )!;
+        scene.setTrack(track);
+        const mesh = () => (scene as unknown as { buildings: Mesh | null }).buildings;
+        const heights = () => {
+            const box = new Box3().setFromObject(mesh()!);
+            return [box.min.y, box.max.y];
+        };
+        return { scene, states, track, mesh, heights };
+    }
+
+    it("loads the flight's buildings once, on first use, and stands them on the ground or terrain", async () => {
+        const { scene, states, track, mesh, heights } = sceneWithTrack();
+        expect(buildingLoads).toHaveLength(0);
+
+        scene.setBuildings(true);
+        expect(states).toEqual(["loading"]);
+        expect(buildingLoads).toHaveLength(1);
+        expect(buildingLoads[0].box).toEqual(track.box);
+        expect(buildingLoads[0].path.length).toBeGreaterThan(0);
+        buildingLoads[0].resolve([tower]);
+        await settle();
+        expect(states).toEqual(["loading", "ready"]);
+        expect(scene.buildingCount).toBe(1);
+        expect(heights()[0]).toBeCloseTo(track.groundU, 3);
+        expect(heights()[1]).toBeCloseTo(track.groundU + 30, 3);
+
+        // Terrain 10 m higher at the tower than at takeoff lifts it with the ground.
+        scene.setTerrain(true);
+        terrainLoads[0].resolve({ elevationAt: (lat: number) => 200 + (lat - ORIGIN.lat) * 11_085 });
+        await settle();
+        expect(heights()[0]).toBeCloseTo(track.groundU + 10, 0);
+
+        scene.setBuildings(false);
+        expect(states.at(-1)).toBe("off");
+        expect(mesh()).toBeNull();
+        expect(scene.buildingCount).toBeNull();
+
+        scene.setBuildings(true);
+        expect(states.at(-1)).toBe("ready");
+        expect(mesh()).not.toBeNull();
+        expect(buildingLoads).toHaveLength(1);
+        scene.dispose();
+    });
+
+    it("reports a failed load and tries again when switched on next", async () => {
+        const { scene, states, mesh } = sceneWithTrack();
+        scene.setBuildings(true);
+        buildingLoads[0].reject();
+        await settle();
+        expect(states).toEqual(["loading", "failed"]);
+        expect(mesh()).toBeNull();
+
+        scene.setBuildings(false);
+        scene.setBuildings(true);
+        expect(buildingLoads).toHaveLength(2);
+        expect(states.at(-1)).toBe("loading");
+        scene.dispose();
+    });
+
+    it("drops a load for a flight that has been replaced", async () => {
+        const { scene, mesh } = sceneWithTrack();
+        scene.setBuildings(true);
+        const first = buildingLoads[0];
+        scene.setTrack(
+            buildTrack(
+                [
+                    { tUs: 0, lat: 0.5, lon: 0.5, altM: 0 },
+                    { tUs: 1e6, lat: 0.501, lon: 0.5, altM: 0 },
+                ],
+                null,
+            ),
+        );
+        expect(first.signal.aborted).toBe(true);
+        first.resolve([tower]);
+        await settle();
+        expect(mesh()).toBeNull();
         scene.dispose();
     });
 });

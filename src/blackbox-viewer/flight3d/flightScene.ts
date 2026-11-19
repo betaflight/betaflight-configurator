@@ -50,12 +50,13 @@ import { ALTITUDE_TRAIL_COLORS } from "../graph_map.js";
 import { groundSpeeds, speedScaleMax, upperBound, type FlightTrack, type TrackPoint } from "./flightTrack";
 import { buildGround, TILE_SOURCES, type Ground, type GroundSourceId, type SurfaceHeight } from "./tileGround";
 import { loadElevation, localToLatLon, type ElevationModel } from "./terrain";
+import { buildingsMesh, loadBuildings, type Footprint } from "./buildings";
 
 /** What the path's colour shows. */
 export type PathColoring = "altitude" | "speed";
 
-/** Terrain progress, for the panel: off, being fetched, shown, or unavailable for this flight. */
-export type TerrainState = "off" | "loading" | "ready" | "failed";
+/** Terrain or buildings progress, for the panel: off, being fetched, shown, or unavailable for this flight. */
+export type LayerState = "off" | "loading" | "ready" | "failed";
 
 const CURTAIN_EVERY_US = 2_000_000;
 const DRONE_SCALE = 0.12; // drone width as a fraction of the camera distance
@@ -111,7 +112,13 @@ export class FlightScene {
     private terrain: { model: ElevationModel; originM: number } | null = null;
     private terrainLoad: AbortController | null = null;
     /** Told whenever the terrain starts loading, appears or turns out unavailable. */
-    onTerrainState: ((state: TerrainState) => void) | null = null;
+    onTerrainState: ((state: LayerState) => void) | null = null;
+    private buildingsEnabled = false;
+    private footprints: Footprint[] | null = null;
+    private buildingsLoad: AbortController | null = null;
+    private buildings: Mesh | null = null;
+    /** Told whenever the buildings start loading, appear or turn out unavailable. */
+    onBuildingsState: ((state: LayerState) => void) | null = null;
     private belowMap = false;
     private groundSource: GroundSourceId = "map";
     private follow = false;
@@ -179,6 +186,9 @@ export class FlightScene {
         if (this.terrainEnabled) {
             this.loadTerrain();
         }
+        if (this.buildingsEnabled) {
+            this.loadBuildings();
+        }
         this.frameTrack();
         this.setTime(samples[0].tUs, null);
     }
@@ -220,7 +230,32 @@ export class FlightScene {
         this.applyTerrain();
     }
 
-    private terrainState(): TerrainState {
+    /** OpenStreetMap buildings around the flight, standing on the ground or terrain. Loaded once per flight, on first use. */
+    setBuildings(enabled: boolean): void {
+        this.buildingsEnabled = enabled;
+        // Also retries a flight whose buildings failed to load before.
+        if (enabled && this.track && !this.footprints && !this.buildingsLoad) {
+            this.loadBuildings();
+        } else {
+            this.onBuildingsState?.(this.buildingsState());
+        }
+        this.buildBuildings();
+        this.requestRender();
+    }
+
+    /** Buildings shown for this flight, or null while none are. */
+    get buildingCount(): number | null {
+        return this.buildingsEnabled && this.footprints ? this.footprints.length : null;
+    }
+
+    private buildingsState(): LayerState {
+        if (this.buildingCount !== null) {
+            return "ready";
+        }
+        return this.buildingsEnabled && this.buildingsLoad ? "loading" : "off";
+    }
+
+    private terrainState(): LayerState {
         if (this.terrainShown) {
             return "ready";
         }
@@ -423,6 +458,64 @@ export class FlightScene {
         );
     }
 
+    private loadBuildings(): void {
+        const track = this.track;
+        if (!track) {
+            return;
+        }
+        this.cancelBuildingsLoad();
+        const load = new AbortController();
+        this.buildingsLoad = load;
+        this.onBuildingsState?.("loading");
+        // About one point per second of flight is plenty to find the tiles it passes over.
+        const toLocal = (lat: number, lon: number) => track.toLocal(lat, lon, track.origin.altM);
+        const path = track.samples
+            .filter((_, i) => i % 10 === 0)
+            .map((s) => localToLatLon(track.origin, s.n, s.e, toLocal));
+        loadBuildings(track.box, path, load.signal).then(
+            (footprints) => {
+                if (load.signal.aborted || this.track !== track) {
+                    return;
+                }
+                this.buildingsLoad = null;
+                this.footprints = footprints;
+                this.onBuildingsState?.(this.buildingsState());
+                this.buildBuildings();
+                this.requestRender();
+            },
+            () => {
+                if (!load.signal.aborted && this.track === track) {
+                    this.buildingsLoad = null;
+                    this.onBuildingsState?.("failed");
+                }
+            },
+        );
+    }
+
+    private cancelBuildingsLoad(): void {
+        this.buildingsLoad?.abort();
+        this.buildingsLoad = null;
+    }
+
+    /** (Re)build the buildings' mesh on the current ground, or remove it while they are off. */
+    private buildBuildings(): void {
+        if (this.buildings) {
+            disposeObject(this.buildings);
+            this.buildings.removeFromParent();
+            this.buildings = null;
+        }
+        const track = this.track;
+        if (!track || !this.footprints || !this.buildingsEnabled || this.footprints.length === 0) {
+            return;
+        }
+        this.buildings = buildingsMesh(
+            this.footprints,
+            (lat, lon) => track.toLocal(lat, lon, track.origin.altM),
+            this.surface() ?? (() => track.groundU),
+        );
+        this.trackObjects.add(this.buildings);
+    }
+
     private cancelTerrainLoad(): void {
         this.terrainLoad?.abort();
         this.terrainLoad = null;
@@ -432,6 +525,7 @@ export class FlightScene {
     private applyTerrain(): void {
         this.ground?.setSurface(this.surface());
         this.buildCurtain();
+        this.buildBuildings();
         if (this.grid) {
             // A flat grid would cut through hills and float over valleys.
             this.grid.visible = !this.terrainShown;
@@ -564,6 +658,9 @@ export class FlightScene {
     private clearTrack(): void {
         this.cancelTerrainLoad();
         this.terrain = null;
+        this.cancelBuildingsLoad();
+        this.footprints = null;
+        this.buildings = null;
         this.trackObjects.traverse(disposeObject);
         this.trackObjects.clear();
         this.grid = null;

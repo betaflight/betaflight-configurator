@@ -36,6 +36,9 @@ interface FakeScene {
     track?: FlightTrack | null;
     attitude?: Quaternion;
     coloring: string;
+    buildingsOn?: boolean;
+    buildingCount: number | null;
+    onBuildingsState: ((state: string) => void) | null;
 }
 const scenes: FakeScene[] = [];
 vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
@@ -59,6 +62,12 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         setFollow() {}
         setGroundSource() {}
         setTerrain() {}
+        buildingsOn?: boolean;
+        buildingCount: number | null = null;
+        onBuildingsState: ((state: string) => void) | null = null;
+        setBuildings(enabled: boolean) {
+            this.buildingsOn = enabled;
+        }
         setColoring(coloring: string) {
             this.coloring = coloring;
         }
@@ -279,6 +288,41 @@ describe("Flight3DPanel", () => {
             button.vm.$emit("click");
             await wrapper.vm.$nextTick();
             expect(scenes[0].coloring).toBe("altitude");
+            wrapper.unmount();
+        });
+
+        it("switches buildings on and off, crediting their source once shown", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS));
+            await wrapper.vm.$nextTick();
+            const button = () =>
+                wrapper.findAllComponents({ name: "Button" }).find((b) => b.attributes("aria-label") === "Buildings")!;
+            expect(button().attributes("title")).toBe("Show buildings");
+
+            button().vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            const scene = scenes[0];
+            expect(scene.buildingsOn).toBe(true);
+            scene.onBuildingsState!("loading");
+            await wrapper.vm.$nextTick();
+            expect(wrapper.text()).not.toContain("OpenFreeMap");
+
+            scene.buildingCount = 42;
+            scene.onBuildingsState!("ready");
+            await wrapper.vm.$nextTick();
+            expect(button().attributes("title")).toContain("42");
+            expect(wrapper.find('a[href="https://openfreemap.org"]').text()).toContain("OpenMapTiles");
+            // OpenStreetMap is credited once, for the map and buildings alike.
+            expect(wrapper.text().match(/OpenStreetMap contributors/g)).toHaveLength(1);
+
+            button().vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scene.buildingsOn).toBe(false);
+            scene.buildingCount = null;
+            scene.onBuildingsState!("off");
+            await wrapper.vm.$nextTick();
+            expect(wrapper.text()).not.toContain("OpenFreeMap");
             wrapper.unmount();
         });
 
