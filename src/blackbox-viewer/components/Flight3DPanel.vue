@@ -42,17 +42,6 @@
                     :title="terrainTitle"
                     @click="terrain = !terrain"
                 />
-                <UButton
-                    size="xs"
-                    variant="soft"
-                    :color="buildings ? 'primary' : 'neutral'"
-                    icon="i-lucide-building-2"
-                    :loading="buildingsState === 'loading'"
-                    :aria-pressed="buildings"
-                    aria-label="Buildings"
-                    :title="buildingsTitle"
-                    @click="buildings = !buildings"
-                />
                 <USelect v-model="groundSource" :items="groundItems" size="xs" class="w-28" aria-label="Ground layer" />
             </div>
         </div>
@@ -89,22 +78,17 @@
                 >
                     {{ hud }}
                 </div>
-                <div
-                    v-if="credits.length"
-                    class="absolute top-1 right-1 max-w-[60%] rounded bg-(--surface-100)/80 px-1.5 py-0.5 text-right text-[10px] leading-tight"
-                >
-                    <template v-for="(credit, i) in credits" :key="credit.text">
-                        <template v-if="i > 0"> · </template>
-                        <a
-                            v-if="credit.url"
-                            :href="credit.url"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="underline"
-                            >{{ credit.text }}</a
-                        >
-                        <template v-else>{{ credit.text }}</template>
-                    </template>
+                <div v-if="attribution || terrainShown" class="absolute right-6 bottom-0.5 text-[10px] opacity-70">
+                    <template v-if="attribution">{{ attribution }}</template>
+                    <template v-if="attribution && terrainShown"> · </template>
+                    <a
+                        v-if="terrainShown"
+                        :href="TERRAIN_SOURCE.attributionUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="underline"
+                        >{{ TERRAIN_SOURCE.attribution }}</a
+                    >
                 </div>
             </template>
         </div>
@@ -155,11 +139,10 @@ import { FlightLogFieldPresenter, type PresentedFlightLog } from "../flightlog_f
 import type { FlightLog } from "../flightlog";
 import { buildFlightTrack, type FlightLogSource, type FlightTrack } from "../flight3d/flightTrack";
 import { buildAttitudeTrack, type AttitudeTrack } from "../flight3d/fcAttitude";
-import { FlightScene, type LayerState, type PathColoring } from "../flight3d/flightScene";
+import { FlightScene, type PathColoring, type TerrainState } from "../flight3d/flightScene";
 import { ALTITUDE_TRAIL_COLORS } from "../graph_map";
 import { TILE_SOURCES, type GroundSourceId } from "../flight3d/tileGround";
 import { TERRAIN_SOURCE } from "../flight3d/terrain";
-import { BUILDINGS_SOURCE } from "../flight3d/buildings";
 
 /** FlightLog members used here beyond what the track builder needs. */
 type ViewerFlightLog = FlightLogSource & PresentedFlightLog & Pick<FlightLog, "getLogIndex" | "getCurrentFrameAtTime">;
@@ -194,11 +177,8 @@ const legendMax = ref("");
 // The scene's gradient, low to high; the hex alpha is dropped as the path draws it opaque.
 const LEGEND_GRADIENT = `linear-gradient(90deg, ${ALTITUDE_TRAIL_COLORS.map(({ color }) => color.slice(0, 7)).join(", ")})`;
 const terrain = ref(false);
-const terrainState = ref<LayerState>("off");
+const terrainState = ref<TerrainState>("off");
 const terrainShown = computed(() => terrainState.value === "ready");
-const buildings = ref(false);
-const buildingsState = ref<LayerState>("off");
-const buildingCount = ref<number | null>(null);
 const box = ref<Box>({ left: 0, top: 0, width: 0, height: 0 });
 const hud = ref("");
 const emptyMessage = ref("No GPS data in this log");
@@ -220,37 +200,7 @@ const boxStyle = computed(() => ({
     height: `${box.value.height}px`,
 }));
 
-/** Credits for what is shown: the map, then terrain and buildings, linked where they have a page. */
-const credits = computed(() => {
-    const list: { text: string; url?: string }[] = [];
-    if (groundSource.value !== "none") {
-        list.push({ text: TILE_SOURCES[groundSource.value].attribution });
-    }
-    if (terrainShown.value) {
-        list.push({ text: TERRAIN_SOURCE.attribution, url: TERRAIN_SOURCE.attributionUrl });
-    }
-    if (buildingsState.value === "ready") {
-        list.push({ text: BUILDINGS_SOURCE.attribution, url: BUILDINGS_SOURCE.attributionUrl });
-        const osm = TILE_SOURCES.map.attribution;
-        if (!list.some((credit) => credit.text === osm)) {
-            list.push({ text: osm });
-        }
-    }
-    return list;
-});
-
-const buildingsTitle = computed(() => {
-    switch (buildingsState.value) {
-        case "loading":
-            return "Loading buildings…";
-        case "failed":
-            return "Buildings could not be loaded";
-        case "ready":
-            return `Hide buildings (${buildingCount.value} from OpenStreetMap, heights often estimated)`;
-        default:
-            return "Show buildings";
-    }
-});
+const attribution = computed(() => (groundSource.value === "none" ? "" : TILE_SOURCES[groundSource.value].attribution));
 
 const terrainTitle = computed(() => {
     switch (terrainState.value) {
@@ -427,7 +377,6 @@ function onPointerUp(event: PointerEvent) {
 
 watch(groundSource, (source) => scene?.setGroundSource(source));
 watch(terrain, (enabled) => scene?.setTerrain(enabled));
-watch(buildings, (enabled) => scene?.setBuildings(enabled));
 watch(coloring, (value) => {
     scene?.setColoring(value);
     updateLegend();
@@ -446,10 +395,6 @@ onMounted(() => {
     scene.onTerrainState = (state) => {
         terrainState.value = state;
         setCurrentTime(logStore.currentBlackboxTime);
-    };
-    scene.onBuildingsState = (state) => {
-        buildingsState.value = state;
-        buildingCount.value = scene?.buildingCount ?? null;
     };
     viewportObserver = new ResizeObserver(([entry]) => {
         scene?.resize(entry.contentRect.width, entry.contentRect.height);
