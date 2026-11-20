@@ -62,21 +62,23 @@ export function useMotorTesting(
     ]);
 
     /**
-     * Keyboard safety handler - stops motors on any key press
+     * Safety handler - stops motor testing on any non-navigation key press, or when the page
+     * becomes hidden (firmware keeps the last MSP_SET_MOTOR value with no timeout).
      */
-    const disableMotorTest = (e: KeyboardEvent): void => {
-        if (motorsTestingEnabled.value && !ignoreKeys.has(e.code)) {
-            motorsTestingEnabled.value = false;
+    const disableMotorTest = (e: Event): void => {
+        if (!motorsTestingEnabled.value) {
+            return;
         }
+        if (e.type === "keydown" && ignoreKeys.has((e as KeyboardEvent).code)) {
+            return;
+        }
+        if (e.type === "visibilitychange" && !document.hidden) {
+            return;
+        }
+        motorsTestingEnabled.value = false;
     };
 
-    // The firmware keeps the last MSP_SET_MOTOR value with no timeout, so a hidden page
-    // would leave the motors spinning with nobody watching them.
-    const stopWhenHidden = (): void => {
-        if (document.hidden && motorsTestingEnabled.value) {
-            motorsTestingEnabled.value = false;
-        }
-    };
+    const safetyEvents = ["keydown", "visibilitychange"] as const;
 
     /**
      * Enable motor testing
@@ -95,9 +97,8 @@ export function useMotorTesting(
             MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
         }
 
-        // Add keyboard safety listener
-        document.addEventListener("keydown", disableMotorTest);
-        document.addEventListener("visibilitychange", stopWhenHidden);
+        // Add safety listeners
+        safetyEvents.forEach((type) => document.addEventListener(type, disableMotorTest));
 
         // Enable arming during motor testing
         mspHelper.enableArmingForMotorTest();
@@ -111,9 +112,8 @@ export function useMotorTesting(
      * - Stops all motors
      */
     const disableMotorTesting = (): void => {
-        // Remove keyboard listener
-        document.removeEventListener("keydown", disableMotorTest);
-        document.removeEventListener("visibilitychange", stopWhenHidden);
+        // Remove safety listeners
+        safetyEvents.forEach((type) => document.removeEventListener(type, disableMotorTest));
 
         // Disable arming
         mspHelper.disableArming();

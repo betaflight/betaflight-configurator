@@ -83,14 +83,40 @@ describe("useMotorTesting", () => {
     });
 
     it("keeps the motor test running when the page becomes visible", async () => {
+        const addListener = vi.spyOn(document, "addEventListener");
         const { wrapper, testing } = mountMotorTesting();
         testing.motorsTestingEnabled.value = true;
         await nextTick();
+        expect(addListener).toHaveBeenCalledWith("visibilitychange", expect.any(Function));
+        addListener.mockRestore();
 
         setPageHidden(false);
         await nextTick();
 
         expect(testing.motorsTestingEnabled.value).toBe(true);
+        wrapper.unmount();
+    });
+
+    it("removes the visibility listener when the motor test is disabled", async () => {
+        const addListener = vi.spyOn(document, "addEventListener");
+        const removeListener = vi.spyOn(document, "removeEventListener");
+        const { wrapper, testing } = mountMotorTesting();
+        testing.motorsTestingEnabled.value = true;
+        await nextTick();
+        const added = addListener.mock.calls.find(([type]) => type === "visibilitychange")?.[1];
+        expect(added).toBeDefined();
+
+        testing.motorsTestingEnabled.value = false;
+        await nextTick();
+        vi.mocked(MSP.send_message).mockClear();
+
+        setPageHidden(true);
+        await nextTick();
+
+        expect(removeListener).toHaveBeenCalledWith("visibilitychange", added);
+        expect(motorCommands()).toHaveLength(0);
+        addListener.mockRestore();
+        removeListener.mockRestore();
         wrapper.unmount();
     });
 
