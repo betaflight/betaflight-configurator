@@ -115,6 +115,8 @@ function buildAllDisplayFields() {
         "WP_ETA",
         "NAV_MAP",
         "POS_HOLD_READY",
+        // API 1.49
+        "PID_RATE_BAT_PROFILE",
     ];
 
     const fields = {};

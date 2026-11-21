@@ -934,6 +934,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "1-2",
         },
+        PID_RATE_BAT_PROFILE: {
+            name: "PID_RATE_BAT_PROFILE",
+            text: "osdTextElementPIDRateBatProfile",
+            desc: "osdDescElementPIDRateBatProfile",
+            defaultPosition: 0x800 | (13 << 5) | 2, // 0x0800 | (y << 5) | x
+            draw_order: 220,
+            positionable: true,
+            preview: "P1R2B3",
+        },
         BATTERY_WARNING: {
             name: "BATTERY_WARNING",
             text: "osdTextElementBatteryWarning",
@@ -1989,6 +1998,10 @@ function chooseDisplayFields(fcStore: FcStore) {
         ]);
 
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat(buildGatedDisplayFields(fcStore, F));
+    }
+
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.PID_RATE_BAT_PROFILE]);
     }
 }
 
