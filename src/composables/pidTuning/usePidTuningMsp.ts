@@ -23,7 +23,7 @@ import semver from "semver";
 import MSP from "@/js/msp";
 import MSPCodes, { MSP2TextType } from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
-import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49, API_VERSION_1_50 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47, API_VERSION_1_49 } from "@/js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
 
 /** `fcStore.copyProfile.type`: which kind of profile MSP_COPY_PROFILE copies. */
@@ -46,7 +46,7 @@ const hasWing = () => {
 
 const hasPSAS = () => {
     const fcStore = useFlightControllerStore();
-    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_50) && fcStore.config.buildOptions.includes("USE_PSAS");
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
 };
 
 /**

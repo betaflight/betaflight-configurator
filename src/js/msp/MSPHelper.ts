@@ -35,7 +35,6 @@ import {
     API_VERSION_1_47,
     API_VERSION_1_48,
     API_VERSION_1_49,
-    API_VERSION_1_50,
 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
@@ -859,7 +858,7 @@ const NOTHING_TO_DO = () => {
 
 const hasPSAS = () => {
     const fcStore = useFlightControllerStore();
-    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_50) && fcStore.config.buildOptions.includes("USE_PSAS");
+    return semver.gte(fcStore.config.apiVersion, API_VERSION_1_49) && fcStore.config.buildOptions.includes("USE_PSAS");
 };
 
 // One decoder per MSP reply code; process_data dispatches here and logs codes with no entry.
