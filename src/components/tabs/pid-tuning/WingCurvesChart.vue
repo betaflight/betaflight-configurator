@@ -1,6 +1,18 @@
 <template>
     <div ref="containerRef" class="chart-container">
         <canvas ref="chartCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+        <div v-if="showLegend" class="flex flex-wrap justify-center gap-4 mt-1 text-xs">
+            <div v-for="(curve, index) in chartCurves" :key="index">
+                <span>
+                    <span
+                        class="inline-block w-3 h-0.5 align-middle mr-1"
+                        :style="{ backgroundColor: curve.color, opacity: curve.active ? 1 : 0.4 }"
+                    >
+                    </span>
+                    {{ curve.label }}
+                </span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -17,6 +29,7 @@ interface ChartCurve {
     data?: CurvePoint[];
     color?: string;
     active?: boolean;
+    label?: string;
 }
 
 interface ChartColors {
@@ -32,6 +45,7 @@ type Scale = (value: number) => number;
 const props = defineProps({
     chartCurves: { type: Array as PropType<ChartCurve[]>, default: () => [] },
     showGrid: { type: Boolean, default: true },
+    showLegend: { type: Boolean, default: true },
 });
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -229,7 +243,7 @@ function drawChart() {
         axisLabel: getCssVar("--chart-axis-label-color"),
         tick: getCssVar("--chart-tick-color"),
         grid: getCssVar("--chart-grid-line-color"),
-        curve: getCssVar("--chart-curve-color"),
+        curve: getCssVar("--chart-curve-color-1"),
     };
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);

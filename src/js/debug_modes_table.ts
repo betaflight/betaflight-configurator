@@ -10,6 +10,7 @@
  *   API 1.47.0  c120dd4e9d 2025-11-12  (100 modes)
  *   API 1.48.0  16e12368bc 2026-08-05  (103 modes)
  *   API 1.49.0  b780e4af0e 2026-11-16  (116 modes)
+>>>>>>> f13d5aaf (Added users interface for the PSAS flight mode:)
  */
 
 /**
@@ -595,6 +596,7 @@ export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> =
         "AUTOPILOT_LANDING", // 113
         "UART_BIDIR", // 114
         "PB04", // 115
+        "PSAS", // 116
     ]),
 });
 
