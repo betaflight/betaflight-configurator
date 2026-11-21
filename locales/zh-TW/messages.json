@@ -827,9 +827,6 @@
     "configurationSpiRX": {
         "message": "SPI 總線接口接收機協議"
     },
-    "configurationButtonSave": {
-        "message": "保存並重啟"
-    },
     "dialogDynFiltersChangeTitle": {
         "message": "動態陷波器數值更改"
     },
@@ -1024,12 +1021,6 @@
     "throttle": {
         "message": "油門曲線"
     },
-    "pidTuningButtonSave": {
-        "message": "保存"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "刷新"
-    },
     "dialogCopyProfileText": {
         "message": "將當前 PID 配置文件複製到"
     },
@@ -1111,12 +1102,6 @@
     "receiverRssiChannelDisabledOption": {
         "message": "已禁用"
     },
-    "receiverButtonSave": {
-        "message": "保存"
-    },
-    "receiverButtonRefresh": {
-        "message": "刷新"
-    },
     "receiverButtonBind": {
         "message": "接收機對頻"
     },
@@ -1153,9 +1138,6 @@
     },
     "auxiliaryAddLink": {
         "message": "添加鏈接"
-    },
-    "auxiliaryButtonSave": {
-        "message": "保存"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "自動"
@@ -1268,9 +1250,6 @@
     "adjustmentsFunction30": {
         "message": "LED 配置文件選擇"
     },
-    "adjustmentsSave": {
-        "message": "保存"
-    },
     "servosChangeDirection": {
         "message": "設置遙控器通道反向來匹配"
     },
@@ -1288,9 +1267,6 @@
     },
     "servosLiveMode": {
         "message": "激活實時模式"
-    },
-    "servosButtonSave": {
-        "message": "保存"
     },
     "gpsMapMessage1": {
         "message": "請檢查網路連接"
@@ -1442,20 +1418,11 @@
     "cliReboot": {
         "message": "檢測到命令行重啟"
     },
-    "cliSaveToFileBtn": {
-        "message": "保存到文件"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "清除輸出歷史記錄"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "複製到剪貼簿"
-    },
     "cliCopySuccessful": {
         "message": "複製成功！"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "從文件加載"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>注意</strong>：你可以在執行前查看和編輯命令"
@@ -1489,9 +1456,6 @@
     },
     "blackboxConfiguration": {
         "message": "黑盒設置"
-    },
-    "blackboxButtonSave": {
-        "message": "保存並重啟"
     },
     "blackboxLoggingNone": {
         "message": "無"
@@ -1674,9 +1638,6 @@
     },
     "ledStripHelp": {
         "message": "飛控可以控制 LED 燈帶上的每一個燈珠的顏色和效果。 <br />配置燈珠的位置，連線的順序，然後按位置將燈帶接入。沒有設置過接線順序的燈珠設置不會被保存。 <br />在一個顏色上雙擊可編輯 HSV 值。"
-    },
-    "ledStripButtonSave": {
-        "message": "保存"
     },
     "ledStripColorSetupTitle": {
         "message": "顏色設置",
@@ -2177,9 +2138,6 @@
     "failsafeSwitchOptionKill": {
         "message": "終止"
     },
-    "powerButtonSave": {
-        "message": "保存"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "固件更新 <span class=\"message-negative\">要求</span>。電池/電流/電壓通過API &lt; 1.33.0 設置。（Betaflight 版本&lt;=3.17）不支援。"
     },
@@ -2558,9 +2516,6 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "將全部 {{length}} 個字符上傳到 OSD"
-    },
-    "osdSetupSave": {
-        "message": "保存"
     },
     "osdTextElementMainBattVoltage": {
         "message": "電池電壓",
@@ -3371,14 +3326,6 @@
         "message": "<span class=\"message-negative\">注意:</span>在使用$t(vtxSelectedMode.message)之前，必須先在下面配置並保存圖傳表",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">注意：</span> 選定的圖傳不支援以“工廠模式”設置頻段，但您的部分頻段設置中使用了這個功能。點擊 '$t(vtxButtonSave.message)' 以修復這個問題。",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">注意:</span>圖傳表內容已加載，但尚未存儲至飛行控制器。您必須驗證和修改部分數值，以確保其在您的國家有效且合法，然後點擊$t(vtxButtonSave.message)按鈕來將其儲存至飛行控制器上。",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
-    },
     "vtxFrequencyChannel": {
         "message": "直接輸入頻率",
         "description": "Text of one of the fields of the VTX tab"
@@ -3571,25 +3518,9 @@
         "message": "當從剪貼板加載圖傳配置訊息時發生<span class=\"message-negative\">錯誤</span>。內容可能不正確",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "保存到文件",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "保存 Lua 腳本",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "從文件加載",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "從剪貼板加載",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "保存",
-        "description": "Save button in the VTX tab"
     },
     "mainHelpArmed": {
         "message": "電機解鎖"

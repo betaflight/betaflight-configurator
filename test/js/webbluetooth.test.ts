@@ -42,7 +42,8 @@ import type { BluetoothDeviceProfile } from "../../src/js/protocols/devices";
 // without its real import graph.
 // ---------------------------------------------------------------------------
 
-vi.mock("../../src/js/protocols/devices", () => ({
+vi.mock(import("../../src/js/protocols/devices"), async (importOriginal) => ({
+    ...(await importOriginal()),
     bluetoothDevices: [
         {
             name: "CC2541",
@@ -468,6 +469,17 @@ describe("WebBluetooth characteristic selection on the FFE0 service", () => {
         expect(ffe1.startNotifications).not.toHaveBeenCalled();
     });
 
+    it("writes and reads by property when a module swaps the profile's characteristics", async () => {
+        const ffe1 = makeCharacteristic(FFE1, { notify: true });
+        const ffe2 = makeCharacteristic(FFE2, { writeWithoutResponse: true });
+
+        const { bt, results } = await connectTo([ffe1, ffe2]);
+
+        expect(results).toEqual([true]);
+        expect(bt.writeCharacteristic).toBe(ffe2);
+        expect(bt.readCharacteristic).toBe(ffe1);
+    });
+
     it("stops notifications once on disconnect when one characteristic serves both directions", async () => {
         const { ffe1, characteristics } = tmotorModule();
         const { bt } = await connectTo(characteristics);
@@ -562,7 +574,7 @@ describe("WebBluetooth fixes surfaced by the TypeScript conversion", () => {
         expect(bt.createPort(device).displayName).toBe("dev-nameless");
     });
 
-    it("names the expected characteristic when the service lacks it", async () => {
+    it("names the expected characteristics when the service lacks them", async () => {
         const WebBluetooth = await loadWebBluetooth();
         const bt = new WebBluetooth();
         bt.deviceDescription = {
@@ -573,6 +585,6 @@ describe("WebBluetooth fixes surfaced by the TypeScript conversion", () => {
         };
         bt.service = { uuid: "ffe0", getCharacteristics: vi.fn(async () => []) };
 
-        await expect(bt.getCharacteristics()).rejects.toThrow("should be ffe1");
+        await expect(bt.getCharacteristics()).rejects.toThrow("expected to write ffe1 and read ffe2");
     });
 });

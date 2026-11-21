@@ -1638,6 +1638,13 @@ const onSliderWheel = (index: number, event: WheelEvent) => {
 
     event.preventDefault();
 
+    // Only a slider the user has selected reacts: a wheel turned while merely passing over
+    // a motor column must not spin that motor up.
+    const cell = event.currentTarget as HTMLElement | null;
+    if (!cell?.contains(document.activeElement)) {
+        return;
+    }
+
     // index -1 for master
     const step = 25;
     const delta = event.deltaY > 0 ? -step : step;

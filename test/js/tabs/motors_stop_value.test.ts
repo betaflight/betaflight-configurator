@@ -471,4 +471,45 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(consoleError).not.toHaveBeenCalledWith("Failed to load motors data:", expect.anything());
         expect(initializeDefaults).not.toHaveBeenCalled();
     });
+
+    describe("mouse wheel over a motor slider", () => {
+        function motorSliderCell(container: HTMLElement, motorIndex: number): HTMLElement {
+            const thumbs = container.querySelectorAll<HTMLElement>('[role="slider"]');
+            const cell = thumbs[motorIndex]?.closest("li");
+            expect(cell).toBeTruthy();
+            return cell!;
+        }
+
+        function scrollUp(cell: HTMLElement) {
+            vi.useFakeTimers();
+            try {
+                cell.dispatchEvent(new WheelEvent("wheel", { deltaY: -100, bubbles: true, cancelable: true }));
+                // Motor commands are buffered for 10 ms before being sent.
+                vi.advanceTimersByTime(10);
+            } finally {
+                vi.useRealTimers();
+            }
+        }
+
+        it("does not change a motor whose slider was not selected", async () => {
+            const container = await mountReady({ enable3d: false, neutral: 1500 });
+            motorsTestingEnabled.value = true;
+
+            scrollUp(motorSliderCell(container, 0));
+
+            expect(sendMotorCommand).not.toHaveBeenCalled();
+        });
+
+        it("changes the motor whose slider has focus", async () => {
+            const container = await mountReady({ enable3d: false, neutral: 1500 });
+            motorsTestingEnabled.value = true;
+            const cell = motorSliderCell(container, 0);
+            cell.querySelector<HTMLElement>('[role="slider"]')!.focus();
+
+            scrollUp(cell);
+
+            expect(sendMotorCommand).toHaveBeenCalledTimes(1);
+            expect(sendMotorCommand.mock.calls[0][0][0]).toBe(1025);
+        });
+    });
 });
