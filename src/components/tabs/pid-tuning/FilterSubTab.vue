@@ -657,17 +657,48 @@ const dtermSliderMode = computed({
     set: (value) => (fcStore.tuningSliders.slider_dterm_filter = value),
 });
 
+// Cutoffs a filter slider drives (the same fields the FC calculate reply and the
+// client-side calculation write).
+const GYRO_SLIDER_CUTOFFS = [
+    "gyro_lowpass_hz",
+    "gyro_lowpass2_hz",
+    "gyro_lowpass_dyn_min_hz",
+    "gyro_lowpass_dyn_max_hz",
+] as const;
+const DTERM_SLIDER_CUTOFFS = [
+    "dterm_lowpass_hz",
+    "dterm_lowpass2_hz",
+    "dterm_lowpass_dyn_min_hz",
+    "dterm_lowpass_dyn_max_hz",
+] as const;
+type SliderCutoffField = (typeof GYRO_SLIDER_CUTOFFS)[number] | (typeof DTERM_SLIDER_CUTOFFS)[number];
+type CutoffSnapshot = Partial<Record<SliderCutoffField, number>>;
+
+// Manual cutoffs from before a slider was switched ON in this session, so switching it
+// OFF again (before saving) puts them back. Cleared on load/save by forceUpdateSliders().
+let gyroManualCutoffs: CutoffSnapshot | null = null;
+let dtermManualCutoffs: CutoffSnapshot | null = null;
+
+function takeCutoffs(fields: readonly SliderCutoffField[]): CutoffSnapshot {
+    return Object.fromEntries(fields.map((field) => [field, fcStore.filterConfig[field]]));
+}
+
 // Boolean wrappers for USwitch binding.
 // Turning a slider ON recalculates the cutoffs from the current multiplier right away,
 // so the (now read-only) inputs show what will be saved — matching the PID slider mode.
+// Turning it OFF restores the manual cutoffs it replaced, if it was turned ON here.
 const gyroSliderEnabled = computed({
     get: () => gyroSliderMode.value === 1,
     set: (value) => {
         gyroSliderMode.value = value ? 1 : 0;
         if (value) {
+            gyroManualCutoffs = takeCutoffs(GYRO_SLIDER_CUTOFFS);
             calculateNewGyroFilters(gyroFilterMultiplier.value).catch((error) => {
                 console.error("Failed to calculate simplified gyro filters:", error);
             });
+        } else if (gyroManualCutoffs) {
+            Object.assign(fcStore.filterConfig, gyroManualCutoffs);
+            gyroManualCutoffs = null;
         }
     },
 });
@@ -677,9 +708,13 @@ const dtermSliderEnabled = computed({
     set: (value) => {
         dtermSliderMode.value = value ? 1 : 0;
         if (value) {
+            dtermManualCutoffs = takeCutoffs(DTERM_SLIDER_CUTOFFS);
             calculateNewDTermFilters(dtermFilterMultiplier.value).catch((error) => {
                 console.error("Failed to calculate simplified dterm filters:", error);
             });
+        } else if (dtermManualCutoffs) {
+            Object.assign(fcStore.filterConfig, dtermManualCutoffs);
+            dtermManualCutoffs = null;
         }
     },
 });
@@ -1246,6 +1281,9 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
 
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {
+    // The loaded/saved values are the new baseline: nothing to restore on OFF any more.
+    gyroManualCutoffs = null;
+    dtermManualCutoffs = null;
     isUpdatingSliders = true;
     gyroFilterMultiplier.value = (fcStore.tuningSliders.slider_gyro_filter_multiplier || 100) / 100;
     dtermFilterMultiplier.value = (fcStore.tuningSliders.slider_dterm_filter_multiplier || 100) / 100;

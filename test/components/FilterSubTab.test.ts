@@ -113,4 +113,71 @@ describe("Filter slider mode switches", () => {
         expect(sliders.calculateNewGyroFilters).not.toHaveBeenCalled();
         expect(sliders.calculateNewDTermFilters).not.toHaveBeenCalled();
     });
+
+    describe.each([
+        {
+            name: "gyro",
+            index: 0,
+            calculate: sliders.calculateNewGyroFilters,
+            fields: ["gyro_lowpass_hz", "gyro_lowpass2_hz", "gyro_lowpass_dyn_min_hz", "gyro_lowpass_dyn_max_hz"],
+            mode: "slider_gyro_filter",
+        },
+        {
+            name: "D-term",
+            index: 1,
+            calculate: sliders.calculateNewDTermFilters,
+            fields: ["dterm_lowpass_hz", "dterm_lowpass2_hz", "dterm_lowpass_dyn_min_hz", "dterm_lowpass_dyn_max_hz"],
+            mode: "slider_dterm_filter",
+        },
+    ] as const)("$name slider OFF", ({ index, calculate, fields, mode }) => {
+        const MANUAL = [150, 0, 0, 0];
+        const CALCULATED = [0, 300, 240, 600];
+
+        const cutoffs = () => fields.map((field) => fcStore.filterConfig[field]);
+        const setCutoffs = (values: number[]) =>
+            fields.forEach((field, i) => (fcStore.filterConfig[field] = values[i]));
+
+        beforeEach(() => {
+            setCutoffs(MANUAL);
+            // Stand in for the calculate reply / client-side calculation.
+            calculate.mockImplementation(() => {
+                setCutoffs(CALCULATED);
+                return Promise.resolve(undefined);
+            });
+        });
+
+        it("restores the manual cutoffs it replaced when turned ON in this session", async () => {
+            sliderSwitch(wrapper, index).vm.$emit("update:modelValue", true);
+            await flushPromises();
+            expect(cutoffs()).toEqual(CALCULATED);
+
+            sliderSwitch(wrapper, index).vm.$emit("update:modelValue", false);
+            await flushPromises();
+
+            expect(fcStore.tuningSliders[mode]).toBe(0);
+            expect(cutoffs()).toEqual(MANUAL);
+        });
+
+        it("keeps the cutoffs when the slider was already ON at load", async () => {
+            fcStore.tuningSliders[mode] = 1;
+            setCutoffs(CALCULATED);
+            await flushPromises();
+
+            sliderSwitch(wrapper, index).vm.$emit("update:modelValue", false);
+            await flushPromises();
+
+            expect(cutoffs()).toEqual(CALCULATED);
+        });
+
+        it("keeps the cutoffs after a save or reload made them the baseline", async () => {
+            sliderSwitch(wrapper, index).vm.$emit("update:modelValue", true);
+            await flushPromises();
+
+            wrapper.vm.forceUpdateSliders();
+            sliderSwitch(wrapper, index).vm.$emit("update:modelValue", false);
+            await flushPromises();
+
+            expect(cutoffs()).toEqual(CALCULATED);
+        });
+    });
 });
