@@ -884,12 +884,14 @@ function updateColorSliders(colorIndex: number) {
 }
 
 function onColorSliderChange() {
-    if (selectedColorIndex.value !== null) {
-        ledColors.value[selectedColorIndex.value].h = colorHSV.h;
-        ledColors.value[selectedColorIndex.value].s = colorHSV.s;
-        ledColors.value[selectedColorIndex.value].v = colorHSV.v;
-        buildLedStripFromGrid(gridLeds);
+    const color = ledColors.value[selectedColorIndex.value];
+    if (!color) {
+        return;
     }
+    color.h = colorHSV.h;
+    color.s = colorHSV.s;
+    color.v = colorHSV.v;
+    buildLedStripFromGrid(gridLeds);
 }
 
 function openColorSliders(event: MouseEvent) {
