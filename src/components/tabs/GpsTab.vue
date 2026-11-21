@@ -179,11 +179,11 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span v-html="$t('gpsAltitude')"></span>
-                            <span>{{ gpsInfo.alt }} m</span>
+                            <span>{{ formatShortDistance(gpsInfo.alt) }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span v-html="$t('gpsSpeed')"></span>
-                            <span>{{ gpsInfo.speed }} cm/s</span>
+                            <span>{{ formatGroundSpeed(gpsInfo.speed) }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span v-html="$t('gpsHeading')"></span>
@@ -210,7 +210,7 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span v-html="$t('gpsDistToHome')"></span>
-                            <span>{{ gpsInfo.distToHome }} m</span>
+                            <span>{{ formatShortDistance(gpsInfo.distToHome) }}</span>
                         </div>
                         <div v-if="showPositionalDop" class="flex justify-between items-center">
                             <span v-html="$t('gpsPositionalDop')"></span>
@@ -322,6 +322,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { tabSwitchCleanup } from "@/js/tab_adapters";
 import { useDialogStore } from "@/stores/dialog";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
 import { useGpsData } from "../../composables/gps/useGpsData";
 import { useGpsSave } from "../../composables/gps/useGpsSave";
 import { useMapViewport } from "../../composables/useMapViewport";
@@ -362,6 +363,7 @@ export default defineComponent({
     },
     setup() {
         const fcStore = useFlightControllerStore();
+        const { formatShortDistance, formatGroundSpeed } = useDisplayUnits();
         const { hasBuildOption } = useBuildOptions();
         const connectionStore = useConnectionStore();
         const dialogStore = useDialogStore();
@@ -989,6 +991,8 @@ export default defineComponent({
             gpsSbasItems,
             gpsConfig,
             gpsInfo,
+            formatShortDistance,
+            formatGroundSpeed,
             signalRows,
             hasGpsSensor,
             hasGpsBuildOption,

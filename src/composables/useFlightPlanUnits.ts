@@ -19,91 +19,64 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { computed, ref } from "vue";
-import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
+import { computed } from "vue";
+import { useDisplayUnits, type DisplayUnitSystem } from "./useDisplayUnits";
 
-/**
- * Display units for the Flight Plan tab.
- *
- * Waypoints are always stored in feet / knots (that is what the CLI round-trip in
- * useFlightPlan converts from), so this is a pure presentation layer: values are
- * converted on the way into the UI and back on the way out of the editor.
- */
-export type FlightPlanUnitSystem = "imperial" | "metric";
-
-const STORAGE_KEY = "flightPlanUnits";
-
+export type FlightPlanUnitSystem = DisplayUnitSystem;
+const { unitSystem, usesMetricLength, isMetric, setUnitSystem } = useDisplayUnits();
 const FEET_TO_METERS = 0.3048;
 const KNOTS_TO_KMH = 1.852;
-const METERS_TO_NAUTICAL_MILES = 1 / 1852;
+const KNOTS_TO_MPH = 1.150779448;
 
-function isUnitSystem(value: unknown): value is FlightPlanUnitSystem {
-    return value === "imperial" || value === "metric";
+const altitudeUnit = computed(() => (usesMetricLength.value ? "m" : "ft"));
+const speedUnit = computed(() => (isMetric.value ? "km/h" : "mph"));
+
+export function altitudeToUnit(feet: number, system: DisplayUnitSystem): number {
+    return system === "imperial" ? feet : feet * FEET_TO_METERS;
 }
 
-function loadUnitSystem(): FlightPlanUnitSystem {
-    try {
-        const stored = getConfig<unknown>(STORAGE_KEY)[STORAGE_KEY];
-        return isUnitSystem(stored) ? stored : "imperial";
-    } catch {
-        return "imperial";
-    }
+export function altitudeFromUnit(value: number, system: DisplayUnitSystem): number {
+    return system === "imperial" ? value : value / FEET_TO_METERS;
 }
 
-// Shared across every Flight Plan component, like the waypoint state.
-const unitSystem = ref<FlightPlanUnitSystem>(loadUnitSystem());
-
-const isMetric = computed(() => unitSystem.value === "metric");
-const altitudeUnit = computed(() => (isMetric.value ? "m" : "ft"));
-const speedUnit = computed(() => (isMetric.value ? "km/h" : "kts"));
-
-/** Accepts unknown so it can be bound straight to a select's update event; invalid values are ignored. */
-function setUnitSystem(value: unknown) {
-    if (!isUnitSystem(value)) {
-        return;
-    }
-    unitSystem.value = value;
-    setConfig({ [STORAGE_KEY]: value });
+export function speedToUnit(knots: number, system: DisplayUnitSystem): number {
+    return knots * (system === "metric" ? KNOTS_TO_KMH : KNOTS_TO_MPH);
 }
 
-/** Stored feet → value in the selected unit. */
+export function speedFromUnit(value: number, system: DisplayUnitSystem): number {
+    return value / (system === "metric" ? KNOTS_TO_KMH : KNOTS_TO_MPH);
+}
+
 function altitudeToDisplay(feet: number): number {
-    return isMetric.value ? feet * FEET_TO_METERS : feet;
+    return altitudeToUnit(feet, unitSystem.value);
 }
 
-/** Value in the selected unit → stored feet. */
 function altitudeFromDisplay(value: number): number {
-    return isMetric.value ? value / FEET_TO_METERS : value;
+    return altitudeFromUnit(value, unitSystem.value);
 }
 
-/** Stored knots → value in the selected unit. */
 function speedToDisplay(knots: number): number {
-    return isMetric.value ? knots * KNOTS_TO_KMH : knots;
+    return speedToUnit(knots, unitSystem.value);
 }
 
-/** Value in the selected unit → stored knots. */
 function speedFromDisplay(value: number): number {
-    return isMetric.value ? value / KNOTS_TO_KMH : value;
+    return speedFromUnit(value, unitSystem.value);
 }
 
-/** Feet → rounded altitude string with unit, e.g. "400ft" or "122m". */
 function formatAltitude(feet: number): string {
     return `${Math.round(altitudeToDisplay(feet))}${altitudeUnit.value}`;
 }
 
-/** Knots → speed string with unit, e.g. "10kts" or "18.5km/h". */
 function formatSpeed(knots: number): string {
     return `${Number(speedToDisplay(knots).toFixed(1))}${speedUnit.value}`;
 }
 
-/** Meters → distance string: nautical miles for imperial, m/km for metric. */
 function formatDistance(meters: number): string {
-    if (!isMetric.value) {
-        return `${(meters * METERS_TO_NAUTICAL_MILES).toFixed(2)}nm`;
+    if (!usesMetricLength.value) {
+        const feet = meters / FEET_TO_METERS;
+        return feet < 5280 ? `${Math.round(feet)}ft` : `${(meters / 1609.344).toFixed(2)}mi`;
     }
-    if (meters < 1000) {
-        return `${Math.round(meters)}m`;
-    }
+    if (meters < 1000) return `${Math.round(meters)}m`;
     return `${(meters / 1000).toFixed(2)}km`;
 }
 

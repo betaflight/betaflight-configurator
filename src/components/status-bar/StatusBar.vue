@@ -59,9 +59,9 @@
                 </UTooltip>
                 <UTooltip
                     v-if="cpuTemperatureSupported"
-                    :text="`${$t('initialSetupCpuTemp')} ${cpuTemperature.toFixed(0)} ℃`"
+                    :text="`${$t('initialSetupCpuTemp')} ${formatTemperature(cpuTemperature)}`"
                 >
-                    <span class="value">{{ cpuTemperature.toFixed(0) }} ℃</span>
+                    <span class="value">{{ formatTemperature(cpuTemperature) }}</span>
                 </UTooltip>
 
                 <USeparator orientation="vertical" :ui="{ root: 'py-1', border: 'border-accented' }" />
@@ -139,6 +139,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, onUnmounted, type PropType } from "vue";
 import PortUtilization from "./PortUtilization.vue";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
 import { useConnectionStore } from "../../stores/connection";
 import { useFlightControllerStore } from "../../stores/fc";
 import BatteryIcon from "../quad-status/BatteryIcon.vue";
@@ -213,6 +214,7 @@ export default defineComponent({
         const expanded = ref(false);
 
         const { t } = useTranslation();
+        const { formatTemperature } = useDisplayUnits();
 
         // The compact bar is the navigation: the same tabs the sidebar shows, scrolled sideways.
         const activeTabs = useVisibleTabs();
@@ -336,6 +338,7 @@ export default defineComponent({
             dataflash,
             dataflashSupported,
             cpuTemperatureSupported,
+            formatTemperature,
             clampedCpuLoad,
             cpuLoadClass,
         };

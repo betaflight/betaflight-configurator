@@ -28,20 +28,25 @@ async function loadUnits() {
     return module.useFlightPlanUnits();
 }
 
+async function loadDisplayUnits() {
+    vi.resetModules();
+    return (await import("../../src/composables/useDisplayUnits")).useDisplayUnits();
+}
+
 describe("useFlightPlanUnits", () => {
     beforeEach(() => {
         localStorage.clear();
     });
 
-    it("defaults to imperial and formats ft / kts / nm", async () => {
+    it("defaults to imperial and formats ft / mph / miles", async () => {
         const units = await loadUnits();
 
         expect(units.unitSystem.value).toBe("imperial");
         expect(units.formatAltitude(400)).toBe("400ft");
-        expect(units.formatSpeed(10)).toBe("10kts");
-        expect(units.formatDistance(1852)).toBe("1.00nm");
+        expect(units.formatSpeed(10)).toBe("11.5mph");
+        expect(units.formatDistance(1852)).toBe("1.15mi");
         expect(units.altitudeToDisplay(400)).toBe(400);
-        expect(units.speedFromDisplay(10)).toBe(10);
+        expect(units.speedFromDisplay(10)).toBeCloseTo(8.68976, 4);
     });
 
     it("formats m / km/h / m-or-km in metric", async () => {
@@ -54,6 +59,17 @@ describe("useFlightPlanUnits", () => {
         expect(units.formatSpeed(10)).toBe("18.5km/h");
         expect(units.formatDistance(389)).toBe("389m");
         expect(units.formatDistance(2500)).toBe("2.50km");
+    });
+
+    it("uses metres, kilometres and mph for British units and persists the selection", async () => {
+        const units = await loadUnits();
+        units.setUnitSystem("british");
+        expect(units.formatAltitude(400)).toBe("122m");
+        expect(units.formatSpeed(10)).toBe("11.5mph");
+        expect(units.formatDistance(2500)).toBe("2.50km");
+        expect(units.speedFromDisplay(units.speedToDisplay(10))).toBeCloseTo(10, 9);
+        expect(units.altitudeFromDisplay(units.altitudeToDisplay(400))).toBeCloseTo(400, 9);
+        expect((await loadUnits()).unitSystem.value).toBe("british");
     });
 
     it("round-trips display values back to stored feet and knots", async () => {
@@ -80,5 +96,51 @@ describe("useFlightPlanUnits", () => {
 
         units.setUnitSystem("furlongs");
         expect(units.unitSystem.value).toBe("imperial");
+    });
+
+    it("uses the existing Flight Plan preference and lets the new preference take precedence", async () => {
+        localStorage.setItem("flightPlanUnits", JSON.stringify({ flightPlanUnits: "metric" }));
+        const units = await loadDisplayUnits();
+        expect(units.unitSystem.value).toBe("metric");
+        units.setUnitSystem("imperial");
+        expect((await loadDisplayUnits()).unitSystem.value).toBe("imperial");
+    });
+
+    it("shares the selection with Flight Plan", async () => {
+        const units = await loadDisplayUnits();
+        const flightPlan = (await import("../../src/composables/useFlightPlanUnits")).useFlightPlanUnits();
+        units.setUnitSystem("metric");
+        expect(flightPlan.formatSpeed(10)).toBe("18.5km/h");
+        flightPlan.setUnitSystem("imperial");
+        expect(units.formatTemperature(0)).toBe("32°F");
+    });
+
+    it("formats weather and elevation consistently while preserving zero and missing readings", async () => {
+        const units = await loadDisplayUnits();
+        expect(units.formatTemperature(0)).toBe("32°F");
+        expect(units.formatTemperature(-40)).toBe("-40°F");
+        expect(units.formatTemperature(null)).toBe("-");
+        expect(units.formatWind(10)).toBe("22.4");
+        expect(units.windUnit.value).toBe("mph");
+        expect(units.formatVisibility(1609.344)).toBe("1.0 mi");
+        expect(units.formatPrecipitation(25.4)).toBe("1.00 in");
+        expect(units.formatPrecipitation(0.1)).toBe("<0.01 in");
+        expect(units.formatPrecipitation(0)).toBe("0.00 in");
+        expect(units.formatPrecipitation(null)).toBe("-");
+        expect(units.formatVisibility(null)).toBe("-");
+        expect(units.formatPressure(undefined)).toBe("-");
+        expect(units.formatPressure(1013.25)).toBe("29.92 inHg");
+        expect(units.formatElevation(304.8)).toBe("1000 ft");
+        units.setUnitSystem("metric");
+        expect(units.formatTemperature(0)).toBe("0°C");
+        expect(units.formatWind(10)).toBe("10.0");
+        expect(units.windUnit.value).toBe("m/s");
+        expect(units.formatVisibility(999)).toBe("999 m");
+        expect(units.formatVisibility(1000)).toBe("1.0 km");
+        expect(units.formatElevation(304.8)).toBe("305 m");
+        units.setUnitSystem("british");
+        expect(units.formatTemperature(0)).toBe("0°C");
+        expect(units.formatGroundSpeed(1000)).toBe("22.4 mph");
+        expect(units.formatVisibility(1000)).toBe("1.0 km");
     });
 });

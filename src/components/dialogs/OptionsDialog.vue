@@ -33,6 +33,20 @@
                 </UiBox>
 
                 <UiBox :title="$t('languageAndAppearanceSettings')">
+                    <SettingRow :label="$t('displayUnits')" :help="$t('displayUnitsHelp')">
+                        <USelect
+                            :model-value="unitSystem"
+                            :items="[
+                                { label: $t('displayUnitsMetric'), value: 'metric' },
+                                { label: $t('displayUnitsImperial'), value: 'imperial' },
+                                { label: $t('displayUnitsBritish'), value: 'british' },
+                            ]"
+                            :aria-label="$t('displayUnits')"
+                            class="min-w-40"
+                            :ui="{ content: 'z-3002' }"
+                            @update:model-value="setUnitSystem"
+                        />
+                    </SettingRow>
                     <SettingRow :label="$t('useLegacyRenderingModel')">
                         <USwitch v-model="settings.useLegacyRenderingModel" size="sm" />
                     </SettingRow>
@@ -153,6 +167,7 @@
 <script setup lang="ts">
 import { computed, onUnmounted, reactive, watch } from "vue";
 import { useDialog } from "@/composables/useDialog";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { applyUiScale, sanitizeUiScale, DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE } from "../../js/UiScale";
 import { i18n } from "../../js/localization";
@@ -173,6 +188,7 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const dialog = useDialog();
+const { unitSystem, setUnitSystem } = useDisplayUnits();
 
 const open = computed({
     get: () => props.modelValue,
