@@ -657,15 +657,31 @@ const dtermSliderMode = computed({
     set: (value) => (fcStore.tuningSliders.slider_dterm_filter = value),
 });
 
-// Boolean wrappers for USwitch binding
+// Boolean wrappers for USwitch binding.
+// Turning a slider ON recalculates the cutoffs from the current multiplier right away,
+// so the (now read-only) inputs show what will be saved — matching the PID slider mode.
 const gyroSliderEnabled = computed({
     get: () => gyroSliderMode.value === 1,
-    set: (value) => (gyroSliderMode.value = value ? 1 : 0),
+    set: (value) => {
+        gyroSliderMode.value = value ? 1 : 0;
+        if (value) {
+            calculateNewGyroFilters(gyroFilterMultiplier.value).catch((error) => {
+                console.error("Failed to calculate simplified gyro filters:", error);
+            });
+        }
+    },
 });
 
 const dtermSliderEnabled = computed({
     get: () => dtermSliderMode.value === 1,
-    set: (value) => (dtermSliderMode.value = value ? 1 : 0),
+    set: (value) => {
+        dtermSliderMode.value = value ? 1 : 0;
+        if (value) {
+            calculateNewDTermFilters(dtermFilterMultiplier.value).catch((error) => {
+                console.error("Failed to calculate simplified dterm filters:", error);
+            });
+        }
+    },
 });
 
 // Filter Sliders
