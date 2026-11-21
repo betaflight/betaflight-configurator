@@ -25,6 +25,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("sortablejs", () => ({
     default: { create: () => ({ destroy: vi.fn() }) },
 }));
+// Labels read as their message keys.
+vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 
 import HeaderDialog from "../../src/blackbox-viewer/components/HeaderDialog.vue";
 import { FIRMWARE_TYPE_BETAFLIGHT } from "../../src/blackbox-viewer/flightlog_fielddefs";
@@ -127,5 +129,81 @@ describe("HeaderDialog value formatting", () => {
         const text = await copiedHeader({ thrust_linear: 25 });
 
         expect(text).toContain("  Thrust Linear: 25");
+    });
+});
+
+describe("HeaderDialog wing TPA rows", () => {
+    const speedHeader = {
+        tpa_speed_basic_delay: 1000,
+        tpa_speed_basic_gravity: 50,
+        tpa_speed_adv_prop_pitch: 370,
+        tpa_speed_adv_mass: 1000,
+        tpa_speed_adv_drag_k: 1000,
+        tpa_speed_adv_thrust: 2000,
+        tpa_speed_max_voltage: 2520,
+        tpa_speed_pitch_offset: 0,
+        yaw_type: 0,
+    };
+
+    it("shows the basic speed rows, then voltage, pitch offset and yaw type", async () => {
+        const text = await copiedHeader({ ...speedHeader, tpa_speed_type: 0 });
+
+        expect(text).toContain(
+            [
+                "  pidTuningWingTpaSpeedType: pidTuningWingTpaSpeedBasic",
+                "  pidTuningWingTpaBasicSpeedDelay: 1000",
+                "  pidTuningWingTpaBasicSpeedGravity: 50",
+                "  pidTuningWingTpaAdvSpeedMaxVoltage: 2520",
+                "  pidTuningWingTpaAdvSpeedPitchOffset: 0",
+                "  pidTuningWingMiscYawType: pidTuningWingYawTypeRudder",
+            ].join("\n"),
+        );
+        expect(text).not.toContain("pidTuningWingTpaAdvSpeedPropPitch");
+    });
+
+    it("shows the advanced speed rows, then voltage, pitch offset and yaw type", async () => {
+        const text = await copiedHeader({ ...speedHeader, tpa_speed_type: 1 });
+
+        expect(text).toContain(
+            [
+                "  pidTuningWingTpaSpeedType: pidTuningWingTpaSpeedAdvanced",
+                "  pidTuningWingTpaAdvSpeedPropPitch: 370",
+                "  pidTuningWingTpaAdvSpeedMass: 1000",
+                "  pidTuningWingTpaAdvSpeedDragK: 1000",
+                "  pidTuningWingTpaAdvSpeedThrust: 2000",
+                "  pidTuningWingTpaAdvSpeedMaxVoltage: 2520",
+            ].join("\n"),
+        );
+        expect(text).not.toContain("pidTuningWingTpaBasicSpeedDelay");
+    });
+
+    it("shows the speed rows with the classic curve type", async () => {
+        const text = await copiedHeader({ ...speedHeader, tpa_speed_type: 0, tpa_curve_type: 0 });
+
+        expect(text).toContain("  pidTuningWingTpaCurveType: pidTuningWingTpaCurveClassic");
+        expect(text).toContain("  pidTuningWingTpaBasicSpeedDelay: 1000");
+    });
+
+    it("shows the reference speed curve rows for curve type 2", async () => {
+        const text = await copiedHeader({
+            tpa_curve_type: 2,
+            speed_curve_vref: 18,
+            speed_curve_power: 10,
+            speed_curve_min: 10,
+            speed_curve_max: 200,
+            // Belongs to curve type 1 only, so it must not show here.
+            tpa_curve_stall_throttle: 30,
+        });
+
+        expect(text).toContain(
+            [
+                "  pidTuningWingTpaCurveType: pidTuningWingTpaCurveHyperbolicRefSpeed",
+                "  speedCurvesReferenceSpeed: 18",
+                "  speedCurvesPower: 10",
+                "  speedCurvesCurveMin: 10",
+                "  speedCurvesCurveMax: 200",
+            ].join("\n"),
+        );
+        expect(text).not.toContain("pidTuningWingTpaAdvSpeedCurveStallSpeed");
     });
 });
