@@ -47,8 +47,15 @@ import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { ALTITUDE_TRAIL_COLORS } from "../graph_map.js";
-import { upperBound, type FlightTrack, type TrackPoint } from "./flightTrack";
-import { buildGround, TILE_SOURCES, type Ground, type GroundSourceId } from "./tileGround";
+import { groundSpeeds, speedScaleMax, upperBound, type FlightTrack, type TrackPoint } from "./flightTrack";
+import { buildGround, TILE_SOURCES, type Ground, type GroundSourceId, type SurfaceHeight } from "./tileGround";
+import { loadElevation, localToLatLon, type ElevationModel } from "./terrain";
+
+/** What the path's colour shows. */
+export type PathColoring = "altitude" | "speed";
+
+/** Terrain progress, for the panel: off, being fetched, shown, or unavailable for this flight. */
+export type TerrainState = "off" | "loading" | "ready" | "failed";
 
 const CURTAIN_EVERY_US = 2_000_000;
 const DRONE_SCALE = 0.12; // drone width as a fraction of the camera distance
@@ -89,9 +96,22 @@ export class FlightScene {
     private readonly trackObjects = new Group();
     private track: FlightTrack | null = null;
     private traveled: LineSegmentsGeometry | null = null;
+    private path: LineSegments2[] = [];
+    private coloring: PathColoring = "altitude";
+    private speeds: Float32Array = new Float32Array(0);
+    private speedMax = 1;
+    private timeUs = 0;
     /** segmentsBefore[i]: drawn path segments that start before sample i. */
     private segmentsBefore = new Uint32Array(0);
     private ground: Ground | null = null;
+    private grid: GridHelper | null = null;
+    private curtain: LineSegments | null = null;
+    private terrainEnabled = false;
+    /** The loaded terrain and its height at the track's origin, which the scene puts at groundU. */
+    private terrain: { model: ElevationModel; originM: number } | null = null;
+    private terrainLoad: AbortController | null = null;
+    /** Told whenever the terrain starts loading, appears or turns out unavailable. */
+    onTerrainState: ((state: TerrainState) => void) | null = null;
     private belowMap = false;
     private groundSource: GroundSourceId = "map";
     private follow = false;
@@ -140,57 +160,9 @@ export class FlightScene {
         }
 
         const { samples, gapAfter, groundU } = track;
-        const span = Math.max(1, track.bounds.maxU - groundU);
-        const positions: number[] = [];
-        const colors: number[] = [];
-        const color = new Color();
-        this.segmentsBefore = new Uint32Array(samples.length + 1);
-        let segments = 0;
-        for (let i = 0; i < samples.length; i++) {
-            this.segmentsBefore[i] = segments;
-            if (i === samples.length - 1 || gapAfter[i]) {
-                continue;
-            }
-            for (const s of [samples[i], samples[i + 1]]) {
-                positions.push(s.n, s.u, s.e);
-                altitudeColor((s.u - groundU) / span, color);
-                colors.push(color.r, color.g, color.b);
-            }
-            segments++;
-        }
-        this.segmentsBefore[samples.length] = segments;
-
-        const full = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
-        this.traveled = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
-        this.trackObjects.add(
-            new LineSegments2(
-                full,
-                new LineMaterial({ linewidth: 2, vertexColors: true, transparent: true, opacity: 0.35 }),
-            ),
-            new LineSegments2(this.traveled, new LineMaterial({ linewidth: 4, vertexColors: true })),
-        );
-
-        const curtain: number[] = [];
-        const curtainColors: number[] = [];
-        let nextCurtainUs = -Infinity;
-        for (const s of samples) {
-            if (s.tUs < nextCurtainUs) {
-                continue;
-            }
-            nextCurtainUs = s.tUs + CURTAIN_EVERY_US;
-            altitudeColor((s.u - groundU) / span, color);
-            curtain.push(s.n, s.u, s.e, s.n, groundU, s.e);
-            curtainColors.push(color.r, color.g, color.b, color.r, color.g, color.b);
-        }
-        const curtainGeometry = new BufferGeometry();
-        curtainGeometry.setAttribute("position", new Float32BufferAttribute(curtain, 3));
-        curtainGeometry.setAttribute("color", new Float32BufferAttribute(curtainColors, 3));
-        this.trackObjects.add(
-            new LineSegments(
-                curtainGeometry,
-                new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.25 }),
-            ),
-        );
+        this.speeds = groundSpeeds(samples, gapAfter);
+        this.speedMax = speedScaleMax(this.speeds);
+        this.buildPath();
 
         const { minN, maxN, minE, maxE } = track.bounds;
         const extent = Math.max(maxN - minN, maxE - minE, 50);
@@ -199,11 +171,79 @@ export class FlightScene {
         grid.material.opacity = 0.2;
         grid.material.depthWrite = false;
         grid.position.set((minN + maxN) / 2, groundU - 0.05, (minE + maxE) / 2);
+        this.grid = grid;
         this.trackObjects.add(grid);
 
+        this.buildCurtain();
         this.buildGround();
+        if (this.terrainEnabled) {
+            this.loadTerrain();
+        }
         this.frameTrack();
         this.setTime(samples[0].tUs, null);
+    }
+
+    /** Colour the path and curtain by altitude or by ground speed. */
+    setColoring(coloring: PathColoring): void {
+        this.coloring = coloring;
+        const track = this.track;
+        if (track) {
+            this.buildPath();
+            this.buildCurtain();
+            // Only the part flown so far: setTime would also drop the craft's attitude while paused.
+            this.traveled!.instanceCount = this.segmentsBefore[upperBound(track.samples, this.timeUs)];
+            this.requestRender();
+        }
+    }
+
+    /** What the colours run up to, red at the top: meters above the ground level, or m/s. */
+    get colorScale(): { coloring: PathColoring; max: number } {
+        const track = this.track;
+        if (this.coloring === "speed" || !track) {
+            return { coloring: this.coloring, max: this.speedMax };
+        }
+        return { coloring: "altitude", max: Math.max(1, track.bounds.maxU - track.groundU) };
+    }
+
+    /**
+     * Drape the map over real terrain heights, measured from the track's origin so the takeoff
+     * spot stays at the track's ground level. Loaded once per flight, on first use.
+     */
+    setTerrain(enabled: boolean): void {
+        this.terrainEnabled = enabled;
+        // Also retries a flight whose terrain failed to load before.
+        if (enabled && this.track && !this.terrain && !this.terrainLoad) {
+            this.loadTerrain();
+        } else {
+            this.onTerrainState?.(this.terrainState());
+        }
+        this.applyTerrain();
+    }
+
+    private terrainState(): TerrainState {
+        if (this.terrainShown) {
+            return "ready";
+        }
+        return this.terrainEnabled && this.terrainLoad ? "loading" : "off";
+    }
+
+    /** Ground height under a scene position: the terrain when shown, otherwise the flat ground. */
+    surfaceU(n: number, e: number): number {
+        const track = this.track;
+        if (!track) {
+            return 0;
+        }
+        const surface = this.surface();
+        if (!surface) {
+            return track.groundU;
+        }
+        const { lat, lon } = localToLatLon(track.origin, n, e, (la, lo) => track.toLocal(la, lo, track.origin.altM));
+        return surface(lat, lon);
+    }
+
+    /** True while the terrain is shown, so heights above it mean something. */
+    get terrainShown(): boolean {
+        return this.terrainEnabled && this.terrain !== null;
     }
 
     setGroundSource(source: GroundSourceId): void {
@@ -221,6 +261,7 @@ export class FlightScene {
         if (!this.active || !track || !this.traveled) {
             return null;
         }
+        this.timeUs = tUs;
         this.traveled.instanceCount = this.segmentsBefore[upperBound(track.samples, tUs)];
 
         const position = track.positionAt(tUs);
@@ -286,6 +327,7 @@ export class FlightScene {
 
     dispose(): void {
         this.disposed = true;
+        this.cancelTerrainLoad();
         this.cancelRender();
         this.clearTrack();
         this.controls.dispose();
@@ -330,19 +372,173 @@ export class FlightScene {
             groundU: track.groundU,
             toLocal: (lat, lon) => track.toLocal(lat, lon, track.origin.altM),
             onTileLoaded: () => this.requestRender(),
+            surface: this.surface(),
         });
         this.ground.setTranslucent(this.belowMap);
         this.scene.add(this.ground.group);
     }
 
+    /** Scene height of the terrain at a lat/lon, while it is shown. */
+    private surface(): SurfaceHeight | null {
+        const track = this.track;
+        const terrain = this.terrain;
+        if (!track || !terrain || !this.terrainEnabled) {
+            return null;
+        }
+        const { model, originM } = terrain;
+        // Where a tile failed, the ground is taken as level with the origin.
+        return (lat, lon) => track.groundU + (model.elevationAt(lat, lon) ?? originM) - originM;
+    }
+
+    private loadTerrain(): void {
+        const track = this.track;
+        if (!track) {
+            return;
+        }
+        this.cancelTerrainLoad();
+        const load = new AbortController();
+        this.terrainLoad = load;
+        this.onTerrainState?.("loading");
+        loadElevation(track.box, load.signal).then(
+            (model) => {
+                if (load.signal.aborted || this.track !== track) {
+                    return;
+                }
+                this.terrainLoad = null;
+                const originM = model.elevationAt(track.origin.lat, track.origin.lon);
+                if (originM === null) {
+                    this.onTerrainState?.(this.terrainEnabled ? "failed" : "off");
+                    return;
+                }
+                this.terrain = { model, originM };
+                this.onTerrainState?.(this.terrainEnabled ? "ready" : "off");
+                this.applyTerrain();
+            },
+            () => {
+                if (!load.signal.aborted && this.track === track) {
+                    this.terrainLoad = null;
+                    // Switched off meanwhile: nothing to report; switching on again retries.
+                    this.onTerrainState?.(this.terrainEnabled ? "failed" : "off");
+                }
+            },
+        );
+    }
+
+    private cancelTerrainLoad(): void {
+        this.terrainLoad?.abort();
+        this.terrainLoad = null;
+    }
+
+    /** Re-lay everything that rests on the ground after the terrain appears or is switched. */
+    private applyTerrain(): void {
+        this.ground?.setSurface(this.surface());
+        this.buildCurtain();
+        if (this.grid) {
+            // A flat grid would cut through hills and float over valleys.
+            this.grid.visible = !this.terrainShown;
+        }
+        this.requestRender();
+    }
+
+    /** Colour of sample `i` under the current colouring. */
+    private sampleColor(i: number, out: Color): Color {
+        const track = this.track!;
+        if (this.coloring === "speed") {
+            return altitudeColor(this.speeds[i] / this.speedMax, out);
+        }
+        const span = Math.max(1, track.bounds.maxU - track.groundU);
+        return altitudeColor((track.samples[i].u - track.groundU) / span, out);
+    }
+
+    /** The whole path, faint, and the part flown so far over it. */
+    private buildPath(): void {
+        for (const line of this.path) {
+            disposeObject(line);
+            line.removeFromParent();
+        }
+        this.path = [];
+        this.traveled = null;
+        const track = this.track;
+        if (!track) {
+            return;
+        }
+        const { samples, gapAfter } = track;
+        const positions: number[] = [];
+        const colors: number[] = [];
+        const color = new Color();
+        this.segmentsBefore = new Uint32Array(samples.length + 1);
+        let segments = 0;
+        for (let i = 0; i < samples.length; i++) {
+            this.segmentsBefore[i] = segments;
+            if (i === samples.length - 1 || gapAfter[i]) {
+                continue;
+            }
+            for (const k of [i, i + 1]) {
+                const s = samples[k];
+                positions.push(s.n, s.u, s.e);
+                this.sampleColor(k, color);
+                colors.push(color.r, color.g, color.b);
+            }
+            segments++;
+        }
+        this.segmentsBefore[samples.length] = segments;
+
+        const full = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
+        this.traveled = new LineSegmentsGeometry().setPositions(positions).setColors(colors);
+        this.path = [
+            new LineSegments2(
+                full,
+                new LineMaterial({ linewidth: 2, vertexColors: true, transparent: true, opacity: 0.35 }),
+            ),
+            new LineSegments2(this.traveled, new LineMaterial({ linewidth: 4, vertexColors: true })),
+        ];
+        this.trackObjects.add(...this.path);
+    }
+
+    /** Vertical lines from the path down to the ground every few seconds, to read height by. */
+    private buildCurtain(): void {
+        if (this.curtain) {
+            disposeObject(this.curtain);
+            this.curtain.removeFromParent();
+            this.curtain = null;
+        }
+        const track = this.track;
+        if (!track) {
+            return;
+        }
+        const { samples } = track;
+        const color = new Color();
+        const curtain: number[] = [];
+        const curtainColors: number[] = [];
+        let nextCurtainUs = -Infinity;
+        for (let i = 0; i < samples.length; i++) {
+            const s = samples[i];
+            if (s.tUs < nextCurtainUs) {
+                continue;
+            }
+            nextCurtainUs = s.tUs + CURTAIN_EVERY_US;
+            this.sampleColor(i, color);
+            curtain.push(s.n, s.u, s.e, s.n, this.surfaceU(s.n, s.e), s.e);
+            curtainColors.push(color.r, color.g, color.b, color.r, color.g, color.b);
+        }
+        const curtainGeometry = new BufferGeometry();
+        curtainGeometry.setAttribute("position", new Float32BufferAttribute(curtain, 3));
+        curtainGeometry.setAttribute("color", new Float32BufferAttribute(curtainColors, 3));
+        this.curtain = new LineSegments(
+            curtainGeometry,
+            new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.25 }),
+        );
+        this.trackObjects.add(this.curtain);
+    }
+
     /** See-through map while any part of the drone, as drawn (on-screen size, tilt), is below it. */
     private updateBelowMap(): void {
-        const groundU = this.track?.groundU;
-        if (groundU === undefined || !this.drone.visible) {
+        if (!this.track || !this.drone.visible) {
             this.setBelowMap(false);
             return;
         }
         this.drone.updateWorldMatrix(false, true);
+        const groundU = this.surfaceU(this.drone.position.x, this.drone.position.z);
         this.setBelowMap(droneBounds.setFromObject(this.model?.visible ? this.model : this.marker).min.y < groundU);
     }
 
@@ -367,8 +563,13 @@ export class FlightScene {
     }
 
     private clearTrack(): void {
+        this.cancelTerrainLoad();
+        this.terrain = null;
         this.trackObjects.traverse(disposeObject);
         this.trackObjects.clear();
+        this.grid = null;
+        this.curtain = null;
+        this.path = [];
         this.disposeGround();
         this.traveled = null;
         this.track = null;

@@ -35,6 +35,7 @@ interface FakeScene {
     canvasInPageAtDispose?: boolean;
     track?: FlightTrack | null;
     attitude?: Quaternion;
+    coloring: string;
 }
 const scenes: FakeScene[] = [];
 vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
@@ -57,6 +58,19 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         }
         setFollow() {}
         setGroundSource() {}
+        setTerrain() {}
+        setColoring(coloring: string) {
+            this.coloring = coloring;
+        }
+        coloring = "altitude";
+        get colorScale() {
+            return { coloring: this.coloring, max: this.coloring === "speed" ? 12.5 : 80 };
+        }
+        terrainShown = false;
+        onTerrainState = null;
+        surfaceU() {
+            return 0;
+        }
         resize() {}
         pickTime() {
             return null;
@@ -242,6 +256,47 @@ describe("Flight3DPanel", () => {
             } else {
                 expect(scene.attitude).toBeUndefined();
             }
+            wrapper.unmount();
+        });
+
+        it("switches the path between altitude and speed colours, with a legend in the user's units", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS));
+            graphStore.flight3d!.setCurrentTime(10e6);
+            await wrapper.vm.$nextTick();
+            const legend = () => wrapper.find('[data-testid="flight3d-legend"]').text();
+            expect(legend()).toMatch(/^Altitude 0\s*80\.00 m$/);
+
+            const button = wrapper
+                .findAllComponents({ name: "Button" })
+                .find((b) => b.attributes("aria-label") === "Colour by speed")!;
+            button.vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scenes[0].coloring).toBe("speed");
+            expect(legend()).toMatch(/^Speed 0\s*12\.50 m\/s$/);
+
+            button.vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scenes[0].coloring).toBe("altitude");
+            wrapper.unmount();
+        });
+
+        it("keeps the Terrain button usable while the terrain loads", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS));
+            await wrapper.vm.$nextTick();
+            const button = () =>
+                wrapper.findAllComponents({ name: "Button" }).find((b) => b.attributes("aria-label") === "Terrain")!;
+            button().vm.$emit("click");
+            (scenes[0] as unknown as { onTerrainState(state: string): void }).onTerrainState("loading");
+            await wrapper.vm.$nextTick();
+            expect(button().attributes("aria-busy")).toBe("true");
+            expect(button().attributes("title")).toBe("Loading terrain…");
+            // Nuxt UI disables a button while `loading` is set, which would trap the terrain on.
+            expect(button().props("loading")).toBeFalsy();
+            expect(button().props("disabled")).toBeFalsy();
             wrapper.unmount();
         });
 

@@ -63,7 +63,189 @@ vi.mock("three/examples/jsm/loaders/GLTFLoader.js", () => ({
     },
 }));
 
+const terrainLoads = vi.hoisted(
+    () => [] as { box: unknown; signal: AbortSignal; resolve(model: unknown): void; reject(): void }[],
+);
+vi.mock("../../../src/blackbox-viewer/flight3d/terrain", async (original) => ({
+    ...(await original<typeof import("../../../src/blackbox-viewer/flight3d/terrain")>()),
+    loadElevation: (box: unknown, signal: AbortSignal) =>
+        new Promise((resolve, reject) =>
+            terrainLoads.push({ box, signal, resolve, reject: () => reject(new Error("offline")) }),
+        ),
+}));
+
 afterEach(() => vi.unstubAllGlobals());
+
+describe("path colouring", () => {
+    it("recolours path and curtain by speed and back, keeping the part flown so far and the quad", () => {
+        vi.stubGlobal("requestAnimationFrame", () => 1);
+        vi.stubGlobal("cancelAnimationFrame", () => {});
+        model.factory = () => new Group().add(new Mesh(new BoxGeometry(8, 1, 8)));
+        try {
+            const scene = new FlightScene(document.createElement("canvas"));
+            scene.setGroundSource("none");
+            // 20 s due north, slowing from 20 m/s to a stop while climbing to 50 m: the start is fast
+            // but low, the end high but slow, so the two colourings run in opposite directions.
+            const fixes = Array.from({ length: 201 }, (_, i) => {
+                const t = i / 10;
+                return {
+                    tUs: i * 100_000,
+                    lat: 48.4 + (20 * t - (t * t) / 2) / 111_200,
+                    lon: -71.1,
+                    altM: 100 + 2.5 * t,
+                };
+            });
+            const track = buildTrack(fixes, null)!;
+            scene.setTrack(track);
+            scene.setTime(10e6, new Quaternion()); // paused mid-flight with the FC's attitude
+            type Inside = {
+                traveled: { instanceCount: number };
+                path: { geometry: { getAttribute(name: string): { data: { array: ArrayLike<number> } } } }[];
+                curtain: { geometry: { getAttribute(name: string): { array: ArrayLike<number> } } };
+                model: { visible: boolean };
+            };
+            const inside = scene as unknown as Inside;
+            const colors = () => ({
+                path: Array.from(inside.path[0].geometry.getAttribute("instanceColorStart").data.array),
+                curtain: Array.from(inside.curtain.geometry.getAttribute("color").array),
+            });
+            /** Red, green, blue of the first and last vertex. */
+            const ends = (rgb: number[]) => [rgb.slice(0, 3), rgb.slice(-3)];
+            const distance = (a: number[], b: number[]) => Math.hypot(...a.map((v, i) => v - b[i]));
+            const flown = inside.traveled.instanceCount;
+            const altitudeScale = scene.colorScale;
+            const altitudeColors = colors();
+            expect(altitudeScale.coloring).toBe("altitude");
+            expect(altitudeScale.max).toBeCloseTo(track.bounds.maxU - track.groundU, 3);
+            expect(inside.model.visible).toBe(true);
+
+            scene.setColoring("speed");
+            expect(scene.colorScale.coloring).toBe("speed");
+            expect(scene.colorScale.max).toBeGreaterThan(15);
+            const speedColors = colors();
+            for (const part of ["path", "curtain"] as const) {
+                // Altitude starts at the bottom of the scale and speed at the top, and the reverse at the end.
+                const [altStart, altEnd] = ends(altitudeColors[part]);
+                const [speedStart, speedEnd] = ends(speedColors[part]);
+                expect(distance(speedStart, altEnd)).toBeLessThan(distance(speedStart, altStart) / 4);
+                expect(distance(speedEnd, altStart)).toBeLessThan(distance(speedEnd, altEnd) / 4);
+            }
+            expect(inside.path).toHaveLength(2);
+            expect(inside.traveled.instanceCount).toBe(flown);
+            expect(inside.model.visible).toBe(true);
+
+            scene.setColoring("altitude");
+            expect(scene.colorScale).toEqual(altitudeScale);
+            expect(colors()).toEqual(altitudeColors);
+            expect(inside.traveled.instanceCount).toBe(flown);
+            expect(inside.model.visible).toBe(true);
+            scene.dispose();
+        } finally {
+            model.factory = null;
+        }
+    });
+});
+
+describe("terrain", () => {
+    const ORIGIN = { lat: 29.9792, lon: 31.1342 };
+    const trackAt = (lat: number) =>
+        buildTrack(
+            [
+                { tUs: 0, lat, lon: ORIGIN.lon, altM: 60 },
+                { tUs: 1e6, lat: lat + 0.001, lon: ORIGIN.lon, altM: 80 },
+            ],
+            null,
+        );
+    // Rises 10 m per 100 m north of the origin; nothing south of it.
+    const slope = {
+        elevationAt: (lat: number) => (lat < ORIGIN.lat - 1e-9 ? null : 200 + (lat - ORIGIN.lat) * 11_085),
+    };
+    const settle = () => new Promise((resolve) => setTimeout(resolve));
+
+    function sceneWithTrack(lat = ORIGIN.lat) {
+        vi.stubGlobal("requestAnimationFrame", () => 1);
+        vi.stubGlobal("cancelAnimationFrame", () => {});
+        terrainLoads.length = 0;
+        const scene = new FlightScene(document.createElement("canvas"));
+        const states: string[] = [];
+        scene.onTerrainState = (state) => states.push(state);
+        scene.setGroundSource("none");
+        const track = trackAt(lat)!;
+        scene.setTrack(track);
+        return { scene, states, track };
+    }
+
+    it("loads the flight's terrain once, on first use, and lays the ground over it from the origin", async () => {
+        const { scene, states, track } = sceneWithTrack();
+        expect(terrainLoads).toHaveLength(0);
+        expect(scene.surfaceU(100, 0)).toBe(track.groundU);
+
+        scene.setTerrain(true);
+        expect(states).toEqual(["loading"]);
+        expect(terrainLoads).toHaveLength(1);
+        expect(terrainLoads[0].box).toEqual(track.box);
+        terrainLoads[0].resolve(slope);
+        await settle();
+
+        expect(states).toEqual(["loading", "ready"]);
+        expect(scene.terrainShown).toBe(true);
+        expect(scene.surfaceU(0, 0)).toBeCloseTo(track.groundU, 3);
+        expect(scene.surfaceU(100, 0)).toBeCloseTo(track.groundU + 10, 1);
+        // Where no tile loaded, the ground stays level with the origin.
+        expect(scene.surfaceU(-100, 0)).toBeCloseTo(track.groundU, 3);
+
+        scene.setTerrain(false);
+        expect(states.at(-1)).toBe("off");
+        expect(scene.terrainShown).toBe(false);
+        expect(scene.surfaceU(100, 0)).toBe(track.groundU);
+
+        scene.setTerrain(true);
+        expect(states.at(-1)).toBe("ready");
+        expect(terrainLoads).toHaveLength(1);
+        scene.dispose();
+    });
+
+    it("drops a load for a flight that has been replaced, and fetches the new one's", async () => {
+        const { scene, states } = sceneWithTrack();
+        scene.setTerrain(true);
+        const first = terrainLoads[0];
+        scene.setTrack(trackAt(ORIGIN.lat + 0.01));
+        expect(first.signal.aborted).toBe(true);
+        expect(terrainLoads).toHaveLength(2);
+        first.resolve(slope);
+        await settle();
+        expect(scene.terrainShown).toBe(false);
+        expect(states.at(-1)).toBe("loading");
+        scene.dispose();
+        expect(terrainLoads[1].signal.aborted).toBe(true);
+    });
+
+    it("stays off when a load switched off meanwhile fails, and retries when switched on", async () => {
+        const { scene, states } = sceneWithTrack();
+        scene.setTerrain(true);
+        scene.setTerrain(false);
+        terrainLoads[0].reject();
+        await settle();
+        expect(states).toEqual(["loading", "off", "off"]);
+
+        scene.setTerrain(true);
+        expect(terrainLoads).toHaveLength(2);
+        terrainLoads[1].reject();
+        await settle();
+        expect(states.at(-1)).toBe("failed");
+        scene.dispose();
+    });
+
+    it("reports terrain without a height at the takeoff spot as unavailable", async () => {
+        const { scene, states } = sceneWithTrack(ORIGIN.lat - 0.01);
+        scene.setTerrain(true);
+        terrainLoads[0].resolve(slope);
+        await settle();
+        expect(states).toEqual(["loading", "failed"]);
+        expect(scene.terrainShown).toBe(false);
+        scene.dispose();
+    });
+});
 
 describe("flight scene lifecycle", () => {
     it("cancels queued renders and stays idle while the viewer is hidden or disposed", () => {
