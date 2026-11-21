@@ -26,6 +26,7 @@ import type { ComponentPublicInstance } from "vue";
 import USwitch from "@nuxt/ui/components/Switch.vue";
 import FilterSubTab from "../../src/components/tabs/pid-tuning/FilterSubTab.vue";
 import { useFlightControllerStore } from "../../src/stores/fc";
+import { usePidTuningStore } from "../../src/stores/pidTuning";
 
 const sliders = vi.hoisted(() => ({
     calculateNewGyroFilters: vi.fn(),
@@ -158,6 +159,21 @@ describe("Filter slider mode switches", () => {
             expect(cutoffs()).toEqual(MANUAL);
         });
 
+        it("restores the manual cutoffs after visiting another sub-tab and coming back", async () => {
+            sliderSwitch(wrapper, index).vm.$emit("update:modelValue", true);
+            await flushPromises();
+
+            // PidTuningTab renders sub-tabs with v-if: leaving Filter destroys it, returning recreates it.
+            wrapper.unmount();
+            wrapper = mountTab();
+            await flushPromises();
+
+            sliderSwitch(wrapper, index).vm.$emit("update:modelValue", false);
+            await flushPromises();
+
+            expect(cutoffs()).toEqual(MANUAL);
+        });
+
         it("keeps the cutoffs when the slider was already ON at load", async () => {
             fcStore.tuningSliders[mode] = 1;
             setCutoffs(CALCULATED);
@@ -173,7 +189,7 @@ describe("Filter slider mode switches", () => {
             sliderSwitch(wrapper, index).vm.$emit("update:modelValue", true);
             await flushPromises();
 
-            wrapper.vm.forceUpdateSliders();
+            usePidTuningStore().markEditsClean();
             sliderSwitch(wrapper, index).vm.$emit("update:modelValue", false);
             await flushPromises();
 
