@@ -18,8 +18,9 @@
  *
  * If not, see <http://www.gnu.org/licenses/>.
  */
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
 import { shallowMount, flushPromises } from "@vue/test-utils";
+import type { ComponentPublicInstance } from "vue";
 import LedStripTab from "../../src/components/tabs/LedStripTab.vue";
 import BaseTab from "../../src/components/tabs/BaseTab.vue";
 import MSP from "../../src/js/msp";
@@ -79,5 +80,63 @@ describe("LED tab load failure", () => {
             wrapper.unmount();
             consoleError.mockRestore();
         }
+    });
+});
+
+describe("LED color sliders", () => {
+    async function loadTabAndSelectColor(index: number) {
+        const errorHandler = vi.fn();
+        const wrapper = shallowMount(LedStripTab, {
+            global: {
+                renderStubDefaultSlot: true,
+                mocks: { $t: (key: string) => key },
+                config: { errorHandler },
+                stubs: { SubtabNav: { template: '<div><slot name="advanced" /></div>' } },
+            },
+        });
+        onTestFinished(() => wrapper.unmount());
+        wrapper.getComponent(BaseTab).vm.$emit("mounted");
+        await flushPromises();
+        expect([undefined, "false"]).toContain(wrapper.get(".controls").attributes("inert"));
+        await wrapper.get(`.colors .color-${index}`).trigger("click");
+        function moveSlider(channel: "H" | "S" | "V", value: number) {
+            wrapper
+                .getComponent<ComponentPublicInstance>(`#colorSlider${channel}`)
+                .vm.$emit("update:modelValue", value);
+        }
+        return { moveSlider, errorHandler };
+    }
+
+    it.each([
+        { description: "an empty Basic palette", advanced: false, length: 0, index: 0 },
+        { description: "a missing entry in a partial palette", advanced: true, length: 1, index: 1 },
+    ])("ignores slider updates for $description", async ({ advanced, length, index }) => {
+        const fc = setupLedStore();
+        fc.ledStripAdvanced = advanced;
+        fc.ledColors = fc.ledColors.slice(0, length);
+        const palette = fc.ledColors.map((color) => ({ ...color }));
+        const { moveSlider, errorHandler } = await loadTabAndSelectColor(index);
+        const strip = fc.ledStrip;
+
+        moveSlider("H", 75);
+
+        expect(errorHandler).not.toHaveBeenCalled();
+        expect(fc.ledColors).toEqual(palette);
+        expect(fc.ledStrip).toBe(strip);
+    });
+
+    it("updates the selected HSV color and rebuilds the strip for a valid entry", async () => {
+        const fc = setupLedStore();
+        const { moveSlider, errorHandler } = await loadTabAndSelectColor(1);
+        const strip = fc.ledStrip;
+
+        moveSlider("H", 75);
+        moveSlider("S", 85);
+        moveSlider("V", 95);
+
+        expect(errorHandler).not.toHaveBeenCalled();
+        expect(fc.ledColors[1]).toEqual({ h: 75, s: 85, v: 95 });
+        expect(fc.ledColors[0]).toEqual({ h: 0, s: 0, v: 0 });
+        expect(fc.ledStrip).not.toBe(strip);
     });
 });
