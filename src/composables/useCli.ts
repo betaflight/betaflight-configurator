@@ -60,7 +60,6 @@ interface CliState {
     lineDelayMs: number;
     profileSwitchDelayMs: number;
     commandInput: string;
-    promptInput: string;
     snippetPreview: string;
     supportDialogInput: string;
     copyButtonText: string;
@@ -213,7 +212,6 @@ export function useCli(): Cli {
         lineDelayMs: 5,
         profileSwitchDelayMs: 100,
         commandInput: "",
-        promptInput: "",
         snippetPreview: "",
         supportDialogInput: "",
         copyButtonText: i18n.getMessage("copyToClipboard"),
@@ -305,8 +303,9 @@ export function useCli(): Cli {
         }
     };
 
+    // Mirrors the FC's line buffer into the input, so a native Tab completion can be edited further.
     const setPrompt = (text: string) => {
-        state.promptInput = text;
+        state.commandInput = text;
     };
 
     const clearHistory = () => {
@@ -338,13 +337,13 @@ export function useCli(): Cli {
         history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-        // Captured before sendCommandIterative shift()s the array. A multi-line input is a paste or a
-        // loaded file, and its lines have to go out exactly as written; only a single command is
-        // reconciled with whatever the FC currently has in its own line buffer.
-        const isMultiLine = outputArray.length > 1;
+        // Before this input's first line goes out, cliBuffer is the line the FC is still editing (e.g. a
+        // native Tab completion, mirrored into the input by setPrompt), so that line is reconciled with it.
+        // From then on cliBuffer only holds the FC's echo of lines already sent, and the rest go out verbatim.
+        let isFirstLine = true;
 
         // Wall-clock timer: logs "[CLI] paste: N lines" and "paste done: X.XXs" to the browser console.
-        if (isMultiLine) {
+        if (outputArray.length > 1) {
             const t0 = performance.now();
             const startMs = Date.now();
             console.log(`[CLI] paste: ${outputArray.length} lines`);
@@ -362,9 +361,10 @@ export function useCli(): Cli {
             if (execution !== commandExecution) return;
             pendingCommands = null;
             let line = outputArray.shift()!.trim();
-            if (outputArray.length === 0 && cliBuffer && !isMultiLine) {
+            if (isFirstLine && cliBuffer) {
                 line = getCliCommand(line, cliBuffer);
             }
+            isFirstLine = false;
             const processingDelay = line.toLowerCase().startsWith("profile")
                 ? state.profileSwitchDelayMs
                 : state.lineDelayMs;

@@ -172,6 +172,23 @@ describe("useCli", () => {
             expect(cli.state.commandInput).toBe("");
         });
 
+        it("after a native Tab, shows the FC's completed line in the input and sends only the rest", () => {
+            vi.spyOn(CliAutoComplete, "isEnabled").mockReturnValue(false);
+            vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(false);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
+            useConnectionStore().cliValid = true;
+            const cli = useCli();
+            cli.state.commandInput = "set gyro_lpf1_st";
+
+            cli.handleCommandKeyDown(key("Tab"));
+            cli.read(new TextEncoder().encode("# set gyro_lpf1_static_hz"));
+            expect(cli.state.commandInput).toBe("set gyro_lpf1_static_hz");
+
+            cli.state.commandInput += " = 250";
+            cli.handleCommandKeyDown(key(ENTER));
+            expect(sentText(send, 1)).toBe(" = 250\n");
+        });
+
         it("holds Enter while the autocomplete cache is building", () => {
             vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(true);
             const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
@@ -331,6 +348,17 @@ describe("useCli", () => {
             submit("set profile_name 1\nsave");
             // The FC has not caught up yet: this is the echo of the previous line, not typed input.
             cli.read(new TextEncoder().encode("# set profile_"));
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(sentText(send, 1)).toBe("save\n");
+        });
+
+        it("reconciles the first pasted line with what the FC already holds in its line buffer", () => {
+            useConnectionStore().cliValid = true;
+            // A native Tab completion left a partial command in the FC's line buffer.
+            cli.read(new TextEncoder().encode("# set gyro_"));
+            submit("feature -GPS\nsave");
+            expect(sentText(send)).toBe(`${String.fromCodePoint(127).repeat(9)}feature -GPS\n`);
             complete(0);
             vi.advanceTimersByTime(cli.state.lineDelayMs);
             expect(sentText(send, 1)).toBe("save\n");
