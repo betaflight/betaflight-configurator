@@ -251,7 +251,9 @@ export function useCli(): Cli {
     let supportPollInterval: ReturnType<typeof setInterval> | null = null;
     let commandExecution = 0;
     let commandWritePending = false;
-    let lastLineSentAt = 0;
+    // cliBuffer is a line the FC is still editing only until a line is sent, and again after a native Tab
+    // completion. After a sent line it holds that line's echo or output, and the FC's own line is empty.
+    let cliBufferIsEditLine = true;
     let pendingCommands: (() => void) | null = null;
 
     const flushOutput = () => {
@@ -319,18 +321,12 @@ export function useCli(): Cli {
     };
 
     const sendLine = (line: string, callback?: SendCallback) => {
-        lastLineSentAt = Date.now();
+        cliBufferIsEditLine = false;
         send(`${line}\n`, callback);
     };
 
-    // cliBuffer is the line the FC is editing only once the FC has answered every line sent and gone quiet;
-    // until then it holds the echo of, or the output for, a line already sent.
-    const cliBufferIsEditLine = () =>
-        cliBuffer !== "" &&
-        (lastLineSentAt === 0 ||
-            (state.lastArrival > lastLineSentAt && Date.now() - state.lastArrival > SERIAL_IDLE_MS));
-
     const sendNativeAutoComplete = (line: string, callback?: SendCallback) => {
+        cliBufferIsEditLine = true;
         send(`${line}\t`, callback);
     };
 
@@ -369,7 +365,7 @@ export function useCli(): Cli {
             if (execution !== commandExecution) return;
             pendingCommands = null;
             const command = outputArray.shift()!.trim();
-            const line = isFirstLine && cliBufferIsEditLine() ? getCliCommand(command, cliBuffer) : command;
+            const line = isFirstLine && cliBufferIsEditLine && cliBuffer ? getCliCommand(command, cliBuffer) : command;
             isFirstLine = false;
             const processingDelay = command.toLowerCase().startsWith("profile")
                 ? state.profileSwitchDelayMs

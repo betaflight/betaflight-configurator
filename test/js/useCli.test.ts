@@ -364,15 +364,22 @@ describe("useCli", () => {
             expect(sentText(send, 1)).toBe("save\n");
         });
 
-        it("still reconciles with the FC's line once it has answered an earlier command and gone quiet", () => {
+        it("reconciles a native Tab completion after an earlier command, even right after the FC's reply", () => {
+            vi.spyOn(CliAutoComplete, "isEnabled").mockReturnValue(false);
             useConnectionStore().cliValid = true;
             submit("status");
             complete(0);
-            vi.advanceTimersByTime(1);
-            cli.read(new TextEncoder().encode("status\r\nok\r\n# set gyro_"));
-            vi.advanceTimersByTime(1000);
-            submit("set gyro_lpf1_static_hz = 250");
-            expect(sentText(send, 1)).toBe("lpf1_static_hz = 250\n");
+            cli.read(new TextEncoder().encode("status\r\nok\r\n# "));
+
+            cli.state.commandInput = "set gyro_lpf1_st";
+            cli.handleCommandKeyDown(key("Tab"));
+            expect(sentText(send, 1)).toBe("set gyro_lpf1_st\t");
+            cli.read(new TextEncoder().encode("set gyro_lpf1_static_hz"));
+            expect(cli.state.commandInput).toBe("set gyro_lpf1_static_hz");
+
+            cli.state.commandInput += " = 250";
+            cli.handleCommandKeyDown(key(ENTER));
+            expect(sentText(send, 2)).toBe(" = 250\n");
         });
 
         it("picks the profile delay from the command, not from the reconciled text", () => {
