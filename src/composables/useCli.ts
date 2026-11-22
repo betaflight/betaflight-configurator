@@ -251,6 +251,7 @@ export function useCli(): Cli {
     let supportPollInterval: ReturnType<typeof setInterval> | null = null;
     let commandExecution = 0;
     let commandWritePending = false;
+    let lastLineSentAt = 0;
     let pendingCommands: (() => void) | null = null;
 
     const flushOutput = () => {
@@ -318,8 +319,16 @@ export function useCli(): Cli {
     };
 
     const sendLine = (line: string, callback?: SendCallback) => {
+        lastLineSentAt = Date.now();
         send(`${line}\n`, callback);
     };
+
+    // cliBuffer is the line the FC is editing only once the FC has answered every line sent and gone quiet;
+    // until then it holds the echo of, or the output for, a line already sent.
+    const cliBufferIsEditLine = () =>
+        cliBuffer !== "" &&
+        (lastLineSentAt === 0 ||
+            (state.lastArrival > lastLineSentAt && Date.now() - state.lastArrival > SERIAL_IDLE_MS));
 
     const sendNativeAutoComplete = (line: string, callback?: SendCallback) => {
         send(`${line}\t`, callback);
@@ -337,9 +346,8 @@ export function useCli(): Cli {
         history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-        // Before this input's first line goes out, cliBuffer is the line the FC is still editing (e.g. a
-        // native Tab completion, mirrored into the input by setPrompt), so that line is reconciled with it.
-        // From then on cliBuffer only holds the FC's echo of lines already sent, and the rest go out verbatim.
+        // Only the first line can extend a line the FC is still editing (e.g. a native Tab completion,
+        // mirrored into the input by setPrompt); every later line follows lines this input already sent.
         let isFirstLine = true;
 
         // Wall-clock timer: logs "[CLI] paste: N lines" and "paste done: X.XXs" to the browser console.
@@ -360,12 +368,10 @@ export function useCli(): Cli {
         function sendCommandIterative() {
             if (execution !== commandExecution) return;
             pendingCommands = null;
-            let line = outputArray.shift()!.trim();
-            if (isFirstLine && cliBuffer) {
-                line = getCliCommand(line, cliBuffer);
-            }
+            const command = outputArray.shift()!.trim();
+            const line = isFirstLine && cliBufferIsEditLine() ? getCliCommand(command, cliBuffer) : command;
             isFirstLine = false;
-            const processingDelay = line.toLowerCase().startsWith("profile")
+            const processingDelay = command.toLowerCase().startsWith("profile")
                 ? state.profileSwitchDelayMs
                 : state.lineDelayMs;
 

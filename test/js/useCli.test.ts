@@ -364,6 +364,40 @@ describe("useCli", () => {
             expect(sentText(send, 1)).toBe("save\n");
         });
 
+        it("still reconciles with the FC's line once it has answered an earlier command and gone quiet", () => {
+            useConnectionStore().cliValid = true;
+            submit("status");
+            complete(0);
+            vi.advanceTimersByTime(1);
+            cli.read(new TextEncoder().encode("status\r\nok\r\n# set gyro_"));
+            vi.advanceTimersByTime(1000);
+            submit("set gyro_lpf1_static_hz = 250");
+            expect(sentText(send, 1)).toBe("lpf1_static_hz = 250\n");
+        });
+
+        it("picks the profile delay from the command, not from the reconciled text", () => {
+            useConnectionStore().cliValid = true;
+            cli.read(new TextEncoder().encode("# pro"));
+            submit("profile 1\nstatus");
+            expect(sentText(send)).toBe("file 1\n");
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(send).toHaveBeenCalledTimes(1);
+            vi.advanceTimersByTime(cli.state.profileSwitchDelayMs - cli.state.lineDelayMs);
+            expect(sentText(send, 1)).toBe("status\n");
+        });
+
+        it("sends a submission queued behind an in-flight write verbatim, not against that write's echo", () => {
+            useConnectionStore().cliValid = true;
+            submit("feature RX_SERIAL");
+            // The FC is echoing the line still being written; that is not a line being edited.
+            cli.read(new TextEncoder().encode("# feature "));
+            submit("feature GPS\nsave");
+            expect(send).toHaveBeenCalledTimes(1);
+            complete(0);
+            expect(sentText(send, 1)).toBe("feature GPS\n");
+        });
+
         it("applies the ordinary delay before a profile and the profile delay after its completion", () => {
             submit("status\nprofile 1\nversion");
             complete(0);
