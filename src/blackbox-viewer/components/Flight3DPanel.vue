@@ -32,6 +32,17 @@
                     @click="coloring = coloring === 'speed' ? 'altitude' : 'speed'"
                 />
                 <UButton
+                    v-if="baroAvailable"
+                    size="xs"
+                    variant="soft"
+                    :color="altitudeSource === 'gps' ? 'primary' : 'neutral'"
+                    icon="i-lucide-satellite"
+                    :aria-pressed="altitudeSource === 'gps'"
+                    aria-label="GPS altitude"
+                    :title="altitudeTitle"
+                    @click="altitudeSource = altitudeSource === 'gps' ? 'baro' : 'gps'"
+                />
+                <UButton
                     size="xs"
                     variant="soft"
                     :color="terrain ? 'primary' : 'neutral'"
@@ -138,7 +149,14 @@ import { useSettingsStore } from "../stores/settings";
 import { setCurrentBlackboxTime } from "../playback_controls";
 import { FlightLogFieldPresenter, type PresentedFlightLog } from "../flightlog_fields_presenter";
 import type { FlightLog } from "../flightlog";
-import { buildFlightTrack, type FlightLogSource, type FlightTrack } from "../flight3d/flightTrack";
+import {
+    buildTrack,
+    extractSamples,
+    hasUsableBaro,
+    type AltitudeSource,
+    type FlightLogSource,
+    type FlightTrack,
+} from "../flight3d/flightTrack";
 import { buildAttitudeTrack, type AttitudeTrack } from "../flight3d/fcAttitude";
 import { FlightScene, type PathColoring, type TerrainState } from "../flight3d/flightScene";
 import { ALTITUDE_TRAIL_COLORS } from "../graph_map";
@@ -174,6 +192,9 @@ const groundItems = [
     { label: "None", value: "none" },
 ];
 const coloring = ref<PathColoring>("altitude");
+const altitudeSource = ref<AltitudeSource>("baro");
+// GPS is the only source without a working barometer, so there is nothing to choose.
+const baroAvailable = ref(false);
 const legendMax = ref("");
 // The scene's gradient, low to high; the hex alpha is dropped as the path draws it opaque.
 const LEGEND_GRADIENT = `linear-gradient(90deg, ${ALTITUDE_TRAIL_COLORS.map(({ color }) => color.slice(0, 7)).join(", ")})`;
@@ -187,6 +208,7 @@ const emptyMessage = ref("No GPS data in this log");
 let scene: FlightScene | null = null;
 let flightLog: ViewerFlightLog | null = null;
 let attitudeTrack: AttitudeTrack | null = null;
+let logSamples: ReturnType<typeof extractSamples> | null = null;
 let fieldIndex: Record<string, number | undefined> = {};
 let builtFor: { log: object; index: number } | null = null;
 let pointerDownAt: { x: number; y: number } | null = null;
@@ -216,10 +238,17 @@ const terrainTitle = computed(() => {
 
 const hudTitle = computed(() => {
     const from = track.value?.pinned === "none" ? "the first position" : "takeoff";
+    const source = track.value?.altitudeSource === "baro" ? "barometer, aligned to GPS" : "GPS";
     return terrainShown.value
-        ? `Altitude relative to ${from}; AGL above terrain data, which is coarser than the real ground`
-        : `Altitude relative to ${from}; map is a flat reference, not terrain`;
+        ? `Altitude (${source}) relative to ${from}; AGL above terrain data, which is coarser than the real ground`
+        : `Altitude (${source}) relative to ${from}; map is a flat reference, not terrain`;
 });
+
+const altitudeTitle = computed(() =>
+    altitudeSource.value === "gps"
+        ? "Altitude from GPS; switch to the barometer"
+        : "Altitude from the barometer; switch to GPS (for a barometer upset by punch-outs)",
+);
 
 /** Keep the panel inside the graph area and at least its minimum size. */
 function fit(b: Box): Box {
@@ -291,7 +320,9 @@ function setFlightLog(log: ViewerFlightLog | null) {
         return;
     }
     builtFor = log ? { log, index } : null;
-    track.value = log ? buildFlightTrack(log) : null;
+    logSamples = log ? extractSamples(log) : null;
+    baroAvailable.value = hasUsableBaro(logSamples?.baro ?? null);
+    track.value = buildDisplayTrack();
     emptyMessage.value =
         log?.getMainFieldIndexByName("GPS_coord[0]") === undefined
             ? "No GPS data in this log"
@@ -305,6 +336,10 @@ function setFlightLog(log: ViewerFlightLog | null) {
         : {};
     scene?.setTrack(track.value);
     setCurrentTime(logStore.currentBlackboxTime);
+}
+
+function buildDisplayTrack(): FlightTrack | null {
+    return logSamples && buildTrack(logSamples.fixes, logSamples.baro, logSamples.idle, altitudeSource.value);
 }
 
 function setCurrentTime(tUs: number) {
@@ -378,6 +413,15 @@ function onPointerUp(event: PointerEvent) {
 
 watch(groundSource, (source) => scene?.setGroundSource(source));
 watch(terrain, (enabled) => scene?.setTerrain(enabled));
+watch(altitudeSource, () => {
+    const rebuilt = buildDisplayTrack();
+    if (!scene || !rebuilt) {
+        return;
+    }
+    track.value = rebuilt;
+    scene.replaceTrack(rebuilt);
+    setCurrentTime(logStore.currentBlackboxTime);
+});
 watch(coloring, (value) => {
     scene?.setColoring(value);
     updateLegend();

@@ -87,7 +87,11 @@ export interface TrackSample extends TrackPoint {
     tUs: number;
 }
 
+/** Where the path's height comes from: the barometer, shifted onto GPS, or GPS alone. */
+export type AltitudeSource = "baro" | "gps";
+
 export interface FlightTrack {
+    altitudeSource: AltitudeSource;
     origin: { lat: number; lon: number; altM: number };
     samples: TrackSample[];
     /** gapAfter[i] === 1 when GPS was lost between samples i and i + 1. */
@@ -287,16 +291,21 @@ function holdPositions(fixes: GpsFix[], heldUntil: number[]): GpsFix[] {
     return held;
 }
 
-export function buildFlightTrack(flightLog: FlightLogSource): FlightTrack | null {
-    const { fixes, baro, idle } = extractSamples(flightLog);
-    return buildTrack(fixes, baro, idle);
+/** A barometer that never changes is missing or failed, not a flat flight. */
+export function hasUsableBaro(baro: BaroSample[] | null): baro is BaroSample[] {
+    return !!baro && baro.length >= 2 && baro.some((b) => b.altM !== baro[0].altM);
 }
 
-/** Build the display track. Returns null when fewer than two usable fixes exist. */
+/**
+ * Build the display track. Returns null when fewer than two usable fixes exist. The barometer gives
+ * the height when usable unless `altitude` asks for GPS: a hard punch-out can upset the barometer
+ * (prop wash, airspeed), and GPS cannot correct it mid-flight as it only sets the overall offset.
+ */
 export function buildTrack(
     allFixes: GpsFix[],
     baro: BaroSample[] | null,
     idle: IdleThrottle | null = null,
+    altitude: AltitudeSource = "baro",
 ): FlightTrack | null {
     if (allFixes.length < 2) {
         return null;
@@ -313,13 +322,13 @@ export function buildTrack(
         return null;
     }
 
-    // A barometer that never changes is missing or failed, not a flat flight.
-    const hasBaro = !!baro && baro.length >= 2 && baro.some((b) => b.altM !== baro[0].altM);
-    const altitude = hasBaro ? baroAltitude(fixes, baro) : smoothGpsAltitude(fixes);
-    const { samples, gapAfter } = resample(fixes, altitude);
+    const useBaro = altitude === "baro" && hasUsableBaro(baro);
+    const heightAt = useBaro ? baroAltitude(fixes, baro) : smoothGpsAltitude(fixes);
+    const { samples, gapAfter } = resample(fixes, heightAt);
     const pinned = pinToGround(samples, fixes, idle);
 
     return {
+        altitudeSource: useBaro ? "baro" : "gps",
         origin,
         samples,
         gapAfter,

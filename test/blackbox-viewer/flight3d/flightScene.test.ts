@@ -220,6 +220,32 @@ describe("terrain", () => {
         expect(terrainLoads[1].signal.aborted).toBe(true);
     });
 
+    it("keeps the camera and the loaded terrain when the same flight's heights are replaced", async () => {
+        const { scene, states, track } = sceneWithTrack();
+        scene.setTerrain(true);
+        terrainLoads[0].resolve(slope);
+        await settle();
+        const { camera } = scene as unknown as { camera: { position: Vector3 } };
+        camera.position.set(123, 45, 67);
+
+        const higher = { ...track, samples: track.samples.map((s) => ({ ...s, u: s.u + 30 })) };
+        scene.replaceTrack(higher);
+        expect(camera.position.toArray()).toEqual([123, 45, 67]);
+        expect(terrainLoads).toHaveLength(1);
+        expect(scene.terrainShown).toBe(true);
+        expect(states.at(-1)).toBe("ready");
+
+        // A load still under way when the heights change is fetched again for the new track.
+        scene.setTrack(trackAt(ORIGIN.lat + 0.01)!);
+        scene.replaceTrack(trackAt(ORIGIN.lat + 0.01)!);
+        expect(terrainLoads[1].signal.aborted).toBe(true);
+        expect(terrainLoads).toHaveLength(3);
+        terrainLoads[2].resolve(slope);
+        await settle();
+        expect(scene.terrainShown).toBe(true);
+        scene.dispose();
+    });
+
     it("stays off when a load switched off meanwhile fails, and retries when switched on", async () => {
         const { scene, states } = sceneWithTrack();
         scene.setTerrain(true);

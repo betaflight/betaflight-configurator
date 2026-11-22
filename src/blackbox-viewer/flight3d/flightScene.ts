@@ -152,6 +152,20 @@ export class FlightScene {
     }
 
     setTrack(track: FlightTrack | null): void {
+        this.showTrack(track, false);
+    }
+
+    /**
+     * The same flight with its heights recomputed (another altitude source): keeps the camera and
+     * the loaded terrain, which depend only on where the flight went.
+     */
+    replaceTrack(track: FlightTrack): void {
+        this.showTrack(track, true);
+    }
+
+    private showTrack(track: FlightTrack | null, sameFlight: boolean): void {
+        // A terrain load still under way restarts below.
+        const keptTerrain = sameFlight ? this.terrain : null;
         this.clearTrack();
         this.track = track;
         if (!track) {
@@ -174,12 +188,17 @@ export class FlightScene {
         this.grid = grid;
         this.trackObjects.add(grid);
 
+        this.terrain = keptTerrain;
+        // A flat grid would cut through hills and float over valleys.
+        grid.visible = !this.terrainShown;
         this.buildCurtain();
         this.buildGround();
-        if (this.terrainEnabled) {
+        if (!sameFlight) {
+            this.frameTrack();
+        }
+        if (this.terrainEnabled && !this.terrain) {
             this.loadTerrain();
         }
-        this.frameTrack();
         this.setTime(samples[0].tUs, null);
     }
 
