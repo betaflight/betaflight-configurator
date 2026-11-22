@@ -5120,6 +5120,10 @@
     "failsafeChannelFallbackSettingsTitle": {
         "message": "Stage 1 - Channel Fallback Settings"
     },
+    "failsafeChannelServoBadge": {
+        "message": "Servo {{servo}} {{min}}–{{max}}",
+        "description": "Badge on a failsafe channel that a servo forwards, with the servo's output range in µs"
+    },
     "failsafeChannelFallbackSettingsValueAuto": {
         "message": "Auto",
         "description": "Text for Auto option"
