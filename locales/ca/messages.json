@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "No s'ha pogut carregar la configuració dels LED. Torneu a connectar i recarregueu aquesta pestanya abans de desar."
+    },
     "yes": {
         "message": "Sí",
         "description": "General Yes message to be used across the application"
@@ -2491,6 +2494,46 @@
         "message": "Un factor d'accionament addicional, derivat exclusivament de l'entrada del stick, que ajuda a empènyer el quad a moviments ràpids del stick.<br><br>FF no pot causar oscil·lacions, permet una P més baixa per a respostes de stick similars i compensa l'oposició natural de D a entrades malaltes.<br><br>Els valors baixos o zero donaran com a resultat una resposta més suau però més retardada a les entrades del stick.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningPhysicalUnits": {
+        "message": "Unitats físiques",
+        "description": "Section label above the PID gains expressed in physical units"
+    },
+    "pidTuningPhysicalUnitsHelp": {
+        "message": "Aquests valors mostren els increments anteriors en unitats físiques. No es poden editar. Durant el vol, el TPA, la compensació de la caiguda de tensió de la bateria i la mescla de motors modifiquen els valors efectius.",
+        "description": "Help for the physical units section of the PID table"
+    },
+    "pidTuningPhysicalUnitP": {
+        "message": "% / 100°/s",
+        "description": "Unit label for P in physical units"
+    },
+    "pidTuningPhysicalUnitPHelp": {
+        "message": "La sortida motriu de P per a un error de velocitat de 100 graus/s, expressada com a percentatge del rang del motor.",
+        "description": "Help for P in physical units"
+    },
+    "pidTuningPhysicalUnitI": {
+        "message": "reset ms",
+        "description": "Unit label for I in physical units"
+    },
+    "pidTuningPhysicalUnitIHelp": {
+        "message": "Temps de restabliment. El temps necessari perquè l'acció integral I produeixi la mateixa sortida que l'acció proporcional P quan l'error de velocitat és constant. Un temps més curt implica una acció integral més intensa.",
+        "description": "Help for I in physical units"
+    },
+    "pidTuningPhysicalUnitD": {
+        "message": "avanç ms",
+        "description": "Unit label for D and D Max in physical units"
+    },
+    "pidTuningPhysicalUnitDHelp": {
+        "message": "Temps de avanç. El temps que D mira cap al futur en la velocitat giroscòpica per proporcionar amortiment. Un temps més llarg proporciona més amortiment.",
+        "description": "Help for D in physical units"
+    },
+    "pidTuningPhysicalUnitF": {
+        "message": "avanç ms",
+        "description": "Unit label for Feedforward in physical units"
+    },
+    "pidTuningPhysicalUnitFHelp": {
+        "message": "Temps d'avanç. El temps durant el qual el mecanisme d'acció anticipada (*feedforward*) desplaça els motors per davant de la posició de la palanca. Un temps més llarg proporciona una resposta de la palanca més ràpida.",
+        "description": "Help for Feedforward in physical units"
+    },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Advertència:</b></span> taxes molt altes poden donar lloc a desincronitzacions en desacceleracions ràpides."
     },
@@ -2968,10 +3011,6 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Desactiva el control de la configuració de VTX mitjançant l'OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
-    },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Canvia pels nivells de potència del VTX (si el VTX és compatible)",
-        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Canvia el VTX al mode PIT (potència de sortida baixa, si és compatible)",
@@ -9252,6 +9291,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "Avançat"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "Sensor Pitot"
+    },
     "pidTuningWingTpaCurveType": {
         "message": "Tipus de corba"
     },
@@ -9272,6 +9314,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "Configuració avançada de velocitat"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Configuració velocitat Pitot"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "Retard"
@@ -9326,6 +9371,12 @@
     },
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "Desplaçament de pas en graus*10 per a l'estimació de la velocitat de l'aeronau"
+    },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "Velocitat màxima d'aire Pitot"
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "Velocitat màxima de l'aeronau segons el sensor Pitot"
     },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "Configuració de la corba hiperbòlica"

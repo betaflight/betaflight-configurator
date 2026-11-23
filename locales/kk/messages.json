@@ -2765,10 +2765,6 @@
         "message": "OSD арқылы VTX параметрлерін басқаруды өшіріңіз",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "VTX қуат деңгейлері арқылы өтіңіз (VTX қолдаса)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "VTX-ны PitMode режиміне ауыстыру (қолдау көрсетілсе, шығыс қуаты төмен)",
         "description": "Help text to VTX PIT MODE mode"
