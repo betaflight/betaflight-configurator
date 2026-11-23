@@ -2911,10 +2911,6 @@
         "message": "השבתת השליטה בהגדרות משדר הוידאו דרך ה-OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "עבור בין רמות עוצמת השידור של ה-VTX (אם נתמך על ידי המשדר)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "העבר את משדר הוידאו למצב פיט (Pit Mode, עוצמת שידור חלשה, אם נתמך)",
         "description": "Help text to VTX PIT MODE mode"

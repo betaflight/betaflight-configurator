@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "Non è possibile caricare la configurazione del LED. Riconnettersi e ricaricare questa scheda prima di salvare."
+    },
     "yes": {
         "message": "Si",
         "description": "General Yes message to be used across the application"
@@ -2487,6 +2490,46 @@
         "message": "Un fattore aggiuntivo, derivato solo dall'input degli stick, che aiuta a spingere rapidamente il quad in movimenti veloci degli stick.<br><br>FF non può causare oscillazioni, consente una P inferiore per simili risposte di stick e compensa la normale opposizione di D agli input degli stick.<br><br>Valori bassi o zero si tradurranno in una risposta più fluida ma ritardata rispetto agli input degli stick.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningPhysicalUnits": {
+        "message": "Unità fisica",
+        "description": "Section label above the PID gains expressed in physical units"
+    },
+    "pidTuningPhysicalUnitsHelp": {
+        "message": "Questi valori mostrano i guadagni precedenti espressi in unità fisiche. Non è possibile modificarli. Durante il volo, il TPA, la compensazione della caduta di tensione della batteria e il mixaggio dei motori modificano i valori effettivi.",
+        "description": "Help for the physical units section of the PID table"
+    },
+    "pidTuningPhysicalUnitP": {
+        "message": "% / 100°/s",
+        "description": "Unit label for P in physical units"
+    },
+    "pidTuningPhysicalUnitPHelp": {
+        "message": "L'uscita del motore del termine P per un errore di 100 gradi/s, in percentuale dell'intervallo di funzionamento del motore.",
+        "description": "Help for P in physical units"
+    },
+    "pidTuningPhysicalUnitI": {
+        "message": "reset ms",
+        "description": "Unit label for I in physical units"
+    },
+    "pidTuningPhysicalUnitIHelp": {
+        "message": "Tempo di reset. Il tempo necessario affinché il termine I raggiunga la stessa intensità di uscita del termine P, quando l'errore di velocità angolare rimane costante. Un tempo più breve corrisponde a un'azione integrale più forte.",
+        "description": "Help for I in physical units"
+    },
+    "pidTuningPhysicalUnitD": {
+        "message": "anticipo ms",
+        "description": "Unit label for D and D Max in physical units"
+    },
+    "pidTuningPhysicalUnitDHelp": {
+        "message": "Tempo di anticipo. Il tempo che D guarda in anticipo sulla velocità del giroscopio per dare smorzamento. Un tempo più lungo dà più smorzamento.",
+        "description": "Help for D in physical units"
+    },
+    "pidTuningPhysicalUnitF": {
+        "message": "anticipo ms",
+        "description": "Unit label for Feedforward in physical units"
+    },
+    "pidTuningPhysicalUnitFHelp": {
+        "message": "Il tempo di anticipo con cui il Feedforward fa reagire i motori prima al movimento dello stick.\nUn valore più alto rende la risposta ai comandi dello stick più rapida e immediata.",
+        "description": "Help for Feedforward in physical units"
+    },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Attenzione:</b></span> rates molto alti possono causare desincronizzazione durante decelerazioni rapide."
     },
@@ -2964,10 +3007,6 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Disabilita il controllo delle impostazioni VTX tramite l'OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
-    },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Scorri attraverso i livelli di potenza VTX (se la VTX lo supporta)",
-        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Cambia la VTX in modalità pit (bassa potenza in uscita, se supportata)",

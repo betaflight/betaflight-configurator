@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "LED-ის კონფიგურაციის ჩატვირთვა ვერ მოხერხდა. შენახვამდე ხელახლა დაუკავშირდით და გადატვირთეთ ეს ჩანართი."
+    },
     "yes": {
         "message": "დიახ",
         "description": "General Yes message to be used across the application"
@@ -32,11 +35,11 @@
         "message": "ძებნა"
     },
     "settingsSearchTitle": {
-        "message": "ძიების პარამეტრები",
+        "message": "პარამეტრების ძიება",
         "description": "Title and accessible label for the global settings search"
     },
     "settingsSearchPlaceholder": {
-        "message": "ძიების პარამეტრები...",
+        "message": "პარამეტრების ძიება...",
         "description": "Placeholder text for the global settings search input"
     },
     "settingsSearchNoResults": {
@@ -72,14 +75,14 @@
         "message": "უკავშირდება"
     },
     "disconnect": {
-        "message": "კავშირის გაწყვეტა"
+        "message": "გათიშვა"
     },
     "disconnectVirtual": {
-        "message": "გათიშვა(ვირტუალური)",
+        "message": "გათიშვა (ვირტუალური)",
         "description": "Disconnect button label shown when connected in virtual mode."
     },
     "disconnectManual": {
-        "message": "გათიშვა(ხელით)",
+        "message": "გათიშვა (ხელით)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
     "disconnectBridge": {
@@ -87,7 +90,7 @@
         "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
     },
     "disconnectBluetooth": {
-        "message": "გათიშვა(ბლუთუზ)",
+        "message": "გათიშვა (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
     },
     "portsSelectNoSelection": {
@@ -959,6 +962,9 @@
     },
     "dfu_hex_address_errors": {
         "message": "პროგრამა შეიცავს მისამართებს რომელიც არ იძებნება კონკრეტულ მოწყობილობაზე"
+    },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "ფირმვერის ფაილი რამდენიმე flash მეხსიერებას მოიცავს, რომელთა შორის გადართვა ამ აპს ამ მოწყობილობაზე არ შეუძლია"
     },
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">შენახულია</span>"
@@ -2472,6 +2478,46 @@
         "message": "დამატებითი მამოძრავებელი ფაქტორი, რომელიც მიიღება მხოლოდ ჯოხის შეყვანიდან, რომელიც ეხმარება თვითმფრინავს სწრაფად უბიძგოს გლუვ მოძრაობას.<br><br>FF არ შეიძლება გამოიწვიოს რხევა, საშუალებას აძლევს ქვედა P-ს მსგავსი ჯოხის პასუხებისთვის და ანაზღაურებს D-ის ბუნებრივ წინააღმდეგობას ავადმყოფურ შეყვანებთან.<br> პასუხი ჯოხის შეყვანებზე.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningPhysicalUnits": {
+        "message": "ფიზიკური ერთეულები",
+        "description": "Section label above the PID gains expressed in physical units"
+    },
+    "pidTuningPhysicalUnitsHelp": {
+        "message": "ეს მნიშვნელობები ზემოთ მოცემულ კოეფიციენტებს ფიზიკურ ერთეულებში აჩვენებს. მათი რედაქტირება შეუძლებელია. ფრენისას TPA, ბატარეის ძაბვის ვარდნის კომპენსაცია და ძრავების მიქსინგი ეფექტურ მნიშვნელობებს ცვლის.",
+        "description": "Help for the physical units section of the PID table"
+    },
+    "pidTuningPhysicalUnitP": {
+        "message": "% / 100°/s",
+        "description": "Unit label for P in physical units"
+    },
+    "pidTuningPhysicalUnitPHelp": {
+        "message": "P-ს გამოსავალი ძრავზე 100 deg/s სიჩქარის შეცდომისას, ძრავის დიაპაზონის პროცენტებში.",
+        "description": "Help for P in physical units"
+    },
+    "pidTuningPhysicalUnitI": {
+        "message": "აღდგ. ms",
+        "description": "Unit label for I in physical units"
+    },
+    "pidTuningPhysicalUnitIHelp": {
+        "message": "აღდგენის დრო. დრო, რომლის განმავლობაშიც I იგივე გამოსავალს ქმნის, რასაც P, როცა სიჩქარის შეცდომა მუდმივია. უფრო მოკლე დრო უფრო ძლიერ I-ს ნიშნავს.",
+        "description": "Help for I in physical units"
+    },
+    "pidTuningPhysicalUnitD": {
+        "message": "წინსწრ. ms",
+        "description": "Unit label for D and D Max in physical units"
+    },
+    "pidTuningPhysicalUnitDHelp": {
+        "message": "წინსწრების დრო. დრო, რამდენითაც D წინ უსწრებს gyro-ს სიჩქარეს დემფირებისთვის. უფრო გრძელი დრო უფრო მეტ დემფირებას იძლევა.",
+        "description": "Help for D in physical units"
+    },
+    "pidTuningPhysicalUnitF": {
+        "message": "წინსწრ. ms",
+        "description": "Unit label for Feedforward in physical units"
+    },
+    "pidTuningPhysicalUnitFHelp": {
+        "message": "წინსწრების დრო. დრო, რამდენითაც feedforward ძრავებს სტიკზე წინ ამოძრავებს. უფრო გრძელი დრო სტიკზე უფრო სწრაფ რეაქციას იძლევა.",
+        "description": "Help for Feedforward in physical units"
+    },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>გაფრთხილება:</b></span> ძალიან მაღალმა მაჩვენებლებმა შეიძლება გამოიწვიოს დესინქრონიზაცია სწრაფი შენელების შედეგად."
     },
@@ -2949,10 +2995,6 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "VTX პარამეტრების OSD-დან მართვის გამორთვა",
         "description": "Help text to VTX CONTROL DISABLE mode"
-    },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "VTX-ის სიმძლავრის დონეებს შორის გადართვა (თუ VTX-ს მხარდაჭერა აქვს)",
-        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "გადართეთ VTX ორმოს რეჟიმში (დაბალი გამომავალი სიმძლავრე, მხარდაჭერის შემთხვევაში)",
@@ -9225,6 +9267,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "გაფართოებული"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "Pitot სენსორი"
+    },
     "pidTuningWingTpaCurveType": {
         "message": "მრუდის ტიპი"
     },
@@ -9245,6 +9290,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "სიჩქარის გაფართოებული პარამეტრები"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Pitot სიჩქარის პარამეტრები"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "დაყოვნება"
@@ -9299,6 +9347,12 @@
     },
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "Pitch წანაცვლება გრადუსებში*10, აპარატის სიჩქარის შესაფასებლად"
+    },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "მაქსიმალური Pitot საჰაერო სიჩქარე"
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "თვითმფრინავის მაქსიმალური საჰაერო სიჩქარე Pitot სენსორის მიხედვით"
     },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "ჰიპერბოლური მრუდის პარამეტრები"

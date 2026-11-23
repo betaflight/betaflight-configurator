@@ -340,6 +340,11 @@ class MspHelper {
         const fcStore = useFlightControllerStore();
         fcStore.tuningSliders.slider_dterm_filter = data.readU8();
         fcStore.tuningSliders.slider_dterm_filter_multiplier = data.readU8();
+        MspHelper.readDtermFilterCutoffs(data);
+    }
+
+    static readDtermFilterCutoffs(data: MspDataView) {
+        const fcStore = useFlightControllerStore();
         fcStore.filterConfig.dterm_lowpass_hz = data.readU16();
         fcStore.filterConfig.dterm_lowpass2_hz = data.readU16();
         fcStore.filterConfig.dterm_lowpass_dyn_min_hz = data.readU16();
@@ -365,6 +370,11 @@ class MspHelper {
         const fcStore = useFlightControllerStore();
         fcStore.tuningSliders.slider_gyro_filter = data.readU8();
         fcStore.tuningSliders.slider_gyro_filter_multiplier = data.readU8();
+        MspHelper.readGyroFilterCutoffs(data);
+    }
+
+    static readGyroFilterCutoffs(data: MspDataView) {
+        const fcStore = useFlightControllerStore();
         fcStore.filterConfig.gyro_lowpass_hz = data.readU16();
         fcStore.filterConfig.gyro_lowpass2_hz = data.readU16();
         fcStore.filterConfig.gyro_lowpass_dyn_min_hz = data.readU16();
@@ -2337,12 +2347,26 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         }
     },
 
+    // The FC echoes back the slider mode and multiplier it was sent; only the cutoffs are its
+    // answer. Switching a slider OFF sends nothing, so a reply still in flight carries a stale
+    // mode: never write the echo back, and drop the cutoffs once the slider is off (as the PID
+    // calculate reply does above).
     [MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO](data) {
-        MspHelper.readGyroFilterSliderSettings(data);
+        const fcStore = useFlightControllerStore();
+        data.readU8(); // slider mode (echo)
+        data.readU8(); // slider multiplier (echo)
+        if (fcStore.tuningSliders.slider_gyro_filter) {
+            MspHelper.readGyroFilterCutoffs(data);
+        }
     },
 
     [MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM](data) {
-        MspHelper.readDtermFilterSliderSettings(data);
+        const fcStore = useFlightControllerStore();
+        data.readU8(); // slider mode (echo)
+        data.readU8(); // slider multiplier (echo)
+        if (fcStore.tuningSliders.slider_dterm_filter) {
+            MspHelper.readDtermFilterCutoffs(data);
+        }
     },
 
     [MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING](data) {

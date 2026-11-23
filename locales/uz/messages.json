@@ -2949,10 +2949,6 @@
         "message": "OSD orqali VTX sozlamalarini boşqarişni öçiriş",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "VTX quvvat darajalari orasida almaştiriş (agar VTX qöllab-quvvatlasa)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "VTX'ni pit rejimiga ötkaziş (past çiqiş quvvati, agar qöllab-quvvatlasa)",
         "description": "Help text to VTX PIT MODE mode"
