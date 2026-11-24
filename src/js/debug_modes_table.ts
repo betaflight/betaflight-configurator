@@ -9,8 +9,8 @@
  *   API 1.46.0  5fd38528ba 2024-05-04  (90 modes)
  *   API 1.47.0  c120dd4e9d 2025-11-12  (100 modes)
  *   API 1.48.0  16e12368bc 2026-08-05  (103 modes)
- *   API 1.49.0  b780e4af0e 2026-11-16  (116 modes)
->>>>>>> f13d5aaf (Added users interface for the PSAS flight mode:)
+ *   API 1.49.0  d026894d40 2026-11-23  (117 modes)
+ *   API 1.50.0  e77185785e 2026-10-28  (117 modes)
  */
 
 /**
@@ -480,6 +480,125 @@ export const FIRMWARE_DEBUG_MODES: Readonly<Record<string, readonly string[]>> =
         "PITOT", // 102
     ]),
     "1.49.0": Object.freeze([
+        "NONE", // 0
+        "CYCLETIME", // 1
+        "BATTERY", // 2
+        "GYRO_FILTERED", // 3
+        "ACCELEROMETER", // 4
+        "PIDLOOP", // 5
+        "RC_INTERPOLATION", // 6
+        "ANGLERATE", // 7
+        "ESC_SENSOR", // 8
+        "SCHEDULER", // 9
+        "STACK", // 10
+        "ESC_SENSOR_RPM", // 11
+        "ESC_SENSOR_TMP", // 12
+        "ALTITUDE", // 13
+        "FFT", // 14
+        "FFT_TIME", // 15
+        "FFT_FREQ", // 16
+        "RX_FRSKY_SPI", // 17
+        "RX_SFHSS_SPI", // 18
+        "GYRO_RAW", // 19
+        "MULTI_GYRO_RAW", // 20
+        "MULTI_GYRO_DIFF", // 21
+        "MAX7456_SIGNAL", // 22
+        "MAX7456_SPICLOCK", // 23
+        "SBUS", // 24
+        "FPORT", // 25
+        "RANGEFINDER", // 26
+        "RANGEFINDER_QUALITY", // 27
+        "OPTICALFLOW", // 28
+        "LIDAR_TF", // 29
+        "ADC_INTERNAL", // 30
+        "RUNAWAY_TAKEOFF", // 31
+        "SDIO", // 32
+        "CURRENT_SENSOR", // 33
+        "USB", // 34
+        "SMARTAUDIO", // 35
+        "RTH", // 36
+        "ITERM_RELAX", // 37
+        "ACRO_TRAINER", // 38
+        "RC_SMOOTHING", // 39
+        "RX_SIGNAL_LOSS", // 40
+        "RC_SMOOTHING_RATE", // 41
+        "ANTI_GRAVITY", // 42
+        "DYN_LPF", // 43
+        "RX_SPEKTRUM_SPI", // 44
+        "DSHOT_RPM_TELEMETRY", // 45
+        "RPM_FILTER", // 46
+        "D_MAX", // 47
+        "AC_CORRECTION", // 48
+        "AC_ERROR", // 49
+        "MULTI_GYRO_SCALED", // 50
+        "DSHOT_RPM_ERRORS", // 51
+        "CRSF_LINK_STATISTICS_UPLINK", // 52
+        "CRSF_LINK_STATISTICS_PWR", // 53
+        "CRSF_LINK_STATISTICS_DOWN", // 54
+        "BARO", // 55
+        "AUTOPILOT_ALTITUDE", // 56
+        "DYN_IDLE", // 57
+        "FEEDFORWARD_LIMIT", // 58
+        "FEEDFORWARD", // 59
+        "BLACKBOX_OUTPUT", // 60
+        "GYRO_SAMPLE", // 61
+        "RX_TIMING", // 62
+        "D_LPF", // 63
+        "VTX_TRAMP", // 64
+        "GHST", // 65
+        "GHST_MSP", // 66
+        "SCHEDULER_DETERMINISM", // 67
+        "TIMING_ACCURACY", // 68
+        "RX_EXPRESSLRS_SPI", // 69
+        "RX_EXPRESSLRS_PHASELOCK", // 70
+        "RX_STATE_TIME", // 71
+        "GPS_RESCUE_VELOCITY", // 72
+        "GPS_RESCUE_HEADING", // 73
+        "GPS_RESCUE_TRACKING", // 74
+        "GPS_CONNECTION", // 75
+        "ATTITUDE", // 76
+        "VTX_MSP", // 77
+        "GPS_DOP", // 78
+        "FAILSAFE", // 79
+        "GYRO_CALIBRATION", // 80
+        "ANGLE_MODE", // 81
+        "ANGLE_TARGET", // 82
+        "CURRENT_ANGLE", // 83
+        "DSHOT_TELEMETRY_COUNTS", // 84
+        "RPM_LIMIT", // 85
+        "RC_STATS", // 86
+        "MAG_CALIB", // 87
+        "MAG_TASK_RATE", // 88
+        "EZLANDING", // 89
+        "TPA", // 90
+        "S_TERM", // 91
+        "SPA", // 92
+        "TASK", // 93
+        "GIMBAL", // 94
+        "WING_SETPOINT", // 95
+        "CHIRP", // 96
+        "FLASH_TEST_PRBS", // 97
+        "MAVLINK_TELEMETRY", // 98
+        "AUTOPILOT_PID", // 99
+        "POSITION_NAV", // 100
+        "AUTOPILOT_STOP", // 101
+        "PITOT", // 102
+        "POSITION_EST", // 103
+        "AUTOPILOT_HEADING", // 104
+        "RX_REDPINE_SPI", // 105
+        "LAUNCH", // 106
+        "VELOCITY_EST", // 107
+        "SAG_COMPENSATION", // 108
+        "UPT1", // 109
+        "FLIGHT_PLAN", // 110
+        "AUTOPILOT_CLIMB", // 111
+        "AUTOPILOT_GUIDANCE", // 112
+        "AUTOPILOT_LANDING", // 113
+        "UART_BIDIR", // 114
+        "PB04", // 115
+        "PSAS", // 116
+    ]),
+    "1.50.0": Object.freeze([
         "NONE", // 0
         "CYCLETIME", // 1
         "BATTERY", // 2
