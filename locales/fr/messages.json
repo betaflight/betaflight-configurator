@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "La configuration de la LED n'a pas pu être chargée. Reconnectez et rechargez cet onglet avant d'enregistrer."
+    },
     "yes": {
         "message": "Oui",
         "description": "General Yes message to be used across the application"
@@ -2471,6 +2474,46 @@
         "message": "Un facteur d'entraînement supplémentaire, dérivé uniquement de la commande des sticks, qui aide à pousser rapidement la machine lors des mouvements de sticks rapides.<br><br>FF ne peut pas causer d'oscillation, permet un P plus bas pour des réponses aux sticks similaires, et compense l'opposition naturelle de D aux entrées des sticks.<br><br>Les valeurs basses ou nulles se traduiront par une réponse plus lisse mais plus retardée aux commandes des sticks.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningPhysicalUnits": {
+        "message": "Unités physiques",
+        "description": "Section label above the PID gains expressed in physical units"
+    },
+    "pidTuningPhysicalUnitsHelp": {
+        "message": "Ces valeurs montrent les gains ci-dessus en unités physiques. Vous ne pouvez pas les modifier. En vol, le TPA, la compensation des chutes de batterie et le mixage moteur changent les valeurs effectives.",
+        "description": "Help for the physical units section of the PID table"
+    },
+    "pidTuningPhysicalUnitP": {
+        "message": "% / 100°/s",
+        "description": "Unit label for P in physical units"
+    },
+    "pidTuningPhysicalUnitPHelp": {
+        "message": "La sortie du moteur à partir de P pour une erreur de taux de 100 degs/s, en pourcentage de la gamme du moteur.",
+        "description": "Help for P in physical units"
+    },
+    "pidTuningPhysicalUnitI": {
+        "message": "réinitialise ms",
+        "description": "Unit label for I in physical units"
+    },
+    "pidTuningPhysicalUnitIHelp": {
+        "message": "Réinitialise le temps. Le temps pour que I fasse la même sortie que P lorsque l'erreur de débit est constante. Un temps plus court donne un I plus fort.",
+        "description": "Help for I in physical units"
+    },
+    "pidTuningPhysicalUnitD": {
+        "message": "ms d'anticipation",
+        "description": "Unit label for D and D Max in physical units"
+    },
+    "pidTuningPhysicalUnitDHelp": {
+        "message": "Temps d'anticipation. Durée pendant laquelle le paramètre D anticipe la vitesse de rotation du gyroscope afin de fournir un effet d'amortissement. Une durée plus longue augmente l'amortissement.",
+        "description": "Help for D in physical units"
+    },
+    "pidTuningPhysicalUnitF": {
+        "message": "ms d'anticipation",
+        "description": "Unit label for Feedforward in physical units"
+    },
+    "pidTuningPhysicalUnitFHelp": {
+        "message": "Temps d'anticipation. Durée pendant laquelle le feedforward fait réagir les moteurs avant le mouvement du manche. Une durée plus longue permet d'obtenir une réponse plus rapide des sticks.",
+        "description": "Help for Feedforward in physical units"
+    },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Avertissement:</b></span> des rates très élevés peuvent entraîner des désynchronisations lors des décélérations rapides."
     },
@@ -2945,10 +2988,6 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Désactiver le contrôle des paramètres VTX via l'OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
-    },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Cycler entre les niveaux de puissance VTX (si pris en charge par VTX)",
-        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Basculer le VTX en mode pit (faible puissance de sortie, si pris en charge)",

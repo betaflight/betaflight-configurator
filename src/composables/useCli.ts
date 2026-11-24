@@ -338,9 +338,13 @@ export function useCli(): Cli {
         history.add(outString.trim());
 
         const outputArray = outString.split("\n");
+        // Captured before sendCommandIterative shift()s the array. A multi-line input is a paste or a
+        // loaded file, and its lines have to go out exactly as written; only a single command is
+        // reconciled with whatever the FC currently has in its own line buffer.
+        const isMultiLine = outputArray.length > 1;
 
         // Wall-clock timer: logs "[CLI] paste: N lines" and "paste done: X.XXs" to the browser console.
-        if (outputArray.length > 1) {
+        if (isMultiLine) {
             const t0 = performance.now();
             const startMs = Date.now();
             console.log(`[CLI] paste: ${outputArray.length} lines`);
@@ -358,7 +362,7 @@ export function useCli(): Cli {
             if (execution !== commandExecution) return;
             pendingCommands = null;
             let line = outputArray.shift()!.trim();
-            if (outputArray.length === 0 && cliBuffer) {
+            if (outputArray.length === 0 && cliBuffer && !isMultiLine) {
                 line = getCliCommand(line, cliBuffer);
             }
             const processingDelay = line.toLowerCase().startsWith("profile")

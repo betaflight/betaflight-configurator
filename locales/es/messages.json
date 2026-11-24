@@ -2423,10 +2423,6 @@
         "message": "Desactiva el control de ajustes del VTX a través del OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Alternar entre los niveles de energía VTX (si es compatible con el VTX)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Cambia el VTX a modo Pit (potencia de salida baja, si es compatible)",
         "description": "Help text to VTX PIT MODE mode"

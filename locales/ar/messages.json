@@ -221,6 +221,24 @@
     "save": {
         "message": "حفظ"
     },
+    "saveAndReboot": {
+        "message": "حفظ وإعادة التشغيل"
+    },
+    "refresh": {
+        "message": "تحديث"
+    },
+    "saveToFile": {
+        "message": "حفظ إلى ملف"
+    },
+    "loadFromFile": {
+        "message": "تحميل من ملف"
+    },
+    "loadFromClipboard": {
+        "message": "تحميل من الحافظة"
+    },
+    "copyToClipboard": {
+        "message": "نسخ إلى الحافظة"
+    },
     "autoConnectEnabled": {
         "message": "الاتصال التلقائي: مفعّل - يحاول التطبيق الاتصال تلقائيًا عند اكتشاف منفذ جديد"
     },
@@ -937,6 +955,9 @@
     },
     "dfu_hex_address_errors": {
         "message": "رمز البرنامج الثابت يتضمن عناوين لم يتم العثور عليها على الجهاز المستهدف"
+    },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "صورة البرنامج الثابت تمتد عبر عدة ذواكر فلاش لا يستطيع هذا التطبيق التبديل بينها على هذا الجهاز."
     },
     "eeprom_saved_ok": {
         "message": "ذاكرة EEPROM <span class=\"message-positive\">تم حفظها</span>"
@@ -2927,10 +2948,6 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "تعطيل التحكم في إعدادات جهاز الفيديو من خلال العرض على الشاشة",
         "description": "Help text to VTX CONTROL DISABLE mode"
-    },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "التنقل بين مستويات طاقة جهاز الفيديو (إذا كان مدعومًا من قبل VTX)",
-        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "تحويل جهاز الفيديو إلى وضع الحفرة (طاقة إخراج منخفضة، إذا كان مدعومًا)",
@@ -5709,6 +5726,10 @@
         "message": "الخط المحدد هو خط صغير مخصص لشاشات OSD التي تستخدم Framebuffer، لكن شاشة OSD الحالية تستخدم خطوطًا بالحجم القياسي. لذلك لن يظهر الخط بشكل صحيح. هل تريد رفع الخط رغم ذلك؟",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
+    "osdSetupSaveOptions": {
+        "message": "خيارات حفظ OSD",
+        "description": "Accessible label for the toolbar dropdown button"
+    },
     "osdTextElementMainBattVoltage": {
         "message": "جهد البطارية الرئيسية",
         "description": "One of the elements of the OSD"
@@ -6931,6 +6952,10 @@
     "osdPitotAirSpeed": {
         "message": "السرعة الجوية"
     },
+    "vtxHelp": {
+        "message": "هنا يمكنك ضبط إعدادات جهاز إرسال الفيديو (VTX). يمكنك عرض قيم الإرسال وتعديلها، بما في ذلك جداول VTX، إذا كانت وحدة التحكم بالطيران (FC) وجهاز إرسال الفيديو (VTX) يدعمان ذلك.\n\nلإعداد جهاز VTX، اتبع الخطوات التالية:\n\n1. انتقل إلى [هذه الصفحة](https://betaflight.com/docs/wiki/guides/current/VTX?utm_source=chatgpt.com#vtx-tables).\n2. ابحث عن ملف إعدادات VTX المناسب لبلدك وطراز جهازك، ثم قم بتنزيله.\n3. اضغط على '$t(loadFromFile.message)' أدناه، ثم حدد ملف إعدادات VTX وقم بتحميله.\n4. تأكد من صحة الإعدادات.\n5. اضغط على '$t(save.message)' لحفظ إعدادات VTX في وحدة التحكم بالطيران.\n6. اختياريًا، اضغط على '$t(vtxButtonSaveLua.message)' لحفظ ملف إعدادات Lua لاستخدامه مع سكربتات Betaflight Lua. (لمزيد من المعلومات، اضغط [هنا](https://github.com/betaflight/betaflight-tx-lua-scripts/?utm_source=chatgpt.com)).\n\n",
+        "description": "Introduction message in the VTX tab"
+    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">تنبيه:</span> لم يستجب جهاز VTX بعد. اختر أدناه البروتوكول الذي يستخدمه جهاز VTX ومنفذ UART الموصل به، ثم احفظ الإعدادات؛ ستظهر بقية الإعدادات بمجرد استجابة الجهاز.\n",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6938,6 +6963,14 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">انتباه:</span> تحتاج إلى تكوين وحفظ جدول VTX أولاً في الأسفل قبل أن تتمكن من استخدام حقول $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
+    },
+    "vtxMessageFactoryBandsNotSupported": {
+        "message": "&#x20;نوع جهاز إرسال الفيديو (VTX) المحدد لا يدعم إعداد 'factory' للنطاقات، ولكن بعض النطاقات لديك تستخدم هذا الإعداد. اضغط على '$t(save.message)' لإصلاح المشكلة.",
+        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
+    },
+    "vtxMessageVerifyTable": {
+        "message": "**تنبيه:** تم تحميل قيم جدول VTX، ولكن لم يتم حفظها بعد في وحدة التحكم بالطيران. يجب عليك مراجعة القيم وتعديلها للتأكد من صحتها وتوافقها مع القوانين المعمول بها في بلدك، ثم الضغط على زر $t(save.message) لحفظها في وحدة التحكم بالطيران.",
+        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "أدخل التردد مباشرة",
@@ -7185,9 +7218,17 @@
         "message": "<span class=\"message-negative\">خطأ</span> أثناء تحميل معلومات تكوين VTX من الحافظة. ربما المحتويات غير صحيحة",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
+    "vtxButtonSaveFileOptions": {
+        "message": "خيارات تصدير جدول VTX",
+        "description": "Accessible label for the toolbar dropdown button"
+    },
     "vtxButtonSaveLua": {
         "message": "حفظ نص Lua",
         "description": "Save Lua script button in the VTX tab"
+    },
+    "vtxButtonLoadOptions": {
+        "message": "خيارات تحميل جدول VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "buttonSaving": {
         "message": "جاري الحفظ",
@@ -7791,6 +7832,10 @@
     "presetsLoadError": {
         "message": "خطأ في تحميل الإعدادات المسبقة من الإنترنت",
         "description": "Error report when failed to load presets index or a specific preset"
+    },
+    "presetsButtonClearSelection": {
+        "message": "مسح التحديد",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "جاري تطبيق التكوين...",
@@ -9175,6 +9220,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "متقدم"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "مستشعر Pitot "
+    },
     "pidTuningWingTpaCurveType": {
         "message": "نوع المنحنى"
     },
@@ -9195,6 +9243,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "إعداد السرعة المتقدمة"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "إعداد سرعة Pitot"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "تأخير"
@@ -9249,6 +9300,12 @@
     },
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "إزاحة زاوية Pitch بالدرجات مضروبة في 10، وتُستخدم لتقدير سرعة الطائرة."
+    },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "أقصى سرعة جوية يقيسها pitot "
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "أقصى سرعة جوية للطائرة يقيسها مستشعر Pitot"
     },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "إعدادات المنحنى الزائدي"

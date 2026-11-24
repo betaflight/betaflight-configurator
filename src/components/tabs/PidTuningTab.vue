@@ -119,7 +119,10 @@
 
             <!-- Tab Content -->
             <div class="tabarea">
-                <form name="pid-tuning" id="pid-tuning">
+                <!-- Each save write encodes the live store when it is sent, so an edit made while
+                     the writes are in flight (e.g. a filter slider switched ON) would partly reach
+                     the FC. Lock the sub-tabs until the save is done. -->
+                <form name="pid-tuning" id="pid-tuning" :inert="isSaving">
                     <PidSubTab
                         ref="pidSubTab"
                         v-if="activeSubtab === 'pid'"

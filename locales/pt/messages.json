@@ -2618,10 +2618,6 @@
         "message": "Desativar o controlo das configurações do VTX através do OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Alternar entre níveis de energia do VTX (se suportado pelo VTX)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Mudar o VTX para modo pit (baixa emissão de energia, se suportado)",
         "description": "Help text to VTX PIT MODE mode"

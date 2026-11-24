@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, describe, expect, it } from "vitest";
 import semver from "semver";
 import MspHelper from "../../../src/js/msp/MSPHelper";
@@ -247,6 +268,84 @@ describe("MspHelper", () => {
             expect(q.y).toBeCloseTo(0, 3);
             expect(q.z).toBeCloseTo(16384 / 32767, 3);
         });
+    });
+
+    describe("simplified filter calculate replies", () => {
+        // Reply layout: U8 mode, U8 multiplier, U16 lpf1, U16 lpf2, U16 dyn min, U16 dyn max, 2x U32 reserved.
+        function calculateReply(code: number, mode: number, multiplier: number, cutoffs: number[]) {
+            const buffer = new MspBuffer();
+            buffer.push8(mode).push8(multiplier);
+            cutoffs.forEach((hz) => buffer.push16(hz));
+            buffer.push32(0).push32(0);
+            mspHelper.process_data({
+                code,
+                dataView: new MspDataView(new Uint8Array(buffer).buffer),
+                crcError: false,
+                unsupported: 0,
+                callbacks: [],
+            });
+        }
+
+        const cases = [
+            {
+                name: "gyro",
+                code: MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO,
+                mode: "slider_gyro_filter",
+                multiplier: "slider_gyro_filter_multiplier",
+                fields: ["gyro_lowpass_hz", "gyro_lowpass2_hz", "gyro_lowpass_dyn_min_hz", "gyro_lowpass_dyn_max_hz"],
+            },
+            {
+                name: "D-term",
+                code: MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM,
+                mode: "slider_dterm_filter",
+                multiplier: "slider_dterm_filter_multiplier",
+                fields: [
+                    "dterm_lowpass_hz",
+                    "dterm_lowpass2_hz",
+                    "dterm_lowpass_dyn_min_hz",
+                    "dterm_lowpass_dyn_max_hz",
+                ],
+            },
+        ] as const;
+
+        const cutoffs = (fields: readonly (keyof typeof fcStore.filterConfig)[]) =>
+            fields.map((field) => fcStore.filterConfig[field]);
+
+        it.each(cases)("applies the $name cutoffs while the slider is on", ({ code, mode, multiplier, fields }) => {
+            fcStore.tuningSliders[mode] = 1;
+            fcStore.tuningSliders[multiplier] = 130;
+
+            calculateReply(code, 1, 130, [0, 250, 200, 500]);
+
+            expect(cutoffs(fields)).toEqual([0, 250, 200, 500]);
+        });
+
+        it.each(cases)(
+            "keeps the $name slider off and the cutoffs manual when the reply lands after switching off",
+            ({ code, mode, multiplier, fields }) => {
+                fcStore.tuningSliders[mode] = 0;
+                fcStore.tuningSliders[multiplier] = 130;
+                fields.forEach((field, i) => (fcStore.filterConfig[field] = [150, 0, 0, 0][i]));
+
+                // Echo of the request sent while the slider was still on.
+                calculateReply(code, 1, 130, [0, 250, 200, 500]);
+
+                expect(fcStore.tuningSliders[mode]).toBe(0);
+                expect(cutoffs(fields)).toEqual([150, 0, 0, 0]);
+            },
+        );
+
+        it.each(cases)(
+            "does not overwrite the current $name multiplier with an older echo",
+            ({ code, mode, multiplier }) => {
+                fcStore.tuningSliders[mode] = 1;
+                fcStore.tuningSliders[multiplier] = 140;
+
+                calculateReply(code, 1, 120, [0, 250, 200, 500]);
+
+                expect(fcStore.tuningSliders[multiplier]).toBe(140);
+            },
+        );
     });
 
     describe("MSP2 text types", () => {
