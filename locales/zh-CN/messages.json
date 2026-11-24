@@ -2670,10 +2670,6 @@
         "message": "禁用通过 OSD 控制图传设置项",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "循环切换图传的功率挡位（如果该功能被图传支持）",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "将图传切换到维修站模式（如果它支持低输出功率）",
         "description": "Help text to VTX PIT MODE mode"

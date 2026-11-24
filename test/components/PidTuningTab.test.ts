@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
@@ -113,6 +134,24 @@ describe("PID Tuning MSP wiring", () => {
         release();
         await flushPromises();
         expect(saveToEeprom).toHaveBeenCalledOnce();
+    });
+
+    it("locks the sub-tabs while the save writes are in flight", async () => {
+        const release = hold(msp.writePidTuningConfig);
+        fcStore.pids[0][0] = 99;
+        await flushPromises();
+        // jsdom has no HTMLElement.inert, so Vue writes the attribute as "true"/"false" here
+        // (as LedStripLoad.test.ts checks); a browser gets the property.
+        const inert = () => wrapper.get("form#pid-tuning").attributes("inert") === "true";
+        expect(inert()).toBe(false);
+
+        button(wrapper, "save").vm.$emit("click");
+        await flushPromises();
+        expect(inert()).toBe(true);
+
+        release();
+        await flushPromises();
+        expect(inert()).toBe(false);
     });
 
     it.each([

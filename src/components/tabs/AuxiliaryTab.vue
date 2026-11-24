@@ -195,7 +195,7 @@ import {
     type ModeEntry,
     type RangeEntry,
 } from "../../js/utils/modeRanges";
-import inflection from "inflection";
+import { getModeHelpKey } from "../../js/modeHelpKey";
 import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
@@ -386,7 +386,7 @@ export default defineComponent({
                 const modeId = fcStore.auxConfigIds[index];
                 const rawName = fcStore.auxConfig[index];
                 const adjustedName = adjustBoxNameIfPeripheralWithModeID(modeId, rawName);
-                const helpKey = `auxiliaryHelpMode_${inflection.camelize(rawName.replaceAll(/\s+/g, ""))}`;
+                const helpKey = getModeHelpKey(modeId, rawName);
                 modeMap.set(modeId, {
                     id: modeId,
                     index,
