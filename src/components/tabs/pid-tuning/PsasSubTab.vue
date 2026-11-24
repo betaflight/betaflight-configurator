@@ -480,7 +480,7 @@
                         <UInputNumber
                             v-model="psasLiftCoefLPF"
                             :step="1"
-                            :min="0"
+                            :min="10"
                             :max="255"
                             size="xs"
                             orientation="vertical"
