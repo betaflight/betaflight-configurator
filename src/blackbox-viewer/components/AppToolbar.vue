@@ -18,6 +18,18 @@
                     :loading="pulling"
                     :disabled="!downloadAvailable || pulling"
                     :label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
+                    class="toolbar-download--wide"
+                    @click="$emit('download-from-fc')"
+                />
+                <UButton
+                    size="xs"
+                    color="primary"
+                    variant="soft"
+                    icon="i-lucide-download"
+                    :loading="pulling"
+                    :disabled="!downloadAvailable || pulling"
+                    :aria-label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
+                    class="toolbar-download--compact"
                     @click="$emit('download-from-fc')"
                 />
             </UTooltip>
@@ -26,7 +38,7 @@
             </span>
         </div>
 
-        <div class="toolbar-group">
+        <div class="toolbar-group toolbar-group--wide-actions">
             <template v-if="logStore.hasLog">
                 <UButton
                     variant="ghost"
@@ -102,6 +114,19 @@
                 @click="$emit('toggle-fullscreen')"
             />
         </div>
+        <div class="toolbar-group toolbar-group--compact-actions">
+            <UDropdownMenu :items="compactActions" :content="{ align: 'end' }">
+                <UButton
+                    variant="ghost"
+                    color="neutral"
+                    icon="i-lucide-ellipsis"
+                    label="Actions"
+                    size="xs"
+                    aria-label="Blackbox Viewer actions"
+                    data-testid="blackbox-compact-actions"
+                />
+            </UDropdownMenu>
+        </div>
     </div>
 </template>
 
@@ -114,7 +139,7 @@ import { useGraphStore } from "../stores/graph";
 import { probeVideoExport } from "../video_export";
 import LogFileInput from "./LogFileInput.vue";
 
-defineEmits([
+const emit = defineEmits([
     "files-selected",
     "download-from-fc",
     "export-csv",
@@ -141,6 +166,35 @@ const videoExportTitle = computed(() => {
     }
     return videoCapability.value.canEncode ? "Render the marked range to a video file" : videoCapability.value.reason;
 });
+
+// Keep compact actions aligned with full-width toolbar availability.
+const compactActions = computed(() => [
+    ...(logStore.hasLog
+        ? [
+              [
+                  { label: "Export CSV", icon: "i-lucide-file-spreadsheet", onSelect: () => emit("export-csv") },
+                  { label: "Export GPX", icon: "i-lucide-map-pin", onSelect: () => emit("export-gpx") },
+                  { label: "Export Workspaces", icon: "i-lucide-file-json", onSelect: () => emit("export-workspaces") },
+                  {
+                      label: "Export Video",
+                      icon: "i-lucide-video",
+                      disabled: videoExportDisabled.value,
+                      description: videoExportDisabled.value ? videoExportTitle.value : undefined,
+                      onSelect: () => emit("export-video"),
+                  },
+              ],
+          ]
+        : []),
+    [
+        { label: "User Settings", icon: "i-lucide-settings", onSelect: () => emit("open-settings") },
+        { label: "Keyboard Shortcuts", icon: "i-lucide-keyboard", onSelect: () => emit("open-keys") },
+        {
+            label: graphStore.isFullscreen ? "Exit Full Screen" : "Full Screen",
+            icon: graphStore.isFullscreen ? "i-lucide-minimize" : "i-lucide-maximize",
+            onSelect: () => emit("toggle-fullscreen"),
+        },
+    ],
+]);
 
 watch(
     () => logStore.hasLog,
@@ -194,6 +248,11 @@ const progress = computed(() => dataflash?.progress?.value ?? 0);
         min-width: 0;
     }
 
+    .toolbar-group--compact-actions,
+    .toolbar-download--compact {
+        display: none;
+    }
+
     .toolbar-filename {
         font-size: 0.75rem;
         color: var(--text-secondary);
@@ -201,6 +260,27 @@ const progress = computed(() => dataflash?.progress?.value ?? 0);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+}
+@media (max-width: 900px) {
+    .toolbar-bar {
+        gap: 0.4rem;
+        padding-inline: 0.4rem;
+
+        .toolbar-group--wide-actions,
+        .toolbar-filename {
+            display: none;
+        }
+
+        .toolbar-group--compact-actions,
+        .toolbar-download--compact {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .toolbar-download--wide {
+            display: none;
+        }
     }
 }
 </style>
