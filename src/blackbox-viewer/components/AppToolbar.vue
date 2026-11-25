@@ -3,36 +3,34 @@
     <div class="toolbar-bar">
         <div class="toolbar-group toolbar-group--start">
             <LogFileInput size="xs" label="Open log file" @files-selected="$emit('files-selected', $event)" />
-            <UTooltip
-                :text="
-                    downloadAvailable
-                        ? 'Download the onboard log from the connected flight controller'
-                        : 'Connect a flight controller that has a recorded log'
-                "
-            >
-                <UButton
-                    size="xs"
-                    color="primary"
-                    variant="soft"
-                    icon="i-lucide-download"
-                    :loading="pulling"
-                    :disabled="!downloadAvailable || pulling"
-                    :label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
-                    class="toolbar-download--wide"
-                    @click="$emit('download-from-fc')"
-                />
-                <UButton
-                    size="xs"
-                    color="primary"
-                    variant="soft"
-                    icon="i-lucide-download"
-                    :loading="pulling"
-                    :disabled="!downloadAvailable || pulling"
-                    :aria-label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
-                    class="toolbar-download--compact"
-                    @click="$emit('download-from-fc')"
-                />
-            </UTooltip>
+            <div class="toolbar-download--wide">
+                <UTooltip :text="downloadTooltip">
+                    <UButton
+                        size="xs"
+                        color="primary"
+                        variant="soft"
+                        icon="i-lucide-download"
+                        :loading="pulling"
+                        :disabled="!downloadAvailable || pulling"
+                        :label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
+                        @click="$emit('download-from-fc')"
+                    />
+                </UTooltip>
+            </div>
+            <div class="toolbar-download--compact">
+                <UTooltip :text="downloadTooltip">
+                    <UButton
+                        size="xs"
+                        color="primary"
+                        variant="soft"
+                        icon="i-lucide-download"
+                        :loading="pulling"
+                        :disabled="!downloadAvailable || pulling"
+                        :aria-label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
+                        @click="$emit('download-from-fc')"
+                    />
+                </UTooltip>
+            </div>
             <span v-if="appStore.logFilename" class="toolbar-filename" :title="appStore.logFilename">
                 {{ appStore.logFilename }}
             </span>
@@ -224,6 +222,9 @@ watch(
 // with WelcomePage.vue via the same injection so both surfaces reflect one source of truth.
 const dataflash = inject<DataflashHost | null>("bbvDataflash", null);
 const downloadAvailable = computed(() => !!dataflash?.available?.value);
+const downloadTooltip = computed(() => downloadAvailable.value
+    ? "Download the onboard log from the connected flight controller"
+    : "Connect a flight controller that has a recorded log");
 const pulling = computed(() => !!dataflash?.pulling?.value);
 const progress = computed(() => dataflash?.progress?.value ?? 0);
 </script>
