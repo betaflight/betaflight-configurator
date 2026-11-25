@@ -71,6 +71,14 @@ describe("Blackbox Viewer compact actions", () => {
         csv!.click();
         await nextTick();
         expect(callbacks.onExportCsv).toHaveBeenCalledOnce();
+        await openCompactActions();
+        const video = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((el) =>
+            el.textContent?.includes("Export Video"),
+        );
+        expect(video).toBeTruthy();
+        expect(video!.getAttribute("aria-disabled")).toBe("true");
+        video!.click();
+        await nextTick();
         expect(callbacks.onExportVideo).not.toHaveBeenCalled();
     });
 
