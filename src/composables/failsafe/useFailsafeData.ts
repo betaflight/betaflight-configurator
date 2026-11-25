@@ -24,6 +24,7 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { API_VERSION_1_41 } from "../../js/data_storage";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useNavigationStore } from "@/stores/navigation";
 
 /**
  * MSP traffic for the Failsafe tab's initial load. The replies land in the flightController
@@ -31,6 +32,7 @@ import { useFlightControllerStore } from "@/stores/fc";
  */
 export function useFailsafeData() {
     const fcStore = useFlightControllerStore();
+    const navigationStore = useNavigationStore();
 
     /** Fetch everything the tab renders from, in order. GPS Rescue only exists from API 1.41. */
     const loadFailsafeData = async () => {
@@ -47,6 +49,12 @@ export function useFailsafeData() {
         await MSP.promise(MSPCodes.MSP_BOXIDS);
         await MSP.promise(MSPCodes.MSP_RC);
         await MSP.promise(MSPCodes.MSP_RSSI_CONFIG);
+
+        // Servos that forward an RC channel are labelled on that channel. Builds without
+        // servos have no Servos tab and answer this request with an error, so skip it there.
+        if (navigationStore.allowedTabs.includes("servos")) {
+            await MSP.promise(MSPCodes.MSP_SERVO_CONFIGURATIONS);
+        }
         await MSP.promise(MSPCodes.MSP_MODE_RANGES);
     };
 
