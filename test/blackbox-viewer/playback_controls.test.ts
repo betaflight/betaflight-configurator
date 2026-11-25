@@ -16,6 +16,7 @@ const { usePlaybackStore, GRAPH_STATE_PAUSED, GRAPH_STATE_PLAY } =
 const video = await import("../../src/blackbox-viewer/video_handler");
 const { updateValuesChart } = await import("../../src/blackbox-viewer/values_display");
 const playback = await import("../../src/blackbox-viewer/playback_controls");
+import { bindGraphTouch } from "../../src/blackbox-viewer/graph_touch";
 import type { FlightLog } from "../../src/blackbox-viewer/flightlog";
 
 const MIN = 1_000_000;
@@ -79,6 +80,136 @@ describe("playback controls", () => {
     afterEach(() => {
         vi.unstubAllGlobals();
         vi.useRealTimers();
+    });
+
+    describe("graph touch gestures", () => {
+        function touchGraph(hasVideo = false) {
+            const { logStore, graphStore, playbackStore, graph, videoElement } = setUp({ hasVideo });
+            graph.getWindowWidthTime = () => Math.round(100_000_000 / graphStore.graphZoom);
+            const renderer = graphStore.graph!;
+            renderer.onSeek = vi.fn();
+            const canvas = document.createElement("canvas");
+            canvas.width = 800;
+            Object.defineProperty(canvas, "clientWidth", { value: 400 });
+            vi.spyOn(canvas, "getBoundingClientRect").mockReturnValue(new DOMRect(20, 0, 400, 300));
+            const unbind = bindGraphTouch(canvas, renderer, logStore.flightLog!);
+            type Point = [number, number];
+            let touchCount = 0;
+            function send(type: string, points: Point[], changed: Point[] = []) {
+                if (type === "touchstart") {
+                    changed = points.slice(touchCount);
+                }
+                if (type !== "touchmove") {
+                    touchCount = points.length;
+                }
+                const touches = (list: Point[]) => list.map(([clientX, clientY]) => ({ clientX, clientY }));
+                const event = new Event(type, { cancelable: true });
+                Object.defineProperties(event, {
+                    targetTouches: { value: touches(points) },
+                    changedTouches: { value: touches(changed) },
+                });
+                canvas.dispatchEvent(event);
+            }
+            const touch = (type: string, ...points: Point[]) => send(type, points);
+            const lift = (remaining: Point[], ...lifted: Point[]) => send("touchend", remaining, lifted);
+            return { touch, lift, unbind, logStore, graphStore, playbackStore, renderer, videoElement };
+        }
+
+        it("keeps the time under a moving midpoint through a vertical pinch", () => {
+            const { touch, logStore, graphStore, playbackStore } = touchGraph();
+            playbackStore.graphState = GRAPH_STATE_PLAY;
+            touch("touchstart", [320, 40], [320, 140]);
+            touch("touchmove", [270, 0], [270, 200]);
+            expect(graphStore.graphZoom).toBe(200);
+            expect(logStore.currentBlackboxTime).toBe(2_187_500);
+            expect(playbackStore.graphState).toBe(GRAPH_STATE_PAUSED);
+            touch("touchmove", [320, 140], [320, 40]);
+            expect(graphStore.graphZoom).toBe(100);
+            expect(logStore.currentBlackboxTime).toBe(2_000_000);
+        });
+
+        it("honours zoom and log limits and remembers the pre-pinch zoom for QuickZoom", () => {
+            const { touch, logStore, graphStore } = touchGraph();
+            touch("touchstart", [110, 20], [130, 20]);
+            touch("touchmove", [20, 20], [420, 20]);
+            expect(graphStore.graphZoom).toBe(1000);
+            touch("touchmove", [220, 20], [220, 20]);
+            expect(graphStore.graphZoom).toBe(1);
+            touch("touchmove", [30, 20], [30, 20]);
+            expect(logStore.currentBlackboxTime).toBe(MAX);
+            touch("touchmove", [410, 20], [410, 20]);
+            expect(logStore.currentBlackboxTime).toBe(MIN);
+            playback.setGraphZoom(null);
+            expect(graphStore.graphZoom).toBe(100);
+        });
+
+        it("handles extra touches, cancellation, and listener cleanup", () => {
+            const { touch, renderer, graphStore, unbind } = touchGraph();
+            touch("touchstart", [60, 10]);
+            touch("touchmove", [80, 10]);
+            expect(renderer.onSeek).toHaveBeenLastCalledWith(-50_000);
+            touch("touchstart", [80, 10], [120, 10]);
+            touch("touchstart", [80, 10], [120, 10], [200, 10]);
+            touch("touchmove", [80, 10], [190, 10], [200, 10]);
+            expect(graphStore.graphZoom).toBe(100);
+            touch("touchcancel", [190, 10], [200, 10]);
+            touch("touchmove", [185, 10], [205, 10]);
+            expect(graphStore.graphZoom).toBe(200);
+            unbind();
+            touch("touchmove", [180, 10], [210, 10]);
+            expect(graphStore.graphZoom).toBe(200);
+            expect(renderer.onSeek).toHaveBeenCalledOnce();
+        });
+
+        it("starts dragging from the first fresh position after a stale remaining touch", () => {
+            const { touch, lift, renderer, graphStore } = touchGraph();
+            touch("touchstart", [100, 10], [200, 10]);
+            touch("touchmove", [80, 10], [220, 10]);
+            lift([[200, 10]], [80, 10]);
+            expect(graphStore.graphZoom).toBe(140);
+            touch("touchmove", [230, 10]);
+            expect(renderer.onSeek).not.toHaveBeenCalled();
+            touch("touchmove", [240, 10]);
+            expect(renderer.onSeek).toHaveBeenCalledOnce();
+            expect(vi.mocked(renderer.onSeek!).mock.calls[0][0]).toBeCloseTo(-17_857.15);
+        });
+
+        it("applies the final positions when the browser coalesces moves before lift-off", () => {
+            const { touch, lift, graphStore } = touchGraph();
+            touch("touchstart", [170, 10], [270, 10]);
+            touch("touchmove", [145, 10], [295, 10]);
+            lift([[145, 10]], [320, 10]);
+            lift([], [120, 10]);
+            expect(graphStore.graphZoom).toBe(200);
+        });
+
+        it("ignores moves inherited from the previous log and waits for a measurable pinch", () => {
+            const { touch, graphStore, logStore, renderer, playbackStore } = touchGraph();
+            touch("touchmove", [120, 0], [320, 0]);
+            touch("touchmove", [20, 0], [420, 0]);
+            touch("touchend", [20, 0]);
+            touch("touchmove", [40, 0]);
+            expect(graphStore.graphZoom).toBe(100);
+            expect(renderer.onSeek).not.toHaveBeenCalled();
+            touch("touchstart", [40, 0], [140, 0]);
+            touch("touchmove", [20, 0], [200, 0]);
+            expect(graphStore.graphZoom).toBe(100);
+            expect(playbackStore.graphState).toBe(GRAPH_STATE_PAUSED);
+            expect(logStore.currentBlackboxTime).toBe(2_000_000);
+            touch("touchend");
+            touch("touchstart", [220, 0], [220, 0]);
+            touch("touchmove", [120, 0], [320, 0]);
+            touch("touchmove", [20, 0], [420, 0]);
+            expect(graphStore.graphZoom).toBe(200);
+            expect(logStore.currentBlackboxTime).toBe(2_000_000);
+        });
+
+        it("seeks a synchronized video using the log timestamp and video offset", () => {
+            const { touch, videoElement } = touchGraph(true);
+            touch("touchstart", [270, 10], [370, 10]);
+            touch("touchmove", [220, 10], [420, 10]);
+            expect(videoElement.currentTime).toBe(1.625);
+        });
     });
 
     describe("jumps", () => {
