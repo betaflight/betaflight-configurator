@@ -210,16 +210,20 @@
                                     </li>
                                 </ul>
 
+                                <div v-if="eraseRequiresFlashDevice && dataflashUsedSize > 0" class="note">
+                                    <p>{{ $t("dataflashEraseRequiresFlashDevice") }}</p>
+                                </div>
+
                                 <div class="dataflash-buttons flex flex-wrap items-center gap-2">
                                     <UButton
                                         size="xs"
-                                        :disabled="dataflashUsedSize === 0"
+                                        :disabled="dataflashUsedSize === 0 || eraseRequiresFlashDevice"
                                         :label="$t('dataflashButtonErase')"
                                         @click="askToEraseFlash"
                                     />
                                     <UButton
                                         size="xs"
-                                        :disabled="dataflashUsedSize === 0"
+                                        :disabled="dataflashUsedSize === 0 || eraseRequiresFlashDevice"
                                         :label="$t('dataflashButtonSaveAndErase')"
                                         @click="flashSaveBegin(true)"
                                     />
@@ -339,6 +343,7 @@ import { registerTabSave } from "@/js/unsaved_changes";
 import { tabSwitchCleanup } from "@/js/tab_adapters";
 
 const BLOCK_SIZE = 4096;
+const BLACKBOX_DEVICE_FLASH = 1;
 
 // Helper function for GCD calculation
 function gcd(a: number, b: number): number {
@@ -535,6 +540,13 @@ export default defineComponent({
         const dataflashUsedSize = computed(() => fcStore.dataflash?.usedSize || 0);
         const dataflashTotalSize = computed(() => fcStore.dataflash?.totalSize || 0);
         const dataflashFreeSize = computed(() => dataflashTotalSize.value - dataflashUsedSize.value);
+        // Firmware silently ignores MSP_DATAFLASH_ERASE unless the logging device saved on the FC
+        // is onboard flash, so an erase would report success while leaving the logs in place.
+        // Track the saved device separately: a failed save leaves the selection in the store.
+        const savedBlackboxDevice = ref(0);
+        const eraseRequiresFlashDevice = computed(
+            () => !!blackboxConfigSupported.value && savedBlackboxDevice.value !== BLACKBOX_DEVICE_FLASH,
+        );
         const dataflashUsedPercent = computed(() => {
             if (dataflashTotalSize.value === 0) {
                 return 0;
@@ -681,13 +693,14 @@ export default defineComponent({
                     reboot();
                 });
 
+                savedBlackboxDevice.value = fcStore.blackbox.blackboxDevice;
                 markClean(savedSnapshot);
             });
         }
         registerTabSave(() => saveSettings());
 
         function askToEraseFlash() {
-            if (dataflashUsedSize.value === 0) {
+            if (dataflashUsedSize.value === 0 || eraseRequiresFlashDevice.value) {
                 return;
             }
             eraseOpen.value = true;
@@ -965,6 +978,7 @@ export default defineComponent({
                     await loadBlackboxPort();
 
                     blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
+                    savedBlackboxDevice.value = blackboxDevice.value;
                     blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
                     debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
@@ -1028,6 +1042,7 @@ export default defineComponent({
             dataflashUsedPercent,
             dataflashFreeSize,
             dataflashFreePercent,
+            eraseRequiresFlashDevice,
             sdcardUsedKB,
             sdcardUsedPercent,
             sdcardFreeKB,

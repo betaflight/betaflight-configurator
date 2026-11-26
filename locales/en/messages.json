@@ -3954,6 +3954,10 @@
     "dataflashButtonErase": {
         "message": "Erase flash"
     },
+    "dataflashEraseRequiresFlashDevice": {
+        "message": "The flash can only be erased when the Blackbox logging device saved on the flight controller is '$t(blackboxLoggingFlash.message)'. Select '$t(blackboxLoggingFlash.message)' above, press '$t(saveAndReboot.message)', then erase the flash.",
+        "description": "Shown when the dataflash holds logs but the saved Blackbox logging device is not onboard flash, so the firmware would ignore an erase request"
+    },
     "dataflashConfirmEraseTitle": {
         "message": "Confirm dataflash erase"
     },
