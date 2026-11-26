@@ -255,6 +255,8 @@ import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import type { Beeper } from "../../js/Beepers";
 import { configurationDynamicSearchId } from "../settings-search/settingsSearch";
+import { registerTabSave } from "@/js/unsaved_changes";
+import { tabSwitchCleanup } from "@/js/tab_adapters";
 
 export default defineComponent({
     name: "ConfigurationTab",
@@ -267,7 +269,7 @@ export default defineComponent({
     setup() {
         // Reactive State
         const fcStore = useFlightControllerStore();
-        const { saveAndReboot } = useReboot();
+        const { reboot, saveToEeprom } = useReboot();
 
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
@@ -534,11 +536,17 @@ export default defineComponent({
 
                 gui_log(i18n.getMessage("configurationSaved"));
 
-                // Save to EEPROM and Reboot
-                await saveAndReboot();
+                // Error-aware persist: a timeout rejects here instead of leaving the save pending.
+                // Same settle delay that writeConfiguration() gives the writes before the EEPROM write.
+                await new Promise((resolve) => setTimeout(resolve, 100));
+                await saveToEeprom();
+                tabSwitchCleanup(() => {
+                    reboot();
+                });
 
                 markClean(savedSnapshot);
             });
+        registerTabSave(() => saveConfig());
 
         onMounted(() => {
             loadConfig();

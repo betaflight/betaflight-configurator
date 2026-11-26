@@ -2809,10 +2809,6 @@
         "message": "Onemogućava menjanje podešavanja video-predajnika preko OSD-a.",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Kruži kroz nivoe snage video-predajnika, ako ih predajnik podržava.",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Prebacuje video-predajnik u pit mod, na vrlo malu snagu, ako to podržava.",
         "description": "Help text to VTX PIT MODE mode"

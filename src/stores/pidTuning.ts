@@ -83,7 +83,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         dirty: hasEdits,
         markClean: markValuesClean,
         takeSnapshot: takeEditsSnapshot,
-    } = useDirtyState(serializeEdits);
+    } = useDirtyState(serializeEdits, { promptOnLeave: false });
 
     /**
      * The manual cutoffs a filter slider replaced when it was switched ON, so switching it OFF
@@ -119,6 +119,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
 
     const { dirty: profileChanged, markClean: markProfileSelectionClean } = useDirtyState(
         () => `${fcStore.config.profile}:${fcStore.config.rateProfile}`,
+        { promptOnLeave: false },
     );
 
     // Rewriting profile data (MSP_SET_RESET_CURR_PID, MSP_COPY_PROFILE) needs a flag rather than a

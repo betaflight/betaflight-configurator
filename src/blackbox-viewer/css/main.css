@@ -154,12 +154,18 @@
 }
 
 #graphCanvas {
+    touch-action: none;
     position: absolute;
     top: 0;
     inset-inline-start: 0;
     width: 100%;
     height: 100%;
     background-color: var(--graph-background);
+}
+
+#craftCanvas,
+#stickCanvas {
+    pointer-events: none;
 }
 
 #craftCanvas,

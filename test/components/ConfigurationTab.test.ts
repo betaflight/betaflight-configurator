@@ -7,12 +7,17 @@ import MSPCodes from "../../src/js/msp/MSPCodes";
 import { gui_log } from "../../src/js/gui_log";
 import { useFlightControllerStore } from "../../src/stores/fc";
 
-const saveAndReboot = vi.fn();
+const saveToEeprom = vi.fn();
+const reboot = vi.fn();
 
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn() } }));
 vi.mock("../../src/js/msp/MSPHelper", () => ({ mspHelper: { crunch: vi.fn(() => []) } }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
-vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveAndReboot }) }));
+vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom, reboot }) }));
+vi.mock("../../src/js/tab_adapters", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("../../src/js/tab_adapters")>()),
+    tabSwitchCleanup: (callback: () => void) => callback(),
+}));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 
 function mountTab() {
@@ -80,14 +85,17 @@ describe("Configuration MSP wiring", () => {
             if (code === MSPCodes.MSP2_SET_TEXT) order.push(`text:${fcStore.config.craftName}`);
         });
         vi.mocked(gui_log).mockImplementation(() => order.push("log"));
-        saveAndReboot.mockImplementation(async () => {
+        saveToEeprom.mockImplementation(async () => {
+            order.push("persist");
+        });
+        reboot.mockImplementation(() => {
             order.push("reboot");
         });
 
         wrapper.vm.craftName = "edited";
         await wrapper.vm.saveConfig();
 
-        expect(order).toEqual(["text:edited", "text:edited", "log", "reboot"]);
+        expect(order).toEqual(["text:edited", "text:edited", "log", "persist", "reboot"]);
         expect(MSP.promise).toHaveBeenCalledWith(MSPCodes.MSP_SET_ADVANCED_CONFIG, []);
         expect(wrapper.vm.dirty).toBe(false);
     });
