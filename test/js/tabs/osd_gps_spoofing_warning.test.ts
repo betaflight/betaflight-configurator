@@ -71,6 +71,6 @@ describe("OSD GPS spoofing warning", () => {
         const after = warningNames(API_VERSION_1_49);
 
         expect(after.slice(0, before.length)).toEqual(before);
-        expect(after.length).toBe(before.length + 1);
+        expect(after).toHaveLength(before.length + 1);
     });
 });
