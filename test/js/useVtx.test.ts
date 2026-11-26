@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { effectScope, type EffectScope } from "vue";
@@ -46,6 +67,7 @@ vi.mock("../../src/composables/useReboot", () => ({
 }));
 
 import { useVtx } from "../../src/composables/useVtx";
+import { MspRefusedError } from "../../src/js/msp/mspErrors";
 
 let fcStore: ReturnType<typeof useFlightControllerStore>;
 
@@ -117,5 +139,18 @@ describe("useVtx", () => {
         expect(saveToEepromMock).not.toHaveBeenCalled();
         expect(trackingMock.sendSaveAndChangeEvents).not.toHaveBeenCalled();
         expect(vtx.savePending.value).toBe(true);
+    });
+
+    it("keeps the edits unsaved when the FC refuses the EEPROM write", async () => {
+        vtx.vtxConfig.vtx_power = vtx.vtxConfig.vtx_power + 1;
+        vtx.savePending.value = true;
+        expect(vtx.saveButtonDisabled.value).toBe(false);
+        saveToEepromMock.mockRejectedValueOnce(new MspRefusedError("FC refused the EEPROM write"));
+
+        await expect(vtx.saveVtx()).rejects.toBeInstanceOf(MspRefusedError);
+
+        expect(trackingMock.sendSaveAndChangeEvents).not.toHaveBeenCalled();
+        expect(vtx.savePending.value).toBe(true);
+        expect(vtx.saveButtonDisabled.value).toBe(false);
     });
 });

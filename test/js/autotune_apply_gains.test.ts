@@ -55,6 +55,9 @@ const { mspCalls, written } = vi.hoisted(() => ({
     written: { tuning: null as Record<string, unknown> | null, filters: null as Record<string, unknown> | null },
 }));
 
+// The FC refuses the EEPROM write while armed; the reply still resolves, flagged unsupported.
+const eeprom = vi.hoisted(() => ({ refused: false }));
+
 vi.mock("@/js/msp", async () => {
     const { useFlightControllerStore } = await import("../../src/stores/fc");
     const codes = (await import("../../src/js/msp/MSPCodes")).default;
@@ -71,13 +74,17 @@ vi.mock("@/js/msp", async () => {
                     written.tuning = { ...fcStore.tuningSliders };
                     written.filters = { ...fcStore.filterConfig };
                 }
+                if (code === codes.MSP_EEPROM_WRITE) {
+                    return { command: code, length: 0, crcError: false, unsupported: eeprom.refused ? 1 : 0 };
+                }
+                return undefined;
             }),
         },
     };
 });
 
 vi.mock("@/js/msp/MSPHelper", () => ({
-    mspHelper: { crunch: vi.fn(() => []) },
+    mspHelper: { crunch: vi.fn(() => []), disableArming: vi.fn() },
 }));
 
 vi.mock("@/composables/useTuningSliders", async () => {
@@ -92,6 +99,7 @@ vi.mock("@/composables/useTuningSliders", async () => {
 });
 
 import { useAutotune } from "../../src/composables/useAutotune";
+import { MspRefusedError } from "../../src/js/msp/mspErrors";
 
 const PROPOSED = {
     slider_master_multiplier: 110,
@@ -108,6 +116,7 @@ describe("autotune applyGains", () => {
         mspCalls.length = 0;
         written.tuning = null;
         written.filters = null;
+        eeprom.refused = false;
     });
 
     it("writes the FC's own tuning and filters when the PID Tuning tab was never opened", async () => {
@@ -120,5 +129,11 @@ describe("autotune applyGains", () => {
         expect(written.tuning).toMatchObject({ ...FC_TUNING, ...PROPOSED });
         expect(written.filters).toMatchObject(FC_FILTERS);
         expect(mspCalls.at(-1)).toBe(MSPCodes.MSP_EEPROM_WRITE);
+    });
+
+    it("rejects when the FC refuses the EEPROM write, so the gains are not reported as applied", async () => {
+        eeprom.refused = true;
+
+        await expect(useAutotune().applyGains(PROPOSED)).rejects.toBeInstanceOf(MspRefusedError);
     });
 });

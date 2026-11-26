@@ -24,6 +24,8 @@ import { tabSwitchCleanup } from "@/js/tab_adapters";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
+import { MspRefusedError } from "@/js/msp/mspErrors";
+import { withSaveFailureMessage } from "@/composables/useSaving";
 import { useFlightControllerStore } from "@/stores/fc";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
@@ -38,7 +40,8 @@ import { i18n } from "@/js/localization";
  *
  * Defined at module scope (not per useReboot() call) because it closes over no
  * composable-local state — only module-level imports.
- * @returns {Promise<void>} resolves once the EEPROM write is acknowledged
+ * @returns {Promise<void>} resolves once the EEPROM write is acknowledged; rejects with
+ *   MspRefusedError when the FC answers with an error reply
  */
 async function saveToEeprom(): Promise<void> {
     const fcStore = useFlightControllerStore();
@@ -46,7 +49,13 @@ async function saveToEeprom(): Promise<void> {
     if (!fcStore.config.armingDisabled) {
         mspHelper.disableArming();
     }
-    await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+    const response = await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+    // An error reply resolves too, so check it: the FC refused the write and nothing was persisted.
+    if (response?.unsupported) {
+        // The firmware refuses this write while armed, so say that rather than the generic failure.
+        const message = i18n.getMessage("eepromWriteRefused");
+        throw withSaveFailureMessage(new MspRefusedError(message, MSPCodes.MSP_EEPROM_WRITE), message);
+    }
     gui_log(i18n.getMessage("configurationEepromSaved"));
 }
 

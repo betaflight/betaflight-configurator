@@ -46,6 +46,7 @@ import {
     type StepResponse,
 } from "@/js/blackbox/spectral_analysis";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
+import { useReboot } from "@/composables/useReboot";
 
 export type AxisName = "roll" | "pitch" | "yaw";
 
@@ -332,5 +333,6 @@ async function applyGains(proposed: ProposedSliders) {
     if (!fcStore.tuningSliders.slider_pids_valid || !fcStore.tuningSliders.slider_dterm_valid) {
         throw new Error("Recommended autotune sliders did not pass firmware validation.");
     }
-    await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+    // Rejects when the FC refuses the write, so a refused persist is not reported as applied.
+    await useReboot().saveToEeprom();
 }
