@@ -8,12 +8,12 @@ reviews:
   poem: false
   review_status: true
   collapse_walkthrough: false
-  disable_placeholder_comment_notifications: true
   pre_merge_checks:
     docstrings:
       mode: "off"
   auto_review:
     enabled: true
     drafts: false
+    auto_pause_after_reviewed_commits: 20
 chat:
   auto_reply: true

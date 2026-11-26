@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "LED-ის კონფიგურაციის ჩატვირთვა ვერ მოხერხდა. შენახვამდე ხელახლა დაუკავშირდით და გადატვირთეთ ეს ჩანართი."
+    },
     "yes": {
         "message": "დიახ",
         "description": "General Yes message to be used across the application"
@@ -32,11 +35,11 @@
         "message": "ძებნა"
     },
     "settingsSearchTitle": {
-        "message": "ძიების პარამეტრები",
+        "message": "პარამეტრების ძიება",
         "description": "Title and accessible label for the global settings search"
     },
     "settingsSearchPlaceholder": {
-        "message": "ძიების პარამეტრები...",
+        "message": "პარამეტრების ძიება...",
         "description": "Placeholder text for the global settings search input"
     },
     "settingsSearchNoResults": {
@@ -72,14 +75,14 @@
         "message": "უკავშირდება"
     },
     "disconnect": {
-        "message": "კავშირის გაწყვეტა"
+        "message": "გათიშვა"
     },
     "disconnectVirtual": {
-        "message": "გათიშვა(ვირტუალური)",
+        "message": "გათიშვა (ვირტუალური)",
         "description": "Disconnect button label shown when connected in virtual mode."
     },
     "disconnectManual": {
-        "message": "გათიშვა(ხელით)",
+        "message": "გათიშვა (ხელით)",
         "description": "Disconnect button label shown when connected via manual port override."
     },
     "disconnectBridge": {
@@ -87,7 +90,7 @@
         "description": "Disconnect button label shown when connected to a bridge found on the network; $1 is the bridge name."
     },
     "disconnectBluetooth": {
-        "message": "გათიშვა(ბლუთუზ)",
+        "message": "გათიშვა (Bluetooth)",
         "description": "Disconnect button label shown when connected via Bluetooth."
     },
     "portsSelectNoSelection": {
@@ -220,6 +223,24 @@
     },
     "save": {
         "message": "შენახვა"
+    },
+    "saveAndReboot": {
+        "message": "შეინახე და გადატვირთე"
+    },
+    "refresh": {
+        "message": "განაახლეთ"
+    },
+    "saveToFile": {
+        "message": "ფაილში შენახვა"
+    },
+    "loadFromFile": {
+        "message": "ჩატვირთვა ფაილიდან"
+    },
+    "loadFromClipboard": {
+        "message": "ჩატვირთვა ბუფერიდან"
+    },
+    "copyToClipboard": {
+        "message": "გაცვლის ბუფერში კოპირება"
     },
     "autoConnectEnabled": {
         "message": "ავტო-დაკავშორება: ჩართულია- აპლიკაცია ავტომატურად დაუკავშირდება როდესაც ახალ პორტს აღმოაჩენს"
@@ -941,6 +962,9 @@
     },
     "dfu_hex_address_errors": {
         "message": "პროგრამა შეიცავს მისამართებს რომელიც არ იძებნება კონკრეტულ მოწყობილობაზე"
+    },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "ფირმვერის ფაილი რამდენიმე flash მეხსიერებას მოიცავს, რომელთა შორის გადართვა ამ აპს ამ მოწყობილობაზე არ შეუძლია"
     },
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">შენახულია</span>"
@@ -1986,9 +2010,6 @@
     "configurationSaveFailed": {
         "message": "კონფიგურაციის შენახვა ვერ მოხერხდა"
     },
-    "configurationButtonSave": {
-        "message": "შენახვა და გადატვირთვა"
-    },
     "dialogClose": {
         "message": "დახურვა"
     },
@@ -2457,6 +2478,46 @@
         "message": "დამატებითი მამოძრავებელი ფაქტორი, რომელიც მიიღება მხოლოდ ჯოხის შეყვანიდან, რომელიც ეხმარება თვითმფრინავს სწრაფად უბიძგოს გლუვ მოძრაობას.<br><br>FF არ შეიძლება გამოიწვიოს რხევა, საშუალებას აძლევს ქვედა P-ს მსგავსი ჯოხის პასუხებისთვის და ანაზღაურებს D-ის ბუნებრივ წინააღმდეგობას ავადმყოფურ შეყვანებთან.<br> პასუხი ჯოხის შეყვანებზე.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningPhysicalUnits": {
+        "message": "ფიზიკური ერთეულები",
+        "description": "Section label above the PID gains expressed in physical units"
+    },
+    "pidTuningPhysicalUnitsHelp": {
+        "message": "ეს მნიშვნელობები ზემოთ მოცემულ კოეფიციენტებს ფიზიკურ ერთეულებში აჩვენებს. მათი რედაქტირება შეუძლებელია. ფრენისას TPA, ბატარეის ძაბვის ვარდნის კომპენსაცია და ძრავების მიქსინგი ეფექტურ მნიშვნელობებს ცვლის.",
+        "description": "Help for the physical units section of the PID table"
+    },
+    "pidTuningPhysicalUnitP": {
+        "message": "% / 100°/s",
+        "description": "Unit label for P in physical units"
+    },
+    "pidTuningPhysicalUnitPHelp": {
+        "message": "P-ს გამოსავალი ძრავზე 100 deg/s სიჩქარის შეცდომისას, ძრავის დიაპაზონის პროცენტებში.",
+        "description": "Help for P in physical units"
+    },
+    "pidTuningPhysicalUnitI": {
+        "message": "აღდგ. ms",
+        "description": "Unit label for I in physical units"
+    },
+    "pidTuningPhysicalUnitIHelp": {
+        "message": "აღდგენის დრო. დრო, რომლის განმავლობაშიც I იგივე გამოსავალს ქმნის, რასაც P, როცა სიჩქარის შეცდომა მუდმივია. უფრო მოკლე დრო უფრო ძლიერ I-ს ნიშნავს.",
+        "description": "Help for I in physical units"
+    },
+    "pidTuningPhysicalUnitD": {
+        "message": "წინსწრ. ms",
+        "description": "Unit label for D and D Max in physical units"
+    },
+    "pidTuningPhysicalUnitDHelp": {
+        "message": "წინსწრების დრო. დრო, რამდენითაც D წინ უსწრებს gyro-ს სიჩქარეს დემფირებისთვის. უფრო გრძელი დრო უფრო მეტ დემფირებას იძლევა.",
+        "description": "Help for D in physical units"
+    },
+    "pidTuningPhysicalUnitF": {
+        "message": "წინსწრ. ms",
+        "description": "Unit label for Feedforward in physical units"
+    },
+    "pidTuningPhysicalUnitFHelp": {
+        "message": "წინსწრების დრო. დრო, რამდენითაც feedforward ძრავებს სტიკზე წინ ამოძრავებს. უფრო გრძელი დრო სტიკზე უფრო სწრაფ რეაქციას იძლევა.",
+        "description": "Help for Feedforward in physical units"
+    },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>გაფრთხილება:</b></span> ძალიან მაღალმა მაჩვენებლებმა შეიძლება გამოიწვიოს დესინქრონიზაცია სწრაფი შენელების შედეგად."
     },
@@ -2525,12 +2586,6 @@
     },
     "throttle": {
         "message": "დროსელი"
-    },
-    "pidTuningButtonSave": {
-        "message": "შენახვა"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "გადატვირთვა"
     },
     "pidTuningCopyProfile": {
         "message": "დააკოპირეთ პროფილი"
@@ -2675,12 +2730,6 @@
         "message": "დროსელი [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "შენახვა"
-    },
-    "receiverButtonRefresh": {
-        "message": "გადატვირთვა"
-    },
     "receiverButtonBind": {
         "message": "მიმღების დაკავშირება"
     },
@@ -2734,9 +2783,6 @@
     },
     "auxiliaryAddLink": {
         "message": "დაამატეთ ლინკი"
-    },
-    "auxiliaryButtonSave": {
-        "message": "შენახვა"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "ავტომატური"
@@ -2950,10 +2996,6 @@
         "message": "VTX პარამეტრების OSD-დან მართვის გამორთვა",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "VTX-ის სიმძლავრის დონეებს შორის გადართვა (თუ VTX-ს მხარდაჭერა აქვს)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "გადართეთ VTX ორმოს რეჟიმში (დაბალი გამომავალი სიმძლავრე, მხარდაჭერის შემთხვევაში)",
         "description": "Help text to VTX PIT MODE mode"
@@ -3110,9 +3152,6 @@
         "message": "ბატარეის პროფილის შერჩევა",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "შენახვა"
-    },
     "adjustmentsShowAll": {
         "message": "ყველა სლოტის ჩვენება"
     },
@@ -3149,9 +3188,6 @@
     },
     "servosLiveMode": {
         "message": "ჩართეთ ცოცხალი რეჟიმი"
-    },
-    "servosButtonSave": {
-        "message": "შენახვა"
     },
     "gpsHead": {
         "message": "ზოგადი"
@@ -3770,20 +3806,11 @@
     "cliReboot": {
         "message": "CLI გადატვირთვა შემჩნეულია"
     },
-    "cliSaveToFileBtn": {
-        "message": "ფაილში შენახვა"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "შედეგების ისტორიის გაწმენდა"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "გაცვლის ბუფერში კოპირება"
-    },
     "cliCopySuccessful": {
         "message": "დაკოპირებულია!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "ფაილიდან ჩატვირთვა"
     },
     "cliSupportRequestBtn": {
         "message": "მხარდაჭერის მონაცემების გაგზავნა"
@@ -3841,9 +3868,6 @@
     },
     "blackboxConfiguration": {
         "message": "შავი ყუთის კონფიგურაცია"
-    },
-    "blackboxButtonSave": {
-        "message": "შენახე და გადათვირთე"
     },
     "blackboxLoggingNone": {
         "message": "შესვლა არ არის"
@@ -4270,9 +4294,6 @@
     },
     "ledStripHelp": {
         "message": "ფრენის კონტროლერს შეუძლია აკონტროლოს ცალკეული LED-ების ფერები და ეფექტები ზოლზე.<br />დააკონფიგურირეთ LED-ები ქსელზე, დააკონფიგურირეთ გაყვანილობის რიგი და შემდეგ მიამაგრეთ LED-ები თქვენს თვითმფრინავზე ბადის პოზიციების მიხედვით. LED-ები მავთულის შეკვეთის ნომრის გარეშე არ შეინახება.<br />ორჯერ დააწკაპუნეთ ფერზე HSV მნიშვნელობების შესაცვლელად."
-    },
-    "ledStripButtonSave": {
-        "message": "შენახვა"
     },
     "ledStripColorSetupTitle": {
         "message": "ფერის დაყენება",
@@ -5230,9 +5251,6 @@
     "failsafeSwitchOptionKill": {
         "message": "მოკვლა"
     },
-    "powerButtonSave": {
-        "message": "შენახვა"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "პროგრამული უზრუნველყოფის განახლება <span class=\"message-negative\">საჭიროა</span>. ბატარეის/ამპერაჟის/ძაბვის კონფიგურაციები API &lt; 1.33.0-ის გამოყენებით (Betaflight-ის გამოშვება &lt;= 3.17) არ არის მხარდაჭერილი."
     },
@@ -5755,14 +5773,9 @@
         "message": "არჩეულია მცირე ზომის შრიფტი Framebuffer OSD-სთვის, თუმცა ეს OSD იყენებს სტანდარტული ზომის შრიფტს. ის სწორად არ აისახება. მაინც გსურთ ატვირთვა?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
-    "osdSetupSaveReboot": {
-        "message": "შენახვა და გადატვირთვა"
-    },
-    "osdSetupSave": {
-        "message": "შენახვა"
-    },
-    "osdSetupRefresh": {
-        "message": "განაახლეთ"
+    "osdSetupSaveOptions": {
+        "message": "OSD-ის შენახვის პარამეტრები",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "ბატარეის ძაბვა",
@@ -6987,7 +7000,7 @@
         "message": "ჰაერის სიჩქარე"
     },
     "vtxHelp": {
-        "message": "აქ შეგიძლიათ დააკონფიგურიროთ თქვენი ვიდეო გადამცემის (VTX) პარამეტრები. თქვენ შეგიძლიათ ნახოთ და შეცვალოთ გადაცემის მნიშვნელობები, მათ შორის VTX Tables, თუ ფრენის კონტროლერს და VTX-ს აქვთ ამის მხარდაჭერა.<br>თქვენი VTX-ის გასამართად მიყევით შემდეგ ნაბიჯებს:<br>1. გადადით <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">ამ</a> გვერდზე;<br>2. იპოვეთ თქვენი ქვეყნისა და VTX მოდელისთვის შესაბამისი VTX კონფიგურაციის ფაილი და ჩამოტვირთეთ ის;<br>3. დააწკაპუნეთ ქვემოთ მოცემულ '$t(vtxButtonLoadFile.message)' ღილაკს, აირჩიეთ VTX კონფიგურაციის ფაილი და ჩატვირთეთ;<br>4. გადაამოწმეთ, რომ პარამეტრები სწორია;<br>5. დააწკაპუნეთ '$t(vtxButtonSave.message)'-ს, რათა შეინახოთ VTX-ის პარამეტრები საფრენ კონტროლერში.<br>6. სურვილისამებრ, შეგიძლიათ დააწკაპუნოთ '$t(vtxButtonSaveLua.message)'-ს, რათა შეინახოთ lua კონფიგურაციის ფაილი, რომელიც შეგიძლიათ გამოიყენოთ betaflight lua სკრიპტებთან ერთად (იხილეთ მეტი <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">აქ</a>)",
+        "message": "აქ შეგიძლიათ დააკონფიგურიროთ თქვენი ვიდეოგადამცემის (VTX) პარამეტრები. შეგიძლიათ იხილოთ და შეცვალოთ გადაცემის მნიშვნელობები, მათ შორის VTX ცხრილები, თუკი ფრენის კონტროლერსა და VTX-ს ამის მხარდაჭერა აქვთ.<br>VTX-ის გასამართად მიჰყევით შემდეგ ნაბიჯებს:<br>1. გადადით <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">ამ</a> გვერდზე;<br>2. მოძებნეთ თქვენი ქვეყნისა და VTX მოდელისთვის შესაფერისი კონფიგურაციის ფაილი და ჩამოტვირთეთ იგი;<br>3. დააჭირეთ ქვემოთ მოცემულ '$t(loadFromFile.message)'-ს, აირჩიეთ VTX-ის კონფიგურაციის ფაილი და ჩატვირთეთ იგი;<br>4. დარწმუნდით, რომ პარამეტრები სწორია;<br>5. დააჭირეთ '$t(save.message)'-ს, რათა შეინახოთ VTX-ის პარამეტრები ფრენის კონტროლერში.<br>6. სურვილისამებრ, დააჭირეთ '$t(vtxButtonSaveLua.message)'-ს Lua კონფიგურაციის ფაილის შესანახად, რომლის გამოყენებაც შეგიძლიათ Betaflight Lua სკრიპტებთან ერთად (დამატებითი ინფორმაცია იხილეთ <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">აქ</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6999,11 +7012,11 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">ყურადღება:</span> არჩეული VTX ტიპი არ უჭერს მხარს \"ქარხნული\" პარამეტრს ბენდებისთვის, მაგრამ ზოგიერთ თქვენს ჯგუფს აქვს ეს პარამეტრი. ამის გამოსასწორებლად დააწკაპუნეთ '$t(vtxButtonSave.message)'.",
+        "message": "<span class=\"message-negative\">ყურადღება:</span> არჩეული VTX ტიპი არ უჭერს მხარს დიაპაზონების „factory“ პარამეტრს, თუმცა თქვენს ზოგიერთ დიაპაზონს ეს პარამეტრი აქვს მითითებული. ამის გამოსასწორებლად დააჭირეთ '$t(save.message)'-ს.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">ყურადღება:</span> VTX ცხრილის მნიშვნელობები ჩატვირთულია, მაგრამ ჯერ არ არის შენახული ფრენის კონტროლერზე. თქვენ უნდა გადაამოწმოთ და შეცვალოთ მნიშვნელობები, რათა დარწმუნდეთ, რომ ისინი მოქმედი და კანონიერია თქვენს ქვეყანაში და შემდეგ დააჭირეთ ღილაკს $t(vtxButtonSave.message), რომ შეინახოთ ისინი ფრენის კონტროლერზე.",
+        "message": "<span class=\"message-negative\">ყურადღება:</span> VTX ცხრილის მნიშვნელობები ჩაიტვირთა, თუმცა ჯერ არ არის შენახული ფრენის კონტროლერში. თქვენ უნდა გადაამოწმოთ და შეცვალოთ მნიშვნელობები, რათა დარწმუნდეთ, რომ ისინი ვალიდური და ლეგალურია თქვენს ქვეყანაში, შემდეგ კი დააჭირეთ $t(save.message) ღილაკს ფრენის კონტროლერში მათ შესანახად.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -7252,25 +7265,17 @@
         "message": "<span class=\"message-negative\">შეცდომა</span> VTX Config ინფორმაციის ბუფერიდან ჩატვირთვისას. იქნებ შინაარსი არ არის სწორი",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "ფაილში შენახვა",
-        "description": "Save to file button in the VTX tab"
+    "vtxButtonSaveFileOptions": {
+        "message": "VTX ცხრილის ექსპორტის პარამეტრები",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "vtxButtonSaveLua": {
         "message": "ლუას სკრიპტის შენახვა",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxButtonLoadFile": {
-        "message": "ჩატვირთვა ფაილიდან",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "ჩატვირთვა ბუფერიდან",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "შენახვა",
-        "description": "Save button in the VTX tab"
+    "vtxButtonLoadOptions": {
+        "message": "VTX ცხრილის ჩატვირთვის პარამეტრები",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "buttonSaving": {
         "message": "შენახვა",
@@ -7875,13 +7880,9 @@
         "message": "ინტერნეტიდან წინასწარ პარამეტრების ჩატვირთვის შეცდომა",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "შეინახე და გადატვირთე",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "გაუქმება",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+    "presetsButtonClearSelection": {
+        "message": "მონიშვნის გასუფთავება",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "მიმდინარეობს კონფიგურაციის გამოყენება...",
@@ -7906,10 +7907,6 @@
     "presetsWarningDialogYesButton": {
         "message": "ვეთანხმები",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "გაუქმება",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "დაამატეთ საყვარელი წინასწარ დაყენება",
@@ -9270,6 +9267,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "გაფართოებული"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "Pitot სენსორი"
+    },
     "pidTuningWingTpaCurveType": {
         "message": "მრუდის ტიპი"
     },
@@ -9290,6 +9290,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "სიჩქარის გაფართოებული პარამეტრები"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Pitot სიჩქარის პარამეტრები"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "დაყოვნება"
@@ -9345,6 +9348,12 @@
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "Pitch წანაცვლება გრადუსებში*10, აპარატის სიჩქარის შესაფასებლად"
     },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "მაქსიმალური Pitot საჰაერო სიჩქარე"
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "თვითმფრინავის მაქსიმალური საჰაერო სიჩქარე Pitot სენსორის მიხედვით"
+    },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "ჰიპერბოლური მრუდის პარამეტრები"
     },
@@ -9374,6 +9383,9 @@
     },
     "pidTuningWingTpaAdvSpeedCurveDetails": {
         "message": "ჰიპერბოლური მრუდების გრაფიკი"
+    },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "Classic მრუდი არ არის რეკომენდებული ფრთიანი მოდელებისთვის. იგი მულტიროტორის TPA კოეფიციენტსა და გარდატეხის წერტილს throttle ნაცვლად ჰაერის სავარაუდო სიჩქარეზე იყენებს."
     },
     "pidTuningWingMiscSettings": {
         "message": "სხვადასხვა პარამეტრები"

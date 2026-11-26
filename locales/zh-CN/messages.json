@@ -1854,9 +1854,6 @@
     "configurationSaved": {
         "message": "配置已保存"
     },
-    "configurationButtonSave": {
-        "message": "保存并重启"
-    },
     "dialogClose": {
         "message": "关闭"
     },
@@ -2271,12 +2268,6 @@
     "throttle": {
         "message": "油门曲线"
     },
-    "pidTuningButtonSave": {
-        "message": "保存"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "刷新"
-    },
     "pidTuningCopyProfile": {
         "message": "复制配置文件"
     },
@@ -2420,12 +2411,6 @@
         "message": "油门 [T]：",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "保存"
-    },
-    "receiverButtonRefresh": {
-        "message": "刷新"
-    },
     "receiverButtonBind": {
         "message": "接收机对频"
     },
@@ -2472,9 +2457,6 @@
     },
     "auxiliaryAddLink": {
         "message": "添加链接"
-    },
-    "auxiliaryButtonSave": {
-        "message": "保存"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "自动"
@@ -2688,10 +2670,6 @@
         "message": "禁用通过 OSD 控制图传设置项",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "循环切换图传的功率挡位（如果该功能被图传支持）",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "将图传切换到维修站模式（如果它支持低输出功率）",
         "description": "Help text to VTX PIT MODE mode"
@@ -2844,9 +2822,6 @@
         "message": "电池配置文件选择",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "保存"
-    },
     "adjustmentsShowAll": {
         "message": "显示所有槽位"
     },
@@ -2883,9 +2858,6 @@
     },
     "servosLiveMode": {
         "message": "激活实时模式"
-    },
-    "servosButtonSave": {
-        "message": "保存"
     },
     "gpsHead": {
         "message": "通用"
@@ -3472,20 +3444,11 @@
     "cliReboot": {
         "message": "检测到命令行重启"
     },
-    "cliSaveToFileBtn": {
-        "message": "保存到文件"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "清除输出历史记录"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "复制到剪贴板"
-    },
     "cliCopySuccessful": {
         "message": "复制成功！"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "从文件加载"
     },
     "cliSupportRequestBtn": {
         "message": "提交支持数据"
@@ -3543,9 +3506,6 @@
     },
     "blackboxConfiguration": {
         "message": "黑盒设置"
-    },
-    "blackboxButtonSave": {
-        "message": "保存并重启"
     },
     "blackboxLoggingNone": {
         "message": "无"
@@ -3942,9 +3902,6 @@
     },
     "ledStripHelp": {
         "message": "飞控可以控制 LED 灯带上的每一个灯珠的颜色和效果。<br />配置灯珠的位置，连线的顺序，然后按位置将灯带接入。没有设置过接线顺序的灯珠设置不会被保存。<br />在一个颜色上双击可编辑 HSV 值。"
-    },
-    "ledStripButtonSave": {
-        "message": "保存"
     },
     "ledStripColorSetupTitle": {
         "message": "颜色设置",
@@ -4902,9 +4859,6 @@
     "failsafeSwitchOptionKill": {
         "message": "终止"
     },
-    "powerButtonSave": {
-        "message": "保存"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "固件更新 <span class=\"message-negative\">要求</span>。 电池/电流/电压通过API &lt; 1.33.0 设置。 (Betaflight 版本&lt;= 3.17) 不支持。"
     },
@@ -5387,12 +5341,6 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "上传失败"
-    },
-    "osdSetupSave": {
-        "message": "保存"
-    },
-    "osdSetupRefresh": {
-        "message": "刷新"
     },
     "osdTextElementMainBattVoltage": {
         "message": "电池电压",
@@ -6602,21 +6550,9 @@
     "osdButtonSaved": {
         "message": "已保存"
     },
-    "vtxHelp": {
-        "message": "这里可以定义图传 (VTX) 用到的值。如果飞控和图传支持，您可以查看和修改发射参数，包括图传表在内。<br>按以下步骤设置您的图传：<br>1. 打开<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">这个</a>页面；<br>2. 找到并下载适合您图传型号和所在地区的图传配置文件；<br>3. 点击下方「$t(vtxButtonLoadFile.message)」，选择并加载图传配置文件；<br>4. 确认设置项都正确；<br>5. 点击「$t(vtxButtonSave.message)」将图传设置保存到飞控。<br>6. （可选）点击「$t(vtxButtonSaveLua.message)」保存 Lua 配置文件供 Betaflight Lua 脚本使用。（在<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">这里</a>查看更多。）",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">注意:</span>在使用$t(vtxSelectedMode.message)之前，必须先在下面配置并保存图传表",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">注意：</span> 选定的图传不支持以“工厂模式”设置频段，但您的部分频段设置中使用了这个功能。点击 '$t(vtxButtonSave.message)' 以修复这个问题。",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">注意:</span>图传表内容已加载，但尚未存储至飞行控制器。您必须验证和修改部分数值，以确保其在您的国家有效且合法，然后点击$t(vtxButtonSave.message)按钮来将其储存至飞行控制器上。",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "直接输入频率",
@@ -6846,25 +6782,9 @@
         "message": "当从剪贴板加载图传配置信息时发生<span class=\"message-negative\">错误</span>。内容可能不正确",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "保存到文件",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "保存 Lua 脚本",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "从文件加载",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "从剪贴板加载",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "保存",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "正在保存",
@@ -7409,14 +7329,6 @@
         "message": "从互联网加载预设时出错",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "保存并重启",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "取消",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "正在应用配置...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7440,10 +7352,6 @@
     "presetsWarningDialogYesButton": {
         "message": "同意",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "取消",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "添加收藏的预设",

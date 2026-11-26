@@ -779,6 +779,7 @@ export interface WingConfig {
     tpa_speed_adv_thrust: number;
     tpa_speed_max_voltage: number;
     tpa_speed_pitch_offset: number;
+    tpa_max_pitot_speed: number;
     yaw_type: number;
     angle_pitch_offset: number;
     speed_curve_vref: number;
@@ -821,7 +822,10 @@ export interface FcState {
     ledColors: LedColor[];
     ledModeColors: LedModeColor[];
     ledStrip: LedStripEntry[];
+    ledStripAdvanced: boolean | null;
+    ledStripProfile: number | null;
     ledConfigValues: LedConfigValues;
+    ledConfigValuesLoaded: boolean;
     mcuInfo: McuInfo;
     mixerConfig: MixerConfig;
     modeRanges: ModeRange[];

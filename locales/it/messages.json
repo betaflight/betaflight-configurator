@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "Non è possibile caricare la configurazione del LED. Riconnettersi e ricaricare questa scheda prima di salvare."
+    },
     "yes": {
         "message": "Si",
         "description": "General Yes message to be used across the application"
@@ -221,6 +224,24 @@
     "save": {
         "message": "Salva"
     },
+    "saveAndReboot": {
+        "message": "Salva e Riavvia"
+    },
+    "refresh": {
+        "message": "Aggiorna"
+    },
+    "saveToFile": {
+        "message": "Salva su file"
+    },
+    "loadFromFile": {
+        "message": "Carica da file"
+    },
+    "loadFromClipboard": {
+        "message": "Carica dagli appunti"
+    },
+    "copyToClipboard": {
+        "message": "Copia negli appunti"
+    },
     "autoConnectEnabled": {
         "message": "Connessione automatica: Abilitata - Il configuratore si connette automaticamente quando rileva una nuova porta"
     },
@@ -368,6 +389,10 @@
     },
     "tabOptions": {
         "message": "Opzioni"
+    },
+    "sidebarSettingsMenu": {
+        "message": "Impostazioni",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
     },
     "sidebarToggleDarkMode": {
         "message": "Commuta la modalità scura / chiara",
@@ -645,6 +670,10 @@
     "tabAuxiliary": {
         "message": "Modalità di volo"
     },
+    "logActionOpenWindow": {
+        "message": "Apri in una nuova finestra",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
+    },
     "tabLog": {
         "message": "Log"
     },
@@ -703,6 +732,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU non trovato"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "Impossibile aprire il dispositivo DFU. Riconnetti il controllore di volo e riprova"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "L'accesso al dispositivo DFU è stato negato. Controllare che le regole udev siano installate, vedi i documenti per le istruzioni"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "L'accesso al dispositivo DFU è stato negato. Installare il driver WinUSB (ImpulseRC Driver Fixer o Zadig) e chiudere qualsiasi altro programma utilizzando il controller di volo"
     },
     "stm32DfuPermissionRequired": {
         "message": "Il dispositivo è stato riavviato in modalità DFU.<br><br>Il tuo browser richiede l'autorizzazione USB per accedere al dispositivo DFU. Fare clic sul pulsante qui sotto per selezionare il dispositivo."
@@ -928,6 +966,9 @@
     },
     "dfu_hex_address_errors": {
         "message": "L'immagine del firmware contiene indirizzi non trovati sul dispositivo di destinazione"
+    },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "Il firmware occupa aree di memoria Flash che questa applicazione non può cambiare su questo dispositivo"
     },
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">salvata</span>"
@@ -1981,9 +2022,6 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "configurationButtonSave": {
-        "message": "Salva e riavvia"
-    },
     "dialogClose": {
         "message": "Chiudi"
     },
@@ -2452,6 +2490,46 @@
         "message": "Un fattore aggiuntivo, derivato solo dall'input degli stick, che aiuta a spingere rapidamente il quad in movimenti veloci degli stick.<br><br>FF non può causare oscillazioni, consente una P inferiore per simili risposte di stick e compensa la normale opposizione di D agli input degli stick.<br><br>Valori bassi o zero si tradurranno in una risposta più fluida ma ritardata rispetto agli input degli stick.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningPhysicalUnits": {
+        "message": "Unità fisica",
+        "description": "Section label above the PID gains expressed in physical units"
+    },
+    "pidTuningPhysicalUnitsHelp": {
+        "message": "Questi valori mostrano i guadagni precedenti espressi in unità fisiche. Non è possibile modificarli. Durante il volo, il TPA, la compensazione della caduta di tensione della batteria e il mixaggio dei motori modificano i valori effettivi.",
+        "description": "Help for the physical units section of the PID table"
+    },
+    "pidTuningPhysicalUnitP": {
+        "message": "% / 100°/s",
+        "description": "Unit label for P in physical units"
+    },
+    "pidTuningPhysicalUnitPHelp": {
+        "message": "L'uscita del motore del termine P per un errore di 100 gradi/s, in percentuale dell'intervallo di funzionamento del motore.",
+        "description": "Help for P in physical units"
+    },
+    "pidTuningPhysicalUnitI": {
+        "message": "reset ms",
+        "description": "Unit label for I in physical units"
+    },
+    "pidTuningPhysicalUnitIHelp": {
+        "message": "Tempo di reset. Il tempo necessario affinché il termine I raggiunga la stessa intensità di uscita del termine P, quando l'errore di velocità angolare rimane costante. Un tempo più breve corrisponde a un'azione integrale più forte.",
+        "description": "Help for I in physical units"
+    },
+    "pidTuningPhysicalUnitD": {
+        "message": "anticipo ms",
+        "description": "Unit label for D and D Max in physical units"
+    },
+    "pidTuningPhysicalUnitDHelp": {
+        "message": "Tempo di anticipo. Il tempo che D guarda in anticipo sulla velocità del giroscopio per dare smorzamento. Un tempo più lungo dà più smorzamento.",
+        "description": "Help for D in physical units"
+    },
+    "pidTuningPhysicalUnitF": {
+        "message": "anticipo ms",
+        "description": "Unit label for Feedforward in physical units"
+    },
+    "pidTuningPhysicalUnitFHelp": {
+        "message": "Il tempo di anticipo con cui il Feedforward fa reagire i motori prima al movimento dello stick.\nUn valore più alto rende la risposta ai comandi dello stick più rapida e immediata.",
+        "description": "Help for Feedforward in physical units"
+    },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Attenzione:</b></span> rates molto alti possono causare desincronizzazione durante decelerazioni rapide."
     },
@@ -2520,12 +2598,6 @@
     },
     "throttle": {
         "message": "Gas"
-    },
-    "pidTuningButtonSave": {
-        "message": "Salva"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Aggiorna"
     },
     "pidTuningCopyProfile": {
         "message": "Copia profilo"
@@ -2670,12 +2742,6 @@
         "message": "Gas [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Salva"
-    },
-    "receiverButtonRefresh": {
-        "message": "Aggiorna"
-    },
     "receiverButtonBind": {
         "message": "Associa ricevitore"
     },
@@ -2729,9 +2795,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Agg. collegamento"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Salva"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -2945,10 +3008,6 @@
         "message": "Disabilita il controllo delle impostazioni VTX tramite l'OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Scorri attraverso i livelli di potenza VTX (se la VTX lo supporta)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Cambia la VTX in modalità pit (bassa potenza in uscita, se supportata)",
         "description": "Help text to VTX PIT MODE mode"
@@ -3105,9 +3164,6 @@
         "message": "Selezione Profilo Batteria",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Salva"
-    },
     "adjustmentsShowAll": {
         "message": "Mostra gli slot"
     },
@@ -3144,9 +3200,6 @@
     },
     "servosLiveMode": {
         "message": "Abilita la modalità Live"
-    },
-    "servosButtonSave": {
-        "message": "Salva"
     },
     "gpsHead": {
         "message": "Generale"
@@ -3765,20 +3818,11 @@
     "cliReboot": {
         "message": "Rilevato riavvio CLI"
     },
-    "cliSaveToFileBtn": {
-        "message": "Salva su file"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Cancella la cronologia della CLI"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Copia negli appunti"
-    },
     "cliCopySuccessful": {
         "message": "Copiato!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Carica da file"
     },
     "cliSupportRequestBtn": {
         "message": "Invia Dati per Assistenza"
@@ -3836,9 +3880,6 @@
     },
     "blackboxConfiguration": {
         "message": "Configurazione Blackbox"
-    },
-    "blackboxButtonSave": {
-        "message": "Salva e riavvia"
     },
     "blackboxLoggingNone": {
         "message": "Nessuna registrazione"
@@ -3963,6 +4004,9 @@
     },
     "firmwareFlasherReleaseDate": {
         "message": "Data:"
+    },
+    "firmwareFlasherReleaseCommit": {
+        "message": "Commit:"
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Destinazione:"
@@ -4262,9 +4306,6 @@
     },
     "ledStripHelp": {
         "message": "il Controlllore di volo è un grado di controllare il colore e gli effetti di ogni singolo LED su una striscia.<br />Configura i LED sulla griglia, configura l'ordine del cablaggio e poi posiziona i LED sul tuo mezzo seguendo la posizione sulla griglia. I LED senza numero di posizione sulla griglia non saranno salvati.<br />Fai doppio click su un colore per modificare i valori di HSV"
-    },
-    "ledStripButtonSave": {
-        "message": "Salva"
     },
     "ledStripColorSetupTitle": {
         "message": "Impostazione colore",
@@ -5226,9 +5267,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Kill"
     },
-    "powerButtonSave": {
-        "message": "Salva"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Aggiornamento firmware <span class=\"message-negative\">richiesto</span>. La configurazione di Batteria/Corrente/Tensione non è supportata usando API &lt; 1.33.0 (release Betaflight &lt;= 3.17)."
     },
@@ -5751,14 +5789,9 @@
         "message": "Il carattere selezionato è un carattere piccolo per gli OSD framebuffer, ma questo OSD utilizza caratteri di dimensione standard. Non verrà visualizzato correttamente. Caricare comunque?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
-    "osdSetupSaveReboot": {
-        "message": "Salva e Riavvia"
-    },
-    "osdSetupSave": {
-        "message": "Salva"
-    },
-    "osdSetupRefresh": {
-        "message": "Aggiorna"
+    "osdSetupSaveOptions": {
+        "message": "Salva le opzioni OSD",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Tensione Batteria",
@@ -6983,7 +7016,7 @@
         "message": "Velocità Aria"
     },
     "vtxHelp": {
-        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX effettuare questi passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller di volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (più informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
+        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX effettuare questi passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(loadFromFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(save.message)' per salvare le impostazioni della VTX sul controller di volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (Più informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6995,11 +7028,11 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Attenzione:</span> Il tipo di VTX selezionato non supporta l'impostazione 'fabbrica' delle bande, ma alcune delle tue bande hanno questa impostazione. Clicca su '$t(vtxButtonSave.message)' per risolvere.",
+        "message": "<span class=\"message-negative\">Attenzione:</span> Il tipo di VTX selezionata non supporta l'impostazione di 'fabbrica' delle bande, ma alcune delle tue bande hanno questa impostazione. Clicca su '$t(save.message)' per risolvere.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Attenzione:</span> I valori della tabella VTX sono stati caricati, ma non ancora memorizzati nel controllore di volo. Devi verificare e modificare i valori per essere sicuro che siano validi e legali nel tuo paese e quindi premere il pulsante $t(vtxButtonSave.message) per memorizzarli nel controllore di volo.",
+        "message": "<span class=\"message-negative\">Attenzione:</span> I valori della tabella VTX sono stati caricati, ma non ancora memorizzati nel controllore di volo. Devi verificare e modificare i valori per essere sicuro che siano validi e legali nel tuo paese e quindi premere il tasto $t(save.message) per memorizzarli nel controllore di volo.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -7248,25 +7281,17 @@
         "message": "<span class=\"message-negative\">Errore</span> durante il caricamento delle informazioni di configurazione della VTX dagli appunti. Forse il contenuto non è corretto",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Salva sul file",
-        "description": "Save to file button in the VTX tab"
+    "vtxButtonSaveFileOptions": {
+        "message": "Esporta le opzioni della tabella VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "vtxButtonSaveLua": {
         "message": "Salva script Lua",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxButtonLoadFile": {
-        "message": "Carica da file",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Carica dagli appunti",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Salva",
-        "description": "Save button in the VTX tab"
+    "vtxButtonLoadOptions": {
+        "message": "Carica le opzioni della tabella VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "buttonSaving": {
         "message": "Salvataggio",
@@ -7871,13 +7896,9 @@
         "message": "Errore nel caricamento dei preset da internet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Salva e Riavvia",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Annulla",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+    "presetsButtonClearSelection": {
+        "message": "Cancella selezione",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "Applicazione della configurazione...",
@@ -7902,10 +7923,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Consento",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Annulla",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Aggiungi preset preferito",
@@ -9270,6 +9287,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "Avanzato"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "Sensore Pitot"
+    },
     "pidTuningWingTpaCurveType": {
         "message": "Tipo di curva"
     },
@@ -9290,6 +9310,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "Configurazione velocità avanzata"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Imposta velocità Pitot"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "Ritardo"
@@ -9345,6 +9368,12 @@
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "Correzione del pitch in gradi * 10 per la stima della velocità del velivolo"
     },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "Velocità massima dell'aria misurata dal tubo di Pitot"
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "Velocità massima dell'aereo misurata dal sensore Pitot"
+    },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "Impostazioni curva iperbolica"
     },
@@ -9374,6 +9403,9 @@
     },
     "pidTuningWingTpaAdvSpeedCurveDetails": {
         "message": "Grafico delle curve iperboliche"
+    },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "La curva Classic non è consigliata per gli aeromodelli ad ala fissa (wing). Applica il valore di TPA rate e il breakpoint dei multirotori alla velocità dell'aria stimata anziché al gas (throttle)."
     },
     "pidTuningWingMiscSettings": {
         "message": "Impostazioni varie"

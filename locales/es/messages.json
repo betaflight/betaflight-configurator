@@ -1607,9 +1607,6 @@
     "configurationSpiRX": {
         "message": "Proveedor del Receptor Bus SPI"
     },
-    "configurationButtonSave": {
-        "message": "Guardar y Reiniciar"
-    },
     "dialogClose": {
         "message": "Cerrar"
     },
@@ -2024,12 +2021,6 @@
     "throttle": {
         "message": "Acelerador"
     },
-    "pidTuningButtonSave": {
-        "message": "Guardar"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Refrescar"
-    },
     "pidTuningCopyProfile": {
         "message": "Copiar perfil"
     },
@@ -2173,12 +2164,6 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Guardar"
-    },
-    "receiverButtonRefresh": {
-        "message": "Refrescar"
-    },
     "receiverButtonBind": {
         "message": "Enlazar Receptor"
     },
@@ -2225,9 +2210,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Añadir Enlace"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Guardar"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -2441,10 +2423,6 @@
         "message": "Desactiva el control de ajustes del VTX a través del OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Alternar entre los niveles de energía VTX (si es compatible con el VTX)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Cambia el VTX a modo Pit (potencia de salida baja, si es compatible)",
         "description": "Help text to VTX PIT MODE mode"
@@ -2597,9 +2575,6 @@
         "message": "Selección de perfil de batería",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Guardar"
-    },
     "adjustmentsShowAll": {
         "message": "Mostrar todas las ranuras"
     },
@@ -2633,9 +2608,6 @@
     },
     "servosLiveMode": {
         "message": "Activar modo en vivo"
-    },
-    "servosButtonSave": {
-        "message": "Guardar"
     },
     "gpsHead": {
         "message": "General"
@@ -3222,20 +3194,11 @@
     "cliReboot": {
         "message": "Detectado reinicio CLI"
     },
-    "cliSaveToFileBtn": {
-        "message": "Guardar en Archivo"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Limpiar historial de salida"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Copiar al portapapeles"
-    },
     "cliCopySuccessful": {
         "message": "¡Copiado!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Cargar desde archivo"
     },
     "cliSupportRequestBtn": {
         "message": "Enviar datos de soporte"
@@ -3290,9 +3253,6 @@
     },
     "blackboxConfiguration": {
         "message": "Configuración de Caja Negra"
-    },
-    "blackboxButtonSave": {
-        "message": "Guardar y reiniciar"
     },
     "blackboxLoggingNone": {
         "message": "No registrar"
@@ -3689,9 +3649,6 @@
     },
     "ledStripHelp": {
         "message": "El controlador de vuelo puede controlar colores y efectos de LEDs individuales de una tira.<br />Configura LEDs en la rejilla, configura el orden del cableado y añade LEDs a tu aeronave de acuerdo a las posiciones de la rejilla. LEDs sin número de orden de cableado no se guardarán.<br />Doble-pulsación en un color para editar los valores HSV."
-    },
-    "ledStripButtonSave": {
-        "message": "Guardar"
     },
     "ledStripColorSetupTitle": {
         "message": "Ajuste de color",
@@ -4645,9 +4602,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Matar"
     },
-    "powerButtonSave": {
-        "message": "Guardar"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Se <span class=\"message-negative\">requiere</span> actualización de firmware. Configuración de Batería/Amperaje/Voltaje usando API &lt; 1.33.0 (Betaflight versión &lt;= 3.17) no está soportado."
     },
@@ -5124,12 +5078,6 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Error al cargar"
-    },
-    "osdSetupSave": {
-        "message": "Guardar"
-    },
-    "osdSetupRefresh": {
-        "message": "Refrescar"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Batería: voltaje",
@@ -6331,21 +6279,9 @@
     "osdButtonSaved": {
         "message": "Guardado"
     },
-    "vtxHelp": {
-        "message": "Aquí puedes configurar los valores para tu Transmisor de Video (VTX). Puedes ver y cambiar los valores para la transmisión, incluyendo las Tablas VTX, si el controlador de vuelo y el VTX lo soportan.<br>Para configurar tu VTX sigue los siguientes pasos:<br>1. Ve a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">esta página</a>;<br>2. Encuentra el archivo de configuración VTX apropiado para tu país y tu modelo de VTX y descárgalo;<br>3. Pulsa abajo en '$t(vtxButtonLoadFile.message)', selecciona el archivo de configuración VTX, cárgalo;<br>4. Verifica que los ajustes son correctos;<br>5. Pulsa '$t(vtxButtonSave.message)' para almacenar los valores VTX en el controlador de vuelo.<br>6. Opcionalmente, pulsa '$t(vtxButtonSaveLua.message)' para guardar un archivo lua de configuración que puedes usar con los scripts lua de Betaflight (más información <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aquí</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Atención:</span> Necesitas configurar y guardar PRIMERO la Tabla VTX de abajo antes de que puedas hacer uso de los campos de $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Atención:</span> El tipo de VTX seleccionado no es compatible con la configuración de 'fábrica' para las bandas, pero algunas de las bandas tienen esta configuración. Pulsa en '$t(vtxButtonSave.message)' para solucionar esto.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Atención:</span> Los valores de la tabla VTX han sido cargados, pero aún no se han enviado al controlador de vuelo. Debes verificar y modificar los valores para asegurarte de que son válidos y legales en tu país y luego pulsar el botón $t(vtxButtonSave.message) para enviarlos en el controlador de vuelo.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "Introducir frecuencia directamente",
@@ -6575,25 +6511,9 @@
         "message": "<span class=\"message-negative\">Error</span> al cargar la información de Configuración VTX desde el portapapeles. Puede que el contenido no sea correcto.",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Guardar en archivo",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Guardar Scrip Lua",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Cargar desde archivo",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Cargar desde el portapapeles",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Guardar",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Guardando",
@@ -7114,14 +7034,6 @@
         "message": "Error al cargar preajustes desde internet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Guardar y Reiniciar",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Cancelar",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Aplicando configuración...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7145,10 +7057,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Aceptar",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Cancelar",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Añadir preajuste favorito",

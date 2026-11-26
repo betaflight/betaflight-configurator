@@ -411,6 +411,29 @@
                         :format-options="{ useGrouping: false }"
                         class="w-full"
                     />
+
+                    <!-- Physical units -->
+                    <div class="col-span-6 flex items-center gap-0.5 pt-2 text-xs text-dimmed">
+                        <span>{{ $t("pidTuningPhysicalUnits") }}</span>
+                        <HelpIcon :text="$t('pidTuningPhysicalUnitsHelp')" />
+                    </div>
+                    <div></div>
+                    <div
+                        v-for="(unit, index) in physicalUnitHeaders"
+                        :key="index"
+                        class="flex items-center justify-center gap-0.5 text-xs text-dimmed"
+                    >
+                        <span>{{ $t(unit.label) }}</span>
+                        <HelpIcon :text="$t(unit.help)" />
+                    </div>
+                    <template v-for="row in physicalUnitRows" :key="row.axis">
+                        <div class="font-bold text-white text-center py-0.5 px-1 rounded text-xs" :class="row.class">
+                            {{ row.axis }}
+                        </div>
+                        <div v-for="(value, index) in row.values" :key="index" class="text-center text-sm tabular-nums">
+                            {{ value }}
+                        </div>
+                    </template>
                 </div>
             </UiBox>
 
@@ -1128,7 +1151,7 @@
                         v-model="wingConfig.tpa_speed_type"
                         :items="wingTpaSpeedTypeItems"
                         size="xs"
-                        class="w-24"
+                        class="w-26"
                     />
                 </SettingRow>
                 <UiBox
@@ -1218,7 +1241,6 @@
                                 class="w-20"
                             />
                         </SettingRow>
-
                         <SettingRow
                             :label="$t('pidTuningWingTpaAdvSpeedMotorKv')"
                             :help="$t('pidTuningWingTpaAdvSpeedMotorKvHelp')"
@@ -1226,31 +1248,50 @@
                             <UInputNumber v-model="motorKv" disabled size="xs" orientation="vertical" class="w-20" />
                         </SettingRow>
                     </template>
-                    <SettingRow
-                        :label="$t('pidTuningWingTpaAdvSpeedMaxVoltage')"
-                        :help="$t('pidTuningWingTpaAdvSpeedMaxVoltageHelp')"
-                    >
-                        <UInputNumber
-                            v-model="wingConfig.tpa_speed_max_voltage"
-                            :step="1"
-                            :min="0"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-20"
-                        />
-                    </SettingRow>
-                    <SettingRow
-                        :label="$t('pidTuningWingTpaAdvSpeedPitchOffset')"
-                        :help="$t('pidTuningWingTpaAdvSpeedPitchOffsetHelp')"
-                    >
-                        <UInputNumber
-                            v-model="wingConfig.tpa_speed_pitch_offset"
-                            :step="1"
-                            size="xs"
-                            orientation="vertical"
-                            class="w-20"
-                        />
-                    </SettingRow>
+                    <template v-if="isWingTpaBasicSpeedMode || isWingTpaAdvancedSpeedMode">
+                        <SettingRow
+                            :label="$t('pidTuningWingTpaAdvSpeedMaxVoltage')"
+                            :help="$t('pidTuningWingTpaAdvSpeedMaxVoltageHelp')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.tpa_speed_max_voltage"
+                                :step="1"
+                                :min="0"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                        <SettingRow
+                            :label="$t('pidTuningWingTpaAdvSpeedPitchOffset')"
+                            :help="$t('pidTuningWingTpaAdvSpeedPitchOffsetHelp')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.tpa_speed_pitch_offset"
+                                :step="1"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                            />
+                        </SettingRow>
+                    </template>
+                    <template v-else-if="isWingTpaPitotSpeedMode">
+                        <SettingRow
+                            :label="$t('pidTuningWingTpaMaxPitotSpeed')"
+                            :help="$t('pidTuningWingTpaMaxPitotSpeedHelp')"
+                        >
+                            <UInputNumber
+                                v-model="wingConfig.tpa_max_pitot_speed"
+                                :step="1"
+                                :min="1"
+                                :max="85"
+                                size="xs"
+                                orientation="vertical"
+                                class="w-20"
+                                :aria-label="$t('pidTuningWingTpaMaxPitotSpeed')"
+                            />
+                        </SettingRow>
+                    </template>
                 </UiBox>
                 <UiBox
                     v-if="isWingTpaHyperbolicCurveMode"
@@ -1502,6 +1543,13 @@ import HelpIcon from "@/components/elements/HelpIcon.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WingCurvesChart from "./WingCurvesChart.vue";
 import getTpaHyperbolicCurve from "./WingTpaCurvesData";
+import {
+    dLeadTimeMs,
+    feedforwardLeadTimeMs,
+    iResetTimeMs,
+    pMotorPercentPer100Dps,
+    YAW_KI_MULTIPLIER,
+} from "./PidPhysicalUnits";
 
 const { t } = useTranslation();
 const fcStore = useFlightControllerStore();
@@ -1732,6 +1780,61 @@ const pidNavRD = createPidComputed("NavR", 2);
 
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => fcStore.advancedTuning);
+
+const physicalUnitHeaders = [
+    { label: "pidTuningPhysicalUnitP", help: "pidTuningPhysicalUnitPHelp" },
+    { label: "pidTuningPhysicalUnitI", help: "pidTuningPhysicalUnitIHelp" },
+    { label: "pidTuningPhysicalUnitD", help: "pidTuningPhysicalUnitDHelp" },
+    { label: "pidTuningPhysicalUnitD", help: "pidTuningPhysicalUnitDHelp" },
+    { label: "pidTuningPhysicalUnitF", help: "pidTuningPhysicalUnitFHelp" },
+];
+
+const formatPhysical = (value: number | null, digits: number) => (value === null ? "–" : value.toFixed(digits));
+
+const physicalUnitRows = computed(() => {
+    const tuning = advancedTuning.value;
+    return [
+        {
+            axis: "ROLL",
+            class: "bg-axis-roll",
+            pid: fcStore.pids[0],
+            dMax: tuning.dMaxRoll,
+            ff: tuning.feedforwardRoll,
+            kiMultiplier: 1,
+            integrated: false,
+        },
+        {
+            axis: "PITCH",
+            class: "bg-axis-pitch",
+            pid: fcStore.pids[1],
+            dMax: tuning.dMaxPitch,
+            ff: tuning.feedforwardPitch,
+            kiMultiplier: 1,
+            integrated: false,
+        },
+        {
+            axis: "YAW",
+            class: "bg-axis-yaw",
+            pid: fcStore.pids[2],
+            dMax: tuning.dMaxYaw,
+            ff: tuning.feedforwardYaw,
+            kiMultiplier: YAW_KI_MULTIPLIER,
+            integrated: Boolean(tuning.useIntegratedYaw),
+        },
+    ].map(({ axis, class: axisClass, pid: [p, i, d], dMax, ff, kiMultiplier, integrated }) => ({
+        axis,
+        class: axisClass,
+        values: integrated
+            ? Array(physicalUnitHeaders.length).fill(formatPhysical(null, 0))
+            : [
+                  formatPhysical(pMotorPercentPer100Dps(p), 1),
+                  formatPhysical(iResetTimeMs(p, i, kiMultiplier), 0),
+                  formatPhysical(dLeadTimeMs(p, d), 1),
+                  formatPhysical(dLeadTimeMs(p, dMax), 1),
+                  formatPhysical(feedforwardLeadTimeMs(p, ff), 1),
+              ],
+    }));
+});
 
 // Dynamic Idle visibility and state
 const dshotTelemetryEnabled = computed(() => fcStore.motorConfig.use_dshot_telemetry ?? false);
@@ -2121,9 +2224,13 @@ const isWingBuildGte49 = computed(
     () => fcStore.config.buildOptions.includes("USE_WING") && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49),
 );
 
+const isHasPitot = computed(() => fcStore.config.buildOptions.includes("USE_PITOT"));
+
 const isWingTpaBasicSpeedMode = computed(() => wingConfig.value.tpa_speed_type == 0);
 
-const isWingTpaAdvancedSpeedMode = computed(() => wingConfig.value.tpa_speed_type == 1);
+const isWingTpaAdvancedSpeedMode = computed(() => wingConfig.value.tpa_speed_type === 1);
+
+const isWingTpaPitotSpeedMode = computed(() => wingConfig.value.tpa_speed_type === 2);
 
 const isWingTpaHyperbolicCurveMode = computed(() => wingConfig.value.tpa_curve_type > 0);
 
@@ -2141,14 +2248,21 @@ const wingSpaModesItems = computed(() => [
     { value: 4, label: t("pidTuningWingSpaModePDIFreeze") },
 ]);
 
-const wingTpaSpeedTypeItems = computed(() => [
-    { value: 0, label: t("pidTuningWingTpaSpeedBasic") },
-    { value: 1, label: t("pidTuningWingTpaSpeedAdvanced") },
-]);
+const wingTpaSpeedTypeItems = computed(() => {
+    const speedTypeItems = [
+        { value: 0, label: t("pidTuningWingTpaSpeedBasic") },
+        { value: 1, label: t("pidTuningWingTpaSpeedAdvanced") },
+    ];
+    if (isHasPitot.value) {
+        speedTypeItems.push({ value: 2, label: t("pidTuningWingTpaSpeedPitot") });
+    }
+    return speedTypeItems;
+});
 
 const wingTpaSpeedSettingsTitleItems = computed(() => [
     t("pidTuningWingTpaBasicSpeedSettings"),
     t("pidTuningWingTpaAdvancedSpeedSettings"),
+    t("pidTuningWingTpaPitotSpeedSettings"),
 ]);
 
 const wingTpaCurveTypeItems = computed(() => [

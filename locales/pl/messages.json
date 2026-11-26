@@ -1410,9 +1410,6 @@
     "configurationSpiRX": {
         "message": "Rodzaj sygnału odbiornika SPI"
     },
-    "configurationButtonSave": {
-        "message": "Zapisz i uruchom ponownie"
-    },
     "dialogClose": {
         "message": "Zamknij"
     },
@@ -1818,12 +1815,6 @@
     "throttle": {
         "message": "Throttle"
     },
-    "pidTuningButtonSave": {
-        "message": "Zapisz"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Odśwież"
-    },
     "pidTuningCopyProfile": {
         "message": "Kopiuj profil"
     },
@@ -1955,12 +1946,6 @@
         "message": "Throttle [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Zapisz"
-    },
-    "receiverButtonRefresh": {
-        "message": "Odśwież"
-    },
     "receiverButtonBind": {
         "message": "Powiąż odbiornik"
     },
@@ -2007,9 +1992,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Dodaj Łącznik"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Zapisz"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -2215,10 +2197,6 @@
         "message": "Wyłącz kontrolę ustawień VTX poprzez OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Przełączaj się między poziomami mocy VTX (jeśli są obsługiwane przez VTX)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Przełącz VTX w tryb pit mode (niska moc wyjściowa, jeśli jest obsługiwana)",
         "description": "Help text to VTX PIT MODE mode"
@@ -2345,9 +2323,6 @@
         "message": "Wybór profilu baterii",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Zapisz"
-    },
     "adjustmentsShowAll": {
         "message": "Pokaż wszystkie sloty"
     },
@@ -2378,9 +2353,6 @@
     },
     "servosLiveMode": {
         "message": "Wyłącz tryb podglądu na żywo"
-    },
-    "servosButtonSave": {
-        "message": "Zapisz"
     },
     "gpsHead": {
         "message": "Ogólne"
@@ -2778,20 +2750,11 @@
     "cliReboot": {
         "message": "Wykryto ponowne uruchomienie Wiersza Poleceń CLI"
     },
-    "cliSaveToFileBtn": {
-        "message": "Zapisz do Pliku"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Wyczyść historię wyników"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Kopiuj do schowka"
-    },
     "cliCopySuccessful": {
         "message": "Skopiowano!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Odczytaj z Pliku"
     },
     "cliSupportRequestBtn": {
         "message": "Zgłoś problem"
@@ -2846,9 +2809,6 @@
     },
     "blackboxConfiguration": {
         "message": "Konfiguracja Czarnej Skrzynki"
-    },
-    "blackboxButtonSave": {
-        "message": "Zapisz i uruchom ponownie"
     },
     "blackboxLoggingNone": {
         "message": "Brak rejestrów"
@@ -3178,9 +3138,6 @@
     },
     "ledStripHelp": {
         "message": "Kontroler lotu może kontrolować kolory i efekty poszczególnych diod LED na pasku. <br /> Konfiguruj diody LED na siatce, skonfiguruj kolejność okablowania, a następnie podłącz diody LED w twoim modelu zgodnie z pozycjami na siatce. Diody LED bez numeru porządkowego nie zostaną zapisane. <br /> Kliknij dwukrotnie kolor, aby edytować wartości HSV."
-    },
-    "ledStripButtonSave": {
-        "message": "Zapisz"
     },
     "ledStripColorSetupTitle": {
         "message": "Ustawienia kolorów",
@@ -4107,9 +4064,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Upadek"
     },
-    "powerButtonSave": {
-        "message": "Zapisz"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">Wymagana</span>aktualizacja oprogramowania układowego. Konfiguracja baterii/Amperomierza/Napięcia przy użyciu API &lt; 1.33.0 (wydanie dla Betaflight &lt;= 3.17) nie jest obsługiwane."
     },
@@ -4571,12 +4525,6 @@
     },
     "osdSetupUploadingFontFailed": {
         "message": "Błąd przesyłania"
-    },
-    "osdSetupSave": {
-        "message": "Zapisz"
-    },
-    "osdSetupRefresh": {
-        "message": "Odśwież"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Napięcie akumulatora",
@@ -5765,14 +5713,6 @@
         "message": "<span class=\"message-negative\">Uwaga:</span> Musisz skonfigurować i zapisać PIERWSZĄ tabelę VTX (na dole) zanim będziesz mógł korzystać z ustawień z kategorii $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class = \"message-negative\"> Uwaga: </span> Wybrany typ VTX nie obsługuje ustawienia „fabrycznego” dla pasm, ale niektóre z tych pasm mają to ustawienie. Kliknij \"$t(vtxButtonSave.message)”, aby to naprawić.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Uwaga:</span> Wartości tabeli VTX zostały załadowane, ale nie są jeszcze zapisane w kontrolerze lotu. Musisz zweryfikować i zmodyfikować wartości jeśli potrzeba, aby mieć pewność, że są one prawidłowe i legalne w Twoim kraju, a następnie nacisnąć $t(vtxButtonSave.message) przycisk do zapisania ich w kontrolerze lotu.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
-    },
     "vtxFrequencyChannel": {
         "message": "Wprowadź częstotliwość bezpośrednio",
         "description": "Text of one of the fields of the VTX tab"
@@ -6001,25 +5941,9 @@
         "message": "<span class=\"message-negative\">Błąd</span> podczas wklejania konfiguracji VTX ze schowka. Sprawdź poprawność kopiowanej zawartości",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Zapisz plik",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Zapisz skrypt Lua",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Wczytaj plik",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Wczytaj ze schowka",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Zapisz",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Zapisywanie",
@@ -6371,14 +6295,6 @@
         "message": "Błąd ładowania ustawień z Internetu",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Zapisz i uruchom ponownie",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Anuluj",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Zapisywanie konfiguracji...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -6402,10 +6318,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Akceptuję",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Anuluj",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Dodaj ulubione czcionki",

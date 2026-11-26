@@ -83,7 +83,10 @@
 
             <!-- Tab Content -->
             <div class="tabarea">
-                <form name="pid-tuning" id="pid-tuning">
+                <!-- Each save write encodes the live store when it is sent, so an edit made while
+                     the writes are in flight (e.g. a filter slider switched ON) would partly reach
+                     the FC. Lock the sub-tabs until the save is done. -->
+                <form name="pid-tuning" id="pid-tuning" :inert="isSaving">
                     <PidSubTab
                         ref="pidSubTab"
                         v-if="activeSubtab === 'pid'"
@@ -132,6 +135,7 @@ import { gui_log } from "@/js/gui_log";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { runTabLoad } from "@/composables/useTabLoad";
+import { registerTabSave, registerUnsavedChangesForComponent } from "@/js/unsaved_changes";
 import { CopyProfileType, usePidTuningMsp } from "@/composables/pidTuning/usePidTuningMsp";
 
 /** What CopyProfileDialog confirms with: the selected target profile and/or rate profile. */
@@ -229,6 +233,7 @@ const localRateProfileName = computed({
 
 // hasChanges is owned by the Pinia store
 const hasChanges = computed(() => pidTuningStore.hasChanges);
+registerUnsavedChangesForComponent(() => hasChanges.value);
 // Value edits only: a pending profile switch is unsaved work, but it must not lock the profile
 // selectors — otherwise a switch could only be undone by saving it first.
 const hasEdits = computed(() => pidTuningStore.hasEdits);
@@ -439,9 +444,9 @@ function save() {
             fcStore.config.rateProfileNames[fcStore.config.rateProfile] = rateProfileName.value;
         }
 
-        // Pin what this save is about to write. The form stays live while the MSP writes are
-        // in flight, and an edit made in that window is not covered by them — baselining on
-        // the post-save state would silently swallow it.
+        // Pin what this save is about to write. The sub-tabs are inert while it runs, but the
+        // profile name inputs in the header stay live and were copied above, so an edit made to
+        // them in that window is not covered — baselining on the post-save state would swallow it.
         const pending = pidTuningStore.takeEditsSnapshot();
 
         // Save PIDs, advanced tuning, rates, filters, sliders, profile names and wing config
@@ -468,6 +473,7 @@ function save() {
         pidTuningStore.markProfileClean();
     });
 }
+registerTabSave(() => save());
 
 async function refresh() {
     try {

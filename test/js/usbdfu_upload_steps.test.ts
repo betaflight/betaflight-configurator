@@ -39,9 +39,10 @@ vi.mock("../../src/js/protocols/WebUsbDfuTransport", () => ({ default: class ext
 
 import { UsbDfuProtocol, type DfuTransport } from "../../src/js/protocols/usbdfu";
 import type { ParsedHex } from "../../src/js/workers/hex_parser";
+import { DFU_REQUEST, DFU_STATE, FakeDfuDevice } from "./fakeDfuDevice";
 
-const STATE = { dfuIDLE: 2, dfuDNBUSY: 4, dfuDNLOAD_IDLE: 5, dfuUPLOAD_IDLE: 9, dfuERROR: 10 };
-const REQ = { DNLOAD: 1, UPLOAD: 2, GETSTATUS: 3, CLRSTATUS: 4, ABORT: 6 };
+const STATE = DFU_STATE;
+const REQ = DFU_REQUEST;
 const ERR_VENDOR = 0x0b;
 const FLASH_BASE = 0x08000000;
 const OPTION_BYTES = 0x1fff7800;
@@ -63,7 +64,7 @@ interface Setup {
 }
 
 /** An STM32 ROM bootloader with internal flash (4 x 16K pages) and an option-bytes region. */
-class FakeBootloader extends EventTarget {
+class FakeBootloader extends FakeDfuDevice {
     readProtected = false;
     /** Flip one byte on read-back so verification fails. */
     corruptReadback = false;
@@ -79,32 +80,8 @@ class FakeBootloader extends EventTarget {
     written: number[] = [];
     readCursor = 0;
 
-    getDevices() {
-        return Promise.resolve([{ path: "usb_fake", displayName: "fake", port: {} }]);
-    }
-    getConnectedDevice() {
-        return "usb_fake";
-    }
-    open() {
-        return Promise.resolve();
-    }
-    claimInterface() {
-        return Promise.resolve();
-    }
-    releaseInterface() {
-        return Promise.resolve();
-    }
-    close() {
-        return Promise.resolve();
-    }
-    reset() {
-        return Promise.resolve();
-    }
-    getInterfaceDescriptors() {
-        return Promise.resolve(["@Internal Flash  /0x08000000/04*016Kg", "@Option Bytes  /0x1FFF7800/01*016 e"]);
-    }
-    getFunctionalDescriptor() {
-        return Promise.resolve({ wTransferSize: 2048, bcdDFUVersion: 0x011a });
+    constructor() {
+        super("usb_fake", ["@Internal Flash  /0x08000000/04*016Kg", "@Option Bytes  /0x1FFF7800/01*016 e"]);
     }
 
     controlTransferOut(setup: Setup, data: number[] | Uint8Array | 0) {

@@ -1965,9 +1965,6 @@
     "configurationSaveFailed": {
         "message": "שמירת התצורה נכשלה"
     },
-    "configurationButtonSave": {
-        "message": "שמור ואתחל"
-    },
     "dialogClose": {
         "message": "סגור"
     },
@@ -2505,12 +2502,6 @@
     "throttle": {
         "message": "מצערת"
     },
-    "pidTuningButtonSave": {
-        "message": "שמור"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "רענן"
-    },
     "pidTuningCopyProfile": {
         "message": "העתק פרופיל"
     },
@@ -2654,12 +2645,6 @@
         "message": "מצערת[T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "שמור"
-    },
-    "receiverButtonRefresh": {
-        "message": "רענן"
-    },
     "receiverButtonBind": {
         "message": "שייך מקלט"
     },
@@ -2686,7 +2671,7 @@
         "message": "אפשר שליטה"
     },
     "auxiliaryHelp": {
-        "message": "הגדר כאן את מצבי הטיסה באמצעות שילוב של טווחים ו/או קישורים למצבים אחרים (קישורים נתמכים ב-BF 4.0 ומעלה). השתמש ב-<strong>טווחים (Ranges)</strong> כדי להגדיר את המתגים בשלט שלך ואת המצבים התואמים להם. ערוץ מקלט שייתן קריאה בין ה-Min ל-Max של הטווח יפעיל את המצב. השתמש ב-<strong>קישור (Link)</strong> כדי להפעיל מצב מסוים כאשר מצב אחר מופעל. <strong>חריגים:</strong> לא ניתן לקשר אל או מתוך מצב דריכה (ARM), ומצבים לא יכולים להיות מקושרים למצבים אחרים שבעצמם מוגדרים עם קישור (שרשור קישורים). ניתן להשתמש במספר טווחים/קישורים כדי להפעיל כל מצב. אם מוגדרים יותר מטווח/קישור אחד למצב, ניתן להגדיר כל אחד מהם ל-<strong>AND (וגם)</strong> או <strong>OR (או)</strong>. המצב יופעל כאשר:<br />- כל טווחי/קישורי ה-<strong>AND</strong> פעילים; או<br />- לפחות טווח/קישור <strong>OR</strong> אחד פעיל.<br /><br />זכור לשמור את ההגדרות שלך בעזרת כפתור השמירה."
+        "message": "הגדר כאן את מצבי הטיסה באמצעות שילוב של טווחים ו/או קישורים למצבים אחרים (קישורים נתמכים ב-BF 4.0 ומעלה). השתמש ב-<strong>טווחים</strong> כדי להגדיר את המתגים בשלט שלך ואת המצבים התואמים להם. ערוץ מקלט שייתן קריאה בין ה-Min ל-Max של הטווח יפעיל את המצב. השתמש ב-<strong>קישור</strong> כדי להפעיל מצב מסוים כאשר מצב אחר מופעל. <strong>חריגים:</strong> לא ניתן לקשר אל או מתוך מצב דריכה (ARM), ומצבים לא יכולים להיות מקושרים למצבים אחרים שבעצמם מוגדרים עם קישור (שרשור קישורים). ניתן להשתמש במספר טווחים/קישורים כדי להפעיל כל מצב. אם מוגדרים יותר מטווח/קישור אחד למצב, ניתן להגדיר כל אחד מהם ל-<strong> וגם</strong> או <strong> ל - או</strong>. המצב יופעל כאשר:<br />- כל טווחי/קישורי ה-<strong>AND</strong> פעילים; או<br />- לפחות טווח/קישור <strong>OR</strong> אחד פעיל.<br /><br />זכור לשמור את ההגדרות שלך בעזרת כפתור השמירה."
     },
     "auxiliaryToggleUnused": {
         "message": "הסתר מצבים שאינם בשימוש"
@@ -2713,9 +2698,6 @@
     },
     "auxiliaryAddLink": {
         "message": "הוסף קישור"
-    },
-    "auxiliaryButtonSave": {
-        "message": "שמור"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "אוטומטי"
@@ -2929,10 +2911,6 @@
         "message": "השבתת השליטה בהגדרות משדר הוידאו דרך ה-OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "עבור בין רמות עוצמת השידור של ה-VTX (אם נתמך על ידי המשדר)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "העבר את משדר הוידאו למצב פיט (Pit Mode, עוצמת שידור חלשה, אם נתמך)",
         "description": "Help text to VTX PIT MODE mode"
@@ -3089,9 +3067,6 @@
         "message": "בחירת פרופיל סוללה",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "שמור"
-    },
     "adjustmentsShowAll": {
         "message": "הצג את כל המשבצות"
     },
@@ -3128,9 +3103,6 @@
     },
     "servosLiveMode": {
         "message": "אפשר מצב חי"
-    },
-    "servosButtonSave": {
-        "message": "שמור"
     },
     "gpsHead": {
         "message": "GPS"
@@ -3749,20 +3721,11 @@
     "cliReboot": {
         "message": "זוהה אתחול מחדש דרך ה-CLI"
     },
-    "cliSaveToFileBtn": {
-        "message": "שמור לקובץ"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "נקה היסטוריית פלט"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "העתק ללוח"
-    },
     "cliCopySuccessful": {
         "message": "הועתק!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "טען מקובץ"
     },
     "cliSupportRequestBtn": {
         "message": "שלח נתוני תמיכה"
@@ -3820,9 +3783,6 @@
     },
     "blackboxConfiguration": {
         "message": "הגדרות קופסה שחורה"
-    },
-    "blackboxButtonSave": {
-        "message": "שמור והפעל מחדש"
     },
     "blackboxLoggingNone": {
         "message": "ללא תיעוד"
@@ -4038,6 +3998,21 @@
     "firmwareFlasherManualBaudDescription": {
         "message": "בחירה ידנית של קצב השידור עבור לוחות שלא תומכים במהירות ברירת המחדל, או לצריבה דרך בלוטוס.<br /><span class=\"message-negative\">הערה:</span> לא בשימוש בזמן צריבה דרך USB DFU"
     },
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "הצג אפשרויות גרסאות"
+    },
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "בחר אילו גרסאות להציג"
+    },
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "הצג גרסאות"
+    },
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "הצג את כל הגרסאות"
+    },
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "הצג גרסאות פיתוח"
+    },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "בחר גרסת קושחה"
     },
@@ -4198,6 +4173,9 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "אתה עומד לצרוב <strong>גרסת מפתחים של הקושחה</strong>. אלו גרסאות שנמצאות בתהליכי עבודה, וכל אחד מהמקרים הבאים עלול לקרות:<strong><ul><li>הקושחה לא תעבוד בכלל;</li><li>לא יהיה ניתן להטיס את הרחפן עם הקושחה הזו;</li><li>ישנן בעיות בטיחות בקושחה, למשל בריחת כלי הטיס (Flyaways)</li><li>הקושחה עלולה לגרום לבקר הטיסה להפסיק להגיב, או להיהרס לחלוטין</li></ul></strong>אם תמשיך עם צריבת הקושחה הזו, <strong>אתה לוקח על עצמך אחריות מלאה לסיכון שכל אחד מהמקרים הנ\"ל יקרה</strong>. בנוסף אתה מאשר שחובה לבצע <strong>בדיקות שולחן (Bench tests) יסודיות ללא פרופלורים</strong> לפני כל ניסיון להטיס עם קושחה זו."
     },
+    "developmentFirmwareAcknowledgement": {
+        "message": "קראתי את האמור לעיל ו <strong>אני לוקח אחריות מלאה</strong> על צריבת קושחת פיתוח"
+    },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "צרוב (Flash)"
     },
@@ -4228,9 +4206,6 @@
     },
     "ledStripHelp": {
         "message": "בקר הטיסה יכול לשלוט בצבעים ובאפקטים של נוריות לד בודדות על פס תאורה.<br />הגדר את הלדים על הרשת, הגדר את סדר החיווט, ואז חבר את הלדים לרחפן שלך בהתאם למיקומים ברשת. לדים ללא מספר סדר חיווט לא יישמרו.<br />לחץ פעמיים על צבע כדי לערוך את ערכי ה-HSV."
-    },
-    "ledStripButtonSave": {
-        "message": "שמור"
     },
     "ledStripColorSetupTitle": {
         "message": "הגדרות צבע",
@@ -5188,9 +5163,6 @@
     "failsafeSwitchOptionKill": {
         "message": "השבתה"
     },
-    "powerButtonSave": {
-        "message": "שמור"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "<span class=\"message-negative\">נדרש</span> שדרוג קושחה. הגדרות סוללה/זרם/מתח באמצעות גרסת API &lt; 1.33.0 (שחרור Betaflight &lt;= 3.17) אינן נתמכות."
     },
@@ -5712,15 +5684,6 @@
     "osdSetupUploadFontWarningNeedStandardFont": {
         "message": "הגופן שנבחר הוא גופן קטן עבור OSDs מסוג framebuffer, אך OSD זה משתמש בגופנים בגודל סטנדרטי. הוא לא יוצג כהלכה. להעלות בכל זאת?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
-    },
-    "osdSetupSaveReboot": {
-        "message": "שמור ואתחל"
-    },
-    "osdSetupSave": {
-        "message": "שמור"
-    },
-    "osdSetupRefresh": {
-        "message": "רענן"
     },
     "osdTextElementMainBattVoltage": {
         "message": "מתח סוללה",
@@ -6944,10 +6907,6 @@
     "osdPitotAirSpeed": {
         "message": "מהירות אוויר"
     },
-    "vtxHelp": {
-        "message": "כאן תוכל להגדיר את הערכים עבור משדר הוידאו שלך (VTX). תוכל לצפות ולשנות את ערכי השידור, כולל את טבלאות ה-VTX, במידה ובקר הטיסה ומשדר הוידאו תומכים בכך.<br>כדי להגדיר את משדר הוידאו בצע את השלבים הבאים:<br>1. עבור ל<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">דף הזה</a>;<br>2. מצא את קובץ הגדרות ה-VTX המתאים למדינה שלך ולדגם משדר הוידאו שלך והורד אותו;<br>3. לחץ על '$t(vtxButtonLoadFile.message)' למטה, בחר את קובץ הגדרות ה-VTX, וטען אותו;<br>4. ודא שההגדרות תקינות ונכונות;<br>5. לחץ על '$t(vtxButtonSave.message)' כדי לשמור את הגדרות משדר הוידאו בבקר הטיסה.<br>6. באפשרותך גם ללחוץ על '$t(vtxButtonSaveLua.message)' כדי לשמור קובץ הגדרות Lua שניתן להשתמש בו עם סקריפטי ה-Lua של Betaflight בשלט (קרא עוד <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">כאן</a>).",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">תשומת לב:</span> אף משדר וידאו אינו מגיב עדיין. בחר את הפרוטוקול שבו משתמש המשדר וידאו ואת יציאת ה-UART אליה הוא מחווט למטה, ואז שמור; שאר ההגדרות יופיעו ברגע שהמכשיר יגיב.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6955,14 +6914,6 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">שים לב:</span> עליך קודם כל להגדיר ולשמור את טבלת משדר הוידאו בתחתית העמוד לפני שתוכל להשתמש בשדות ה-'$t(vtxSelectedMode.message)'.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">שים לב:</span> סוג המשדר וידאו שבחרת אינו תומך בהגדרות 'יצרן' של התדרים, אבל בחלק מהתדרים שלך יש את ההגדרה הזו. לחץ על '$t(vtxButtonSave.message)' כדי לתקן זאת.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">שים לב:</span> ערכי טבלת משדר הוידאו נטענו, אך טרם נשמרו בבקר הטיסה. עליך לאמת ולשנות את הערכים במידת הצורך כדי להיות בטוח שהם חוקיים וחוקיים במדינה שלך, ולאחר מכן ללחוץ על הכפתור '$t(vtxButtonSave.message)' כדי לשמור אותם בבקר הטיסה.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "הזן תדר באופן ישיר",
@@ -7210,25 +7161,9 @@
         "message": "<span class=\"message-negative\">שגיאה</span> בעת טעינת הגדרות ה-VTX מהלוח (Clipboard). ייתכן והתוכן לא תקין",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "שמור לקובץ",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "שמור סקריפט Lua",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "טען מקובץ",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "טען מהלוח (Clipboard)",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "שמור",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "שומר",
@@ -7833,14 +7768,6 @@
         "message": "שגיאה בטעינת ה-Presets מהאינטרנט",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "שמור והפעל מחדש",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "ביטול",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "מחיל הגדרות...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7864,10 +7791,6 @@
     "presetsWarningDialogYesButton": {
         "message": "מסכים",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "ביטול",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "הוספת הגדרה מוכנה למועדפים",
@@ -7970,7 +7893,7 @@
         "description": "Presets tab, sources dialog, button to delete selected source"
     },
     "presetsWarningNotOfficialSource": {
-        "message": "<span class=\"message-negative\">אזהרה!</span> נבחר מקור Preset צד שלישי.",
+        "message": "<span class=\"message-negative\">אזהרה!</span> נבחר מקור הגדרות מוכנות צד שלישי.",
         "description": "Warning message that shows up when a third party preset source is selected"
     },
     "presetsFailedToLoadRepositories": {
@@ -8847,6 +8770,30 @@
     "preflightFlightWindow": {
         "message": "חלון טיסה"
     },
+    "preflightTimelineDescription": {
+        "message": "ציר זמן המציג לילה, שעה כחולה, שעת הזהב ואור יום, עם סמני זריחה ושקיעה"
+    },
+    "preflightTimelineHelp": {
+        "message": "העבר את סמן העכבר, הקש או התמקד במקטע כדי לראות את הזמנים שלו. השתמש במקרא כדי להדגיש את כל פרקי הזמן מאותו סוג."
+    },
+    "preflightTimelineHint": {
+        "message": "העבר את סמן העכבר או הקש על מקטע לקבלת זמנים מדויקים."
+    },
+    "preflightTimelineNight": {
+        "message": "לילה ודמדומים אחרים"
+    },
+    "preflightBlueHour": {
+        "message": "שעה כחולה"
+    },
+    "preflightGoldenHour": {
+        "message": "שעת הזהב"
+    },
+    "preflightMorning": {
+        "message": "בוקר"
+    },
+    "preflightEvening": {
+        "message": "ערב"
+    },
     "preflightSunrise": {
         "message": "זריחה"
     },
@@ -8861,6 +8808,9 @@
     },
     "preflightTempRange": {
         "message": "טווח טמפרטורה"
+    },
+    "preflightNow": {
+        "message": "עכשיו"
     },
     "preflightCurrentlyDay": {
         "message": "כרגע"

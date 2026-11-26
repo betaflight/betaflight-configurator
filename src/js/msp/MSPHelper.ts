@@ -340,6 +340,11 @@ class MspHelper {
         const fcStore = useFlightControllerStore();
         fcStore.tuningSliders.slider_dterm_filter = data.readU8();
         fcStore.tuningSliders.slider_dterm_filter_multiplier = data.readU8();
+        MspHelper.readDtermFilterCutoffs(data);
+    }
+
+    static readDtermFilterCutoffs(data: MspDataView) {
+        const fcStore = useFlightControllerStore();
         fcStore.filterConfig.dterm_lowpass_hz = data.readU16();
         fcStore.filterConfig.dterm_lowpass2_hz = data.readU16();
         fcStore.filterConfig.dterm_lowpass_dyn_min_hz = data.readU16();
@@ -365,6 +370,11 @@ class MspHelper {
         const fcStore = useFlightControllerStore();
         fcStore.tuningSliders.slider_gyro_filter = data.readU8();
         fcStore.tuningSliders.slider_gyro_filter_multiplier = data.readU8();
+        MspHelper.readGyroFilterCutoffs(data);
+    }
+
+    static readGyroFilterCutoffs(data: MspDataView) {
+        const fcStore = useFlightControllerStore();
         fcStore.filterConfig.gyro_lowpass_hz = data.readU16();
         fcStore.filterConfig.gyro_lowpass2_hz = data.readU16();
         fcStore.filterConfig.gyro_lowpass_dyn_min_hz = data.readU16();
@@ -682,12 +692,31 @@ class MspHelper {
     }
 
     sendLedStripConfigValues(onCompleteCallback?: () => void) {
-        const fcStore = useFlightControllerStore();
-        const buffer = new MspBuffer();
-        buffer.push8(fcStore.ledConfigValues.brightness ?? 0);
-        buffer.push16(fcStore.ledConfigValues.rainbow_delta ?? 0);
-        buffer.push16(fcStore.ledConfigValues.rainbow_freq ?? 0);
+        const buffer = this.ledStripConfigValuesBuffer();
+        if (!buffer) return;
         MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
+    }
+
+    async saveLedStripConfigValues() {
+        const buffer = this.ledStripConfigValuesBuffer();
+        if (!buffer) return;
+        await MSP.promise(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer);
+    }
+
+    private ledStripConfigValuesBuffer() {
+        const { ledConfigValues, ledConfigValuesLoaded } = useFlightControllerStore();
+        const { brightness, rainbow_delta, rainbow_freq } = ledConfigValues;
+        // Never substitute defaults for values not read from this connection.
+        if (
+            !ledConfigValuesLoaded ||
+            brightness === undefined ||
+            rainbow_delta === undefined ||
+            rainbow_freq === undefined
+        )
+            return null;
+        const buffer = new MspBuffer();
+        buffer.push8(brightness).push16(rainbow_delta).push16(rainbow_freq);
+        return buffer;
     }
 
     serialPortFunctionMaskToFunctions(functionMask: number): SerialPortFunction[] {
@@ -1073,7 +1102,7 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
         fcStore.batteryState.voltage = data.readU8() / 10.0; // V
         fcStore.batteryState.mAhDrawn = data.readU16(); // mAh
-        fcStore.batteryState.amperage = data.readU16() / 100; // A
+        fcStore.batteryState.amperage = data.read16() / 100; // A
         fcStore.batteryState.batteryState = data.readU8();
         fcStore.batteryState.voltage = data.readU16() / 100;
     },
@@ -1696,9 +1725,14 @@ const DECODERS: Partial<Record<number, Decoder>> = {
 
     [MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES](data) {
         const fcStore = useFlightControllerStore();
-        fcStore.ledConfigValues.brightness = data.readU8();
-        fcStore.ledConfigValues.rainbow_delta = data.readU16();
-        fcStore.ledConfigValues.rainbow_freq = data.readU16();
+        fcStore.ledConfigValuesLoaded = false;
+        if (data.byteLength < 5) return;
+        fcStore.ledConfigValues = {
+            brightness: data.readU8(),
+            rainbow_delta: data.readU16(),
+            rainbow_freq: data.readU16(),
+        };
+        fcStore.ledConfigValuesLoaded = true;
     },
 
     [MSPCodes.MSP_CF_SERIAL_CONFIG](data) {
@@ -2085,6 +2119,12 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         const fcStore = useFlightControllerStore();
         fcStore.ledStrip = [];
 
+        fcStore.ledStripAdvanced = null;
+        fcStore.ledStripProfile = null;
+        if (data.byteLength < 2 || (data.byteLength - 2) % 4 !== 0) {
+            return;
+        }
+
         const ledCount = (data.byteLength - 2) / 4;
 
         // The 32 bit config of each LED contains the following in LSB:
@@ -2102,10 +2142,11 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         const layout = semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)
             ? LED_MASK_LAYOUT
             : LED_MASK_LAYOUT_PRE_1_46;
-
         for (let i = 0; i < ledCount; i++) {
             fcStore.ledStrip.push(decodeLedMask(data.readU32(), layout));
         }
+        fcStore.ledStripAdvanced = data.readU8() === 1;
+        fcStore.ledStripProfile = data.readU8();
     },
 
     [MSPCodes.MSP_SET_LED_STRIP_CONFIG]() {
@@ -2306,12 +2347,26 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         }
     },
 
+    // The FC echoes back the slider mode and multiplier it was sent; only the cutoffs are its
+    // answer. Switching a slider OFF sends nothing, so a reply still in flight carries a stale
+    // mode: never write the echo back, and drop the cutoffs once the slider is off (as the PID
+    // calculate reply does above).
     [MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO](data) {
-        MspHelper.readGyroFilterSliderSettings(data);
+        const fcStore = useFlightControllerStore();
+        data.readU8(); // slider mode (echo)
+        data.readU8(); // slider multiplier (echo)
+        if (fcStore.tuningSliders.slider_gyro_filter) {
+            MspHelper.readGyroFilterCutoffs(data);
+        }
     },
 
     [MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM](data) {
-        MspHelper.readDtermFilterSliderSettings(data);
+        const fcStore = useFlightControllerStore();
+        data.readU8(); // slider mode (echo)
+        data.readU8(); // slider multiplier (echo)
+        if (fcStore.tuningSliders.slider_dterm_filter) {
+            MspHelper.readDtermFilterCutoffs(data);
+        }
     },
 
     [MSPCodes.MSP_VALIDATE_SIMPLIFIED_TUNING](data) {
@@ -2533,11 +2588,15 @@ const DECODERS: Partial<Record<number, Decoder>> = {
         fcStore.wingConfig.tpa_speed_pitch_offset = data.read16();
         fcStore.wingConfig.yaw_type = data.readU8();
         fcStore.wingConfig.angle_pitch_offset = data.read16();
-        if (data.byteLength >= 51) {
+        const hasSpeedCurve = data.byteLength >= 51;
+        if (hasSpeedCurve) {
             fcStore.wingConfig.speed_curve_vref = data.readU8();
             fcStore.wingConfig.speed_curve_power = data.readU8();
             fcStore.wingConfig.speed_curve_min = data.readU16();
             fcStore.wingConfig.speed_curve_max = data.readU16();
+        }
+        if (hasSpeedCurve && data.byteLength >= 52) {
+            fcStore.wingConfig.tpa_max_pitot_speed = data.readU8();
         }
     },
 
@@ -3260,7 +3319,8 @@ const ENCODERS: Partial<Record<number, Encoder>> = {
             .push8(fcStore.wingConfig.speed_curve_vref)
             .push8(fcStore.wingConfig.speed_curve_power)
             .push16(fcStore.wingConfig.speed_curve_min)
-            .push16(fcStore.wingConfig.speed_curve_max);
+            .push16(fcStore.wingConfig.speed_curve_max)
+            .push8(fcStore.wingConfig.tpa_max_pitot_speed);
     },
 };
 

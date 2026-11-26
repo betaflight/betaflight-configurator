@@ -151,7 +151,7 @@ import { useVisibleTabs } from "../sidebar/useVisibleTabs.js";
 import { useTranslation } from "i18next-vue";
 import semver from "semver";
 import { vueTabState } from "../../js/vue_tab_mounter.js";
-import { switchTab } from "../../js/tab_switch.js";
+import { navigateToTab } from "../../js/tab_switch.js";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { shortenTargetDisplay, stripVersionDisplay } from "./statusBarText";
 import { API_VERSION_1_46 } from "../../js/data_storage";
@@ -224,7 +224,7 @@ export default defineComponent({
                     icon: item.icon,
                     label: t(item.i18n),
                     active: vueTabState.activeTabName === key,
-                    select: () => switchTab(key, { mode: item.mode, label: t(item.i18n) }),
+                    select: () => void navigateToTab(key, { mode: item.mode, label: t(item.i18n) }),
                 };
             }),
         );
@@ -409,105 +409,102 @@ export default defineComponent({
     /* Compact: the bar floats clear of the content and above the home indicator, and carries only
        its two controls. The readouts do not fit on one phone-width line, so they move behind the
        expand control, which grows the same element into a panel rather than duplicating them. */
-    & {
-        @media all and (max-width: 575px),
-            all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    @media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+        .status-bar__tabs {
+            display: flex;
+        }
+        #status_expand_btn {
+            display: inline-flex;
+        }
+
+        &#status-bar {
+            position: fixed;
+            left: 0.75rem;
+            right: 0.75rem;
+            bottom: calc(0.5rem + var(--bf-inset-bottom));
+            width: auto;
+            height: 4.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 2.25rem;
+            border: 1px solid var(--surface-200);
+            background-color: color-mix(in srgb, var(--surface-100) 82%, transparent);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: var(--shadow-chrome-status);
+            overflow: visible;
+            z-index: 2000;
+        }
+
+        /* Thumb-sized targets on a bar this prominent; UButton's own sizes do not go big enough.
+           UButton pads its content, which pushes the glyph off-centre once the box is this large. */
+        .status-bar__tabs > button,
+        #status_expand_btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.75rem;
+            height: 2.75rem;
+            padding: 0;
+        }
+
+        .status-bar__tabs > button svg,
+        #status_expand_btn svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            flex: none;
+        }
+
+        /* Collapsed, the readouts would be a squeezed unreadable strip, so hide them outright. */
+        &#status-bar:not(.status-bar--expanded) .status-bar__items {
+            display: none;
+        }
+
+        &#status-bar.status-bar--expanded {
+            height: auto;
+            max-height: 70vh;
+            border-radius: 2.25rem;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            padding: 0.75rem;
+            overflow-y: auto;
+
+            /* The tab strip and the expand control keep their own row, in the same place and at
+               the same size as when collapsed. The bar grows upwards instead, so nothing the
+               user was just aiming at moves out from under them. */
             .status-bar__tabs {
-                display: flex;
-            }
-            #status_expand_btn {
-                display: inline-flex;
+                order: 2;
             }
 
-            &#status-bar {
-                position: fixed;
-                left: 0.75rem;
-                right: 0.75rem;
-                bottom: calc(0.5rem + var(--bf-inset-bottom));
-                width: auto;
-                height: 4.5rem;
-                padding: 0.375rem 0.75rem;
-                border-radius: 2.25rem;
-                border: 1px solid var(--surface-200);
-                background-color: color-mix(in srgb, var(--surface-100) 82%, transparent);
-                backdrop-filter: blur(14px);
-                -webkit-backdrop-filter: blur(14px);
-                box-shadow: var(--shadow-chrome-status);
+            #status_expand_btn {
+                order: 3;
+            }
+
+            .status-bar__items {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+                /* flex-basis, not width: the base rule's `flex: 1` sets basis 0, which would size
+                   this to a share of the row rather than a full row of its own. */
+                flex: 0 0 100%;
+                /* Above the tab row, so the readouts appear and the controls stay put. */
+                order: 1;
                 overflow: visible;
-                z-index: 2000;
+                white-space: normal;
             }
 
-            /* Thumb-sized targets on a bar this prominent; UButton's own sizes do not go big enough.
-               UButton pads its content, which pushes the glyph off-centre once the box is this large. */
-            .status-bar__tabs > button,
-            #status_expand_btn {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 2.75rem;
-                height: 2.75rem;
-                padding: 0;
+            /* The row markup is built for a right-aligned strip (ml-auto and friends); stacked,
+               each readout needs to start at the left edge instead. */
+            .status-bar__items > *,
+            .status-bar__items .ml-auto {
+                width: 100%;
+                margin-left: 0;
+                justify-content: flex-start;
             }
 
-            .status-bar__tabs > button svg,
-            #status_expand_btn svg {
-                width: 1.5rem;
-                height: 1.5rem;
-                flex: none;
-            }
-
-            /* Collapsed, the readouts would be a squeezed unreadable strip, so hide them outright. */
-            &#status-bar:not(.status-bar--expanded) .status-bar__items {
+            /* Vertical rules between stacked rows read as stray marks. */
+            .status-bar__items > .u-separator,
+            .status-bar__items [role="separator"] {
                 display: none;
-            }
-
-            &#status-bar.status-bar--expanded {
-                height: auto;
-                max-height: 70vh;
-                border-radius: 2.25rem;
-                flex-wrap: wrap;
-                align-items: flex-start;
-                padding: 0.75rem;
-                overflow-y: auto;
-
-                /* The tab strip and the expand control keep their own row, in the same place and at
-                   the same size as when collapsed. The bar grows upwards instead, so nothing the
-                   user was just aiming at moves out from under them. */
-                .status-bar__tabs {
-                    order: 2;
-                }
-
-                #status_expand_btn {
-                    order: 3;
-                }
-
-                .status-bar__items {
-                    flex-direction: column;
-                    align-items: stretch;
-                    gap: 0.75rem;
-                    /* flex-basis, not width: the base rule's `flex: 1` sets basis 0, which would size
-                       this to a share of the row rather than a full row of its own. */
-                    flex: 0 0 100%;
-                    /* Above the tab row, so the readouts appear and the controls stay put. */
-                    order: 1;
-                    overflow: visible;
-                    white-space: normal;
-                }
-
-                /* The row markup is built for a right-aligned strip (ml-auto and friends); stacked,
-                   each readout needs to start at the left edge instead. */
-                .status-bar__items > *,
-                .status-bar__items .ml-auto {
-                    width: 100%;
-                    margin-left: 0;
-                    justify-content: flex-start;
-                }
-
-                /* Vertical rules between stacked rows read as stray marks. */
-                .status-bar__items > .u-separator,
-                .status-bar__items [role="separator"] {
-                    display: none;
-                }
             }
         }
     }

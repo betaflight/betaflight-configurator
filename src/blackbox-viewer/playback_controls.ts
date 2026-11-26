@@ -228,11 +228,11 @@ export function setPlaybackRate(rate: number): void {
 }
 
 /** Zoom the graph to a percentage, or back to the zoom before the last change when none is given. */
-export function setGraphZoom(zoom?: number | null): void {
+export function setGraphZoom(zoom?: number | null, previousZoom?: number): void {
     const graphStore = useGraphStore(pinia);
     zoom ??= graphStore.lastGraphZoom;
     if (zoom >= GRAPH_MIN_ZOOM && zoom <= GRAPH_MAX_ZOOM) {
-        graphStore.lastGraphZoom = graphStore.graphZoom;
+        graphStore.lastGraphZoom = previousZoom ?? graphStore.graphZoom;
         graphStore.graphZoom = zoom;
 
         if (graphStore.graph) {

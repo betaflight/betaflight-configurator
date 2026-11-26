@@ -24,6 +24,14 @@ import { computed, ref } from "vue";
 import { useFlightControllerStore, type FcState } from "@/stores/fc";
 import { useDirtyState } from "@/composables/useDirtyState";
 
+export type FilterSlider = "gyro" | "dterm";
+
+/** The cutoffs each filter slider drives (what the FC calculate reply and the client-side calculation write). */
+const FILTER_SLIDER_CUTOFFS = {
+    gyro: ["gyro_lowpass_hz", "gyro_lowpass2_hz", "gyro_lowpass_dyn_min_hz", "gyro_lowpass_dyn_max_hz"],
+    dterm: ["dterm_lowpass_hz", "dterm_lowpass2_hz", "dterm_lowpass_dyn_min_hz", "dterm_lowpass_dyn_max_hz"],
+} as const satisfies Record<FilterSlider, readonly (keyof FcState["filterConfig"])[]>;
+
 /**
  * Pinia store for PID Tuning tab change tracking.
  *
@@ -73,12 +81,45 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
 
     const {
         dirty: hasEdits,
-        markClean: markEditsClean,
+        markClean: markValuesClean,
         takeSnapshot: takeEditsSnapshot,
-    } = useDirtyState(serializeEdits);
+    } = useDirtyState(serializeEdits, { promptOnLeave: false });
+
+    /**
+     * The manual cutoffs a filter slider replaced when it was switched ON, so switching it OFF
+     * before saving puts them back. Kept here rather than in FilterSubTab: the sub-tab is torn
+     * down whenever the user visits another sub-tab, and the edit session outlives it.
+     */
+    const manualFilterCutoffs: Record<FilterSlider, Partial<FcState["filterConfig"]> | null> = {
+        gyro: null,
+        dterm: null,
+    };
+
+    function rememberManualFilterCutoffs(slider: FilterSlider) {
+        manualFilterCutoffs[slider] = Object.fromEntries(
+            FILTER_SLIDER_CUTOFFS[slider].map((field) => [field, fcStore.filterConfig[field]]),
+        );
+    }
+
+    /** Put back the cutoffs from before the slider was switched ON; a no-op if it wasn't, since the last load/save. */
+    function restoreManualFilterCutoffs(slider: FilterSlider) {
+        const cutoffs = manualFilterCutoffs[slider];
+        if (cutoffs) {
+            Object.assign(fcStore.filterConfig, cutoffs);
+            manualFilterCutoffs[slider] = null;
+        }
+    }
+
+    /** The current values are the new baseline (after a load or a save): nothing left to restore. */
+    function markEditsClean(snapshot?: string) {
+        markValuesClean(snapshot);
+        manualFilterCutoffs.gyro = null;
+        manualFilterCutoffs.dterm = null;
+    }
 
     const { dirty: profileChanged, markClean: markProfileSelectionClean } = useDirtyState(
         () => `${fcStore.config.profile}:${fcStore.config.rateProfile}`,
+        { promptOnLeave: false },
     );
 
     // Rewriting profile data (MSP_SET_RESET_CURR_PID, MSP_COPY_PROFILE) needs a flag rather than a
@@ -108,6 +149,8 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         hasEdits,
         takeEditsSnapshot,
         markEditsClean,
+        rememberManualFilterCutoffs,
+        restoreManualFilterCutoffs,
         markProfileUnsaved,
         // Adopt a profile the FC picked for itself without claiming a pending reset or copy was
         // written: an external switch says nothing about whether EEPROM holds those.

@@ -31,6 +31,18 @@
     "search": {
         "message": "بحث"
     },
+    "settingsSearchTitle": {
+        "message": "إعدادات البحث",
+        "description": "Title and accessible label for the global settings search"
+    },
+    "settingsSearchPlaceholder": {
+        "message": "إعدادات البحث...",
+        "description": "Placeholder text for the global settings search input"
+    },
+    "settingsSearchNoResults": {
+        "message": "لم يتم العثور على إعدادات",
+        "description": "Message shown when the global settings search has no matching results"
+    },
     "dontShowAgain": {
         "message": "عدم الإظهار مرة أخرى"
     },
@@ -209,6 +221,24 @@
     "save": {
         "message": "حفظ"
     },
+    "saveAndReboot": {
+        "message": "حفظ وإعادة التشغيل"
+    },
+    "refresh": {
+        "message": "تحديث"
+    },
+    "saveToFile": {
+        "message": "حفظ إلى ملف"
+    },
+    "loadFromFile": {
+        "message": "تحميل من ملف"
+    },
+    "loadFromClipboard": {
+        "message": "تحميل من الحافظة"
+    },
+    "copyToClipboard": {
+        "message": "نسخ إلى الحافظة"
+    },
     "autoConnectEnabled": {
         "message": "الاتصال التلقائي: مفعّل - يحاول التطبيق الاتصال تلقائيًا عند اكتشاف منفذ جديد"
     },
@@ -349,6 +379,10 @@
     "tabOptions": {
         "message": "خيارات"
     },
+    "sidebarSettingsMenu": {
+        "message": "الاعدادات",
+        "description": "Accessible label for the gear button in the sidebar footer that opens the settings menu (Options, Log, dark mode, expert mode)."
+    },
     "sidebarToggleDarkMode": {
         "message": "التبديل بين الوضع الداكن والفاتح",
         "description": "Item in the sidebar footer settings menu that toggles dark mode."
@@ -365,6 +399,9 @@
     },
     "sensorConfigHardware": {
         "message": "مكونات المستشعرات"
+    },
+    "sensorConfigActiveGyros": {
+        "message": "الجيروسكوبات النشطة"
     },
     "sensorConfigGyroLabel": {
         "message": "الجيروسكوب"
@@ -622,6 +659,10 @@
     "tabAuxiliary": {
         "message": "أنماط"
     },
+    "logActionOpenWindow": {
+        "message": "إفتح فى صفحه جديده",
+        "description": "Opens the activity log in a separate window that can be moved independently of the app."
+    },
     "tabLog": {
         "message": "السجل"
     },
@@ -680,6 +721,15 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "لم يتم العثور على USB DFU"
+    },
+    "dfuDeviceOpenFailed": {
+        "message": "فشل في فتح جهاز DFU . أعد الاتصال بوحدة تحكم الطيران وحاول مرة أخرى"
+    },
+    "dfuDeviceAccessDeniedLinux": {
+        "message": "تم رفض الوصول إلى جهاز DFU . تحقق من تثبيت قواعد udev ، راجع المستندات للحصول على التعليمات"
+    },
+    "dfuDeviceAccessDeniedWindows": {
+        "message": "تم رفض الوصول إلى جهاز DFU . قم بتثبيت مشغل WinUSB (ImpulseRC Driver Fixer أو Zadig) وأغلق أي برنامج آخر باستخدام وحدة تحكم الطيران"
     },
     "stm32DfuPermissionRequired": {
         "message": "أُعيد تشغيل الجهاز في وضع DFU.<br><br>يتطلب متصفحك إذن USB للوصول إلى جهاز DFU. انقر الزر أدناه لاختياره من قائمة الأجهزة."
@@ -905,6 +955,9 @@
     },
     "dfu_hex_address_errors": {
         "message": "رمز البرنامج الثابت يتضمن عناوين لم يتم العثور عليها على الجهاز المستهدف"
+    },
+    "dfu_hex_alt_switch_unsupported": {
+        "message": "صورة البرنامج الثابت تمتد عبر عدة ذواكر فلاش لا يستطيع هذا التطبيق التبديل بينها على هذا الجهاز."
     },
     "eeprom_saved_ok": {
         "message": "ذاكرة EEPROM <span class=\"message-positive\">تم حفظها</span>"
@@ -1302,6 +1355,12 @@
     },
     "initialSetupAccelCalibEnded": {
         "message": "معايرة مقياس التسارع <span class=\"message-positive\">انتهت</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "معايرة المقياس المغناطيسي بدأت"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "معايرة المقياس المغناطيسي<span class=\"message-positive\">انتهت</span>"
     },
     "initialSetupSettingsRestored": {
         "message": "تمت <strong>استعادة الإعدادات إلى الافتراضي</strong>"
@@ -1944,9 +2003,6 @@
     "configurationSaveFailed": {
         "message": "فشل حفظ إعدادات المستشعرات"
     },
-    "configurationButtonSave": {
-        "message": "احفظ ثم أعد التشغيل"
-    },
     "dialogClose": {
         "message": "إغلاق"
     },
@@ -2484,12 +2540,6 @@
     "throttle": {
         "message": "دواسة الوقود"
     },
-    "pidTuningButtonSave": {
-        "message": "حفظ"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "تحديث"
-    },
     "pidTuningCopyProfile": {
         "message": "نسخ ملف التعريف"
     },
@@ -2633,12 +2683,6 @@
         "message": "دواسة الوقود [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "حفظ"
-    },
-    "receiverButtonRefresh": {
-        "message": "تحديث"
-    },
     "receiverButtonBind": {
         "message": "ربط المستقبل"
     },
@@ -2692,9 +2736,6 @@
     },
     "auxiliaryAddLink": {
         "message": "إضافة رابط"
-    },
-    "auxiliaryButtonSave": {
-        "message": "حفظ"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "تلقائي"
@@ -2908,13 +2949,13 @@
         "message": "تعطيل التحكم في إعدادات جهاز الفيديو من خلال العرض على الشاشة",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "التنقل بين مستويات طاقة جهاز الفيديو (إذا كان مدعومًا من قبل VTX)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "تحويل جهاز الفيديو إلى وضع الحفرة (طاقة إخراج منخفضة، إذا كان مدعومًا)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "تسجيل نقاط المسار أثناء الطيران: تؤدي ضغطة قصيرة إلى إضافة الموقع الحالي إلى خطة الطيران كنقطة مسار، بينما يؤدي الضغط المطوّل على المفتاح لمدة 1.5 ثانية إلى حذف آخر نقطة مسار.",
+        "description": "Help text to WP CAPTURE mode"
     },
     "auxiliaryHelpMode_LAPTIMERRESET": {
         "message": "إعادة ضبط مؤقت اللفات الخاص transponder ",
@@ -3064,9 +3105,6 @@
         "message": "اختيار ملف تعريف البطارية",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Save"
-    },
     "adjustmentsShowAll": {
         "message": "عرض جميع الخانات"
     },
@@ -3103,9 +3141,6 @@
     },
     "servosLiveMode": {
         "message": "تمكين الوضع المباشر"
-    },
-    "servosButtonSave": {
-        "message": "حفظ"
     },
     "gpsHead": {
         "message": "عام"
@@ -3724,20 +3759,11 @@
     "cliReboot": {
         "message": "تم اكتشاف إعادة تشغيل CLI"
     },
-    "cliSaveToFileBtn": {
-        "message": "حفظ إلى ملف"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "مسح سجل الإخراج"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "نسخ إلى الحافظة"
-    },
     "cliCopySuccessful": {
         "message": "تم النسخ!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "تحميل من ملف"
     },
     "cliSupportRequestBtn": {
         "message": "إرسال بيانات الدعم"
@@ -3795,9 +3821,6 @@
     },
     "blackboxConfiguration": {
         "message": "تكوين الصندوق الأسود"
-    },
-    "blackboxButtonSave": {
-        "message": "حفظ وإعادة التشغيل"
     },
     "blackboxLoggingNone": {
         "message": "لا تسجيل"
@@ -3923,6 +3946,9 @@
     "firmwareFlasherReleaseDate": {
         "message": "التاريخ:"
     },
+    "firmwareFlasherReleaseCommit": {
+        "message": " اعتماد التغييرات"
+    },
     "firmwareFlasherReleaseTarget": {
         "message": "الهدف:"
     },
@@ -3974,6 +4000,12 @@
     "firmwareFlasherNoReboot": {
         "message": "بدون تسلسل إعادة تشغيل"
     },
+    "firmwareFlasherBuildTypeLabel": {
+        "message": "نوع النسخة"
+    },
+    "firmwareFlasherBoardLabel": {
+        "message": "اللوحة"
+    },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "حدد نوع البناء لرؤية اللوحات المتاحة."
     },
@@ -4006,6 +4038,21 @@
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "الاختيار اليدوي لمعدل الباود للوحات التي لا تدعم السرعة الافتراضية أو للتثبيت عبر البلوتوث.<br /><span class=\"message-negative\">ملاحظة:</span> لا يتم استخدامه عند التثبيت عبر USB DFU"
+    },
+    "firmwareFlasherShowReleaseOptions": {
+        "message": "إظهار خيارات الإصدار"
+    },
+    "firmwareFlasherShowReleaseOptionsDescription": {
+        "message": "اختر الإصدارات التي تريد إظهارها"
+    },
+    "firmwareFlasherOptionLabelShowReleases": {
+        "message": "عرض الإصدار المستقر"
+    },
+    "firmwareFlasherOptionLabelShowAllReleases": {
+        "message": "إظهار جميع الإصدارات"
+    },
+    "firmwareFlasherOptionLabelShowDevelopmentReleases": {
+        "message": "إظهار إصدارات المطورين"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "أختر أصدار البرنامج الثابت"
@@ -4167,6 +4214,9 @@
     "unstableFirmwareAcknowledgementDialog": {
         "message": "أنت على وشك تثبيت <strong>إصدار تطويري من البرنامج الثابت</strong>. هذه الإصدارات لا تزال قيد التطوير، وقد تنطبق عليها أي من الحالات التالية:<strong><ul><li>قد لا يعمل البرنامج الثابت إطلاقًا؛</li><li>قد يكون البرنامج الثابت غير صالح للطيران؛</li><li>قد توجد مشكلات متعلقة بالسلامة في البرنامج الثابت، مثل الطيران غير المنضبط</li><li>قد يتسبب البرنامج الثابت في توقف وحدة التحكم بالطيران عن الاستجابة أو تلفها</li></ul></strong>إذا تابعت تثبيت هذا البرنامج الثابت، <strong>فأنت تتحمل كامل المسؤولية عن مخاطر وقوع أي مما سبق</strong>. كما أنك تقر بضرورة إجراء <strong>اختبارات شاملة على المنضدة مع إزالة المراوح</strong> قبل أي محاولة للطيران باستخدام هذا البرنامج الثابت.\n"
     },
+    "developmentFirmwareAcknowledgement": {
+        "message": "لقد قرأت ما سبق و<strong>أتحمل المسؤولية الكاملة</strong> عن تثبيت Firmware غير مستقر"
+    },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "تثبيت"
     },
@@ -4197,9 +4247,6 @@
     },
     "ledStripHelp": {
         "message": "يمكن لوحدة التحكم الطيرانية التحكم في الألوان والتأثيرات لمصابيح LED الفردية على الشريط.<br /> قم بإعداد مصابيح LED على الشبكة، وقم بإعداد ترتيب التوصيل ثم قم بتثبيت مصابيح LED على طائرتك وفقًا لمواقع الشبكة. لن يتم حفظ مصابيح LED التي لا تحتوي على رقم ترتيب توصيل.<br /> انقر نقرًا مزدوجًا على اللون لتحرير قيم HSV."
-    },
-    "ledStripButtonSave": {
-        "message": "حفظ"
     },
     "ledStripColorSetupTitle": {
         "message": "ضبط اللون",
@@ -5157,9 +5204,6 @@
     "failsafeSwitchOptionKill": {
         "message": "وقف"
     },
-    "powerButtonSave": {
-        "message": "حفظ"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "ترقية البرنامج الثابت <span class=\"message-negative\">مطلوبة</span>. تكوينات البطارية/التيار/الجهد باستخدام API &lt; 1.33.0 (إصدار Betaflight &lt;= 3.17) غير مدعوم."
     },
@@ -5682,14 +5726,9 @@
         "message": "الخط المحدد هو خط صغير مخصص لشاشات OSD التي تستخدم Framebuffer، لكن شاشة OSD الحالية تستخدم خطوطًا بالحجم القياسي. لذلك لن يظهر الخط بشكل صحيح. هل تريد رفع الخط رغم ذلك؟",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
-    "osdSetupSaveReboot": {
-        "message": "حفظ وإعادة التشغيل"
-    },
-    "osdSetupSave": {
-        "message": "حفظ"
-    },
-    "osdSetupRefresh": {
-        "message": "تحديث"
+    "osdSetupSaveOptions": {
+        "message": "خيارات حفظ OSD",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "جهد البطارية الرئيسية",
@@ -6914,7 +6953,7 @@
         "message": "السرعة الجوية"
     },
     "vtxHelp": {
-        "message": "يمكنك هنا ضبط قيم جهاز إرسال الفيديو (VTX). ويمكنك عرض قيم الإرسال وتغييرها، بما في ذلك جداول VTX، إذا كانت وحدة التحكم بالطيران وجهاز VTX يدعمان ذلك.<br>لإعداد جهاز VTX، اتبع الخطوات التالية:<br>1. انتقل إلى <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">هذه</a> الصفحة؛<br>2. ابحث عن ملف إعداد VTX المناسب لبلدك وطراز جهاز VTX لديك، ثم نزّله؛<br>3. اضغط على '$t(vtxButtonLoadFile.message)' أدناه، ثم اختر ملف إعداد VTX وحمّله؛<br>4. تحقق من صحة الإعدادات؛<br>5. اضغط على '$t(vtxButtonSave.message)' لحفظ إعدادات VTX في وحدة التحكم بالطيران.<br>6. يمكنك اختياريًا الضغط على '$t(vtxButtonSaveLua.message)' لحفظ ملف إعداد Lua يمكنك استخدامه مع برامج Betaflight النصية بلغة Lua (اطّلع على المزيد من <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">هنا</a>.)\n",
+        "message": "هنا يمكنك ضبط إعدادات جهاز إرسال الفيديو (VTX). يمكنك عرض قيم الإرسال وتعديلها، بما في ذلك جداول VTX، إذا كانت وحدة التحكم بالطيران (FC) وجهاز إرسال الفيديو (VTX) يدعمان ذلك.\n\nلإعداد جهاز VTX، اتبع الخطوات التالية:\n\n1. انتقل إلى [هذه الصفحة](https://betaflight.com/docs/wiki/guides/current/VTX?utm_source=chatgpt.com#vtx-tables).\n2. ابحث عن ملف إعدادات VTX المناسب لبلدك وطراز جهازك، ثم قم بتنزيله.\n3. اضغط على '$t(loadFromFile.message)' أدناه، ثم حدد ملف إعدادات VTX وقم بتحميله.\n4. تأكد من صحة الإعدادات.\n5. اضغط على '$t(save.message)' لحفظ إعدادات VTX في وحدة التحكم بالطيران.\n6. اختياريًا، اضغط على '$t(vtxButtonSaveLua.message)' لحفظ ملف إعدادات Lua لاستخدامه مع سكربتات Betaflight Lua. (لمزيد من المعلومات، اضغط [هنا](https://github.com/betaflight/betaflight-tx-lua-scripts/?utm_source=chatgpt.com)).\n\n",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6926,11 +6965,11 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">انتباه:</span> نوع VTX المحدد لا يدعم إعداد 'المصنع' للنطاقات، ولكن بعض نطاقاتك لديها هذا الإعداد. انقر على '$t(vtxButtonSave.message)' لإصلاح هذا.",
+        "message": "&#x20;نوع جهاز إرسال الفيديو (VTX) المحدد لا يدعم إعداد 'factory' للنطاقات، ولكن بعض النطاقات لديك تستخدم هذا الإعداد. اضغط على '$t(save.message)' لإصلاح المشكلة.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">انتباه:</span> تم تحميل قيم جدول VTX، ولكن لم يتم تخزينها بعد على وحدة تحكم الطيران. يجب عليك التحقق من القيم وتعديلها لتتأكد من أنها صالحة وقانونية في بلدك ثم اضغط على زر $t(vtxButtonSave.message) لتخزينها على وحدة تحكم الطيران.",
+        "message": "**تنبيه:** تم تحميل قيم جدول VTX، ولكن لم يتم حفظها بعد في وحدة التحكم بالطيران. يجب عليك مراجعة القيم وتعديلها للتأكد من صحتها وتوافقها مع القوانين المعمول بها في بلدك، ثم الضغط على زر $t(save.message) لحفظها في وحدة التحكم بالطيران.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -7179,25 +7218,17 @@
         "message": "<span class=\"message-negative\">خطأ</span> أثناء تحميل معلومات تكوين VTX من الحافظة. ربما المحتويات غير صحيحة",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "حفظ إلى ملف",
-        "description": "Save to file button in the VTX tab"
+    "vtxButtonSaveFileOptions": {
+        "message": "خيارات تصدير جدول VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "vtxButtonSaveLua": {
         "message": "حفظ نص Lua",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxButtonLoadFile": {
-        "message": "تحميل من ملف",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "تحميل من الحافظة",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "حفظ",
-        "description": "Save button in the VTX tab"
+    "vtxButtonLoadOptions": {
+        "message": "خيارات تحميل جدول VTX",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "buttonSaving": {
         "message": "جاري الحفظ",
@@ -7344,6 +7375,15 @@
     },
     "magCalibrationUnguidedDone": {
         "message": "اكتملت معايرة Firmware!"
+    },
+    "magCalibrationNotSent": {
+        "message": "تعذّر بدء المعايرة: لم تتلقَّ وحدة التحكم بالطيران الأمر."
+    },
+    "magCalibrationLegacyStarting": {
+        "message": "جارٍ البدء..."
+    },
+    "magCalibrationLegacyCountdown": {
+        "message": "معايرة... {{seconds}}s"
     },
     "magCalibrationCheck": {
         "message": "تحقق"
@@ -7793,13 +7833,9 @@
         "message": "خطأ في تحميل الإعدادات المسبقة من الإنترنت",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "حفظ وإعادة التشغيل",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "إلغاء",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
+    "presetsButtonClearSelection": {
+        "message": "مسح التحديد",
+        "description": "Clear the picked presets without applying them to the flight controller"
     },
     "presetsApplyingPresets": {
         "message": "جاري تطبيق التكوين...",
@@ -7824,10 +7860,6 @@
     "presetsWarningDialogYesButton": {
         "message": "موافق",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "إلغاء",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "إضافة إعداد مسبق",
@@ -8807,6 +8839,30 @@
     "preflightFlightWindow": {
         "message": "نافذة الطيران"
     },
+    "preflightTimelineDescription": {
+        "message": "خط زمني يوضّح الليل، والساعة الزرقاء، والساعة الذهبية، والنهار، مع علامات الشروق والغروب."
+    },
+    "preflightTimelineHelp": {
+        "message": "مرّر المؤشر فوق أي جزء، أو اضغط عليه، أو حدّده لعرض أوقاته. استخدم مفتاح الرسم التوضيحي لإبراز جميع الفترات من النوع نفسه."
+    },
+    "preflightTimelineHint": {
+        "message": "مرّر المؤشر فوق أي جزء أو اضغط عليه لعرض الأوقات الدقيقة."
+    },
+    "preflightTimelineNight": {
+        "message": "الليل وفترات الشفق الأخرى"
+    },
+    "preflightBlueHour": {
+        "message": "الساعة الزرقاء"
+    },
+    "preflightGoldenHour": {
+        "message": "الساعة الذهبية"
+    },
+    "preflightMorning": {
+        "message": "صباحًا"
+    },
+    "preflightEvening": {
+        "message": "مساءا"
+    },
     "preflightSunrise": {
         "message": "شروق الشمس"
     },
@@ -8821,6 +8877,9 @@
     },
     "preflightTempRange": {
         "message": "نطاق درجة الحرارة"
+    },
+    "preflightNow": {
+        "message": "الآن"
     },
     "preflightCurrentlyDay": {
         "message": "حالياً"
@@ -9161,6 +9220,9 @@
     "pidTuningWingTpaSpeedAdvanced": {
         "message": "متقدم"
     },
+    "pidTuningWingTpaSpeedPitot": {
+        "message": "مستشعر Pitot "
+    },
     "pidTuningWingTpaCurveType": {
         "message": "نوع المنحنى"
     },
@@ -9173,11 +9235,17 @@
     "pidTuningWingTpaCurveHyperbolic": {
         "message": "زائدي"
     },
+    "pidTuningWingTpaCurveHyperbolicRefSpeed": {
+        "message": "القطع الزائد حسب السرعة المرجعية"
+    },
     "pidTuningWingTpaBasicSpeedSettings": {
         "message": "إعداد السرعة الأساسية"
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "إعداد السرعة المتقدمة"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "إعداد سرعة Pitot"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "تأخير"
@@ -9233,6 +9301,12 @@
     "pidTuningWingTpaAdvSpeedPitchOffsetHelp": {
         "message": "إزاحة زاوية Pitch بالدرجات مضروبة في 10، وتُستخدم لتقدير سرعة الطائرة."
     },
+    "pidTuningWingTpaMaxPitotSpeed": {
+        "message": "أقصى سرعة جوية يقيسها pitot "
+    },
+    "pidTuningWingTpaMaxPitotSpeedHelp": {
+        "message": "أقصى سرعة جوية للطائرة يقيسها مستشعر Pitot"
+    },
     "pidTuningWingTpaAdvSpeedCurveSettings": {
         "message": "إعدادات المنحنى الزائدي"
     },
@@ -9263,6 +9337,9 @@
     "pidTuningWingTpaAdvSpeedCurveDetails": {
         "message": "مخطط المنحنيات الزائدية"
     },
+    "pidTuningWingTpaClassicCurvesCaution": {
+        "message": "لا يُنصح باستخدام المنحنى الكلاسيكي للطائرات ثابتة الجناح، لأنه يطبّق معدل تخفيف استجابة PID المرتبط بالخانق (TPA) ونقطة التحوّل الخاصة بالطائرات متعددة المراوح على السرعة الجوية المقدّرة بدلًا من موضع الخانق."
+    },
     "pidTuningWingMiscSettings": {
         "message": "اعدادات متنوعة"
     },
@@ -9283,5 +9360,29 @@
     },
     "pidTuningWingMiscPitchOffsetHelp": {
         "message": "إزاحة زاوية Pitch في أوضاع الطيران المعتمدة على الزاوية، بوحدة عُشر الدرجة. القيم الموجبة تجعل مقدمة الجناح تميل إلى الأسفل.\n"
+    },
+    "speedCurvesReferenceSpeed": {
+        "message": "السرعة المرجعية"
+    },
+    "speedCurvesReferenceSpeedHelp": {
+        "message": "السرعة المرجعية (م/ث) — تكون قيمة المنحنيات عند هذه النقطة 1.0."
+    },
+    "speedCurvesPower": {
+        "message": "قوة المنحنيات"
+    },
+    "speedCurvesPowerHelp": {
+        "message": "أُسّ المنحنيات الزائدة، ×0.1"
+    },
+    "speedCurvesCurveMin": {
+        "message": "القيمة الأقل للمنحنيات"
+    },
+    "speedCurvesCurveMinHelp": {
+        "message": "الحد الأدنى لقيمة المنحنيات الزائدة، ×0.01"
+    },
+    "speedCurvesCurveMax": {
+        "message": "القيمة الاعلى للمنحنيات"
+    },
+    "speedCurvesCurveMaxHelp": {
+        "message": "الحد الأقصى لقيمة المنحنيات الزائدة، ×0.01"
     }
 }

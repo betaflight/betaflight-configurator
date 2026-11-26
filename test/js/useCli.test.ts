@@ -326,13 +326,14 @@ describe("useCli", () => {
             expect(send).toHaveBeenCalledTimes(1);
         });
 
-        it("reconciles the final line using the latest FC input", () => {
+        it("sends a pasted final line verbatim instead of reconciling it with a stale FC echo", () => {
             useConnectionStore().cliValid = true;
-            submit("version\nstatus");
-            cli.read(new TextEncoder().encode("# wrong"));
+            submit("set profile_name 1\nsave");
+            // The FC has not caught up yet: this is the echo of the previous line, not typed input.
+            cli.read(new TextEncoder().encode("# set profile_"));
             complete(0);
             vi.advanceTimersByTime(cli.state.lineDelayMs);
-            expect(sentText(send, 1)).toBe(`${String.fromCodePoint(127).repeat(5)}status\n`);
+            expect(sentText(send, 1)).toBe("save\n");
         });
 
         it("applies the ordinary delay before a profile and the profile delay after its completion", () => {

@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "LED-konfiguration kunne ikke indlæses. Genopret forbindelse og genindlæs denne fane før du gemmer."
+    },
     "yes": {
         "message": "Ja",
         "description": "General Yes message to be used across the application"
@@ -220,6 +223,24 @@
     },
     "save": {
         "message": "Gem"
+    },
+    "saveAndReboot": {
+        "message": "Gem og genstart"
+    },
+    "refresh": {
+        "message": "Opdater"
+    },
+    "saveToFile": {
+        "message": "Gem som fil"
+    },
+    "loadFromFile": {
+        "message": "Indlæs fra fil"
+    },
+    "loadFromClipboard": {
+        "message": "Sæt ind fra udklipsholder"
+    },
+    "copyToClipboard": {
+        "message": "Kopier til udklipsholder"
     },
     "autoConnectEnabled": {
         "message": "Autotilslut er aktiv - tilslutning forsøges automatisk, når ny port registreres"
@@ -1971,9 +1992,6 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
-    "configurationButtonSave": {
-        "message": "Gem og genstart"
-    },
     "dialogClose": {
         "message": "Luk"
     },
@@ -2502,12 +2520,6 @@
     "throttle": {
         "message": "Gas"
     },
-    "pidTuningButtonSave": {
-        "message": "Gem"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Opfrisk"
-    },
     "pidTuningCopyProfile": {
         "message": "Kopier PID profil"
     },
@@ -2651,12 +2663,6 @@
         "message": "Gas [T]",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Gem"
-    },
-    "receiverButtonRefresh": {
-        "message": "Opfrisk"
-    },
     "receiverButtonBind": {
         "message": "Forbind modtager"
     },
@@ -2710,9 +2716,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Tilknyt kanal"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Gem"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -2926,10 +2929,6 @@
         "message": "Deaktiver kontrol af VTX indstillinger via OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Rul gennem niveauer for VTX effekt (hvis VTX har denne mulighed)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
         "description": "Help text to VTX PIT MODE mode"
@@ -3086,9 +3085,6 @@
         "message": "Vælg batteri profil",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Gem"
-    },
     "adjustmentsShowAll": {
         "message": "Vis alle PID profiler"
     },
@@ -3125,9 +3121,6 @@
     },
     "servosLiveMode": {
         "message": "Aktivér Live-tilstand"
-    },
-    "servosButtonSave": {
-        "message": "Gem"
     },
     "gpsHead": {
         "message": "Generelt"
@@ -3746,20 +3739,11 @@
     "cliReboot": {
         "message": "CLI genstart registreret"
     },
-    "cliSaveToFileBtn": {
-        "message": "Gem som fil"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Ryd CLI vindue"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Kopier til udklipsholder"
-    },
     "cliCopySuccessful": {
         "message": "Kopieret"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Indlæs fra fil"
     },
     "cliSupportRequestBtn": {
         "message": "Indsend logoplysninger til Support"
@@ -3817,9 +3801,6 @@
     },
     "blackboxConfiguration": {
         "message": "Blackbox konfiguration"
-    },
-    "blackboxButtonSave": {
-        "message": "Gem og genstart"
     },
     "blackboxLoggingNone": {
         "message": "Ingen logning"
@@ -4243,9 +4224,6 @@
     },
     "ledStripHelp": {
         "message": "FC kan styre farver og effekter på individuelle LED'er på en strimmel.<br />Opsæt LED'er i gitteret, opsæt ledningsrækkefølge og forbnd så LED'erne på dit fartøj jf. gitterpositionerne. LED'er uden ledningsnummer vil ikke blive gemt.<br />Dobbeltklik på en farve for at redigere HSV-værdierne."
-    },
-    "ledStripButtonSave": {
-        "message": "Gem"
     },
     "ledStripColorSetupTitle": {
         "message": "Farve opsætning",
@@ -5207,9 +5185,6 @@
     "failsafeSwitchOptionKill": {
         "message": "SLUK"
     },
-    "powerButtonSave": {
-        "message": "Gem"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Firmware opgradering <span class=\"message-negative\">kræves</span>. Batteri/Amperage/Spænding konfigurationer ved hjælp af API &lt; 1.33.0 (Betaflight release &lt;= 3.17) understøttes ikke."
     },
@@ -5728,14 +5703,9 @@
         "message": "Den valgte skrifttype er konfigureret til lille skrifttype for framebuffer OSDs, men denne OSD bruger standard størrelse skrifttyper. Den vil ikke vises korrekt. Hent alligevel?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
     },
-    "osdSetupSaveReboot": {
-        "message": "Gem og genstart"
-    },
-    "osdSetupSave": {
-        "message": "Gem"
-    },
-    "osdSetupRefresh": {
-        "message": "Opdater"
+    "osdSetupSaveOptions": {
+        "message": "Indstillinger for OSD- gem",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Batteri spænding i realtid",
@@ -6959,10 +6929,6 @@
     "osdPitotAirSpeed": {
         "message": "Lufthastighed"
     },
-    "vtxHelp": {
-        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-Tables\">VTX-tabeller</a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">her</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">BEMÆRK:</span> VTX svarer ikke endnu. Vælg den rigtige VTX protokol og den UART som VTX er forbundet til, og tryk derefter gem; de resterende indstillinger vises, når enheden svarer.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6970,14 +6936,6 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Bemærk:</span> Du skal konfigurere og gemme den første VTX tabel i bunden, før du kan gøre brug af $t(vtxSelectedMode.message) felter.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Den valgte VTX-type understøtter ikke indstillingen 'fabrik' for bands, men nogle af dine bands har denne indstilling. Klik på '$t(vtxButtonSave.message)' for at løse dette.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Bemærk:</span> Værdierne i VTX tabellen er blevet indlæst, men endnu ikke gemt i FC. Du skal bekræfte og ændre værdierne for at sikre, at de er lovlige i dit land, og tryk derefter på $t(vtxButtonSave.message) knappen for at gemme dem i FC.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "Indtast frekvens direkte",
@@ -7225,25 +7183,9 @@
         "message": "<span class=\"message-negative\">Fejl</span> under indlæsning af VTX konfiguration fra udklipsholder. Måske er indholdet ikke korrekt",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Gem i fil",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Gem i Lua format",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Indlæs fra fil",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Sæt ind fra udklipsholder",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Gem",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Gemmer",
@@ -7848,14 +7790,6 @@
         "message": "Fejl ved hent af predefineret opsætning fra internettet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Gem og genstart",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Fortryd",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Anvender opsætning...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7879,10 +7813,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Acceptér",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Fortryd",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Tilføj farvorit forudindstilling",
@@ -9222,6 +9152,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "Avanceret hastigheds konfiguration"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Grundlæggende hastigheds konfiguration"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "Forsinkelse"

@@ -1891,9 +1891,6 @@
     "configurationSaveFailed": {
         "message": "Конфигурация сақталмады"
     },
-    "configurationButtonSave": {
-        "message": "Сақтау және қайта жүктеу"
-    },
     "dialogClose": {
         "message": "Жабу"
     },
@@ -2359,12 +2356,6 @@
     "throttle": {
         "message": "Газ"
     },
-    "pidTuningButtonSave": {
-        "message": "Сақтау"
-    },
-    "pidTuningButtonRefresh": {
-        "message": "Жаңарту"
-    },
     "pidTuningCopyProfile": {
         "message": "Профильді көшіру"
     },
@@ -2508,12 +2499,6 @@
         "message": "Газ [T]:",
         "description": "Throttle label in signal graph"
     },
-    "receiverButtonSave": {
-        "message": "Сақтау"
-    },
-    "receiverButtonRefresh": {
-        "message": "Жаңарту"
-    },
     "receiverButtonBind": {
         "message": "Қабылдағышты байлау"
     },
@@ -2567,9 +2552,6 @@
     },
     "auxiliaryAddLink": {
         "message": "Қосылым қосыңыз"
-    },
-    "auxiliaryButtonSave": {
-        "message": "Сақтау"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "АВТО"
@@ -2783,10 +2765,6 @@
         "message": "OSD арқылы VTX параметрлерін басқаруды өшіріңіз",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "VTX қуат деңгейлері арқылы өтіңіз (VTX қолдаса)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "VTX-ны PitMode режиміне ауыстыру (қолдау көрсетілсе, шығыс қуаты төмен)",
         "description": "Help text to VTX PIT MODE mode"
@@ -2939,9 +2917,6 @@
         "message": "Батарея профилін таңдау",
         "description": "Allows switching battery profiles via RC channel"
     },
-    "adjustmentsSave": {
-        "message": "Сақтау"
-    },
     "adjustmentsShowAll": {
         "message": "Барлық ұяшықтарды көрсету"
     },
@@ -2975,9 +2950,6 @@
     },
     "servosLiveMode": {
         "message": "Тікелей режимді қосыңыз"
-    },
-    "servosButtonSave": {
-        "message": "Сақтау"
     },
     "gpsHead": {
         "message": "Негізгі"
@@ -3563,20 +3535,11 @@
     "cliReboot": {
         "message": "CLI режимінің ауысуы анықталды"
     },
-    "cliSaveToFileBtn": {
-        "message": "Файлға сақтаңыз"
-    },
     "cliClearOutputHistoryBtn": {
         "message": "Тарихты тазалау"
     },
-    "cliCopyToClipboardBtn": {
-        "message": "Буферге көшіру"
-    },
     "cliCopySuccessful": {
         "message": "Көшірілген!"
-    },
-    "cliLoadFromFileBtn": {
-        "message": "Файлдан жүктеңіз"
     },
     "cliSupportRequestBtn": {
         "message": "Қолдау мәліметтерін жіберіңіз"
@@ -3634,9 +3597,6 @@
     },
     "blackboxConfiguration": {
         "message": "Қара жәшік конфигурациясы"
-    },
-    "blackboxButtonSave": {
-        "message": "Сақтау және қайта жүктеу"
     },
     "blackboxLoggingNone": {
         "message": "Тіркеу өшірілген"
@@ -4033,9 +3993,6 @@
     },
     "ledStripHelp": {
         "message": "Ұшу контроллері жолақтағы жарық диодтарының түсін және жеке әсерлерін басқара алады.<br />Тордағы жарықдиодты шамдарды конфигурациялаңыз, сымдардың ретін конфигурациялаңыз, содан кейін жарық диодтарын тордағы орнына сәйкес дронға орнатыңыз. Желілік нөмір тағайындалмаған жарық диодтары сақталмайды.<br />Түсті екі рет басу HSV мәнін өзгертеді."
-    },
-    "ledStripButtonSave": {
-        "message": "Сақтау"
     },
     "ledStripColorSetupTitle": {
         "message": "Түс параметрі",
@@ -4884,9 +4841,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Өлтір"
     },
-    "powerButtonSave": {
-        "message": "Сақтау"
-    },
     "powerFirmwareUpgradeRequired": {
         "message": "Микробағдарлама <span class=\"message-negative\"></span> жаңартуды қажет етеді. Батарея/ток/кернеу конфигурациясы API < 1.33.0 (Betaflight шығарылымы <= 3.17) пайдаланады, бұған қолдау көрсетілмейді."
     },
@@ -5370,15 +5324,6 @@
     "osdSetupUploadFontWarningNeedStandardFont": {
         "message": "Таңдалған шрифт фрейм буферінің экрандық дискілеріне арналған шағын қаріп болып табылады, бірақ бұл OSD стандартты өлшемді қаріптерді пайдаланады. Ол дұрыс көрсетілмейді. Бәрібір жүктеп салу керек пе?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
-    },
-    "osdSetupSaveReboot": {
-        "message": "Сақтау және қайта жүктеу"
-    },
-    "osdSetupSave": {
-        "message": "Сақтау"
-    },
-    "osdSetupRefresh": {
-        "message": "Жаңарту"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Батарея кернеуі",
@@ -6586,10 +6531,6 @@
     "osdPitotAirSpeed": {
         "message": "Әуе жылдамдығы"
     },
-    "vtxHelp": {
-        "message": "Мұнда бейне таратқыш (VTX) параметрлерін конфигурациялауға болады. Ұшу контроллері және VTX өзі оны қолдайтын болса, VTX кестелерін қоса, тасымалдау параметрлерін көруге және өзгертуге болады.<br>VTX конфигурациялау үшін мына қадамдарды орындаңыз:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX#vtx-tables\">осы</a> бетіне өтіңіз;<br>2. Еліңізге және VTX үлгісіне сәйкес VTX конфигурация файлын тауып, оны жүктеп алыңыз;<br>3. Төмендегі '$t(vtxButtonLoadFile.message)' түймесін басыңыз, VTX конфигурация файлын таңдаңыз, оны жүктеп салыңыз;<br>4. Параметрлердің дұрыс екеніне көз жеткізіңіз;<br>5. VTX параметрлерін ұшу контроллеріне сақтау үшін '$t(vtxButtonSave.message)' түймесін басыңыз.<br>6. Betaflight lua сценарийлерімен бірге пайдалану үшін lua конфигурация файлын сақтау үшін қосымша \"$t(vtxButtonSaveLua.message)\" түймесін басыңыз (<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\"> туралы толығырақ осында</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Назар аударыңыз:</span> Ешбір VTX әлі жауап бермейді. VTX сөйлейтін протоколды және ол төменде жалғанған UART протоколын таңдаңыз, содан кейін сақтаңыз; қалған параметрлер құрылғы жауап бергенде пайда болады.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6597,14 +6538,6 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Назар аударыңыз:</span> $t(vtxSelectedMode.message) өрістерін пайдаланбас бұрын, VTX кестесін орнату және сақтау керек.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Ескертпе:</span> Таңдалған VTX түрі «зауыттық» диапазон параметрлерін қолдамайды, бірақ кейбір жолақтарыңызда бұл параметр бар. Мұны түзету үшін '$t(vtxButtonSave.message)' түймесін басыңыз.",
-        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
-    },
-    "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Назар аударыңыз:</span> VTX кестесінің мәндері жүктелді, бірақ ұшу контроллерінде әлі сақталмаған. Еліңізде олардың дұрыс және заңды екеніне көз жеткізу үшін мәндерді тексеріп, реттеу керек. Осыдан кейін оларды ұшу контроллеріне сақтау үшін $t(vtxButtonSave.message) түймесін басыңыз.",
-        "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
         "message": "Жиілікті тікелей енгізіңіз",
@@ -6840,25 +6773,9 @@
         "message": "<span class=\"message-negative\">Қате</span> алмасу буферінен бейне таратқыш конфигурациясын жүктеу кезінде. Мазмұнда қателер болуы мүмкін",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
-    "vtxButtonSaveFile": {
-        "message": "Файлға сақтаңыз",
-        "description": "Save to file button in the VTX tab"
-    },
     "vtxButtonSaveLua": {
         "message": "Lua сценарийін сақтаңыз",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxButtonLoadFile": {
-        "message": "Файлдан жүктеңіз",
-        "description": "Load to file button in the VTX tab"
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "Буферден жүктеңіз",
-        "description": "Paste from clipboard button in the VTX tab"
-    },
-    "vtxButtonSave": {
-        "message": "Сақтау",
-        "description": "Save button in the VTX tab"
     },
     "buttonSaving": {
         "message": "Сақтау",
@@ -7451,14 +7368,6 @@
         "message": "Интернеттен алдын ала орнатуларды жүктеу қатесі",
         "description": "Error report when failed to load presets index or a specific preset"
     },
-    "presetsButtonSave": {
-        "message": "Сақтау және қайта жүктеу",
-        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
-    },
-    "presetsButtonCancel": {
-        "message": "Болдырмау",
-        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
-    },
     "presetsApplyingPresets": {
         "message": "Конфигурация қолданылуда...",
         "description": "First label in the progress dialog when applying configuration (presets or user config)"
@@ -7482,10 +7391,6 @@
     "presetsWarningDialogYesButton": {
         "message": "Қабылдау",
         "description": "Agree button in the presets warning dialog"
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "Болдырмау",
-        "description": "Cancel button in the presets warning dialog"
     },
     "presetsFavoriteAddAriaLabel": {
         "message": "Таңдаулыларға алдын ала орнатуды қосыңыз",
