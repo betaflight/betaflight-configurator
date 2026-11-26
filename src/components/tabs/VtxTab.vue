@@ -493,6 +493,7 @@ export default defineComponent({
             conflict: vtxPortConflict,
             load: loadVtxPort,
             write: writeVtxPort,
+            markSaved: markVtxPortSaved,
             selectedProtocol: vtxProtocol,
             protocolOptions: vtxProtocolValues,
         } = useFeaturePort({
@@ -605,6 +606,8 @@ export default defineComponent({
 
             return runSave(async () => {
                 await saveVtx(writeVtxPort);
+                // saveVtx throws before here when the persist fails, so the change stays marked.
+                markVtxPortSaved();
                 await loadVtxConfig();
                 await loadVtxPort();
                 await loadOsdPort();
