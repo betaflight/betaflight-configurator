@@ -3,113 +3,69 @@
     <div class="toolbar-bar">
         <div class="toolbar-group toolbar-group--start">
             <LogFileInput size="xs" label="Open log file" @files-selected="$emit('files-selected', $event)" />
-            <div class="toolbar-download--wide">
-                <UTooltip :text="downloadTooltip">
-                    <UButton
-                        size="xs"
-                        color="primary"
-                        variant="soft"
-                        icon="i-lucide-download"
-                        :loading="pulling"
-                        :disabled="!downloadAvailable || pulling"
-                        :label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
-                        @click="$emit('download-from-fc')"
-                    />
-                </UTooltip>
-            </div>
-            <div class="toolbar-download--compact">
-                <UTooltip :text="downloadTooltip">
-                    <UButton
-                        size="xs"
-                        color="primary"
-                        variant="soft"
-                        icon="i-lucide-download"
-                        :loading="pulling"
-                        :disabled="!downloadAvailable || pulling"
-                        :aria-label="pulling ? `Downloading… ${Math.round(progress)}%` : 'Download from FC'"
-                        @click="$emit('download-from-fc')"
-                    />
-                </UTooltip>
-            </div>
+            <UTooltip :text="downloadTooltip">
+                <UButton
+                    size="xs"
+                    color="primary"
+                    variant="soft"
+                    icon="i-lucide-download"
+                    :loading="pulling"
+                    :disabled="!downloadAvailable || pulling"
+                    :label="downloadLabel"
+                    :ui="{ label: 'max-[900px]:sr-only' }"
+                    @click="$emit('download-from-fc')"
+                />
+            </UTooltip>
             <span v-if="appStore.logFilename" class="toolbar-filename" :title="appStore.logFilename">
                 {{ appStore.logFilename }}
             </span>
         </div>
 
         <div class="toolbar-group toolbar-group--wide-actions">
-            <template v-if="logStore.hasLog">
-                <UButton
-                    variant="ghost"
-                    color="neutral"
-                    label="CSV"
-                    icon="i-lucide-file-spreadsheet"
-                    size="xs"
-                    @click="$emit('export-csv')"
-                />
-                <UButton
-                    variant="ghost"
-                    color="neutral"
-                    label="GPX"
-                    icon="i-lucide-map-pin"
-                    size="xs"
-                    @click="$emit('export-gpx')"
-                />
-                <UButton
-                    variant="ghost"
-                    color="neutral"
-                    label="Export Workspaces"
-                    icon="i-lucide-file-json"
-                    size="xs"
-                    title="Export your workspace configurations to file"
-                    @click="$emit('export-workspaces')"
-                />
-                <UTooltip :text="videoExportTitle" :delay-duration="300">
+            <template v-for="action in exportActions" :key="action.key">
+                <UTooltip v-if="action.key === 'video'" :text="action.hint" :delay-duration="300">
                     <span
                         data-testid="video-export-capability"
                         class="inline-flex"
-                        :role="videoExportDisabled ? 'group' : undefined"
-                        :aria-disabled="videoExportDisabled || undefined"
-                        :aria-label="videoExportDisabled ? `Export Video unavailable: ${videoExportTitle}` : undefined"
-                        :tabindex="videoExportDisabled ? 0 : undefined"
+                        :role="action.disabled ? 'group' : undefined"
+                        :aria-disabled="action.disabled || undefined"
+                        :aria-label="action.disabled ? `Export Video unavailable: ${action.hint}` : undefined"
+                        :tabindex="action.disabled ? 0 : undefined"
                     >
                         <UButton
                             variant="ghost"
                             color="neutral"
-                            label="Export Video"
-                            icon="i-lucide-video"
+                            :label="action.short || action.label"
+                            :icon="action.icon"
                             size="xs"
-                            :disabled="videoExportDisabled"
-                            :class="{ 'pointer-events-none': videoExportDisabled }"
-                            @click="$emit('export-video')"
+                            :disabled="action.disabled"
+                            :class="{ 'pointer-events-none': action.disabled }"
+                            @click="action.onSelect()"
                         />
                     </span>
                 </UTooltip>
-                <USeparator orientation="vertical" class="h-4" />
+                <UButton
+                    v-else
+                    variant="ghost"
+                    color="neutral"
+                    :label="action.short || action.label"
+                    :icon="action.icon"
+                    size="xs"
+                    :title="action.hint"
+                    @click="action.onSelect()"
+                />
             </template>
+            <USeparator v-if="exportActions.length" orientation="vertical" class="h-4" />
             <UButton
+                v-for="action in utilityActions"
+                :key="action.key"
                 variant="ghost"
                 color="neutral"
-                icon="i-lucide-settings"
+                :icon="action.icon"
                 size="xs"
-                title="User Settings"
-                @click="$emit('open-settings')"
-            />
-            <UButton
-                variant="ghost"
-                color="neutral"
-                icon="i-lucide-keyboard"
-                size="xs"
-                title="Keyboard Shortcuts"
-                @click="$emit('open-keys')"
-            />
-            <UButton
-                variant="ghost"
-                color="neutral"
-                :icon="graphStore.isFullscreen ? 'i-lucide-minimize' : 'i-lucide-maximize'"
-                size="xs"
-                :title="graphStore.isFullscreen ? 'Exit Full Screen (F)' : 'Full Screen (F)'"
-                :aria-pressed="graphStore.isFullscreen"
-                @click="$emit('toggle-fullscreen')"
+                :title="action.kbds?.length ? `${action.label} (${action.kbds.join(', ')})` : action.label"
+                :aria-pressed="action.key === 'fullscreen' ? graphStore.isFullscreen : undefined"
+                @click="action.onSelect()"
             />
         </div>
         <div class="toolbar-group toolbar-group--compact-actions">
@@ -165,34 +121,89 @@ const videoExportTitle = computed(() => {
     return videoCapability.value.canEncode ? "Render the marked range to a video file" : videoCapability.value.reason;
 });
 
-// Keep compact actions aligned with full-width toolbar availability.
-const compactActions = computed(() => [
-    ...(logStore.hasLog
+interface ToolbarAction {
+    key: string;
+    label: string;
+    icon: string;
+    onSelect: () => void;
+    short?: string;
+    disabled?: boolean;
+    hint?: string;
+    kbds?: string[];
+}
+
+const exportActions = computed<ToolbarAction[]>(() =>
+    logStore.hasLog
         ? [
-              [
-                  { label: "Export CSV", icon: "i-lucide-file-spreadsheet", onSelect: () => emit("export-csv") },
-                  { label: "Export GPX", icon: "i-lucide-map-pin", onSelect: () => emit("export-gpx") },
-                  { label: "Export Workspaces", icon: "i-lucide-file-json", onSelect: () => emit("export-workspaces") },
-                  {
-                      label: "Export Video",
-                      icon: "i-lucide-video",
-                      disabled: videoExportDisabled.value,
-                      description: videoExportDisabled.value ? videoExportTitle.value : undefined,
-                      onSelect: () => emit("export-video"),
-                  },
-              ],
+              {
+                  key: "csv",
+                  label: "Export CSV",
+                  short: "CSV",
+                  icon: "i-lucide-file-spreadsheet",
+                  onSelect: () => emit("export-csv"),
+              },
+              {
+                  key: "gpx",
+                  label: "Export GPX",
+                  short: "GPX",
+                  icon: "i-lucide-map-pin",
+                  onSelect: () => emit("export-gpx"),
+              },
+              {
+                  key: "workspaces",
+                  label: "Export Workspaces",
+                  icon: "i-lucide-file-json",
+                  hint: "Export your workspace configurations to file",
+                  onSelect: () => emit("export-workspaces"),
+              },
+              {
+                  key: "video",
+                  label: "Export Video",
+                  icon: "i-lucide-video",
+                  disabled: videoExportDisabled.value,
+                  hint: videoExportTitle.value,
+                  onSelect: () => emit("export-video"),
+              },
           ]
-        : []),
-    [
-        { label: "User Settings", icon: "i-lucide-settings", onSelect: () => emit("open-settings") },
-        { label: "Keyboard Shortcuts", icon: "i-lucide-keyboard", onSelect: () => emit("open-keys") },
-        {
-            label: graphStore.isFullscreen ? "Exit Full Screen" : "Full Screen",
-            icon: graphStore.isFullscreen ? "i-lucide-minimize" : "i-lucide-maximize",
-            onSelect: () => emit("toggle-fullscreen"),
-        },
-    ],
+        : [],
+);
+
+const utilityActions = computed<ToolbarAction[]>(() => [
+    {
+        key: "settings",
+        label: "User Settings",
+        icon: "i-lucide-settings",
+        onSelect: () => emit("open-settings"),
+    },
+    {
+        key: "keys",
+        label: "Keyboard Shortcuts",
+        icon: "i-lucide-keyboard",
+        onSelect: () => emit("open-keys"),
+    },
+    {
+        key: "fullscreen",
+        label: graphStore.isFullscreen ? "Exit Full Screen" : "Full Screen",
+        icon: graphStore.isFullscreen ? "i-lucide-minimize" : "i-lucide-maximize",
+        kbds: ["F"],
+        onSelect: () => emit("toggle-fullscreen"),
+    },
 ]);
+
+const compactActions = computed(() =>
+    [exportActions.value, utilityActions.value]
+        .filter((group) => group.length)
+        .map((group) =>
+            group.map((action) => ({
+                label: action.label,
+                icon: action.icon,
+                disabled: action.disabled,
+                description: action.disabled ? action.hint : undefined,
+                kbds: action.kbds,
+                onSelect: action.onSelect,
+            })),
+        ),
+);
 
 watch(
     () => logStore.hasLog,
@@ -222,10 +233,15 @@ watch(
 // with WelcomePage.vue via the same injection so both surfaces reflect one source of truth.
 const dataflash = inject<DataflashHost | null>("bbvDataflash", null);
 const downloadAvailable = computed(() => !!dataflash?.available?.value);
-const downloadTooltip = computed(() => downloadAvailable.value
-    ? "Download the onboard log from the connected flight controller"
-    : "Connect a flight controller that has a recorded log");
+const downloadTooltip = computed(() =>
+    downloadAvailable.value
+        ? "Download the onboard log from the connected flight controller"
+        : "Connect a flight controller that has a recorded log",
+);
 const pulling = computed(() => !!dataflash?.pulling?.value);
+const downloadLabel = computed(() =>
+    pulling.value ? `Downloading… ${Math.round(progress.value)}%` : "Download from FC",
+);
 const progress = computed(() => dataflash?.progress?.value ?? 0);
 </script>
 
@@ -249,8 +265,7 @@ const progress = computed(() => dataflash?.progress?.value ?? 0);
         min-width: 0;
     }
 
-    .toolbar-group--compact-actions,
-    .toolbar-download--compact {
+    .toolbar-group--compact-actions {
         display: none;
     }
 
@@ -273,15 +288,11 @@ const progress = computed(() => dataflash?.progress?.value ?? 0);
             display: none;
         }
 
-        .toolbar-group--compact-actions,
-        .toolbar-download--compact {
+        .toolbar-group--compact-actions {
             display: flex;
             flex-shrink: 0;
         }
 
-        .toolbar-download--wide {
-            display: none;
-        }
     }
 }
 </style>
