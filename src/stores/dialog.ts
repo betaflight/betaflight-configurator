@@ -25,6 +25,7 @@ import { ref } from "vue";
 /** Component names GlobalDialogs.vue can render. */
 export type DialogType =
     | "YesNoDialog"
+    | "UnsavedChangesDialog"
     | "InformationDialog"
     | "WaitDialog"
     | "RebootDialog"

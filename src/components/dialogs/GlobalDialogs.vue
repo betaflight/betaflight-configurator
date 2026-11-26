@@ -13,6 +13,7 @@
 import { useDialogStore, type DialogType } from "@/stores/dialog";
 import { ref, watch, nextTick, type Component } from "vue";
 import YesNoDialog from "./YesNoDialog.vue";
+import UnsavedChangesDialog from "./UnsavedChangesDialog.vue";
 import InformationDialog from "./InformationDialog.vue";
 import WaitDialog from "./WaitDialog.vue";
 import RebootDialog from "./RebootDialog.vue";
@@ -35,6 +36,7 @@ const currentDialogRef = ref<DialogExposed | null>(null);
 
 const dialogComponents = {
     YesNoDialog,
+    UnsavedChangesDialog,
     InformationDialog,
     WaitDialog,
     RebootDialog,
