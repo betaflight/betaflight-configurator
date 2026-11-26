@@ -163,6 +163,17 @@ async function readSetting(
     return { value, allowed: discoverValues ? findCliSettingAllowedValues(lines) : null };
 }
 
+// What write() sent and EEPROM has not taken yet, or null when RAM and EEPROM agree.
+function unsavedPick<T>(sent: T, persisted: T): { sent: T; persisted: T } | null {
+    return sent === persisted ? null : { sent, persisted };
+}
+
+// The persisted value to compare against after a reload: the one from before a failed save when
+// RAM still holds that save's unsaved pick, otherwise what RAM reports now.
+function persistedBaseline<T>(read: T, unsaved: { sent: T; persisted: T } | null): T {
+    return unsaved && read === unsaved.sent ? unsaved.persisted : read;
+}
+
 async function sendSetting(command: string) {
     const error = findCliError(await cliSend(command));
     if (error) {
@@ -290,6 +301,16 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
     }));
 
     async function load() {
+        // A reload reads RAM, not EEPROM. If a save failed earlier, the FC can still hold the pick
+        // write() sent while EEPROM keeps the old value, so remember what was last persisted and
+        // keep it as the baseline when RAM comes back with that same unsaved pick. A reboot or a
+        // reconnect brings RAM back to EEPROM, which no longer matches and is adopted as before.
+        const unsaved = {
+            identifier: unsavedPick(sentIdentifier.value, assignedIdentifier.value),
+            baud: unsavedPick(sentBaud.value, assignedBaud.value),
+            protocol: unsavedPick(sentProtocol.value, assignedProtocol.value),
+        };
+
         supported.value = true;
         selectedIdentifier.value = PORT_NONE;
         sentIdentifier.value = PORT_NONE;
@@ -319,9 +340,10 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
 
         await loadPortClaims();
 
-        assignedIdentifier.value = findPortIdentifierByCliName(fcStore.serialConfig?.ports, port.value);
-        sentIdentifier.value = assignedIdentifier.value;
-        selectedIdentifier.value = assignedIdentifier.value;
+        const identifier = findPortIdentifierByCliName(fcStore.serialConfig?.ports, port.value);
+        sentIdentifier.value = identifier;
+        selectedIdentifier.value = identifier;
+        assignedIdentifier.value = persistedBaseline(identifier, unsaved.identifier);
 
         if (baud) {
             const stored = await readSetting(baud.setting, { discoverValues: !baud.rates });
@@ -329,9 +351,9 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
                 if (!baud.rates && stored.allowed) {
                     baudRates.value = stored.allowed;
                 }
-                assignedBaud.value = stored.value;
                 sentBaud.value = stored.value;
                 selectedBaud.value = stored.value;
+                assignedBaud.value = persistedBaseline(stored.value, unsaved.baud);
             }
         }
 
@@ -339,9 +361,9 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
             const stored = await readSetting(protocol.setting, { discoverValues: true });
             if (stored) {
                 protocolValues.value = stored.allowed;
-                assignedProtocol.value = stored.value;
                 sentProtocol.value = stored.value;
                 selectedProtocol.value = stored.value;
+                assignedProtocol.value = persistedBaseline(stored.value, unsaved.protocol);
             }
         }
     }

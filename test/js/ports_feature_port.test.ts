@@ -561,15 +561,49 @@ describe("useFeaturePort", () => {
             expect(sentCommands()).toEqual(["set gps_baud = 115200"]);
         });
 
-        it("starts over from the FC on a reload", async () => {
+        it("stays changed on a reload while RAM still holds the unsaved pick", async () => {
             await port.write();
+            // the persist failed: RAM has the new pick, EEPROM still the old one
             replies["get gps_uart"] = ["gps_uart = UART1"];
             replies["get gps_baud"] = ["gps_baud = 115200"];
 
             await port.load();
 
-            expect(port.changed.value).toBe(false);
+            expect(port.changed.value).toBe(true);
             expect(port.selectedIdentifier.value).toBe(51);
+            expect(port.selectedBaud.value).toBe("115200");
+
+            // saving now settles it without resending what RAM already holds
+            cliSend.mockClear();
+            await port.write();
+            port.markSaved();
+
+            expect(sentCommands()).toEqual([]);
+            expect(port.changed.value).toBe(false);
+        });
+
+        it("adopts what the FC reports once RAM is back on the persisted value", async () => {
+            await port.write();
+            // a reboot brings RAM back to EEPROM
+            replies["get gps_uart"] = ["gps_uart = UART3"];
+            replies["get gps_baud"] = ["gps_baud = 57600"];
+
+            await port.load();
+
+            expect(port.changed.value).toBe(false);
+            expect(port.selectedIdentifier.value).toBe(53);
+            expect(port.selectedBaud.value).toBe("57600");
+        });
+
+        it("starts over from the FC when it reports something else entirely", async () => {
+            await port.write();
+            replies["get gps_uart"] = ["gps_uart = NONE"];
+            replies["get gps_baud"] = ["gps_baud = 9600"];
+
+            await port.load();
+
+            expect(port.changed.value).toBe(false);
+            expect(port.selectedIdentifier.value).toBe(PORT_NONE);
         });
     });
 
