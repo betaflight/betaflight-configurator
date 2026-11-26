@@ -921,6 +921,7 @@ const {
     load: loadRangefinderPort,
     write: writeRangefinderPort,
     markSaved: markRangefinderPortSaved,
+    changed: rangefinderPortChanged,
 } = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
@@ -933,6 +934,7 @@ const {
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
     markSaved: markOpticalFlowPortSaved,
+    changed: opticalFlowPortChanged,
 } = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { confirmPortConflicts } = usePortConflicts(
@@ -2231,7 +2233,9 @@ const serializeState = () =>
         opticalFlowPort: opticalFlowPortIdentifier.value,
     });
 
-const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState, {
+    unsaved: () => rangefinderPortChanged.value || opticalFlowPortChanged.value,
+});
 
 // A DroneCAN compass or airspeed sensor can already be stored on a board whose stack is off.
 // Nothing is dirty then, so Save would be disabled and the GUI could never turn the stack on.

@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
@@ -24,6 +45,8 @@ const data = vi.hoisted(() => ({
 const gates = vi.hoisted(() => [] as { value: unknown }[][]);
 const writeFeaturePort = vi.hoisted(() => vi.fn());
 const markFeaturePortSaved = vi.hoisted(() => vi.fn());
+// A plain flag rather than a vi.fn, so vi.resetAllMocks() leaves the default (accept) in place.
+const portConflictPrompt = vi.hoisted(() => ({ declined: false }));
 const saveToEeprom = vi.hoisted(() => vi.fn());
 const reboot = vi.hoisted(() => vi.fn());
 
@@ -64,7 +87,11 @@ vi.mock("../../src/composables/ports/useFeaturePort", () => ({
         load: async () => {},
         write: writeFeaturePort,
         markSaved: markFeaturePortSaved,
+        changed: ref(false),
     }),
+}));
+vi.mock("../../src/composables/ports/usePortConflicts", () => ({
+    usePortConflicts: () => ({ confirmPortConflicts: async () => !portConflictPrompt.declined }),
 }));
 vi.mock("../../src/composables/useDronecanDevice", () => ({
     useDronecanDevice: () => ({
@@ -133,6 +160,7 @@ describe("SensorsTab MSP wiring", () => {
         data.loadGpsData.mockResolvedValue(undefined);
         saveToEeprom.mockResolvedValue(undefined);
         writeFeaturePort.mockResolvedValue(undefined);
+        portConflictPrompt.declined = false;
 
         const fcStore = useFlightControllerStore();
         fcStore.config.apiVersion = "1.48.0";
@@ -275,6 +303,20 @@ describe("SensorsTab MSP wiring", () => {
         await flushPromises();
 
         expect(writeFeaturePort).toHaveBeenCalled();
+        expect(markFeaturePortSaved).not.toHaveBeenCalled();
+    });
+
+    it("writes and marks nothing when the port-conflict prompt is declined", async () => {
+        portConflictPrompt.declined = true;
+        const wrapper = mountTab();
+        await flushPromises();
+
+        clickButton(wrapper, "saveAndReboot");
+        await flushPromises();
+
+        expect(data.sendSensorsConfig).not.toHaveBeenCalled();
+        expect(writeFeaturePort).not.toHaveBeenCalled();
+        expect(saveToEeprom).not.toHaveBeenCalled();
         expect(markFeaturePortSaved).not.toHaveBeenCalled();
     });
 });

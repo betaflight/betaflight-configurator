@@ -1,30 +1,58 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { effectScope } from "vue";
+import { effectScope, type EffectScope } from "vue";
 import { createPinia, setActivePinia } from "pinia";
 import { useFlightControllerStore } from "../../src/stores/fc";
+import type { SerialConfig, SerialPort } from "../../src/stores/fc.types";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { API_VERSION_1_48, API_VERSION_1_49 } from "../../src/js/data_storage";
 import { GPS_BAUD_RATES } from "../../src/composables/ports/featureBaudRates";
 import { PORT_NONE } from "../../src/composables/ports/portNames";
-import { buildBaudOptions, buildPortOptions, useFeaturePort } from "../../src/composables/ports/useFeaturePort";
+import {
+    buildBaudOptions,
+    buildPortOptions,
+    useFeaturePort,
+    type FeaturePortSettings,
+} from "../../src/composables/ports/useFeaturePort";
 import { loadPortClaims } from "../../src/composables/ports/usePortClaims";
 
 vi.mock("../../src/js/localization", () => ({
     __esModule: true,
-    i18n: { getMessage: (key) => key },
+    i18n: { getMessage: (key: string) => key },
 }));
 
 const { cliSend } = vi.hoisted(() => ({ cliSend: vi.fn() }));
 vi.mock("../../src/composables/useMspCliSession", async (importOriginal) => ({
-    ...(await importOriginal()),
+    ...(await importOriginal<typeof import("../../src/composables/useMspCliSession")>()),
     send: cliSend,
 }));
 
-const ports = [{ identifier: 20 }, { identifier: 51 }, { identifier: 53 }];
+// Only the identifier matters to these helpers, so the rest of a port is left out.
+const ports = [{ identifier: 20 }, { identifier: 51 }, { identifier: 53 }] as SerialPort[];
 const claims = { VCP: ["msp_1"], UART3: ["rx"] };
 
-let fcStore;
+let fcStore: ReturnType<typeof useFlightControllerStore>;
 
 describe("buildPortOptions", () => {
     const options = () => buildPortOptions(ports, { claims, noneLabel: "None", freeLabel: "free" });
@@ -35,27 +63,27 @@ describe("buildPortOptions", () => {
     });
 
     it("names what holds a port", () => {
-        expect(options().find((option) => option.value === 20).label).toBe("USB VCP (msp_1)");
+        expect(options().find((option) => option.value === 20)?.label).toBe("USB VCP (msp_1)");
     });
 
     it("names the caller's own claim too", () => {
-        expect(options().find((option) => option.value === 53).label).toBe("UART3 (rx)");
+        expect(options().find((option) => option.value === 53)?.label).toBe("UART3 (rx)");
     });
 
     it("marks a port nothing has claimed as free", () => {
-        expect(options().find((option) => option.value === 51).label).toBe("UART1 (free)");
+        expect(options().find((option) => option.value === 51)?.label).toBe("UART1 (free)");
     });
 
     it("lists every claim on a shared port", () => {
         const shared = buildPortOptions([{ identifier: 51 }], { claims: { UART1: ["vtx", "osd"] } });
 
-        expect(shared.find((option) => option.value === 51).label).toBe("UART1 (vtx, osd)");
+        expect(shared.find((option) => option.value === 51)?.label).toBe("UART1 (vtx, osd)");
     });
 
     it("runs the annotation through the caller's translator", () => {
         const translated = buildPortOptions(ports, { claims, describeClaim: (name) => name.toUpperCase() });
 
-        expect(translated.find((option) => option.value === 20).label).toBe("USB VCP (MSP_1)");
+        expect(translated.find((option) => option.value === 20)?.label).toBe("USB VCP (MSP_1)");
     });
 
     it("claims nothing about a port when the build cannot say what holds it", () => {
@@ -68,7 +96,7 @@ describe("buildPortOptions", () => {
         const withMissing = buildPortOptions(ports, { claims, currentIdentifier: 57 });
 
         expect(withMissing.map((option) => option.value)).toContain(57);
-        expect(withMissing.find((option) => option.value === 57).label).toBe("UART7");
+        expect(withMissing.find((option) => option.value === 57)?.label).toBe("UART7");
     });
 
     it("does not duplicate a current assignment that is already listed", () => {
@@ -90,7 +118,7 @@ describe("buildPortOptions", () => {
         });
 
         expect(withSoftSerial.map((option) => option.value)).toEqual([PORT_NONE, 20, 51, 53, 30, 31]);
-        expect(withSoftSerial.find((option) => option.value === 30).label).toBe("SOFTSERIAL1 (inactive)");
+        expect(withSoftSerial.find((option) => option.value === 30)?.label).toBe("SOFTSERIAL1 (inactive)");
     });
 
     it("keeps the claim on an inactive port beside its inactive mark", () => {
@@ -100,11 +128,11 @@ describe("buildPortOptions", () => {
             inactiveLabel: "inactive",
         });
 
-        expect(withSoftSerial.find((option) => option.value === 30).label).toBe("SOFTSERIAL1 (vtx, inactive)");
+        expect(withSoftSerial.find((option) => option.value === 30)?.label).toBe("SOFTSERIAL1 (vtx, inactive)");
     });
 
     it("does not repeat an inactive port the FC did report", () => {
-        const values = buildPortOptions([...ports, { identifier: 30, functions: [] }], {
+        const values = buildPortOptions([...ports, { identifier: 30, functions: [] } as unknown as SerialPort], {
             inactiveIdentifiers: [30],
         }).map((option) => option.value);
 
@@ -113,27 +141,27 @@ describe("buildPortOptions", () => {
 });
 
 describe("useFeaturePort", () => {
-    let scope;
-    let port;
-    let replies;
+    let scope: EffectScope | undefined;
+    let port: ReturnType<typeof useFeaturePort>;
+    let replies: Record<string, string[]>;
 
     // A `get` for a setting the firmware was not built with is refused; a `set` just succeeds.
-    function reply(command) {
+    function reply(command: string): string[] {
         if (replies[command]) {
             return replies[command];
         }
         return command.startsWith("get ") ? ["###ERROR IN get: INVALID NAME###"] : [];
     }
 
-    const sentCommands = () => cliSend.mock.calls.map((call) => call[0]);
+    const sentCommands = (): string[] => cliSend.mock.calls.map((call) => call[0]);
 
     // A new connection resets the serial config; keepConnection stands for another feature on
     // the same tab, which sees the config the first one already filled in.
-    function withFeature(options, apiVersion = API_VERSION_1_49, { keepConnection = false } = {}) {
+    function withFeature(options: FeaturePortSettings, apiVersion = API_VERSION_1_49, { keepConnection = false } = {}) {
         fcStore.config.apiVersion = apiVersion;
         fcStore.config.flightControllerVersion = "4.6.0";
         if (!keepConnection) {
-            fcStore.serialConfig = { ports: [...ports] };
+            fcStore.serialConfig = { ports: [...ports] } as SerialConfig;
         }
 
         scope?.stop();
@@ -152,7 +180,7 @@ describe("useFeaturePort", () => {
             peripherals: ["serial VCP: msp_1*", "serial UART3: rx*"],
         };
         cliSend.mockReset();
-        cliSend.mockImplementation((command) => Promise.resolve(reply(command)));
+        cliSend.mockImplementation((command: string) => Promise.resolve(reply(command)));
         vi.spyOn(MSP, "promise").mockResolvedValue(undefined);
         withFeature({ setting: "rx_uart" });
     });
@@ -239,7 +267,7 @@ describe("useFeaturePort", () => {
         await port.load();
 
         expect(sentCommands().filter((command) => command === "peripherals")).toHaveLength(1);
-        expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsClaimRx)");
+        expect(port.options.value.find((option) => option.value === 53)?.label).toBe("UART3 (portsClaimRx)");
     });
 
     it("refreshes the labels as soon as a port has been reassigned, save or no save", async () => {
@@ -250,8 +278,8 @@ describe("useFeaturePort", () => {
         await port.write();
 
         expect(sentCommands().filter((command) => command === "peripherals")).toHaveLength(2);
-        expect(port.options.value.find((option) => option.value === 51).label).toBe("UART1 (portsClaimRx)");
-        expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsPortFree)");
+        expect(port.options.value.find((option) => option.value === 51)?.label).toBe("UART1 (portsClaimRx)");
+        expect(port.options.value.find((option) => option.value === 53)?.label).toBe("UART3 (portsPortFree)");
     });
 
     it("asks again on a new connection", async () => {
@@ -484,14 +512,6 @@ describe("useFeaturePort", () => {
             expect(port.selection.value.changed).toBe(true);
         });
 
-        it("stays changed with the edits intact when the save is cancelled before the write", async () => {
-            // a declined port-conflict prompt returns before write() and markSaved()
-            expect(port.changed.value).toBe(true);
-            expect(port.selectedIdentifier.value).toBe(51);
-            expect(port.selectedBaud.value).toBe("115200");
-            expect(cliSend).not.toHaveBeenCalled();
-        });
-
         it("does not resend what the FC already holds when the save is retried", async () => {
             await port.write();
             cliSend.mockClear();
@@ -508,17 +528,19 @@ describe("useFeaturePort", () => {
             port.selectedIdentifier.value = 53;
             port.selectedBaud.value = "57600";
 
-            // back on what is persisted, so nothing is left unsaved
-            expect(port.changed.value).toBe(false);
+            // back on what is persisted, but the FC's RAM still holds the abandoned pick
+            expect(port.changed.value).toBe(true);
+            expect(port.selection.value.changed).toBe(true);
 
             cliSend.mockClear();
             await port.write();
 
-            // but the FC's RAM still holds the abandoned pick, so it has to be set back
+            // so it has to be set back; once it is, RAM matches what is persisted again
             expect(sentCommands().filter((command) => command !== "peripherals")).toEqual([
                 "set gps_uart = UART3",
                 "set gps_baud = 57600",
             ]);
+            expect(port.changed.value).toBe(false);
         });
 
         it("settles only what went out when a set is refused partway", async () => {
@@ -589,7 +611,7 @@ describe("useFeaturePort", () => {
 
         await port.load();
 
-        expect(port.options.value.find((option) => option.value === 53).label).toBe("UART3 (portsClaimTelemetry 1)");
+        expect(port.options.value.find((option) => option.value === 53)?.label).toBe("UART3 (portsClaimTelemetry 1)");
     });
 
     describe("conflict", () => {
@@ -692,9 +714,9 @@ describe("buildBaudOptions", () => {
 
 describe("loadPortClaims", () => {
     function deferred() {
-        let resolve;
-        let reject;
-        const promise = new Promise((res, rej) => {
+        let resolve!: (lines: string[]) => void;
+        let reject!: (error: unknown) => void;
+        const promise = new Promise<string[]>((res, rej) => {
             resolve = res;
             reject = rej;
         });
@@ -706,7 +728,7 @@ describe("loadPortClaims", () => {
         fcStore = useFlightControllerStore();
         fcStore.resetState();
         fcStore.config.flightControllerVersion = "4.6.0";
-        fcStore.serialConfig = { ports: [...ports] };
+        fcStore.serialConfig = { ports: [...ports] } as SerialConfig;
         cliSend.mockReset();
     });
 

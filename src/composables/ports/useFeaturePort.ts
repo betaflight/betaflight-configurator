@@ -224,9 +224,21 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
     const assignedProtocol: Ref<string | null> = ref(null);
     const protocolValues: Ref<string[] | null> = ref(null);
 
-    const portChanged = computed(() => selectedIdentifier.value !== assignedIdentifier.value);
-    const baudChanged = computed(() => Boolean(baud) && selectedBaud.value !== assignedBaud.value);
-    const protocolChanged = computed(() => Boolean(protocol) && selectedProtocol.value !== assignedProtocol.value);
+    // A RAM value that differs from the persisted one is unsaved too: after a failed persist the
+    // user can move the pick back to the original, but the FC still holds the abandoned pick until
+    // write() sends the original again, so the feature must stay changed until then.
+    const portChanged = computed(
+        () =>
+            selectedIdentifier.value !== assignedIdentifier.value || sentIdentifier.value !== assignedIdentifier.value,
+    );
+    const baudChanged = computed(
+        () => Boolean(baud) && (selectedBaud.value !== assignedBaud.value || sentBaud.value !== assignedBaud.value),
+    );
+    const protocolChanged = computed(
+        () =>
+            Boolean(protocol) &&
+            (selectedProtocol.value !== assignedProtocol.value || sentProtocol.value !== assignedProtocol.value),
+    );
     const changed = computed(() => portChanged.value || baudChanged.value || protocolChanged.value);
 
     const options = computed(() =>
