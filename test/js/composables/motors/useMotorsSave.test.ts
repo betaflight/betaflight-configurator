@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises } from "@vue/test-utils";
 import { ref, type Ref } from "vue";
@@ -73,6 +94,7 @@ describe("useMotorsSave", () => {
             writeEscSensorPort: vi.fn(async () => {
                 events.push("writePort");
             }),
+            markEscSensorPortSaved: vi.fn(() => events.push("portSaved")),
             motorsTestingEnabled,
             stopAllMotors: vi.fn((value?: number) => events.push(`stop:${value}`)),
             zeroThrottleValue: ref(1500),
@@ -118,6 +140,7 @@ describe("useMotorsSave", () => {
             ...WRITE_ORDER.map((code) => `msp:${code}`),
             "writePort",
             "saveAndReboot",
+            "portSaved",
             "sync",
             "analytics",
             "reset",
@@ -151,6 +174,7 @@ describe("useMotorsSave", () => {
         expect(options.stopAllMotors).not.toHaveBeenCalled();
         expect(MSP.promise).not.toHaveBeenCalled();
         expect(options.writeEscSensorPort).not.toHaveBeenCalled();
+        expect(options.markEscSensorPortSaved).not.toHaveBeenCalled();
     });
 
     it("ends a running motor test and waits 50 ms before the stop, then 100 ms before the first write", async () => {
@@ -205,11 +229,13 @@ describe("useMotorsSave", () => {
 
         const done = useMotorsSave(options).saveMotors(reboot);
         await vi.runAllTimersAsync();
+        expect(options.markEscSensorPortSaved).not.toHaveBeenCalled();
         expect(options.syncAppliedMotorStopState).not.toHaveBeenCalled();
         expect(options.motorsState.resetChanges).not.toHaveBeenCalled();
 
         release();
         await done;
+        expect(options.markEscSensorPortSaved).toHaveBeenCalledOnce();
         expect(options.syncAppliedMotorStopState).toHaveBeenCalledOnce();
         expect(options.motorsState.resetChanges).toHaveBeenCalledOnce();
     });
@@ -236,6 +262,7 @@ describe("useMotorsSave", () => {
         await vi.runAllTimersAsync();
         await done;
 
+        expect(options.markEscSensorPortSaved).not.toHaveBeenCalled();
         expect(options.syncAppliedMotorStopState).not.toHaveBeenCalled();
         expect(tracking.sendSaveAndChangeEvents).not.toHaveBeenCalled();
         expect(options.motorsState.resetChanges).not.toHaveBeenCalled();

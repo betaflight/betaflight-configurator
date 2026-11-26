@@ -163,6 +163,17 @@ async function readSetting(
     return { value, allowed: discoverValues ? findCliSettingAllowedValues(lines) : null };
 }
 
+// What write() sent and EEPROM has not taken yet, or null when RAM and EEPROM agree.
+function unsavedPick<T>(sent: T, persisted: T): { sent: T; persisted: T } | null {
+    return sent === persisted ? null : { sent, persisted };
+}
+
+// The persisted value to compare against after a reload: the one from before a failed save when
+// RAM still holds that save's unsaved pick, otherwise what RAM reports now.
+function persistedBaseline<T>(read: T, unsaved: { sent: T; persisted: T } | null): T {
+    return unsaved && read === unsaved.sent ? unsaved.persisted : read;
+}
+
 async function sendSetting(command: string) {
     const error = findCliError(await cliSend(command));
     if (error) {
@@ -207,18 +218,38 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
     const available = computed(() => apiSupported.value && supported.value);
     const writable = computed(() => available.value && isMspCliSupported());
 
+    // Three values per field: `selected` is the user's pick, `sent` is what the FC holds in RAM,
+    // and `assigned` is what has been persisted. write() moves `sent`; only markSaved(), called
+    // once the tab's EEPROM write has gone through, moves `assigned`. So a save that fails or is
+    // cancelled after the CLI set keeps the feature dirty, and the next write() still knows what
+    // the FC actually holds when the user moves the pick again.
     const selectedIdentifier = ref(PORT_NONE);
+    const sentIdentifier = ref(PORT_NONE);
     const assignedIdentifier = ref(PORT_NONE);
     const selectedBaud: Ref<string | null> = ref(null);
+    const sentBaud: Ref<string | null> = ref(null);
     const assignedBaud: Ref<string | null> = ref(null);
     const baudRates: Ref<string[] | null> = ref(baud?.rates ?? null);
     const selectedProtocol: Ref<string | null> = ref(null);
+    const sentProtocol: Ref<string | null> = ref(null);
     const assignedProtocol: Ref<string | null> = ref(null);
     const protocolValues: Ref<string[] | null> = ref(null);
 
-    const portChanged = computed(() => selectedIdentifier.value !== assignedIdentifier.value);
-    const baudChanged = computed(() => Boolean(baud) && selectedBaud.value !== assignedBaud.value);
-    const protocolChanged = computed(() => Boolean(protocol) && selectedProtocol.value !== assignedProtocol.value);
+    // A RAM value that differs from the persisted one is unsaved too: after a failed persist the
+    // user can move the pick back to the original, but the FC still holds the abandoned pick until
+    // write() sends the original again, so the feature must stay changed until then.
+    const portChanged = computed(
+        () =>
+            selectedIdentifier.value !== assignedIdentifier.value || sentIdentifier.value !== assignedIdentifier.value,
+    );
+    const baudChanged = computed(
+        () => Boolean(baud) && (selectedBaud.value !== assignedBaud.value || sentBaud.value !== assignedBaud.value),
+    );
+    const protocolChanged = computed(
+        () =>
+            Boolean(protocol) &&
+            (selectedProtocol.value !== assignedProtocol.value || sentProtocol.value !== assignedProtocol.value),
+    );
     const changed = computed(() => portChanged.value || baudChanged.value || protocolChanged.value);
 
     const options = computed(() =>
@@ -270,12 +301,25 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
     }));
 
     async function load() {
+        // A reload reads RAM, not EEPROM. If a save failed earlier, the FC can still hold the pick
+        // write() sent while EEPROM keeps the old value, so remember what was last persisted and
+        // keep it as the baseline when RAM comes back with that same unsaved pick. A reboot or a
+        // reconnect brings RAM back to EEPROM, which no longer matches and is adopted as before.
+        const unsaved = {
+            identifier: unsavedPick(sentIdentifier.value, assignedIdentifier.value),
+            baud: unsavedPick(sentBaud.value, assignedBaud.value),
+            protocol: unsavedPick(sentProtocol.value, assignedProtocol.value),
+        };
+
         supported.value = true;
         selectedIdentifier.value = PORT_NONE;
+        sentIdentifier.value = PORT_NONE;
         assignedIdentifier.value = PORT_NONE;
         selectedBaud.value = null;
+        sentBaud.value = null;
         assignedBaud.value = null;
         selectedProtocol.value = null;
+        sentProtocol.value = null;
         assignedProtocol.value = null;
 
         if (!apiSupported.value) {
@@ -296,8 +340,10 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
 
         await loadPortClaims();
 
-        assignedIdentifier.value = findPortIdentifierByCliName(fcStore.serialConfig?.ports, port.value);
-        selectedIdentifier.value = assignedIdentifier.value;
+        const identifier = findPortIdentifierByCliName(fcStore.serialConfig?.ports, port.value);
+        sentIdentifier.value = identifier;
+        selectedIdentifier.value = identifier;
+        assignedIdentifier.value = persistedBaseline(identifier, unsaved.identifier);
 
         if (baud) {
             const stored = await readSetting(baud.setting, { discoverValues: !baud.rates });
@@ -305,8 +351,9 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
                 if (!baud.rates && stored.allowed) {
                     baudRates.value = stored.allowed;
                 }
-                assignedBaud.value = stored.value;
+                sentBaud.value = stored.value;
                 selectedBaud.value = stored.value;
+                assignedBaud.value = persistedBaseline(stored.value, unsaved.baud);
             }
         }
 
@@ -314,32 +361,47 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
             const stored = await readSetting(protocol.setting, { discoverValues: true });
             if (stored) {
                 protocolValues.value = stored.allowed;
-                assignedProtocol.value = stored.value;
+                sentProtocol.value = stored.value;
                 selectedProtocol.value = stored.value;
+                assignedProtocol.value = persistedBaseline(stored.value, unsaved.protocol);
             }
         }
     }
 
+    /**
+     * Sends the picks the FC does not hold yet. This only reaches RAM: the feature stays changed
+     * until markSaved() confirms the persist, so the caller must call it after its EEPROM write.
+     */
     async function write() {
         if (!available.value) {
             return;
         }
 
-        if (protocol && protocolChanged.value) {
+        if (protocol && selectedProtocol.value !== sentProtocol.value) {
             await sendSetting(`set ${protocol.setting} = ${selectedProtocol.value}`);
-            assignedProtocol.value = selectedProtocol.value;
+            sentProtocol.value = selectedProtocol.value;
         }
 
-        if (portChanged.value) {
+        if (selectedIdentifier.value !== sentIdentifier.value) {
             await sendSetting(formatPortSetCommand(setting, selectedIdentifier.value));
-            assignedIdentifier.value = selectedIdentifier.value;
+            sentIdentifier.value = selectedIdentifier.value;
             await loadPortClaims({ refresh: true });
         }
 
-        if (baud && baudChanged.value) {
+        if (baud && selectedBaud.value !== sentBaud.value) {
             await sendSetting(`set ${baud.setting} = ${selectedBaud.value}`);
-            assignedBaud.value = selectedBaud.value;
+            sentBaud.value = selectedBaud.value;
         }
+    }
+
+    /**
+     * Marks what write() sent as persisted. Call it only after the EEPROM write succeeds; a save
+     * that fails or is cancelled skips it, so the feature stays changed and the edits stay.
+     */
+    function markSaved() {
+        assignedIdentifier.value = sentIdentifier.value;
+        assignedBaud.value = sentBaud.value;
+        assignedProtocol.value = sentProtocol.value;
     }
 
     return {
@@ -357,5 +419,6 @@ export function useFeaturePort({ setting, baud = null, protocol = null }: Featur
         selection,
         load,
         write,
+        markSaved,
     };
 }

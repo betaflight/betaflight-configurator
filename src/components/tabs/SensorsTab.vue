@@ -920,6 +920,8 @@ const {
     selection: rangefinderPortSelection,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
+    markSaved: markRangefinderPortSaved,
+    changed: rangefinderPortChanged,
 } = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
@@ -931,6 +933,8 @@ const {
     selection: opticalFlowPortSelection,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
+    markSaved: markOpticalFlowPortSaved,
+    changed: opticalFlowPortChanged,
 } = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { confirmPortConflicts } = usePortConflicts(
@@ -2229,7 +2233,9 @@ const serializeState = () =>
         opticalFlowPort: opticalFlowPortIdentifier.value,
     });
 
-const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState);
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeState, {
+    unsaved: () => rangefinderPortChanged.value || opticalFlowPortChanged.value,
+});
 
 // A DroneCAN compass or airspeed sensor can already be stored on a board whose stack is off.
 // Nothing is dirty then, so Save would be disabled and the GUI could never turn the stack on.
@@ -2498,6 +2504,8 @@ const saveConfig = async () => {
 
         // Error-aware persist: a timeout rejects here instead of leaving the save pending.
         await saveToEeprom();
+        markRangefinderPortSaved();
+        markOpticalFlowPortSaved();
         tabSwitchCleanup(() => {
             reboot();
         });

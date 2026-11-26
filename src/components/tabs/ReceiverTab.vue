@@ -742,6 +742,8 @@ const {
     selection: rxPortSelection,
     load: loadRxPort,
     write: writeRxPort,
+    markSaved: markRxPortSaved,
+    changed: rxPortChanged,
 } = useFeaturePort({ setting: "rx_uart" });
 
 // MAX_TELEMETRY_PROVIDERS is a compile-time constant that never reaches the app, so each instance
@@ -782,6 +784,8 @@ const {
     selection: rcdevicePortSelection,
     load: loadRcdevicePort,
     write: writeRcdevicePort,
+    markSaved: markRcdevicePortSaved,
+    changed: rcdevicePortChanged,
 } = useFeaturePort({ setting: "rcdevice_uart" });
 
 // Every port this tab can assign, so a save can warn before taking one from another feature, or
@@ -829,7 +833,9 @@ function serializeReceiverState() {
     });
 }
 
-const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState);
+const { dirty, markClean, takeSnapshot } = useDirtyState(serializeReceiverState, {
+    unsaved: () => rxPortChanged.value || rcdevicePortChanged.value || telemetryPorts.some((port) => port.changed),
+});
 
 const saveButtonLabel = computed(() => t(needReboot.value ? "saveAndReboot" : "save"));
 
@@ -1344,6 +1350,13 @@ const saveConfig = async (withReboot = false) => {
         } else {
             await saveToEeprom();
             gui_log(t("receiverConfigSaved") || "Configuration saved");
+        }
+
+        // Only now are the port writes persisted; a failed persist above keeps them changed.
+        markRxPortSaved();
+        markRcdevicePortSaved();
+        for (const port of telemetryPorts) {
+            port.markSaved();
         }
 
         markClean(savedSnapshot);

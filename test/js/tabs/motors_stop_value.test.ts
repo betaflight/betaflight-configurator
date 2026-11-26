@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { createApp, h } from "vue";
 import { createPinia, getActivePinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -38,6 +59,7 @@ const port = vi.hoisted(() => ({
     changed: { value: false },
     load: vi.fn(),
     write: vi.fn(),
+    markSaved: vi.fn(),
     confirmPortConflicts: vi.fn(),
 }));
 
@@ -53,6 +75,7 @@ vi.mock("@/composables/ports/useFeaturePort", async () => {
             conflict: ref(null),
             load: port.load,
             write: port.write,
+            markSaved: port.markSaved,
         }),
     };
 });
@@ -239,6 +262,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         port.changed.value = false;
         port.load.mockReset().mockResolvedValue(undefined);
         port.write.mockReset().mockResolvedValue(undefined);
+        port.markSaved.mockReset();
         port.confirmPortConflicts.mockReset().mockResolvedValue(true);
         vi.mocked(MSP.promise).mockClear();
         vi.mocked(MSP.send_message).mockClear();
@@ -423,6 +447,7 @@ describe("MotorsTab 3D motor-stop-value wiring", () => {
         expect(port.confirmPortConflicts).toHaveBeenCalledOnce();
         expect(port.write).toHaveBeenCalledOnce();
         expect(saveAndReboot).toHaveBeenCalledOnce();
+        expect(port.markSaved).toHaveBeenCalledOnce();
     });
 
     it("adopts the saved configuration as the applied one, so the next save stops under it", async () => {

@@ -453,6 +453,8 @@ export default defineComponent({
             conflict: blackboxPortConflict,
             load: loadBlackboxPort,
             write: writeBlackboxPort,
+            markSaved: markBlackboxPortSaved,
+            changed: blackboxPortChanged,
         } = useFeaturePort({
             setting: "blackbox_uart",
             baud: { setting: "blackbox_baud" },
@@ -605,7 +607,9 @@ export default defineComponent({
                 blackboxBaud: blackboxBaud.value,
             });
 
-        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState);
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeOnboardLoggingState, {
+            unsaved: () => blackboxPortChanged.value,
+        });
 
         const {
             isErasing,
@@ -677,6 +681,7 @@ export default defineComponent({
 
                 // Error-aware persist: a timeout rejects here instead of leaving the save pending.
                 await saveToEeprom();
+                markBlackboxPortSaved();
                 tabSwitchCleanup(() => {
                     reboot();
                 });

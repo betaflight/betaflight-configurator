@@ -51,11 +51,17 @@ export interface DirtyState {
  * gone, for example once a reconnect leaves the store's baseline stale.
  *
  * @param serialize side-effect free, since `dirty` calls it during render
+ * @param options.unsaved extra state the snapshot cannot see, such as a feature port whose FC RAM
+ *   value differs from the persisted one after a failed save. Read during render, so keep it
+ *   side-effect free too.
  */
-export function useDirtyState(serialize: () => string, { promptOnLeave = true } = {}): DirtyState {
+export function useDirtyState(
+    serialize: () => string,
+    { promptOnLeave = true, unsaved = () => false }: { promptOnLeave?: boolean; unsaved?: () => boolean } = {},
+): DirtyState {
     const baseline = ref<string | null>(null);
 
-    const dirty = computed(() => baseline.value !== null && baseline.value !== serialize());
+    const dirty = computed(() => baseline.value !== null && (baseline.value !== serialize() || unsaved()));
 
     function markClean(snapshot?: string) {
         baseline.value = snapshot ?? serialize();

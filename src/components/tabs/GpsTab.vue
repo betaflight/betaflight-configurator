@@ -475,6 +475,8 @@ export default defineComponent({
             conflict: gpsPortConflict,
             load: loadGpsPort,
             write: writeGpsPort,
+            markSaved: markGpsPortSaved,
+            changed: gpsPortChanged,
         } = useFeaturePort({
             setting: "gps_uart",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
@@ -507,7 +509,9 @@ export default defineComponent({
                 canDevice: canDevice.value,
             });
 
-        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState);
+        const { dirty, markClean, takeSnapshot } = useDirtyState(serializeGpsTabState, {
+            unsaved: () => gpsPortChanged.value,
+        });
 
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
@@ -922,6 +926,7 @@ export default defineComponent({
 
                     // Error-aware persist: a timeout rejects here instead of leaving the save pending.
                     await saveToEeprom();
+                    markGpsPortSaved();
                     tabSwitchCleanup(() => {
                         reboot();
                     });
