@@ -44,7 +44,15 @@ describe("Blackbox Viewer compact actions", () => {
     async function mountToolbar(options: { hasLog: boolean; videoAvailable: boolean }) {
         vi.mocked(probeVideoExport).mockResolvedValue(
             options.videoAvailable
-                ? { canEncode: true, codec: "avc", container: "mp4", extension: "mp4", description: "MP4 video", saveMode: "stream", androidBridge: false }
+                ? {
+                      canEncode: true,
+                      codec: "avc",
+                      container: "mp4",
+                      extension: "mp4",
+                      description: "MP4 video",
+                      saveMode: "stream",
+                      androidBridge: false,
+                  }
                 : { canEncode: false, reason: "No supported video encoder" },
         );
         const pinia = createPinia();
@@ -59,7 +67,9 @@ describe("Blackbox Viewer compact actions", () => {
             onExportVideo: vi.fn(),
             onOpenSettings: vi.fn(),
         };
-        app = createApp({ render: () => h(TooltipProvider, null, () => h(AppToolbar, callbacks)) });
+        app = createApp({
+            render: () => h(TooltipProvider, null, () => h(AppToolbar, callbacks)),
+        });
         app.use(pinia);
         app.mount(host);
         await Promise.resolve();
@@ -70,7 +80,9 @@ describe("Blackbox Viewer compact actions", () => {
     }
 
     async function openCompactActions() {
-        const trigger = host!.querySelector<HTMLButtonElement>('[data-testid="blackbox-compact-actions"]');
+        const trigger = host!.querySelector<HTMLButtonElement>(
+            '[data-testid="blackbox-compact-actions"]',
+        );
         expect(trigger).toBeTruthy();
         trigger!.click();
         await nextTick();
@@ -86,7 +98,9 @@ describe("Blackbox Viewer compact actions", () => {
     it("forwards export selections and keeps unsupported video disabled", async () => {
         const callbacks = await mountToolbar({ hasLog: true, videoAvailable: false });
         await openCompactActions();
-        const csv = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((el) => el.textContent?.includes("Export CSV"));
+        const csv = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((el) =>
+            el.textContent?.includes("Export CSV"),
+        );
         expect(csv).toBeTruthy();
         csv!.click();
         await nextTick();
@@ -105,7 +119,9 @@ describe("Blackbox Viewer compact actions", () => {
     it("makes video export selectable when the capability probe succeeds", async () => {
         const callbacks = await mountToolbar({ hasLog: true, videoAvailable: true });
         await openCompactActions();
-        const video = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((el) => el.textContent?.includes("Export Video"));
+        const video = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((el) =>
+            el.textContent?.includes("Export Video"),
+        );
         expect(video).toBeTruthy();
         expect(video!.getAttribute("aria-disabled")).not.toBe("true");
         video!.click();
