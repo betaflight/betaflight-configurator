@@ -1,5 +1,26 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { describe, expect, it } from "vitest";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useDirtyState } from "../../src/composables/useDirtyState";
 
 function setup(initial: Record<string, number> = { a: 1 }) {
@@ -71,5 +92,21 @@ describe("useDirtyState", () => {
 
         state.text = "x";
         expect(dirty.value).toBe(true);
+    });
+
+    it("reports dirty when the unsaved check is true, even with a clean snapshot", () => {
+        const state = reactive({ a: 1 });
+        const pending = ref(false);
+        const { dirty, markClean } = useDirtyState(() => JSON.stringify(state), { unsaved: () => pending.value });
+
+        // Not tracking yet, so nothing is dirty whatever the check says.
+        pending.value = true;
+        expect(dirty.value).toBe(false);
+
+        markClean();
+        expect(dirty.value).toBe(true);
+
+        pending.value = false;
+        expect(dirty.value).toBe(false);
     });
 });

@@ -132,6 +132,7 @@ describe("buildPortOptions", () => {
     });
 
     it("does not repeat an inactive port the FC did report", () => {
+        // A partial fake: buildPortOptions only reads `identifier`, so the baud-rate fields are left out.
         const values = buildPortOptions([...ports, { identifier: 30, functions: [] } as unknown as SerialPort], {
             inactiveIdentifiers: [30],
         }).map((option) => option.value);
