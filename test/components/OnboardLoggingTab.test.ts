@@ -29,6 +29,10 @@ import USelect from "@nuxt/ui/components/Select.vue";
 import OnboardLoggingTab from "../../src/components/tabs/OnboardLoggingTab.vue";
 import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
+import { mspHelper } from "../../src/js/msp/MSPHelper";
+import FileSystem from "../../src/js/FileSystem";
+import { gui_log } from "../../src/js/gui_log";
+import { useConnectionStore } from "../../src/stores/connection";
 import { useFlightControllerStore } from "../../src/stores/fc";
 
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
@@ -50,6 +54,14 @@ vi.mock("../../src/composables/ports/useFeaturePort", () => ({
 }));
 vi.mock("../../src/js/localization", () => ({ i18n: { getMessage: (key: string) => key } }));
 vi.mock("../../src/js/gui_log", () => ({ gui_log: vi.fn() }));
+vi.mock("../../src/js/FileSystem", () => ({
+    default: {
+        pickSaveFile: vi.fn(),
+        openFile: vi.fn(),
+        writeChunck: vi.fn(),
+        closeFile: vi.fn(),
+    },
+}));
 
 const FLASH = 1;
 const NO_LOGGING = 0;
@@ -114,6 +126,33 @@ function eraseRequested() {
     return vi.mocked(MSP.send_message).mock.calls.some(([code]) => code === MSPCodes.MSP_DATAFLASH_ERASE);
 }
 
+/** Run Save & Erase to completion: the whole used flash is read in one chunk and written to file. */
+async function saveAndErase(wrapper: Wrapper) {
+    const fcStore = useFlightControllerStore();
+    fcStore.dataflash.usedSize = 16;
+    const connectionStore = useConnectionStore();
+    connectionStore.connectedTo = "serial";
+    connectionStore.connectionValid = true;
+
+    vi.mocked(MSP.send_message).mockImplementation((code, _data, _callbackAfterSend, callback) => {
+        if (code === MSPCodes.MSP_DATAFLASH_SUMMARY && typeof callback === "function") {
+            callback(null);
+        }
+        return false;
+    });
+    vi.mocked(FileSystem.pickSaveFile).mockResolvedValue({} as Awaited<ReturnType<typeof FileSystem.pickSaveFile>>);
+    vi.mocked(FileSystem.openFile).mockResolvedValue({} as Awaited<ReturnType<typeof FileSystem.openFile>>);
+    vi.mocked(FileSystem.writeChunck).mockResolvedValue(undefined);
+    vi.spyOn(mspHelper, "dataflashRead").mockImplementation((_address, blockSize, onChunkRead) =>
+        onChunkRead(0, new DataView(new ArrayBuffer(Math.min(blockSize, fcStore.dataflash.usedSize))), null),
+    );
+    vi.spyOn(console, "log").mockImplementation(() => {});
+
+    // Clicked directly: the disabled state alone must not be what keeps the erase from being sent.
+    await click(wrapper, "dataflashButtonSaveAndErase");
+    await flushPromises();
+}
+
 describe("Onboard logging dataflash erase", () => {
     let wrapper: Wrapper;
 
@@ -171,6 +210,26 @@ describe("Onboard logging dataflash erase", () => {
 
         expect(wrapper.text()).not.toContain("dataflashEraseRequiresFlashDevice");
         expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(false);
+    });
+
+    it("saves but does not send the erase from Save & Erase when the FC is not logging to onboard flash", async () => {
+        wrapper = await mountWithSavedDevice(NO_LOGGING);
+
+        await saveAndErase(wrapper);
+
+        expect(FileSystem.closeFile).toHaveBeenCalled();
+        expect(eraseRequested()).toBe(false);
+        expect(eraseDialogOpen(wrapper)).toBe(false);
+        expect(gui_log).toHaveBeenCalledWith("dataflashEraseRequiresFlashDevice");
+    });
+
+    it("sends the erase from Save & Erase when the FC logs to onboard flash", async () => {
+        wrapper = await mountWithSavedDevice(FLASH);
+
+        await saveAndErase(wrapper);
+
+        expect(eraseRequested()).toBe(true);
+        expect(eraseDialogOpen(wrapper)).toBe(true);
     });
 
     it("allows erasing without the warning when the FC logs to onboard flash", async () => {

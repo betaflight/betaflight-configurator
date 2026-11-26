@@ -775,6 +775,10 @@ export default defineComponent({
         }
 
         function conditionallyEraseFlash(maxBytes: number, nextAddress: number) {
+            if (eraseRequiresFlashDevice.value) {
+                gui_log(i18n.getMessage("dataflashEraseRequiresFlashDevice"));
+                return;
+            }
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
                 eraseOpen.value = true;
                 void startFlashErase({ clearQueue: false });
