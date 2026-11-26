@@ -292,7 +292,6 @@ const progress = computed(() => dataflash?.progress?.value ?? 0);
             display: flex;
             flex-shrink: 0;
         }
-
     }
 }
 </style>
