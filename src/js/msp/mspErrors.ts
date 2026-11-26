@@ -60,6 +60,18 @@ export class MspCrcError extends MspError {
 }
 
 /**
+ * The FC answered with an error reply ("!") rather than carrying the request out, as it does for
+ * an EEPROM write while armed. MSP.promise resolves such a reply, so a caller that must know the
+ * FC acted on the request checks `unsupported` and throws this.
+ */
+export class MspRefusedError extends MspError {
+    constructor(message?: string, code?: number) {
+        super(message, code);
+        this.name = "MspRefusedError";
+    }
+}
+
+/**
  * True when an error is a benign MSP request cancellation — the queue was cleared on a tab
  * switch (reason "cleanup") or a disconnect/reboot (reason "disconnected"), not a real request
  * failure (timeout, CRC). Lifecycle code (the live-data poller, the shared save helper) uses
