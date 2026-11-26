@@ -435,6 +435,7 @@ const auxConfig = computed(() => fcStore.auxConfig);
 const auxConfigIds = computed(() => fcStore.auxConfigIds);
 const modeRanges = computed(() => fcStore.modeRanges);
 const rssiConfig = computed(() => fcStore.rssiConfig);
+const servoConfig = computed(() => fcStore.servoConfig);
 
 // --- Dirty state tracking ---
 
@@ -526,66 +527,71 @@ const sanityCheckItems = computed(() => [
 
 // --- Channel fallback list ---
 
-type AuxAssignments = { label: string }[][];
+// Badges per active RC channel (index 0 is roll), naming what the channel drives so
+// the fallback value can be chosen with the consequence in view.
+type ChannelAssignments = { label: string }[][];
 
-function collectAuxAssignments(): AuxAssignments {
-    const auxAssignments: AuxAssignments = [];
-    for (let i = 0; i < rc.value.active_channels - 4; i++) {
-        auxAssignments.push([]);
-    }
+const CHANNEL_FORWARDING_DISABLED = 255;
+
+function collectChannelAssignments(channelCount: number): ChannelAssignments {
+    const assignments: ChannelAssignments = Array.from({ length: channelCount }, () => []);
 
     const rssiChannel = rssiConfig.value?.channel;
-    if (rssiChannel !== undefined) {
-        const index = rssiChannel - 5;
-        if (index >= 0 && index < auxAssignments.length) {
-            auxAssignments[index].push({ label: "RSSI" });
-        }
+    // rssi_channel is 1-based and 0 means disabled.
+    if (rssiChannel !== undefined && rssiChannel > 0 && rssiChannel <= channelCount) {
+        assignments[rssiChannel - 1].push({ label: "RSSI" });
     }
 
     for (let modeIndex = 0; modeIndex < auxConfig.value.length; modeIndex++) {
-        addModeAssignments(auxAssignments, modeIndex);
+        addModeAssignments(assignments, modeIndex);
     }
-    return auxAssignments;
+    addServoAssignments(assignments);
+    return assignments;
 }
 
-// Every channel range that enables this mode labels its aux channel with the mode's name.
-function addModeAssignments(auxAssignments: AuxAssignments, modeIndex: number) {
+// Every channel range that enables this mode labels its aux channel with the mode's
+// name and the range it is active in.
+function addModeAssignments(assignments: ChannelAssignments, modeIndex: number) {
     const modeId = auxConfigIds.value[modeIndex];
+    const modeName = adjustBoxNameIfPeripheralWithModeID(modeId, auxConfig.value[modeIndex]);
 
     for (const modeRange of modeRanges.value) {
         if (modeRange.id !== modeId) continue;
 
-        const range = modeRange.range;
-        if (range.start >= range.end) continue;
+        const { start, end } = modeRange.range;
+        if (start >= end) continue;
 
-        const modeName = adjustBoxNameIfPeripheralWithModeID(modeId, auxConfig.value[modeIndex]);
-
-        if (modeRange.auxChannelIndex < auxAssignments.length) {
-            auxAssignments[modeRange.auxChannelIndex].push({ label: modeName });
+        const channel = modeRange.auxChannelIndex + 4;
+        if (channel < assignments.length) {
+            assignments[channel].push({ label: `${modeName} ${start}–${end}` });
         }
     }
 }
 
+// A servo with channel forwarding follows that channel, scaled onto the servo's min..max.
+function addServoAssignments(assignments: ChannelAssignments) {
+    servoConfig.value.forEach((servo, servoIndex) => {
+        const channel = servo.indexOfChannelToForward;
+        if (channel === CHANNEL_FORWARDING_DISABLED || channel >= assignments.length) return;
+
+        assignments[channel].push({
+            label: i18n.getMessage("failsafeChannelServoBadge", {
+                servo: servoIndex + 1,
+                min: servo.min,
+                max: servo.max,
+            }),
+        });
+    });
+}
+
 const activeChannels = computed(() => {
-    const channels = [];
     const channelNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
-    const auxAssignments = collectAuxAssignments();
+    const assignments = collectChannelAssignments(Math.min(rc.value.active_channels, rxFailConfig.value.length));
 
-    let auxIndex = 1;
-    let auxAssignmentIndex = 0;
-
-    for (let i = 0; i < rxFailConfig.value.length; i++) {
-        if (i < 4) {
-            channels.push({ name: channelNames[i] });
-        } else {
-            const messageKey = `controlAxisAux${auxIndex++}`;
-            channels.push({
-                name: t(messageKey),
-                assignments: auxAssignments[auxAssignmentIndex++] || [],
-            });
-        }
-    }
-    return channels;
+    return rxFailConfig.value.map((_, i) => ({
+        name: i < 4 ? channelNames[i] : t(`controlAxisAux${i - 3}`),
+        assignments: assignments[i] ?? [],
+    }));
 });
 
 // --- GPS Rescue helpers ---

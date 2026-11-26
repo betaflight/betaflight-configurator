@@ -1,4 +1,7 @@
 {
+    "ledStripLoadFailed": {
+        "message": "LED-konfiguration kunne ikke indlæses. Genopret forbindelse og genindlæs denne fane før du gemmer."
+    },
     "yes": {
         "message": "Ja",
         "description": "General Yes message to be used across the application"
@@ -220,6 +223,24 @@
     },
     "save": {
         "message": "Gem"
+    },
+    "saveAndReboot": {
+        "message": "Gem og genstart"
+    },
+    "refresh": {
+        "message": "Opdater"
+    },
+    "saveToFile": {
+        "message": "Gem som fil"
+    },
+    "loadFromFile": {
+        "message": "Indlæs fra fil"
+    },
+    "loadFromClipboard": {
+        "message": "Sæt ind fra udklipsholder"
+    },
+    "copyToClipboard": {
+        "message": "Kopier til udklipsholder"
     },
     "autoConnectEnabled": {
         "message": "Autotilslut er aktiv - tilslutning forsøges automatisk, når ny port registreres"
@@ -2907,10 +2928,6 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Deaktiver kontrol af VTX indstillinger via OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
-    },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Rul gennem niveauer for VTX effekt (hvis VTX har denne mulighed)",
-        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
@@ -5685,6 +5702,10 @@
     "osdSetupUploadFontWarningNeedStandardFont": {
         "message": "Den valgte skrifttype er konfigureret til lille skrifttype for framebuffer OSDs, men denne OSD bruger standard størrelse skrifttyper. Den vil ikke vises korrekt. Hent alligevel?",
         "description": "Confirmation shown before uploading a small font to an OSD that uses standard size fonts"
+    },
+    "osdSetupSaveOptions": {
+        "message": "Indstillinger for OSD- gem",
+        "description": "Accessible label for the toolbar dropdown button"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Batteri spænding i realtid",
@@ -9131,6 +9152,9 @@
     },
     "pidTuningWingTpaAdvancedSpeedSettings": {
         "message": "Avanceret hastigheds konfiguration"
+    },
+    "pidTuningWingTpaPitotSpeedSettings": {
+        "message": "Grundlæggende hastigheds konfiguration"
     },
     "pidTuningWingTpaBasicSpeedDelay": {
         "message": "Forsinkelse"

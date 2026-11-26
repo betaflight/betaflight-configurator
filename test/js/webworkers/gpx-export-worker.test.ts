@@ -42,15 +42,15 @@ describe("gpx-export-worker", () => {
         vi.restoreAllMocks();
     });
 
-    it("writes one track point per frame with a position, timed from the log start", async () => {
+    it("writes a track point for each position, timed from the log start", async () => {
         const gpx = await runWorker({
             sysConfig: { "Log start datetime": "2024-01-02T03:04:05.000Z" },
             fieldNames,
             frames: [
                 // No fix yet: latitude 0, so the frame is skipped.
-                [[1000000, 0, 47500000, 100]],
+                [[1000000, 0, 311342000, 100]],
                 [
-                    [1500999, 525000000, 47500000, 123],
+                    [1500999, 299792000, 311342000, 123],
                     [2000000, -337500000, -1500000, -5],
                 ],
             ],
@@ -59,7 +59,7 @@ describe("gpx-export-worker", () => {
         expect(gpx.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n<gpx ')).toBe(true);
         expect(gpx.endsWith("  </trk>\n</gpx>")).toBe(true);
         expect(gpx.match(/<trkpt.*<\/trkpt>/g)).toEqual([
-            '<trkpt lat="52.5" lon="4.75"><ele>12.3</ele><time>2024-01-02T03:04:06.500Z</time></trkpt>',
+            '<trkpt lat="29.9792" lon="31.1342"><ele>12.3</ele><time>2024-01-02T03:04:06.500Z</time></trkpt>',
             '<trkpt lat="-33.75" lon="-0.15"><ele>-0.5</ele><time>2024-01-02T03:04:07.000Z</time></trkpt>',
         ]);
     });
@@ -71,13 +71,47 @@ describe("gpx-export-worker", () => {
             frames: [
                 [
                     [1000000, null, null, null],
-                    [2000000, 525000000, 47500000, null],
+                    [2000000, 299792000, 311342000, null],
                 ],
             ],
         });
 
         expect(gpx.match(/<trkpt.*<\/trkpt>/g)).toEqual([
-            '<trkpt lat="52.5" lon="4.75"><ele>0</ele><time>2024-01-02T03:04:07.000Z</time></trkpt>',
+            '<trkpt lat="29.9792" lon="31.1342"><ele>0</ele><time>2024-01-02T03:04:07.000Z</time></trkpt>',
+        ]);
+    });
+
+    it("writes a repeated fix once, at the frame it first appeared in, and ends at the last frame", async () => {
+        const gpx = await runWorker({
+            sysConfig: { "Log start datetime": "2024-01-02T03:04:05.000Z" },
+            fieldNames,
+            frames: [
+                [
+                    [1000000, 299792000, 311342000, 123],
+                    [1001000, 299792000, 311342000, 123],
+                ],
+                [
+                    // The same fix carried into the next chunk.
+                    [1002000, 299792000, 311342000, 123],
+                    // Only the altitude changed.
+                    [1100000, 299792000, 311342000, 124],
+                    [1101000, 299792000, 311342000, 124],
+                    // Back to an earlier position: still a new point in the track.
+                    [1200000, 299792000, 311342000, 123],
+                    [1201000, 299792000, 311342000, 123],
+                    // The last frame with a position, written although it repeats the fix.
+                    [1300000, 299792000, 311342000, 123],
+                    // No position: not the end of the track.
+                    [1400000, 0, 0, 0],
+                ],
+            ],
+        });
+
+        expect(gpx.match(/<trkpt.*<\/trkpt>/g)).toEqual([
+            '<trkpt lat="29.9792" lon="31.1342"><ele>12.3</ele><time>2024-01-02T03:04:06.000Z</time></trkpt>',
+            '<trkpt lat="29.9792" lon="31.1342"><ele>12.4</ele><time>2024-01-02T03:04:06.100Z</time></trkpt>',
+            '<trkpt lat="29.9792" lon="31.1342"><ele>12.3</ele><time>2024-01-02T03:04:06.200Z</time></trkpt>',
+            '<trkpt lat="29.9792" lon="31.1342"><ele>12.3</ele><time>2024-01-02T03:04:06.300Z</time></trkpt>',
         ]);
     });
 
@@ -85,7 +119,7 @@ describe("gpx-export-worker", () => {
         const gpx = await runWorker({
             sysConfig: { "Log start datetime": "2024-01-02T03:04:05.000Z" },
             fieldNames,
-            frames: [[[1000000, 525000000, 0, 100]]],
+            frames: [[[1000000, 299792000, 0, 100]]],
         });
 
         expect(gpx).not.toContain("<trkpt");

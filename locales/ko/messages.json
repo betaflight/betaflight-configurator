@@ -2940,10 +2940,6 @@
         "message": "OSD를 통한 VTX 제어 설정을 비활성화합니다",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "VTX 출력 수준을 순환합니다(VTX가 지원하는 경우)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "VTX를 피트모드로 전환합니다 (지원시 저전력 모드로 진입)",
         "description": "Help text to VTX PIT MODE mode"

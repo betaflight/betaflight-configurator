@@ -1,3 +1,24 @@
+/*
+ * This file is part of Betaflight.
+ *
+ * Betaflight is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General
+ * Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Betaflight is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { beforeEach, describe, expect, it } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { useFlightControllerStore } from "../../../src/stores/fc";
@@ -213,5 +234,87 @@ describe("pidTuning store dirty tracking", () => {
         fcStore.config.rateProfileNames[fcStore.config.rateProfile] = "renamed";
 
         expect(store.hasEdits).toBe(true);
+    });
+});
+
+describe("pidTuning store manual filter cutoffs", () => {
+    const GYRO = ["gyro_lowpass_hz", "gyro_lowpass2_hz", "gyro_lowpass_dyn_min_hz", "gyro_lowpass_dyn_max_hz"] as const;
+    const DTERM = [
+        "dterm_lowpass_hz",
+        "dterm_lowpass2_hz",
+        "dterm_lowpass_dyn_min_hz",
+        "dterm_lowpass_dyn_max_hz",
+    ] as const;
+    type CutoffField = (typeof GYRO)[number] | (typeof DTERM)[number];
+
+    const cutoffs = (fields: readonly CutoffField[]) => fields.map((field) => fcStore.filterConfig[field]);
+    const setCutoffs = (fields: readonly CutoffField[], values: number[]) =>
+        fields.forEach((field, i) => (fcStore.filterConfig[field] = values[i]));
+
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        fcStore = useFlightControllerStore();
+        fcStore.resetState();
+    });
+
+    it.each([
+        ["gyro", GYRO],
+        ["dterm", DTERM],
+    ] as const)("restores the %s cutoffs remembered before the slider took over", (slider, fields) => {
+        const store = usePidTuningStore();
+        setCutoffs(fields, [150, 0, 0, 0]);
+
+        store.rememberManualFilterCutoffs(slider);
+        setCutoffs(fields, [0, 300, 240, 600]);
+        store.restoreManualFilterCutoffs(slider);
+
+        expect(cutoffs(fields)).toEqual([150, 0, 0, 0]);
+    });
+
+    it("keeps the two sliders' cutoffs apart", () => {
+        const store = usePidTuningStore();
+        setCutoffs(GYRO, [150, 0, 0, 0]);
+        setCutoffs(DTERM, [90, 0, 0, 0]);
+
+        store.rememberManualFilterCutoffs("gyro");
+        setCutoffs(GYRO, [0, 300, 240, 600]);
+        setCutoffs(DTERM, [0, 200, 100, 250]);
+        store.restoreManualFilterCutoffs("gyro");
+
+        expect(cutoffs(GYRO)).toEqual([150, 0, 0, 0]);
+        expect(cutoffs(DTERM)).toEqual([0, 200, 100, 250]);
+    });
+
+    it("restores nothing when the slider was not switched ON since the last load/save", () => {
+        const store = usePidTuningStore();
+        setCutoffs(GYRO, [0, 300, 240, 600]);
+
+        store.restoreManualFilterCutoffs("gyro");
+
+        expect(cutoffs(GYRO)).toEqual([0, 300, 240, 600]);
+    });
+
+    it("forgets the remembered cutoffs once a load or save re-baselines the values", () => {
+        const store = usePidTuningStore();
+        setCutoffs(GYRO, [150, 0, 0, 0]);
+        store.rememberManualFilterCutoffs("gyro");
+        setCutoffs(GYRO, [0, 300, 240, 600]);
+
+        store.markEditsClean();
+        store.restoreManualFilterCutoffs("gyro");
+
+        expect(cutoffs(GYRO)).toEqual([0, 300, 240, 600]);
+    });
+
+    it("restores only once", () => {
+        const store = usePidTuningStore();
+        setCutoffs(GYRO, [150, 0, 0, 0]);
+        store.rememberManualFilterCutoffs("gyro");
+        store.restoreManualFilterCutoffs("gyro");
+
+        setCutoffs(GYRO, [120, 0, 0, 0]);
+        store.restoreManualFilterCutoffs("gyro");
+
+        expect(cutoffs(GYRO)).toEqual([120, 0, 0, 0]);
     });
 });

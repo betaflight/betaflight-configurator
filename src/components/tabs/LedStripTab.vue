@@ -342,6 +342,7 @@ import semver from "semver";
 import { useFlightControllerStore } from "@/stores/fc";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 import UiBox from "../elements/UiBox.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 // Decode HTML entities in translations (some use &amp; etc) so plain-text
 // component props (e.g. USelect item labels) render correctly.
@@ -884,12 +885,14 @@ function updateColorSliders(colorIndex: number) {
 }
 
 function onColorSliderChange() {
-    if (selectedColorIndex.value !== null) {
-        ledColors.value[selectedColorIndex.value].h = colorHSV.h;
-        ledColors.value[selectedColorIndex.value].s = colorHSV.s;
-        ledColors.value[selectedColorIndex.value].v = colorHSV.v;
-        buildLedStripFromGrid(gridLeds);
+    const color = ledColors.value[selectedColorIndex.value];
+    if (!color) {
+        return;
     }
+    color.h = colorHSV.h;
+    color.s = colorHSV.s;
+    color.v = colorHSV.v;
+    buildLedStripFromGrid(gridLeds);
 }
 
 function openColorSliders(event: MouseEvent) {
@@ -1006,7 +1009,7 @@ watch(isColorSlidersOpen, (newValue) => {
 
 // Save
 function save() {
-    runSave(async () => {
+    return runSave(async () => {
         const savedSnapshot = takeSnapshot();
 
         await saveConfig();
@@ -1018,6 +1021,7 @@ function save() {
         // showing the identical toast twice.
     });
 }
+registerTabSave(() => save());
 
 // Helper functions
 function getColorStyle(colorIndex: number) {

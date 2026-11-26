@@ -25,6 +25,7 @@ import { MapGrapher } from "./graph_map";
 import { FlightLogGrapher } from "./grapher";
 import { loadConfigurationFile, ConfigurationDefaults } from "./configuration";
 import { GraphConfig, type GraphPanelConfig } from "./graph_config";
+import { bindGraphTouch } from "./graph_touch";
 import { SeekBar } from "./seekbar";
 import ctzsnoozeWorkspace from "./ws_ctzsnooze.json";
 import supaflyWorkspace from "./ws_supafly.json";
@@ -128,6 +129,8 @@ export function bootstrapViewer(): () => void {
     }
 
     let graph: FlightLogGrapher | null = null;
+    let unbindGraphTouch: (() => void) | undefined;
+    cleanupFns.push(() => unbindGraphTouch?.());
     const prefs = new PrefStorage();
     const configurationDefaults = new ConfigurationDefaults(prefs);
     const video = viewerElement<HTMLVideoElement>("logVideo");
@@ -205,6 +208,7 @@ export function bootstrapViewer(): () => void {
             return;
         }
 
+        unbindGraphTouch?.();
         if (graph) {
             graph.destroy();
         }
@@ -232,6 +236,7 @@ export function bootstrapViewer(): () => void {
         );
         graph = newGraph;
         graphStore.graph = newGraph;
+        unbindGraphTouch = bindGraphTouch(canvas, newGraph, flightLog);
 
         setVideoInTime(null);
         setVideoOutTime(null);

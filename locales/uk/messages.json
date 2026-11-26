@@ -2894,10 +2894,6 @@
         "message": "Вимкнути керування налаштуваннями відеопередавача через наекранне меню",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
-    "auxiliaryHelpMode_VTXPOWER": {
-        "message": "Перемикати по колу рівні потужності VTX (якщо підтримується VTX)",
-        "description": "Help text to VTX POWER mode"
-    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Перемкнути відеопередавач у режим ями (низька вихідна потужність, якщо підтримується)",
         "description": "Help text to VTX PIT MODE mode"

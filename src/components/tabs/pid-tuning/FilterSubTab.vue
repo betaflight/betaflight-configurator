@@ -584,6 +584,7 @@
 import { computed, ref, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { usePidTuningStore } from "@/stores/pidTuning";
 import {
     NON_EXPERT_SLIDER_MIN_GYRO,
     NON_EXPERT_SLIDER_MAX_GYRO,
@@ -600,6 +601,7 @@ import SettingRow from "@/components/elements/SettingRow.vue";
 
 const { t } = useTranslation();
 const fcStore = useFlightControllerStore();
+const pidTuningStore = usePidTuningStore();
 
 const props = defineProps({
     expertMode: {
@@ -657,15 +659,38 @@ const dtermSliderMode = computed({
     set: (value) => (fcStore.tuningSliders.slider_dterm_filter = value),
 });
 
-// Boolean wrappers for USwitch binding
+// Boolean wrappers for USwitch binding.
+// Turning a slider ON recalculates the cutoffs from the current multiplier right away,
+// so the (now read-only) inputs show what will be saved — matching the PID slider mode.
+// Turning it OFF restores the manual cutoffs it replaced (kept by the PID tuning store).
 const gyroSliderEnabled = computed({
     get: () => gyroSliderMode.value === 1,
-    set: (value) => (gyroSliderMode.value = value ? 1 : 0),
+    set: (value) => {
+        gyroSliderMode.value = value ? 1 : 0;
+        if (value) {
+            pidTuningStore.rememberManualFilterCutoffs("gyro");
+            calculateNewGyroFilters(gyroFilterMultiplier.value).catch((error) => {
+                console.error("Failed to calculate simplified gyro filters:", error);
+            });
+        } else {
+            pidTuningStore.restoreManualFilterCutoffs("gyro");
+        }
+    },
 });
 
 const dtermSliderEnabled = computed({
     get: () => dtermSliderMode.value === 1,
-    set: (value) => (dtermSliderMode.value = value ? 1 : 0),
+    set: (value) => {
+        dtermSliderMode.value = value ? 1 : 0;
+        if (value) {
+            pidTuningStore.rememberManualFilterCutoffs("dterm");
+            calculateNewDTermFilters(dtermFilterMultiplier.value).catch((error) => {
+                console.error("Failed to calculate simplified dterm filters:", error);
+            });
+        } else {
+            pidTuningStore.restoreManualFilterCutoffs("dterm");
+        }
+    },
 });
 
 // Filter Sliders

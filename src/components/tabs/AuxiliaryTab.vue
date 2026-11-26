@@ -195,12 +195,13 @@ import {
     type ModeEntry,
     type RangeEntry,
 } from "../../js/utils/modeRanges";
-import inflection from "inflection";
+import { getModeHelpKey } from "../../js/modeHelpKey";
 import UiBox from "../elements/UiBox.vue";
 import HelpIcon from "../elements/HelpIcon.vue";
 import SettingRow from "../elements/SettingRow.vue";
 import DraggableMultiSlider from "../elements/DraggableMultiSlider.vue";
 import ChannelRangePips from "../elements/ChannelRangePips.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 /** A mode entry as the tab edits it: `uid` keys it in v-for and removeEntry(). */
 type TabModeEntry = ModeEntry & { uid: number };
@@ -386,7 +387,7 @@ export default defineComponent({
                 const modeId = fcStore.auxConfigIds[index];
                 const rawName = fcStore.auxConfig[index];
                 const adjustedName = adjustBoxNameIfPeripheralWithModeID(modeId, rawName);
-                const helpKey = `auxiliaryHelpMode_${inflection.camelize(rawName.replaceAll(/\s+/g, ""))}`;
+                const helpKey = getModeHelpKey(modeId, rawName);
                 modeMap.set(modeId, {
                     id: modeId,
                     index,
@@ -482,6 +483,7 @@ export default defineComponent({
         };
 
         const { saveModes, isSaving } = useAuxiliarySave(modes, requiredModeRangeCount, { takeSnapshot, markClean });
+        registerTabSave(() => saveModes());
         const { loadAuxiliaryData, startPolling } = useAuxiliaryData();
 
         const loadData = async () => {
