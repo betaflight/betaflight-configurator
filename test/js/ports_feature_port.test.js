@@ -319,7 +319,7 @@ describe("useFeaturePort", () => {
         expect(cliSend).not.toHaveBeenCalled();
     });
 
-    it("writes the selection as a CLI set and settles the dirty state", async () => {
+    it("writes the selection as a CLI set and settles the dirty state once it is saved", async () => {
         await port.load();
         port.selectedIdentifier.value = 51;
 
@@ -328,6 +328,10 @@ describe("useFeaturePort", () => {
         await port.write();
 
         expect(cliSend).toHaveBeenCalledWith("set rx_uart = UART1");
+        expect(port.changed.value).toBe(true);
+
+        port.markSaved();
+
         expect(port.changed.value).toBe(false);
     });
 
@@ -406,6 +410,7 @@ describe("useFeaturePort", () => {
 
         cliSend.mockClear();
         await port.write();
+        port.markSaved();
 
         expect(cliSend.mock.calls.map((call) => call[0])).toEqual(["set gps_baud = 115200"]);
         expect(port.changed.value).toBe(false);
@@ -438,6 +443,111 @@ describe("useFeaturePort", () => {
             "set gps_baud = 115200",
         ]);
         expect(port.changed.value).toBe(true);
+    });
+
+    describe("clean only after the EEPROM write", () => {
+        beforeEach(async () => {
+            replies = {
+                "get gps_uart": ["gps_uart = UART3"],
+                "get gps_baud": ["gps_baud = 57600"],
+            };
+            withFeature({
+                setting: "gps_uart",
+                baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
+            });
+            await port.load();
+            port.selectedIdentifier.value = 51;
+            port.selectedBaud.value = "115200";
+            cliSend.mockClear();
+        });
+
+        it("marks the feature clean once the persist succeeds", async () => {
+            await port.write();
+            port.markSaved();
+
+            expect(port.changed.value).toBe(false);
+            expect(port.selectedIdentifier.value).toBe(51);
+            expect(port.selectedBaud.value).toBe("115200");
+
+            cliSend.mockClear();
+            await port.write();
+            expect(cliSend).not.toHaveBeenCalled();
+        });
+
+        it("stays changed with the edits intact when the persist fails after the CLI sets", async () => {
+            await port.write();
+            // the tab's EEPROM write throws here, so markSaved() is never reached
+
+            expect(port.changed.value).toBe(true);
+            expect(port.selectedIdentifier.value).toBe(51);
+            expect(port.selectedBaud.value).toBe("115200");
+            expect(port.selection.value.changed).toBe(true);
+        });
+
+        it("stays changed with the edits intact when the save is cancelled before the write", async () => {
+            // a declined port-conflict prompt returns before write() and markSaved()
+            expect(port.changed.value).toBe(true);
+            expect(port.selectedIdentifier.value).toBe(51);
+            expect(port.selectedBaud.value).toBe("115200");
+            expect(cliSend).not.toHaveBeenCalled();
+        });
+
+        it("does not resend what the FC already holds when the save is retried", async () => {
+            await port.write();
+            cliSend.mockClear();
+
+            await port.write();
+            port.markSaved();
+
+            expect(cliSend).not.toHaveBeenCalled();
+            expect(port.changed.value).toBe(false);
+        });
+
+        it("sends the original back when the user reverts after a failed persist", async () => {
+            await port.write();
+            port.selectedIdentifier.value = 53;
+            port.selectedBaud.value = "57600";
+
+            // back on what is persisted, so nothing is left unsaved
+            expect(port.changed.value).toBe(false);
+
+            cliSend.mockClear();
+            await port.write();
+
+            // but the FC's RAM still holds the abandoned pick, so it has to be set back
+            expect(sentCommands().filter((command) => command !== "peripherals")).toEqual([
+                "set gps_uart = UART3",
+                "set gps_baud = 57600",
+            ]);
+        });
+
+        it("settles only what went out when a set is refused partway", async () => {
+            cliSend.mockImplementation((command) =>
+                Promise.resolve(command.startsWith("set gps_baud") ? ["###ERROR IN set: INVALID VALUE###"] : []),
+            );
+
+            await expect(port.write()).rejects.toThrow(/ERROR/);
+            port.markSaved();
+
+            expect(port.changed.value).toBe(true);
+
+            cliSend.mockClear();
+            cliSend.mockImplementation(() => Promise.resolve([]));
+            await port.write();
+
+            expect(sentCommands()).toEqual(["set gps_baud = 115200"]);
+        });
+
+        it("starts over from the FC on a reload", async () => {
+            await port.write();
+            replies["get gps_uart"] = ["gps_uart = UART1"];
+            replies["get gps_baud"] = ["gps_baud = 115200"];
+
+            await port.load();
+
+            expect(port.changed.value).toBe(false);
+            expect(port.selectedIdentifier.value).toBe(51);
+        });
     });
 
     it("carries a protocol beside the port and writes it first", async () => {

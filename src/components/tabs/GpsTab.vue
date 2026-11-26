@@ -475,6 +475,7 @@ export default defineComponent({
             conflict: gpsPortConflict,
             load: loadGpsPort,
             write: writeGpsPort,
+            markSaved: markGpsPortSaved,
         } = useFeaturePort({
             setting: "gps_uart",
             baud: { setting: "gps_baud", rates: GPS_BAUD_RATES },
@@ -922,6 +923,7 @@ export default defineComponent({
 
                     // Error-aware persist: a timeout rejects here instead of leaving the save pending.
                     await saveToEeprom();
+                    markGpsPortSaved();
                     tabSwitchCleanup(() => {
                         reboot();
                     });

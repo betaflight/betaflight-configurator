@@ -23,6 +23,7 @@ const data = vi.hoisted(() => ({
 }));
 const gates = vi.hoisted(() => [] as { value: unknown }[][]);
 const writeFeaturePort = vi.hoisted(() => vi.fn());
+const markFeaturePortSaved = vi.hoisted(() => vi.fn());
 const saveToEeprom = vi.hoisted(() => vi.fn());
 const reboot = vi.hoisted(() => vi.fn());
 
@@ -62,6 +63,7 @@ vi.mock("../../src/composables/ports/useFeaturePort", () => ({
         selection: ref(null),
         load: async () => {},
         write: writeFeaturePort,
+        markSaved: markFeaturePortSaved,
     }),
 }));
 vi.mock("../../src/composables/useDronecanDevice", () => ({
@@ -244,6 +246,36 @@ describe("SensorsTab MSP wiring", () => {
         expect(writeFeaturePort).toHaveBeenCalled();
         expect(saveToEeprom).toHaveBeenCalledOnce();
         expect(reboot).toHaveBeenCalledOnce();
+    });
+
+    it("marks the ports saved only after the EEPROM write has gone through", async () => {
+        const wrapper = mountTab();
+        await flushPromises();
+        let release!: () => void;
+        saveToEeprom.mockReturnValue(new Promise<void>((resolve) => (release = resolve)));
+
+        clickButton(wrapper, "saveAndReboot");
+        await flushPromises();
+        expect(writeFeaturePort).toHaveBeenCalled();
+        expect(markFeaturePortSaved).not.toHaveBeenCalled();
+
+        release();
+        await flushPromises();
+        // rangefinder and optical flow
+        expect(markFeaturePortSaved).toHaveBeenCalledTimes(2);
+    });
+
+    it("keeps the ports unsaved when the EEPROM write fails", async () => {
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        saveToEeprom.mockRejectedValue(new Error("EEPROM"));
+        const wrapper = mountTab();
+        await flushPromises();
+
+        clickButton(wrapper, "saveAndReboot");
+        await flushPromises();
+
+        expect(writeFeaturePort).toHaveBeenCalled();
+        expect(markFeaturePortSaved).not.toHaveBeenCalled();
     });
 });
 

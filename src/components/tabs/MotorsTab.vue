@@ -601,6 +601,7 @@ const {
     conflict: escSensorPortConflict,
     load: loadEscSensorPort,
     write: writeEscSensorPort,
+    markSaved: markEscSensorPortSaved,
 } = useFeaturePort({ setting: "esc_sensor_uart" });
 
 const { confirmPortConflicts } = usePortConflicts(() => [escSensorPortConflict]);
@@ -830,6 +831,7 @@ const { saveMotors, isSaving } = useMotorsSave({
     escSensorPortChanged,
     confirmPortConflicts,
     writeEscSensorPort,
+    markEscSensorPortSaved,
     motorsTestingEnabled,
     stopAllMotors,
     zeroThrottleValue,

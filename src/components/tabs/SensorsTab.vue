@@ -920,6 +920,7 @@ const {
     selection: rangefinderPortSelection,
     load: loadRangefinderPort,
     write: writeRangefinderPort,
+    markSaved: markRangefinderPortSaved,
 } = useFeaturePort({ setting: "rangefinder_uart" });
 
 const {
@@ -931,6 +932,7 @@ const {
     selection: opticalFlowPortSelection,
     load: loadOpticalFlowPort,
     write: writeOpticalFlowPort,
+    markSaved: markOpticalFlowPortSaved,
 } = useFeaturePort({ setting: "opticalflow_uart" });
 
 const { confirmPortConflicts } = usePortConflicts(
@@ -2498,6 +2500,8 @@ const saveConfig = async () => {
 
         // Error-aware persist: a timeout rejects here instead of leaving the save pending.
         await saveToEeprom();
+        markRangefinderPortSaved();
+        markOpticalFlowPortSaved();
         tabSwitchCleanup(() => {
             reboot();
         });

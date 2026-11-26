@@ -453,6 +453,7 @@ export default defineComponent({
             conflict: blackboxPortConflict,
             load: loadBlackboxPort,
             write: writeBlackboxPort,
+            markSaved: markBlackboxPortSaved,
         } = useFeaturePort({
             setting: "blackbox_uart",
             baud: { setting: "blackbox_baud" },
@@ -677,6 +678,7 @@ export default defineComponent({
 
                 // Error-aware persist: a timeout rejects here instead of leaving the save pending.
                 await saveToEeprom();
+                markBlackboxPortSaved();
                 tabSwitchCleanup(() => {
                     reboot();
                 });
