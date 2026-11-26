@@ -60,7 +60,13 @@ describe("saveToEeprom", () => {
     it("rejects when the FC refuses the EEPROM write with an error reply", async () => {
         vi.mocked(MSP.promise).mockResolvedValue(eepromReply(1));
 
-        await expect(useReboot().saveToEeprom()).rejects.toBeInstanceOf(MspRefusedError);
+        const error = await useReboot()
+            .saveToEeprom()
+            .catch((e: unknown) => e);
+
+        expect(error).toBeInstanceOf(MspRefusedError);
+        // runSave shows this instead of the generic "failed to save configuration"
+        expect(error).toMatchObject({ message: "eepromWriteRefused", saveFailureMessage: "eepromWriteRefused" });
         expect(gui_log).not.toHaveBeenCalled();
     });
 });

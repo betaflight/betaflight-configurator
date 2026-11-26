@@ -1980,6 +1980,10 @@
     "dronecanSaveFailed": {
         "message": "Could not change the DroneCAN settings, so nothing was saved."
     },
+    "eepromWriteRefused": {
+        "message": "The flight controller refused to save the settings. Disarm and try again.",
+        "description": "Shown when the flight controller refuses the EEPROM write, which it does while armed"
+    },
     "configurationGPSAutoBaud": {
         "message": "Auto Baud"
     },

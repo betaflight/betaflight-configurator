@@ -25,6 +25,7 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { MspRefusedError } from "@/js/msp/mspErrors";
+import { withSaveFailureMessage } from "@/composables/useSaving";
 import { useFlightControllerStore } from "@/stores/fc";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
@@ -51,7 +52,9 @@ async function saveToEeprom(): Promise<void> {
     const response = await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
     // An error reply resolves too, so check it: the FC refused the write and nothing was persisted.
     if (response?.unsupported) {
-        throw new MspRefusedError("FC refused the EEPROM write", MSPCodes.MSP_EEPROM_WRITE);
+        // The firmware refuses this write while armed, so say that rather than the generic failure.
+        const message = i18n.getMessage("eepromWriteRefused");
+        throw withSaveFailureMessage(new MspRefusedError(message, MSPCodes.MSP_EEPROM_WRITE), message);
     }
     gui_log(i18n.getMessage("configurationEepromSaved"));
 }

@@ -35,6 +35,7 @@ import { useDirtyState } from "../composables/useDirtyState";
 import { MspBuffer } from "../js/msp/mspBytes";
 import type { MspResponse } from "../js/msp";
 import { useConnectionStore } from "../stores/connection";
+import { useReboot } from "../composables/useReboot";
 
 /** An alarm threshold as `OSD.msp.decode` builds it; only `value` is written back. */
 export interface OsdAlarm {
@@ -542,7 +543,8 @@ export const useOsdStore = defineStore("osd", () => {
 
         await beforePersist?.();
 
-        await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+        // saveToEeprom rejects when the FC refuses the write, so the snapshot only moves on a persist.
+        await useReboot().saveToEeprom();
         captureSnapshot(savedSnapshot);
     };
 
