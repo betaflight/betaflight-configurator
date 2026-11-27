@@ -79,4 +79,74 @@ describe("csv-export-worker", () => {
         const tabbed = await runWorker(request({ columnDelimiter: "\t", stringDelimiter: "'" }));
         expect(tabbed.split("\n")[3]).toBe("'time'\t'gyroADC[0]'");
     });
+
+    it("escapes embedded quotes, delimiters, and line breaks in string headers", async () => {
+        const data = {
+            ...request(),
+            sysConfig: {
+                'pilot"name': 'A,"B"\r\nC',
+                "tab;name": "semi;colon",
+            },
+            fieldNames: ['time,"ms"', "line\nbreak"],
+        };
+
+        expect(await runWorker(data)).toBe(
+            [
+                '"pilot""name","A,""B""\r\nC"',
+                '"tab;name","semi;colon"',
+                '"time,""ms""","line\nbreak"',
+                "0,-12",
+                "125,NaN",
+                "250,0",
+            ].join("\n"),
+        );
+    });
+
+    it("quotes only CSV-sensitive frame strings and leaves numbers and NaN unchanged", async () => {
+        const data = {
+            ...request(),
+            frames: [[["ordinary", "a,b", 'say "hi"', "a\rb", "a\nb", 0, null]]],
+        };
+
+        expect((await runWorker(data)).split("\n").slice(4).join("\n")).toBe(
+            ['ordinary,"a,b","say ""hi""","a\rb","a\nb",0,NaN'].join("\n"),
+        );
+    });
+
+    it("supports custom column and quote delimiters", async () => {
+        const data = {
+            ...request({ columnDelimiter: ";", stringDelimiter: "'" }),
+            sysConfig: { "key;name": "it's fine" },
+            fieldNames: ["time", "value"],
+            frames: [[["a;b", "it's", 1]]],
+        };
+
+        expect(await runWorker(data)).toBe(
+            ["'key;name';'it''s fine'", "'time';'value'", "'a;b';'it''s';1"].join("\n"),
+        );
+    });
+
+    it("doubles a custom quote delimiter even without a column delimiter", async () => {
+        const data = {
+            ...request({ columnDelimiter: ";", stringDelimiter: "'" }),
+            sysConfig: { notes: "pilot's comment" },
+            fieldNames: ["time"],
+            frames: [[[0]]],
+        };
+
+        expect(await runWorker(data)).toBe(["'notes';'pilot''s comment'", "'time'", "0"].join("\n"));
+    });
+
+    it("preserves raw string output when quoteStrings is disabled", async () => {
+        const data = {
+            ...request({ columnDelimiter: ";", quoteStrings: false }),
+            sysConfig: { "k;e;y": 'some "text"' },
+            fieldNames: ["a;b", "second"],
+            frames: [[["a;b", "value", 0, null]]],
+        };
+
+        expect(await runWorker(data)).toBe(
+            ['k;e;y;some "text"', "a;b;second", "a;b;value;0;NaN"].join("\n"),
+        );
+    });
 });
