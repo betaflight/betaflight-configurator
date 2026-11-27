@@ -25,6 +25,7 @@ import {
     buildGround,
     lonLatToTile,
     MAX_TILES,
+    padded,
     pickZoom,
     tileToLonLat,
     TILE_SOURCES,
@@ -91,6 +92,23 @@ describe("pickZoom", () => {
     });
 });
 
+describe("padded", () => {
+    it("gives a long, thin flight the same margin in meters beside it as beyond its ends", () => {
+        // 2 km east-west, 20 m north-south.
+        const box = {
+            minLat: LAT0,
+            maxLat: LAT0 + 20 / M_PER_DEG_LAT,
+            minLon: LON0,
+            maxLon: LON0 + 2000 / M_PER_DEG_LON,
+        };
+        const area = padded(box);
+        expect((box.minLat - area.minLat) * M_PER_DEG_LAT).toBeCloseTo(400, 0);
+        expect((area.maxLat - box.maxLat) * M_PER_DEG_LAT).toBeCloseTo(400, 0);
+        expect((box.minLon - area.minLon) * M_PER_DEG_LON).toBeCloseTo(400, 0);
+        expect((area.maxLon - box.maxLon) * M_PER_DEG_LON).toBeCloseTo(400, 0);
+    });
+});
+
 describe("buildGround", () => {
     it("switches loaded tiles between opaque and see-through on request", () => {
         const images: (() => void)[] = [];
@@ -125,6 +143,42 @@ describe("buildGround", () => {
             expect(states()).toEqual(new Set(["false false true"]));
         } finally {
             faded.dispose();
+            loader.mockRestore();
+        }
+    });
+
+    it("drapes the tiles over terrain and lays them flat again", () => {
+        const loader = vi.spyOn(TextureLoader.prototype, "load").mockReturnValue(new Texture());
+        const draped = buildGround({
+            box: boxAround(50),
+            source: TILE_SOURCES.map,
+            groundU: -2,
+            toLocal,
+            onTileLoaded: () => {},
+        });
+        const heights = () =>
+            (draped.group.children as Mesh[]).flatMap((mesh) => {
+                const position = mesh.geometry.getAttribute("position");
+                return Array.from({ length: position.count }, (_, i) => position.getY(i));
+            });
+        try {
+            const flatCount = heights().length;
+            // 5 m higher per 0.0001° of latitude north of the flight's centre.
+            draped.setSurface((lat) => -2 + (lat - LAT0) * 50_000);
+            const drapedHeights = heights();
+            expect(drapedHeights.length).toBeGreaterThan(flatCount);
+            expect(Math.max(...drapedHeights) - Math.min(...drapedHeights)).toBeGreaterThan(5);
+            const tile = draped.group.children[0] as Mesh;
+            const index = tile.geometry.getIndex()!;
+            const v = (i: number) =>
+                new Vector3().fromBufferAttribute(tile.geometry.getAttribute("position"), index.getX(i));
+            const normal = new Vector3().subVectors(v(1), v(0)).cross(new Vector3().subVectors(v(2), v(0)));
+            expect(normal.y).toBeGreaterThan(0);
+            draped.setSurface(null);
+            expect(new Set(heights())).toEqual(new Set([-2]));
+            expect(heights()).toHaveLength(flatCount);
+        } finally {
+            draped.dispose();
             loader.mockRestore();
         }
     });

@@ -21,6 +21,39 @@
                     title="Follow craft"
                     @click="toggleFollow"
                 />
+                <UButton
+                    size="xs"
+                    variant="soft"
+                    :color="coloring === 'speed' ? 'primary' : 'neutral'"
+                    icon="i-lucide-gauge"
+                    :aria-pressed="coloring === 'speed'"
+                    aria-label="Colour by speed"
+                    :title="coloring === 'speed' ? 'Colour by altitude' : 'Colour by speed'"
+                    @click="coloring = coloring === 'speed' ? 'altitude' : 'speed'"
+                />
+                <UButton
+                    v-if="baroAvailable"
+                    size="xs"
+                    variant="soft"
+                    :color="altitudeSource === 'gps' ? 'primary' : 'neutral'"
+                    icon="i-lucide-satellite"
+                    :aria-pressed="altitudeSource === 'gps'"
+                    aria-label="GPS altitude"
+                    :title="altitudeTitle"
+                    @click="altitudeSource = altitudeSource === 'gps' ? 'baro' : 'gps'"
+                />
+                <UButton
+                    size="xs"
+                    variant="soft"
+                    :color="terrain ? 'primary' : 'neutral'"
+                    :icon="terrainState === 'loading' ? 'i-lucide-loader-circle' : 'i-lucide-mountain'"
+                    :ui="{ leadingIcon: terrainState === 'loading' ? 'animate-spin' : '' }"
+                    :aria-busy="terrainState === 'loading'"
+                    :aria-pressed="terrain"
+                    aria-label="Terrain"
+                    :title="terrainTitle"
+                    @click="terrain = !terrain"
+                />
                 <USelect v-model="groundSource" :items="groundItems" size="xs" class="w-28" aria-label="Ground layer" />
             </div>
         </div>
@@ -40,17 +73,34 @@
             </div>
             <template v-else>
                 <div
+                    class="absolute top-1 left-1 flex items-center gap-1 rounded bg-(--surface-100)/80 px-1.5 py-0.5 text-[10px] tabular-nums"
+                    data-testid="flight3d-legend"
+                >
+                    <span>{{ coloring === "speed" ? "Speed" : "Altitude" }} 0</span>
+                    <span
+                        class="h-2 w-16 rounded-sm"
+                        :style="{ background: LEGEND_GRADIENT }"
+                        aria-hidden="true"
+                    ></span>
+                    <span>{{ legendMax }}</span>
+                </div>
+                <div
                     class="absolute bottom-1 left-1 rounded bg-(--surface-100)/80 px-1.5 py-0.5 text-xs tabular-nums"
-                    :title="
-                        track.pinned === 'none'
-                            ? 'Altitude relative to the first position; map is a flat reference, not terrain'
-                            : 'Altitude relative to takeoff; map is a flat reference, not terrain'
-                    "
+                    :title="hudTitle"
                 >
                     {{ hud }}
                 </div>
-                <div v-if="attribution" class="absolute right-6 bottom-0.5 text-[10px] opacity-70">
-                    {{ attribution }}
+                <div v-if="attribution || terrainShown" class="absolute right-6 bottom-0.5 text-[10px] opacity-70">
+                    <template v-if="attribution">{{ attribution }}</template>
+                    <template v-if="attribution && terrainShown"> · </template>
+                    <a
+                        v-if="terrainShown"
+                        :href="TERRAIN_SOURCE.attributionUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="underline"
+                        >{{ TERRAIN_SOURCE.attribution }}</a
+                    >
                 </div>
             </template>
         </div>
@@ -99,10 +149,19 @@ import { useSettingsStore } from "../stores/settings";
 import { setCurrentBlackboxTime } from "../playback_controls";
 import { FlightLogFieldPresenter, type PresentedFlightLog } from "../flightlog_fields_presenter";
 import type { FlightLog } from "../flightlog";
-import { buildFlightTrack, type FlightLogSource, type FlightTrack } from "../flight3d/flightTrack";
+import {
+    buildTrack,
+    extractSamples,
+    hasUsableBaro,
+    type AltitudeSource,
+    type FlightLogSource,
+    type FlightTrack,
+} from "../flight3d/flightTrack";
 import { buildAttitudeTrack, type AttitudeTrack } from "../flight3d/fcAttitude";
-import { FlightScene } from "../flight3d/flightScene";
+import { FlightScene, type PathColoring, type TerrainState } from "../flight3d/flightScene";
+import { ALTITUDE_TRAIL_COLORS } from "../graph_map";
 import { TILE_SOURCES, type GroundSourceId } from "../flight3d/tileGround";
+import { TERRAIN_SOURCE } from "../flight3d/terrain";
 
 /** FlightLog members used here beyond what the track builder needs. */
 type ViewerFlightLog = FlightLogSource & PresentedFlightLog & Pick<FlightLog, "getLogIndex" | "getCurrentFrameAtTime">;
@@ -132,6 +191,16 @@ const groundItems = [
     { label: "Satellite", value: "satellite" },
     { label: "None", value: "none" },
 ];
+const coloring = ref<PathColoring>("altitude");
+const altitudeSource = ref<AltitudeSource>("baro");
+// GPS is the only source without a working barometer, so there is nothing to choose.
+const baroAvailable = ref(false);
+const legendMax = ref("");
+// The scene's gradient, low to high; the hex alpha is dropped as the path draws it opaque.
+const LEGEND_GRADIENT = `linear-gradient(90deg, ${ALTITUDE_TRAIL_COLORS.map(({ color }) => color.slice(0, 7)).join(", ")})`;
+const terrain = ref(false);
+const terrainState = ref<TerrainState>("off");
+const terrainShown = computed(() => terrainState.value === "ready");
 const box = ref<Box>({ left: 0, top: 0, width: 0, height: 0 });
 const hud = ref("");
 const emptyMessage = ref("No GPS data in this log");
@@ -139,6 +208,7 @@ const emptyMessage = ref("No GPS data in this log");
 let scene: FlightScene | null = null;
 let flightLog: ViewerFlightLog | null = null;
 let attitudeTrack: AttitudeTrack | null = null;
+let logSamples: ReturnType<typeof extractSamples> | null = null;
 let fieldIndex: Record<string, number | undefined> = {};
 let builtFor: { log: object; index: number } | null = null;
 let pointerDownAt: { x: number; y: number } | null = null;
@@ -154,6 +224,31 @@ const boxStyle = computed(() => ({
 }));
 
 const attribution = computed(() => (groundSource.value === "none" ? "" : TILE_SOURCES[groundSource.value].attribution));
+
+const terrainTitle = computed(() => {
+    switch (terrainState.value) {
+        case "loading":
+            return "Loading terrain…";
+        case "failed":
+            return "No terrain data for this area";
+        default:
+            return terrain.value ? "Hide terrain" : "Show terrain";
+    }
+});
+
+const hudTitle = computed(() => {
+    const from = track.value?.pinned === "none" ? "the first position" : "takeoff";
+    const source = track.value?.altitudeSource === "baro" ? "barometer, aligned to GPS" : "GPS";
+    return terrainShown.value
+        ? `Altitude (${source}) relative to ${from}; AGL above terrain data, which is coarser than the real ground`
+        : `Altitude (${source}) relative to ${from}; map is a flat reference, not terrain`;
+});
+
+const altitudeTitle = computed(() =>
+    altitudeSource.value === "gps"
+        ? "Altitude from GPS; switch to the barometer"
+        : "Altitude from the barometer; switch to GPS (for a barometer upset by punch-outs)",
+);
 
 /** Keep the panel inside the graph area and at least its minimum size. */
 function fit(b: Box): Box {
@@ -225,7 +320,9 @@ function setFlightLog(log: ViewerFlightLog | null) {
         return;
     }
     builtFor = log ? { log, index } : null;
-    track.value = log ? buildFlightTrack(log) : null;
+    logSamples = log ? extractSamples(log) : null;
+    baroAvailable.value = hasUsableBaro(logSamples?.baro ?? null);
+    track.value = buildDisplayTrack();
     emptyMessage.value =
         log?.getMainFieldIndexByName("GPS_coord[0]") === undefined
             ? "No GPS data in this log"
@@ -239,6 +336,10 @@ function setFlightLog(log: ViewerFlightLog | null) {
         : {};
     scene?.setTrack(track.value);
     setCurrentTime(logStore.currentBlackboxTime);
+}
+
+function buildDisplayTrack(): FlightTrack | null {
+    return logSamples && buildTrack(logSamples.fixes, logSamples.baro, logSamples.idle, altitudeSource.value);
 }
 
 function setCurrentTime(tUs: number) {
@@ -256,6 +357,10 @@ function setCurrentTime(tUs: number) {
         parts.push(
             `Alt ${FlightLogFieldPresenter.decodeCorrectAltitude(position.u - track.value.groundU, userSettings.altitudeUnits)}`,
         );
+        if (scene.terrainShown) {
+            const agl = position.u - scene.surfaceU(position.n, position.e);
+            parts.push(`AGL ${FlightLogFieldPresenter.decodeCorrectAltitude(agl, userSettings.altitudeUnits)}`);
+        }
     }
     // A GPS slot is null until the log's first GPS frame.
     const present = (field: string, value: number | null) =>
@@ -267,6 +372,20 @@ function setCurrentTime(tUs: number) {
         parts.push(`Home ${present("gpsDistance", frame[fieldIndex.distance])}`);
     }
     hud.value = parts.join(" · ");
+    updateLegend();
+}
+
+/** Top of the colour scale, in the user's units. */
+function updateLegend() {
+    if (!scene || !flightLog) {
+        legendMax.value = "";
+        return;
+    }
+    const { coloring: scale, max } = scene.colorScale;
+    legendMax.value =
+        scale === "speed"
+            ? String(FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, "GPS_speed", max * 100))
+            : String(FlightLogFieldPresenter.decodeCorrectAltitude(max, userSettings.altitudeUnits));
 }
 
 function toggleFollow() {
@@ -293,6 +412,20 @@ function onPointerUp(event: PointerEvent) {
 }
 
 watch(groundSource, (source) => scene?.setGroundSource(source));
+watch(terrain, (enabled) => scene?.setTerrain(enabled));
+watch(altitudeSource, () => {
+    const rebuilt = buildDisplayTrack();
+    if (!scene || !rebuilt) {
+        return;
+    }
+    track.value = rebuilt;
+    scene.replaceTrack(rebuilt);
+    setCurrentTime(logStore.currentBlackboxTime);
+});
+watch(coloring, (value) => {
+    scene?.setColoring(value);
+    updateLegend();
+});
 onActivated(() => {
     scene?.setActive(true);
     if (viewportRef.value) {
@@ -304,6 +437,10 @@ onDeactivated(() => scene?.setActive(false));
 
 onMounted(() => {
     scene = new FlightScene(canvasRef.value!);
+    scene.onTerrainState = (state) => {
+        terrainState.value = state;
+        setCurrentTime(logStore.currentBlackboxTime);
+    };
     viewportObserver = new ResizeObserver(([entry]) => {
         scene?.resize(entry.contentRect.width, entry.contentRect.height);
     });

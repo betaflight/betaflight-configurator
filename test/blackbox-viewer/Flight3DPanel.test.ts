@@ -26,6 +26,7 @@ import { defineComponent } from "vue";
 import { Quaternion, Vector3 } from "three";
 import Flight3DPanel from "../../src/blackbox-viewer/components/Flight3DPanel.vue";
 import { useGraphStore } from "../../src/blackbox-viewer/stores/graph";
+import { useLogStore } from "../../src/blackbox-viewer/stores/log";
 import { useSettingsStore } from "../../src/blackbox-viewer/stores/settings";
 import type { FlightTrack } from "../../src/blackbox-viewer/flight3d/flightTrack";
 
@@ -35,6 +36,8 @@ interface FakeScene {
     canvasInPageAtDispose?: boolean;
     track?: FlightTrack | null;
     attitude?: Quaternion;
+    coloring: string;
+    replaced: number;
 }
 const scenes: FakeScene[] = [];
 vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
@@ -49,6 +52,12 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         }
         setTrack(track: FlightTrack | null) {
             this.track = track;
+            this.replaced = 0;
+        }
+        replaced = 0;
+        replaceTrack(track: FlightTrack) {
+            this.track = track;
+            this.replaced++;
         }
         setTime(tUs: number, attitude: Quaternion | null) {
             // Only the latest update's attitude; the real scene keeps the previous one on null.
@@ -57,6 +66,19 @@ vi.mock("../../src/blackbox-viewer/flight3d/flightScene", () => ({
         }
         setFollow() {}
         setGroundSource() {}
+        setTerrain() {}
+        setColoring(coloring: string) {
+            this.coloring = coloring;
+        }
+        coloring = "altitude";
+        get colorScale() {
+            return { coloring: this.coloring, max: this.coloring === "speed" ? 12.5 : 80 };
+        }
+        terrainShown = false;
+        onTerrainState = null;
+        surfaceU() {
+            return 0;
+        }
         resize() {}
         pickTime() {
             return null;
@@ -172,8 +194,11 @@ describe("Flight3DPanel", () => {
         };
         const ALTITUDE: Record<string, string[]> = { "a barometer": ["baroAlt"], "no barometer": [] };
 
-        /** 20 s at 50 Hz flying east at 10 m/s, nose first, climbing 1 m/s; GPS updates at 10 Hz. */
-        function fakeLog(fields: string[], numSat = 12) {
+        /**
+         * 20 s at 50 Hz flying east at 10 m/s, nose first, climbing 1 m/s; GPS updates at 10 Hz.
+         * `baroDipM` makes the barometer read that much low from 9 to 11 s, as in a punch-out.
+         */
+        function fakeLog(fields: string[], numSat = 12, baroDipM = 0) {
             // The FC's yaw is the negative of the compass heading, about its up axis.
             const east = new Quaternion().setFromAxisAngle(new Vector3(0, 0, 1), -Math.PI / 2);
             const frames = Array.from({ length: 1001 }, (_, i) => {
@@ -188,7 +213,7 @@ describe("Flight3DPanel", () => {
                     GPS_altitude: Math.round((100 + gpsT) * 10),
                     GPS_speed: 1000,
                     GPS_ground_course: 900,
-                    baroAlt: Math.round(tS * 100),
+                    baroAlt: Math.round((tS - (tS >= 9 && tS <= 11 ? baroDipM : 0)) * 100),
                     "imuQuaternion[0]": Math.round(east.x * 0x7fff),
                     "imuQuaternion[1]": Math.round(east.y * 0x7fff),
                     "imuQuaternion[2]": Math.round(east.z * 0x7fff),
@@ -242,6 +267,89 @@ describe("Flight3DPanel", () => {
             } else {
                 expect(scene.attitude).toBeUndefined();
             }
+            wrapper.unmount();
+        });
+
+        it("switches the path between altitude and speed colours, with a legend in the user's units", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS));
+            graphStore.flight3d!.setCurrentTime(10e6);
+            await wrapper.vm.$nextTick();
+            const legend = () => wrapper.find('[data-testid="flight3d-legend"]').text();
+            expect(legend()).toMatch(/^Altitude 0\s*80\.00 m$/);
+
+            const button = wrapper
+                .findAllComponents({ name: "Button" })
+                .find((b) => b.attributes("aria-label") === "Colour by speed")!;
+            button.vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scenes[0].coloring).toBe("speed");
+            expect(legend()).toMatch(/^Speed 0\s*12\.50 m\/s$/);
+
+            button.vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scenes[0].coloring).toBe("altitude");
+            wrapper.unmount();
+        });
+
+        it("takes the altitude from GPS instead of a barometer upset by a punch-out, on request", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            useLogStore().currentBlackboxTime = 10e6; // playback paused mid-dip
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS, 12, 15));
+            await wrapper.vm.$nextTick();
+            const shownAltitude = () => Number(/Alt (-?[\d.]+) m/.exec(wrapper.text())?.[1]);
+            const button = () =>
+                wrapper
+                    .findAllComponents({ name: "Button" })
+                    .find((b) => b.attributes("aria-label") === "GPS altitude")!;
+            expect(scenes[0].track!.altitudeSource).toBe("baro");
+            expect(shownAltitude()).toBeLessThan(0); // 10 m flown, 15 m dip
+            expect(button().attributes("aria-pressed")).toBe("false");
+
+            button().vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            // The same flight redrawn in place, not a new one framed from scratch.
+            expect(scenes[0].replaced).toBe(1);
+            expect(scenes[0].track!.altitudeSource).toBe("gps");
+            expect(Math.abs(shownAltitude() - 10)).toBeLessThan(1);
+            expect(button().attributes("aria-pressed")).toBe("true");
+            expect(wrapper.find("[title^='Altitude (GPS)']").exists()).toBe(true);
+
+            button().vm.$emit("click");
+            await wrapper.vm.$nextTick();
+            expect(scenes[0].track!.altitudeSource).toBe("baro");
+            wrapper.unmount();
+        });
+
+        it("offers no altitude choice without a working barometer", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS.filter((name) => name !== "baroAlt")));
+            await wrapper.vm.$nextTick();
+            const labels = wrapper.findAllComponents({ name: "Button" }).map((b) => b.attributes("aria-label"));
+            expect(labels).toContain("Terrain");
+            expect(labels).not.toContain("GPS altitude");
+            expect(scenes[0].track!.altitudeSource).toBe("gps");
+            wrapper.unmount();
+        });
+
+        it("keeps the Terrain button usable while the terrain loads", async () => {
+            const graphStore = useGraphStore();
+            const wrapper = mountPanel();
+            graphStore.flight3d!.setFlightLog(fakeLog(ALL_FIELDS));
+            await wrapper.vm.$nextTick();
+            const button = () =>
+                wrapper.findAllComponents({ name: "Button" }).find((b) => b.attributes("aria-label") === "Terrain")!;
+            button().vm.$emit("click");
+            (scenes[0] as unknown as { onTerrainState(state: string): void }).onTerrainState("loading");
+            await wrapper.vm.$nextTick();
+            expect(button().attributes("aria-busy")).toBe("true");
+            expect(button().attributes("title")).toBe("Loading terrain…");
+            // Nuxt UI disables a button while `loading` is set, which would trap the terrain on.
+            expect(button().props("loading")).toBeFalsy();
+            expect(button().props("disabled")).toBeFalsy();
             wrapper.unmount();
         });
 

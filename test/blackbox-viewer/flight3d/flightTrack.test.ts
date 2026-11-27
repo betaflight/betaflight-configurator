@@ -24,6 +24,8 @@ import { chunksOf } from "../fakeChunks";
 import {
     buildTrack,
     extractSamples,
+    groundSpeeds,
+    speedScaleMax,
     type BaroSample,
     type FlightLogSource,
     type GpsFix,
@@ -434,5 +436,54 @@ describe("extractSamples", () => {
         const { baro, idle } = extractSamples(fakeLog(1, () => ({}), fields));
         expect(baro).toBeNull();
         expect(idle).toBeNull();
+    });
+});
+
+describe("groundSpeeds", () => {
+    /** Samples every 40 ms moving east at `speed` m/s from `fromUs`, starting at `e0`. */
+    const run = (fromUs: number, count: number, speed: number, e0 = 0) =>
+        Array.from({ length: count }, (_, i) => ({ tUs: fromUs + i * 40_000, n: 0, u: 0, e: e0 + speed * i * 0.04 }));
+
+    it("measures steady horizontal speed, at the ends of the flight too", () => {
+        const samples = run(0, 100, 12);
+        const speeds = groundSpeeds(samples, new Uint8Array(samples.length));
+        for (const speed of speeds) {
+            expect(speed).toBeCloseTo(12, 3);
+        }
+    });
+
+    it("ignores climbs: ground speed only", () => {
+        const samples = run(0, 50, 5).map((s, i) => ({ ...s, u: i * 2 }));
+        expect(groundSpeeds(samples, new Uint8Array(samples.length))[25]).toBeCloseTo(5, 3);
+    });
+
+    it("never measures across a GPS gap", () => {
+        // 4 m/s, then 3 s without GPS, then 20 m/s from 500 m further on.
+        const before = run(0, 50, 4);
+        const after = run(5e6, 50, 20, 500);
+        const samples = [...before, ...after];
+        const gapAfter = new Uint8Array(samples.length);
+        gapAfter[before.length - 1] = 1;
+        const speeds = groundSpeeds(samples, gapAfter);
+        expect(speeds[before.length - 1]).toBeCloseTo(4, 3);
+        expect(speeds[before.length]).toBeCloseTo(20, 3);
+    });
+
+    it("gives a lone sample between gaps no speed", () => {
+        const samples = run(0, 3, 10);
+        expect(Array.from(groundSpeeds(samples, new Uint8Array([1, 1, 0])))).toEqual([0, 0, 0]);
+    });
+});
+
+describe("speedScaleMax", () => {
+    it("tops the scale below a single glitch", () => {
+        const speeds = new Float32Array(200).fill(10);
+        speeds[100] = 90;
+        expect(speedScaleMax(speeds)).toBe(10);
+    });
+
+    it("keeps a hover from stretching over the whole gradient", () => {
+        expect(speedScaleMax(new Float32Array(50).fill(0.2))).toBe(1);
+        expect(speedScaleMax(new Float32Array(0))).toBe(1);
     });
 });
