@@ -308,6 +308,7 @@ import InfoGrid from "@/components/InfoGrid.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import HelpIcon from "@/components/elements/HelpIcon.vue";
 import semver from "semver";
+import { useDisplayUnits } from "@/composables/useDisplayUnits";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
@@ -323,6 +324,7 @@ import { flightIndicator } from "../../js/flightIndicators";
 import { tabSwitchCleanup } from "../../js/tab_adapters";
 
 const { t } = useTranslation();
+const { formatTemperature, formatShortDistance } = useDisplayUnits();
 
 const yaw_fix = ref(0);
 
@@ -651,7 +653,7 @@ function process_html() {
         state.rssi = t("initialSetupRSSIValue", { 1: ((fcStore.analogData.rssi / 1023) * 100).toFixed(0) });
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46) && fcStore.config.cpuTemp) {
-            state.cpuTemp = `${fcStore.config.cpuTemp.toFixed(0)} \u2103`;
+            state.cpuTemp = formatTemperature(fcStore.config.cpuTemp);
         } else {
             state.cpuTemp = t("initialSetupCpuTempNotSupported");
         }
@@ -712,7 +714,7 @@ function process_html() {
         if (have_sensor(fcStore.config.activeSensors, "sonar")) {
             requestSonar(function () {
                 if (mountedFlag) {
-                    state.sonar = `${fcStore.sensorData.sonar.toFixed(1)} cm`;
+                    state.sonar = formatShortDistance(fcStore.sensorData.sonar / 100);
                 }
             });
         }
