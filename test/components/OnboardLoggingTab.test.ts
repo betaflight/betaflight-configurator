@@ -222,6 +222,24 @@ describe("Onboard logging dataflash erase", () => {
         expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
     });
 
+    it("blocks erasing when a save away from onboard flash fails after the device was sent", async () => {
+        wrapper = await mountWithSavedDevice(FLASH);
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        vi.mocked(MSP.promise).mockImplementation(async (code) => {
+            if (code === MSPCodes.MSP_SET_ADVANCED_CONFIG) {
+                throw new Error("refused");
+            }
+        });
+        await selectDevice(wrapper, NO_LOGGING);
+        await click(wrapper, "saveAndReboot");
+
+        expect(vi.mocked(MSP.promise).mock.calls.some(([code]) => code === MSPCodes.MSP_SET_BLACKBOX_CONFIG)).toBe(
+            true,
+        );
+        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
+        expect(button(wrapper, "dataflashButtonSaveAndErase").props("disabled")).toBe(true);
+    });
+
     it("allows erasing once onboard flash has been saved as the device", async () => {
         wrapper = await mountWithSavedDevice(NO_LOGGING);
         await selectDevice(wrapper, FLASH);

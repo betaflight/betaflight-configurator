@@ -543,7 +543,9 @@ export default defineComponent({
         // Firmware silently ignores MSP_DATAFLASH_ERASE unless the logging device saved on the FC
         // is onboard flash, so an erase would report success while leaving the logs in place.
         // Track the saved device separately: a failed save leaves the selection in the store.
-        const savedBlackboxDevice = ref(0);
+        // null while a save is in progress or after it failed, because the FC can already use
+        // the new device then.
+        const savedBlackboxDevice = ref<number | null>(0);
         const eraseRequiresFlashDevice = computed(
             () => !!blackboxConfigSupported.value && savedBlackboxDevice.value !== BLACKBOX_DEVICE_FLASH,
         );
@@ -681,6 +683,9 @@ export default defineComponent({
                 });
                 fcStore.blackbox.blackboxDisabledMask = mask;
 
+                // MSP_SET_BLACKBOX_CONFIG changes the device that the FC uses at once, so the
+                // device is not known if a later step fails.
+                savedBlackboxDevice.value = null;
                 await sendLoggingConfig(debugMode);
 
                 // Between the parameter group write and the persist that serialises it, so a
