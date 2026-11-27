@@ -224,9 +224,12 @@ const remapMotorIndex = (motorIndex: number) => {
 };
 
 // User interaction
+// Also drops the canvas instance: cleanup() hides the main content, so Vue removes the <canvas>
+// it is bound to, and the next start must build a new one on the freshly rendered element.
 const stopUserInteraction = () => {
     if (motorOutputReorderCanvas) {
         motorOutputReorderCanvas.pause();
+        motorOutputReorderCanvas = null;
     }
 };
 
