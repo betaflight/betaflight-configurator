@@ -59,11 +59,36 @@ function normalizeEmpty(value: CsvValue) {
 }
 
 csvWorker.onmessage = function (event) {
+    const opts = event.data.opts;
+
+    /**
+     * Header strings remain quoted for compatibility. Frame strings only need
+     * quotes when they contain CSV syntax; numeric values remain unquoted.
+     * With quoteStrings disabled, preserve the caller's raw delimiter output.
+     */
+    function formatText(value: string, quoteHeader: boolean): string {
+        if (!opts.quoteStrings) {
+            return value;
+        }
+
+        const delimiter = opts.stringDelimiter;
+        const needsQuotes =
+            quoteHeader ||
+            value.includes(opts.columnDelimiter) ||
+            value.includes(delimiter) ||
+            value.includes("\\r") ||
+            value.includes("\\n");
+
+        if (!needsQuotes) {
+            return value;
+        }
+
+        return `${delimiter}${value.split(delimiter).join(delimiter + delimiter)}${delimiter}`;
+    }
+
     function joinColumns(columns: CsvValue[]): string {
         return columns
-            .map((value) =>
-                typeof value === "number" ? value : `${stringDelim}${normalizeEmpty(value)}${stringDelim}`,
-            )
+            .map((value) => (typeof value === "number" ? String(value) : formatText(String(normalizeEmpty(value)), true)))
             .join(opts.columnDelimiter);
     }
 
@@ -71,11 +96,15 @@ csvWorker.onmessage = function (event) {
      * Converts `null` entries in columns and other empty non-numeric values to NaN value string.
      */
     function joinColumnValues(columns: CsvValue[]): string {
-        return columns.map((value) => (typeof value === "number" || value ? value : "NaN")).join(opts.columnDelimiter);
+        return columns
+            .map((value) => {
+                const normalized = typeof value === "number" || value ? value : "NaN";
+                return typeof normalized === "number" ? String(normalized) : formatText(String(normalized), false);
+            })
+            .join(opts.columnDelimiter);
     }
 
-    const opts = event.data.opts,
-        stringDelim = opts.quoteStrings ? opts.stringDelimiter : "",
+    const
         mainFields = [joinColumns(event.data.fieldNames)]
             .concat(event.data.frames.flat().map((row) => joinColumnValues(row)))
             .join("\n"),
