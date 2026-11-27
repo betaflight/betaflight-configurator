@@ -68,6 +68,10 @@ export const useDebugStore = defineStore("debug", () => {
             addArrayElement(result, "Pitot");
         }
 
+        if (semver.gte(apiVersion, API_VERSION_1_49)) {
+            addArrayElement(result, "PSAS");
+        }
+
         return result;
     });
 

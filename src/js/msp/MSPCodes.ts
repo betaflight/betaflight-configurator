@@ -151,6 +151,7 @@ enum MSPCodes {
     MSP_UID = 160,
     MSP_GPSSVINFO = 164,
     MSP_ATTITUDE_QUATERNION = 167,
+    MSP_PSAS_CONFIG = 168,
     MSP_PITOT = 170,
 
     MSP_WING = 169,
@@ -190,8 +191,10 @@ enum MSPCodes {
 
     MSP_SET_VTXTABLE_BAND = 227,
     MSP_SET_VTXTABLE_POWERLEVEL = 228,
+    MSP_SET_PSAS_CONFIG = 229,
 
     MSP_MULTIPLE_MSP = 230,
+    MSP_SET_RESET_CURR_PSAS = 231,
 
     MSP_MODE_RANGES_EXTRA = 238,
     MSP_SET_ACC_TRIM = 239,
@@ -254,6 +257,7 @@ export enum MSP2TextType {
     // are taken and the next new type must be >= 12.
     CUSTOM_MSG_0 = 7,
     BATTERY_PROFILE_NAME = 11,
+    PSAS_PROFILE_NAME = 12,
 }
 
 export default MSPCodes;
