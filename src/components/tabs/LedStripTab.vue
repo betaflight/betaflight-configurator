@@ -3,320 +3,333 @@
         <div class="content_wrapper" @keydown.esc="handleEscapeKey">
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
             <WikiButton docUrl="led_strip" />
+
             <p v-if="loadFailed" role="alert">{{ $t("ledStripLoadFailed") }}</p>
-
-            <UiBox highlight class="mb-3">
-                <p v-html="$t('ledStripHelp')"></p>
-            </UiBox>
-
-            <!-- LED Grid Container -->
-            <div class="grid-container" :inert="!dataLoaded">
-                <!-- LED Grid with custom selection -->
-                <LedGrid
-                    :grid-leds="gridLeds"
-                    :wire-mode="wireMode"
-                    :selected-indices="selectedIndices"
-                    :hsv-to-color="hsvToColor"
-                    :led-colors="ledColors"
-                    @selection-change="onSelectionChange"
-                    @selection-end="onSelectionEnd"
-                />
-
-                <!-- Grid sections overlay -->
-                <div class="gridSections">
-                    <div class="block" v-for="i in 16" :key="i"></div>
-                </div>
-            </div>
-
-            <!-- Controls Panel -->
-            <div class="controls" :inert="!dataLoaded">
-                <div class="top-controls">
-                    <!-- Wires Remaining -->
-                    <div class="wires-remaining">
-                        <div>{{ wiresRemaining }}</div>
-                        <span v-html="$t('ledStripRemainingText')"></span>
-                    </div>
-
-                    <div class="clear-buttons-container">
-                        <!-- Clear Buttons -->
-                        <UButton
-                            size="xs"
-                            color="neutral"
-                            variant="soft"
-                            :disabled="!hasSelection"
-                            :label="$t('ledStripClearSelectedButton')"
-                            @click="clearSelected"
-                        />
-                        <UButton
-                            size="xs"
-                            color="error"
-                            variant="soft"
-                            :label="$t('ledStripClearAllButton')"
-                            @click="clearAll"
-                        />
-                    </div>
-                </div>
-                <!-- Function Selection -->
-                <div class="section" v-html="$t('ledStripFunctionSection')"></div>
-
-                <div class="select">
-                    <span v-html="$t('ledStripFunctionTitle')"></span>
-                    <USelect
-                        id="ledStripFunctionSelect"
-                        :class="['functionSelect', 'min-w-48', selectedFunction]"
-                        size="xs"
-                        :items="functionItems"
-                        v-model="selectedFunction"
-                        @update:model-value="onFunctionChange"
+            <p v-if="wizardApplied && dirty" role="status" class="mb-3">{{ $t("ledWizardApplied") }}</p>
+            <SubtabNav v-model="activeView" :items="viewItems">
+                <template #wizard>
+                    <LedSetupWizard
+                        v-if="activeView === 'wizard' && dataLoaded"
+                        :busy="isSaving"
+                        @applied="onWizardApplied"
+                        @advanced="activeView = 'advanced'"
                     />
-                </div>
+                </template>
+                <template #advanced>
+                    <UiBox highlight class="mb-3">
+                        <p v-html="$t('ledStripHelp')"></p>
+                    </UiBox>
 
-                <!-- Color Modifiers -->
-                <div class="modifiers" v-show="showModifiers">
-                    <span class="header" v-html="$t('ledStripColorModifierTitle')"></span>
+                    <!-- LED Grid Container -->
+                    <div class="grid-container" :inert="!dataLoaded">
+                        <!-- LED Grid with custom selection -->
+                        <LedGrid
+                            :grid-leds="gridLeds"
+                            :wire-mode="wireMode"
+                            :selected-indices="selectedIndices"
+                            :hsv-to-color="hsvToColor"
+                            :led-colors="ledColors"
+                            @selection-change="onSelectionChange"
+                            @selection-end="onSelectionEnd"
+                        />
 
-                    <div class="modifier-row">
-                        <USwitch
-                            id="throttleHue"
-                            v-model="modifiers.throttleHue"
-                            @update:model-value="onModifierChange('t')"
-                            :label="$t('ledStripThrottleHue')"
-                        />
-                        <USelect
-                            id="auxSelectThrottle"
-                            class="auxSelect"
-                            size="xs"
-                            :items="auxChannelItems"
-                            v-model="auxChannelValue"
-                            :aria-label="$t('ledStripThrottleHueChannel')"
-                        />
+                        <!-- Grid sections overlay -->
+                        <div class="gridSections">
+                            <div class="block" v-for="i in 16" :key="i"></div>
+                        </div>
                     </div>
 
-                    <div class="modifier-row">
-                        <USwitch
-                            id="larsonScanner"
-                            v-model="modifiers.larsonScanner"
-                            @update:model-value="onModifierChange('o')"
-                            :label="$t('ledStripLarsonOverlay')"
-                        />
-                    </div>
-
-                    <div class="modifier-row">
-                        <USwitch
-                            id="blink"
-                            v-model="modifiers.blink"
-                            @update:model-value="onModifierChange('b')"
-                            :label="$t('ledStripBlinkAlwaysOverlay')"
-                        />
-                    </div>
-
-                    <div class="modifier-row rainbowOverlay" v-show="showRainbow">
-                        <USwitch
-                            id="rainbow"
-                            v-model="modifiers.rainbow"
-                            @update:model-value="onModifierChange('y')"
-                            :label="$t('ledStripRainbowOverlay')"
-                        />
-                        <div class="sliders-group" v-show="modifiers.rainbow">
-                            <span v-html="$t('ledStripRainbowDeltaSliderTitle')"></span>
-                            <div class="slider-control">
-                                <span class="slider-value">{{ rainbowDelta }}</span>
-                                <USlider v-model="rainbowDelta" :min="0" :max="359" class="w-40" />
-                                <HelpIcon :text="$t('ledStripRainbowDeltaSliderHelp')" />
+                    <!-- Controls Panel -->
+                    <div class="controls" :inert="!dataLoaded">
+                        <div class="top-controls">
+                            <!-- Wires Remaining -->
+                            <div class="wires-remaining">
+                                <div>{{ wiresRemaining }}</div>
+                                <span v-html="$t('ledStripRemainingText')"></span>
                             </div>
-                            <span v-html="$t('ledStripRainbowFreqSliderTitle')"></span>
-                            <div class="slider-control">
-                                <span class="slider-value">{{ rainbowFreq }}</span>
-                                <USlider v-model="rainbowFreq" :min="1" :max="360" class="w-40" />
-                                <HelpIcon :text="$t('ledStripRainbowFreqSliderHelp')" />
+
+                            <div class="clear-buttons-container">
+                                <!-- Clear Buttons -->
+                                <UButton
+                                    size="xs"
+                                    color="neutral"
+                                    variant="soft"
+                                    :disabled="!hasSelection"
+                                    :label="$t('ledStripClearSelectedButton')"
+                                    @click="clearSelected"
+                                />
+                                <UButton
+                                    size="xs"
+                                    color="error"
+                                    variant="soft"
+                                    :label="$t('ledStripClearAllButton')"
+                                    @click="clearAll"
+                                />
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <!-- Function Selection -->
+                        <div class="section" v-html="$t('ledStripFunctionSection')"></div>
 
-                <!-- Overlays -->
-                <div class="overlays" v-show="showOverlays">
-                    <span class="header" v-html="$t('ledStripOverlayTitle')"></span>
-                    <div class="modifier-row warningOverlay" v-show="showWarning">
-                        <USwitch
-                            id="warnings"
-                            v-model="overlayStates.warnings"
-                            @update:model-value="onOverlayChange('w')"
-                            :label="$t('ledStripWarningsOverlay')"
-                        />
-                    </div>
-                    <div class="modifier-row indicatorOverlay">
-                        <USwitch
-                            id="indicator"
-                            v-model="overlayStates.indicator"
-                            @update:model-value="onOverlayChange('i')"
-                            :label="$t('ledStripIndecatorOverlay')"
-                        />
-                    </div>
-                    <div class="modifier-row vtxOverlay" v-show="showVtx">
-                        <USwitch
-                            id="vtx"
-                            v-model="overlayStates.vtx"
-                            @update:model-value="onOverlayChange('v')"
-                            :label="$t('ledStripVtxOverlay')"
-                        />
-                    </div>
-                </div>
-
-                <!-- Mode Colors -->
-                <div class="mode_colors" v-show="showModeColors">
-                    <div class="section" v-html="$t('ledStripModeColorsTitle')"></div>
-
-                    <USelect
-                        id="ledStripModeColorsModeSelect"
-                        class="modeSelect gps min-w-48"
-                        size="xs"
-                        :items="modeColorsModeItems"
-                        v-model="modeColorsMode"
-                    />
-
-                    <button
-                        v-for="i in 6"
-                        :key="`mode-${i - 1}`"
-                        :class="getModeColorButtonClass(modeColorsMode, i - 1)"
-                        :style="getModeColorButtonStyle(modeColorsMode, i - 1)"
-                        @click="handleModeColorClick(modeColorsMode, i - 1)"
-                        v-html="$t(getModeColorButtonLabel(i - 1))"
-                    ></button>
-                </div>
-
-                <!-- Directions -->
-                <div class="section" v-html="$t('ledStripModesOrientationTitle')"></div>
-                <div class="directions">
-                    <UButton
-                        v-for="dir in directions"
-                        :key="dir"
-                        size="xs"
-                        color="primary"
-                        :variant="activeDirections.has(dir) ? 'solid' : 'soft'"
-                        :class="'dir-' + dir"
-                        :label="$t('ledStripDir' + dir.toUpperCase())"
-                        @click="toggleDirection(dir)"
-                    />
-                </div>
-
-                <!-- Colors -->
-                <div class="colors">
-                    <div class="colorDefineSliders" ref="colorDefineSliders">
-                        <div v-html="$t('ledStripColorSetupTitle')"></div>
-                        <div class="colorDefineSliderContainer">
-                            <span class="colorDefineSliderLabel" v-html="$t('ledStripH')"></span>
-                            <USlider
-                                id="colorSliderH"
-                                class="sliderHSV"
-                                :min="0"
-                                :max="359"
-                                :aria-label="$t('ledStripH')"
-                                v-model="colorHSV.h"
-                                @update:model-value="onColorSliderChange"
+                        <div class="select">
+                            <span v-html="$t('ledStripFunctionTitle')"></span>
+                            <USelect
+                                id="ledStripFunctionSelect"
+                                :class="['functionSelect', 'min-w-48', selectedFunction]"
+                                size="xs"
+                                :items="functionItems"
+                                v-model="selectedFunction"
+                                @update:model-value="onFunctionChange"
                             />
-                            <span class="colorDefineSliderValue Hvalue">{{ colorHSV.h }}</span>
                         </div>
-                        <div class="colorDefineSliderContainer">
-                            <span class="colorDefineSliderLabel" v-html="$t('ledStripS')"></span>
-                            <USlider
-                                id="colorSliderS"
-                                class="sliderHSV"
-                                :min="0"
-                                :max="255"
-                                :aria-label="$t('ledStripS')"
-                                v-model="colorHSV.s"
-                                @update:model-value="onColorSliderChange"
+
+                        <!-- Color Modifiers -->
+                        <div class="modifiers" v-show="showModifiers">
+                            <span class="header" v-html="$t('ledStripColorModifierTitle')"></span>
+
+                            <div class="modifier-row">
+                                <USwitch
+                                    id="throttleHue"
+                                    v-model="modifiers.throttleHue"
+                                    @update:model-value="onModifierChange('t')"
+                                    :label="$t('ledStripThrottleHue')"
+                                />
+                                <USelect
+                                    id="auxSelectThrottle"
+                                    class="auxSelect"
+                                    size="xs"
+                                    :items="auxChannelItems"
+                                    v-model="auxChannelValue"
+                                    :aria-label="$t('ledStripThrottleHueChannel')"
+                                />
+                            </div>
+
+                            <div class="modifier-row">
+                                <USwitch
+                                    id="larsonScanner"
+                                    v-model="modifiers.larsonScanner"
+                                    @update:model-value="onModifierChange('o')"
+                                    :label="$t('ledStripLarsonOverlay')"
+                                />
+                            </div>
+
+                            <div class="modifier-row">
+                                <USwitch
+                                    id="blink"
+                                    v-model="modifiers.blink"
+                                    @update:model-value="onModifierChange('b')"
+                                    :label="$t('ledStripBlinkAlwaysOverlay')"
+                                />
+                            </div>
+
+                            <div class="modifier-row rainbowOverlay" v-show="showRainbow">
+                                <USwitch
+                                    id="rainbow"
+                                    v-model="modifiers.rainbow"
+                                    @update:model-value="onModifierChange('y')"
+                                    :label="$t('ledStripRainbowOverlay')"
+                                />
+                                <div class="sliders-group" v-show="modifiers.rainbow">
+                                    <span v-html="$t('ledStripRainbowDeltaSliderTitle')"></span>
+                                    <div class="slider-control">
+                                        <span class="slider-value">{{ rainbowDelta }}</span>
+                                        <USlider v-model="rainbowDelta" :min="0" :max="359" class="w-40" />
+                                        <HelpIcon :text="$t('ledStripRainbowDeltaSliderHelp')" />
+                                    </div>
+                                    <span v-html="$t('ledStripRainbowFreqSliderTitle')"></span>
+                                    <div class="slider-control">
+                                        <span class="slider-value">{{ rainbowFreq }}</span>
+                                        <USlider v-model="rainbowFreq" :min="1" :max="360" class="w-40" />
+                                        <HelpIcon :text="$t('ledStripRainbowFreqSliderHelp')" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overlays -->
+                        <div class="overlays" v-show="showOverlays">
+                            <span class="header" v-html="$t('ledStripOverlayTitle')"></span>
+                            <div class="modifier-row warningOverlay" v-show="showWarning">
+                                <USwitch
+                                    id="warnings"
+                                    v-model="overlayStates.warnings"
+                                    @update:model-value="onOverlayChange('w')"
+                                    :label="$t('ledStripWarningsOverlay')"
+                                />
+                            </div>
+                            <div class="modifier-row indicatorOverlay">
+                                <USwitch
+                                    id="indicator"
+                                    v-model="overlayStates.indicator"
+                                    @update:model-value="onOverlayChange('i')"
+                                    :label="$t('ledStripIndecatorOverlay')"
+                                />
+                            </div>
+                            <div class="modifier-row vtxOverlay" v-show="showVtx">
+                                <USwitch
+                                    id="vtx"
+                                    v-model="overlayStates.vtx"
+                                    @update:model-value="onOverlayChange('v')"
+                                    :label="$t('ledStripVtxOverlay')"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Mode Colors -->
+                        <div class="mode_colors" v-show="showModeColors">
+                            <div class="section" v-html="$t('ledStripModeColorsTitle')"></div>
+
+                            <USelect
+                                id="ledStripModeColorsModeSelect"
+                                class="modeSelect gps min-w-48"
+                                size="xs"
+                                :items="modeColorsModeItems"
+                                v-model="modeColorsMode"
                             />
-                            <span class="colorDefineSliderValue Svalue">{{ colorHSV.s }}</span>
+
+                            <button
+                                v-for="i in 6"
+                                :key="`mode-${i - 1}`"
+                                :class="getModeColorButtonClass(modeColorsMode, i - 1)"
+                                :style="getModeColorButtonStyle(modeColorsMode, i - 1)"
+                                @click="handleModeColorClick(modeColorsMode, i - 1)"
+                                v-html="$t(getModeColorButtonLabel(i - 1))"
+                            ></button>
                         </div>
-                        <div class="colorDefineSliderContainer">
-                            <span class="colorDefineSliderLabel" v-html="$t('ledStripV')"></span>
-                            <USlider
-                                id="colorSliderV"
-                                class="sliderHSV"
-                                :min="0"
-                                :max="255"
-                                :aria-label="$t('ledStripV')"
-                                v-model="colorHSV.v"
-                                @update:model-value="onColorSliderChange"
+
+                        <!-- Directions -->
+                        <div class="section" v-html="$t('ledStripModesOrientationTitle')"></div>
+                        <div class="directions">
+                            <UButton
+                                v-for="dir in directions"
+                                :key="dir"
+                                size="xs"
+                                color="primary"
+                                :variant="activeDirections.has(dir) ? 'solid' : 'soft'"
+                                :class="'dir-' + dir"
+                                :label="$t('ledStripDir' + dir.toUpperCase())"
+                                @click="toggleDirection(dir)"
                             />
-                            <span class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</span>
                         </div>
+
+                        <!-- Colors -->
+                        <div class="colors">
+                            <div class="colorDefineSliders" ref="colorDefineSliders">
+                                <div v-html="$t('ledStripColorSetupTitle')"></div>
+                                <div class="colorDefineSliderContainer">
+                                    <span class="colorDefineSliderLabel" v-html="$t('ledStripH')"></span>
+                                    <USlider
+                                        id="colorSliderH"
+                                        class="sliderHSV"
+                                        :min="0"
+                                        :max="359"
+                                        :aria-label="$t('ledStripH')"
+                                        v-model="colorHSV.h"
+                                        @update:model-value="onColorSliderChange"
+                                    />
+                                    <span class="colorDefineSliderValue Hvalue">{{ colorHSV.h }}</span>
+                                </div>
+                                <div class="colorDefineSliderContainer">
+                                    <span class="colorDefineSliderLabel" v-html="$t('ledStripS')"></span>
+                                    <USlider
+                                        id="colorSliderS"
+                                        class="sliderHSV"
+                                        :min="0"
+                                        :max="255"
+                                        :aria-label="$t('ledStripS')"
+                                        v-model="colorHSV.s"
+                                        @update:model-value="onColorSliderChange"
+                                    />
+                                    <span class="colorDefineSliderValue Svalue">{{ colorHSV.s }}</span>
+                                </div>
+                                <div class="colorDefineSliderContainer">
+                                    <span class="colorDefineSliderLabel" v-html="$t('ledStripV')"></span>
+                                    <USlider
+                                        id="colorSliderV"
+                                        class="sliderHSV"
+                                        :min="0"
+                                        :max="255"
+                                        :aria-label="$t('ledStripV')"
+                                        v-model="colorHSV.v"
+                                        @update:model-value="onColorSliderChange"
+                                    />
+                                    <span class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</span>
+                                </div>
+                            </div>
+                            <!-- Color palette buttons (16 colored swatches) -->
+                            <button
+                                v-for="i in 16"
+                                :key="`color-${i - 1}`"
+                                :class="['color-' + (i - 1), { btnOn: selectedColorIndex === i - 1 }]"
+                                :style="{ backgroundColor: getColorStyle(i - 1) }"
+                                :title="$t(getColorTitle(i - 1))"
+                                @click="handleColorClick(i - 1, $event)"
+                                @dblclick="handleColorDblClick($event)"
+                            >
+                                {{ i - 1 }}
+                            </button>
+                        </div>
+
+                        <!-- Special Colors -->
+                        <div class="special_colors mode_colors" v-show="showSpecialColors">
+                            <div class="section" v-html="$t('ledStripModesSpecialColorsTitle')"></div>
+
+                            <button
+                                v-for="config in specialColorButtons"
+                                :key="config.key"
+                                v-show="config.show"
+                                :class="getModeColorButtonClass(6, config.direction)"
+                                :style="getModeColorButtonStyle(6, config.direction)"
+                                :title="$t(config.titleKey)"
+                                @click="handleModeColorClick(6, config.direction)"
+                                v-html="$t(config.labelKey)"
+                            ></button>
+                        </div>
+
+                        <!-- Brightness Slider -->
+                        <div class="slider-container" v-show="showBrightness">
+                            <span v-html="$t('ledStripBrightnessSliderTitle')"></span>
+                            <div class="slider-control">
+                                <span class="slider-value">{{ brightness }}%</span>
+                                <USlider v-model="brightness" :min="5" :max="100" class="w-40" />
+                                <HelpIcon :text="$t('ledStripBrightnessSliderHelp')" />
+                            </div>
+                        </div>
+
+                        <!-- Wiring Mode -->
+                        <div class="section" v-html="$t('ledStripWiring')"></div>
+                        <div class="wiring-container">
+                            <UButton
+                                size="xs"
+                                color="primary"
+                                :variant="wireMode ? 'solid' : 'soft'"
+                                :label="$t('ledStripWiringMode')"
+                                @click="toggleWireMode"
+                            />
+                            <div class="wiringControls">
+                                <UButton
+                                    size="xs"
+                                    color="neutral"
+                                    variant="soft"
+                                    class="w50"
+                                    :label="$t('ledStripWiringClearControl')"
+                                    @click="clearWiresSelected"
+                                />
+                                <UButton
+                                    size="xs"
+                                    color="error"
+                                    variant="soft"
+                                    class="w50"
+                                    :label="$t('ledStripWiringClearAllControl')"
+                                    @click="clearWiresAll"
+                                />
+                            </div>
+                        </div>
+                        <p v-html="$t('ledStripWiringMessage')"></p>
                     </div>
-                    <!-- Color palette buttons (16 colored swatches) -->
-                    <button
-                        v-for="i in 16"
-                        :key="`color-${i - 1}`"
-                        :class="['color-' + (i - 1), { btnOn: selectedColorIndex === i - 1 }]"
-                        :style="{ backgroundColor: getColorStyle(i - 1) }"
-                        :title="$t(getColorTitle(i - 1))"
-                        @click="handleColorClick(i - 1, $event)"
-                        @dblclick="handleColorDblClick($event)"
-                    >
-                        {{ i - 1 }}
-                    </button>
-                </div>
 
-                <!-- Special Colors -->
-                <div class="special_colors mode_colors" v-show="showSpecialColors">
-                    <div class="section" v-html="$t('ledStripModesSpecialColorsTitle')"></div>
-
-                    <button
-                        v-for="config in specialColorButtons"
-                        :key="config.key"
-                        v-show="config.show"
-                        :class="getModeColorButtonClass(6, config.direction)"
-                        :style="getModeColorButtonStyle(6, config.direction)"
-                        :title="$t(config.titleKey)"
-                        @click="handleModeColorClick(6, config.direction)"
-                        v-html="$t(config.labelKey)"
-                    ></button>
-                </div>
-
-                <!-- Brightness Slider -->
-                <div class="slider-container" v-show="showBrightness">
-                    <span v-html="$t('ledStripBrightnessSliderTitle')"></span>
-                    <div class="slider-control">
-                        <span class="slider-value">{{ brightness }}%</span>
-                        <USlider v-model="brightness" :min="5" :max="100" class="w-40" />
-                        <HelpIcon :text="$t('ledStripBrightnessSliderHelp')" />
-                    </div>
-                </div>
-
-                <!-- Wiring Mode -->
-                <div class="section" v-html="$t('ledStripWiring')"></div>
-                <div class="wiring-container">
-                    <UButton
-                        size="xs"
-                        color="primary"
-                        :variant="wireMode ? 'solid' : 'soft'"
-                        :label="$t('ledStripWiringMode')"
-                        @click="toggleWireMode"
-                    />
-                    <div class="wiringControls">
-                        <UButton
-                            size="xs"
-                            color="neutral"
-                            variant="soft"
-                            class="w50"
-                            :label="$t('ledStripWiringClearControl')"
-                            @click="clearWiresSelected"
-                        />
-                        <UButton
-                            size="xs"
-                            color="error"
-                            variant="soft"
-                            class="w50"
-                            :label="$t('ledStripWiringClearAllControl')"
-                            @click="clearWiresAll"
-                        />
-                    </div>
-                </div>
-                <p v-html="$t('ledStripWiringMessage')"></p>
-            </div>
-
-            <div class="clear-both"></div>
+                    <div class="clear-both"></div>
+                </template>
+            </SubtabNav>
         </div>
 
         <!-- Bottom Toolbar -->
@@ -330,7 +343,9 @@
 import { ref, reactive, computed, watch, onBeforeUnmount } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
+import SubtabNav from "../elements/SubtabNav.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
+import LedSetupWizard from "./led_strip/LedSetupWizard.vue";
 import { isEmptyLed } from "@/composables/ledStripUtils";
 import HelpIcon from "../elements/HelpIcon.vue";
 import { useLedStrip, type LedGridCell, type LedModeColorSelection } from "@/composables/useLedStrip";
@@ -356,8 +371,10 @@ function decodeHtmlEntities(text: string) {
 }
 const t = (key: string) => decodeHtmlEntities(i18n.getMessage(key));
 const fcStore = useFlightControllerStore();
+const activeView = ref("advanced");
 const dataLoaded = ref(false);
 const loadFailed = ref(false);
+const wizardApplied = ref(false);
 
 const {
     wireMode,
@@ -420,6 +437,10 @@ const auxChannelValue = ref("3");
 const colorDefineSliders = ref<HTMLElement | null>(null);
 const colorHSV = reactive({ h: 0, s: 0, v: 0 });
 const { isSaving, runSave } = useSaving();
+const viewItems = computed(() => [
+    { value: "wizard", label: t("ledWizardTitle"), disabled: !dataLoaded.value || isSaving.value },
+    { value: "advanced", label: t("ledWizardAdvanced"), disabled: isSaving.value },
+]);
 
 // Color setup popup state
 const isColorSlidersOpen = ref(false);
@@ -638,6 +659,17 @@ function loadConfigValues() {
     brightness.value = ledConfigValues.value?.brightness ?? 50;
     rainbowDelta.value = ledConfigValues.value?.rainbow_delta ?? 0;
     rainbowFreq.value = ledConfigValues.value?.rainbow_freq ?? 1;
+}
+
+function onWizardApplied() {
+    selectedIndices.value = new Set();
+    selectedFunction.value = "none";
+    selectedModeColor.value = null;
+    wireMode.value = false;
+    initializeGrid();
+    loadConfigValues();
+    wizardApplied.value = true;
+    activeView.value = "advanced";
 }
 
 // Selection handlers for custom grid
