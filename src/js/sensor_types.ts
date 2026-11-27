@@ -281,7 +281,7 @@ export async function sensorTypes(): Promise<SensorTypes> {
  */
 export function gpsProtocols(): string[] {
     const fcStore = useFlightControllerStore();
-    const protocols = ["NMEA", "UBLOX", "MSP"];
+    const protocols = ["NMEA", "UBLOX", "SEPTENTRIO", "MSP"];
 
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
         addArrayElement(protocols, "VIRTUAL");
