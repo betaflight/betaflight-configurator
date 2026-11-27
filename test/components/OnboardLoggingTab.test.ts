@@ -38,7 +38,14 @@ import { useFlightControllerStore } from "../../src/stores/fc";
 vi.mock("../../src/js/msp", () => ({ default: { promise: vi.fn(), send_message: vi.fn() } }));
 vi.mock("../../src/js/sensor_types", () => ({ sensorTypes: vi.fn(async () => ({ gyro: { elements: [] } })) }));
 vi.mock("../../src/js/Analytics", () => ({ getTracking: () => null }));
-vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveAndReboot: vi.fn() }) }));
+const saveToEeprom = vi.hoisted(() => vi.fn());
+const reboot = vi.hoisted(() => vi.fn());
+
+vi.mock("../../src/composables/useReboot", () => ({ useReboot: () => ({ saveToEeprom, reboot }) }));
+vi.mock("../../src/js/tab_adapters", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("../../src/js/tab_adapters")>()),
+    tabSwitchCleanup: (callback: () => void) => callback(),
+}));
 vi.mock("../../src/composables/ports/useFeaturePort", () => ({
     useFeaturePort: () => ({
         available: ref(false),
@@ -203,11 +210,24 @@ describe("Onboard logging dataflash erase", () => {
         expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
     });
 
+    it("keeps erasing blocked when the EEPROM write of onboard flash as the device fails", async () => {
+        wrapper = await mountWithSavedDevice(NO_LOGGING);
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        saveToEeprom.mockRejectedValue(new Error("EEPROM write timed out"));
+        await selectDevice(wrapper, FLASH);
+        await click(wrapper, "saveAndReboot");
+
+        expect(reboot).not.toHaveBeenCalled();
+        expect(wrapper.text()).toContain("dataflashEraseRequiresFlashDevice");
+        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
+    });
+
     it("allows erasing once onboard flash has been saved as the device", async () => {
         wrapper = await mountWithSavedDevice(NO_LOGGING);
         await selectDevice(wrapper, FLASH);
         await click(wrapper, "saveAndReboot");
 
+        expect(saveToEeprom).toHaveBeenCalledOnce();
         expect(wrapper.text()).not.toContain("dataflashEraseRequiresFlashDevice");
         expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(false);
     });
