@@ -126,6 +126,17 @@ describe("csv-export-worker", () => {
         );
     });
 
+    it("doubles a custom quote delimiter even without a column delimiter", async () => {
+        const data = {
+            ...request({ columnDelimiter: ";", stringDelimiter: "'" }),
+            sysConfig: { notes: "pilot's comment" },
+            fieldNames: ["time"],
+            frames: [[[0]]],
+        };
+
+        expect(await runWorker(data)).toBe(["'notes';'pilot''s comment'", "'time'", "0"].join("\n"));
+    });
+
     it("preserves raw string output when quoteStrings is disabled", async () => {
         const data = {
             ...request({ columnDelimiter: ";", quoteStrings: false }),
