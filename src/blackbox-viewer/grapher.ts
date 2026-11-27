@@ -191,17 +191,6 @@ export class FlightLogGrapher {
             lastMouseX = e.pageX;
         };
 
-        const onTouchMove = (e: TouchEvent) => {
-            e.preventDefault();
-
-            if (this.onSeek) {
-                //Reverse the seek direction so that it looks like you're dragging the data
-                this.onSeek(((lastMouseX - e.touches[0].pageX) / canvas.width) * windowWidthMicros);
-            }
-
-            lastMouseX = e.touches[0].pageX;
-        };
-
         function onMouseDown(e: MouseEvent) {
             if (e.button === 0) {
                 //Left mouse button only for seeking
@@ -215,23 +204,6 @@ export class FlightLogGrapher {
                     document.removeEventListener("mouseup", onMouseUp);
                 }
                 document.addEventListener("mouseup", onMouseUp);
-
-                e.preventDefault();
-            }
-        }
-
-        function onTouchStart(e: TouchEvent) {
-            if (e.touches && e.touches.length > 0) {
-                lastMouseX = e.touches[0].pageX;
-
-                //"capture" so we can drag outside the boundaries of canvas
-                document.addEventListener("touchmove", onTouchMove);
-
-                function onTouchEnd() {
-                    document.removeEventListener("touchmove", onTouchMove);
-                    document.removeEventListener("touchend", onTouchEnd);
-                }
-                document.addEventListener("touchend", onTouchEnd);
 
                 e.preventDefault();
             }
@@ -1201,7 +1173,6 @@ export class FlightLogGrapher {
 
         this.destroy = function () {
             canvas.removeEventListener("mousedown", onMouseDown);
-            canvas.removeEventListener("touchstart", onTouchStart);
         };
 
         this.refreshTheme = function () {
@@ -1319,7 +1290,6 @@ export class FlightLogGrapher {
 
         //Handle dragging events
         canvas.addEventListener("mousedown", onMouseDown);
-        canvas.addEventListener("touchstart", onTouchStart);
 
         graphConfig.addListener(this.refreshGraphConfig);
         this.refreshGraphConfig();

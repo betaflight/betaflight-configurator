@@ -337,6 +337,7 @@ import { addArrayElement } from "../../js/utils/array";
 import WikiButton from "../elements/WikiButton.vue";
 import UiBox from "../elements/UiBox.vue";
 import SettingRow from "../elements/SettingRow.vue";
+import { registerTabSave } from "@/js/unsaved_changes";
 
 const loadingBarsUrl = new URL("../../images/loading-bars.svg", import.meta.url).href;
 
@@ -367,7 +368,7 @@ export default defineComponent({
         const dialogStore = useDialogStore();
 
         const { isSaving, runSave } = useSaving();
-        const { saveAndReboot } = useReboot();
+        const { reboot, saveToEeprom } = useReboot();
 
         const mapRef = ref<HTMLElement | null>(null);
         const mapContainerRef = ref<HTMLElement | null>(null);
@@ -877,7 +878,7 @@ export default defineComponent({
             }
         };
 
-        const saveConfig = () => {
+        const saveConfig = async () => {
             // The firmware answers MSP_SET_GPS_CONFIG with an error when it was
             // built without USE_GPS, and MSP_SET_FEATURE_CONFIG has been written
             // by then. Do not start the sequence at all.
@@ -885,13 +886,14 @@ export default defineComponent({
                 return undefined;
             }
 
-            return runSave(async () => {
-                // Warn before a pick that would take a port from another feature; a cancel here
-                // leaves the save untouched, before anything has been written to the FC.
-                if (!(await confirmPortConflicts())) {
-                    return;
-                }
+            // Warn before a pick that would take a port from another feature; a cancel here
+            // leaves the save untouched, before anything has been written to the FC, and counts
+            // as not saved.
+            if (!(await confirmPortConflicts())) {
+                return false;
+            }
 
+            return runSave(async () => {
                 const savedSnapshot = takeSnapshot();
 
                 Object.assign(fcStore.gpsConfig, gpsConfig);
@@ -918,7 +920,11 @@ export default defineComponent({
                         throw withSaveFailureMessage(error, i18n.getMessage("dronecanSaveFailed"));
                     }
 
-                    await saveAndReboot();
+                    // Error-aware persist: a timeout rejects here instead of leaving the save pending.
+                    await saveToEeprom();
+                    tabSwitchCleanup(() => {
+                        reboot();
+                    });
                 } finally {
                     resumePolling();
                 }
@@ -926,6 +932,7 @@ export default defineComponent({
                 markClean(savedSnapshot);
             });
         };
+        registerTabSave(() => saveConfig());
 
         const initializeMap = () => {
             if (mapInstance.value || !mapRef.value) return;
