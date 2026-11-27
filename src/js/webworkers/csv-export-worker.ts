@@ -88,7 +88,9 @@ csvWorker.onmessage = function (event) {
 
     function joinColumns(columns: CsvValue[]): string {
         return columns
-            .map((value) => (typeof value === "number" ? String(value) : formatText(String(normalizeEmpty(value)), true)))
+            .map((value) =>
+                typeof value === "number" ? String(value) : formatText(String(normalizeEmpty(value)), true),
+            )
             .join(opts.columnDelimiter);
     }
 
@@ -104,8 +106,7 @@ csvWorker.onmessage = function (event) {
             .join(opts.columnDelimiter);
     }
 
-    const
-        mainFields = [joinColumns(event.data.fieldNames)]
+    const mainFields = [joinColumns(event.data.fieldNames)]
             .concat(event.data.frames.flat().map((row) => joinColumnValues(row)))
             .join("\n"),
         headers = Object.entries(event.data.sysConfig)
