@@ -76,8 +76,8 @@ csvWorker.onmessage = function (event) {
             quoteHeader ||
             value.includes(opts.columnDelimiter) ||
             value.includes(delimiter) ||
-            value.includes("\\r") ||
-            value.includes("\\n");
+            value.includes("\r") ||
+            value.includes("\n");
 
         if (!needsQuotes) {
             return value;
