@@ -29,7 +29,7 @@ import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../components/tabs/osd/osd_constants";
 import semver from "semver";
 import { useFlightControllerStore } from "./fc";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_49 } from "../js/data_storage";
 import { bit_set } from "../js/bit";
 import { useDirtyState } from "../composables/useDirtyState";
 import { MspBuffer } from "../js/msp/mspBytes";
@@ -169,6 +169,9 @@ async function fetchOsdInfo(fcStore: FlightControllerStore) {
     legacyOsd.data.canvas = null;
     if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
         await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
+    }
+    if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_49)) {
+        await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG); // motor thermal estimator presence gates its OSD element, warning and stat
     }
 
     return MSP.promise(MSPCodes.MSP_OSD_CONFIG);

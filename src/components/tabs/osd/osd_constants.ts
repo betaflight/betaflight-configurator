@@ -191,6 +191,11 @@ export const OSD_CONSTANTS = {
             text: "osdTextStatAvgThrottle",
             desc: "osdDescStatAvgThrottle",
         },
+        STAT_MOTOR_TEMP_EST: {
+            name: "STAT_MOTOR_TEMP_EST",
+            text: "osdTextStatMotorTempEst",
+            desc: "osdDescStatMotorTempEst",
+        },
     },
     ALL_WARNINGS: {
         ARMING_DISABLED: {
@@ -297,6 +302,11 @@ export const OSD_CONSTANTS = {
             name: "AUTOPILOT_ABORT",
             text: "osdWarningTextAutopilotAbort",
             desc: "osdWarningAutopilotAbort",
+        },
+        MOTOR_TEMP: {
+            name: "MOTOR_TEMP",
+            text: "osdWarningTextMotorTemp",
+            desc: "osdWarningMotorTemp",
         },
     },
     FONT_TYPES: [
