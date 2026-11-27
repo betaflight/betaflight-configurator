@@ -172,6 +172,23 @@ describe("useCli", () => {
             expect(cli.state.commandInput).toBe("");
         });
 
+        it("after a native Tab, shows the FC's completed line in the input and sends only the rest", () => {
+            vi.spyOn(CliAutoComplete, "isEnabled").mockReturnValue(false);
+            vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(false);
+            const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
+            useConnectionStore().cliValid = true;
+            const cli = useCli();
+            cli.state.commandInput = "set gyro_lpf1_st";
+
+            cli.handleCommandKeyDown(key("Tab"));
+            cli.read(new TextEncoder().encode("# set gyro_lpf1_static_hz"));
+            expect(cli.state.commandInput).toBe("set gyro_lpf1_static_hz");
+
+            cli.state.commandInput += " = 250";
+            cli.handleCommandKeyDown(key(ENTER));
+            expect(sentText(send, 1)).toBe(" = 250\n");
+        });
+
         it("holds Enter while the autocomplete cache is building", () => {
             vi.spyOn(CliAutoComplete, "isBuilding").mockReturnValue(true);
             const send = vi.spyOn(serial, "send").mockResolvedValue({ bytesSent: 0 });
@@ -334,6 +351,58 @@ describe("useCli", () => {
             complete(0);
             vi.advanceTimersByTime(cli.state.lineDelayMs);
             expect(sentText(send, 1)).toBe("save\n");
+        });
+
+        it("reconciles the first pasted line with what the FC already holds in its line buffer", () => {
+            useConnectionStore().cliValid = true;
+            // A native Tab completion left a partial command in the FC's line buffer.
+            cli.read(new TextEncoder().encode("# set gyro_"));
+            submit("feature -GPS\nsave");
+            expect(sentText(send)).toBe(`${String.fromCodePoint(127).repeat(9)}feature -GPS\n`);
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(sentText(send, 1)).toBe("save\n");
+        });
+
+        it("reconciles a native Tab completion after an earlier command, even right after the FC's reply", () => {
+            vi.spyOn(CliAutoComplete, "isEnabled").mockReturnValue(false);
+            useConnectionStore().cliValid = true;
+            submit("status");
+            complete(0);
+            cli.read(new TextEncoder().encode("status\r\nok\r\n# "));
+
+            cli.state.commandInput = "set gyro_lpf1_st";
+            cli.handleCommandKeyDown(key("Tab"));
+            expect(sentText(send, 1)).toBe("set gyro_lpf1_st\t");
+            cli.read(new TextEncoder().encode("set gyro_lpf1_static_hz"));
+            expect(cli.state.commandInput).toBe("set gyro_lpf1_static_hz");
+
+            cli.state.commandInput += " = 250";
+            cli.handleCommandKeyDown(key(ENTER));
+            expect(sentText(send, 2)).toBe(" = 250\n");
+        });
+
+        it("picks the profile delay from the command, not from the reconciled text", () => {
+            useConnectionStore().cliValid = true;
+            cli.read(new TextEncoder().encode("# pro"));
+            submit("profile 1\nstatus");
+            expect(sentText(send)).toBe("file 1\n");
+            complete(0);
+            vi.advanceTimersByTime(cli.state.lineDelayMs);
+            expect(send).toHaveBeenCalledTimes(1);
+            vi.advanceTimersByTime(cli.state.profileSwitchDelayMs - cli.state.lineDelayMs);
+            expect(sentText(send, 1)).toBe("status\n");
+        });
+
+        it("sends a submission queued behind an in-flight write verbatim, not against that write's echo", () => {
+            useConnectionStore().cliValid = true;
+            submit("feature RX_SERIAL");
+            // The FC is echoing the line still being written; that is not a line being edited.
+            cli.read(new TextEncoder().encode("# feature "));
+            submit("feature GPS\nsave");
+            expect(send).toHaveBeenCalledTimes(1);
+            complete(0);
+            expect(sentText(send, 1)).toBe("feature GPS\n");
         });
 
         it("applies the ordinary delay before a profile and the profile delay after its completion", () => {

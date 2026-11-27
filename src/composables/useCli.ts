@@ -60,7 +60,6 @@ interface CliState {
     lineDelayMs: number;
     profileSwitchDelayMs: number;
     commandInput: string;
-    promptInput: string;
     snippetPreview: string;
     supportDialogInput: string;
     copyButtonText: string;
@@ -213,7 +212,6 @@ export function useCli(): Cli {
         lineDelayMs: 5,
         profileSwitchDelayMs: 100,
         commandInput: "",
-        promptInput: "",
         snippetPreview: "",
         supportDialogInput: "",
         copyButtonText: i18n.getMessage("copyToClipboard"),
@@ -253,6 +251,9 @@ export function useCli(): Cli {
     let supportPollInterval: ReturnType<typeof setInterval> | null = null;
     let commandExecution = 0;
     let commandWritePending = false;
+    // cliBuffer is a line the FC is still editing only until a line is sent, and again after a native Tab
+    // completion. After a sent line it holds that line's echo or output, and the FC's own line is empty.
+    let cliBufferIsEditLine = true;
     let pendingCommands: (() => void) | null = null;
 
     const flushOutput = () => {
@@ -305,8 +306,9 @@ export function useCli(): Cli {
         }
     };
 
+    // Mirrors the FC's line buffer into the input, so a native Tab completion can be edited further.
     const setPrompt = (text: string) => {
-        state.promptInput = text;
+        state.commandInput = text;
     };
 
     const clearHistory = () => {
@@ -319,10 +321,12 @@ export function useCli(): Cli {
     };
 
     const sendLine = (line: string, callback?: SendCallback) => {
+        cliBufferIsEditLine = false;
         send(`${line}\n`, callback);
     };
 
     const sendNativeAutoComplete = (line: string, callback?: SendCallback) => {
+        cliBufferIsEditLine = true;
         send(`${line}\t`, callback);
     };
 
@@ -338,13 +342,12 @@ export function useCli(): Cli {
         history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-        // Captured before sendCommandIterative shift()s the array. A multi-line input is a paste or a
-        // loaded file, and its lines have to go out exactly as written; only a single command is
-        // reconciled with whatever the FC currently has in its own line buffer.
-        const isMultiLine = outputArray.length > 1;
+        // Only the first line can extend a line the FC is still editing (e.g. a native Tab completion,
+        // mirrored into the input by setPrompt); every later line follows lines this input already sent.
+        let isFirstLine = true;
 
         // Wall-clock timer: logs "[CLI] paste: N lines" and "paste done: X.XXs" to the browser console.
-        if (isMultiLine) {
+        if (outputArray.length > 1) {
             const t0 = performance.now();
             const startMs = Date.now();
             console.log(`[CLI] paste: ${outputArray.length} lines`);
@@ -361,11 +364,10 @@ export function useCli(): Cli {
         function sendCommandIterative() {
             if (execution !== commandExecution) return;
             pendingCommands = null;
-            let line = outputArray.shift()!.trim();
-            if (outputArray.length === 0 && cliBuffer && !isMultiLine) {
-                line = getCliCommand(line, cliBuffer);
-            }
-            const processingDelay = line.toLowerCase().startsWith("profile")
+            const command = outputArray.shift()!.trim();
+            const line = isFirstLine && cliBufferIsEditLine && cliBuffer ? getCliCommand(command, cliBuffer) : command;
+            isFirstLine = false;
+            const processingDelay = command.toLowerCase().startsWith("profile")
                 ? state.profileSwitchDelayMs
                 : state.lineDelayMs;
 
