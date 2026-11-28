@@ -42,16 +42,17 @@ describe("UserApi.deleteAccount", () => {
         vi.unstubAllGlobals();
     });
 
-    it("sends DELETE to /api/user with the bearer token", async () => {
+    it("sends DELETE to /api/user with the bearer token and the confirming email", async () => {
         fetchMock.mockResolvedValue(new Response(null, { status: 204 }));
         const api = new UserApi(fakeLoginApi("abc123"));
 
-        await api.deleteAccount();
+        await api.deleteAccount("pilot@example.com");
 
         expect(fetchMock).toHaveBeenCalledTimes(1);
         expect(fetchMock).toHaveBeenCalledWith("https://user.betaflight.com/api/user", {
             method: "DELETE",
-            headers: { Authorization: "Bearer abc123" },
+            headers: { Authorization: "Bearer abc123", "Content-Type": "application/json" },
+            body: JSON.stringify({ email: "pilot@example.com" }),
             signal: expect.any(AbortSignal),
         });
     });
@@ -60,7 +61,7 @@ describe("UserApi.deleteAccount", () => {
         fetchMock.mockResolvedValue(new Response("account locked", { status: 409 }));
         const api = new UserApi(fakeLoginApi());
 
-        await expect(api.deleteAccount()).rejects.toThrow("account locked");
+        await expect(api.deleteAccount("pilot@example.com")).rejects.toThrow("account locked");
     });
 
     it("gives up when the server never answers", async () => {
@@ -74,7 +75,7 @@ describe("UserApi.deleteAccount", () => {
         );
         const api = new UserApi(fakeLoginApi());
 
-        const result = expect(api.deleteAccount()).rejects.toThrow();
+        const result = expect(api.deleteAccount("pilot@example.com")).rejects.toThrow();
         await vi.advanceTimersByTimeAsync(30000);
         await result;
     });
@@ -82,7 +83,7 @@ describe("UserApi.deleteAccount", () => {
     it("does not call the API without an access token", async () => {
         const api = new UserApi(fakeLoginApi(null));
 
-        await expect(api.deleteAccount()).rejects.toThrow("Unable to obtain access token");
+        await expect(api.deleteAccount("pilot@example.com")).rejects.toThrow("Unable to obtain access token");
         expect(fetchMock).not.toHaveBeenCalled();
     });
 });
