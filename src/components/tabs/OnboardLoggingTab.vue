@@ -111,10 +111,13 @@
                             <p>{{ $t("serialLoggingSupportedNote") }}</p>
                         </UiBox>
 
-                        <UiBox :title="$t('onboardLoggingFlashLogger')" type="neutral" collapsible>
+                        <UiBox
+                            v-if="!flashLoggingInactive || dataflashPresent"
+                            :title="$t('onboardLoggingFlashLogger')"
+                            type="neutral"
+                            collapsible
+                        >
                             <div class="require-dataflash-supported">
-                                <p>{{ $t("dataflashNote") }}</p>
-
                                 <UModal
                                     :open="eraseOpen"
                                     :close="false"
@@ -189,55 +192,68 @@
                                     </template>
                                 </UModal>
 
-                                <ul class="dataflash-contents">
-                                    <li
-                                        class="dataflash-used"
-                                        :style="{
-                                            width: dataflashUsedPercent + '%',
-                                            display: dataflashUsedSize > 0 ? 'block' : 'none',
-                                        }"
-                                    >
-                                        <div>{{ $t("dataflashUsedSpace") }} {{ formatBytes(dataflashUsedSize) }}</div>
-                                    </li>
-                                    <li
-                                        class="dataflash-free"
-                                        :style="{
-                                            width: dataflashFreePercent + '%',
-                                            display: dataflashFreeSize > 0 ? 'block' : 'none',
-                                        }"
-                                    >
-                                        <div>{{ $t("dataflashFreeSpace") }} {{ formatBytes(dataflashFreeSize) }}</div>
-                                    </li>
-                                </ul>
+                                <template v-if="!flashLoggingInactive">
+                                    <p>{{ $t("dataflashNote") }}</p>
 
-                                <div class="dataflash-buttons flex flex-wrap items-center gap-2">
-                                    <UButton
-                                        size="xs"
-                                        :disabled="dataflashUsedSize === 0"
-                                        :label="$t('dataflashButtonErase')"
-                                        @click="askToEraseFlash"
-                                    />
-                                    <UButton
-                                        size="xs"
-                                        :disabled="dataflashUsedSize === 0"
-                                        :label="$t('dataflashButtonSaveAndErase')"
-                                        @click="flashSaveBegin(true)"
-                                    />
-                                    <UButton
-                                        size="xs"
-                                        :disabled="dataflashUsedSize === 0"
-                                        :label="$t('dataflashButtonSaveFile')"
-                                        @click="flashSaveBegin(false)"
-                                    >
-                                        <template #trailing>
-                                            <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
-                                        </template>
-                                    </UButton>
+                                    <ul class="dataflash-contents">
+                                        <li
+                                            class="dataflash-used"
+                                            :style="{
+                                                width: dataflashUsedPercent + '%',
+                                                display: dataflashUsedSize > 0 ? 'block' : 'none',
+                                            }"
+                                        >
+                                            <div>
+                                                {{ $t("dataflashUsedSpace") }} {{ formatBytes(dataflashUsedSize) }}
+                                            </div>
+                                        </li>
+                                        <li
+                                            class="dataflash-free"
+                                            :style="{
+                                                width: dataflashFreePercent + '%',
+                                                display: dataflashFreeSize > 0 ? 'block' : 'none',
+                                            }"
+                                        >
+                                            <div>
+                                                {{ $t("dataflashFreeSpace") }} {{ formatBytes(dataflashFreeSize) }}
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                    <div class="dataflash-buttons flex flex-wrap items-center gap-2">
+                                        <UButton
+                                            size="xs"
+                                            :disabled="dataflashUsedSize === 0"
+                                            :label="$t('dataflashButtonErase')"
+                                            @click="askToEraseFlash"
+                                        />
+                                        <UButton
+                                            size="xs"
+                                            :disabled="dataflashUsedSize === 0"
+                                            :label="$t('dataflashButtonSaveAndErase')"
+                                            @click="flashSaveBegin(true)"
+                                        />
+                                        <UButton
+                                            size="xs"
+                                            :disabled="dataflashUsedSize === 0"
+                                            :label="$t('dataflashButtonSaveFile')"
+                                            @click="flashSaveBegin(false)"
+                                        >
+                                            <template #trailing>
+                                                <HelpIcon :text="$t('dataflashSaveFileDepreciationHint')" />
+                                            </template>
+                                        </UButton>
+                                    </div>
+                                    <p class="mt-2" v-html="$t('dataflashSavetoFileNote')"></p>
+                                </template>
+                                <div v-else class="note">
+                                    <p>{{ $t("dataflashLoggingDeviceNotFlashNote") }}</p>
                                 </div>
-                                <p class="mt-2" v-html="$t('dataflashSavetoFileNote')"></p>
                             </div>
 
-                            <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
+                            <p v-if="!flashLoggingInactive" class="require-dataflash-not-present">
+                                {{ $t("dataflashNotPresentNote") }}
+                            </p>
                         </UiBox>
 
                         <UiBox
@@ -339,6 +355,7 @@ import { registerTabSave } from "@/js/unsaved_changes";
 import { tabSwitchCleanup } from "@/js/tab_adapters";
 
 const BLOCK_SIZE = 4096;
+const BLACKBOX_DEVICE_FLASH = 1;
 
 // Helper function for GCD calculation
 function gcd(a: number, b: number): number {
@@ -535,6 +552,16 @@ export default defineComponent({
         const dataflashUsedSize = computed(() => fcStore.dataflash?.usedSize || 0);
         const dataflashTotalSize = computed(() => fcStore.dataflash?.totalSize || 0);
         const dataflashFreeSize = computed(() => dataflashTotalSize.value - dataflashUsedSize.value);
+        // The flash tools apply only when onboard flash is the logging device saved on the FC.
+        // For other devices the firmware ignores MSP_DATAFLASH_ERASE, so an erase would report
+        // success while the logs stay in place.
+        // Track the saved device separately: a failed save leaves the selection in the store.
+        // null while the device is unknown: before the tab loads, while a save is in progress,
+        // or after a save failed, because the FC can already use the new device then.
+        const savedBlackboxDevice = ref<number | null>(null);
+        const flashLoggingInactive = computed(
+            () => !!blackboxConfigSupported.value && savedBlackboxDevice.value !== BLACKBOX_DEVICE_FLASH,
+        );
         const dataflashUsedPercent = computed(() => {
             if (dataflashTotalSize.value === 0) {
                 return 0;
@@ -669,6 +696,9 @@ export default defineComponent({
                 });
                 fcStore.blackbox.blackboxDisabledMask = mask;
 
+                // MSP_SET_BLACKBOX_CONFIG changes the device that the FC uses at once, so the
+                // device is not known if a later step fails.
+                savedBlackboxDevice.value = null;
                 await sendLoggingConfig(debugMode);
 
                 // Between the parameter group write and the persist that serialises it, so a
@@ -681,13 +711,14 @@ export default defineComponent({
                     reboot();
                 });
 
+                savedBlackboxDevice.value = fcStore.blackbox.blackboxDevice;
                 markClean(savedSnapshot);
             });
         }
         registerTabSave(() => saveSettings());
 
         function askToEraseFlash() {
-            if (dataflashUsedSize.value === 0) {
+            if (dataflashUsedSize.value === 0 || flashLoggingInactive.value) {
                 return;
             }
             eraseOpen.value = true;
@@ -762,6 +793,10 @@ export default defineComponent({
         }
 
         function conditionallyEraseFlash(maxBytes: number, nextAddress: number) {
+            if (flashLoggingInactive.value) {
+                gui_log(i18n.getMessage("dataflashLoggingDeviceNotFlashNote"));
+                return;
+            }
             if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
                 eraseOpen.value = true;
                 void startFlashErase({ clearQueue: false });
@@ -965,6 +1000,7 @@ export default defineComponent({
                     await loadBlackboxPort();
 
                     blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
+                    savedBlackboxDevice.value = blackboxDevice.value;
                     blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
                     debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
@@ -1028,6 +1064,7 @@ export default defineComponent({
             dataflashUsedPercent,
             dataflashFreeSize,
             dataflashFreePercent,
+            flashLoggingInactive,
             sdcardUsedKB,
             sdcardUsedPercent,
             sdcardFreeKB,
