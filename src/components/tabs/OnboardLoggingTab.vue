@@ -556,9 +556,9 @@ export default defineComponent({
         // For other devices the firmware ignores MSP_DATAFLASH_ERASE, so an erase would report
         // success while the logs stay in place.
         // Track the saved device separately: a failed save leaves the selection in the store.
-        // null while a save is in progress or after it failed, because the FC can already use
-        // the new device then.
-        const savedBlackboxDevice = ref<number | null>(0);
+        // null while the device is unknown: before the tab loads, while a save is in progress,
+        // or after a save failed, because the FC can already use the new device then.
+        const savedBlackboxDevice = ref<number | null>(null);
         const flashLoggingInactive = computed(
             () => !!blackboxConfigSupported.value && savedBlackboxDevice.value !== BLACKBOX_DEVICE_FLASH,
         );
