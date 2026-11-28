@@ -31,7 +31,6 @@ import MSP from "../../src/js/msp";
 import MSPCodes from "../../src/js/msp/MSPCodes";
 import { mspHelper } from "../../src/js/msp/MSPHelper";
 import FileSystem from "../../src/js/FileSystem";
-import { gui_log } from "../../src/js/gui_log";
 import { useConnectionStore } from "../../src/stores/connection";
 import { useFlightControllerStore } from "../../src/stores/fc";
 
@@ -114,19 +113,29 @@ function eraseDialogOpen(wrapper: Wrapper) {
     return wrapper.findAllComponents(UModal)[0].props("open");
 }
 
-async function mountWithSavedDevice(device: number) {
+async function mountWithSavedDevice(device: number, { flashChip = true } = {}) {
     const fcStore = useFlightControllerStore();
     fcStore.config.apiVersion = "1.47.0";
     fcStore.blackbox.supported = true;
     fcStore.blackbox.blackboxDevice = device;
-    fcStore.dataflash.supported = true;
-    fcStore.dataflash.ready = true;
-    fcStore.dataflash.totalSize = 128 * 1024 * 1024;
-    fcStore.dataflash.usedSize = 4 * 1024 * 1024;
+    fcStore.dataflash.supported = flashChip;
+    fcStore.dataflash.ready = flashChip;
+    fcStore.dataflash.totalSize = flashChip ? 128 * 1024 * 1024 : 0;
+    fcStore.dataflash.usedSize = flashChip ? 4 * 1024 * 1024 : 0;
 
     const wrapper = mountTab();
     await flushPromises();
     return wrapper;
+}
+
+const FLASH_TOOL_LABELS = ["dataflashButtonErase", "dataflashButtonSaveAndErase", "dataflashButtonSaveFile"];
+
+/** The labels of the flash tool buttons that the tab shows. */
+function flashTools(wrapper: Wrapper) {
+    return wrapper
+        .findAllComponents(UButton)
+        .map((b) => b.props("label"))
+        .filter((label) => FLASH_TOOL_LABELS.includes(label as string));
 }
 
 function eraseRequested() {
@@ -155,12 +164,11 @@ async function saveAndErase(wrapper: Wrapper) {
     );
     vi.spyOn(console, "log").mockImplementation(() => {});
 
-    // Clicked directly: the disabled state alone must not be what keeps the erase from being sent.
     await click(wrapper, "dataflashButtonSaveAndErase");
     await flushPromises();
 }
 
-describe("Onboard logging dataflash erase", () => {
+describe("Onboard logging dataflash section", () => {
     let wrapper: Wrapper;
 
     beforeEach(() => {
@@ -173,29 +181,53 @@ describe("Onboard logging dataflash erase", () => {
         wrapper.unmount();
     });
 
-    it("warns and blocks erasing when the FC is not logging to onboard flash", async () => {
+    it("hides the flash tools and shows the note when the board has flash but does not log to it", async () => {
         wrapper = await mountWithSavedDevice(NO_LOGGING);
 
-        expect(wrapper.text()).toContain("dataflashEraseRequiresFlashDevice");
-        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
-        expect(button(wrapper, "dataflashButtonSaveAndErase").props("disabled")).toBe(true);
-        // Reading the flash does not depend on the logging device, so saving stays available.
-        expect(button(wrapper, "dataflashButtonSaveFile").props("disabled")).toBe(false);
-
-        await click(wrapper, "dataflashButtonErase");
-        expect(eraseDialogOpen(wrapper)).toBe(false);
+        expect(flashTools(wrapper)).toEqual([]);
+        expect(wrapper.text()).toContain("dataflashLoggingDeviceNotFlashNote");
+        expect(wrapper.text()).not.toContain("dataflashNotPresentNote");
         expect(eraseRequested()).toBe(false);
     });
 
-    it("keeps erasing blocked until a switch to onboard flash is saved to the FC", async () => {
+    it("shows neither the flash tools nor a note when the board has no flash and does not log to it", async () => {
+        wrapper = await mountWithSavedDevice(NO_LOGGING, { flashChip: false });
+
+        expect(flashTools(wrapper)).toEqual([]);
+        expect(wrapper.text()).not.toContain("dataflashLoggingDeviceNotFlashNote");
+        expect(wrapper.text()).not.toContain("dataflashNotPresentNote");
+        expect(wrapper.text()).not.toContain("onboardLoggingFlashLogger");
+    });
+
+    it("shows the flash tools without the note when the FC logs to onboard flash", async () => {
+        wrapper = await mountWithSavedDevice(FLASH);
+
+        expect(flashTools(wrapper)).toEqual(FLASH_TOOL_LABELS);
+        expect(wrapper.text()).not.toContain("dataflashLoggingDeviceNotFlashNote");
+
+        await click(wrapper, "dataflashButtonErase");
+        expect(eraseDialogOpen(wrapper)).toBe(true);
+    });
+
+    it("keeps the flash tools hidden until a switch to onboard flash is saved to the FC", async () => {
         wrapper = await mountWithSavedDevice(NO_LOGGING);
         await selectDevice(wrapper, FLASH);
 
-        expect(wrapper.text()).toContain("dataflashEraseRequiresFlashDevice");
-        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
+        expect(flashTools(wrapper)).toEqual([]);
+        expect(wrapper.text()).toContain("dataflashLoggingDeviceNotFlashNote");
     });
 
-    it("keeps erasing blocked when saving onboard flash as the device fails", async () => {
+    it("shows the flash tools once onboard flash has been saved as the device", async () => {
+        wrapper = await mountWithSavedDevice(NO_LOGGING);
+        await selectDevice(wrapper, FLASH);
+        await click(wrapper, "saveAndReboot");
+
+        expect(saveToEeprom).toHaveBeenCalledOnce();
+        expect(flashTools(wrapper)).toEqual(FLASH_TOOL_LABELS);
+        expect(wrapper.text()).not.toContain("dataflashLoggingDeviceNotFlashNote");
+    });
+
+    it("keeps the flash tools hidden when saving onboard flash as the device fails", async () => {
         wrapper = await mountWithSavedDevice(NO_LOGGING);
         vi.spyOn(console, "error").mockImplementation(() => {});
         vi.mocked(MSP.promise).mockImplementation(async (code) => {
@@ -206,11 +238,11 @@ describe("Onboard logging dataflash erase", () => {
         await selectDevice(wrapper, FLASH);
         await click(wrapper, "saveAndReboot");
 
-        expect(wrapper.text()).toContain("dataflashEraseRequiresFlashDevice");
-        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
+        expect(flashTools(wrapper)).toEqual([]);
+        expect(wrapper.text()).toContain("dataflashLoggingDeviceNotFlashNote");
     });
 
-    it("keeps erasing blocked when the EEPROM write of onboard flash as the device fails", async () => {
+    it("keeps the flash tools hidden when the EEPROM write of onboard flash as the device fails", async () => {
         wrapper = await mountWithSavedDevice(NO_LOGGING);
         vi.spyOn(console, "error").mockImplementation(() => {});
         saveToEeprom.mockRejectedValue(new Error("EEPROM write timed out"));
@@ -218,11 +250,10 @@ describe("Onboard logging dataflash erase", () => {
         await click(wrapper, "saveAndReboot");
 
         expect(reboot).not.toHaveBeenCalled();
-        expect(wrapper.text()).toContain("dataflashEraseRequiresFlashDevice");
-        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
+        expect(flashTools(wrapper)).toEqual([]);
     });
 
-    it("blocks erasing when a save away from onboard flash fails after the device was sent", async () => {
+    it("hides the flash tools when a save away from onboard flash fails after the device was sent", async () => {
         wrapper = await mountWithSavedDevice(FLASH);
         vi.spyOn(console, "error").mockImplementation(() => {});
         vi.mocked(MSP.promise).mockImplementation(async (code) => {
@@ -236,29 +267,7 @@ describe("Onboard logging dataflash erase", () => {
         expect(vi.mocked(MSP.promise).mock.calls.some(([code]) => code === MSPCodes.MSP_SET_BLACKBOX_CONFIG)).toBe(
             true,
         );
-        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(true);
-        expect(button(wrapper, "dataflashButtonSaveAndErase").props("disabled")).toBe(true);
-    });
-
-    it("allows erasing once onboard flash has been saved as the device", async () => {
-        wrapper = await mountWithSavedDevice(NO_LOGGING);
-        await selectDevice(wrapper, FLASH);
-        await click(wrapper, "saveAndReboot");
-
-        expect(saveToEeprom).toHaveBeenCalledOnce();
-        expect(wrapper.text()).not.toContain("dataflashEraseRequiresFlashDevice");
-        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(false);
-    });
-
-    it("saves but does not send the erase from Save & Erase when the FC is not logging to onboard flash", async () => {
-        wrapper = await mountWithSavedDevice(NO_LOGGING);
-
-        await saveAndErase(wrapper);
-
-        expect(FileSystem.closeFile).toHaveBeenCalled();
-        expect(eraseRequested()).toBe(false);
-        expect(eraseDialogOpen(wrapper)).toBe(false);
-        expect(gui_log).toHaveBeenCalledWith("dataflashEraseRequiresFlashDevice");
+        expect(flashTools(wrapper)).toEqual([]);
     });
 
     it("sends the erase from Save & Erase when the FC logs to onboard flash", async () => {
@@ -266,26 +275,8 @@ describe("Onboard logging dataflash erase", () => {
 
         await saveAndErase(wrapper);
 
+        expect(FileSystem.closeFile).toHaveBeenCalled();
         expect(eraseRequested()).toBe(true);
         expect(eraseDialogOpen(wrapper)).toBe(true);
-    });
-
-    it("allows erasing without the warning when the FC logs to onboard flash", async () => {
-        wrapper = await mountWithSavedDevice(FLASH);
-
-        expect(wrapper.text()).not.toContain("dataflashEraseRequiresFlashDevice");
-        expect(button(wrapper, "dataflashButtonErase").props("disabled")).toBe(false);
-        expect(button(wrapper, "dataflashButtonSaveAndErase").props("disabled")).toBe(false);
-
-        await click(wrapper, "dataflashButtonErase");
-        expect(eraseDialogOpen(wrapper)).toBe(true);
-    });
-
-    it("shows no warning when the flash is already empty", async () => {
-        wrapper = await mountWithSavedDevice(NO_LOGGING);
-        useFlightControllerStore().dataflash.usedSize = 0;
-        await nextTick();
-
-        expect(wrapper.text()).not.toContain("dataflashEraseRequiresFlashDevice");
     });
 });
