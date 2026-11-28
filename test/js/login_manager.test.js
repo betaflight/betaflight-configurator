@@ -49,9 +49,9 @@ describe("LoginManager.deleteAccount", () => {
     it("clears the session and notifies logout once the account is deleted", async () => {
         const deleteAccount = vi.spyOn(loginManager.getUserApi(), "deleteAccount").mockResolvedValue(undefined);
 
-        await loginManager.deleteAccount();
+        await loginManager.deleteAccount("pilot@example.com");
 
-        expect(deleteAccount).toHaveBeenCalledTimes(1);
+        expect(deleteAccount).toHaveBeenCalledWith("pilot@example.com");
         expect(localStorage.getItem("userToken")).toBeNull();
         expect(localStorage.getItem("accessToken")).toBeNull();
         expect(loginManager._loginApi._userToken).toBeNull();
@@ -65,7 +65,7 @@ describe("LoginManager.deleteAccount", () => {
     it("rethrows and leaves the session intact when the API fails", async () => {
         vi.spyOn(loginManager.getUserApi(), "deleteAccount").mockRejectedValue(new Error("server error"));
 
-        await expect(loginManager.deleteAccount()).rejects.toThrow("server error");
+        await expect(loginManager.deleteAccount("pilot@example.com")).rejects.toThrow("server error");
 
         expect(localStorage.getItem("userToken")).not.toBeNull();
         expect(localStorage.getItem("accessToken")).not.toBeNull();

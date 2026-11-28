@@ -257,9 +257,10 @@ class LoginManager {
     /**
      * Permanently delete the signed-in user's account, then end the local session.
      * Throws (leaving the session intact) when the server refuses.
+     * @param email - the address the user typed to confirm, which must match the account's.
      */
-    async deleteAccount(): Promise<void> {
-        await this.getUserApi().deleteAccount();
+    async deleteAccount(email: string): Promise<void> {
+        await this.getUserApi().deleteAccount(email);
         this._loginApi.clearSession();
         this._finishSession();
         gui_log(i18n.getMessage("userAccountDeleteSuccess"));

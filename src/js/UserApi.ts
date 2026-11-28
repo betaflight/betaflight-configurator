@@ -159,7 +159,10 @@ export default class UserApi {
         return await response.json();
     }
 
-    async deleteAccount(): Promise<void> {
+    /**
+     * @param email - the account's own address, which the service requires back as confirmation.
+     */
+    async deleteAccount(email: string): Promise<void> {
         const authHeaders = await this._authHeaders();
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), DELETE_ACCOUNT_TIMEOUT_MS);
@@ -168,7 +171,9 @@ export default class UserApi {
                 method: "DELETE",
                 headers: {
                     ...authHeaders,
+                    "Content-Type": "application/json",
                 },
+                body: JSON.stringify({ email }),
                 signal: controller.signal,
             });
 

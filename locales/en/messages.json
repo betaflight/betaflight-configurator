@@ -8599,6 +8599,9 @@
     "deleteAccountDescription": {
         "message": "Permanently delete your Betaflight account, including your profile, passkeys, sign-in tokens and cloud backups. This cannot be undone."
     },
+    "deleteAccountTypeEmail": {
+        "message": "Type your email address to confirm"
+    },
     "actionDeleteAccount": {
         "message": "Delete account"
     },

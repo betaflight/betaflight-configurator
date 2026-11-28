@@ -168,13 +168,24 @@
                     highlight
                 >
                     <p>{{ $t("deleteAccountDescription") }}</p>
+                    <p>
+                        <label for="delete-account-email">{{ $t("deleteAccountTypeEmail") }}</label>
+                        <input
+                            ref="deleteAccountEmailInput"
+                            v-model="deleteAccountEmail"
+                            type="email"
+                            id="delete-account-email"
+                            name="delete-account-email"
+                            autocomplete="off"
+                            :placeholder="profile?.email"
+                        />
+                    </p>
                     <div>
                         <UButton
-                            ref="deleteAccountButton"
                             color="error"
                             icon="i-lucide-trash-2"
                             :loading="isDeletingAccount"
-                            :disabled="isDeletingAccount"
+                            :disabled="isDeletingAccount || !deleteAccountEmailMatches"
                             @click="deleteAccount"
                         >
                             {{ $t("actionDeleteAccount") }}
@@ -211,7 +222,12 @@ const passkeys = ref<UserPasskey[]>([]);
 const editOpen = ref(false);
 const isDeletingAccount = ref(false);
 const deleteAccountBox = ref<InstanceType<typeof UiBox> | null>(null);
-const deleteAccountButton = ref<{ $el: HTMLElement } | null>(null);
+const deleteAccountEmailInput = ref<HTMLInputElement | null>(null);
+const deleteAccountEmail = ref("");
+const deleteAccountEmailMatches = computed(() => {
+    const email = profile.value?.email?.trim();
+    return !!email && deleteAccountEmail.value.trim().toLowerCase() === email.toLowerCase();
+});
 let userApi: UserApi | null = null;
 // The unsubscribe functions LoginManager returns; take their type from there.
 let unsubscribeLogin: ReturnType<typeof loginManager.onLogin> | null = null;
@@ -299,7 +315,7 @@ async function focusDeleteAccountIfRequested() {
     }
     await nextTick();
     deleteAccountBox.value?.$el.scrollIntoView({ block: "center" });
-    deleteAccountButton.value?.$el.focus();
+    deleteAccountEmailInput.value?.focus();
 }
 
 function startEdit() {
@@ -401,7 +417,8 @@ async function deleteAccount() {
 
     isDeletingAccount.value = true;
     try {
-        await loginManager.deleteAccount();
+        await loginManager.deleteAccount(deleteAccountEmail.value.trim());
+        deleteAccountEmail.value = "";
     } catch (error) {
         gui_log(`${t("userAccountDeleteFailed")}: ${error}`);
     } finally {
